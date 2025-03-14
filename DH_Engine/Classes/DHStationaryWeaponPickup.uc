@@ -41,4 +41,5 @@ function InitDroppedPickupFor(Inventory Inv)
 
 defaultproperties
 {
+    PlayerNearbyRadiusMeters=250
 }

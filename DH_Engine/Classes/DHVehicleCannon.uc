@@ -2234,8 +2234,6 @@ function SetVehicleWeaponState(DHVehicleWeaponState WeaponState)
 {
     local int i;
 
-    Log("SetVehicleWeaponState" @ self);
-
     super.SetVehicleWeaponState(WeaponState);
 
     for (i = 0; i < arraycount(MainAmmoChargeExtra); ++i)

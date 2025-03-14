@@ -560,15 +560,6 @@ exec function SetBinocsDrivePos(string NewX, string NewY, string NewZ)
     }
 }
 
-exec function LogMG() // DEBUG (Matt: please use & report if you ever find you can't fire or reload MG when you should be able to)
-{
-    Log("LogMG: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
-    Log("Controller =" @ Controller.Tag @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
-    Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " bReloadPaused =" @ VehWep.bReloadPaused @ " CanReload() =" @ CanReload() @ " ProjectileClass =" @ VehWep.ProjectileClass);
-    Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount() @ " NumMGMags =" @ VehWep.NumMGMags
-        @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
-}
-
 function Material CreateXRayMaterial()
 {
     local FadeColor FC;

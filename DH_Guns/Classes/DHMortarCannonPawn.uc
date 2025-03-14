@@ -540,4 +540,5 @@ simulated function ClientKDriverLeave(PlayerController PC)
 defaultproperties
 {    
     bNetNotify=true
+    InitialPositionIndex=1
 }

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ConstructionWeapon extends DH_ProxyWeapon;
+class DH_ConstructionWeapon extends DHProxyWeapon;
 
 var class<DHConstruction>       ConstructionClass;
 

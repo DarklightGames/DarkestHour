@@ -5589,15 +5589,6 @@ function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
     return false;
 }
 
-simulated function bool CanUseMortars()
-{
-    local DHRoleInfo RI;
-
-    RI = GetRoleInfo();
-
-    return RI != none && RI.bCanUseMortars;
-}
-
 simulated function DHRoleInfo GetRoleInfo()
 {
     local DHPlayerReplicationInfo PRI;

@@ -7,7 +7,7 @@ class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
 // General
-var     int                     PlayerNearbyRadius;
+var     int                     PlayerNearbyRadiusMeters;
 var     int                     PlayerNearbyRetryTime;
 
 // Ammo
@@ -97,7 +97,7 @@ function bool ArePlayersNearby()
 {
     local DHPawn    DHP;
 
-    foreach RadiusActors(class'DHPawn', DHP, PlayerNearbyRadius)
+    foreach RadiusActors(class'DHPawn', DHP, class'DHUnits'.static.MetersToUnreal(PlayerNearbyRadiusMeters))
     {
         return true;
     }
@@ -226,6 +226,6 @@ defaultproperties
     BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
-    PlayerNearbyRadius=256
+    PlayerNearbyRadiusMeters=5
     PlayerNearbyRetryTime=10
 }

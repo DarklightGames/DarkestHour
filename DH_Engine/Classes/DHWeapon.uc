@@ -1103,6 +1103,16 @@ simulated function HandleSleeveSwapping()
     }
 }
 
+static function string GetInventoryName(bool bUseNativeItemNames)
+{
+    if (bUseNativeItemNames && default.NativeItemName != "")
+    {
+        return default.NativeItemName;
+    }
+
+    return default.ItemName;
+}
+
 defaultproperties
 {
     // Sway modifiers

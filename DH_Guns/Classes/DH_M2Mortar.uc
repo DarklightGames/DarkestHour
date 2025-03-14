@@ -4,12 +4,12 @@
 //==============================================================================
 // CODING
 //==============================================================================
-// [ ] set up name reuse on stationry weapons (use name of veh)
 // [~] re-use & re-tool the construction/proxy weapon system for placing
 //     stationary weapons
-// [ ] add a "point to" animation driver for the arm thing
-// [ ] transfer ammo state between weapon, pickup and vehicle
 // [ ] make smoke grenade actually WP
+// [ ] add a "point to" animation driver for the arm thing
+// [ ] make sure you can't pick up other stationary weapons if you are currently
+//     holding one
 //==============================================================================
 // ART
 //==============================================================================

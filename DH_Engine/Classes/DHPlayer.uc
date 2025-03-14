@@ -7982,12 +7982,9 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 // Function for getting the correct inventory item name to display depending on settings.
 simulated static function string GetInventoryName(class<Inventory> InventoryClass)
 {
-    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, class'DHWeapon'))
+    if (ClassIsChildOf(InventoryClass, class'DHWeapon'))
     {
-        if (class<DHWeapon>(InventoryClass).default.NativeItemName != "")
-        {
-            return class<DHWeapon>(InventoryClass).default.NativeItemName;
-        }
+        return class<DHWeapon>(InventoryClass).static.GetInventoryName(default.bUseNativeItemNames);
     }
 
     return InventoryClass.default.ItemName;

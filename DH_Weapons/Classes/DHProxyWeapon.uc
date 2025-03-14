@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ProxyWeapon extends DHWeapon;
+class DHProxyWeapon extends DHWeapon;
 
 var DHActorProxy                ProxyCursor;
 

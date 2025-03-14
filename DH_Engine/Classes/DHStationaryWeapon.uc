@@ -324,6 +324,16 @@ function bool HandlePickupQuery(Pickup Item)
     return Inventory != none && Inventory.HandlePickupQuery(Item);
 }
 
+static function string GetInventoryName(bool bUseNativeItemNames)
+{
+    if (default.VehicleClass != none)
+    {
+        return default.VehicleClass.default.VehicleNameString;
+    }
+
+    return super.GetInventoryName(bUseNativeItemNames);
+}
+
 defaultproperties
 {
     InventoryGroup=9
