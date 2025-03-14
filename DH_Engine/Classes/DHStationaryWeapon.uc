@@ -9,15 +9,9 @@
 class DHStationaryWeapon extends DHWeapon
     abstract;
 
-var     class<DHVehicle>  VehicleClass;
+var     class<DHVehicle>    VehicleClass;
 
-// Hold relevant state information for the vehicle such as health, ammo, etc.
-var struct SVehicleState
-{
-    var int Health;
-    var int Ammo[3];
-    // TODO: barrel information
-} VehicleState;
+var     DHVehicleState      VehicleState;
 
 // Deploying
 var     bool    bDeploying;
@@ -265,6 +259,12 @@ function ServerDeployEnd()
         {
             DeployedVehicle.SetTeamNum(VehicleClass.default.VehicleTeam);
             DeployedVehicle.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
+
+            if (VehicleState != none)
+            {
+                DeployedVehicle.SetVehicleState(VehicleState);
+            }
+            
             Destroy(); // destroy this carried weapon version of the mortar, as it's been replaced by the deployed Vehicle version
 
             return;
@@ -328,7 +328,6 @@ defaultproperties
 {
     InventoryGroup=9
     Priority=99 // super high value so this weapon is always ranked as best/preferred weapon to bring up
-    bCanThrow=false
     bCanSway=false
     bCanResupplyWhenEmpty=false
     SelectAnim="Draw"

@@ -66,7 +66,7 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Reloading
 struct ReloadStage
 {
-    var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+    var     Sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
     var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
     var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
@@ -1391,6 +1391,32 @@ state InstantFireMode
 
 simulated function SimulateTraceFire(out vector Start, out rotator Dir, out vector HitLocation, out vector HitNormal);
 function TraceFire(vector Start, rotator Dir);
+
+// State serialization and deserialization functions.
+function DHVehicleWeaponState GetVehicleWeaponState()
+{
+    local DHVehicleWeaponState WeaponState;
+
+    WeaponState = new class'DHVehicleWeaponState';
+    WeaponState.LastResupplyTimestamp = LastResupplyTimestamp;
+    WeaponState.MainAmmoCharge[0] = MainAmmoCharge[0];
+    WeaponState.MainAmmoCharge[1] = MainAmmoCharge[1];
+    WeaponState.AltAmmoCharge = AltAmmoCharge;
+    WeaponState.NumMGMags = NumMGMags;
+    WeaponState.ReloadState = ReloadState;
+
+    return WeaponState;
+}
+
+function SetVehicleWeaponState(DHVehicleWeaponState WeaponState)
+{
+    LastResupplyTimestamp = WeaponState.LastResupplyTimestamp;
+    MainAmmoCharge[0] = WeaponState.MainAmmoCharge[0];
+    MainAmmoCharge[1] = WeaponState.MainAmmoCharge[1];
+    AltAmmoCharge = WeaponState.AltAmmoCharge;
+    NumMGMags = WeaponState.NumMGMags;
+    ReloadState = EReloadState(WeaponState.ReloadState);
+}
 
 defaultproperties
 {

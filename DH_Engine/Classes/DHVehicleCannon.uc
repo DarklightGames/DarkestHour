@@ -2213,6 +2213,37 @@ simulated function UpdateGunWheels()
     }
 }
 
+
+// State serialization and deserialization functions.
+function DHVehicleWeaponState GetVehicleWeaponState()
+{
+    local int i;
+    local DHVehicleWeaponState WeaponState;
+
+    WeaponState = super.GetVehicleWeaponState();
+
+    for (i = 0; i < arraycount(MainAmmoChargeExtra); ++i)
+    {
+        WeaponState.MainAmmoCharge[i] = MainAmmoChargeExtra[i];
+    }
+
+    return WeaponState;
+}
+
+function SetVehicleWeaponState(DHVehicleWeaponState WeaponState)
+{
+    local int i;
+
+    Log("SetVehicleWeaponState" @ self);
+
+    super.SetVehicleWeaponState(WeaponState);
+
+    for (i = 0; i < arraycount(MainAmmoChargeExtra); ++i)
+    {
+        MainAmmoChargeExtra[i] = WeaponState.MainAmmoCharge[i];
+    }
+}
+
 defaultproperties
 {
     // General

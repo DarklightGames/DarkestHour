@@ -266,6 +266,9 @@ var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combine
 
 var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
 
+// Vehicle state, used to restore a saved state.
+var DHVehicleState VehicleState;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -418,6 +421,15 @@ simulated function PostNetBeginPlay()
 
     // Spawn a variety of vehicle attachment options
     SpawnVehicleAttachments();
+
+    if (Role == ROLE_Authority && VehicleState != none)
+    {
+        // Restore the vehicle state now that all the weapons have been spawned.
+        SetVehicleState(VehicleState);
+
+        // Clear the saved vehicle state to release the object.
+        VehicleState = none;
+    }
 }
 
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
@@ -4565,6 +4577,57 @@ function CreateSpawnPointAttachment(bool bIsTemporary)
 function bool ShouldPlayersSpawnInsideVehicle()
 {
     return !bEngineOff;
+}
+
+// State serialization and deserialization functions.
+function DHVehicleState GetVehicleState()
+{
+    local DHVehicleState VehicleState;
+    local DHVehicleWeapon VehicleWeapon;
+    local int i;
+
+    VehicleState = new class'DHVehicleState';
+    VehicleState.Health = Health;
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (WeaponPawns[i] == none)
+        {
+            continue;
+        }
+
+        VehicleWeapon = DHVehicleWeapon(WeaponPawns[i].Gun);
+
+        if (VehicleWeapon != none)
+        {
+            VehicleState.WeaponStates[i] = VehicleWeapon.GetVehicleWeaponState();
+        }
+    }
+
+    return VehicleState;
+}
+
+function SetVehicleState(DHVehicleState VehicleState)
+{
+    local DHVehicleWeapon Weapon;
+    local int i;
+
+    Health = VehicleState.Health;
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (WeaponPawns[i] == none)
+        {
+            continue;
+        }
+
+        Weapon = DHVehicleWeapon(WeaponPawns[i].Gun);
+
+        if (Weapon != none)
+        {
+            Weapon.SetVehicleWeaponState(VehicleState.WeaponStates[i]);
+        }
+    }
 }
 
 defaultproperties

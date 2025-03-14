@@ -19,11 +19,37 @@ var DHATGun.ERotateError RotationError;
 var DHATGun.EPickUpError PickUpError;
 var int                  TeammatesInRadiusCount;
 
+function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
+{
+    local DHStationaryWeapon StationaryWeapon;
+    local int i, j;
+
+    if (Pawn == none || Gun == none)
+    {
+        return;
+    }
+
+    // Give the player the stationary gun, delete the construction.
+    // Make sure to store the state of the weapon in the inventory item.
+    Pawn.GiveWeapon(string(Gun.StationaryWeaponClass));
+
+    // Find the reference to the weapon that we just gave the player and transfer the state.
+    StationaryWeapon = DHStationaryWeapon(Pawn.FindInventoryType(Gun.StationaryWeaponClass));
+
+    if (StationaryWeapon != none)
+    {
+        StationaryWeapon.VehicleState = Gun.GetVehicleState();
+    }
+
+    Gun.Destroy();
+}
+
 function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
     local DHATGun Gun;
+    local DHStationaryWeapon StationaryWeapon;
 
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);
@@ -53,10 +79,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
         case 1: // Pick Up
             if (PickUpError == ERROR_None)
             {
-                // Give the player the stationary gun, delete the construction.
-                // Make sure to store the state of the weapon in the inventory item.
-                P.GiveWeapon(string(Gun.StationaryWeaponClass));
-                Gun.Destroy();
+                PickUpStationaryWeapon(P, Gun);
             }
             break;
         default:
