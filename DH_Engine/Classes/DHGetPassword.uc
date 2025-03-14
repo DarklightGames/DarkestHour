@@ -22,14 +22,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function RetryPassword()
 {
-    local string            EntryString;
-    local ExtendedConsole   MyConsole;
+    local string EntryString;
+    local ExtendedConsole MyConsole;
 
     EntryString = ed_Data.GetText();
     MyConsole = ExtendedConsole(PlayerOwner().Player.Console);
 
-    if ( MyConsole != None && EntryString != "" )
+    if (MyConsole != None && EntryString != "")
+    {
         SavePassword(MyConsole, EntryString);
+    }
 
     if (EntryString != "")
     {
