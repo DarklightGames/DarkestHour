@@ -22,9 +22,10 @@ var()   float   FiringCameraOutTime;            // How long it takes to interpol
 var()   float   ProjectileLifeSpan;             // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
-var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
-var     Mesh                HandsMesh;              // The first person hands mesh.
-var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
+var     DHFirstPersonHands  HandsActor;                 // The first person hands actor.
+var     Mesh                HandsMesh;                  // The first person hands mesh.
+var     DHDecoAttachment    HandsProjectile;            // The first person projectile.
+var     int                 HandsProjectileRollRange;   // The maximum amount of roll deviation for the first person projectile actor.
 
 var()   Vector              HandsRelativeLocation;  // The location of the hands in actor relation to it's attachment bone.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
@@ -447,7 +448,7 @@ simulated state Firing
             UpdateHandsProjectileStaticMesh();
 
             // Randomly spin the projectile so it's not always the same.
-            ProjectileRelativeRotation.Roll = Rand(65535);
+            ProjectileRelativeRotation.Roll = RandRange(-HandsProjectileRollRange, HandsProjectileRollRange);
             HandsProjectile.SetRelativeRotation(ProjectileRelativeRotation);
         }
 
@@ -541,4 +542,5 @@ defaultproperties
 {    
     bNetNotify=true
     InitialPositionIndex=1
+    HandsProjectileRollRange=2048
 }

@@ -39,13 +39,11 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    // AmmoShellTextures(0)=Texture'DH_M2Mortar_tex.interface.IT_HE_M110_3360_ICON'
-    // AmmoShellTextures(1)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_3360_ICON'
-    // AmmoShellTextures(2)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
+    AmmoShellTextures(0)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_HE_ICON'
+    AmmoShellTextures(1)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_WP_ICON'
 
-    // AmmoShellReloadTextures(0)=Texture'DH_M2Mortar_tex.interface.IT_HE_M110_3360_ICON_RELOAD'
-    // AmmoShellReloadTextures(1)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
-    // AmmoShellReloadTextures(2)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
+    AmmoShellReloadTextures(0)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_HE_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_WP_ICON_RELOAD'
 
     ArtillerySpottingScopeClass=class'DH_M2MortarArtillerySpottingScope'
 
