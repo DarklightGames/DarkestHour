@@ -9,7 +9,4 @@ defaultproperties
 {
     ComponentClassName="DH_Interface.DHGUINumericEdit"
     LabelStyleName="DHLargeText"
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }

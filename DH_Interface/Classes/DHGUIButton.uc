@@ -9,7 +9,4 @@ defaultproperties
 {
     StyleName="DHMenuTextButtonStyle"
     OnKeyEvent=DHGUIButton.InternalOnKeyEvent
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }

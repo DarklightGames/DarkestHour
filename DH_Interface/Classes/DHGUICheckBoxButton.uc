@@ -75,7 +75,4 @@ defaultproperties
 {
     bCanClickUncheck=true
     OnRendered=InternalOnRendered
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }
