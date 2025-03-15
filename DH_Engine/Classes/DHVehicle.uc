@@ -4630,6 +4630,69 @@ function SetVehicleState(DHVehicleState VehicleState)
     }
 }
 
+static function UpdateProxy(DHActorProxy AP)
+{
+    local int i, j;
+    local DHActorProxyAttachment APA;
+
+    AP.SetDrawType(DT_Mesh);
+    AP.LinkMesh(default.Mesh);
+
+    if (AP.HasAnim(default.BeginningIdleAnim))
+    {
+        AP.PlayAnim(default.BeginningIdleAnim);
+    }
+
+    for (j = 0; j < default.Skins.Length; ++j)
+    {
+        if (default.Skins[j] != none)
+        {
+            AP.Skins[j] = AP.CreateProxyMaterial(default.Skins[j]);
+        }
+    }
+
+    for (i = 0; i < default.PassengerWeapons.Length; ++i)
+    {
+        APA = AP.Spawn(class'DHActorProxyAttachment', AP);
+
+        if (APA != none)
+        {
+            AP.AttachToBone(APA, default.PassengerWeapons[i].WeaponBone);
+
+            APA.SetDrawType(DT_Mesh);
+            APA.LinkMesh(default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
+
+            // HACK: Play an idle animation if it exists. This is needed because on some "vehicles", the gun needs to
+            // be displayed in a certain way (i.e. mortars).
+            // TODO: just define an idle animation on the gun class then?
+            if (APA.HasAnim('idle'))
+            {
+                APA.PlayAnim('idle');
+            }
+
+            // First try to apply the cannon skins.
+            for (j = 0; j < default.CannonSkins.Length; ++j)
+            {
+                if (default.CannonSkins[j] != none)
+                {
+                    APA.Skins[j] = AP.CreateProxyMaterial(default.CannonSkins[j]);
+                }
+            }
+
+            // If there are still any skin slots empty, just use the skins defined in the weapon class.
+            for (j = 0; j < default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins.Length; ++j)
+            {
+                if ((j >= APA.Skins.Length || APA.Skins[j] == none) && default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j] != none)
+                {
+                    APA.Skins[j] = AP.CreateProxyMaterial(default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j]);
+                }
+            }
+
+            AP.Attachments[AP.Attachments.Length] = APA;
+        }
+    }
+}
+
 defaultproperties
 {
     // Miscellaneous

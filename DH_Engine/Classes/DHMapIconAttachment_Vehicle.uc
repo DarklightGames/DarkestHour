@@ -43,7 +43,12 @@ function DHPlayerReplicationInfo GetPrimaryOccupant()
 
     V = ROVehicle(AttachedTo);
 
-    if (V != none && V.Controller != none)
+    if (V == none)
+    {
+        return none;
+    }
+    
+    if (V.Controller != none)
     {
         return DHPlayerReplicationInfo(V.Controller.PlayerReplicationInfo);
     }

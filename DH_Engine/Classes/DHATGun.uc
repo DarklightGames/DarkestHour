@@ -424,7 +424,6 @@ function ServerRotate(byte InputRotationFactor)
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientEnterRotation()
 {
-
     local vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
@@ -463,7 +462,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector = Spawn(class'DHActorProxyProjector', self,, Location, Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;

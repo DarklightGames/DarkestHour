@@ -9,7 +9,7 @@ var DHPawn                          PawnOwner;
 var DHPlayer                        PlayerOwner;
 
 // Projector
-var DHConstructionProxyProjector    Projector;
+var DHActorProxyProjector           Projector;
 
 // Attachments
 var array<Actor>                    Attachments;
@@ -51,7 +51,7 @@ function PostBeginPlay()
         Destroy();
     }
 
-    Projector = Spawn(class'DHConstructionProxyProjector', self);
+    Projector = Spawn(class'DHActorProxyProjector', self);
 
     if (Projector != none)
     {

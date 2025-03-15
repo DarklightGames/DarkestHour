@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHConstructionProxyProjector extends DynamicProjector
+class DHActorProxyProjector extends DynamicProjector
     notplaceable;
 
 var Material GreenTexture;
@@ -23,4 +23,3 @@ defaultproperties
     FrameBufferBlendingOp=PB_AlphaBlend
     FOV=1
 }
-

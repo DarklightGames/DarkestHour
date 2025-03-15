@@ -6,7 +6,18 @@
 class DHStationaryWeaponPickup extends DHWeaponPickup
     abstract;
 
-var DHVehicleState VehicleState;
+var DHVehicleState              VehicleState;
+var DHMapIconAttachment_Vehicle MapIconAttachment;
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
+}
 
 // Modified to transfer vehicle state to the new inventory item.
 function Inventory SpawnCopy(Pawn Other)
@@ -36,6 +47,27 @@ function InitDroppedPickupFor(Inventory Inv)
     if (StationaryWeapon != none)
     {
         VehicleState = StationaryWeapon.VehicleState;
+    }
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
+
+    // Spawn the map icon attachment.
+    MapIconAttachment = Spawn(class'DHMapIconAttachment_Vehicle', self);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetBase(self);
+        MapIconAttachment.VehicleClass = StationaryWeapon.VehicleClass;
+
+        if (Inv.Instigator != none)
+        {
+            MapIconAttachment.SetTeamIndex(Inv.Instigator.GetTeamNum());
+        }
+
+        MapIconAttachment.Setup();
     }
 }
 
