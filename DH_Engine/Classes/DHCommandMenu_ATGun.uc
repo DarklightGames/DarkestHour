@@ -222,7 +222,7 @@ simulated function UpdateErrors()
 defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
-    Options(1)=(ActionText="Pick Up",HoldTime=3.0)
+    Options(1)=(ActionText="Pick Up",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=3.0)
     EnemyGunText="Cannot rotate an enemy gun"
     CannotBePickUpText="Cannot be picked up"
     CannotBeRotatedText="Cannot be rotated"
