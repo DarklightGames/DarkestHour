@@ -6,10 +6,13 @@
 //==============================================================================
 // [~] re-use & re-tool the construction/proxy weapon system for placing
 //     stationary weapons
-// [ ] make smoke grenade actually WP
 // [ ] add a "point to" animation driver for the arm thing
+// [ ] make smoke grenade actually WP
 // [ ] make sure you can't pick up other stationary weapons if you are currently
 //     holding one
+// [ ] proper names of shells
+// [ ] when player dies on it, why is the ragdoll half into the ground?
+// [ ] tube sliding sounds in fp and tp
 //==============================================================================
 // ART
 //==============================================================================
@@ -20,7 +23,6 @@
 // [ ] remake collision meshes
 // [ ] destroyed mesh
 // [ ] third person attachment & animations
-// [ ] UI art
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;
@@ -41,9 +43,9 @@ defaultproperties
     bUsesCodedDestroyedSkins=true
     //DestroyedVehicleMesh=StaticMesh'DH_M2Mortar_stc.Destroyed.M2mortar_destroyed'
 
-    //VehicleHudImage=Texture'DH_M2Mortar_tex.interface.M2mortar_body_icon'
-    //VehicleHudTurret=TexRotator'DH_M2Mortar_tex.interface.M2mortar_tube_icon_rot'
-    //VehicleHudTurretLook=TexRotator'DH_M2Mortar_tex.interface.M2mortar_tube_icon_look'
+    VehicleHudImage=Texture'DH_M2Mortar_tex.interface.M2mortar_body'
+    VehicleHudTurret=TexRotator'DH_M2Mortar_tex.interface.M2mortar_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M2Mortar_tex.interface.M2mortar_turret_look'
 
     DestructionEffectOffset=(Z=-60)
 

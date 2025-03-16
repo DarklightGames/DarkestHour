@@ -77,8 +77,6 @@ defaultproperties
     // so it's best to just hide it once it enters the tube.
     ProjectileLifeSpan=1.525
 
-    bNetNotify=true
-
     TPCamLookat=(X=0,Y=0,Z=-70)
     FiringDriverPositionIndex=1
 }
