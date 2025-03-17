@@ -33,6 +33,8 @@ function Inventory SpawnCopy(Pawn Other)
     {
         StationaryWeapon.VehicleState = VehicleState;
     }
+
+    return Copy;
 }
 
 // Modified to transfer the vehicle state to the dropped pickup.

@@ -64,11 +64,6 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
 // But also need to add a mechanism to stop server destroying projectile before client has time to trigger this locally & play explosion effects (there are several solutions)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 {
-    local ESurfaceTypes    HitSurfaceType;
-    local class<Emitter>   ExplosionEmitterClass;
-    local class<Projector> ExplosionDecalClass;
-    local sound            ExplosionSound;
-
     // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
     if (Level.NetMode != NM_DedicatedServer)
     {

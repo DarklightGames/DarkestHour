@@ -10,6 +10,6 @@ defaultproperties
     VehicleClass=class'DH_M2Mortar'
     AttachmentClass=class'DH_M2MortarAttachment'
     PickupClass=class'DH_M2MortarPickup'    // TODO: transfer state to the pickup.
-    PlayerViewOffset=(Z=-2.0)
     Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'
+    TraceDepthMeters=1.5
 }

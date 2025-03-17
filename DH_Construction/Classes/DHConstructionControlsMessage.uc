@@ -12,7 +12,15 @@ static function string GetHeaderString(
     optional Object OptionalObject)
 {
     local DHConstructionProxy CP;
+
     CP = DHConstructionProxy(OptionalObject);
+
+    if (CP == none)
+    {
+        Warn("OptionalObject is not a DHConstructionProxy (found" @ OptionalObject $ ")");
+        return "";
+    }
+
     return CP.GetRuntimeData().MenuName;
 }
 
@@ -21,6 +29,12 @@ static function bool ShouldShowControl(int Index, optional int Switch, optional 
     local DHConstructionProxy CP;
     
     CP = DHConstructionProxy(OptionalObject);
+
+    if (CP == none)
+    {
+        Warn("OptionalObject is not a DHConstructionProxy (found" @ OptionalObject $ ")");
+        return false;
+    }
 
     switch (Index)
     {

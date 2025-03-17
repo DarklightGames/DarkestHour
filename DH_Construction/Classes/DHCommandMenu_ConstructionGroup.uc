@@ -141,7 +141,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     if (C != none)
     {
-        return C.static.GetPlayerError(Context).Type != ERROR_None;
+        return C.static.GetContextError(Context).Type != ERROR_None;
     }
 
     return false;
@@ -150,7 +150,7 @@ function bool IsOptionDisabled(int OptionIndex)
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local class<DHConstruction> ConstructionClass;
-    local DHConstruction.ConstructionError E;
+    local DHActorProxy.ActorProxyError E;
     local DHPlayer PC;
     local int SquadMemberCount, Remaining, Active, MaxActive, InfoTextIndex;
     local DHGameReplicationInfo GRI;
@@ -165,7 +165,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         return;
     }
 
-    E = ConstructionClass.static.GetPlayerError(Context);
+    E = ConstructionClass.static.GetContextError(Context);
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     ORI.OptionName = ConstructionClass.static.GetMenuName(Context);

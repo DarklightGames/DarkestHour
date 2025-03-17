@@ -4630,6 +4630,7 @@ function SetVehicleState(DHVehicleState VehicleState)
     }
 }
 
+// Function to create a proxy respresentation for the vehicle.
 static function UpdateProxy(DHActorProxy AP)
 {
     local int i, j;

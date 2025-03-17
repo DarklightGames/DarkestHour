@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ConstructionWeapon extends DHProxyWeapon;
+class DH_ConstructionWeapon extends DHActorProxyWeapon;
 
 var class<DHConstruction>       ConstructionClass;
 
@@ -74,39 +74,6 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
     }
 }
 
-simulated function OnTick(float DeltaTime)
-{
-    local Actor HitActor;
-    local Vector HitLocation, HitNormal;
-    local PlayerController PC;
-    local DHConstructionProxy CP;
-    local int bLimitLocalRotation;
-    local Range LocalRotationYawRange;
-
-    if (ProxyCursor != none)
-    {
-        PC = PlayerController(Instigator.Controller);
-
-        TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
-
-        CP = DHConstructionProxy(ProxyCursor);
-
-        if (CP != none)
-        {
-            CP.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
-
-            if (CP.ProxyError.Type != ERROR_None)
-            {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
-            }
-            else
-            {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
-            }
-        }
-    }
-}
-
 simulated function DHActorProxy CreateProxyCursor()
 {
     local DHConstructionProxy Cursor;
@@ -158,100 +125,19 @@ simulated function float GetLocalRotationRate()
     return ConstructionClass.default.LocalRotationRate;
 }
 
-simulated function TraceFromPlayer(
-    out Actor HitActor,
-    out Vector HitLocation,
-    out Vector HitNormal,
-    optional out int bLimitLocalRotation,
-    optional out Range LocalRotationYawRange
-    )
-{
-    local PlayerController PC;
-    local Actor TempHitActor;
-    local Vector TraceStart, TraceEnd, X, Y, Z;
-    local DHConstructionSocket Socket;
-
-    bLimitLocalRotation = 0;
-
-    if (Instigator == none)
-    {
-        return;
-    }
-
-    PC = PlayerController(Instigator.Controller);
-
-    // Trace out into the world and try and hit something static.
-    TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
-
-    // Trace for location hints.
-    foreach TraceActors(class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
-    {
-        if (Socket == none)
-        {
-            continue;
-        }
-
-        // This is assumed to be in ascending order of distance, so this should
-        // return the nearest traced location hint.
-        if (Socket.IsForConstructionClass(ConstructionClass))
-        {
-            HitActor = Socket;
-            HitLocation = HitActor.Location;
-            GetAxes(HitActor.Rotation, X, Y, Z);
-            HitNormal = Z;
-            bLimitLocalRotation = int(Socket.bLimitLocalRotation);
-            LocalRotationYawRange = Socket.LocalRotationYawRange;
-            return;
-        }
-    }
-
-    // Trace static actors and (world geometry etc.)
-    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
-    {
-        if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
-        {
-            HitActor = TempHitActor;
-            break;
-        }
-    }
-
-    if (HitActor == none)
-    {
-        // We didn't hit anything, trace down to the ground in hopes of finding
-        // something solid to rest on
-        TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
-
-        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
-        {
-            if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
-            {
-                HitActor = TempHitActor;
-                break;
-            }
-        }
-
-        if (HitActor == none)
-        {
-            HitLocation = TraceStart;
-        }
-    }
-}
-
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
+function DHConstruction ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
 {
     local DHConstruction C;
     local DHPawn P;
     local DHActorProxy.Context Context;
     local DHConstructionProxy TestProxy;
-    local DHConstruction.ConstructionError Error;
+    local DHActorProxy.ActorProxyError Error;
     local array<DHConstructionSupplyAttachment.Withdrawal> Withdrawals;
     local DHConstructionSocket Socket;
 
     if (Instigator == none)
     {
-        return;
+        return none;
     }
 
     Context.TeamIndex = Instigator.GetTeamNum();
@@ -260,9 +146,9 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     Context.VariantIndex = VariantIndex;
     Context.SkinIndex = SkinIndex;
 
-    if (ConstructionClass.static.GetPlayerError(Context).Type != ERROR_None)
+    if (ConstructionClass.static.GetContextError(Context).Type != ERROR_None)
     {
-        return;
+        return none;
     }
 
     // Create a proxy to test placement logic on the server-side.
@@ -270,7 +156,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     if (TestProxy == none)
     {
-        return;
+        return none;
     }
 
     TestProxy.GroundActor = Owner;
@@ -288,19 +174,17 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     if (Error.Type != ERROR_None)
     {
-        return;
+        return none;
     }
 
     P = DHPawn(Instigator);
 
     if (P == none || !P.UseSupplies(ConstructionClass.static.GetSupplyCost(Context), Withdrawals))
     {
-        return;
+        return none;
     }
 
     C = Spawn(ConstructionClass, Owner,, Location, Rotation);
-
-    Socket = DHConstructionSocket(Owner);
 
     if (C != none)
     {
@@ -327,6 +211,8 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         C.UpdateAppearance();
         C.OnSpawnedByPlayer(C.InstigatorController);
     }
+
+    return C;
 }
 
 simulated function ResetCursor()
@@ -344,7 +230,18 @@ simulated function ResetCursor()
     }
 }
 
+function bool IsSocketValid(DHActorProxySocket Socket)
+{
+    local DHConstructionSocket CS;
+
+    CS = DHConstructionSocket(Socket);
+
+    return CS != none && CS.IsForConstructionClass(ConstructionClass);
+}
+
 defaultproperties
 {
     ClickSound=Sound'ROMenuSounds.msfxMouseClick'
+    ControlsMessageClass=class'DHConstructionControlsMessage'
+    DrawScale=0.0
 }

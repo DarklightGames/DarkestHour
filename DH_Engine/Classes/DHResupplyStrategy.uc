@@ -41,7 +41,6 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     local bool bShouldResupplyGrenades;
     local DHPawn P;
     local Vehicle V;
-    local DHRoleInfo RI;
     local ROWeapon recvr_weapon;
 
     if (default.UpdateTime > TimeSeconds - recvr.LastResupplyTime)

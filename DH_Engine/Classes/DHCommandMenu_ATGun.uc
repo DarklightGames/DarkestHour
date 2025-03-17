@@ -22,7 +22,6 @@ var int                  TeammatesInRadiusCount;
 function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
 {
     local DHStationaryWeapon StationaryWeapon;
-    local int i, j;
 
     if (Pawn == none || Gun == none)
     {
@@ -49,7 +48,6 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
     local DHPlayer PC;
     local DHPawn P;
     local DHATGun Gun;
-    local DHStationaryWeapon StationaryWeapon;
 
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);

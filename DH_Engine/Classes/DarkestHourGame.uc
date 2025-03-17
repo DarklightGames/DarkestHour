@@ -170,7 +170,7 @@ function PostBeginPlay()
     local SpectatorCam          ViewPoint;
     local DHObstacleInfo        DHOI;
     local bool                  bMultipleLevelInfos;
-    local int                   i, j, k, m, n, o, p;
+    local int                   i, j, k, m, n, o;
 
     // Matt: for info, this hack could be used to prevent net clients & SP from logging "accessed none" errors for redundant SteamStatsAndAchievements actor
     // Even though PostLogin() event has been overridden & SS&A functionality removed, some native code still calls the event's Super from GameInfo class

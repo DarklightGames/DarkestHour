@@ -235,8 +235,8 @@ defaultproperties
     CrawlBackwardAnim="crawl_in"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_in"
-    FireModeClass(0)=class'DH_Weapons.DH_EmptyFire'
-    FireModeClass(1)=class'DH_Weapons.DH_EmptyFire'
+    FireModeClass(0)=class'DH_Engine.DH_EmptyFire'
+    FireModeClass(1)=class'DH_Engine.DH_EmptyFire'
     RestAnim="crawl_in"
     AimAnim="crawl_in"
     RunAnim="crawl_in"
@@ -249,7 +249,7 @@ defaultproperties
     InventoryGroup=1
     PlayerViewOffset=(X=-6.000000,Y=-6.000000,Z=100000.000000)
     PlayerViewPivot=(Roll=-2730)
-    AttachmentClass=class'DH_Weapons.DH_EmptyAttachment'
+    AttachmentClass=class'DH_Engine.DH_EmptyAttachment'
     ItemName=" "
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_US'
     bForceSwitch=false

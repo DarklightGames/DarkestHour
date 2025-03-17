@@ -13,6 +13,7 @@
 // [ ] proper names of shells
 // [ ] when player dies on it, why is the ragdoll half into the ground?
 // [ ] tube sliding sounds in fp and tp
+// [ ] don't let the player move around while holding the pick up button
 //==============================================================================
 // ART
 //==============================================================================

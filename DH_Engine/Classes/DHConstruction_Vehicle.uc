@@ -108,8 +108,6 @@ simulated state Dummy
 // TODO: do we put this in the vehicle itself???
 function static UpdateProxy(DHActorProxy AP)
 {
-    local int i, j;
-    local DHActorProxyAttachment APA;
     local class<DHVehicle> VehicleClass;
 
     VehicleClass = GetVehicleClass(AP.GetContext());
@@ -174,7 +172,7 @@ function UpdateAppearance()
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
-function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     local class<DHVehicle> VehicleClass;
 
@@ -195,7 +193,7 @@ function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadi
 // Used to provide a more season-specific variant if one is available.
 static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, int VariantIndex)
 {
-    local int i, j, k, DefaultIndex;
+    local int i, j;
     local array<int> Indices;
 
     Indices = GetAvailableIndicesForVariant(Context, VariantIndex);
@@ -285,7 +283,6 @@ static function array<int> GetAvailableIndicesForVariant(DHActorProxy.Context Co
 static function class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     local array<int> Indices;
-    local int i;
 
     // Count the number of variants.
     Indices = GetAvailableVariantIndices(Context);

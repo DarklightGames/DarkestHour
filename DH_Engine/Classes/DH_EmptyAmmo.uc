@@ -9,7 +9,7 @@ defaultproperties
 {
     MaxAmmo=99999
     InitialAmount=99999
-    PickupClass=class'DH_Weapons.DH_EmptyAmmoPickup'
+    PickupClass=class'DH_Engine.DH_EmptyAmmoPickup'
     IconMaterial=none
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }

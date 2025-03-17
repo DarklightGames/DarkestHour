@@ -3,11 +3,16 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHProxyWeapon extends DHWeapon;
+class DHActorProxyWeapon extends DHWeapon;
 
-var DHActorProxy                ProxyCursor;
+var DHActorProxy                    ProxyCursor;
 
-simulated function OnTick(float DeltaTime);
+var class<DHActorProxyErrorMessage> ErrorMessageClass;
+var class<DHControlsMessage>        ControlsMessageClass;
+
+var() protected float               TraceDepthMeters;
+var() protected float               TraceHeightMeters;
+
 simulated function DHActorProxy CreateProxyCursor();
 simulated function OnConfirmPlacement();
 simulated function bool ShouldSnapRotation();
@@ -37,6 +42,38 @@ simulated event Tick(float DeltaTime)
             PutDown();
             Instigator.Controller.SwitchToBestWeapon();
             Instigator.ChangedWeapon();
+        }
+    }
+}
+
+simulated function OnTick(float DeltaTime)
+{
+    local Actor HitActor;
+    local Vector HitLocation, HitNormal;
+    local PlayerController PC;
+    local int bLimitLocalRotation;
+    local Range LocalRotationYawRange;
+
+    if (ProxyCursor == none)
+    {
+        return;
+    }
+
+    PC = PlayerController(Instigator.Controller);
+
+    TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
+
+    if (ProxyCursor != none)
+    {
+        ProxyCursor.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
+
+        if (ProxyCursor.ProxyError.Type != ERROR_None)
+        {
+            Instigator.ReceiveLocalizedMessage(ErrorMessageClass, int(ProxyCursor.ProxyError.Type),,, ProxyCursor);
+        }
+        else
+        {
+            Instigator.ReceiveLocalizedMessage(ControlsMessageClass, 0, Instigator.PlayerReplicationInfo,, ProxyCursor);
         }
     }
 }
@@ -250,6 +287,102 @@ simulated function WeaponLeanRightReleased()
     }
 }
 
+simulated function TraceFromPlayer(
+    out Actor HitActor,
+    out Vector HitLocation,
+    out Vector HitNormal,
+    optional out int bLimitLocalRotation,
+    optional out Range LocalRotationYawRange
+    )
+{
+    local PlayerController PC;
+    local Actor TempHitActor;
+    local Vector TraceStart, TraceEnd, X, Y, Z;
+    local DHActorProxySocket Socket;
+
+    bLimitLocalRotation = 0;
+
+    if (Instigator == none)
+    {
+        return;
+    }
+
+    PC = PlayerController(Instigator.Controller);
+
+    // Trace out into the world and try and hit something static.
+    TraceStart = Instigator.Location + Instigator.EyePosition();
+    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(GetTraceDepthMeters()));
+
+    // TODO: make a function that evaluates whether sockets are valid.
+
+    // Trace for location hints.
+    foreach TraceActors(class'DHActorProxySocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
+    {
+        if (Socket == none)
+        {
+            continue;
+        }
+
+        // TODO: add a check if the socket is appropriate.
+        // This is assumed to be in ascending order of distance, so this should
+        // return the nearest traced location hint.
+        if (IsSocketValid(Socket))
+        {
+            HitActor = Socket;
+            HitLocation = HitActor.Location;
+            GetAxes(HitActor.Rotation, X, Y, Z);
+            HitNormal = Z;
+            bLimitLocalRotation = int(Socket.bLimitLocalRotation);
+            LocalRotationYawRange = Socket.LocalRotationYawRange;
+            return;
+        }
+    }
+
+    // Trace static actors and (world geometry etc.)
+    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+        {
+            HitActor = TempHitActor;
+            break;
+        }
+    }
+
+    if (HitActor == none)
+    {
+        // We didn't hit anything, trace down to the ground in hopes of finding
+        // something solid to rest on
+        TraceStart = TraceEnd;
+        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(GetTraceHeightMeters());
+
+        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        {
+            if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+            {
+                HitActor = TempHitActor;
+                break;
+            }
+        }
+
+        if (HitActor == none)
+        {
+            HitLocation = TraceStart;
+        }
+    }
+}
+
+function bool IsSocketValid(DHActorProxySocket Socket);
+
+function float GetTraceDepthMeters()
+{
+    return TraceDepthMeters;
+}
+
+function float GetTraceHeightMeters()
+{
+    return TraceHeightMeters;
+}
+
 defaultproperties
 {
     SprintStartAnim="crawl_in"
@@ -259,8 +392,8 @@ defaultproperties
     CrawlBackwardAnim="crawl_in"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_in"
-    FireModeClass(0)=class'DH_Weapons.DH_EmptyFire'
-    FireModeClass(1)=class'DH_Weapons.DH_EmptyFire'
+    FireModeClass(0)=class'DH_Engine.DH_EmptyFire'
+    FireModeClass(1)=class'DH_Engine.DH_EmptyFire'
     RestAnim="crawl_in"
     AimAnim="crawl_in"
     RunAnim="crawl_in"
@@ -271,12 +404,13 @@ defaultproperties
     bUsesFreeAim=false
     bCanSway=false
     InventoryGroup=1
-    PlayerViewOffset=(X=-6.000000,Y=-6.000000,Z=100000.000000)
-    PlayerViewPivot=(Roll=-2730)
-    AttachmentClass=class'DH_Weapons.DH_EmptyAttachment'
+    AttachmentClass=class'DH_Engine.DH_EmptyAttachment'
     ItemName=" "
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_US'
     bForceSwitch=false
     bNoVoluntarySwitch=true
+    ErrorMessageClass=class'DHActorProxyErrorMessage'
+    TraceDepthMeters=5.0
+    TraceHeightMeters=2.0
 }
 

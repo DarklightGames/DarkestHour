@@ -6,30 +6,15 @@
 // that can be carried by infantry and deployed.
 //==============================================================================
 
-class DHStationaryWeapon extends DHWeapon
+class DHStationaryWeapon extends DHActorProxyWeapon
     abstract;
 
 var     class<DHVehicle>    VehicleClass;
-
 var     DHVehicleState      VehicleState;
 
 // Deploying
 var     bool    bDeploying;
 var     name    DeployAnimation;
-var     float   DeployRadius;
-var     float   DeployAngleMaximum;
-
-enum EDeployError
-{
-    DE_None,            // 0
-    DE_BadStance,       // 1
-    DE_Fatal,           // 2
-    DE_Moving,          // 3
-    DE_BadSurface,      // 4
-    DE_NotEnoughRoom,   // 5
-    DE_Leaning,         // 6
-    DE_BadVolume,       // 7
-};
 
 replication
 {
@@ -38,23 +23,42 @@ replication
         ServerDeployEnd;
 }
 
-// Implemented to force player to equip the mortar if it isn't already his current weapon
+simulated function DHActorProxy CreateProxyCursor()
+{
+    local DHVehicleProxy Cursor;
+
+    Cursor = Spawn(class'DHVehicleProxy', Instigator);
+    Cursor.SetVehicleClass(VehicleClass);
+
+    return Cursor;
+}
+
+// Implemented to force player to equip the stationary weapon if it isn't already his current weapon
+// TODO: not necessarily universal; some carried weapons may be small enough to be put away.
 simulated function Tick(float DeltaTime)
 {
     if (Instigator != none && Instigator.Weapon != self && Instigator.PendingWeapon != self && Instigator.IsLocallyControlled())
     {
         Instigator.SwitchWeapon(InventoryGroup);
     }
+    else
+    {
+        super.Tick(DeltaTime);
+    }
 }
 
-// Modified to add a hint when carrying a mortar
+// Modified to add a hint when carrying a stationary weapon.
 simulated function BringUp(optional Weapon PrevWeapon)
 {
+    local DHPlayer PC;
+
     super.BringUp(PrevWeapon);
 
-    if (DHPlayer(Instigator.Controller) != none)
+    PC = DHPlayer(Instigator.Controller);
+
+    if (PC != none)
     {
-        DHPlayer(Instigator.Controller).QueueHint(6, false);
+        PC.QueueHint(6, true);
     }
 }
 
@@ -83,136 +87,35 @@ simulated function bool WeaponAllowMantle()
 exec simulated function Deploy()
 {
     local DHPawn  P;
-    local rotator LockedViewRotation;
+    local Rotator LockedViewRotation;
 
-    if (!bDeploying)
+    if (bDeploying)
     {
-        P = DHPawn(Instigator);
-
-        if (CanDeploy(P))
-        {
-            PlayAnim(DeployAnimation);
-            bDeploying = true;
-            P.bIsDeployingStationaryWeapon = true;
-
-            LockedViewRotation = P.Rotation;
-            LockedViewRotation.Pitch = 0;
-            P.SetLockViewRotation(true, LockedViewRotation); // makes the pawn lock view pitch & yaw
-        }
-    }
-}
-
-simulated function EDeployError GetDeployError(DHPawn P)
-{
-    local Actor        HitActor;
-    local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
-    local rotator      TraceRotation;
-
-    // Can't deploy if we're busy, raising the weapon, on fire or somehow crawling
-    // If we don't check state RaisingWeapon, it allows the player to almost instantaneously redeploy a mortar after undeploying
-    if (P == none || P.Controller == none || IsBusy() || IsInState('RaisingWeapon') || P.bOnFire || P.bIsCrawling)
-    {
-        return DE_Fatal;
-    }
-    
-    // Can't deploy if we're in water
-    if (P.PhysicsVolume.bWaterVolume || P.PhysicsVolume.bPainCausing)
-    {
-        return DE_BadVolume;
+        return;
     }
 
-    // Can't deploy if we're not crouching
-    if (!P.bIsCrouched)
-    {
-        return DE_BadStance;
-    }
+    P = DHPawn(Instigator);
 
-    // Can't deploy if we're moving
-    if (P.Velocity != vect(0.0, 0.0, 0.0))
-    {
-        return DE_Moving;
-    }
+    // BUG: player can drop the weapon while in this state, bricking the pawn's movement until it dies.
+    // solution: don't let them drop the weapon while deploying.
 
-    // Can't deploy if we're leaning
-    if (P.bLeaningLeft || P.bLeaningRight)
+    if (CanDeploy(P))
     {
-        return DE_Leaning;
-    }
-    
-    // Check we're standing on a level, static surface, by tracing straight downwards to see what we're standing on
-    TraceStart = P.Location;
-    TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+        PlayAnim(DeployAnimation);
+        bDeploying = true;
+        P.bIsDeployingStationaryWeapon = true;
 
-    // Can't deploy if we're not standing on a static surface
-    if (HitActor == none || !HitActor.bStatic)
-    {
-        // "You cannot deploy your mortar on this surface"
-        return DE_BadSurface;
+        LockedViewRotation = P.Rotation;
+        P.SetLockViewRotation(true, LockedViewRotation); // makes the pawn lock view pitch & yaw
     }
-    // Can't deploy if the surface angle is too steep
-    else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-    {
-        // "You cannot deploy your mortar on this surface"
-        return DE_BadSurface;
-    }
-    else
-    {
-        // Ok, we're standing on a level, static surface, but now check we also have a clear, level surface all around us
-        // Trace in 8 directions around us in the X/Y plane, within our DeployRadius
-        for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
-        {
-            TraceEnd = P.Location + (DeployRadius * vector(TraceRotation));
-            HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-            // Can't deploy if there's anything static around us
-            if (HitActor != none && HitActor.bStatic)
-            {
-                // "You do not have enough room to deploy your mortar here"
-                return DE_NotEnoughRoom;
-            }
-
-            // Now trace downwards from the end point of our previous trace, to make sure there's a level surface there
-            TraceStart = TraceEnd;
-            TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
-            HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-            // Can't deploy if there isn't a static surface there
-            if (HitActor == none || !HitActor.bStatic)
-            {
-                // "You cannot deploy your mortar on this surface"
-                return DE_BadSurface;
-            }
-            // Can't deploy if the surface angle is too steep
-            else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-            {
-                // "You cannot deploy your mortar on this surface"
-                return DE_BadSurface;
-            }
-        }
-    }
-    
-    return DE_None;
 }
 
 // New function to check whether the player can deploy the mortar where they are, with explanatory screen messages if they can't
 simulated function bool CanDeploy(DHPawn P)
 {
-    local EDeployError Error;
+    // TODO: re-add check for being stationary & crouched, with no leaning.
 
-    Error = GetDeployError(P);
-
-    // We can't deploy the mortar if we registered an error in any of the checks above
-    // Display a screen message to the player saying why he can't deploy
-    if (Error != DE_None)
-    {
-        P.ReceiveLocalizedMessage(class'DHStationaryWeaponMessage', int(Error),,, self);
-
-        return false;
-    }
-
-    // Passed all tests so mortar can be deployed
-    return true;
+    return ProxyCursor.ProxyError.Type == ERROR_None;
 }
 
 // Modified to prevent player from changing stance while he is crouched & deploying the mortar
@@ -236,42 +139,69 @@ simulated event AnimEnd(int Channel)
             P.SetLockViewRotation(false);
         }
 
-        ServerDeployEnd();
+        ServerDeployEnd(ProxyCursor.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
     }
 }
 
-// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy this carried Weapon version of the mortar
-function ServerDeployEnd()
+function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
 {
-    local DHVehicle DeployedVehicle;
-    local vector    TraceStart, TraceEnd, HitLocation, HitNormal;
-    local rotator   SpawnRotation;
+    local DHVehicleProxy TestProxy;
+    local DHActorProxy.ActorProxyError Error;
 
-    TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
-    TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
+    // Create a proxy to test placement logic on the server-side.
+    TestProxy = Spawn(class'DHVehicleProxy', Instigator);
 
-    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+    if (TestProxy == none)
     {
-        SpawnRotation.Yaw = Instigator.Rotation.Yaw;
-        DeployedVehicle = Spawn(VehicleClass,,, HitLocation, SpawnRotation);
-
-        if (DeployedVehicle != none)
-        {
-            DeployedVehicle.SetTeamNum(VehicleClass.default.VehicleTeam);
-            DeployedVehicle.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
-
-            if (VehicleState != none)
-            {
-                DeployedVehicle.SetVehicleState(VehicleState);
-            }
-            
-            Destroy(); // destroy this carried weapon version of the mortar, as it's been replaced by the deployed Vehicle version
-
-            return;
-        }
+        return false;
     }
 
-    GotoState('Idle'); // either failed to trace a location to spawn the mortar, or somehow failed to spawn it
+    TestProxy.GroundActor = Owner;
+    TestProxy.SetVehicleClass(VehicleClass);
+    TestProxy.SetLocation(Location);
+    TestProxy.SetRotation(Rotation);
+
+    // HACK: We set this to true to signal to the error checker that we should
+    // not raise errors when we are overlapping other proxies.
+    TestProxy.bHidden = true;
+
+    Error = TestProxy.GetPositionError();
+
+    TestProxy.Destroy();
+
+    return Error.Type == ERROR_None;
+}
+
+// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy this carried Weapon version of the mortar
+function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
+{
+    local DHVehicle Vehicle;
+    
+    if (!CanSpawnVehicle(Owner, Location, Rotation))
+    {
+        return;
+    }
+
+    Vehicle = Spawn(VehicleClass,,, ProxyCursor.Location, ProxyCursor.Rotation);
+
+    if (Vehicle == none)
+    {
+        // Either failed to trace a location to spawn the mortar, or somehow failed to spawn it.
+        GotoState('Idle');
+        return;
+    }
+
+    // Set the team, otherwise the team wil default to the team defined vehicle class.
+    Vehicle.SetTeamNum(Instigator.GetTeamNum());
+
+    // Transfer saved vehicle state to the newly spawned vehicle.
+    if (VehicleState != none)
+    {
+        Vehicle.SetVehicleState(VehicleState);
+    }
+    
+    // Destroy the carried weapon, as it's now been replaced by the deployed weapon.
+    Destroy();
 }
 
 // Functions emptied out as carried mortar weapons cannot be fired, ironsighted or reloaded:
@@ -288,42 +218,6 @@ simulated function ImmediateStopFire();
 simulated function ROIronSights();
 exec simulated function ROManualReload();
 
-// Modified to allow same InventoryGroup items
-function bool HandlePickupQuery(Pickup Item)
-{
-    local int i;
-
-    // If no passed item, prevent pick up & stops checking rest of Inventory chain
-    if (Item == none)
-    {
-        return true;
-    }
-
-    // Pickup weapon is same as this weapon, so see if we can carry another
-    if (Class == Item.InventoryType && WeaponPickup(Item) != none)
-    {
-        for (i = 0; i < NUM_FIRE_MODES; ++i)
-        {
-            if (AmmoClass[i] != none && AmmoCharge[i] < MaxAmmo(i) && WeaponPickup(Item).AmmoAmount[i] > 0)
-            {
-                AddAmmo(WeaponPickup(Item).AmmoAmount[i], i);
-
-                // Need to do this here as we're going to prevent a new weapon pick up, so the pickup won't give a screen message or destroy/respawn itself
-                Item.AnnouncePickup(Pawn(Owner));
-                Item.SetRespawn();
-
-                break;
-            }
-        }
-
-        return true; // prevents pick up, as already have weapon, & stops checking rest of Inventory chain
-    }
-
-    // Didn't do any pick up for this weapon, so pass this query on to the next item in the Inventory chain
-    // If we've reached the last Inventory item, returning false will allow pick up of the weapon
-    return Inventory != none && Inventory.HandlePickupQuery(Item);
-}
-
 static function string GetInventoryName(bool bUseNativeItemNames)
 {
     if (default.VehicleClass != none)
@@ -332,6 +226,17 @@ static function string GetInventoryName(bool bUseNativeItemNames)
     }
 
     return super.GetInventoryName(bUseNativeItemNames);
+}
+
+// TODO: use state instead.
+function DropFrom(vector StartLocation)
+{
+    if (bDeploying)
+    {
+        return;
+    }
+
+    super.DropFrom(StartLocation);
 }
 
 defaultproperties
@@ -343,9 +248,7 @@ defaultproperties
     SelectAnim="Draw"
     PutDownAnim="putaway"
     DeployAnimation="Deploy"
-    DeployRadius=32.0
-    DeployAngleMaximum=0.349066
-
     AIRating=1.0
     CurrentRating=1.0
+    bCanThrow=true
 }

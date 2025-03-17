@@ -176,12 +176,12 @@ simulated function OnTeamIndexChanged()
     }
 }
 
-static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
+static function DHActorProxy.ActorProxyError GetCustomProxyError(DHConstructionProxy P)
 {
     local Actor A;
     local DHSpawnPoint SP;
     local DHConstruction C;
-    local DHConstruction.ConstructionError E;
+    local DHActorProxy.ActorProxyError E;
     local bool bFoundFriendlyDuplicate, bWithinFriendlyObjectiveDistance;
     local float ControlledObjDistanceMin, DistanceMin, Distance;
     local int i, TeamIndex, ObjectiveIndex;

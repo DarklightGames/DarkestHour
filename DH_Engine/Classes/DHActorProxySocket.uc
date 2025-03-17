@@ -12,41 +12,32 @@
 // and client independently.
 //==============================================================================
 
-class DHConstructionSocket extends DHActorProxySocket;
+class DHActorProxySocket extends Actor;
 
-var() array<class<DHConstruction> > IncludeClasses;
-var() array<class<DHConstruction> > ExcludeClasses;
+var() bool  bLimitLocalRotation;    // When true, the local rotation of the actor proxy is limited to the specified yaw range.
+var() Range LocalRotationYawRange;  // Limits the local rotation of the actor proxy attached to this hint.
 
-simulated function bool IsForConstructionClass(class<DHConstruction> ConstructionClass)
+var Actor   Occupant;               // The current actor that is occupying this socket.
+
+replication
 {
-    local int i;
-    local bool bIncluded;
+    reliable if (Role == ROLE_Authority)
+        Occupant;
+}
 
-    for (i = 0; i < IncludeClasses.Length; ++i)
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (Occupant != None)
     {
-        if (ConstructionClass == IncludeClasses[i] ||
-            ClassIsChildOf(ConstructionClass, IncludeClasses[i]))
-        {
-            bIncluded = true;
-            break;
-        }
+        Occupant.Destroy();
     }
+}
 
-    if (!bIncluded)
-    {
-        return false;
-    }
-
-    for (i = 0; i < ExcludeClasses.Length; ++i)
-    {
-        if (ConstructionClass == ExcludeClasses[i] ||
-            ClassIsChildOf(ConstructionClass, ExcludeClasses[i]))
-        {
-            return false;
-        }
-    }
-
-    return true;
+simulated function bool IsOccupied()
+{
+    return Occupant != None;
 }
 
 defaultproperties

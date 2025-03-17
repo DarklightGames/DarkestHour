@@ -7,7 +7,7 @@ class DH_EmptyFire extends ROWeaponFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Weapons.DH_EmptyAmmo'
+    AmmoClass=class'DH_Engine.DH_EmptyAmmo'
     AmmoPerFire=0
     FireRate=0.1
     RecoilRate=0.0
