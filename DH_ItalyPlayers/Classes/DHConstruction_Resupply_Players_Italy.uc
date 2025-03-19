@@ -10,4 +10,5 @@ class DHConstruction_Resupply_Players_Italy extends DHConstruction_Resupply_Play
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.ITA_ammo_box'
+    CollisionRadius=32.0
 }

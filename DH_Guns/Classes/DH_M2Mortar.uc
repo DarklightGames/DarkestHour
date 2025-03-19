@@ -17,7 +17,6 @@
 // ART
 //==============================================================================
 // [ ] re-export gun mesh and animations
-// [ ] first person firing animations
 // [ ] third person raise/lower/binoc animations
 // [ ] first person carrying animations
 // [ ] third person carrying animations
