@@ -154,7 +154,16 @@ function OnPop()
 function bool IsOptionDisabled(int OptionIndex);
 function bool ShouldHideMenu();
 function bool IsOptionHidden(int OptionIndex) { return false; } // This will only get run once when the menu is pushed onto the stack.
-function float GetOptionHoldTime(int OptionIndex) { return Options[OptionIndex].HoldTime; }
+
+function float GetOptionHoldTime(int OptionIndex)
+{
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
+    {
+        return 0.0;
+    }
+
+    return Options[OptionIndex].HoldTime;
+}
 
 function OnActive();                    // Called when a menu becomes the topmost menu on the stack
 function OnPassive();                   // Called when a menu is no longer the topmost menu on the stack

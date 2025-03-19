@@ -52,9 +52,9 @@ defaultproperties
     FiringCameraInTime=0.65
     FiringCameraOutTime=1.0
     HandsFiringCameraBone="CAMERA"
-    HandsFiringAnimName="FIRE_HANDS_60MM"
+    HandsFiringAnimName="M2MORTAR_HANDS_FIRE"
 
-    HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.MORTAR_FIRST_PERSON_HANDS'
+    HandsMesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_HANDS'
     HandsAttachBone="MUZZLE"
     HandsProjectileBone="PROJECTILE"
 

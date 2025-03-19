@@ -17,8 +17,16 @@ var()   float   FireDelaySeconds;               // The amount of time to wait in
 
 var()   name    HandsFiringCameraBone;          // The name of the bone to use for the camera while firing.
 var()   name    HandsFiringAnimName;            // The name of the firing animation on the hands mesh.
+
+var()   float   HandsFiringShowInTime;          // The amount of time to wait before showing the hands when firing.
+var()   float   HandsFiringShowOutTime;         // The amount of time to wait before hiding the hands after firing.
+
 var()   float   FiringCameraInTime;             // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
 var()   float   FiringCameraOutTime;            // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+
+var()   float   FiringCameraLocationFactor;
+var()   float   FiringCameraRotationFactor;
+
 var()   float   ProjectileLifeSpan;             // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
@@ -168,9 +176,6 @@ simulated function InitializeVehicleAndWeapon()
 
 simulated function InitializeHands()
 {
-    local DHPlayer PC;
-    local DHRoleInfo RI;
-
     if (Gun == none)
     {
         Warn("No gun found for mortar cannon pawn!");
@@ -355,26 +360,24 @@ simulated state Firing
     // Calculate the linear interpolation value for the camera position and rotation.
     simulated function float GetCameraInterpolationTheta()
     {
-        local float Theta;
-        local float FiringTimeSeconds, ZoomOutTime;
+        return class'UInterp'.static.LerpBilateral(
+            Level.TimeSeconds, 
+            FiringStartTimeSeconds, 
+            FiringStartTimeSeconds + OverlayFiringAnimDuration, 
+            FiringCameraInTime,
+            FiringCameraOutTime
+        );
+    }
 
-        FiringTimeSeconds = Level.TimeSeconds - FiringStartTimeSeconds;
-        ZoomOutTime = OverlayFiringAnimDuration - FiringCameraOutTime;
-
-        if (FiringTimeSeconds < FiringCameraInTime)
-        {
-            Theta = FiringTimeSeconds / FiringCameraInTime;
-        }
-        else if (FiringTimeSeconds > ZoomOutTime)
-        {
-            Theta = 1.0 - ((FiringTimeSeconds - ZoomOutTime) / FiringCameraOutTime);
-        }
-        else
-        {
-            Theta = 1.0;
-        }
-
-        return Theta;
+    simulated function bool GetHandsHidden()
+    {
+        return class'UInterp'.static.LerpBilateral(
+            Level.TimeSeconds, 
+            FiringStartTimeSeconds, 
+            FiringStartTimeSeconds + OverlayFiringAnimDuration, 
+            HandsFiringShowInTime,
+            HandsFiringShowOutTime
+        ) < 1.0;
     }
 
     simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
@@ -404,11 +407,11 @@ simulated state Firing
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
 
         // Hide the hands mesh if the camera is not fully in the firing position.
-        HandsActor.bHidden = Theta < 1.0;
+        HandsActor.bHidden = GetHandsHidden();
 
         ViewActor = self;
-        CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
-        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
+        CameraLocation = class'UVector'.static.VLerp(Theta * FiringCameraLocationFactor, NormalCameraLocation, FiringCameraLocation);
+        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta * FiringCameraRotationFactor));
 
         // Neutralize the roll to prevent motion sickness.
         CameraRotation.Roll = CameraRotation.Roll * (1.0 - Theta);
@@ -541,6 +544,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 defaultproperties
 {    
     bNetNotify=true
-    InitialPositionIndex=1
     HandsProjectileRollRange=2048
+    FiringCameraLocationFactor=1.0
+    FiringCameraRotationFactor=1.0
+    HandsFiringShowInTime=0.5
+    HandsFiringShowOutTime=0.5
 }

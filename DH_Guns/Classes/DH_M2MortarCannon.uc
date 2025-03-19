@@ -40,24 +40,24 @@ defaultproperties
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(1)="WP"
 
     // rename obviously
-    nProjectileDescriptions(0)="Bomba g. a. da 81"  // TODO: real names
-    nProjectileDescriptions(1)="Bomba Fumogena"
+    nProjectileDescriptions(0)="M49A2 HE"
+    nProjectileDescriptions(1)="M302 WP"
 
     PrimaryProjectileClass=class'DH_M2MortarProjectileHE'
     SecondaryProjectileClass=class'DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=2
+    InitialTertiaryAmmo=0
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
     MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
 
-    Spread=0.01
-    SecondarySpread=0.01
-    TertiarySpread=0.01
+    Spread=0.02
+    SecondarySpread=0.02
+    TertiarySpread=0.02
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE

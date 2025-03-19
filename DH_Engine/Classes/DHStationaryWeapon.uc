@@ -105,8 +105,7 @@ exec simulated function Deploy()
         bDeploying = true;
         P.bIsDeployingStationaryWeapon = true;
 
-        LockedViewRotation = P.Rotation;
-        P.SetLockViewRotation(true, LockedViewRotation); // makes the pawn lock view pitch & yaw
+        P.SetLockViewRotation(true, P.Controller.Rotation); // makes the pawn lock view pitch & yaw
     }
 }
 
@@ -115,7 +114,7 @@ simulated function bool CanDeploy(DHPawn P)
 {
     // TODO: re-add check for being stationary & crouched, with no leaning.
 
-    return ProxyCursor.ProxyError.Type == ERROR_None;
+    return ProxyCursor != none && ProxyCursor.ProxyError.Type == ERROR_None;
 }
 
 // Modified to prevent player from changing stance while he is crouched & deploying the mortar
@@ -251,4 +250,5 @@ defaultproperties
     AIRating=1.0
     CurrentRating=1.0
     bCanThrow=true
+    TraceDepthMeters=1.5
 }

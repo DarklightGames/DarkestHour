@@ -14,6 +14,7 @@ var localized string FatalText;
 var localized string CooldownText;
 var localized string BusyText;
 var localized string CannotBePickUpText;
+var localized string PlayerMovingText;
 
 var DHATGun.ERotateError RotationError;
 var DHATGun.EPickUpError PickUpError;
@@ -175,6 +176,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 case ERROR_Busy:
                     ORI.InfoText[0] = default.BusyText;
                     break;
+                case ERROR_PlayerMoving:
+                    ORI.InfoText[0] = default.PlayerMovingText;
+                    break;
                 default:
                     break;
             }
@@ -228,4 +232,5 @@ defaultproperties
     FatalText="Rotation unavailable"
     CooldownText="Wait"
     BusyText="Busy"
+    PlayerMovingText="Must be stationary"
 }

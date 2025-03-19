@@ -10,6 +10,7 @@ var DHActorProxy                    ProxyCursor;
 var class<DHActorProxyErrorMessage> ErrorMessageClass;
 var class<DHControlsMessage>        ControlsMessageClass;
 
+var() int                           LocalRotationRate;
 var() protected float               TraceDepthMeters;
 var() protected float               TraceHeightMeters;
 
@@ -17,7 +18,7 @@ simulated function DHActorProxy CreateProxyCursor();
 simulated function OnConfirmPlacement();
 simulated function bool ShouldSnapRotation();
 simulated function float GetRotationSnapAngle();
-simulated function float GetLocalRotationRate();
+simulated function float GetLocalRotationRate() { return LocalRotationRate; }
 simulated function ResetCursor();
 
 simulated function bool ShouldSwitchToLastWeaponOnPlacement()
@@ -69,11 +70,17 @@ simulated function OnTick(float DeltaTime)
 
         if (ProxyCursor.ProxyError.Type != ERROR_None)
         {
-            Instigator.ReceiveLocalizedMessage(ErrorMessageClass, int(ProxyCursor.ProxyError.Type),,, ProxyCursor);
+            if (ErrorMessageClass != none)
+            {
+                Instigator.ReceiveLocalizedMessage(ErrorMessageClass, int(ProxyCursor.ProxyError.Type),,, ProxyCursor);
+            }
         }
         else
         {
-            Instigator.ReceiveLocalizedMessage(ControlsMessageClass, 0, Instigator.PlayerReplicationInfo,, ProxyCursor);
+            if (ControlsMessageClass != none)
+            {
+                Instigator.ReceiveLocalizedMessage(ControlsMessageClass, 0, Instigator.PlayerReplicationInfo,, ProxyCursor);
+            }
         }
     }
 }
@@ -412,5 +419,6 @@ defaultproperties
     ErrorMessageClass=class'DHActorProxyErrorMessage'
     TraceDepthMeters=5.0
     TraceHeightMeters=2.0
+    LocalRotationRate=32768
 }
 

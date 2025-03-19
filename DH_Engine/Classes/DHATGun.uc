@@ -30,6 +30,7 @@ enum EPickUpError
     ERROR_Fatal,
     ERROR_TooFarAway,
     ERROR_Busy,
+    ERROR_PlayerMoving,
 };
 
 var DHPawn            RotateControllerPawn;
@@ -251,6 +252,11 @@ simulated function EPickUpError GetPickUpError(DHPawn Pawn)
     if (StationaryWeaponClass == none)
     {
         return ERROR_CannotBePickedUp;
+    }
+
+    if (Pawn.Velocity != vect(0, 0, 0))
+    {
+        return ERROR_PlayerMoving;
     }
 
     if (!Pawn.CanSwitchWeapon())

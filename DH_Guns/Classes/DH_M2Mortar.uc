@@ -4,26 +4,23 @@
 //==============================================================================
 // CODING
 //==============================================================================
-// [~] re-use & re-tool the construction/proxy weapon system for placing
-//     stationary weapons
 // [ ] add a "point to" animation driver for the arm thing
 // [ ] make smoke grenade actually WP
-// [ ] make sure you can't pick up other stationary weapons if you are currently
-//     holding one
-// [ ] proper names of shells
+// [ ] make sure you can't pick up other stationary weapons if you are currently holding one
 // [ ] when player dies on it, why is the ragdoll half into the ground?
 // [ ] tube sliding sounds in fp and tp
-// [ ] don't let the player move around while holding the pick up button
+// [ ] interrupt the pick-up interaction if error is ever not none
+// [ ] look at issue with not being able to raise on 8cm mortars (initial position issue?)
+// [ ] pickup option sometimes crashes the game (some sort of interaction bug);
+//     probably related to object holding onto actor reference. (it's the array of objects, almost certainly)
 //==============================================================================
 // ART
 //==============================================================================
-// [ ] re-export all gun animations
-// [ ] fix vis bounds
-// [ ] redo first person anims
-// [ ] add raise/lower/binoc anims for third person
-// [ ] remake collision meshes
-// [ ] destroyed mesh
-// [ ] third person attachment & animations
+// [ ] re-export gun mesh and animations
+// [ ] first person firing animations
+// [ ] third person raise/lower/binoc animations
+// [ ] first person carrying animations
+// [ ] third person carrying animations
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;
@@ -42,7 +39,7 @@ defaultproperties
     ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
 
     bUsesCodedDestroyedSkins=true
-    //DestroyedVehicleMesh=StaticMesh'DH_M2Mortar_stc.Destroyed.M2mortar_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_M2Mortar_stc.M2mortar_destroyed'
 
     VehicleHudImage=Texture'DH_M2Mortar_tex.interface.M2mortar_body'
     VehicleHudTurret=TexRotator'DH_M2Mortar_tex.interface.M2mortar_turret_rot'
