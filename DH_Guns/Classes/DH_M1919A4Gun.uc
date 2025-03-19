@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] fire/move marks hit the backside of the gun
+//==============================================================================
 
 class DH_M1919A4Gun extends DHATGun
     //abstract
@@ -29,4 +31,6 @@ defaultproperties
         KMaxAngularSpeed=0.0
     End Object
     KParams=KParams0
+    
+    StationaryWeaponClass=class'DH_M1919A4Weapon'
 }
