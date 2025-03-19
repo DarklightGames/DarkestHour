@@ -126,8 +126,8 @@ const PRONE_FROM_CROUCH_DELAY_SECONDS = 0.2;
 var float                   LastStartCrouchTime; // Stores the last time that StartCrouch was called (used for avoiding prone eye-height bug)
 
 // Smoke grenades for squad leaders
-var int RequiredSquadMembersToReceiveSmoke;
-var int RequiredSquadMembersToReceiveColoredSmoke;
+const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_SMOKE = 4; 
+const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_COLORED_SMOKE = 6;
 
 // Gun Rotation
 var     DHATGun             GunToRotate;
@@ -3311,19 +3311,13 @@ function CheckGiveSmoke()
 
     SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
 
-    // Not enough people in the squad to receive any smoke
-    if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
-    {
-        return;
-    }
-
     // Get the smoke grenade classes from the nation.
-    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeClass != none)
+    if (SquadMemberCount >= REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_SMOKE && SmokeGrenadeClass != none)
     {
         CreateInventory(string(SmokeGrenadeClass));
     }
 
-    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeClass != none)
+    if (SquadMemberCount >= REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_COLORED_SMOKE && ColoredSmokeGrenadeClass != none)
     {
         CreateInventory(string(ColoredSmokeGrenadeClass));
     }
@@ -7471,10 +7465,6 @@ defaultproperties
     DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
     CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
-
-    // Smoke grenades for squad leaders
-    RequiredSquadMembersToReceiveSmoke=4
-    RequiredSquadMembersToReceiveColoredSmoke=6
 
     // Third person player animations
     bShovelHangsOnLeftHip=true

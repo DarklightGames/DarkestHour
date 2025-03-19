@@ -830,14 +830,17 @@ function bool RenderDeviceClick(byte Btn)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
+    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
+    NoneText="None"
+
     RenderModeText(0)="Direct3D 9.0 (Recommended)"
     RenderModeText(1)="Direct3D 8.0 (Rendering Issues)"
     RenderModeText(2)="OpenGL (Unstable)"
     RenderMode(0)="D3D9Drv.D3D9RenderDevice"
     RenderMode(1)="D3DDrv.D3DRenderDevice"
     RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
-
-    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
 
     DisplayModes(0)=(Width=1024,Height=768)
     DisplayModes(1)=(Width=1280,Height=800)
@@ -855,8 +858,6 @@ defaultproperties
     DisplayModes(13)=(Width=2560,Height=1440)
     DisplayModes(14)=(Width=3440,Height=1440)
     DisplayModes(15)=(Width=3840,Height=2160)
-
-    NoneText="None"
 
     // Background for left side "Basic Rendering"
     Begin Object Class=DHGUISectionBackground Name=sbSection1

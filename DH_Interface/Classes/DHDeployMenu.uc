@@ -2510,7 +2510,7 @@ defaultproperties
     End Object
     i_Vehicle=VehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=SpawnVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=SpawnVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
@@ -2523,7 +2523,7 @@ defaultproperties
     End Object
     i_SpawnVehicle=SpawnVehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=ArtilleryVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=ArtilleryVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
@@ -2536,7 +2536,7 @@ defaultproperties
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=MaxVehiclesImageObject
+    Begin Object Class=GUIGFXButton Name=MaxVehiclesImageObject
         WinWidth=0.125
         WinHeight=0.125
         WinLeft=0.0
@@ -2560,7 +2560,7 @@ defaultproperties
     End Object
     l_MaxVehicles=MaxVehiclesLabelObject
 
-    Begin Object Class=DHGUIGFXButton Name=SupplyVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.5

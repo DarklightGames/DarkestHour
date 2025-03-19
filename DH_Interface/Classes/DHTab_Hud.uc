@@ -427,6 +427,8 @@ function InternalOnChange(GUIComponent Sender)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     Begin Object Class=DHmoCheckBox Name=GameHudSimpleColours
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9

@@ -28,8 +28,4 @@ defaultproperties
 {
     OnEnter=InternalOnEnter
     StyleName="DHEditBox"
-
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }

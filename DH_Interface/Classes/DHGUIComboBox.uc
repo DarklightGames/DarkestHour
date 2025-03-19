@@ -16,7 +16,7 @@ defaultproperties
         OnKeyEvent=EditBox1.InternalOnKeyEvent
     End Object
     Edit=EditBox1
-    Begin Object Class=DHGUIComboButton Name=ShowList
+    Begin Object Class=GUIComboButton Name=ShowList
         StyleName="DHGripButton"
         RenderWeight=0.6
         bNeverScale=true
@@ -33,8 +33,5 @@ defaultproperties
         bNeverScale=true
     End Object
     MyListBox=ListBox1
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
     OnKeyEvent=DHGUIComboBox.InternalOnKeyEvent
 }

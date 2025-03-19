@@ -62,6 +62,8 @@ function SaveSettings()
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     Begin Object Class=DHGUISectionBackground Name=AudioBK1
         Caption="Sound System"
         WinTop=0.1

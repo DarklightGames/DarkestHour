@@ -32,7 +32,7 @@ var()   float   ProjectileLifeSpan;             // The life span of the projecti
 // First person hands.
 var     DHFirstPersonHands  HandsActor;                 // The first person hands actor.
 var     Mesh                HandsMesh;                  // The first person hands mesh.
-var     DHDecoAttachment    HandsProjectile;            // The first person projectile.
+var     DHDecoAttachment    HandsProjectile;            // The first person projectile actor.
 var     int                 HandsProjectileRollRange;   // The maximum amount of roll deviation for the first person projectile actor.
 
 var()   Vector              HandsRelativeLocation;  // The location of the hands in actor relation to it's attachment bone.

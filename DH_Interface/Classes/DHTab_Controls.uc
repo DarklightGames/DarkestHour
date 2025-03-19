@@ -248,6 +248,8 @@ function SetUpProfileControls(int Index)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     SectionStyleName="DHListSection"
     PanelCaption="Controls"
 
