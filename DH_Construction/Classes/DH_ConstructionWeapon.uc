@@ -120,11 +120,6 @@ simulated function float GetRotationSnapAngle()
     return ConstructionClass.default.RotationSnapAngle;
 }
 
-simulated function float GetLocalRotationRate()
-{
-    return ConstructionClass.default.LocalRotationRate;
-}
-
 function DHConstruction ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
 {
     local DHConstruction C;
@@ -237,6 +232,16 @@ function bool IsSocketValid(DHActorProxySocket Socket)
     CS = DHConstructionSocket(Socket);
 
     return CS != none && CS.IsForConstructionClass(ConstructionClass);
+}
+
+simulated function float GetTraceDepthMeters()
+{
+    return ConstructionClass.default.ProxyTraceDepthMeters;
+}
+
+simulated function bool GetTraceHeightMeters()
+{
+    return ConstructionClass.default.ProxyTraceHeightMeters;
 }
 
 defaultproperties
