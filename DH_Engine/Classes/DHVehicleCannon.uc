@@ -109,6 +109,9 @@ var() array<SGunWheel> GunWheels;
 var int                 OldTotalRoundsRemaining;
 var int                 TotalRoundsRemaining;
 
+// Resupply
+var     int             MainAmmoResupplyPerInterval;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -912,32 +915,55 @@ function bool GiveInitialAmmo()
     return false;
 }
 
+simulated function int GetMaxAmmo(int AmmoIndex)
+{
+    switch (AmmoIndex)
+    {
+        case 0:
+            return MaxPrimaryAmmo;
+        case 1:
+            return MaxSecondaryAmmo;
+        case 2:
+            return MaxTertiaryAmmo;
+        default:
+            return 0;
+    }
+}
+
+simulated function bool HasMaxAmmo()
+{
+    return MainAmmoChargeExtra[0] == MaxPrimaryAmmo && MainAmmoChargeExtra[1] == MaxSecondaryAmmo && MainAmmoChargeExtra[2] == MaxTertiaryAmmo;
+}
+
 // Modified to incrementally resupply all extended ammo types (only resupplies spare rounds & mags; doesn't reload the weapons)
 function bool ResupplyAmmo()
 {
+    local int i;
     local bool bDidResupply;
+    local int MainAmmoResupplyCount;
+
+    // How many main ammo resupply rounds we have left to distribute this interval.
+    MainAmmoResupplyCount = MainAmmoResupplyPerInterval;
 
     if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
         if (!bUsesMags)
         {
-            if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
+            // Iterate over each ammo type sequentially, incrementing each by one
+            // until we run out of rounds to resupply or all ammo types are full.
+            do
             {
-                ++MainAmmoChargeExtra[0];
-                bDidResupply = true;
+                for (i = 0; i < arraycount(MainAmmoChargeExtra); ++i)
+                {
+                    if (MainAmmoResupplyCount > 0 && MainAmmoChargeExtra[i] < GetMaxAmmo(i))
+                    {
+                        ++MainAmmoChargeExtra[i];
+                        --MainAmmoResupplyCount;
+                        bDidResupply = true;
+                    }
+                }
             }
-
-            if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
-            {
-                ++MainAmmoChargeExtra[1];
-                bDidResupply = true;
-            }
-
-            if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
-            {
-                ++MainAmmoChargeExtra[2];
-                bDidResupply = true;
-            }
+            until (MainAmmoResupplyCount == 0 || HasMaxAmmo());
 
             // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
             if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
@@ -2319,9 +2345,11 @@ defaultproperties
     ShakeOffsetRate=(X=0.0,Y=0.0,Z=100.0)
     ShakeOffsetTime=10.0
 
+    ShootAnimChannel=1
+
+    MainAmmoResupplyPerInterval=3
+
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bDoOffsetTrace=false
     bAmbientAltFireSound=true
-
-    ShootAnimChannel=1
 }
