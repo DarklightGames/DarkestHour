@@ -239,7 +239,7 @@ simulated function float GetTraceDepthMeters()
     return ConstructionClass.default.ProxyTraceDepthMeters;
 }
 
-simulated function bool GetTraceHeightMeters()
+simulated function float GetTraceHeightMeters()
 {
     return ConstructionClass.default.ProxyTraceHeightMeters;
 }
