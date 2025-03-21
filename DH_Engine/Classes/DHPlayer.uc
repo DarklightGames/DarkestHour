@@ -6499,13 +6499,14 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     local Actor HitActor;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    P = DHPawn(Pawn);
 
     if (PRI == none)
     {
         return false;
     }
 
-    if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    if (P != none && P.GunToRotate != none)
     {
         return false;
     }
@@ -6515,6 +6516,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
     foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
+        // If the actor we hit is a vehicle collision actor, set the hit actor to the base vehicle.
+        if (HitActor.IsA('DHCollisionMeshActor'))
+        {
+            HitActor = DHCollisionMeshActor(HitActor).GetBaseVehicle();
+        }
+
         if (HitActor.IsA('DHRadio'))
         {
             Radio = DHRadio(HitActor);
@@ -6530,7 +6537,6 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         else if (HitActor.IsA('DHATGun'))
         {
             Gun = DHATGun(HitActor);
-            P = DHPawn(Pawn);
 
             if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway && !Gun.bVehicleDestroyed)
             {

@@ -6,13 +6,14 @@
 //==============================================================================
 // [ ] add a "point to" animation driver for the arm thing
 // [ ] make smoke grenade actually WP
-// [ ] make sure you can't pick up other stationary weapons if you are currently holding one
-// [ ] when player dies on it, why is the ragdoll half into the ground?
-// [ ] tube sliding sounds in fp and tp
-// [ ] interrupt the pick-up interaction if error is ever not none
-// [ ] look at issue with not being able to raise on 8cm mortars (initial position issue?)
+// [~] make sure you can't pick up other stationary weapons if you are currently
+//     holding one (currently working accidentially because of not being able to
+//     switch weapons while holding one)
 // [ ] pickup option sometimes crashes the game (some sort of interaction bug);
-//     probably related to object holding onto actor reference. (it's the array of objects, almost certainly)
+//     probably related to object holding onto actor reference. (it's the array
+//     of objects, almost certainly)
+// [ ] add animation + sound for long-hold actions in command menu
+// [ ] when a player runs out of ammo, prompt them to press X to change round type.
 //==============================================================================
 // ART
 //==============================================================================
@@ -20,6 +21,24 @@
 // [ ] third person raise/lower/binoc animations
 // [ ] first person carrying animations
 // [ ] third person carrying animations
+// [ ] pickup mesh (muzzle cover?)
+//==============================================================================
+// AUDIO
+//==============================================================================
+// [ ] sound for when stationary weapon is deployed
+// [ ] no distant sound for 60mm explosion?
+// [ ] replace firing sound with the old one
+//==============================================================================
+// BUGS
+//==============================================================================
+// [ ] can circumvent force switch behavior by picking up the weapon while
+//     unable to switch weapons (i.e. while reloading)
+// [ ] some sort of bug happening when the player gets into a bad state when
+//     interacting with the pickups (slows down, can't switch weapons etc.)
+// [ ] when player dies on it, why is the ragdoll half into the ground?
+// [ ] can get into the "rotating" state without the rotating weapon, leaving a
+//     permanent rotating decal under the gun. (seems to just be trying to 
+//     switch weapons fsr)
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;

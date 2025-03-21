@@ -9,6 +9,6 @@ defaultproperties
 {
     InventoryType=class'DH_M2MortarWeapon'
     // TODO: not static mesh, use normal mesh in fun pose.
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BAR'
+    StaticMesh=StaticMesh'DH_M2Mortar_stc.M2MORTAR_PICKUP'
 }
 

@@ -41,7 +41,6 @@ var     bool    bSnapRotation;
 var     int     RotationSnapAngle;
 var     Rotator StartRotationMin;
 var     Rotator StartRotationMax;
-var     int     LocalRotationRate;
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
@@ -1365,20 +1364,6 @@ simulated function DHActorProxy.Context GetContext()
     return Context;
 }
 
-static function DHActorProxy.Context ContextFromPlayerController(DHPlayer PC)
-{
-    local DHActorProxy.Context Context;
-
-    if (PC != none)
-    {
-        Context.TeamIndex = PC.GetTeamNum();
-        Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
-        Context.PlayerController = PC;
-    }
-
-    return Context;
-}
-
 // This is used to return a custom error that is class specific for specialized
 // placement logic. By default this simply returns no error.
 static function DHActorProxy.ActorProxyError GetCustomProxyError(DHConstructionProxy P)
@@ -1474,8 +1459,6 @@ defaultproperties
     // Stagnation
     bCanDieOfStagnation=true
     StagnationLifespan=300
-
-    LocalRotationRate=32768
 
     // Death
     BrokenLifespan=15.0

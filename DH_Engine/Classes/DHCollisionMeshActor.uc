@@ -154,6 +154,16 @@ simulated function ToggleVisible()
     }
 }
 
+simulated function Vehicle GetBaseVehicle()
+{
+    if (Owner != none)
+    {
+        return Vehicle(Owner.Base);
+    }
+
+    return none;
+}
+
 // New debug helper function to hide or re-show the owning actor
 // Can't simply set owner as DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player, so we skin with an alpha transparency texture
 simulated function HideOwner(bool bHide)

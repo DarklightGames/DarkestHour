@@ -29,42 +29,40 @@ defaultproperties
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
 
     // Turret movement
-    ManualRotationsPerSecond=0.0125
     MaxPositiveYaw=1274.0    // +/- 7 degrees
     MaxNegativeYaw=-1274.0
     YawStartConstraint=-1274.0
     YawEndConstraint=1274.0
     CustomPitchUpLimit=8190     // 40-85 degrees
     CustomPitchDownLimit=65535
-    RotationsPerSecond=0.0125
+    ManualRotationsPerSecond=0.015
+    RotationsPerSecond=0.015
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="WP"
-
-    // rename obviously
     nProjectileDescriptions(0)="M49A2 HE"
     nProjectileDescriptions(1)="M302 WP"
 
     PrimaryProjectileClass=class'DH_M2MortarProjectileHE'
     SecondaryProjectileClass=class'DH_M2MortarProjectileSmoke'
-    InitialPrimaryAmmo=28
-    InitialSecondaryAmmo=5
+    InitialPrimaryAmmo=24
+    InitialSecondaryAmmo=4
     InitialTertiaryAmmo=0
-    MaxPrimaryAmmo=28
-    MaxSecondaryAmmo=5
-    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=4
+    MaxTertiaryAmmo=0
 
-    Spread=0.02
-    SecondarySpread=0.02
-    TertiarySpread=0.02
+    Spread=0.0125
+    SecondarySpread=0.0125
+    TertiarySpread=0.0125
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
     AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    // TODO: use 60mm mortar sounds, or just make new ones
+    // TODO: use 60mm mortar sounds, or just make new ones??
     CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
     CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
     CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
