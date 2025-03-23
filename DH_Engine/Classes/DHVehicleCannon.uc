@@ -1178,7 +1178,7 @@ simulated function AttemptReload()
 
         // If we don't have any ammo of the pending type, try to automatically switch to another ammo type (unless player reloads & switches manually)
         // Note if server changes ammo, client's pending type gets matched in PostNetReceive() on receiving new ProjectileClass, so no need to replicate pending ammo directly
-        if (!HasAmmoToReload(ServerPendingAmmoIndex) && !PlayerUsesManualReloading() && ShouldSwitchToNextAmmoTypeWhenEmpty())
+        if (!HasAmmoToReload(ServerPendingAmmoIndex) && !PlayerUsesManualReloading())
         {
             for (i = 0; i < 3; ++i)
             {
@@ -1506,13 +1506,6 @@ simulated function bool HasAmmoToReload(byte AmmoIndex)
 simulated function bool PlayerUsesManualReloading()
 {
     return Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading;
-}
-
-// When true, when the player tries to reload the cannon and the current ammo type is empty,
-// the cannon will automatically switch to the next available ammo type.
-simulated function bool ShouldSwitchToNextAmmoTypeWhenEmpty()
-{
-    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

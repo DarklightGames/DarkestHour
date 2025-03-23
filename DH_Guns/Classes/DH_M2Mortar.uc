@@ -13,7 +13,8 @@
 //     probably related to object holding onto actor reference. (it's the array
 //     of objects, almost certainly)
 // [ ] add animation + sound for long-hold actions in command menu
-// [ ] when a player runs out of ammo, prompt them to press X to change round type.
+// [ ] when a player runs out of ammo, prompt them to press X to change round
+//     type.
 //==============================================================================
 // ART
 //==============================================================================
@@ -55,15 +56,11 @@ defaultproperties
     // Reversed because the gunner uses index 1.
     ExitPositions(0)=(X=-50.00,Y=35.0,Z=20)
     ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
-
     bUsesCodedDestroyedSkins=true
     DestroyedVehicleMesh=StaticMesh'DH_M2Mortar_stc.M2mortar_destroyed'
-
     VehicleHudImage=Texture'DH_M2Mortar_tex.interface.M2mortar_body'
     VehicleHudTurret=TexRotator'DH_M2Mortar_tex.interface.M2mortar_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_M2Mortar_tex.interface.M2mortar_turret_look'
-
     DestructionEffectOffset=(Z=-60)
-
     StationaryWeaponClass=class'DH_M2MortarWeapon'
 }

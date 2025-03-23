@@ -221,6 +221,12 @@ simulated function UpdateErrors()
     }
 }
 
+public function bool ShouldHideMenu()
+{
+    // TODO: close this if we are too far away for any interaction.
+    return false;
+}
+
 defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')

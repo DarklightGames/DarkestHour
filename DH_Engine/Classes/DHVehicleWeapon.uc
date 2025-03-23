@@ -426,13 +426,20 @@ event bool AttemptFire(Controller C, bool bAltFire)
             ReloadState = RL_Waiting; // player reloads manually, so just wait for key press
             PassReloadStateToClient();
         }
-        else
+        else if (ShouldSwitchToNextAmmoTypeWhenEmpty())
         {
             AttemptReload();
         }
     }
 
     return true;
+}
+
+// When true, when the player tries to reload the cannon and the current ammo type is empty,
+// the cannon will automatically switch to the next available ammo type.
+simulated function bool ShouldSwitchToNextAmmoTypeWhenEmpty()
+{
+    return false;
 }
 
 // Fire functions moved out of state 'ProjectileFireMode', which is deprecated as unnecessary in DH
