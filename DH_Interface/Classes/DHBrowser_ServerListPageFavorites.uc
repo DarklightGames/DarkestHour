@@ -35,11 +35,11 @@ defaultproperties
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
     DetailSplitterPosition=0.465621
 
-    Begin Object Class=ROGUIContextMenu Name=FavoritesContextMenu
+    Begin Object Class=DHGUIContextMenu Name=FavoritesContextMenu
         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
     End Object
-    ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    ContextMenu=DHGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
 
     bStandardized=true
     StandardHeight=0.8
