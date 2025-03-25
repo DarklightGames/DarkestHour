@@ -34,21 +34,21 @@ defaultproperties
     // STAND
 
     PA_IdleDeployedAnim="stand_idleiron_breda"
-    PA_IdleIronRestAnim="stand_idlerest_breda"
+    PA_IdleIronRestAnim="stand_idlehip_breda"
     PA_IdleIronWeaponAnim="stand_idlehip_breda"
 
     PA_StandWeaponDeployAnim="stand_idleiron_breda"
     PA_StandWeaponUnDeployAnim="stand_idlehip_breda"
     PA_DeployedFire="stand_shootiron_breda"
 
-    PA_IdleRestAnim="stand_idlerest_breda"
+    PA_IdleRestAnim="stand_idlehip_breda"
     PA_IdleWeaponAnim="stand_idlehip_breda"
 
     PA_Fire="stand_shoothip_breda"
     PA_IronFire="stand_shoothip_breda"
 
-    PA_TurnRightAnim="stand_turnRrest_breda"
-    PA_TurnLeftAnim="stand_turnLrest_breda"
+    PA_TurnRightAnim="stand_turnRhip_breda"
+    PA_TurnLeftAnim="stand_turnLhip_breda"
     PA_TurnIronRightAnim="stand_turnRhip_breda"
     PA_TurnIronLeftAnim="stand_turnLhip_breda"
 
