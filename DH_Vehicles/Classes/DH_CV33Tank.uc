@@ -56,10 +56,10 @@ defaultproperties
     WheelLatFrictionScale=3.0
 
     // Damage
-    Health=250.0
-    HealthMax=250.0
+    Health=250
+    HealthMax=250
     DamagedEffectHealthFireFactor=0.1
-    EngineHealth=150.0
+    EngineHealth=100
     EngineDamageFromGrenadeModifier=0.05
     DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
