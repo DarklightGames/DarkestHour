@@ -121,7 +121,7 @@ defaultproperties
     PanelCaption(2)="Internet"
 
     WelcomeMessageText="Welcome to Darkest Hour: Europe '44-'45! Be sure to join the 5000+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
-    WelcomeMessageDiscordButtonText="Join Discord!"
+    WelcomeMessageDiscordButtonText="Join Discord"
     WelcomeMessagePlayButtonText="Just play!"
     OnOpen=InternalOnOpen
 }
