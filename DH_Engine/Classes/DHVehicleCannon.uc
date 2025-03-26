@@ -932,7 +932,7 @@ simulated function int GetMaxAmmo(int AmmoIndex)
 
 simulated function bool HasMaxAmmo()
 {
-    return MainAmmoChargeExtra[0] == MaxPrimaryAmmo && MainAmmoChargeExtra[1] == MaxSecondaryAmmo && MainAmmoChargeExtra[2] == MaxTertiaryAmmo;
+    return MainAmmoChargeExtra[0] >= MaxPrimaryAmmo && MainAmmoChargeExtra[1] >= MaxSecondaryAmmo && MainAmmoChargeExtra[2] >= MaxTertiaryAmmo;
 }
 
 // Modified to incrementally resupply all extended ammo types (only resupplies spare rounds & mags; doesn't reload the weapons)
