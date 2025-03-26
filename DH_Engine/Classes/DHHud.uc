@@ -212,7 +212,7 @@ function DrawDebugInformation(Canvas C)
     const MARGIN = 4.0;
 
     C.Style = ERenderStyle.STY_Alpha;
-    C.Font = GetTinyFont(C);
+    C.Font = GetConsoleFont(C);
     C.DrawColor = WhiteColor;
 
     S = default.PrereleaseDisclaimerText;
@@ -581,49 +581,49 @@ function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMes
 // Font functions.
 static function Font GetMediumFontFor(Canvas C)
 {
-    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 function Font GetFontSizeIndex(Canvas C, int FontSize)
 {
     // FontSize always seems to be passed in as a NEGATIVE value.
-    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetPlayerNameFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetConsoleFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetTinyFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHSmallFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHSmallFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetLargeMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetSmallMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetSmallerMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 function Font GetCriticalMsgFontSizeIndex(Canvas C, int FontSize)
 {
     // TODO: Index is irrelevant here (although we probably want an offset here because we want it kinda big).
-    return class'DHFonts'.static.GetDHConsoleFontByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHConsoleFontByResolution(C.ClipX, C.ClipY);
 }
 
 // This is more or less just a re-stating of the ROHud function with a couple of
@@ -1444,7 +1444,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
                 PlayerNumberText.Text = string(i + 1);
 
-                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipY);
+                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
 
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
@@ -1498,7 +1498,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
                 PlayerNumberText.text = string(i + 1);
-                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipY);
+                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
         }
@@ -4001,7 +4001,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
     }
     
     // Set the font to be used to draw player icons.
-    C.Font = class'DHFonts'.static.GetDHTinyFontByResolution(C.ClipY);
+    C.Font = class'DHFonts'.static.GetDHTinyFontByResolution(C.ClipX, C.ClipY);
 
     // Draw other squad leaders on map
     if (PRI.IsSLorASL() || PRI.IsRadioman())
