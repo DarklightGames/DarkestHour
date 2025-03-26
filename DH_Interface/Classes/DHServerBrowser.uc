@@ -5,8 +5,10 @@
 
 class DHServerBrowser extends ROUT2k4ServerBrowser;
 
-var     config bool             bDidShowBetaMessage;
-var     localized string        BetaMessageText;
+var     config bool             bDidShowWelcomeMessage;
+var     localized string        WelcomeMessageText;
+var     localized string        WelcomeMessageDiscordButtonText;
+var     localized string        WelcomeMessagePlayButtonText;
 
 function CreateTabs()
 {
@@ -20,15 +22,15 @@ function InternalOnOpen()
 {
     local GUIQuestionPage QP;
 
-    if (!bDidShowBetaMessage)
+    if (!bDidShowWelcomeMessage)
     {
-        QP = Controller.ShowQuestionDialog(default.BetaMessageText, QBTN_OkCancel, QBTN_OK);
+        QP = Controller.ShowQuestionDialog(default.WelcomeMessageText, QBTN_OkCancel, QBTN_OK);
         QP.OnButtonClick = InternalOnButtonClick;
-        QP.ButtonNames[0] = "Join Discord";
-        QP.ButtonNames[1] = "Just play!";
-        QP.SetupQuestion(default.BetaMessageText, QBTN_OkCancel, QBTN_OK, true);
+        QP.ButtonNames[0] = WelcomeMessageDiscordButtonText;
+        QP.ButtonNames[1] = WelcomeMessagePlayButtonText;
+        QP.SetupQuestion(default.WelcomeMessageText, QBTN_OkCancel, QBTN_OK, true);
 
-        bDidShowBetaMessage = true;
+        bDidShowWelcomeMessage = true;
         SaveConfig();
     }
 }
@@ -118,7 +120,9 @@ defaultproperties
     PanelCaption(1)="LAN"
     PanelCaption(2)="Internet"
 
-    BetaMessageText="Welcome to the Darkest Hour: Europe '44-'45 live beta! Be sure to join the 500+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
+    WelcomeMessageText="Welcome to the Darkest Hour: Europe '44-'45! Be sure to join the 5000+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
+    WelcomeMessageDiscordButtonText="Join Discord!"
+    WelcomeMessagePlayButtonText="Just play!"
     OnOpen=InternalOnOpen
 }
 
