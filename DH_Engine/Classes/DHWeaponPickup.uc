@@ -218,7 +218,7 @@ simulated event NotifySelected(Pawn User)
 defaultproperties
 {
     DrawType=DT_StaticMesh
-    AmbientGlow=64
+    bAmbientGlow=false
     PickupMessage="You got the {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
