@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHCommandMenu_ATGun extends DHCommandMenu
+class DHCommandMenu_StationaryWeapon extends DHCommandMenu
     dependson(DHATGun);
 
 var localized string EnemyGunText;
