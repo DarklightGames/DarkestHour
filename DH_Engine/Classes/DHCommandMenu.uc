@@ -8,15 +8,15 @@ class DHCommandMenu extends Object
 
 const MAX_LABELS = 3;
 
-var color SpottingMarkerDisabledColor;
-var color SpottingMarkerEnabledColor;
+var Color SpottingMarkerDisabledColor;
+var Color SpottingMarkerEnabledColor;
 
 struct OptionRenderInfo
 {
     var string      OptionName;
     var string      InfoText[MAX_LABELS];
     var Material    InfoIcon;
-    var color       InfoColor;
+    var Color       InfoColor;
     var string      DescriptionText;
 };
 
@@ -30,7 +30,8 @@ struct Option
     var Object OptionalObject;
     var Color IconColor;    // If unspecified, will default to white.
     var int OptionalInteger;
-    var float HoldTime; // If non-zero, the amount of time the player must hold the button to select this option.
+    var float HoldTime;     // If non-zero, the amount of time the player must hold the button to select this option.
+    var Sound HoldSound;    // Sound to play when the player holds the button down for this option.
 };
 
 var array<Option> Options;
@@ -163,6 +164,16 @@ function float GetOptionHoldTime(int OptionIndex)
     }
 
     return Options[OptionIndex].HoldTime;
+}
+
+function Sound GetOptionHoldSound(int OptionIndex)
+{
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
+    {
+        return none;
+    }
+
+    return Options[OptionIndex].HoldSound;
 }
 
 function OnActive();                    // Called when a menu becomes the topmost menu on the stack

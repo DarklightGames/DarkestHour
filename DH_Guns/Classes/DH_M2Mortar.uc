@@ -12,32 +12,35 @@
 // [ ] pickup option sometimes crashes the game (some sort of interaction bug);
 //     probably related to object holding onto actor reference. (it's the array
 //     of objects, almost certainly)
-// [ ] add animation + sound for long-hold actions in command menu
 // [ ] when a player runs out of ammo, prompt them to press X to change round
 //     type.
+// [ ] allow resupply while holding (needs custom resupply logic for saved state)
 //==============================================================================
 // ART
 //==============================================================================
 // [ ] third person raise/lower/binoc animations
-// [ ] first person carrying animations
 // [ ] third person carrying animations
+// [ ] re-export FP mesh without sight
+// [ ] add tube sliding sounds to the firing anims (fp and tp)
 //==============================================================================
 // AUDIO
 //==============================================================================
-// [ ] sound for when stationary weapon is deployed
 // [ ] no distant sound for 60mm explosion?
-// [ ] replace firing sound with the old one
+// [ ] replace firing sound to distinguish from the 8cm
 //==============================================================================
 // BUGS
 //==============================================================================
+// [ ] clicking after all HE has been fired doesn't swap to new ammo type
 // [ ] can circumvent force switch behavior by picking up the weapon while
 //     unable to switch weapons (i.e. while reloading)
 // [ ] some sort of bug happening when the player gets into a bad state when
 //     interacting with the pickups (slows down, can't switch weapons etc.)
-// [ ] when player dies on it, why is the ragdoll half into the ground?
 // [ ] can get into the "rotating" state without the rotating weapon, leaving a
 //     permanent rotating decal under the gun. (seems to just be trying to 
 //     switch weapons fsr)
+// [ ] can deploy while doing first draw, due to fucky AnimEnd thing, it
+//     doesn't play the deploy animation. use STATES
+// [ ] when player dies on it, why is the ragdoll half into the ground?
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;

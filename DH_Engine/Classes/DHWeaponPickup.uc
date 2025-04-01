@@ -219,6 +219,7 @@ defaultproperties
 {
     DrawType=DT_StaticMesh
     bAmbientGlow=false
+    AmbientGlow=64
     PickupMessage="You got the {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0

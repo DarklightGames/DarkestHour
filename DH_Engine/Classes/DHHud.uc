@@ -136,7 +136,6 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
-var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
 var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
@@ -1431,7 +1430,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && Passenger == none)
+                if (Passenger == none)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
@@ -1486,7 +1485,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+                if (WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -4257,6 +4256,7 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
+    local DHWeapon DHW;
     local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
@@ -4314,13 +4314,28 @@ function UpdateHud()
 
         if (W != none)
         {
-            if (W.AmmoClass[0] != none)
+            DHW = DHWeapon(W);
+
+            if (DHW != none)
             {
-                AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
+                AmmoIcon.WidgetTexture = DHW.GetHudAmmoIconMaterial();
             }
             else
             {
-                AmmoIcon.WidgetTexture = none;
+                if (W.AmmoClass[0] != none)
+                {
+                    AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
+                }
+                else
+                {
+                    AmmoIcon.WidgetTexture = none;
+                }
+            }
+
+            if (AmmoIcon.WidgetTexture != none)
+            {
+                AmmoIcon.TextureCoords.X2 = AmmoIcon.WidgetTexture.MaterialUSize() - 1;
+                AmmoIcon.TextureCoords.Y2 = AmmoIcon.WidgetTexture.MaterialVSize() - 1;
             }
 
             AmmoCount.Value = W.GetHudAmmoCount();
@@ -5992,8 +6007,6 @@ defaultproperties
     MessageFontOffset=0
     bShowIndicators=true
     MinPromptPacketLoss=10
-
-    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true

@@ -31,7 +31,7 @@ function Inventory SpawnCopy(Pawn Other)
 
     if (StationaryWeapon != none)
     {
-        StationaryWeapon.VehicleState = VehicleState;
+        StationaryWeapon.SetVehicleState(VehicleState);
     }
 
     return Copy;
@@ -48,7 +48,7 @@ function InitDroppedPickupFor(Inventory Inv)
 
     if (StationaryWeapon != none)
     {
-        VehicleState = StationaryWeapon.VehicleState;
+        VehicleState = StationaryWeapon.GetVehicleState();
     }
 
     if (MapIconAttachment != none)

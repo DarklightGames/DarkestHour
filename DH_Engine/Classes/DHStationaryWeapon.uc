@@ -9,18 +9,77 @@
 class DHStationaryWeapon extends DHActorProxyWeapon
     abstract;
 
-var     class<DHVehicle>    VehicleClass;
-var     DHVehicleState      VehicleState;
+var         class<DHVehicle>    VehicleClass;
+var private DHVehicleState      VehicleState;
+
+var()       Material            HudAmmoIconMaterial;
 
 // Deploying
 var     bool    bDeploying;
-var     name    DeployAnimation;
+var()   name    DeployAnimation;
+
+var()   int     HudAmmoCount;
 
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerDeployEnd;
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        HudAmmoCount;
+}
+
+function DHVehicleState GetVehicleState()
+{
+    return VehicleState;
+}
+
+function SetVehicleState(DHVehicleState State)
+{
+    VehicleState = State;
+
+    if (VehicleState == none)
+    {
+        return;
+    }
+
+    UpdateHudAmmoCount();
+}
+
+function UpdateHudAmmoCount()
+{
+    if (VehicleState != none)
+    {
+        HudAmmoCount = VehicleState.GetTotalMainAmmoCharges();
+    }
+    else
+    {
+        HudAmmoCount = 0;
+    }
+}
+
+public function bool ResupplyAmmo()
+{
+    local bool bResult;
+    
+    bResult = super.ResupplyAmmo();
+
+    // TODO: how to handle resupplying while being held? we need the same rules
+    //  as vehicles, but I don't want to just duplicate the logic.
+    UpdateHudAmmoCount();
+
+    return false;
+}
+
+// Modified so HUD shows ammo count in the current vehicle state.
+simulated function int GetHudAmmoCount()
+{
+    return HudAmmoCount;
+}
+
+simulated function Material GetHudAmmoIconMaterial()
+{
+    return HudAmmoIconMaterial;
 }
 
 simulated function DHActorProxy CreateProxyCursor()
@@ -64,11 +123,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 // Functions always returning false as carried mortar is too heavy & bulky to put away, or to sprint, crawl, or mantle with
 simulated function bool WeaponCanSwitch()
-{
-    return false;
-}
-
-simulated function bool WeaponAllowSprint()
 {
     return false;
 }
@@ -244,9 +298,13 @@ defaultproperties
     Priority=99 // super high value so this weapon is always ranked as best/preferred weapon to bring up
     bCanSway=false
     bCanResupplyWhenEmpty=false
-    SelectAnim="Draw"
+    SelectAnim="draw"
     PutDownAnim="putaway"
-    DeployAnimation="Deploy"
+    DeployAnimation="deploy"
+    SprintStartAnim="sprint_start"
+    SprintEndAnim="sprint_end"
+    SprintLoopAnim="sprint_loop"
+    bUsesFreeAim=true
     AIRating=1.0
     CurrentRating=1.0
     bCanThrow=true

@@ -38,7 +38,7 @@ function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
 
     if (StationaryWeapon != none)
     {
-        StationaryWeapon.VehicleState = Gun.GetVehicleState();
+        StationaryWeapon.SetVehicleState(Gun.GetVehicleState());
     }
 
     Gun.Destroy();
@@ -230,7 +230,7 @@ public function bool ShouldHideMenu()
 defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
-    Options(1)=(ActionText="Pick Up",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=3.0)
+    Options(1)=(ActionText="Pick Up",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup')
     EnemyGunText="Cannot rotate an enemy gun"
     CannotBePickUpText="Cannot be picked up"
     CannotBeRotatedText="Cannot be rotated"

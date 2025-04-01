@@ -21,13 +21,16 @@ var Vector              Cursor;
 var int                 SelectedIndex;
 
 const MAX_OPTIONS = 8;
+const MAX_PROGRESS_SEGMENTS = 8;
 
 // This is necessary because trying to DrawTile on identical TexRotators
 // and other procedural materials in the same frame ends up only drawing one
 // of them (probably due to engine-level render batching).
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
+var TexRotator          ProgressWheelTexRotators[MAX_PROGRESS_SEGMENTS];
 var Texture             RingTexture;
+var Texture             ProgressSegmentTexture;
 
 var Color               SelectedColor;
 var Color               DisabledColor;
@@ -48,7 +51,8 @@ var Material            CrosshairMaterial;
 var bool                bDebugCursor;
 
 var bool                bIsHolding;         // Whether or not the player is holding the button to select the option.
-var float               HoldTimeRemaining;  // Number of seconds remaining to hold the button to select the option.
+var float               HoldTimeStart;      // When the button was first pressed.
+var float               HoldTimeEnd;        // When the hold time ends.
 var Vector              HoldHitLocation;    // The location of the hit when the button was held.
 var Vector              HoldHitNormal;      // The normal of the hit when the button was held.
 
@@ -107,6 +111,24 @@ function CreateOptionTexRotators(DHCommandMenu Menu)
     }
 }
 
+function CreateProgressWheelMaterials()
+{
+    local int i;
+    local TexRotator TR;
+
+    for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
+    {
+        TR = new class'Engine.TexRotator';
+        TR.Rotation.Yaw = -(i * (65536 / MAX_PROGRESS_SEGMENTS)) + ((0.5 / MAX_PROGRESS_SEGMENTS) * 65536);
+        TR.Material = ProgressSegmentTexture;
+        TR.TexRotationType = TR_FixedRotation;
+        TR.UOffset = TR.Material.MaterialUSize() / 2;
+        TR.VOffset = TR.Material.MaterialVSize() / 2;
+
+        ProgressWheelTexRotators[i] = TR;
+    }
+}
+
 // Pushes a new menu onto the top of the stack to be displayed immediately.
 // Allows the specification of an optional object to attach to the menu.
 function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject, optional int OptionalInteger)
@@ -137,6 +159,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     }
 
     CreateOptionTexRotators(Menu);
+    CreateProgressWheelMaterials();
 
     Menus.Push(Menu);
     Menu.OnPush();
@@ -311,10 +334,7 @@ function Tick(float DeltaTime)
         }
         else
         {
-            // Update the hold time remaining.
-            HoldTimeRemaining -= DeltaTime;
-
-            if (HoldTimeRemaining <= 0.0)
+            if (HoldTimeEnd - ViewportOwner.Actor.Level.TimeSeconds <= 0.0)
             {
                 // Perform the action.
                 bIsHolding = false;
@@ -347,6 +367,7 @@ function PostRender(Canvas C)
     local DHCommandMenu Menu;
     local bool bIsOptionDisabled;
     local DHCommandMenu.OptionRenderInfo ORI;
+    local float HoldProgressTheta;
 
     if (C == none)
     {
@@ -398,7 +419,7 @@ function PostRender(Canvas C)
 
             if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
             else
             {
@@ -453,7 +474,7 @@ function PostRender(Canvas C)
         Theta += ArcLength;
     }
 
-    // Display text of selection
+    // Display text of selection.
     if (SelectedIndex >= 0)
     {
         Menu.GetOptionRenderInfo(SelectedIndex, ORI);
@@ -505,6 +526,35 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 192) - YL);
         C.DrawText(ORI.DescriptionText);
     }
+
+    // Display hold time progress bar, if holding.
+    if (bIsHolding)
+    {
+        HoldProgressTheta = class'UInterp'.static.MapRangeClamped(
+            ViewportOwner.Actor.Level.TimeSeconds, 
+            HoldTimeStart,
+            HoldTimeEnd,
+            0.0,
+            1.0);
+        
+        // Use a deceleration interpolation so that the user can see that progress is being made immediately.
+        HoldProgressTheta = class'UInterp'.static.Interpolate(
+            HoldProgressTheta,
+            0.0,
+            1.0,
+            INTERP_Deceleration
+            ) * MAX_PROGRESS_SEGMENTS;
+
+        for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
+        {
+            Theta = class'UInterp'.static.MapRangeClamped(HoldProgressTheta, i, i + 1.0, 0.0, 1.0);
+
+            C.DrawColor = class'UColor'.static.Interp(Theta, class'UColor'.default.White, SelectedColor);
+            C.DrawColor.A = byte(255 * MenuAlpha * Theta);
+
+            DrawCenteredTile(C, ProgressWheelTexRotators[i], CenterX, CenterY, GUIScale);
+        }
+    }
     
     if (bDebugCursor)
     {
@@ -521,6 +571,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     local DHPlayerReplicationInfo PRI;
     local vector HitLocation, HitNormal;
     local DHCommandMenu Menu;
+    local Sound HoldSound;
     
     Menu = DHCommandMenu(Menus.Peek());
 
@@ -591,12 +642,20 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 case IK_LeftMouse:
                     PC.GetEyeTraceLocation(HitLocation, HitNormal);
 
-                    if (Menu != none && Menu.GetOptionHoldTime(SelectedIndex) > 0.0)
+                    if (Menu != none && Menu.GetOptionHoldTime(SelectedIndex) > 0.0 && !Menu.IsOptionDisabled(SelectedIndex))
                     {
                         bIsHolding = true;
-                        HoldTimeRemaining = Menu.GetOptionHoldTime(SelectedIndex);
+                        HoldTimeStart = ViewportOwner.Actor.Level.TimeSeconds;
+                        HoldTimeEnd = HoldTimeStart + Menu.GetOptionHoldTime(SelectedIndex);
                         HoldHitLocation = HitLocation;
                         HoldHitNormal = HitNormal;
+
+                        HoldSound = Menu.GetOptionHoldSound(SelectedIndex);
+
+                        if (HoldSound != none)
+                        {
+                            PlaySound(HoldSound);
+                        }
                     }
                     else
                     {
@@ -671,16 +730,17 @@ defaultproperties
     bVisible=true
     bRequiresTick=true
 
-    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_1'
-    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_2'
-    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_3'
-    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_4'
-    OptionTextures(4)=Texture'DH_InterfaceArt_tex.Communication.menu_option_5'
-    OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
-    OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
-    OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+    OptionTextures(0)=Texture'DH_InterfaceArt_tex.menu_option_1'
+    OptionTextures(1)=Texture'DH_InterfaceArt_tex.menu_option_2'
+    OptionTextures(2)=Texture'DH_InterfaceArt_tex.menu_option_3'
+    OptionTextures(3)=Texture'DH_InterfaceArt_tex.menu_option_4'
+    OptionTextures(4)=Texture'DH_InterfaceArt_tex.menu_option_5'
+    OptionTextures(5)=Texture'DH_InterfaceArt_tex.menu_option_6'
+    OptionTextures(6)=Texture'DH_InterfaceArt_tex.menu_option_7'
+    OptionTextures(7)=Texture'DH_InterfaceArt_tex.menu_option_8'
 
-    RingTexture=Texture'DH_InterfaceArt_tex.Communication.ring'
+    RingTexture=Texture'DH_InterfaceArt_tex.ring'
+    ProgressSegmentTexture=Texture'DH_InterfaceArt_tex.menu_progress_segment'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)
@@ -690,5 +750,5 @@ defaultproperties
     HoverSound=Sound'ROMenuSounds.msfxDown'
     CancelSound=Sound'ROMenuSounds.CharFade'
 
-    CrosshairMaterial=Material'DH_InterfaceArt_tex.Communication.menu_crosshair'
+    CrosshairMaterial=Material'DH_InterfaceArt_tex.menu_crosshair'
 }

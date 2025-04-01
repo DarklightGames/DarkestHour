@@ -1113,6 +1113,17 @@ static function string GetInventoryName(bool bUseNativeItemNames)
     return default.ItemName;
 }
 
+// Added so we can override the ammo icon material without needing to have an ammo class.
+simulated function Material GetHudAmmoIconMaterial()
+{
+    if (AmmoClass[0] != none)
+    {
+        return AmmoClass[0].default.IconMaterial;
+    }
+
+    return none;
+}
+
 defaultproperties
 {
     // Sway modifiers

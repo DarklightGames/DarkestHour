@@ -9,7 +9,6 @@ var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
-var automated moCheckBox    ch_ShowVehicleVisionCone;
 var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
 var automated moCheckBox    ch_UseNativeItemNames;
@@ -18,7 +17,6 @@ var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
 var bool bShowIndicators;
-var bool bShowVehicleVisionCone;
 var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
 var bool bUseNativeItemNames, bUseNativeItemNamesD;
@@ -35,7 +33,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
-    i_BG1.ManageComponent(ch_ShowVehicleVisionCone);
     i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
     i_BG1.ManageComponent(ch_UseNativeItemNames);
 }
@@ -187,17 +184,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             HintLevelD = HintLevel;
             co_Hints.SilentSetIndex(HintLevel);
             break;
-        case ch_ShowVehicleVisionCone:
-            if (H != none)
-            {
-                bShowVehicleVisionCone = H.bShowVehicleVisionCone;
-            }
-            else
-            {
-                bShowVehicleVisionCone = class'DHHud'.default.bShowVehicleVisionCone;
-            }
-            ch_ShowVehicleVisionCone.SetComponentValue(bShowVehicleVisionCone, true);
-            break;
         default:
             super(UT2K4Tab_HudSettings).InternalOnLoadINI(sender, s);
     }
@@ -312,13 +298,6 @@ function SaveSettings()
             bSave = true;
         }
 
-        if (H.bShowVehicleVisionCone != bShowVehicleVisionCone)
-        {
-            H.bShowVehicleVisionCone = bShowVehicleVisionCone;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowVehicleVisionCone" @ string(bShowVehicleVisionCone));
-            bSave = true;
-        }
-
         if (H.bShowCompass != bShowCompass)
         {
             H.bShowCompass = bShowCompass;
@@ -370,7 +349,6 @@ function SaveSettings()
     {
         class'DHHud'.default.bShowCompass = bShowCompass;
         class'DHHud'.default.bShowIndicators = bShowIndicators;
-        class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
         class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
@@ -385,9 +363,6 @@ function InternalOnChange(GUIComponent Sender)
     {
         case ch_ShowIndicators:
             bShowIndicators = ch_ShowIndicators.IsChecked();
-            break;
-        case ch_ShowVehicleVisionCone:
-            bShowVehicleVisionCone = ch_ShowVehicleVisionCone.IsChecked();
             break;
         case ch_ShowChatMessages:
             bShowChatMessages = ch_ShowChatMessages.IsChecked();
@@ -440,26 +415,10 @@ defaultproperties
         WinLeft=0.379297
         WinWidth=0.196875
         TabOrder=1
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_SimpleColours=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudSimpleColours'
-
-    Begin Object Class=DHmoCheckBox Name=GameHudShowVehicleVisionCone
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Vehicle Vision Cone"
-        OnCreateComponent=GameHudShowVehicleVisionCone.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.373749
-        WinHeight=0.034156
-        TabOrder=29
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowVehicleVisionCone=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowVehicleVisionCone'
+    ch_SimpleColours=GameHudSimpleColours
 
     Begin Object Class=DHmoCheckBox Name=ShowChatMessages
         ComponentJustification=TXTA_Left
@@ -472,10 +431,10 @@ defaultproperties
         WinLeft=0.379297
         WinWidth=0.196875
         TabOrder=1
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowChatMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowChatMessages'
+    ch_ShowChatMessages=ShowChatMessages
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowDeathMessages
         ComponentJustification=TXTA_Left
@@ -488,10 +447,10 @@ defaultproperties
         WinWidth=0.373749
         WinHeight=0.034156
         TabOrder=27
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowDeathMessages'
+    ch_ShowDeathMessages=GameHudShowDeathMessages
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowIndicators
         ComponentJustification=TXTA_Left
@@ -504,10 +463,10 @@ defaultproperties
         WinWidth=0.373749
         WinHeight=0.034156
         TabOrder=29
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowIndicators=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowIndicators'
+    ch_ShowIndicators=GameHudShowIndicators
 
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left
@@ -519,10 +478,10 @@ defaultproperties
         WinLeft=0.555313
         WinWidth=0.373749
         TabOrder=23
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowCompass=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowCompass'
+    ch_ShowCompass=ShowCompass
 
     Begin Object Class=DHmoCheckBox Name=ShowRallyPoint
         ComponentJustification=TXTA_Left
@@ -534,10 +493,10 @@ defaultproperties
         WinLeft=0.555313
         WinWidth=0.373749
         TabOrder=28
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowRallyPoint'
+    ch_ShowRallyPoint=ShowRallyPoint
 
     Begin Object Class=DHmoCheckBox Name=ShowMapFirstSpawn
         ComponentJustification=TXTA_Left
@@ -549,10 +508,10 @@ defaultproperties
         WinLeft=0.555313
         WinWidth=0.373749
         TabOrder=24
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_ShowMapFirstSpawn=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowMapFirstSpawn'
+    ch_ShowMapFirstSpawn=ShowMapFirstSpawn
 
     Begin Object Class=DHmoCheckBox Name=UseNativeRoleNames
         ComponentJustification=TXTA_Left
@@ -565,10 +524,10 @@ defaultproperties
         WinWidth=0.373749
         WinHeight=0.034156
         TabOrder=25
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeRoleNames'
+    ch_UseNativeRoleNames=UseNativeRoleNames
 
     Begin Object Class=DHmoCheckBox Name=UseTechnicalAmmoNames
         ComponentJustification=TXTA_Left
@@ -581,10 +540,10 @@ defaultproperties
         WinWidth=0.373749
         WinHeight=0.034156
         TabOrder=26
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_UseTechnicalAmmoNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseTechnicalAmmoNames'
+    ch_UseTechnicalAmmoNames=UseTechnicalAmmoNames
 
     Begin Object Class=DHmoCheckBox Name=UseNativeItemNames
         ComponentJustification=TXTA_Left
@@ -597,10 +556,10 @@ defaultproperties
         WinWidth=0.373749
         WinHeight=0.034156
         TabOrder=26
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_UseNativeItemNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeItemNames'
+    ch_UseNativeItemNames=UseNativeItemNames
 
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left
@@ -614,10 +573,10 @@ defaultproperties
         TabOrder=0
         bBoundToParent=true
         bScaleToParent=true
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    co_Hints=DHmoComboBox'DH_Interface.DHTab_Hud.HintsCombo'
+    co_Hints=HintsCombo
 
     Begin Object Class=DHGUISectionBackground Name=GameBK
         Caption="Options"
@@ -628,7 +587,7 @@ defaultproperties
         RenderWeight=0.001
         OnPreDraw=GameBK.InternalPreDraw
     End Object
-    i_BG1=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK'
+    i_BG1=GameBK
 
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Style"
@@ -639,7 +598,7 @@ defaultproperties
         RenderWeight=0.001
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
-    i_BG2=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK1'
+    i_BG2=GameBK1
 
     Begin Object Class=moSlider Name=myHudScale
         MaxValue=100.0
@@ -653,10 +612,10 @@ defaultproperties
         WinLeft=0.018164
         WinWidth=0.45
         TabOrder=22
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    sl_Scale=moSlider'DH_Interface.DHTab_Hud.myHudScale'
+    sl_Scale=myHudScale
 
     Begin Object Class=moSlider Name=myGameHudOpacity
         MaxValue=100.0
@@ -670,8 +629,8 @@ defaultproperties
         WinLeft=0.018164
         WinWidth=0.45
         TabOrder=21
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
     sl_Opacity=moSlider'DH_Interface.DHTab_Hud.myGameHudOpacity'
 
@@ -687,10 +646,10 @@ defaultproperties
         WinLeft=0.550781
         WinWidth=0.38125
         TabOrder=9
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    nu_MsgCount=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageCount'
+    nu_MsgCount=GameHudMessageCount
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageScale
         MinValue=0
@@ -704,10 +663,10 @@ defaultproperties
         WinLeft=0.550781
         WinWidth=0.38125
         TabOrder=10
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    nu_MsgScale=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageScale'
+    nu_MsgScale=GameHudMessageScale
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageOffset
         MinValue=0
@@ -721,10 +680,10 @@ defaultproperties
         WinLeft=0.550781
         WinWidth=0.38125
         TabOrder=11
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    nu_MsgOffset=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageOffset'
+    nu_MsgOffset=GameHudMessageOffset
 
     Begin Object Class=DHmoCheckBox Name=GameHudVisible
         ComponentJustification=TXTA_Left
@@ -736,10 +695,10 @@ defaultproperties
         WinLeft=0.379297
         WinWidth=0.196875
         TabOrder=0
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_Visible=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudVisible'
+    ch_Visible=GameHudVisible
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowWeaponInfo
         ComponentJustification=TXTA_Left
@@ -751,10 +710,10 @@ defaultproperties
         WinLeft=0.05
         WinWidth=0.378125
         TabOrder=3
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_Weapons=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowWeaponInfo'
+    ch_Weapons=GameHudShowWeaponInfo
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowPersonalInfo
         ComponentJustification=TXTA_Left
@@ -766,8 +725,8 @@ defaultproperties
         WinLeft=0.05
         WinWidth=0.378125
         TabOrder=4
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
     End Object
-    ch_Personal=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowPersonalInfo'
+    ch_Personal=GameHudShowPersonalInfo
 }
