@@ -29,6 +29,51 @@ replication
         HudAmmoCount;
 }
 
+simulated state Deploying
+{
+    simulated function BeginState()
+    {
+        local DHPawn P;
+
+        super.BeginState();
+
+        P = DHPawn(Instigator);
+
+        if (P != none)
+        {
+            P.bIsDeployingStationaryWeapon = true;
+            P.SetLockViewRotation(true, P.Controller.Rotation); // makes the pawn lock view pitch & yaw
+        }
+    }
+
+    simulated function EndState()
+    {
+        local DHPawn P;
+
+        super.EndState();
+        
+        P = DHPawn(Instigator);
+
+        if (P != none)
+        {
+            P.bIsDeployingStationaryWeapon = false;
+            P.SetLockViewRotation(false);
+        }
+
+        ServerDeployEnd(ProxyCursor.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
+    }
+
+    exec simulated function Deploy()
+    {
+        return;
+    }
+
+Begin:
+    PlayAnim(DeployAnimation);
+    Sleep(GetAnimDuration(DeployAnimation));
+    GotoState('Idle');
+}
+
 function DHVehicleState GetVehicleState()
 {
     return VehicleState;
@@ -143,11 +188,6 @@ exec simulated function Deploy()
     local DHPawn  P;
     local Rotator LockedViewRotation;
 
-    if (bDeploying)
-    {
-        return;
-    }
-
     P = DHPawn(Instigator);
 
     // BUG: player can drop the weapon while in this state, bricking the pawn's movement until it dies.
@@ -155,11 +195,7 @@ exec simulated function Deploy()
 
     if (CanDeploy(P))
     {
-        PlayAnim(DeployAnimation);
-        bDeploying = true;
-        P.bIsDeployingStationaryWeapon = true;
-
-        P.SetLockViewRotation(true, P.Controller.Rotation); // makes the pawn lock view pitch & yaw
+        GotoState('Deploying');
     }
 }
 
@@ -168,32 +204,13 @@ simulated function bool CanDeploy(DHPawn P)
 {
     // TODO: re-add check for being stationary & crouched, with no leaning.
 
-    return ProxyCursor != none && ProxyCursor.ProxyError.Type == ERROR_None;
+    return ProxyCursor != none && ProxyCursor.ProxyError.Type == ERROR_None && IsInState('Idle');
 }
 
 // Modified to prevent player from changing stance while he is crouched & deploying the mortar
 simulated function bool WeaponAllowCrouchChange()
 {
     return !bDeploying && super.WeaponAllowCrouchChange();
-}
-
-// Modified so when the deploy animation ends, we update the DHPawn & notify the server that mortar is now deployed
-simulated event AnimEnd(int Channel)
-{
-    local DHPawn P;
-
-    if (bDeploying)
-    {
-        P = DHPawn(Instigator);
-
-        if (P != none)
-        {
-            P.bIsDeployingStationaryWeapon = false;
-            P.SetLockViewRotation(false);
-        }
-
-        ServerDeployEnd(ProxyCursor.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
-    }
 }
 
 function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)

@@ -21,7 +21,7 @@
 // [ ] third person raise/lower/binoc animations
 // [ ] third person carrying animations
 // [ ] re-export FP mesh without sight
-// [ ] add tube sliding sounds to the firing anims (fp and tp)
+// [ ] add tube sliding sounds to the TP firing anims
 //==============================================================================
 // AUDIO
 //==============================================================================
@@ -34,7 +34,7 @@
 // [ ] can circumvent force switch behavior by picking up the weapon while
 //     unable to switch weapons (i.e. while reloading)
 // [ ] some sort of bug happening when the player gets into a bad state when
-//     interacting with the pickups (slows down, can't switch weapons etc.)
+//     interacting with the pickups (slows down, can't switch weapons etc.) PRONE-TOGGLING FIXES IT
 // [ ] can get into the "rotating" state without the rotating weapon, leaving a
 //     permanent rotating decal under the gun. (seems to just be trying to 
 //     switch weapons fsr)
