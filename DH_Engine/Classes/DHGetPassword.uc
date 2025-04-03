@@ -67,7 +67,6 @@ defaultproperties
 {
 	Begin Object Class=GUIButton Name=GetPassFail
         Caption="Cancel"
-        StyleName="SquareButton"
 		OnClick=InternalOnClick
 		bBoundToParent=true
 		TabOrder=2
@@ -76,7 +75,6 @@ defaultproperties
 
 	Begin Object Class=GUIButton Name=GetPassRetry
         Caption="Submit"
-        StyleName="SquareButton"
 		OnClick=InternalOnClick
 		bBoundToParent=true
 		TabOrder=1

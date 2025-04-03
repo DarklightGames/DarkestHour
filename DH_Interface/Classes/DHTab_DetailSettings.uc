@@ -831,6 +831,7 @@ function bool RenderDeviceClick(byte Btn)
 defaultproperties
 {
     PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+    DisplayPromptMenu="DH_Interface.DHVideoChangePrompt"
 
     RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
     NoneText="None"

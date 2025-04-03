@@ -296,8 +296,6 @@ function bool MyContextOpen(GUIContextMenu Sender)
     local DHSpawnPoint_Admin AdminSpawn;
     local array<DHSpawnPoint_SquadRallyPoint> RallyPoints;
 
-    Log(GRI.SpawnPoints[Sender.Tag]);
-
     if (Sender == none || PRI == none || GRI == none)
     {
         return false;
@@ -476,6 +474,8 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     MapMarkerIndexToRemove = -1;
     bRemoveMapMarker = false;
     ElapsedTime = GRI.ElapsedTime;
+    bDeselectArtilleryTarget = false;
+    bSelectArtilleryTarget = false;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
