@@ -37,15 +37,22 @@ static function Font GetFontByIndex(int i) {
     return default.Fonts[i];
 }
 
+static function int GetEffectiveResolution(int ResX, int ResY)
+{
+    const BASELINE_ASPECT_RATIO = 1.7777777777777777777777777777778;    // 16:9 aspect ratio
+    return ResY * FMax(1.0, ((float(ResX) / float(ResY)) / BASELINE_ASPECT_RATIO));
+}
+
 static function Font GetDHConsoleFontByIndex(int i) {
     return GetFontByIndex(default.DHConsoleFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHConsoleFontByResolution(int Resolution) {
+static function Font GetDHConsoleFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHConsoleFontItems); i++) {
-        if (Resolution >= default.DHConsoleFontItems[i].Resolution) {
+        if (ResY >= default.DHConsoleFontItems[i].Resolution) {
             return GetDHConsoleFontByIndex(i);
         }
     }
@@ -57,10 +64,11 @@ static function Font GetDHConsoleFontDSByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHConsoleFontDSByResolution(int Resolution) {
+static function Font GetDHConsoleFontDSByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHConsoleFontDSItems); i++) {
-        if (Resolution >= default.DHConsoleFontDSItems[i].Resolution) {
+        if (ResY >= default.DHConsoleFontDSItems[i].Resolution) {
             return GetDHConsoleFontDSByIndex(i);
         }
     }
@@ -72,10 +80,11 @@ static function Font GetDHButtonFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHButtonFontByResolution(int Resolution) {
+static function Font GetDHButtonFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHButtonFontItems); i++) {
-        if (Resolution >= default.DHButtonFontItems[i].Resolution) {
+        if (ResY >= default.DHButtonFontItems[i].Resolution) {
             return GetDHButtonFontByIndex(i);
         }
     }
@@ -87,10 +96,11 @@ static function Font GetDHButtonFontDSByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHButtonFontDSByResolution(int Resolution) {
+static function Font GetDHButtonFontDSByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHButtonFontDSItems); i++) {
-        if (Resolution >= default.DHButtonFontDSItems[i].Resolution) {
+        if (ResY >= default.DHButtonFontDSItems[i].Resolution) {
             return GetDHButtonFontDSByIndex(i);
         }
     }
@@ -102,10 +112,11 @@ static function Font GetDHHugeButtonFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHHugeButtonFontByResolution(int Resolution) {
+static function Font GetDHHugeButtonFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHHugeButtonFontItems); i++) {
-        if (Resolution >= default.DHHugeButtonFontItems[i].Resolution) {
+        if (ResY >= default.DHHugeButtonFontItems[i].Resolution) {
             return GetDHHugeButtonFontByIndex(i);
         }
     }
@@ -117,10 +128,11 @@ static function Font GetDHLargeFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHLargeFontByResolution(int Resolution) {
+static function Font GetDHLargeFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHLargeFontItems); i++) {
-        if (Resolution >= default.DHLargeFontItems[i].Resolution) {
+        if (ResY >= default.DHLargeFontItems[i].Resolution) {
             return GetDHLargeFontByIndex(i);
         }
     }
@@ -132,10 +144,11 @@ static function Font GetDHLargeFontDSByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHLargeFontDSByResolution(int Resolution) {
+static function Font GetDHLargeFontDSByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHLargeFontDSItems); i++) {
-        if (Resolution >= default.DHLargeFontDSItems[i].Resolution) {
+        if (ResY >= default.DHLargeFontDSItems[i].Resolution) {
             return GetDHLargeFontDSByIndex(i);
         }
     }
@@ -147,10 +160,11 @@ static function Font GetDHMenuFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHMenuFontByResolution(int Resolution) {
+static function Font GetDHMenuFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHMenuFontItems); i++) {
-        if (Resolution >= default.DHMenuFontItems[i].Resolution) {
+        if (ResY >= default.DHMenuFontItems[i].Resolution) {
             return GetDHMenuFontByIndex(i);
         }
     }
@@ -162,10 +176,11 @@ static function Font GetDHMenuFontDSByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHMenuFontDSByResolution(int Resolution) {
+static function Font GetDHMenuFontDSByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHMenuFontDSItems); i++) {
-        if (Resolution >= default.DHMenuFontDSItems[i].Resolution) {
+        if (ResY >= default.DHMenuFontDSItems[i].Resolution) {
             return GetDHMenuFontDSByIndex(i);
         }
     }
@@ -177,10 +192,11 @@ static function Font GetDHSmallFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHSmallFontByResolution(int Resolution) {
+static function Font GetDHSmallFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHSmallFontItems); i++) {
-        if (Resolution >= default.DHSmallFontItems[i].Resolution) {
+        if (ResY >= default.DHSmallFontItems[i].Resolution) {
             return GetDHSmallFontByIndex(i);
         }
     }
@@ -192,10 +208,11 @@ static function Font GetDHSmallFontDSByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHSmallFontDSByResolution(int Resolution) {
+static function Font GetDHSmallFontDSByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHSmallFontDSItems); i++) {
-        if (Resolution >= default.DHSmallFontDSItems[i].Resolution) {
+        if (ResY >= default.DHSmallFontDSItems[i].Resolution) {
             return GetDHSmallFontDSByIndex(i);
         }
     }
@@ -207,10 +224,11 @@ static function Font GetDHTinyFontByIndex(int i) {
 }
 
 // Load a font by the nearest target resolution
-static function Font GetDHTinyFontByResolution(int Resolution) {
+static function Font GetDHTinyFontByResolution(int ResX, int ResY) {
     local int i;
+    ResY = GetEffectiveResolution(ResX, ResY);
     for (i = 0; i < arraycount(default.DHTinyFontItems); i++) {
-        if (Resolution >= default.DHTinyFontItems[i].Resolution) {
+        if (ResY >= default.DHTinyFontItems[i].Resolution) {
             return GetDHTinyFontByIndex(i);
         }
     }
