@@ -10,9 +10,6 @@ defaultproperties
     // to do: replace with some cool American overlay (maybe just the springfield sight)
     SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
-    YawScaleStep=5.0
-    PitchScaleStep=10.0
-
     RangeTable(0)=(Pitch=0,Range=115)
     RangeTable(1)=(Pitch=25,Range=200)
     RangeTable(2)=(Pitch=50,Range=300)
@@ -39,7 +36,8 @@ defaultproperties
     RangeTable(23)=(Pitch=575,Range=1925)
     RangeTable(24)=(Pitch=600,Range=1955)
 
-    NumberOfPitchSegments=6
+    PitchScaleStep=5.0
+    NumberOfPitchSegments=3
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
@@ -53,17 +51,17 @@ defaultproperties
 
     PitchIndicatorLength=320
 
-    NumberOfYawSegments=4
+    YawScaleStep=5.0
+    NumberOfYawSegments=2
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)
     YawSegmentSchema(3)=(Shape=ShortTick)
     YawSegmentSchema(4)=(Shape=ShortTick)
-    YawSegmentSchema(5)=(Shape=ShortTick)
+    YawSegmentSchema(5)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(6)=(Shape=ShortTick)
     YawSegmentSchema(7)=(Shape=ShortTick)
     YawSegmentSchema(8)=(Shape=ShortTick)
     YawSegmentSchema(9)=(Shape=ShortTick)
-
-    YawIndicatorLength=160
+    YawIndicatorLength=200
 }

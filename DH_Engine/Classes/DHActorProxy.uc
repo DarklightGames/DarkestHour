@@ -834,6 +834,11 @@ function string GetMenuVerb()
     return MenuVerb;
 }
 
+function bool HasError()
+{
+    return ProxyError.Type != ERROR_None;
+}
+
 defaultproperties
 {
     MenuName="object"

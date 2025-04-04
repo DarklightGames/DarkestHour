@@ -42,6 +42,15 @@ function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
     }
 
     Gun.Destroy();
+    
+    // Without this, the menu is holding on to a reference to the gun, which is an actor.
+    // There is a bug in the engine where Objects holding on to Actors can cause segfaults when the actor is destroyed.
+    // This would result in a crash about 10% of the time when the player picked up a gun.
+    // This is a workaround for that bug.
+    // TODO: There is still the possiblity to have the client crash if the gun is destroyed by other means while the
+    // menu is open (i.e., gun is blown up or picked up by another player). We should find another method for finding
+    // the gun in the world or turn this into an Actor itself.
+    MenuObject = none;
 }
 
 function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)

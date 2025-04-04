@@ -20,6 +20,10 @@ var()   name    DeployAnimation;
 
 var()   int     HudAmmoCount;
 
+var()   bool    bCanDeployWhileStanding;
+var()   bool    bCanDeployWhileCrouched;
+var()   bool    bCanDeployWhileCrawling;
+
 replication
 {
     // Functions a client can call on the server
@@ -66,6 +70,17 @@ simulated state Deploying
     exec simulated function Deploy()
     {
         return;
+    }
+
+    // Modified to prevent player from changing stance while he is crouched & deploying the mortar
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
     }
 
 Begin:
@@ -116,6 +131,12 @@ public function bool ResupplyAmmo()
     return false;
 }
 
+// Modified so that the UI knows when we're out of ammo and can show the ammo icon greyed out.
+simulated function int AmmoAmount(int Mode)
+{
+    return HudAmmoCount;
+}
+
 // Modified so HUD shows ammo count in the current vehicle state.
 simulated function int GetHudAmmoCount()
 {
@@ -148,6 +169,11 @@ simulated function Tick(float DeltaTime)
     else
     {
         super.Tick(DeltaTime);
+    }
+
+    if (CanConfirmPlacement())
+    {
+        Instigator.ReceiveLocalizedMessage(class'DHStationaryWeaponControlsMessage', 0, Instigator.PlayerReplicationInfo, none, self);
     }
 }
 
@@ -193,24 +219,30 @@ exec simulated function Deploy()
     // BUG: player can drop the weapon while in this state, bricking the pawn's movement until it dies.
     // solution: don't let them drop the weapon while deploying.
 
-    if (CanDeploy(P))
+    if (CanConfirmPlacement())
     {
         GotoState('Deploying');
     }
 }
 
-// New function to check whether the player can deploy the mortar where they are, with explanatory screen messages if they can't
-simulated function bool CanDeploy(DHPawn P)
+simulated function bool CanConfirmPlacement()
 {
-    // TODO: re-add check for being stationary & crouched, with no leaning.
+    local DHPawn P;
 
-    return ProxyCursor != none && ProxyCursor.ProxyError.Type == ERROR_None && IsInState('Idle');
-}
+    if (!IsInState('Idle'))
+    {
+        return false;
+    }
 
-// Modified to prevent player from changing stance while he is crouched & deploying the mortar
-simulated function bool WeaponAllowCrouchChange()
-{
-    return !bDeploying && super.WeaponAllowCrouchChange();
+    P = DHPawn(Instigator);
+
+    if (P != none && (P.bLeanLeft || P.bLeanRight))
+    {
+        // Don't allow deploying while leaning.
+        return false;
+    }
+
+    return super.CanConfirmPlacement();
 }
 
 function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
@@ -308,6 +340,29 @@ function DropFrom(vector StartLocation)
 
     super.DropFrom(StartLocation);
 }
+ 
+public function bool ShouldShowProxyCursor()
+{
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
+    if (P == none)
+    {
+        return false;
+    }
+
+    if (P.bIsCrouched)
+    {
+        return bCanDeployWhileCrouched;
+    }
+    else if (P.bIsCrawling)
+    {
+        return bCanDeployWhileCrawling;
+    }
+
+    return bCanDeployWhileStanding;
+}
 
 defaultproperties
 {
@@ -326,4 +381,6 @@ defaultproperties
     CurrentRating=1.0
     bCanThrow=true
     TraceDepthMeters=1.5
+    bCanRotateCursor=false
+    bCanDeployWhileCrouched=true
 }

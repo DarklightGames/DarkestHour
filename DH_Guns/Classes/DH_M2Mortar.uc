@@ -9,12 +9,12 @@
 // [~] make sure you can't pick up other stationary weapons if you are currently
 //     holding one (currently working accidentially because of not being able to
 //     switch weapons while holding one)
-// [ ] pickup option sometimes crashes the game (some sort of interaction bug);
-//     probably related to object holding onto actor reference. (it's the array
-//     of objects, almost certainly)
 // [ ] when a player runs out of ammo, prompt them to press X to change round
 //     type.
 // [ ] allow resupply while holding (needs custom resupply logic for saved state)
+// [ ] add dust effect when weapon is deployed (same as constructions)
+// [ ] don't let the player pick it up while prone
+// [ ] shells are not visually in empty/reloading state on UI when out of ammo
 //==============================================================================
 // ART
 //==============================================================================
@@ -41,6 +41,8 @@
 // [ ] can deploy while doing first draw, due to fucky AnimEnd thing, it
 //     doesn't play the deploy animation. use STATES
 // [ ] when player dies on it, why is the ragdoll half into the ground?
+// [ ] mortar disappears when enterting and exiting a vehicle with it in-hand
+// [ ] player can still "move" camera while in locked view modes (gunsight etc.)
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;

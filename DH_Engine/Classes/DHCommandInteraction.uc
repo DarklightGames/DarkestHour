@@ -119,7 +119,7 @@ function CreateProgressWheelMaterials()
     for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
     {
         TR = new class'Engine.TexRotator';
-        TR.Rotation.Yaw = -(i * (65536 / MAX_PROGRESS_SEGMENTS)) + ((0.5 / MAX_PROGRESS_SEGMENTS) * 65536);
+        TR.Rotation.Yaw = -(i * (65536 / MAX_PROGRESS_SEGMENTS));
         TR.Material = ProgressSegmentTexture;
         TR.TexRotationType = TR_FixedRotation;
         TR.UOffset = TR.Material.MaterialUSize() / 2;
@@ -598,14 +598,15 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 {
                     case IK_MouseX:
                         Cursor.X += Delta;
-                        return true;
+                        break;
                     case IK_MouseY:
                         Cursor.Y -= Delta;
-                        return true;
+                        break;
                     default:
                         break;
                 }
             }
+            return true;
             break;
         case IST_Release:
             switch (Key)

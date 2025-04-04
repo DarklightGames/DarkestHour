@@ -9,7 +9,6 @@ defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
-    YawScaleStep=5.0
     PitchScaleStep=0.5
 
     RangeTable(0)=(Range=125,Pitch=84)
@@ -44,6 +43,7 @@ defaultproperties
     PitchSegmentSchema(8)=(Shape=MediumLengthTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
 
+    YawScaleStep=5.0
     NumberOfYawSegments=2
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
@@ -55,7 +55,6 @@ defaultproperties
     YawSegmentSchema(7)=(Shape=ShortTick)
     YawSegmentSchema(8)=(Shape=ShortTick)
     YawSegmentSchema(9)=(Shape=ShortTick)
-
     YawIndicatorLength=200
 
     PitchAngleUnit=AU_Degrees

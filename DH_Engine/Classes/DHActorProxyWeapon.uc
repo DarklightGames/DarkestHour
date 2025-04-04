@@ -10,6 +10,7 @@ var DHActorProxy                    ProxyCursor;
 var class<DHActorProxyErrorMessage> ErrorMessageClass;
 var class<DHControlsMessage>        ControlsMessageClass;
 
+var() bool                          bCanRotateCursor;
 var() int                           LocalRotationRate;
 var() protected float               TraceDepthMeters;
 var() protected float               TraceHeightMeters;
@@ -34,6 +35,8 @@ simulated event Tick(float DeltaTime)
     {
         OnTick(DeltaTime);
 
+        // TODO: this is probably causing the bug where it disappears when you enter and leave a vehicle.
+
         // HACK: This inventory system doesn't like what we're trying to do with it.
         // This bit of garbage saves us if we get into a state where the proxy has
         // been destroyed but the weapon is still hanging around.
@@ -45,6 +48,12 @@ simulated event Tick(float DeltaTime)
             Instigator.ChangedWeapon();
         }
     }
+}
+
+// Override in subclasses to hide the cursor when not needed.
+simulated function bool ShouldShowProxyCursor()
+{
+    return true;
 }
 
 simulated function OnTick(float DeltaTime)
@@ -64,7 +73,9 @@ simulated function OnTick(float DeltaTime)
 
     TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
 
-    if (ProxyCursor != none)
+    ProxyCursor.bHidden = !ShouldShowProxyCursor();
+
+    if (!ProxyCursor.bHidden)
     {
         ProxyCursor.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
 
@@ -195,6 +206,11 @@ simulated function ROIronSights()
 
 simulated function bool CanConfirmPlacement()
 {
+    if (ProxyCursor == none || ProxyCursor.bHidden || ProxyCursor.HasError())
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -242,45 +258,51 @@ exec simulated function ROManualReload()
 
 simulated function bool WeaponLeanLeft()
 {
-    if (ProxyCursor != none)
+    if (CanRotateCursor())
     {
-        if (ShouldSnapRotation())
-        {
-            ProxyCursor.LocalRotation.Yaw -= GetRotationSnapAngle();
-        }
-        else
-        {
-            ProxyCursor.LocalRotationRate.Yaw = -GetLocalRotationRate();
+        if (ProxyCursor != none)
+        { 
+            if (ShouldSnapRotation())
+            {
+                ProxyCursor.LocalRotation.Yaw -= GetRotationSnapAngle();
+            }
+            else
+            {
+                ProxyCursor.LocalRotationRate.Yaw = -GetLocalRotationRate();
+            }
         }
 
         return true;
     }
 
-    return false;
+    return super.WeaponLeanLeft();
 }
 
 simulated function bool WeaponLeanRight()
 {
-    if (ProxyCursor != none)
+    if (CanRotateCursor())
     {
-        if (ShouldSnapRotation())
+        if (ProxyCursor != none)
         {
-            ProxyCursor.LocalRotation.Yaw += GetRotationSnapAngle();
-        }
-        else
-        {
-            ProxyCursor.LocalRotationRate.Yaw = GetLocalRotationRate();
-        }
+            if (ShouldSnapRotation())
+            {
+                ProxyCursor.LocalRotation.Yaw += GetRotationSnapAngle();
+            }
+            else
+            {
+                ProxyCursor.LocalRotationRate.Yaw = GetLocalRotationRate();
+            }
 
-        return true;
+            return true;
+        }
     }
 
-    return false;
+    return super.WeaponLeanRight();
 }
 
 simulated function WeaponLeanLeftReleased()
 {
-    if (ProxyCursor != none)
+    if (CanRotateCursor() && ProxyCursor != none)
     {
         ProxyCursor.LocalRotationRate.Yaw = 0;
     }
@@ -288,10 +310,15 @@ simulated function WeaponLeanLeftReleased()
 
 simulated function WeaponLeanRightReleased()
 {
-    if (ProxyCursor != none)
+    if (CanRotateCursor() && ProxyCursor != none)
     {
         ProxyCursor.LocalRotationRate.Yaw = 0;
     }
+}
+
+simulated function bool CanRotateCursor()
+{
+    return bCanRotateCursor;
 }
 
 simulated function TraceFromPlayer(
@@ -420,5 +447,6 @@ defaultproperties
     TraceDepthMeters=5.0
     TraceHeightMeters=2.0
     LocalRotationRate=32768
+    bCanRotateCursor=true
 }
 

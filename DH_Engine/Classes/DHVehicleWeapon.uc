@@ -426,7 +426,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             ReloadState = RL_Waiting; // player reloads manually, so just wait for key press
             PassReloadStateToClient();
         }
-        else if (ShouldSwitchToNextAmmoTypeWhenEmpty())
+        else
         {
             AttemptReload();
         }
