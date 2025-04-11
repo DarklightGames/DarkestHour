@@ -235,6 +235,34 @@ simulated function float GetTraceHeightMeters()
     return ConstructionClass.default.ProxyTraceHeightMeters;
 }
 
+simulated function ROIronSights()
+{
+    local ROPawn P;
+
+    P = ROPawn(Instigator);
+
+    if (InstigatorIsLocallyControlled())
+    {
+        if (P != none && P.CanSwitchWeapon())
+        {
+            ProxyCursor.Destroy();
+
+            if (Instigator.Weapon.OldWeapon != none)
+            {
+                Instigator.SwitchToLastWeapon();
+                Instigator.ChangedWeapon();
+            }
+            else
+            {
+                // We've no weapon to go back to so just put this down, subsequently
+                // destroying it.
+                PutDown();
+                Instigator.Controller.SwitchToBestWeapon();
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     ClickSound=Sound'ROMenuSounds.msfxMouseClick'

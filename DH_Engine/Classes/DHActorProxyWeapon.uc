@@ -31,20 +31,29 @@ simulated event Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
+    if (Level.NetMode != NM_DedicatedServer && ProxyCursor != none)
+    {
+        // Even if the instigator is not locally controlled, we want to update the hidden state of the cursor.
+        ProxyCursor.bHidden = !ShouldShowProxyCursor();
+    }
+
     if (InstigatorIsLocallyControlled())
     {
         OnTick(DeltaTime);
-
-        // TODO: this is probably causing the bug where it disappears when you enter and leave a vehicle.
 
         // HACK: This inventory system doesn't like what we're trying to do with it.
         // This bit of garbage saves us if we get into a state where the proxy has
         // been destroyed but the weapon is still hanging around.
         if (ProxyCursor == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
         {
-            // We've no weapon to go back to so just put this down, subsequently destroying it
+            // We've no weapon to go back to so just put this down, subsequently destroying it.
             PutDown();
-            Instigator.Controller.SwitchToBestWeapon();
+
+            if (Instigator.Controller != none)
+            {
+                Instigator.Controller.SwitchToBestWeapon();
+            }
+
             Instigator.ChangedWeapon();
         }
     }
@@ -53,6 +62,11 @@ simulated event Tick(float DeltaTime)
 // Override in subclasses to hide the cursor when not needed.
 simulated function bool ShouldShowProxyCursor()
 {
+    if (Instigator == none || Instigator.Controller == none || Instigator.Weapon != self)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -64,16 +78,19 @@ simulated function OnTick(float DeltaTime)
     local int bLimitLocalRotation;
     local Range LocalRotationYawRange;
 
-    if (ProxyCursor == none)
+    if (ProxyCursor == none || Instigator == none)
     {
         return;
     }
 
     PC = PlayerController(Instigator.Controller);
 
-    TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
+    if (PC == none)
+    {
+        return;
+    }
 
-    ProxyCursor.bHidden = !ShouldShowProxyCursor();
+    TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
 
     if (!ProxyCursor.bHidden)
     {
@@ -176,34 +193,6 @@ simulated function bool PutDown()
     return super.PutDown();
 }
 
-simulated function ROIronSights()
-{
-    local ROPawn P;
-
-    P = ROPawn(Instigator);
-
-    if (InstigatorIsLocallyControlled())
-    {
-        if (P != none && P.CanSwitchWeapon())
-        {
-            ProxyCursor.Destroy();
-
-            if (Instigator.Weapon.OldWeapon != none)
-            {
-                Instigator.SwitchToLastWeapon();
-                Instigator.ChangedWeapon();
-            }
-            else
-            {
-                // We've no weapon to go back to so just put this down, subsequently
-                // destroying it.
-                PutDown();
-                Instigator.Controller.SwitchToBestWeapon();
-            }
-        }
-    }
-}
-
 simulated function bool CanConfirmPlacement()
 {
     if (ProxyCursor == none || ProxyCursor.bHidden || ProxyCursor.HasError())
@@ -216,36 +205,33 @@ simulated function bool CanConfirmPlacement()
 
 simulated function Fire(float F)
 {
-    if (InstigatorIsLocallyControlled())
+    if (!InstigatorIsLocallyControlled() || !CanConfirmPlacement())
     {
-        if (!CanConfirmPlacement())
+        return;
+    }
+
+    OnConfirmPlacement();
+
+    if (ShouldSwitchToLastWeaponOnPlacement())
+    {
+        ProxyCursor.Destroy();
+
+        if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
         {
-            return;
+            // HACK: This stops a standalone client from immediately firing
+            // their previous weapon.
+            if (Level.NetMode == NM_Standalone)
+            {
+                Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
+            }
+
+            Instigator.SwitchToLastWeapon();
+            Instigator.ChangedWeapon();
         }
-
-        OnConfirmPlacement();
-
-        if (ShouldSwitchToLastWeaponOnPlacement())
+        else
         {
-            ProxyCursor.Destroy();
-
-            if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
-            {
-                // HACK: This stops a standalone client from immediately firing
-                // their previous weapon.
-                if (Level.NetMode == NM_Standalone)
-                {
-                    Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
-                }
-
-                Instigator.SwitchToLastWeapon();
-                Instigator.ChangedWeapon();
-            }
-            else
-            {
-                PutDown();
-                Instigator.Controller.SwitchToBestWeapon();
-            }
+            PutDown();
+            Instigator.Controller.SwitchToBestWeapon();
         }
     }
 }
@@ -342,6 +328,11 @@ simulated function TraceFromPlayer(
     }
 
     PC = PlayerController(Instigator.Controller);
+
+    if (PC == none)
+    {
+        return;
+    }
 
     // Trace out into the world and try and hit something static.
     TraceStart = Instigator.Location + Instigator.EyePosition();

@@ -12,13 +12,12 @@ class DHStationaryWeapon extends DHActorProxyWeapon
 var         class<DHVehicle>    VehicleClass;
 var private DHVehicleState      VehicleState;
 
-var()       Material            HudAmmoIconMaterial;
+var()       Material    HudAmmoIconMaterial;
+var         int         HudAmmoCount;
 
 // Deploying
 var     bool    bDeploying;
 var()   name    DeployAnimation;
-
-var()   int     HudAmmoCount;
 
 var()   bool    bCanDeployWhileStanding;
 var()   bool    bCanDeployWhileCrouched;
@@ -79,6 +78,11 @@ simulated state Deploying
     }
 
     simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
+
+    simulated function bool CanThrow()
     {
         return false;
     }
@@ -194,16 +198,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 // Functions always returning false as carried mortar is too heavy & bulky to put away, or to sprint, crawl, or mantle with
 simulated function bool WeaponCanSwitch()
-{
-    return false;
-}
-
-simulated function bool WeaponAllowProneChange()
-{
-    return false;
-}
-
-simulated function bool WeaponAllowMantle()
 {
     return false;
 }
@@ -345,6 +339,11 @@ public function bool ShouldShowProxyCursor()
 {
     local DHPawn P;
 
+    if (!super.ShouldShowProxyCursor())
+    {
+        return false;
+    }
+
     P = DHPawn(Instigator);
 
     if (P == none)
@@ -360,8 +359,10 @@ public function bool ShouldShowProxyCursor()
     {
         return bCanDeployWhileCrawling;
     }
-
-    return bCanDeployWhileStanding;
+    else
+    {
+        return bCanDeployWhileStanding;
+    }
 }
 
 defaultproperties
@@ -375,12 +376,12 @@ defaultproperties
     DeployAnimation="deploy"
     SprintStartAnim="sprint_start"
     SprintEndAnim="sprint_end"
-    SprintLoopAnim="sprint_loop"
+    SprintLoopAnim="sprint_middle"
     bUsesFreeAim=true
     AIRating=1.0
     CurrentRating=1.0
     bCanThrow=true
-    TraceDepthMeters=1.5
+    TraceDepthMeters=1.25
     bCanRotateCursor=false
     bCanDeployWhileCrouched=true
 }

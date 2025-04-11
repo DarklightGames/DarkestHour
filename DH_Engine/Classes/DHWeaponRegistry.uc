@@ -127,7 +127,7 @@ defaultproperties
     Records(67)=(ClassName="DH_Weapons.DH_ViSWeapon",WeaponNames=("vis"))
     Records(68)=(ClassName="DH_Weapons.DH_VK98Weapon",WeaponNames=("vk98", "vkar98"))
     Records(69)=(ClassName="DH_Weapons.DH_Winchester1897Weapon",WeaponNames=("shotgun", "1897", "winchester"))
-    Records(70)=(ClassName="DH_Equipment.DHBinocularsItemAllied",WeaponNames=("binocs", "binocs_us"))
+    Records(70)=(ClassName="DH_Equipment.DHBinocularsItemAllied",WeaponNames=("binoculars", "binocs", "binocs_us"))
     Records(71)=(ClassName="DH_Equipment.DHBinocularsItemGerman",WeaponNames=("binocs_ger"))
     Records(72)=(ClassName="DH_Equipment.DHBinocularsItemSoviet",WeaponNames=("binocs_sov"))
     Records(73)=(ClassName="DH_Equipment.DHRadioItem",WeaponNames=("radio"))
@@ -180,4 +180,8 @@ defaultproperties
     Records(119)=(ClassName="DH_Weapons.DH_SRCMMod35GrenadeWeapon",WeaponNames=("srcm","srcm35"))
     Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
     Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
+
+    Records(122)=(ClassName="DH_Guns.DH_M1919A4Weapon",bShouldExcludeFromGiveAll=true,WeaponNames=("m1919a4"))
+    Records(123)=(ClassName="DH_Guns.DH_Fiat1435ACWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("fiat1435"))
+    Records(124)=(ClassName="DH_Guns.DH_Fiat1435WCWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("fiat1435w"))
 }

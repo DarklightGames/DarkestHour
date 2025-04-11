@@ -211,6 +211,11 @@ function static UpdateProxyMaterialColors(Actor A, Color Color)
     local FadeColor FC;
     local int i;
 
+    if (A == none)
+    {
+        return;
+    }
+
     for (i = 0; i < A.Skins.Length; ++i)
     {
         FB = FinalBlend(A.Skins[i]);
@@ -271,7 +276,7 @@ function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe || PawnOwner.Controller == none)
+    if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe)
     {
         Destroy();
     }

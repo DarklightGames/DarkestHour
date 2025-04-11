@@ -4,23 +4,12 @@
 //==============================================================================
 // CODING
 //==============================================================================
-// [ ] add a "point to" animation driver for the arm thing
-// [ ] make smoke grenade actually WP
-// [~] make sure you can't pick up other stationary weapons if you are currently
-//     holding one (currently working accidentially because of not being able to
-//     switch weapons while holding one)
-// [ ] when a player runs out of ammo, prompt them to press X to change round
-//     type.
 // [ ] allow resupply while holding (needs custom resupply logic for saved state)
-// [ ] add dust effect when weapon is deployed (same as constructions)
-// [ ] don't let the player pick it up while prone
-// [ ] shells are not visually in empty/reloading state on UI when out of ammo
 //==============================================================================
 // ART
 //==============================================================================
+// [~] third person carrying animations
 // [ ] third person raise/lower/binoc animations
-// [ ] third person carrying animations
-// [ ] re-export FP mesh without sight
 // [ ] add tube sliding sounds to the TP firing anims
 //==============================================================================
 // AUDIO
@@ -30,19 +19,31 @@
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] clicking after all HE has been fired doesn't swap to new ammo type
+// [ ] clicking fire or reload after all HE has been fired doesn't swap to new
+//     ammo type
 // [ ] can circumvent force switch behavior by picking up the weapon while
 //     unable to switch weapons (i.e. while reloading)
 // [ ] some sort of bug happening when the player gets into a bad state when
-//     interacting with the pickups (slows down, can't switch weapons etc.) PRONE-TOGGLING FIXES IT
+//     interacting with the pickups (slows down, can't switch weapons etc.)
+//     PRONE-TOGGLING FIXES IT [might not be an issue, could have been missing TP anims]
 // [ ] can get into the "rotating" state without the rotating weapon, leaving a
 //     permanent rotating decal under the gun. (seems to just be trying to 
 //     switch weapons fsr)
-// [ ] can deploy while doing first draw, due to fucky AnimEnd thing, it
-//     doesn't play the deploy animation. use STATES
 // [ ] when player dies on it, why is the ragdoll half into the ground?
 // [ ] mortar disappears when enterting and exiting a vehicle with it in-hand
+//     I think this is is happening because it loses its parent or reference.
 // [ ] player can still "move" camera while in locked view modes (gunsight etc.)
+// [ ] gun explodes if axis team deploys it in a "minefield"; seems the team is
+//     not being evaluated correctly.
+//==============================================================================
+// NICE TO HAVE
+//==============================================================================
+// [ ] make smoke grenade actually WP
+// [ ] add a "point to" animation driver for the arm thing (when yawing the gun
+//     to the side, parts of the model don't line up because of the simplified
+//     rigging).
+// [ ] when a player runs out of ammo, prompt them to press X to change round
+//     type.
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;

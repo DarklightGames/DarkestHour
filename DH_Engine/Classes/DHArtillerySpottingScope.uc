@@ -354,7 +354,59 @@ function Draw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP)
         DrawPitch(C, VWP);
         DrawYaw(PC, C, VWP, Targets);
         DrawTargets(PC, C, VWP, Targets);
+        DrawBubbleLevel(C, VWP);
     }
+}
+
+function DrawBubbleLevel(Canvas C, DHVehicleWeaponPawn VWP)
+{
+    local float GUIScale, X, Y, XL, YL, Theta;
+    local float DeflectionDegrees;
+    local int DeflectionSign;
+
+    const Y_WIDTH = 256.0; // width of the bubble level in pixels
+    const Y_HEIGHT = 128.0; // height of the bubble level in pixels
+    const Y_POS = 0.075; // 7.5% from the top of the screen
+
+    GUIScale = C.ClipY / 1080.0;
+
+    XL = Y_WIDTH * GUIScale;
+    YL = Y_HEIGHT * GUIScale;
+    X = C.ClipX * 0.5 - XL * 0.5;
+    Y = C.ClipY * Y_POS - YL * 0.5;
+
+    // Frame
+    C.SetPos(X, Y);
+    C.DrawTileJustified(Texture'DH_InterfaceArt2_tex.bubble_level_frame', 1, XL, YL);
+
+    // Bubble
+    DeflectionDegrees = class'UUnits'.static.UnrealToDegrees(VWP.Gun.GetBoneRotation(VWP.CameraBone, 1).Roll);
+
+    if (DeflectionDegrees >= 0)
+    {
+        DeflectionSign = 1;
+    }
+    else if (DeflectionDegrees < 0)
+    {
+        DeflectionSign = -1;
+    }
+
+    const MAX_DEGREES = 1.5;
+
+    Theta = class'UInterp'.static.Interpolate(
+        class'UInterp'.static.MapRangeClamped(Abs(DeflectionDegrees), 0.0, MAX_DEGREES, 0.0, 1.0),
+        0.0, 1.0, INTERP_Cosine);
+
+    const DEFLECTION_SQUISH = 1.0; // squish factor for the bubble level
+    const DEFLECTION_TRANSLATE_FACTOR = 0.5; // translation factor for the bubble level
+
+    XL = (Y_HEIGHT * GUIScale) * (1.0 + ((1.0 - Theta) * DEFLECTION_SQUISH));
+    YL = Y_HEIGHT * GUIScale;
+    X = (C.ClipX * 0.5 - XL * 0.5) + (Theta * DEFLECTION_TRANSLATE_FACTOR * Y_HEIGHT * DeflectionSign);
+    Y = C.ClipY * Y_POS - YL * 0.5;
+
+    C.SetPos(X, Y);
+    C.DrawTile(Texture'DH_InterfaceArt2_tex.bubble_level_bubble', XL, YL, 0, 0, 127, 127);
 }
 
 function DrawRangeTable(Canvas C, DHVehicleWeaponPawn VWP)
