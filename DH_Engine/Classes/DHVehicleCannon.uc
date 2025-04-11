@@ -470,11 +470,11 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     }
     else if (!bDebugRangeManually && !bDebugRangeAutomatically)
     {
-        if (ProjectileClass == SecondaryProjectileClass && SecondarySpread > 0.0)
+        if (ProjectileClass == SecondaryProjectileClass)
         {
             ProjectileSpread = SecondarySpread;
         }
-        else if (ProjectileClass == TertiaryProjectileClass && TertiarySpread > 0.0)
+        else if (ProjectileClass == TertiaryProjectileClass)
         {
             ProjectileSpread = TertiarySpread;
         }
