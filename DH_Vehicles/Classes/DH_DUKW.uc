@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Fix engine fire position
-// [ ] Fix passengers all facing wild directions by default [why did this happen?]
+// [ ] Idle anims do not loop
 //==============================================================================
 // Bonus Marks:
 // [ ] Have a special emitter for the propeller and bow wash
