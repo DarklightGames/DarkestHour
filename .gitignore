@@ -121,3 +121,13 @@ umodel.cfg
 *.til
 *.i64
 .bdk
+
+System/libSDL-1.2.so.0
+
+System/libsteam_api.so
+
+System/MSVCP71.DLL
+
+System/openal.so
+
+System/redorchestra-bin
