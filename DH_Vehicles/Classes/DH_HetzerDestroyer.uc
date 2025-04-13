@@ -2,37 +2,20 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] late/early variant
+//==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Hetzer_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex.utx
-
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
-    DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
-    DestroyedSkin.FallbackMaterial = Skins[0];
-    DestroyedSkin.CombineOperation = CO_Multiply;
-    DestroyedMeshSkins[0] = DestroyedSkin;
-
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
-    DestroyedSkin.Material1 = Texture'axis_vehicles_tex.Stug3_treads';
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
-    DestroyedSkin.FallbackMaterial = Skins[1];
-    DestroyedSkin.CombineOperation = CO_Multiply;
-    DestroyedMeshSkins[1] = DestroyedSkin;
-
-    super.DestroyAppearance();
-}
-
 defaultproperties
 {
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_German'
+    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_early_ext'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
+
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_BODY_ATTACHMENT_EARLY',AttachBone="body")
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
     ReinforcementCost=4
     FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=9.900000,LocationName="lower")
     FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")
@@ -57,22 +40,22 @@ defaultproperties
     MaxPitchSpeed=450.000000
     RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
     TreadVelocityScale=55.000000
-    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
-    LeftWheelBones(0)="Wheel_L_1"
-    LeftWheelBones(1)="Wheel_L_2"
-    LeftWheelBones(2)="Wheel_L_3"
-    LeftWheelBones(3)="Wheel_L_4"
-    LeftWheelBones(4)="Wheel_L_5"
-    LeftWheelBones(5)="Wheel_L_6"
-    LeftWheelBones(6)="Wheel_L_7"
-    RightWheelBones(0)="Wheel_R_1"
-    RightWheelBones(1)="Wheel_R_2"
-    RightWheelBones(2)="Wheel_R_3"
-    RightWheelBones(3)="Wheel_R_4"
-    RightWheelBones(4)="Wheel_R_5"
-    RightWheelBones(5)="Wheel_R_6"
-    RightWheelBones(6)="Wheel_R_7"
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    LeftWheelBones(0)="Wheel_1_L"
+    LeftWheelBones(1)="Wheel_2_L"
+    LeftWheelBones(2)="Wheel_3_L"
+    LeftWheelBones(3)="Wheel_4_L"
+    LeftWheelBones(4)="Wheel_5_L"
+    LeftWheelBones(5)="Wheel_6_L"
+    LeftWheelBones(6)="Wheel_7_L"
+    RightWheelBones(0)="Wheel_1_R"
+    RightWheelBones(1)="Wheel_2_R"
+    RightWheelBones(2)="Wheel_3_R"
+    RightWheelBones(3)="Wheel_4_R"
+    RightWheelBones(4)="Wheel_5_R"
+    RightWheelBones(5)="Wheel_6_R"
+    RightWheelBones(6)="Wheel_7_R"
     WheelRotationScale=20000.000000
     TreadHitMaxHeight=8.000000
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.hetzer_turret_rot'
@@ -109,70 +92,65 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.610000
     VehicleHudOccupantsY(4)=0.610000
     VehicleHudEngineY=0.610000
+
     VehHitpoints(0)=(PointRadius=30.000000,PointOffset=(X=-60.000000))
     VehHitpoints(1)=(PointRadius=18.000000,PointBone="body",PointOffset=(Y=-28.299999,Z=-5.500000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=74.000000,Y=26.700001,Z=-9.400000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=29.000000,Y=26.700001,Z=-9.400000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
     VehHitpoints(4)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=38.500000,Y=35.299999,Z=37.299999),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
     VehHitpoints(5)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=1.000000,Y=35.299999,Z=37.299999),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone=
+
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=True
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=12.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+    Wheels(0)=LF_Steering
 
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=True
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=12.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+    Wheels(1)=RF_Steering
 
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=True
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-18.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+    Wheels(2)=LR_Steering
 
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=True
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-18.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+    Wheels(3)=RR_Steering
 
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=True
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-3.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
 
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=True
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-3.000000)
-        WheelRadius=30.000000
+        WheelRadius=32
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     VehicleMass=11.000000
     bDrawDriverInTP=False
@@ -194,13 +172,7 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     // reduced reliability due to increased weight
-    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_ext'
-    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
-    Skins(1)=Texture'axis_vehicles_tex.Stug3_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Stug3_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.Alpha'
-    Skins(4)=Texture'DH_Hetzer_tex.hetzer_int'
-    Skins(5)=Texture'DH_Hetzer_tex.Hetzer_driver_glass'
+
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.000000
         KInertiaTensor(3)=3.000000
@@ -219,5 +191,5 @@ defaultproperties
         KFriction=0.500000
         KImpactThreshold=700.000000
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

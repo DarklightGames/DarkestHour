@@ -20,11 +20,12 @@ simulated function NextWeapon()
 
 defaultproperties
 {
-     BinocsDrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionUpAnim="MG_open",DriverTransitionAnim="VT60_com_close")
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionDownAnim="MG_close",DriverTransitionAnim="VT60_com_open")
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG')
-     GunClass=Class'DH_HetzerMountedMG'
-     DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
+     BinocsDrivePos=(X=0,Y=0,Z=0)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionUpAnim="MG_open",DriverTransitionAnim="VT60_com_close")
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionDownAnim="MG_close",DriverTransitionAnim="VT60_com_open")
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext')
+     GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
+     DrivePos=(X=0,Y=0,Z=0)
      DriveAnim="VT60_com_idle_open"
+     GunsightCameraBone="GUNSIGHT_CAMERA"
 }

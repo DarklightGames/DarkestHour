@@ -10,14 +10,18 @@ defaultproperties
     //Gun Class
     GunClass=Class'DH_HetzerCannon'
 
+    CameraBone="GUNSIGHT_CAMERA"
+    PeriscopeCameraBone="PERISCOPE_CAMERA"
+
     //Driver's positions & anims
-    DriverPositions(0)=(ViewLocation=(X=37.000000,Y=-35.000000,Z=12.000000),ViewFOV=15.0,bDrawOverlays=true)
-    DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=7.200000,TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
+    DriverPositions(0)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=15.0,bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(Z=0),ViewFOV=7.2,TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
     DriverPositions(2)=(TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.000000,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true,bExposed=true)
 
     PeriscopePositionIndex=1
-    DrivePos=(X=5.000000,Z=-29.000000)
+    BinocPositionIndex=3
+    DrivePos=(X=0,Y=0,Z=58.0)
     bHasAltFire=false
     DriveAnim="VStug3_com_idle_close"
 

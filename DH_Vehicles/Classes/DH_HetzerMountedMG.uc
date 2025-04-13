@@ -7,12 +7,17 @@ class DH_HetzerMountedMG extends DH_StuH42MountedMG;
 
 defaultproperties
 {
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Hetzer_MG_collision')
-    FireAttachBone="Gun_placement"
-    FireEffectOffset=(X=-30.000000,Y=5.000000,Z=0.000000)
-    AmbientEffectEmitterClass=Class'DH_HetzerVehicleMGEmitter'
-    CustomPitchUpLimit=2100
-    CustomPitchDownLimit=63100
+    Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_EXT'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext'
+    Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_MG_collision')
+    WeaponFireAttachmentBone="MUZZLE"
+    FireEffectOffset=(X=-4.0)
+    AmbientEffectEmitterClass=Class'DH_Vehicles.DH_HetzerVehicleMGEmitter'
+    CustomPitchUpLimit=1092         // + 6 degrees
+    CustomPitchDownLimit=63716      // -10 degrees
     BeginningIdleAnim="MG_idle_close"
-    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG'
+    PitchBone="PITCH"
+    YawBone="YAW"
+    bLimitYaw=false
 }

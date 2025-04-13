@@ -7,9 +7,11 @@ class DH_HetzerCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
-    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
+    Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_EXT'
+    Skins(0)=Texture'DH_Hetzer_tex.HETZER_BODY_EXT'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Hetzer_mantlet_collision',AttachBone="Gun")
+
+    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_BODY_ATTACHMENT_EARLY',AttachBone="body")
 
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
@@ -64,12 +66,17 @@ defaultproperties
     FireEffectOffset=(X=5.000000)
     YawStartConstraint=-2000.000000
     YawEndConstraint=3000.000000
-    PitchBone="gun_pitch"
-    WeaponFireOffset=34.200001
-    CustomPitchUpLimit=1820
-    CustomPitchDownLimit=64444
-    MaxPositiveYaw=2000
-    MaxNegativeYaw=-910
+    PitchBone="PITCH"
+    YawBone="YAW"
+    WeaponFireAttachmentBone="MUZZLE"
+    WeaponFireOffset=0
+
+    CustomPitchUpLimit=2184     // +12 degrees
+    CustomPitchDownLimit=64444  // -6 degrees
+
+    MaxPositiveYaw=2002     // +11 degrees
+    MaxNegativeYaw=-910     // -5 degrees
+
     bLimitYaw=True
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=8
