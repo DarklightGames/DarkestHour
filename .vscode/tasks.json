@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "py tools/make/make.py -mod DarkestHourDev .",
+            "command": "python tools/make/make.py -mod DarkestHourDev .",
             "problemMatcher": [
                 {
                     "owner": "unrealscript",
@@ -41,7 +41,7 @@
         {
             "label": "Build with Parameters",
             "type": "shell",
-            "command": "py tools/make/make.py ${input:buildArgs} -mod DarkestHourDev .",
+            "command": "python tools/make/make.py ${input:buildArgs} -mod DarkestHourDev .",
             "problemMatcher": [
                 {
                     "owner": "unrealscript",
