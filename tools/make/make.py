@@ -477,7 +477,7 @@ def main():
 
         for package_name in compiled_packages:
             package_name = os.path.splitext(package_name)[0]
-            old_package_crcs[package_name] = manifest._package_crcs[package_name]
+            old_package_crcs[package_name] = manifest.package_crcs[package_name]
 
         # Delete the CRCs of changed packages that failed to compile.
         for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
