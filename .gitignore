@@ -124,3 +124,12 @@ umodel.cfg
 .bdk
 DH_Engine/Classes/DHBuildManifest.uc
 __pycache__
+
+# Linux
+*.dxvk-cache
+System/GLCache/
+System/libSDL-1.2.so.0
+System/libsteam_api.so
+System/MSVCP71.DLL
+System/openal.so
+System/redorchestra-bin
