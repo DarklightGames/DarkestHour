@@ -5,27 +5,49 @@
 
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
 
+var() RangeInt HatchClearRange;
+
+simulated function bool IsHatchBlocked()
+{
+    if (Gun == none)
+    {
+        return false;
+    }
+
+    if (Gun.CurrentAim.Yaw < HatchClearRange.Min || Gun.CurrentAim.Yaw > HatchClearRange.Max)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Modified to prevent player from unbuttoning if MG is not turned sideways (otherwise it will be blocking hatch, due to hetzer's small size)
 simulated function NextWeapon()
 {
-    if (Gun != none && Abs(Gun.CurrentAim.Yaw) > 10700 && Abs(Gun.CurrentAim.Yaw) < 22700) // to open, MG must be between approx 2 to 4 o'clock, or 8 to 10 o'clock
+    if (IsHatchBlocked())
     {
-        super.NextWeapon();
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage');
+        }
+
+        return;
     }
-    else if (IsHumanControlled())
-    {
-        PlayerController(Controller).ReceiveLocalizedMessage(Class'DH_HetzerVehicleMessage', 1); // "MG is blocking the hatch - turn it sideways to open"
-    }
+
+    super.NextWeapon();
 }
 
 defaultproperties
 {
-     BinocsDrivePos=(X=0,Y=0,Z=0)
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionUpAnim="MG_open",DriverTransitionAnim="VT60_com_close")
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionDownAnim="MG_close",DriverTransitionAnim="VT60_com_open")
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext')
-     GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
-     DrivePos=(X=0,Y=0,Z=0)
-     DriveAnim="VT60_com_idle_open"
-     GunsightCameraBone="GUNSIGHT_CAMERA"
+    HatchClearRange=(Min=-24500,Max=-18200)
+    BinocsDrivePos=(X=0,Y=0,Z=0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionUpAnim="raise",DriverTransitionAnim="VT60_com_close")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext',TransitionDownAnim="lower",DriverTransitionAnim="VT60_com_open")
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG_ext')
+    GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
+    DrivePos=(X=0,Y=0,Z=0)
+    DriveAnim="VT60_com_idle_open"
+    GunsightCameraBone="GUNSIGHT_CAMERA"
+    CameraBone="COM_CAMERA"
 }
