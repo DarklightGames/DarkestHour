@@ -180,7 +180,7 @@ defaultproperties
 {
     PostHintDisplayDelay=10.0
     Hints(0)=(Title="Welcome to Darkest Hour!",Text="These hint messages will show up periodically in the game. Pay attention to them, your survival might depend on it! They can be disabled from the HUD tab in the configuration menu.")
-    Hints(1)=(Title="Mantling",Text="You are able to mantle on to small obstacles! To mantle, stand in front of any low obstacle until the mantling icon to appears then press %JUMP% to mantle on top of the obstacle.")
+    Hints(1)=(Title="Mantling",Text="You are able to mantle on to small obstacles! To mantle, stand in front of any low obstacle until the mantling icon appears then press %JUMP% to mantle on top of the obstacle.")
     Hints(2)=(Title="Parachutes",Text="You can guide your parachute's trajectory with your movement keys!")
     Hints(3)=(Title="Coloured Smoke Grenades",Text="Coloured smoke grenades are used to communicate on the battlefield with your teammates. Be sure to tell your teammates what the coloured smoke indicates.")
     Hints(6)=(Title="Mortars",Text="While you are holding a mortar you cannot change weapons, sprint, prone or mantle. To deploy your mortar, crouch on flat ground and press %DEPLOY%.")
