@@ -5,7 +5,6 @@
 // [ ] top MG shells not ejected the right direction & don't collide with top of tank (done with an emitter)
 // [ ] you can destroy the thing by penetrating the MG
 // [ ] late variant
-// [ ] don't shake screen when firing with no ammo
 // [ ] if we want to go FULL HOG, we could force the MG to a particular orientation
 //     and do a reload sequence, at least in third person; would look SWEET
 // [ ] TP and FP anims for all 
@@ -16,6 +15,9 @@
 // [ ] exhaust position on late variant
 // [ ] destroyed mesh
 // [ ] destroyed textures (for statics)
+// [ ] destroyed treads
+// [ ] bushes
+// [ ] hatch opening/closing sounds in animations
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;

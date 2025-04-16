@@ -69,6 +69,10 @@ var() array<RandomAttachmentGroup> RandomAttachmentGroups;
 const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
 var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
 
+// Use this to set the skins of all random attachments at once.
+// These skins will be applied before individual skins (from VehicleAttachment) are applied.
+var array<Material> RandomAttachmentSkins;
+
 struct VehicleComponentController
 {
     var() int Channel;
@@ -3253,6 +3257,15 @@ simulated function SpawnVehicleAttachments()
 
                 if (VA.StaticMesh != none)
                 {
+                    // Apply global skin override to the attachment if no per-attachment skin is specified.
+                    for (j = 0; j < RandomAttachmentSkins.Length; ++j)
+                    {
+                        if (VA.Skins[j] == none && RandomAttachmentSkins[j] != none)
+                        {
+                            VA.Skins[j] = RandomAttachmentSkins[j];
+                        }
+                    }
+
                     VehicleAttachments[VehicleAttachments.Length] = VA;
                 }
             }

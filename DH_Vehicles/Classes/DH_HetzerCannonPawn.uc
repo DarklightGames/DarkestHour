@@ -5,14 +5,6 @@
 
 class DH_HetzerCannonPawn extends DHAssaultGunCannonPawn;
 
-var() int PeriscopeRotation;
-
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        PeriscopeRotation;
-}
-
 defaultproperties
 {
     //Gun Class
