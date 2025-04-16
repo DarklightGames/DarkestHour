@@ -25,6 +25,11 @@ var     vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     StaticMesh              EmptyStaticMesh;
 
+// This is a bit of a hack; the stationary weapons will be forced to be brought up as soon
+// as they are added to the inventory. However, if the player is busy (reloading, etc) then
+// the weapon will not be brought up. In future, replace this with a more elegant solution.
+var     bool                    bCanPickupWhileBusy;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -72,10 +77,29 @@ auto state Pickup
 {
     function bool ValidTouch(Actor Other)
     {
-        return !(DHPawn(Other) != none &&
-                 (DHPawn(Other).bOnFire ||
-                 !DHPawn(Other).bCanPickupWeapons)) &&
-               super.ValidTouch(Other);
+        local DHPawn Pawn;
+        local DHWeapon Weapon;
+
+        Pawn = DHPawn(Other);
+
+        if (Pawn == none)
+        {
+            return false;
+        }
+
+        Weapon = DHWeapon(Pawn.Weapon);
+
+        if (!bCanPickupWhileBusy && Weapon != none && !Weapon.WeaponCanSwitch())
+        {
+            return false;
+        }
+
+        if (Pawn.bOnFire || !Pawn.bCanPickupWeapons)
+        {
+            return false;
+        }
+
+        return super.ValidTouch(Other);
     }
 
     function Timer()
@@ -99,7 +123,10 @@ function bool ArePlayersNearby()
 
     foreach RadiusActors(class'DHPawn', DHP, class'DHUnits'.static.MetersToUnreal(PlayerNearbyRadiusMeters))
     {
-        return true;
+        if (DHP.Controller != none)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -229,4 +256,5 @@ defaultproperties
     bAcceptsProjectors=false
     PlayerNearbyRadiusMeters=5
     PlayerNearbyRetryTime=10
+    bCanPickupWhileBusy=true
 }

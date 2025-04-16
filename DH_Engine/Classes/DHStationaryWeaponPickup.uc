@@ -75,5 +75,6 @@ function InitDroppedPickupFor(Inventory Inv)
 
 defaultproperties
 {
+    bCanPickupWhileBusy=false
     PlayerNearbyRadiusMeters=250
 }
