@@ -73,6 +73,7 @@ defaultproperties
     YawBone="YAW"
     WeaponFireAttachmentBone="MUZZLE"
     WeaponFireOffset=0
+    GunnerAttachmentBone="TURRET"
 
     CustomPitchUpLimit=2184     // +12 degrees
     CustomPitchDownLimit=64444  // -6 degrees
