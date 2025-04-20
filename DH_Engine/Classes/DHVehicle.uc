@@ -31,8 +31,8 @@ struct VehicleAttachment
     var array<Material> Skins;
     var bool            bHasCollision;
     var float           CullDistance;
-    var bool            bAttachToWeapon;
-    var int             WeaponAttachIndex;
+    var bool            bAttachToWeapon;    // When true, attach this to a weapon instead of the base vehicle.
+    var int             WeaponAttachIndex;  // When bAttachToWeapon is true, the index of the weapon to attach to.
 };
 
 // A static mesh and probability weight for random attachment options.
@@ -3332,7 +3332,6 @@ simulated function SpawnVehicleAttachments()
     }
 }
 
-// New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation, optional Actor AttachTarget)
 {

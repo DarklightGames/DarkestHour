@@ -7,7 +7,7 @@
 // [ ] late variant
 // [ ] if we want to go FULL HOG, we could force the MG to a particular orientation
 //     and do a reload sequence, at least in third person; would look SWEET
-// [ ] TP and FP anims for all 
+// [ ] TP and FP anims for all
 // [ ] add passengers in right spot
 // [ ] UI art (do against straight dunkelgelb)
 // [ ] fix rear cmd hatch collision
@@ -15,7 +15,6 @@
 // [ ] exhaust position on late variant
 // [ ] destroyed mesh
 // [ ] destroyed textures (for statics)
-// [ ] destroyed treads
 // [ ] bushes
 // [ ] hatch opening/closing sounds in animations
 //==============================================================================
@@ -26,8 +25,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_BODY_EARLY_EXT'
     Skins(0)=Texture'DH_Hetzer_tex.HETZER_BODY_EXT'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(1)=Texture'DH_Hetzer_tex.HETZER_TREADS'
+    Skins(2)=Texture'DH_Hetzer_tex.HETZER_TREADS'
 
     PeriscopeCameraBone="PERISCOPE_CAMERA"
     PeriscopePositionIndex=0
@@ -57,7 +56,7 @@ defaultproperties
     MaxPitchSpeed=450.000000
     RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     WheelRotationScale=30000.000000
-    TreadVelocityScale=100.000000
+    TreadVelocityScale=125.000000
     LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
     RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
     LeftWheelBones(0)="Wheel_1_L"
@@ -109,6 +108,9 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.610000
     VehicleHudOccupantsY(4)=0.610000
     VehicleHudEngineY=0.610000
+
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_Hetzer_stc.HETZER_TRACK_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_Hetzer_stc.HETZER_TRACK_R'
 
     ShadowZOffset=40
 

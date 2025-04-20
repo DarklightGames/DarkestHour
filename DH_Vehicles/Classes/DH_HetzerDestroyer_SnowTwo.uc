@@ -7,7 +7,9 @@ class DH_HetzerDestroyer_SnowTwo extends DH_HetzerDestroyer;
 
 defaultproperties
 {
-     CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
-     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
-     RandomAttachmentSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
+    CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
+    Skins(1)=Texture'DH_Hetzer_tex.HETZER_TREADS_WINTER'
+    Skins(2)=Texture'DH_Hetzer_tex.HETZER_TREADS_WINTER'
+    RandomAttachmentSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_winter2'
 }
