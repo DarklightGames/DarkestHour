@@ -78,8 +78,8 @@ defaultproperties
     //AmmoIgnitionProbability=0.2  // 0.75 default; 20mm ammo is unlikely to explode
     //TurretDetonationThreshold=5000.0 // increased from 1750
     //above properties dont compile
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
+    DamagedEffectHealthFireFactor=0.8
+    EngineHealth=100
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
