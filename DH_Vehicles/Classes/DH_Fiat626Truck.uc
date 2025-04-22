@@ -17,6 +17,7 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=2
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
+    FPCamPos=(X=10,Y=0,Z=0)
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat626_anm.fiat626_body_ext'

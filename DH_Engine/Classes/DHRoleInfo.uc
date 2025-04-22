@@ -372,4 +372,9 @@ defaultproperties
     HandType=Hand_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
+    // In order to replicate the locked state of the role, we need to enable property replication and ensure
+    // that the actor is always relevant. We'll also tone down the update frequency from 10 to 2 to reduce network load.
+    bSkipActorPropertyReplication=false
+    bAlwaysRelevant=true
+    NetUpdateFrequency=2
 }
