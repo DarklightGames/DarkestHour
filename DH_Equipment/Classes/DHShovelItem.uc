@@ -36,6 +36,10 @@ simulated function Fire(float F)
 simulated event DigDone()
 {
     local DHShovelBuildFireMode FM;
+    local DHPawn P;
+
+    //Test to see if this function is called
+    P = DHPawn(Instigator);
 
     FM = DHShovelBuildFireMode(FireMode[0]);
 
