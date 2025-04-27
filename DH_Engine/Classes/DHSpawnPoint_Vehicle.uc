@@ -279,6 +279,35 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
+function OnPawnSpawned(Pawn P)
+{
+    local DHPawn DHP;
+    local VehicleWeaponPawn VWP;
+
+    VWP = VehicleWeaponPawn(P);
+
+    if (VWP != none)
+    {
+        // Spawned as a passenger/weapon crew
+        DHP = DHPawn(VWP.Driver);
+    }
+    else
+    {
+        // TODO: Is this necessary? If we're spawning on a vehicle, we can't be
+        // on foot.
+        DHP = DHPawn(P);
+    }
+
+    if (DHP != none)
+    {
+        // TODO: Duplicates code in DarkestHourGame.OnPawnSpawned(). Refactor this!
+        // TODO: Spawn does not lock when player dies inside the vehicle.
+        DHP.SpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+        DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnKillProtectionTime;
+        DHP.SpawnPoint = self;
+    }
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHSpawnVehicleButtonStyle"
