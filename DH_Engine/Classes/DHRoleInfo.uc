@@ -20,6 +20,7 @@ var     bool                bCanUseMortars;         // role has functionality of
 var     bool                bCanCarryExtraAmmo;     // role can carry extra ammo
 var     bool                bSpawnWithExtraAmmo;    // role spawns with extra ammo
 var     bool                bCarriesRadio;          // role can carry radios
+var     bool                bIsLogiCrew;            // role can construct but can't spot
 var     bool                bCanPickupWeapons;
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select

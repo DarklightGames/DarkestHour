@@ -25,7 +25,9 @@ enum ERoleSelector
     ERS_ARTILLERY_SPOTTER,
     ERS_RADIOMAN,
     ERS_ADMIN,
-    ERS_PATRON
+    ERS_PATRON,
+    ERS_LOGISTICCREW,
+
 };
 
 var     EPatronTier             PatronTier;
@@ -47,6 +49,7 @@ var     int                     CategoryScores[2];
 
 var     localized string        SquadLeaderAbbreviation;
 var     localized string        AssistantAbbreviation;
+var     localized string        LogisticCrewAbbreviation;
 
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
@@ -70,6 +73,10 @@ simulated function string GetNamePrefix()
     else if (bIsSquadAssistant)
     {
         return default.AssistantAbbreviation;
+    }
+    else if (IsLogisticCrew()) 
+    {
+        return default.LogisticCrewAbbreviation;
     }
     else if (IsInSquad())
     {
@@ -100,6 +107,15 @@ simulated function bool IsAssistantLeader()
     return IsInSquad() && bIsSquadAssistant;
 }
 
+simulated function bool IsLogisticCrew()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Owner);
+
+    return PC != none && PC.IsLogisticCrew();
+}
+
 simulated function bool IsASL()
 {
     return IsAssistantLeader();
@@ -108,6 +124,11 @@ simulated function bool IsASL()
 simulated function bool IsSLorASL()
 {
     return IsSL() || IsASL();
+}
+
+simulated function bool IsAbleToConstruct() 
+{
+    return IsLogisticCrew() || IsSLorASL();
 }
 
 simulated function bool IsInSquad()
@@ -193,7 +214,12 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
 
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
-    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsAbleToConstruct();
+}
+
+simulated static function bool IsPlayerLicensedToSpawnDriveVehicle(DHPlayer C, DHRoleInfo RI)
+{
+    return RI.bIsLogiCrew || C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -226,6 +252,8 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
             return IsSL();
         case ERS_ASL:
             return IsASL();
+        case ERS_LOGISTICCREW:
+            return IsLogisticCrew();
         case ERS_ARTILLERY_SPOTTER:
             return IsArtillerySpotter();
         case ERS_ARTILLERY_OPERATOR:
@@ -265,5 +293,6 @@ defaultproperties
     SquadMemberIndex=-1
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
+    LogisticCrewAbbreviation="L"
     CountryIndex=-1
 }
