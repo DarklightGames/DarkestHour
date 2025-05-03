@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO:
+//  * Impact fuze: Add pickup functionality for impact explosives that failed
+//                 to blow up.
 
 class DHThrowableExplosiveProjectile extends DHProjectile
     abstract;
@@ -16,13 +19,21 @@ var     sound           WaterHitSound; // sound of this bullet hitting water
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
 var     PlayerReplicationInfo   SavedPRI;
-var     Pawn            SavedInstigator;
+var     Pawn                    SavedInstigator;
+
+// This flag disables the fuze timer and explodes the projectile on impact.
+var     bool            bExplodeOnImpact;
+
+// Impact speed and angle (in degrees) at which the projectile has to hit a surface to explode.
+// These values are in effect when `bExplodeOnImpact` is enabled.
+var     float           MinImpactSpeedToExplode;
+var     float           MaxImpactAOIToExplode;
 
 //==============================================================================
 // Variables from deprecated ROThrowableExplosiveProjectile:
 
 var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
-var     float           FuzeLengthTimer;
+var     float           FuzeLengthTimer;  // fuze time (has no effect when `bExplodeOnImpact` is on)
 var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
@@ -47,13 +58,22 @@ replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        FuzeLengthTimer, Bounces, bDud;
+        Bounces, bDud;
+
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority && !bExplodeOnImpact)
+        FuzeLengthTimer;
 }
 
 // From ROThrowableExplosiveProjectile & ROGrenadeProjectile, combined
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    // Forgo tick, as we don't need it when the impact fuze is enabled.
+    if (bExplodeOnImpact)
+    {
+        Disable('Tick');
+    }
 
     if (Role == ROLE_Authority)
     {
@@ -150,10 +170,11 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-// Modified from ROThrowableExplosiveProjectile to optimise
+// Modified from ROThrowableExplosiveProjectile to optimize
 simulated function Tick(float DeltaTime)
 {
-    if (!bAlreadyExploded)
+    // The tick is disabled when impact fuze is on, but we double check it here just in case.
+    if (!bAlreadyExploded && !bExplodeOnImpact)
     {
         FuzeLengthTimer -= DeltaTime;
 
@@ -465,7 +486,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local RODestroyableStaticMesh DestroMesh;
     local vector        VNorm;
     local ESurfaceTypes ST;
-    local int           i;
+    local int           i, ImpactSpeed;
+    local float         ImpactAOI;
 
     DestroMesh = RODestroyableStaticMesh(Wall);
 
@@ -501,6 +523,28 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
 
+    // Check if the projectile can explode.
+    // It shouldn't detonate when it hits a player (to discourage players
+    // throwing impact explosives at each other)
+    if (bExplodeOnImpact && ROPawn(Wall) == none)
+    {
+        ImpactSpeed = VSize(Velocity);
+        ImpactAOI = Abs(class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
+
+        // Are we hitting the wall hard enough and at a right angle to explode?
+        // TODO: maybe use CheckWall() to get hit surface Hardness & use that
+        // to calculate required ImpactSpeed?
+
+        if (ImpactSpeed >= default.MinImpactSpeedToExplode &&
+            ImpactAOI <= default.MaxImpactAOIToExplode)
+        {
+            // EXPLODE ME!
+            Explode(Location, vect(0.0, 0.0, 1.0));
+            return;
+        }
+    }
+
+    // We haven't exploded yet, so we keep bouncing.
     Bounces--;
 
     if (Bounces <= 0)
