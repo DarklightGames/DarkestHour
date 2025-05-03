@@ -26,4 +26,6 @@ defaultproperties
     PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireImpulse=(X=-95000.0)
+    OverlayCorrectionX=2
+    OverlayCorrectionY=10
 }

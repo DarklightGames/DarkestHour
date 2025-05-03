@@ -8,4 +8,6 @@ class DH_WolverineCannonPawn_Early extends DH_WolverineCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_WolverineCannon_Early'
+    OverlayCorrectionX=3
+    OverlayCorrectionY=23
 }
