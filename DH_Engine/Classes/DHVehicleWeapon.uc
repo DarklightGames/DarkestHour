@@ -1269,9 +1269,10 @@ simulated function InitializeWeaponPawn(DHVehicleWeaponPawn WeaponPwn)
 // we use the vehicle's attachment system to specify the attachments for the vehicle weapon as well.
 simulated function SpawnWeaponAttachments()
 {
-    local int i, j;
+    local int i, j, k;
     local DHVehicle V;
     local DHVehicle.VehicleAttachment VA;
+    local Actor Attachment;
 
     if (Base == none)
     {
@@ -1305,7 +1306,26 @@ simulated function SpawnWeaponAttachments()
                     VA.AttachClass = class'DHDecoAttachment';
                 }
 
-                V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
+                Attachment = V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
+
+                for (k = 0; k < VA.Skins.Length; ++k)
+                {
+                    if (VA.Skins[k] != none)
+                    {
+                        Attachment.Skins[k] = VA.Skins[k];
+                    }
+                }
+
+                if (VA.bHasCollision)
+                {
+                    Attachment.SetCollision(true, true);
+                    Attachment.bWorldGeometry = true;
+                }
+
+                Attachment.CullDistance = VA.CullDistance;
+
+                V.VehicleAttachments[i].Actor = Attachment;
+
                 break;
             }
         }

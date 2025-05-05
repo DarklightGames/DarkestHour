@@ -22,4 +22,5 @@ defaultproperties
     PitchBone="PITCH"
     YawBone="YAW"
     bLimitYaw=false
+    GunnerAttachmentBone="ROOT"
 }
