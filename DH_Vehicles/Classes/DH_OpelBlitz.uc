@@ -9,6 +9,7 @@
 // [ ] set up variants (no canvas, transport, snow etc.)
 // [ ] engine hitpoint
 // [ ] new interface art
+// [ ] lower bench in the back so we can reuse the fiat 626 passenger animations
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -120,8 +121,8 @@ defaultproperties
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
-    ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0) // driver
-    ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)  // front passenger
+    ExitPositions(0)=(X=45,Y=-100,Z=60)
+    ExitPositions(1)=(X=45,Y=100,Z=60)
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
