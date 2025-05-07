@@ -133,9 +133,11 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-function SetVehicleTeam(int TeamIndex)
+function SetTeamNum(byte NewTeam)
 {
-    VehicleTeam = TeamIndex;
+    super.SetTeamNum(NewTeam);
+
+    VehicleTeam = NewTeam;
 
     if (MapIconAttachment != none)
     {
@@ -147,7 +149,7 @@ function SetVehicleTeam(int TeamIndex)
 function KDriverEnter(Pawn P)
 {
     // Update the owning team of the gun.
-    SetVehicleTeam(P.GetTeamNum());
+    SetTeamNum(P.GetTeamNum());
 
     if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {

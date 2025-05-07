@@ -17,20 +17,15 @@
 //==============================================================================
 // [ ] clicking fire or reload after all HE has been fired doesn't swap to new
 //     ammo type
-// [ ] can circumvent force switch behavior by picking up the weapon while
-//     unable to switch weapons (i.e. while reloading)
 // [ ] some sort of bug happening when the player gets into a bad state when
 //     interacting with the pickups (slows down, can't switch weapons etc.)
-//     PRONE-TOGGLING FIXES IT [might not be an issue, could have been missing TP anims]
+//     PRONE-TOGGLING FIXES IT [might not be an issue, could have been missing
+//     TP anims]
 // [ ] can get into the "rotating" state without the rotating weapon, leaving a
 //     permanent rotating decal under the gun. (seems to just be trying to 
 //     switch weapons fsr)
 // [ ] when player dies on it, why is the ragdoll half into the ground?
-// [ ] mortar disappears when enterting and exiting a vehicle with it in-hand
-//     I think this is is happening because it loses its parent or reference.
 // [ ] player can still "move" camera while in locked view modes (gunsight etc.)
-// [ ] gun explodes if axis team deploys it in a "minefield"; seems the team is
-//     not being evaluated correctly.
 //==============================================================================
 // NICE TO HAVE
 //==============================================================================
