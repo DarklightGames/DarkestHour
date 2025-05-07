@@ -299,7 +299,7 @@ function bool RelevantPawnInMineVolume(Pawn P)
     }
 
     // Check whether the pawn has been in the MV too long & needs to be killed
-    if (PawnInMineVolumeTooLong(P))
+    if (IsPawnInMineVolumeTooLong(P))
     {
         KillPawn(P);
 
@@ -317,7 +317,7 @@ function bool RelevantVehicleInMineVolume(ROVehicle Vehicle)
     local Pawn Occupant;
     local int  i;
 
-    bVehicleBeingDestroyed = PawnInMineVolumeTooLong(Vehicle); // if vehicle is going to get blown up then for now just set a flag so we can handle warnings
+    bVehicleBeingDestroyed = IsPawnInMineVolumeTooLong(Vehicle); // if vehicle is going to get blown up then for now just set a flag so we can handle warnings
 
     // Loop through all vehicle positions & handle any occupants
     Occupant = Vehicle.Driver;
@@ -414,16 +414,18 @@ function bool IsARelevantPawn(Pawn P)
         PawnTeam = P.GetTeamNum();
     }
 
+    Log("IsARelevantPawn" @ P @ "Team=" @ PawnTeam);
+
     return (PawnTeam == AXIS_TEAM_INDEX && MineKillStyle == KS_Axis) || (PawnTeam == ALLIES_TEAM_INDEX && MineKillStyle == KS_Allies);
 }
 
-// New function to check if pawn has been inside the mine volume too long & is going to get blown up (added for readability in other functions)
-function bool PawnInMineVolumeTooLong(Pawn P)
+// Check if pawn has been inside the mine volume too long & is going to get blown up (added for readability in other functions)
+function bool IsPawnInMineVolumeTooLong(Pawn P)
 {
     return (Level.TimeSeconds - P.MineAreaEnterTime) >= KillTime;
 }
 
-// New function to check whether a warning message is due (added for readability in other functions)
+// Check whether a warning message is due (added for readability in other functions)
 function bool WarningDueForPawn(Pawn P)
 {
     return (Level.TimeSeconds - P.MineAreaWarnTime) >= WarnInterval;

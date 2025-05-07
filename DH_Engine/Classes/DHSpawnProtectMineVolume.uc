@@ -166,9 +166,9 @@ function bool ProtectionActiveForPawn(Pawn P)
 }
 
 // Modified so pawn is safe if it has protection from this mine volume
-function bool PawnInMineVolumeTooLong(Pawn P)
+function bool IsPawnInMineVolumeTooLong(Pawn P)
 {
-    return super.PawnInMineVolumeTooLong(P) && !ProtectionActiveForPawn(P);
+    return super.IsPawnInMineVolumeTooLong(P) && !ProtectionActiveForPawn(P);
 }
 
 defaultproperties
