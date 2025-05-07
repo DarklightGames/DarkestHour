@@ -93,6 +93,16 @@ Begin:
     GotoState('Idle');
 }
 
+function DHVehicleState EnsureVehicleState()
+{
+    if (VehicleState == none)
+    {
+        VehicleState = class'DHVehicleState'.static.GetDefaultVehicleState(VehicleClass);
+    }
+
+    return VehicleState;
+}
+
 function DHVehicleState GetVehicleState()
 {
     return VehicleState;
@@ -122,17 +132,87 @@ function UpdateHudAmmoCount()
     }
 }
 
-public function bool ResupplyAmmo()
+function bool FillAmmo()
 {
-    local bool bResult;
-    
-    bResult = super.ResupplyAmmo();
+    local int i, j;
+    local bool bDidResupply, bDidResupplyWeapon, bDidResupplyCannon;
+    local int MainAmmoResupplyCount;
+    local DHVehicleWeaponState VehicleWeaponState;
+    local class<DHVehicleWeapon> VehicleWeaponClass;
+    local class<DHVehicleCannon> VehicleCannonClass;
 
-    // TODO: how to handle resupplying while being held? we need the same rules
-    //  as vehicles, but I don't want to just duplicate the logic.
-    UpdateHudAmmoCount();
+    if (VehicleClass == none)
+    {
+        return false;
+    }
 
-    return false;
+    EnsureVehicleState();
+
+    if (Level.TimeSeconds <= LastResupplyTimestamp + ResupplyInterval)
+    {
+        return false;
+    }
+
+    for (i = 0; i < VehicleState.WeaponStates.Length; ++i)
+    {
+        bDidResupplyWeapon = false;
+
+        if (VehicleState.WeaponStates[i] == none || VehicleClass.default.PassengerWeapons[i].WeaponPawnClass == none)
+        {
+            continue;
+        }
+
+        VehicleWeaponClass = class<DHVehicleWeapon>(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass);
+
+        if (VehicleWeaponClass == none)
+        {
+            continue;
+        }
+
+        VehicleWeaponState = VehicleState.WeaponStates[i];
+
+        if (VehicleWeaponState.NumMGMags < VehicleWeaponClass.default.NumMGMags)
+        {
+            ++VehicleWeaponState.NumMGMags;
+            bDidResupplyWeapon = true;
+        }
+
+        if (ClassIsChildOf(VehicleWeaponClass, class'DHVehicleCannon'))
+        {
+            VehicleCannonClass = class<DHVehicleCannon>(VehicleWeaponClass);
+            MainAmmoResupplyCount = VehicleCannonClass.default.MainAmmoResupplyPerInterval;
+
+            do
+            {
+                bDidResupplyCannon = false;
+                for (j = 0; j < arraycount(VehicleWeaponState.MainAmmoCharge); ++j)
+                {
+                    if (MainAmmoResupplyCount > 0 && VehicleWeaponState.MainAmmoCharge[j] < VehicleCannonClass.static.GetMaxAmmo(j))
+                    {
+                        ++VehicleWeaponState.MainAmmoCharge[j];
+                        --MainAmmoResupplyCount;
+                        bDidResupplyCannon = true;
+                        bDidResupplyWeapon = true;
+                    }
+                }
+            }
+            until (MainAmmoResupplyCount == 0 || bDidResupplyCannon == false);
+        }
+
+        if (bDidResupplyWeapon)
+        {
+            VehicleWeaponState.LastResupplyTimestamp = Level.TimeSeconds;
+            bDidResupply = true;
+        }
+    }
+
+    if (bDidResupply)
+    {
+        UpdateHudAmmoCount();
+        LastResupplyTimestamp = Level.TimeSeconds;
+    }
+
+    return bDidResupply;
 }
 
 // Modified so that the UI knows when we're out of ammo and can show the ammo icon greyed out.

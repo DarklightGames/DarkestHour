@@ -915,16 +915,16 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-simulated function int GetMaxAmmo(int AmmoIndex)
+simulated static function int GetMaxAmmo(int AmmoIndex)
 {
     switch (AmmoIndex)
     {
         case 0:
-            return MaxPrimaryAmmo;
+            return default.MaxPrimaryAmmo;
         case 1:
-            return MaxSecondaryAmmo;
+            return default.MaxSecondaryAmmo;
         case 2:
-            return MaxTertiaryAmmo;
+            return default.MaxTertiaryAmmo;
         default:
             return 0;
     }
