@@ -419,7 +419,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector = Spawn(class'DHConstructionProxyProjector', self, ,Location,Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;

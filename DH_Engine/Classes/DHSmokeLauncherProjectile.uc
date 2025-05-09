@@ -13,18 +13,18 @@ var float       SmokeTrailDuration; // we want to destroy the trail a few second
 
 simulated function PostBeginPlay()
 {
-    if ( Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
+    if (Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
     {
-        SmokeTrail = Spawn(MortarSmokeTrailClass,self);
+        SmokeTrail = Spawn(MortarSmokeTrailClass, self);
         SmokeTrail.SetBase(self);
     }
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function HandleDestruction()
 {
-    if ( SmokeTrail != None )
+    if (SmokeTrail != none)
     {
         SmokeTrail.LifeSpan = SmokeTrailDuration;
     }

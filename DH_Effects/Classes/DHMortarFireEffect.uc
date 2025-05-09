@@ -15,7 +15,7 @@ simulated function PostBeginPlay()
     }
     
     LightBrightness = RandRange(96, 150);
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function Timer()

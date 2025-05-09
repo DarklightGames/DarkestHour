@@ -15,7 +15,7 @@ var int    ServerRulesRefreshAttempts;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-    Super.InitComponent(InController, InOwner);
+    super.InitComponent(InController, InOwner);
 
     if (WrongVersionStyleName != "" && WrongVersionStyle == none)
     {

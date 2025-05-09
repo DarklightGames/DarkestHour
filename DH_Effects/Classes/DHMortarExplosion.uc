@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
         SetTimer(0.1, false);
     }
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function Timer()

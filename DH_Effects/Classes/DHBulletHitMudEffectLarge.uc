@@ -12,7 +12,7 @@ var Texture Impacts[4];
 simulated function PostBeginPlay()
 {
     Emitters[0].Texture = Impacts[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

@@ -10,7 +10,7 @@ var Texture SparkGroup[4];
 simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

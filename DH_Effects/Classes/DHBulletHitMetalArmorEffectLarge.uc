@@ -14,7 +14,7 @@ simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
     Emitters[6].Texture = ShrapGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

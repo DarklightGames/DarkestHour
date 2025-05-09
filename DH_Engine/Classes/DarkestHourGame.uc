@@ -137,8 +137,8 @@ event InitGame(string Options, out string Error)
     // Handle single-player voting
     if (Level.NetMode == NM_Standalone &&
         class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
-        VotingHandlerClass != None &&
-        VotingHandlerClass.Static.IsEnabled())
+        VotingHandlerClass != none &&
+        VotingHandlerClass.static.IsEnabled())
     {
         VotingHandler = Spawn(VotingHandlerClass);
 

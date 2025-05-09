@@ -46,7 +46,7 @@ function RetryPassword()
     EntryString = ed_Data.GetText();
     MyConsole = ExtendedConsole(PlayerOwner().Player.Console);
 
-    if (MyConsole != None && EntryString != "")
+    if (MyConsole != none && EntryString != "")
     {
         SavePassword(MyConsole, EntryString);
     }

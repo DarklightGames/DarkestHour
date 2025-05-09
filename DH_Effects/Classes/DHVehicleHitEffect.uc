@@ -15,7 +15,7 @@ simulated function InitHitEffects(Vector HitLoc, Vector HitNormal)
 
     if (HitDecal != None)
     {
-        Spawn(HitDecal,self,, Location, Rotator(-HitNormal));
+        Spawn(HitDecal, self,, Location, Rotator(-HitNormal));
     }
 }
 
