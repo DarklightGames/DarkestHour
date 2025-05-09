@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMudEffectLarge extends emitter;
+class DHBulletHitMudEffectLarge extends Emitter;
 
 //particles: 31
 

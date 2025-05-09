@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSnowEffectLarge extends emitter;
+class DHBulletHitSnowEffectLarge extends Emitter;
 
 //particles: 37
 

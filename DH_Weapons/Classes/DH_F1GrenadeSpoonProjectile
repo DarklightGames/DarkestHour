@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2024
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Client-side only "spoon" projectile for the US M1 Grenade. Spawned on the client
 // when a real grenade projectile is created, inheriting the a portion of the velocity

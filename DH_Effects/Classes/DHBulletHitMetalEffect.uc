@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMetalEffect extends emitter;
+class DHBulletHitMetalEffect extends Emitter;
 
 var Texture SparkGroup[4];
 

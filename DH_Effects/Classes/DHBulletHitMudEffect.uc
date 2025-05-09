@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMudEffect extends emitter;
+class DHBulletHitMudEffect extends Emitter;
 
 var Texture Impacts[4];
 

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitGrassEffectLarge extends emitter;
+class DHBulletHitGrassEffectLarge extends Emitter;
 
 //Particle count: 48
 

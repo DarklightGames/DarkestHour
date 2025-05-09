@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitGravelEffectLarge extends emitter;
+class DHBulletHitGravelEffectLarge extends Emitter;
 
 //Particle count: 33
 

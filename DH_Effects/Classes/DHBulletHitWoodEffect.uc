@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitWoodEffect extends emitter;
+class DHBulletHitWoodEffect extends Emitter;
 
 defaultproperties
 {
