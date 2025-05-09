@@ -389,15 +389,15 @@ state SpeechMenuVisible
 
         if (CanUseOrderCommands())
         {
-            for (i = 0; i < ROVP.Default.numCommands; i++)
+            for (i = 0; i < ROVP.default.numCommands; i++)
             {
-                if(ROVP.Default.OrderAbbrev[i] != "")
+                if(ROVP.default.OrderAbbrev[i] != "")
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderAbbrev[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderAbbrev[i];
                 }
                 else
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderString[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderString[i];
                 }
 
                 SMIndexArray[SMArraySize] = i;

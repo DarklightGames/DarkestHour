@@ -2504,7 +2504,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, Vector HitLoc)
 
             // Set initial angular and linear velocity for ragdoll.
             // Scale horizontal velocity for characters - they run really fast!
-            if (DamageType.Default.bRubbery)
+            if (DamageType.default.bRubbery)
             {
                 SkelParams.KStartLinVel = vect(0,0,0);
             }
@@ -2522,12 +2522,12 @@ function PlayDyingAnimation(class<DamageType> DamageType, Vector HitLoc)
             }
 
             // If not moving downwards - give extra upward kick
-            if (!DamageType.default.bLeaveBodyEffect && !DamageType.Default.bRubbery && (Velocity.Z > -10))
+            if (!DamageType.default.bLeaveBodyEffect && !DamageType.default.bRubbery && (Velocity.Z > -10))
             {
                 SkelParams.KStartLinVel.Z += RagDeathUpKick;
             }
 
-            if (DamageType.Default.bRubbery)
+            if (DamageType.default.bRubbery)
             {
                 Velocity = vect(0,0,0);
                 SkelParams.KStartAngVel = vect(0,0,0);
