@@ -12,6 +12,7 @@ class DHBulletHoleDev extends ROBulletHole;
 
 defaultproperties
 {
-    ProjTexture=Texture'DH_FX_Tex.Effects.DevImpact' //Purple Square impact to show off where a bullet landed
+    // TODO: These sounds got lost in a merge & need to be added back.
+    //ProjTexture=Texture'DH_FX_Tex.Effects.DevImpact' //Purple Square impact to show off where a bullet landed
     LifeSpan=30.0
 }

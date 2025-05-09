@@ -42,8 +42,9 @@ defaultproperties
     BashAnim="bash_attack_bottle"
     BashFinishAnim="bash_return_bottle"
     //TearDownSound=SoundGroup'DH_WeaponSounds.Shovel.shovel_hit'
-    GroundBashSound=Sound'DH_WeaponSounds.Halloween.BottleSmack'
-    GroundStabSound=Sound'DH_WeaponSounds.Halloween.BottleSmack'
-    PlayerStabSound=Sound'DH_WeaponSounds.Halloween.BottleStab'
-    PlayerBashSound=Sound'DH_WeaponSounds.Halloween.BottleStab'
+    // TODO: These sounds got lost in a merge & need to be added back.
+    // GroundBashSound=Sound'DH_WeaponSounds.Halloween.BottleSmack'
+    // GroundStabSound=Sound'DH_WeaponSounds.Halloween.BottleSmack'
+    // PlayerStabSound=Sound'DH_WeaponSounds.Halloween.BottleStab'
+    // PlayerBashSound=Sound'DH_WeaponSounds.Halloween.BottleStab'
 }
