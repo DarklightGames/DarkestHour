@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CSAZ_SnowAssault extends DHCSAssaultRoles;  
+class DH_CSAZ_SnowAssault extends DHCSAssaultRoles;
 
 defaultproperties
 {

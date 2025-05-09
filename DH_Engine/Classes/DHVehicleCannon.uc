@@ -1686,7 +1686,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
             }
 
             return false;
-        }        
+        }
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;

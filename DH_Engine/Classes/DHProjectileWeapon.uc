@@ -750,8 +750,8 @@ simulated function bool IsInstigatorBipodDeployed()
 // Modified so no free aim if using ironsights, bipod, or melee attacking
 simulated function bool ShouldUseFreeAim()
 {
-    return bUsesFreeAim 
-        && !bUsingSights 
+    return bUsesFreeAim
+        && !bUsingSights
         && !(FireMode[1].IsFiring() && FireMode[1].bMeleeMode)
         && !(bCanBipodDeploy && IsInstigatorBipodDeployed());
 }
@@ -2355,7 +2355,7 @@ Begin:
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodMagEmptyReloadAnim))
-        {    
+        {
             Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
         else if (HasAnim(BipodMagPartialReloadAnim))
@@ -3532,7 +3532,7 @@ private simulated function float GetWeaponComponentAnimationTheta(EWeaponCompone
             return GetMagazinePercent();
         case DRIVER_Bolt:
             // Bolt-driven animations are expected to have 2 frames.
-            // The first frame is when the gun is waiting to bolt, and the second frame is where the 
+            // The first frame is when the gun is waiting to bolt, and the second frame is where the
             // gun is bolted and ready to fire.
             if (bWaitingToBolt)
             {

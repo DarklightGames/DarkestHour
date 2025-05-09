@@ -111,8 +111,8 @@ simulated function PostBeginPlay()
         if (FuzeType == FT_Impact)
         {
             ImpactFuzeMomentumThreshold = class'UInterp'.static.Lerp(
-                FRand(), 
-                ImpactFuzeMomentumThresholdRange.Min, 
+                FRand(),
+                ImpactFuzeMomentumThresholdRange.Min,
                 ImpactFuzeMomentumThresholdRange.Max
             );
         }
@@ -642,8 +642,8 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
         if (Level.NetMode != NM_DedicatedServer && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
             ImpactSoundVolume = class'UInterp'.static.MapRangeClamped(
-                Speed, 
-                ImpactSoundSpeedFactorRange.Min, ImpactSoundSpeedFactorRange.Max, 
+                Speed,
+                ImpactSoundSpeedFactorRange.Min, ImpactSoundSpeedFactorRange.Max,
                 ImpactSoundVolumeRange.Min, ImpactSoundVolumeRange.Max
                 );
 

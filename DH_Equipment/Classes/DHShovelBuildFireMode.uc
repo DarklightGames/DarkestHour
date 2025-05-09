@@ -67,7 +67,7 @@ event ModeDoFire()
     {
         GotoState('Building');
     }
-    else 
+    else
     {
         Weapon.StopFire(ThisModeNum);
     }

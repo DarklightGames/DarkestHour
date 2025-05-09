@@ -284,8 +284,8 @@ simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScal
     Style = GUIController.GetStyle(GetMapStyleName(), FontScale);
 
     // Set all the images to be the icon used for the vehicle.
-    if (VehicleClass != none && 
-        VehicleClass.default.MapIconAttachmentClass != none && 
+    if (VehicleClass != none &&
+        VehicleClass.default.MapIconAttachmentClass != none &&
         VehicleClass.default.MapIconAttachmentClass.default.IconMaterial != none)
     {
         M = VehicleClass.default.MapIconAttachmentClass.default.IconMaterial;

@@ -3643,7 +3643,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     {
         // Do not show the objective if it is supposed to be hidden on the map
         if (DHGRI.DHObjectives[i] == none ||
-            DHGRI.DHObjectives[i].bHideOnMap || 
+            DHGRI.DHObjectives[i].bHideOnMap ||
             (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideOnMapWhenInactive))
         {
             continue;

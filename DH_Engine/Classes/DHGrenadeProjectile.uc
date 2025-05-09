@@ -63,7 +63,7 @@ simulated function PostBeginPlay()
         RandSpin(100000.0);
         break;
     case ST_Tumble:
-        RotationRate.Pitch = -(90000 + Rand(30000)); 
+        RotationRate.Pitch = -(90000 + Rand(30000));
         break;
     }
 }

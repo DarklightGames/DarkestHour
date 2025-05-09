@@ -129,7 +129,7 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
 
     // Reload
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14) 
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)

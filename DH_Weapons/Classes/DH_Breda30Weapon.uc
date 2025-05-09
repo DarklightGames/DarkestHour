@@ -28,7 +28,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     BredaHideSpillBulletBones();
 }
 
-// This hides the two rounds that will spill out of the gun when the 
+// This hides the two rounds that will spill out of the gun when the
 simulated function HideProxySpillBullets()
 {
     local int i, j, k;

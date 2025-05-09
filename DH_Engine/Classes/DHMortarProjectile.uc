@@ -671,9 +671,9 @@ simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float V
     Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
     
     Pitch = class'UInterp'.static.MapRangeClamped(
-        Distance, 
-        PITCH_DISTANCE_METERS_MIN, 
-        PITCH_DISTANCE_METERS_MAX, 
+        Distance,
+        PITCH_DISTANCE_METERS_MIN,
+        PITCH_DISTANCE_METERS_MAX,
         PITCH_MAX,
         PITCH_MIN
     );

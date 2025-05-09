@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CSAZAmoebaPawn extends DH_CSAZPawn;  
+class DH_CSAZAmoebaPawn extends DH_CSAZPawn;
 
 defaultproperties
 {

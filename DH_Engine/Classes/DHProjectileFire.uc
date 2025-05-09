@@ -191,7 +191,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 
 simulated function bool IsInstigatorBipodDeployed()
 {
-    return Instigator != none && Instigator.bBipodDeployed;   
+    return Instigator != none && Instigator.bBipodDeployed;
 }
 
 function CalcSpreadModifiers()
@@ -414,7 +414,7 @@ function bool PreLaunchTrace(Vector Start, Vector Direction)
             }
 
             // We're primarily interested if we hit a player, but also need to check if hit an awkward collision or destroyable mesh that doesn't stop a bullet
-            if (DHPawn(A) != none || 
+            if (DHPawn(A) != none ||
                 (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) ||
                 (RODestroyableStaticMesh(A) != none && RODestroyableStaticMesh(A).bWontStopBullets))
             {
@@ -473,7 +473,7 @@ function bool PreLaunchTrace(Vector Start, Vector Direction)
 
     // We hit a special collision mesh or destroyable mesh (e.g. glass) that doesn't stop bullets
     // These are very rare & cause too many complications to be worth handling in pre-launch trace, so we'll just exit & let bullet spawn & handle things
-    if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) || 
+    if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) ||
         (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets) ||
         (DHThrowableExplosiveProjectile(Other) != none))
     {
@@ -493,8 +493,8 @@ function bool PreLaunchTrace(Vector Start, Vector Direction)
     }
 
     // Update hit effect (not if we hit a player, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
-    if (HitPlayer == none && 
-        ROWeaponAttachment(Weapon.ThirdPersonActor) != none && 
+    if (HitPlayer == none &&
+        ROWeaponAttachment(Weapon.ThirdPersonActor) != none &&
         Other != none &&
         (Other.bWorldGeometry || Other.IsA('Vehicle') || Other.IsA('VehicleWeapon')) || Other.Physics == PHYS_MovingBrush)
     {

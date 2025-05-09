@@ -1356,7 +1356,7 @@ exec function SetPeriscopeSize(float NewValue)
     if (IsDebugModeAllowed())
     {
         Log(Tag @ "PeriscopeSize =" @ NewValue @ " (was" @ PeriscopeSize $ ")");
-        PeriscopeSize = NewValue;        
+        PeriscopeSize = NewValue;
     }
 }
 

@@ -21,7 +21,7 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
 
     GroundSpeed=250
-    WalkingPct=0.3 
+    WalkingPct=0.3
     Health=500
     Stamina=500
     MinHurtSpeed=700.0

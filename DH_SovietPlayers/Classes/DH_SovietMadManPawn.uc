@@ -13,7 +13,7 @@ defaultproperties
     Skins(2)=Texture'DHSovietCharactersTex.soviet_gear.Gear'
 
     GroundSpeed=250
-    WalkingPct=0.3   
+    WalkingPct=0.3
     Health=300
     Stamina=500
     MinHurtSpeed=700.0

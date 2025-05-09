@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M9531Weapon extends DHBoltActionWeapon; 
+class DH_M9531Weapon extends DHBoltActionWeapon;
 //Hungarian 1931 modification of Mannlicher M95
 //Meant for hungarian loadouts (not volkssturm)
 

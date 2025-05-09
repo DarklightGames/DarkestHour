@@ -8,7 +8,7 @@
 class DH_FG42ScopedWeapon extends DH_FG42Weapon;
 
 defaultproperties
-{   
+{
     ItemName="FG 42 (ZFG42)"
     NativeItemName="Fallschirmjägergewehr 42 (ZFG42)"
     FireModeClass(0)=class'DH_Weapons.DH_FG42ScopedFire'

@@ -761,7 +761,7 @@ simulated function Tick(float DeltaTime)
 // New function to dynamically set the dust color based on the physics volume and
 // the material the vehicle is currently touching.
 simulated function UpdateDustColor()
-{ 
+{
     local Vector            HitLocation, HitNormal, TraceStart, TraceEnd;
     local Material          HitMaterial;
     local int               i;

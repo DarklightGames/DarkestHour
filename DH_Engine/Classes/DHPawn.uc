@@ -130,7 +130,7 @@ const PRONE_FROM_CROUCH_DELAY_SECONDS = 0.2;
 var float                   LastStartCrouchTime; // Stores the last time that StartCrouch was called (used for avoiding prone eye-height bug)
 
 // Smoke grenades for squad leaders
-const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_SMOKE = 4; 
+const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_SMOKE = 4;
 const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_COLORED_SMOKE = 6;
 
 // Gun Rotation
@@ -7599,9 +7599,9 @@ simulated function bool CanBuildWithShovel()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    return Level.NetMode == NM_Standalone || 
+    return Level.NetMode == NM_Standalone ||
            IsDebugModeAllowed() ||
-           !PRI.IsSquadLeader() || 
+           !PRI.IsSquadLeader() ||
            HasSquadmatesWithinDistance(50.0); // TODO: This shouldn't be a literal!
 }
 

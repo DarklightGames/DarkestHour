@@ -136,7 +136,7 @@ simulated function UpdateMagazineDriver()
 
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
-{    
+{
     if (ROWeapon(Owner) != none && !ROWeapon(Owner).IsBusy() && AllowFire() && (IsInState('FireLoop') || bWaitForRelease))
     {
         UpdateMagazineDriver();

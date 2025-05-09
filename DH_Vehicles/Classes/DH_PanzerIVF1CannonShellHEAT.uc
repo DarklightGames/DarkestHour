@@ -22,7 +22,7 @@ defaultproperties
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     //Penetration
-    DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced. 
+    DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced.
     DHPenetrationTable(1)=8.7
     DHPenetrationTable(2)=8.7
     DHPenetrationTable(3)=8.7
