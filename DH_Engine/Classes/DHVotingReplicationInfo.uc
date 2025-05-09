@@ -8,6 +8,24 @@ class DHVotingReplicationInfo extends VotingReplicationInfo
 
 var config bool bEnableSinglePlayerVoting; // for debugging purposes
 
+replication
+{
+    reliable if (Role < ROLE_Authority)
+        ServerForceMapVote;
+}
+
+function ServerForceMapVote(int MapIndex, int GameIndex)
+{
+    local DHVotingHandler DHVH;
+
+    DHVH = DHVotingHandler(VH);
+
+    if (DHVH != none)
+    {
+        DHVH.ForceMapVote(MapIndex, GameIndex, Owner);
+    }
+}
+
 // Grab data from VotingHandler on server side
 // Overriden to allow single-player debugging
 simulated function GetServerData()

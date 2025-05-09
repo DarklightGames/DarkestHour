@@ -264,7 +264,7 @@ replication
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientReceiveSquadPromotionRequest, ClientSendSquadPromotionRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt,
+        ClientReceiveVotePrompt, ClientMapVoteResponse,
         ClientAddPersonalMapMarker;
 
     unreliable if (Role < ROLE_Authority)
@@ -475,6 +475,19 @@ simulated function DH_LevelInfo GetLevelInfo()
     }
 
     return none;
+}
+
+// Get the currently open GUI page
+simulated function GUIPage GetGUIPage()
+{
+    local UT2K4GUIController GC;
+
+    GC = UT2K4GUIController(Player.GUIController);
+
+    if (GC != none)
+    {
+        return GC.FindMenuByClass(class'GUIPage');
+    }
 }
 
 // Modified to add hacky fix for problem where player re-joins a server with an active weapon lock saved in his DHPlayerSession
@@ -7082,18 +7095,9 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 
 simulated function ClientTeamSurrenderResponse(int Result)
 {
-    local UT2K4GUIController GC;
     local GUIPage Page;
 
-    // Find the currently open ROGUIRoleSelection menu and notify it
-    GC = UT2K4GUIController(Player.GUIController);
-
-    if (GC == none)
-    {
-        return;
-    }
-
-    Page = GC.FindMenuByClass(class'GUIPage');
+    Page = GetGUIPage();
 
     if (Page != none)
     {
@@ -7160,6 +7164,18 @@ simulated function ClientReceiveVotePrompt(class<DHVoteInfo> VoteInfoClass, int 
     class'DHVoteInteraction'.default.VoteId = VoteId;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHVoteInteraction", Player);
+}
+
+simulated function ClientMapVoteResponse(int Result)
+{
+    local GUIPage Page;
+
+    Page = GetGUIPage();
+
+    if (Page != none)
+    {
+        Page.OnMessage("NOTIFY_GUI_MAP_VOTE_RESULT", Result);
+    }
 }
 
 simulated function Destroyed()
