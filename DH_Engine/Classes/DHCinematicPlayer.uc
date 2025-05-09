@@ -7,7 +7,7 @@ class DHCinematicPlayer extends CinematicPlayer;
 auto state PlayerWaiting
 {
     function bool IsSpectating() {return false;}
-    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot) {}
+    function ProcessMove(float DeltaTime, Vector NewAccel, eDoubleClickDir DoubleClickMove, Rotator DeltaRot) {}
     function PlayerMove(float DeltaTime) {}
     exec function Fire(optional float F) {}
     function bool CanRestartPlayer() {return false;}

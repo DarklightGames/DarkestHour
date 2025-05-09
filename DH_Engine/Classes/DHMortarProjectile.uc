@@ -6,8 +6,8 @@
 class DHMortarProjectile extends DHBallisticProjectile
     abstract;
 
-var     vector  HitLocation;
-var     vector  HitNormal;
+var     Vector  HitLocation;
+var     Vector  HitNormal;
 
 // Chance each shell is a dud & does not explode
 var     bool    bDud;
@@ -30,9 +30,9 @@ var     sound   HitWaterSound;
 var     sound   HitWoodSound;
 
 // Debug
-var     vector  DebugForward;
-var     vector  DebugRight;
-var     vector  DebugLocation;
+var     Vector  DebugForward;
+var     Vector  DebugRight;
+var     Vector  DebugLocation;
 var     bool    bDebug;
 
 var     Texture HudTexture;
@@ -55,7 +55,7 @@ simulated function PostBeginPlay()
     // Relevant stuff from the Super
     OrigLoc = Location;
     BCInverse = 1.0 / BallisticCoefficient;
-    Velocity = vector(Rotation) * Speed;
+    Velocity = Vector(Rotation) * Speed;
 
     if (Role == ROLE_Authority)
     {
@@ -165,7 +165,7 @@ simulated singular function Touch(Actor Other)
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
 // Also to ignore collision with a player right in front of the mortar
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
     {
@@ -198,7 +198,7 @@ simulated function MortarExplode()
 }
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     self.HitNormal = HitNormal;
 
@@ -234,7 +234,7 @@ simulated state Whistle
 // Modified to handle various effects when mortar hits something, & to set hit
 // location in team's artillery targets so it's marked on the map for artillery
 // crew. Also includes a debug option.
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
@@ -268,14 +268,14 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Emptied out so we don't cause blast damage by default (add in subclass if required) & because we call MakeNoise() when shell lands, even if doesn't blow up
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     // TODO: add the calibration code back in here.
     super.BlowUp(HitLocation);
 }
 
 // New function to spawn impact effects when the shell lands
-simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnImpactEffects(Vector HitLocation, Vector HitNormal)
 {
     local ESurfaceTypes  HitSurfaceType;
     local class<Emitter> HitEmitterClass;
@@ -289,12 +289,12 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
         GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
 
         PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
-        Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
+        Spawn(HitEmitterClass,,, HitLocation, Rotator(HitNormal));
     }
 }
 
 // New function to spawn explosion effects - implement is subclasses as required
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
 }
 
@@ -323,7 +323,7 @@ simulated function SpawnFiringEffect()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
@@ -331,7 +331,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked, bAlreadyDead;
-    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local Vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
     local int           i;
 
@@ -507,7 +507,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius()
-function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WP;
     local int i;
@@ -530,11 +530,11 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, floa
 }
 
 // New function to handle blast damage to vehicle occupants
-function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local Coords HeadBoneCoords;
+    local Vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
     local float  Distance, DamageScale;
 
     if (P != none)
@@ -579,7 +579,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 }
 
 // New function to get the surface type the projectile has hit
-simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
+simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, Vector HitNormal)
 {
     local Material M;
 
@@ -695,7 +695,7 @@ simulated function UpdateInstigator()
     }
 }
 
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     // More effects should always be relevant as they are large and long-lasting.
     return true;

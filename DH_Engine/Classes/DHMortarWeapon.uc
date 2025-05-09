@@ -84,7 +84,7 @@ simulated function bool WeaponAllowMantle()
 exec simulated function Deploy()
 {
     local DHPawn  P;
-    local rotator LockedViewRotation;
+    local Rotator LockedViewRotation;
 
     if (!bDeploying)
     {
@@ -106,8 +106,8 @@ exec simulated function Deploy()
 simulated function EDeployError GetDeployError(DHPawn P)
 {
     local Actor        HitActor;
-    local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
-    local rotator      TraceRotation;
+    local Vector       HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Rotator      TraceRotation;
 
     // Can't deploy if we're busy, raising the weapon, on fire or somehow crawling
     // If we don't check state RaisingWeapon, it allows the player to almost instantaneously redeploy a mortar after undeploying
@@ -163,7 +163,7 @@ simulated function EDeployError GetDeployError(DHPawn P)
         // Trace in 8 directions around us in the X/Y plane, within our DeployRadius
         for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
         {
-            TraceEnd = P.Location + (DeployRadius * vector(TraceRotation));
+            TraceEnd = P.Location + (DeployRadius * Vector(TraceRotation));
             HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
             // Can't deploy if there's anything static around us
@@ -245,8 +245,8 @@ simulated event AnimEnd(int Channel)
 function ServerDeployEnd()
 {
     local DHMortarVehicle DeployedMortar;
-    local vector          TraceStart, TraceEnd, HitLocation, HitNormal;
-    local rotator         SpawnRotation;
+    local Vector          TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Rotator         SpawnRotation;
 
     TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
     TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);

@@ -33,7 +33,7 @@ var     name        WA_BarrelChangeStandAnim;
 var     name        WA_BarrelChangeCrouchAnim;
 var     name        WA_BarrelChangeProneAnim;
 
-var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
+var     Vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;
 // The correct solution would be to just fix the ejection port in the model.
@@ -42,14 +42,14 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 var     bool    bSpawnShellsOutBottom;
 
 // Mesh offsets for when the weapon is on the back.
-var     vector  BackAttachmentLocationOffset;
-var     rotator BackAttachmentRotationOffset;
+var     Vector  BackAttachmentLocationOffset;
+var     Rotator BackAttachmentRotationOffset;
 
 // An offset for correcting the tip location.
-var     vector  MuzzleFlashOffset;
+var     Vector  MuzzleFlashOffset;
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
-simulated function vector GetTipLocation()
+simulated function Vector GetTipLocation()
 {
     return GetBoneCoords(MuzzleBoneName).Origin;
 }
@@ -131,8 +131,8 @@ simulated function SetBarrelSteamActive(bool bSteaming)
 
 simulated function SpawnShells(float Frequency)
 {
-    local   rotator     EjectorRotation;
-    local   vector      SpawnLocation;
+    local   Rotator     EjectorRotation;
+    local   Vector      SpawnLocation;
 
     if (ROShellCaseClass != none && ShellEjectionBoneName != '' && Instigator != none && !Instigator.IsFirstPerson())
     {
@@ -140,7 +140,7 @@ simulated function SpawnShells(float Frequency)
         {
             // TODO: this is technically incorrect, if gravity was up,
             // the ejection port would still be down.
-            EjectorRotation = rotator(Normal(PhysicsVolume.Gravity));
+            EjectorRotation = Rotator(Normal(PhysicsVolume.Gravity));
         }
         else
         {
@@ -226,12 +226,12 @@ simulated function SpawnHitEffect()
     {
         if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
         {
-            VehEffect = Spawn(class'DHVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            VehEffect = Spawn(class'DHVehicleHitEffect',,, mHitLocation, Rotator(-mHitNormal));
             VehEffect.InitHitEffects(mHitLocation, mHitNormal);
         }
         else
         {
-            Spawn(class'DHBullet'.default.ImpactEffect,,, mHitLocation, rotator(-mHitNormal));
+            Spawn(class'DHBullet'.default.ImpactEffect,,, mHitLocation, Rotator(-mHitNormal));
             CheckForSplash();
         }
     }
@@ -241,7 +241,7 @@ simulated function SpawnHitEffect()
 simulated function CheckForSplash()
 {
     local Actor  HitActor;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low && Instigator != none
@@ -268,7 +268,7 @@ simulated function CheckForSplash()
 // Modified to force a quick new update, as we really want the new mHitLocation asap, so net clients can spawn a hit effect
 // And have deprecated use of replicated byte SpawnHitCount, which used to trigger hit effects, as changing mHitLocation is enough & any more is wasted replication
 // Also removes setting unused & unreplicated variables on a dedicated server, & deprecates mVehHitNormal
-function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
+function UpdateHit(Actor HitActor, Vector HitLocation, Vector HitNormal)
 {
     // If by remote coincidence the hit location is identical to the last one, & we're a server, fudge the new mHitLocation to make it slightly different
     // That makes the server replicate the changed value, as bet client will only spawn hit effect if it detects a changed, replicated value of mHitLocation
@@ -301,7 +301,7 @@ function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
 // & to skip function on any authority role & not just standalone (listen server will also already have the info)
 simulated function GetHitInfo()
 {
-    local vector Offset, HitLocation;
+    local Vector Offset, HitLocation;
 
     if (Role < ROLE_Authority && Instigator != none)
     {
@@ -355,7 +355,7 @@ simulated function Actor GetVehicleHitInfo()
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PC;
 
@@ -381,7 +381,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    if (PC.Pawn != Instigator && Vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
     {
         return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }

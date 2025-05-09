@@ -5,7 +5,7 @@
 
 class DHBulletHitMudEffect extends emitter;
 
-var texture Impacts[4];
+var Texture Impacts[4];
 
 simulated function PostBeginPlay()
 {

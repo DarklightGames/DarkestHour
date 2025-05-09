@@ -29,7 +29,7 @@ var()   float MaxSoundRadius;
 simulated function PostNetBeginPlay()
 {
     local ESurfaceTypes ST;
-    local vector        HitLoc, HitNormal;
+    local Vector        HitLoc, HitNormal;
     local Material      HitMat;
 
     if (Level.NetMode == NM_DedicatedServer)
@@ -37,7 +37,7 @@ simulated function PostNetBeginPlay()
         return;
     }
 
-    Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+    Trace(HitLoc, HitNormal, Location + Vector(Rotation) * 16.0, Location, true,, HitMat);
 
     if (HitMat != none)
     {
@@ -68,12 +68,12 @@ simulated function PostNetBeginPlay()
 
         if (HitEffects[ST].HitEffect != none)
         {
-            Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
+            Spawn(HitEffects[ST].HitEffect,,, HitLoc, Rotator(HitNormal));
         }
 
         if (HitEffects[ST].FlashEffect != none)
         {
-            Spawn(HitEffects[ST].FlashEffect,,, HitLoc, rotator(HitNormal));
+            Spawn(HitEffects[ST].FlashEffect,,, HitLoc, Rotator(HitNormal));
         }
     }
 }

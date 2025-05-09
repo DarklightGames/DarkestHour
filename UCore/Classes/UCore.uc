@@ -31,7 +31,7 @@ final static function FSwap(out float A, out float B)
     B = T;
 }
 
-final static function VSwap(out vector A, out vector B)
+final static function VSwap(out Vector A, out Vector B)
 {
     FSwap(A.X, B.X);
     FSwap(A.Y, B.Y);
@@ -47,19 +47,19 @@ final static function SSwap(out string A, out string B)
     B = T;
 }
 
-final static function vector VReflect(vector V, vector N)
+final static function Vector VReflect(Vector V, Vector N)
 {
     return V - (N * 2.0 * (V dot N));
 }
 
-final static function vector VHalf(vector A, vector B)
+final static function Vector VHalf(Vector A, Vector B)
 {
     return (A + B) / VSize(A + B);
 }
 
-final static function vector VClamp(vector V, vector A, vector B)
+final static function Vector VClamp(Vector V, Vector A, Vector B)
 {
-    local vector R;
+    local Vector R;
 
     R.X = FClamp(V.X, A.X, B.X);
     R.Y = FClamp(V.Y, A.Y, B.Y);
@@ -68,7 +68,7 @@ final static function vector VClamp(vector V, vector A, vector B)
     return R;
 }
 
-final static function vector VClampSize(vector V, float Min, float Max)
+final static function Vector VClampSize(Vector V, float Min, float Max)
 {
     // Avoid divide-by-zero error.
     if (V == vect(0, 0, 0))

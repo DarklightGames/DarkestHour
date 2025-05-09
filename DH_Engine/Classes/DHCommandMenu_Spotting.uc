@@ -30,13 +30,13 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local class<DHMapMarker> MapMarkerClass;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PC = GetPlayerController();
 
@@ -77,7 +77,7 @@ function bool IsOptionDisabled(int OptionIndex)
 function Tick()
 {
     local DHPlayer PC;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     PC = GetPlayerController();
 

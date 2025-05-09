@@ -229,7 +229,7 @@ simulated function AnimEnd(int Channel)
 // Modified to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local rotator YawMod;
+    local Rotator YawMod;
 
     if (Instigator != none)
     {

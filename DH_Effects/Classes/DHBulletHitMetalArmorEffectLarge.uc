@@ -5,8 +5,8 @@
 
 class DHBulletHitMetalArmorEffectLarge extends Emitter;
 
-var texture SparkGroup[4];
-var texture ShrapGroup[4];
+var Texture SparkGroup[4];
+var Texture ShrapGroup[4];
 
 //particles: 34
 

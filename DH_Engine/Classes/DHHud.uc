@@ -145,8 +145,8 @@ var     SpriteWidget        PacketLossIndicator;    // shows up in various color
 
 // Danger Zone
 var     class<DHDangerZone> DangerZoneClass;
-var     array<vector>       DangerZoneOverlayAxis;
-var     array<vector>       DangerZoneOverlayAllies;
+var     array<Vector>       DangerZoneOverlayAxis;
+var     array<Vector>       DangerZoneOverlayAllies;
 var     int                 DangerZoneOverlayResolution;
 var     int                 DangerZoneOverlaySubResolution;
 var     bool                bDangerZoneOverlayUpdatePending;
@@ -631,7 +631,7 @@ function Font GetCriticalMsgFontSizeIndex(Canvas C, int FontSize)
 event PostRender(Canvas Canvas)
 {
     local plane OldModulate, TempModulate;
-    local color OldColor;
+    local Color OldColor;
     local float XPos, YPos;
     local int   i;
 
@@ -827,8 +827,8 @@ function DrawHudPassC(Canvas C)
     local float                 XL, YL;
     local AbsoluteCoordsInfo    Coords;
     local ROWeapon              MyWeapon;
-    local vector                CameraLocation;
-    local rotator               CameraRotation;
+    local Vector                CameraLocation;
+    local Rotator               CameraRotation;
     local Actor                 ViewActor;
     local DHPawn                P;
     local DHPlayer              PC;
@@ -1176,7 +1176,7 @@ function DrawHudPassC(Canvas C)
             Vehicle(PawnOwner).SpecialCalcFirstPersonView(PlayerOwner, ViewActor, CameraLocation, CameraRotation);
             DrawDebugSphere(CameraLocation, 1.0, 4, 255, 0, 0);       // camera location shown as very small red sphere, like a large dot
             DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
-            DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0); // red line to show camera rotation
+            DrawDebugLine(CameraLocation, CameraLocation + (60.0 * Vector(CameraRotation)), 255, 0, 0); // red line to show camera rotation
         }
     }
 
@@ -1257,12 +1257,12 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     //local DHPlayer            PC; // For ammo technical names
     local AbsoluteCoordsInfo  Coords, Coords2;
     local SpriteWidget        Widget;
-    local rotator             MyRot;
+    local Rotator             MyRot;
     local float               XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
     local int                 Current, Pending, i;
     local bool                bDrawThrottleGauge;
-    local color               VehicleColor;
-    local array<color>        Colors;
+    local Color               VehicleColor;
+    local array<Color>        Colors;
     local array<string>       Lines;
 
     if (bHideHud)
@@ -1384,7 +1384,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
         if (Gun != none)
         {
-            MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+            MyRot = Rotator(Vector(Gun.CurrentAim) >> Gun.Rotation);
             V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
             Widget.WidgetTexture = V.VehicleHudTurret;
             Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
@@ -1924,7 +1924,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 }
 
-function color GetPlayerColor(PlayerReplicationInfo PRI)
+function Color GetPlayerColor(PlayerReplicationInfo PRI)
 {
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
 
@@ -1983,7 +1983,7 @@ function DrawSignals(Canvas C)
     bShouldShowDistance = !PC.Pawn.IsA('VehicleCannonPawn');
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
-    ViewDirection = vector(PlayerOwner.CalcViewRotation);
+    ViewDirection = Vector(PlayerOwner.CalcViewRotation);
 
     for (i = 0; i < arraycount(PC.Signals); ++i)
     {
@@ -2231,14 +2231,14 @@ function DrawPlayerNames(Canvas C)
     local Actor                   A;
     local Pawn                    LookedAtPawn, PawnForLocation, P;
     local array<Pawn>             Pawns;
-    local material                IconMaterial;
-    local vector                  ViewLocation, DrawLocation, HitLocation, HitNormal, TextSize, PlayerDirection;
+    local Material                IconMaterial;
+    local Vector                  ViewLocation, DrawLocation, HitLocation, HitNormal, TextSize, PlayerDirection;
     local string                  PlayerName;
     local float                   Now, NameFadeTime, HighestFadeInReached;
     local int                     NumOtherOccupants, i, j;
     local byte                    Alpha;
     local bool                    bMayBeValid, bCurrentlyValid, bFoundMatch, bForceHideAllNames;
-    local color                   IconMaterialColor;
+    local Color                   IconMaterialColor;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -2267,7 +2267,7 @@ function DrawPlayerNames(Canvas C)
     bForceHideAllNames = MyProjWeapon != none && MyProjWeapon.bHasModelScope && MyProjWeapon.bUsingSights;
 
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50.0) * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50.0) * Vector(PlayerOwner.CalcViewRotation)), ViewLocation)
     {
         // Ignore non-blocking actors
         if (!A.bBlockActors)
@@ -2554,7 +2554,7 @@ function DrawPlayerNames(Canvas C)
         {
             PlayerDirection = Normal(PawnForLocation.Location - PawnOwner.Location);
 
-            if (PlayerDirection dot vector(PlayerOwner.CalcViewRotation) < 0.0)
+            if (PlayerDirection dot Vector(PlayerOwner.CalcViewRotation) < 0.0)
             {
                 continue;
             }
@@ -2735,10 +2735,10 @@ function DrawCompass(Canvas C)
     }
 }
 
-function DrawMapMarkerOnCompass(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, AbsoluteCoordsInfo GlobalCoords, class<DHMapMarker> MapMarkerClass, vector Target, vector Current, float XL, float YL)
+function DrawMapMarkerOnCompass(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, AbsoluteCoordsInfo GlobalCoords, class<DHMapMarker> MapMarkerClass, Vector Target, Vector Current, float XL, float YL)
 {
     local float Angle;
-    local rotator RotAngle;
+    local Rotator RotAngle;
 
     if (MapMarkerClass == none || !MapMarkerClass.default.bShouldShowOnCompass)
     {
@@ -2752,7 +2752,7 @@ function DrawMapMarkerOnCompass(Canvas C, float CenterX, float CenterY, float Ra
     CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
 
     // Calculate rotation
-    RotAngle = rotator(Target - Current);
+    RotAngle = Rotator(Target - Current);
     Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
 
     // Update widget offset
@@ -2765,11 +2765,11 @@ function DrawMapMarkerOnCompass(Canvas C, float CenterX, float CenterY, float Ra
 
 function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
 {
-    local vector Target, Current;
+    local Vector Target, Current;
     local int i, Team, Id, Count, TempTeam;
     local ROGameReplicationInfo GRI;
     local float angle, XL, YL;
-    local rotator rotAngle;
+    local Rotator rotAngle;
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
@@ -2920,7 +2920,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
             CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
 
             // Calculate rotation
-            RotAngle = rotator(CompassIconsTargets[i] - Current);
+            RotAngle = Rotator(CompassIconsTargets[i] - Current);
             Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
 
             // Update widget offset
@@ -2985,7 +2985,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
             CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
 
             // Calculate rotation
-            RotAngle = rotator(Target - Current);
+            RotAngle = Rotator(Target - Current);
             Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
 
             // Update widget offset
@@ -3002,7 +3002,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 function DrawNetworkActors(Canvas C)
 {
     local Actor  A;
-    local vector Direction, ScreenPos;
+    local Vector Direction, ScreenPos;
     local string ActorName;
     local float  StrX, StrY;
     local int    Pos;
@@ -3039,7 +3039,7 @@ function DrawNetworkActors(Canvas C)
         // Changed to use PC's CalcViewLocation & CalcViewRotation, which are simple & also work when using behind view
         Direction = Normal(A.Location - PlayerOwner.CalcViewLocation);
 
-        if (Direction dot vector(PlayerOwner.CalcViewRotation) > 0.0)
+        if (Direction dot Vector(PlayerOwner.CalcViewRotation) > 0.0)
         {
             // Get the actor's name to draw, stripping its package name if required
             ActorName = "" $ A;
@@ -3090,7 +3090,7 @@ function DrawNetworkActors(Canvas C)
 // New function to show network actors on the overhead map - which actors are shown is based on the specified NetDebugMode
 // Toggle this option using console command: ShowNetDebugMap [optional int DebugMode]
 // Originally was in DrawMap() function, but split off as this is pretty obscure & it shortens a very long, key function
-function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter)
 {
     local Actor        A;
     local Pawn         P;
@@ -3211,8 +3211,8 @@ function DrawVehiclePointSphere()
     local DHVehicle        V;
     local DHArmoredVehicle AV;
     local Coords           HitPointCoords;
-    local vector           HitPointLocation;
-    local color            C;
+    local Vector           HitPointLocation;
+    local Color            C;
     local int              i;
 
     foreach DynamicActors(class'DHVehicle', V)
@@ -3233,7 +3233,7 @@ function DrawVehiclePointSphere()
                 HitPointCoords = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
             }
 
-            HitPointLocation = HitPointCoords.Origin + (V.VehHitpoints[i].PointOffset >> rotator(HitPointCoords.XAxis));
+            HitPointLocation = HitPointCoords.Origin + (V.VehHitpoints[i].PointOffset >> Rotator(HitPointCoords.XAxis));
 
             if (V.VehHitpoints[i].HitPointType == HP_Engine)
             {
@@ -3275,7 +3275,7 @@ function DrawVehiclePointSphere()
                     HitPointCoords = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
                 }
 
-                HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> rotator(HitPointCoords.XAxis));
+                HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> Rotator(HitPointCoords.XAxis));
 
                 if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                 {
@@ -3302,8 +3302,8 @@ function DrawVehiclePointSphere()
 function DrawPointSphere()
 {
     local ROPawn P;
-    local coords CO;
-    local vector Loc;
+    local Coords CO;
+    local Vector Loc;
     local int    i;
 
     foreach DynamicActors(class'ROPawn', P)
@@ -3338,7 +3338,7 @@ function DrawVehiclePhysiscsWheels()
 {
     local ROVehicle V;
     local Coords    CO;
-    local vector    Loc;
+    local Vector    Loc;
     local int       i;
 
     foreach DynamicActors(class'ROVehicle', V)
@@ -3366,12 +3366,12 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHPlayerReplicationInfo   PRI;
     local DHRoleInfo                RI;
     local SpriteWidget              Widget;
-    local vector                    Temp, MapCenter;
+    local Vector                    Temp, MapCenter;
     local string                    ObjLabel;
     local float                     MyMapScale;
     local int                       OwnerTeam, i, j;
     local DHObjective               ObjA, ObjB;
-    local color                     ObjLineColor;
+    local Color                     ObjLineColor;
     local UColor.HSV                HSV;
     local DH_LevelInfo              LevelInfo;
     local class<DHNation>           AxisNationClass, AlliedNationClass;
@@ -3776,7 +3776,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
 }
 
-function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport)
 {
     local DHPlayer PC;
     local DHMapIconAttachment MIA;
@@ -3811,7 +3811,7 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     }
 }
 
-function DrawMapMarkerOnMap(DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHGameReplicationInfo.MapMarker MapMarker, vector Target)
+function DrawMapMarkerOnMap(DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport, DHGameReplicationInfo.MapMarker MapMarker, Vector Target)
 {
     local class<DHMapMarker> MapMarkerClass;
     local string Caption;
@@ -3836,12 +3836,12 @@ function DrawMapMarkerOnMap(DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords,
     }
 }
 
-function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, array<DHGameReplicationInfo.MapMarker> MapMarkers)
+function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport, array<DHGameReplicationInfo.MapMarker> MapMarkers)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local int i;
-    local vector L;
+    local Vector L;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3911,7 +3911,7 @@ function UpdateDangerZoneOverlay(optional bool bForce)
     }
 }
 
-function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport)
 {
     local int i;
     local DHPlayer PC;
@@ -3939,11 +3939,11 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
 }
 
 // LineStart and LineEnd need to be in world-coordinates.
-function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, vector LineStart, vector LineEnd, color LineColor)
+function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport, Vector LineStart, Vector LineEnd, Color LineColor)
 {
     local Box Box;
     local float X0, Y0, X1, Y1;
-    local vector A, B;
+    local Vector A, B;
 
     Box.Max = vect(1, 1, 0);
 
@@ -3977,16 +3977,16 @@ function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, v
     DrawCanvasLine(X0, Y0, X1, Y1, LineColor);
 }
 
-function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector MapCenter, Box Viewport)
 {
     local Actor A;
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local DHSquadReplicationInfo SRI;
-    local vector PlayerLocation;
+    local Vector PlayerLocation;
     local int PlayerYaw;
     local Pawn P, OtherPawn;
-    local color SquadMemberColor, SelfColor;
+    local Color SquadMemberColor, SelfColor;
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
     local float IconScale, X, Y;
@@ -4142,7 +4142,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
 // Draws a player icon on the map.
 // For performance reasons, we expect that the Canvas font has already been set.
-function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, Box Viewport, float PlayerYaw, color Color, float TextureScale, optional string Text)
+function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, Vector Location, Vector MapCenter, Box Viewport, float PlayerYaw, Color Color, float TextureScale, optional string Text)
 {
     local Vector HUDLocation;
 
@@ -4190,7 +4190,7 @@ function float GetMapIconYaw(float WorldYaw)
 
 function float GetMapMeterScale()
 {
-    local vector MapCenter, DropLoc, temp, dist;
+    local Vector MapCenter, DropLoc, temp, dist;
     local float MapMeterScale, Meters;
 
     if (DHGRI == none)
@@ -5058,8 +5058,8 @@ function DHDrawIconOnMap(
     AbsoluteCoordsInfo LevelCoords,
     SpriteWidget Icon,
     float MyMapScale,
-    vector Location,
-    vector MapCenter,
+    Vector Location,
+    Vector MapCenter,
     Box Viewport,
     optional int FlashMode,
     optional string Title,
@@ -5068,7 +5068,7 @@ function DHDrawIconOnMap(
     )
 {
     local FloatBox Label_coords;
-    local vector   HUDLocation;
+    local Vector   HUDLocation;
     local float    XL, YL, YL_one, OldFontXScale, OldFontYScale;
 
     // Calculate the screen position
@@ -5388,7 +5388,7 @@ function DisplayVoiceGain(Canvas C)
     local float PosY, PosX, XL, YL;
     local string ActiveName;
     local float IconSize, Scale, YOffset;
-    local color SavedColor;
+    local Color SavedColor;
     local DHVoiceChatRoom VCR;
 
     Scale = C.SizeY / 1200.0 * HudScale;
@@ -5508,7 +5508,7 @@ function DrawIQWidget(Canvas C)
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local AbsoluteCoordsInfo GlobalCoords;
-    local color IQWidgetColor;
+    local Color IQWidgetColor;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -5562,7 +5562,7 @@ function DrawRallyPointStatus(Canvas C)
     local float X, Y, XL, YL;
     local string ErrorString;
     local Material ErrorIcon;
-    local color IconColor, DrawColor;
+    local Color IconColor, DrawColor;
     local float BaseX, BaseY, CombinedXL, MarginX, IconXL, IconYL, TextXL, TextYL;
     local float OffsetY;
     local AbsoluteCoordsInfo GlobalCoors;
@@ -5913,7 +5913,7 @@ function DHDrawTypingPrompt(Canvas C)
     local float XPos, YPos;
     local float XL, YL;
     local DHConsole Console;
-    local color SayTypeColor;
+    local Color SayTypeColor;
     local string SayTypeText;
     local class<DHLocalMessage> SayTypeMessageClass;
 

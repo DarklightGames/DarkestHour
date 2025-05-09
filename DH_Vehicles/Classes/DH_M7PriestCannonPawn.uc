@@ -8,7 +8,7 @@ class DH_M7PriestCannonPawn extends DHAmericanCannonPawn;
 // Modified to update sight rotation, if gun pitch has changed
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    local rotator R;
+    local Rotator R;
 
     super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
 

@@ -5,7 +5,7 @@
 
 class DHInterfaceUtil extends GUI;
 
-var() material HeaderTop,HeaderBar,HeaderBase;      // Top, Bar and base
+var() Material HeaderTop,HeaderBar,HeaderBase;      // Top, Bar and base
 
 final simulated static function int SetROStyle(GUIController MyController, array<GUIComponent> Components)
 {

@@ -199,7 +199,7 @@ function bool PerformSpawn(DHPlayer PC)
     local RORoleInfo RoleInfo;
     local Vehicle    EntryVehiclePosition;
     local Pawn       P;
-    local vector     Offset;
+    local Vector     Offset;
     local array<int> ExitPositionIndices;
     local int        RoleIndex, i;
     local bool       bCanEnterTankCrewPositions;

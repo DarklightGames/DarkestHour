@@ -376,7 +376,7 @@ simulated state Firing
         return Theta;
     }
 
-    simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+    simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
     {
         local float Theta;
         local Vector NormalCameraLocation, FiringCameraLocation;

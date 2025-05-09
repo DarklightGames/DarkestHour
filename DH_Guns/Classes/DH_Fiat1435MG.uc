@@ -170,7 +170,7 @@ simulated function InitializeAmmoRounds()
 
 function Fire(Controller C)
 {
-    local coords ShellEjectCoords;
+    local Coords ShellEjectCoords;
     local Actor ShellEjectActor;
 
     super.Fire(C);

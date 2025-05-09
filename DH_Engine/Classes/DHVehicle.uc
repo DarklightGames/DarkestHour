@@ -81,7 +81,7 @@ var   array<DHVehicleComponentController>   VehicleComponentControllerActors;
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
 var DHVehicleMG     MGun;                        // reference to the vehicle's mounted MG weapon
-var array<material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
+var array<Material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
 var     bool        bIsArtilleryVehicle;         // is an artillery support vehicle, where targets can be marked by an observer, with impacts showing on overhead map
@@ -113,7 +113,7 @@ var     float       EngineDamageFromGrenadeModifier;  // if engine can be damage
 var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle can go if wheels are damaged (1.0 is no change)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var     float       DirectHEImpactDamageMult;    // damage multiplier for direct HE impact (direct hits with HE rounds) defaults: 1.0
-var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
 var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
@@ -149,7 +149,7 @@ var     bool                bHasTreads;
 var     int                 LeftTreadIndex, RightTreadIndex;   // index position of treads in Skins array
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner; // texture panners used to make it look like the treads are moving
 var     float               TreadVelocityScale;                // allows adjustment of treads rotation speed for each vehicle
-var     rotator             LeftTreadPanDirection, RightTreadPanDirection; // make sure the treads move the correct way!
+var     Rotator             LeftTreadPanDirection, RightTreadPanDirection; // make sure the treads move the correct way!
 var     sound               LeftTreadSound, RightTreadSound;               // tread movement sound
 var     name                LeftTrackSoundBone, RightTrackSoundBone;       // attachment bone names for tread sound attachments
 var     Actor               LeftTreadSoundAttach, RightTreadSoundAttach;   // references to sound attachments used to make tread sounds
@@ -163,7 +163,7 @@ var     float               TreadDamageThreshold;  // minimum TreadDamageModifie
 var     bool                bLeftTrackDamaged;     // the left track has been damaged
 var     bool                bRightTrackDamaged;    // the left track has been damaged
 var     sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
-var     material            DamagedTreadPanner;    // replacement skin used for a damaged tread
+var     Material            DamagedTreadPanner;    // replacement skin used for a damaged tread
 var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // static meshes to use for damaged left & right tracks
 var     Actor               DamagedTrackLeft, DamagedTrackRight; // static mesh attachment to show damaged track, e.g. broken track links (clientside only)
 var     name                DamagedTrackAttachBone;
@@ -235,8 +235,8 @@ var     bool                    bHasSpawnKillPenalty;
 // Absolute exit positions
 struct SExitPosition
 {
-    var vector Location;
-    var rotator Rotation;
+    var Vector Location;
+    var Rotator Rotation;
 };
 var     array<SExitPosition> AbsoluteExitPositions;
 
@@ -461,7 +461,7 @@ function KilledBy(Pawn EventInstigator)
 }
 
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
 {
     local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
@@ -863,7 +863,7 @@ function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
@@ -1013,7 +1013,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bBehindViewChanged)
         {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // make rotation relative to vehicle again (changed so only if switching back from behind view)
+            PC.SetRotation(Rotator(Vector(PC.Rotation) << Rotation)); // make rotation relative to vehicle again (changed so only if switching back from behind view)
 
             // Switch back to position's normal vehicle mesh & view FOV
             if (DriverPositions.Length > 0)
@@ -1604,7 +1604,7 @@ simulated state ViewTransition
             // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
             if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0)
             {
-                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation)); // camera bone rotation, made relative to vehicle
+                Controller.SetRotation(Rotator(Vector(GetBoneRotation(PlayerCameraBone)) << Rotation)); // camera bone rotation, made relative to vehicle
             }
         }
 
@@ -1747,7 +1747,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
 function bool KDriverLeave(bool bForceLeave)
 {
     local Controller SavedController;
-    local vector     ExitVelocity;
+    local Vector     ExitVelocity;
     local bool       bSwitchingVehiclePosition;
 
     // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
@@ -1967,7 +1967,7 @@ function bool PlaceExitingDriver()
 
 
 // Modify if you want to have different exit positions depending on context.
-function array<vector> GetExitPositions()
+function array<Vector> GetExitPositions()
 {
     return self.ExitPositions;
 }
@@ -2106,7 +2106,7 @@ simulated function SetEngine()
 simulated function StartEmitters()
 {
     local PlayerController PC;
-    local coords           WheelCoords;
+    local Coords           WheelCoords;
     local bool             bLowDetail;
     local int              i;
 
@@ -2221,7 +2221,7 @@ simulated function StopEmitters()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to handle possible tread damage, to add randomised damage, & to add engine fire to APCs
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<ROWeaponDamageType> WepDamageType;
     local Controller InstigatorController;
@@ -2410,9 +2410,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 // Uses new method for track hit detection that works properly - TreadHitMaxHeight is the height (in Unreal units) of the top of tracks above hull mesh origin
 // Problem with original RO method (TreadHitMinAngle) was the InAngle calculation was distorted by the position of the hit along the vehicle mesh's X axis
 // New method is simpler & works, producing consistent results along the length of the hull
-function CheckTreadDamage(vector HitLocation, vector Momentum)
+function CheckTreadDamage(Vector HitLocation, Vector Momentum)
 {
-    local vector HitLocationRelativeOffset, X, RightSidePerp, Z;
+    local Vector HitLocationRelativeOffset, X, RightSidePerp, Z;
     local float  HitDirectionDegrees, InAngleDegrees;
     local string HitSide, OppositeSide;
 
@@ -2428,7 +2428,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     // Calculate the angle direction of hit relative to vehicle's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
     // Convert hit offset to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
-    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
     if (HitDirectionDegrees < 0.0)
     {
@@ -2518,7 +2518,7 @@ event TakeImpactDamage(float AccelMag)
 }
 
 // Modified to kill engine if zero health
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType)
 {
     // Don't let friendlies damage engines
     if (InstigatedBy != none && InstigatedBy.Controller != none && InstigatedBy.Controller.GetTeamNum() == GetTeamNum())
@@ -2556,10 +2556,10 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
-function bool IsTreadInRadius(vector Location, out float Radius, out int TrackNum)
+function bool IsTreadInRadius(Vector Location, out float Radius, out int TrackNum)
 {
     local int           i;
-    local coords        WheelCoords;
+    local Coords        WheelCoords;
     local float         D;
 
     for (i = 0; i < Wheels.Length; ++i)
@@ -2616,7 +2616,7 @@ function DestroyTrack(bool bLeftTrack)
 }
 
 // Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
-function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
 }
 
@@ -2638,9 +2638,9 @@ ignores Tick;
 }
 
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
-function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
+function VehicleExplosion(Vector MomentumNormal, float PercentMomentum)
 {
-    local vector LinearImpulse, AngularImpulse;
+    local Vector LinearImpulse, AngularImpulse;
     local float  ExplosionModifier;
 
     // Don't explode if vehicle is already exploded! (this fixes the stupid constantly exploding vehicle bug)
@@ -2788,10 +2788,10 @@ exec function DebugSpawnKill()
 
 // Modified to handle a turret's yaw bone being specified for a vehicle hit point, with any positional offset being based on turret's rotation
 // Also optimised a little & PointHeight is deprecated (concerned head shot calcs that aren't relevant here)
-function bool IsPointShot(vector HitLocation, vector LineCheck, float AdditionalScale, int Index, optional float CheckDistance)
+function bool IsPointShot(Vector HitLocation, Vector LineCheck, float AdditionalScale, int Index, optional float CheckDistance)
 {
-    local coords HitPointCoords;
-    local vector HitPointLocation, Difference;
+    local Coords HitPointCoords;
+    local Vector HitPointLocation, Difference;
     local float  t, DotMM, ClosestDistance;
 
     if (VehHitpoints[Index].PointBone == '')
@@ -2813,7 +2813,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
 
     if (VehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
+        HitPointLocation += VehHitpoints[Index].PointOffset >> Rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -3307,7 +3307,7 @@ simulated function SpawnVehicleAttachments()
 }
 
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
-simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional vector AttachOffset, optional rotator AttachRotation)
+simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation)
 {
     local Actor A;
 
@@ -4255,7 +4255,7 @@ simulated function bool IsDisabled()
 }
 
 // New function to get the location of the Engine VehHitPoint
-function vector GetEngineLocation()
+function Vector GetEngineLocation()
 {
     return GetBoneCoords(VehHitPoints[0].PointBone).Origin;
 }
@@ -4355,15 +4355,15 @@ simulated function OnTotalRoundsRemainingChanged(int Count);
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):
 simulated event StartDriving(Vehicle V);
 simulated event StopDriving(Vehicle V);
-function bool IsHeadShot(vector Loc, vector Ray, float AdditionalScale) { return false; }
+function bool IsHeadShot(Vector Loc, Vector Ray, float AdditionalScale) { return false; }
 function AttachFlag(Actor FlagActor);
 function ShouldCrouch(bool Crouch);
 function ShouldProne(bool Prone);
 event EndCrouch(float HeightAdjust);
 event StartCrouch(float HeightAdjust);
 function bool DoJump(bool bUpdating) { return false; }
-function bool CheckWaterJump(out vector WallNormal) { return false; }
-function JumpOutOfWater(vector JumpDir);
+function bool CheckWaterJump(out Vector WallNormal) { return false; }
+function JumpOutOfWater(Vector JumpDir);
 function ClimbLadder(LadderVolume L);
 function EndClimbLadder(LadderVolume OldLadder);
 simulated function AltFire(optional float F);
@@ -4375,7 +4375,7 @@ function ShouldTargetMissile(Projectile P);
 function ShootMissile(Projectile P);
 function GiveWeapon(string aClassName);
 simulated function bool CanThrowWeapon() { return false; }
-function TossWeapon(vector TossVel);
+function TossWeapon(Vector TossVel);
 exec function SwitchToLastWeapon();
 simulated function ChangedWeapon();
 function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon);

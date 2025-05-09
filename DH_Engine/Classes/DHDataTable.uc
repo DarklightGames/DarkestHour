@@ -8,7 +8,7 @@ class DHDataTable extends Object;
 struct STableColumn
 {
     var string Header;
-    var color TextColor;
+    var Color TextColor;
     var int Width;
     var int HeaderJustification;
     var int RowJustification;

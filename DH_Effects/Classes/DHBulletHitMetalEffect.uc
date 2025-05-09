@@ -5,7 +5,7 @@
 
 class DHBulletHitMetalEffect extends emitter;
 
-var texture SparkGroup[4];
+var Texture SparkGroup[4];
 
 simulated function PostBeginPlay()
 {

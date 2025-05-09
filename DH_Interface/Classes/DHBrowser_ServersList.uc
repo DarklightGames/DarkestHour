@@ -9,7 +9,7 @@ const MAX_RULES_REFRESH_ATTEMPTS = 5;
 
 var(Style) noexport GUIStyles           WrongVersionStyle;
 var(Style) string                       WrongVersionStyleName;
-var        color                        WrongVersionColor;
+var        Color                        WrongVersionColor;
 
 var int    ServerRulesRefreshAttempts;
 
@@ -61,7 +61,7 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
     local float IconPosX, IconPosY;
     local string Ping, VersionString, LocationString, HealthString, GitCommit;
     local int k, j, flags, checkFlag;
-    local color HealthColor;
+    local Color HealthColor;
     local GUIStyles DStyle;
 
     // Get values for columns (have to use j as i is passed in as arguement)

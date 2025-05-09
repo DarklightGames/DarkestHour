@@ -1285,7 +1285,7 @@ function InternalOnChange(GUIComponent Sender)
 {
     local class<Inventory> InventoryClass;
     local RORoleInfo       RI;
-    local material         InventoryMaterial;
+    local Material         InventoryMaterial;
     local int              i, j;
 
     switch (Sender)

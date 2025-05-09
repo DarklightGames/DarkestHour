@@ -7,7 +7,7 @@ class DHConstruction_MortarPit extends DHConstruction;
 
 var class<DHMortarVehicle>  MortarClass;
 var DHMortarVehicle         Mortar;
-var vector                  MortarOffset;
+var Vector                  MortarOffset;
 
 function PostBeginPlay()
 {

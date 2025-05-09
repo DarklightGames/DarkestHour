@@ -7,7 +7,7 @@ class DHBulletHitMudEffectLarge extends emitter;
 
 //particles: 31
 
-var texture Impacts[4];
+var Texture Impacts[4];
 
 simulated function PostBeginPlay()
 {

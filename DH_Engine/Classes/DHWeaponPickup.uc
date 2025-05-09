@@ -21,7 +21,7 @@ var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
-var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+var     Vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
 var     StaticMesh              EmptyStaticMesh;
 

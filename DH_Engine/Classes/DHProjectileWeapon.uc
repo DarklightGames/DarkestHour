@@ -444,7 +444,7 @@ simulated event RenderOverlays(Canvas Canvas)
 {
     local ROPlayer Playa;
     local ROPawn   RPawn;
-    local rotator  RollMod;
+    local Rotator  RollMod;
     local int      LeanAngle, i;
     local float    TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
 
@@ -597,7 +597,7 @@ simulated event RenderOverlays(Canvas Canvas)
 // From ROSniperWeapon
 simulated event RenderTexture(ScriptedTexture Tex)
 {
-    local rotator RollMod;
+    local Rotator RollMod;
     local ROPawn  RPawn;
 
     if (Owner != none && Instigator != none && Tex != none && Tex.Client != none)
@@ -709,9 +709,9 @@ exec function EmptyMags()
     }
 }
 
-function SetServerOrientation(rotator NewRotation)
+function SetServerOrientation(Rotator  NewRotation)
 {
-    local rotator WeaponRotation;
+    local Rotator WeaponRotation;
 
     if (bUsesFreeAim && !bUsingSights && Instigator != none)
     {
@@ -731,7 +731,7 @@ function SetServerOrientation(rotator NewRotation)
 }
 
 // Get the coords for the muzzle bone - used for free-aim projectile spawning
-function coords GetMuzzleCoords()
+function Coords GetMuzzleCoords()
 {
     // Have to update the location of the weapon before getting the coords
     if (Instigator != none)
@@ -1757,7 +1757,7 @@ Begin:
 // New function just to avoid code repetition in different functions
 simulated function SetIronSightFOV()
 {
-    local vector TargetPVO;
+    local Vector TargetPVO;
 
     if (InstigatorIsLocalHuman())
     {
@@ -2695,7 +2695,7 @@ function bool FillAmmo()
 }
 
 // Modified to call UpdateResupplyStatus()
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     if (bCanThrow)
     {
@@ -3362,7 +3362,7 @@ simulated function float GetScopePortalFOV()
     }
 }
 
-simulated function vector GetScopePlayerViewOffset()
+simulated function Vector GetScopePlayerViewOffset()
 {
     switch (ScopeDetail)
     {

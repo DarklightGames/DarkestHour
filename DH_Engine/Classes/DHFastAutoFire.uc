@@ -25,7 +25,7 @@ var     float                   PackingThresholdTime;   // If the shots are clos
 // Modified to support packing two shots together to save net bandwidth
 // The high rate of fire system packs shots together, replicates the shot info to net clients & then they spawn their own client bullets
 // Bullet actor replication is disabled
-function Projectile SpawnProjectile(vector Start, rotator Dir)
+function Projectile SpawnProjectile(Vector Start, Rotator Dir)
 {
     local Projectile SpawnedProjectile;
 

@@ -171,7 +171,7 @@ struct MapMarker
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
     var int CreationTime;                   // The time this marker was created, relative to ElapsedTime
     var int ExpiryTime;                     // The expiry time, relative to ElapsedTime
-    var vector WorldLocation;               // World location of the marker
+    var Vector WorldLocation;               // World location of the marker
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
@@ -1301,7 +1301,7 @@ function RemoveRadio(DHRadio Radio)
 //------------------------------------------------------------------------------
 
 // Modified to avoid "accessed none" errors on PRI.Team
-function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
+function AddRallyPoint(PlayerReplicationInfo PRI, Vector NewLoc, optional bool bRemoveFromList)
 {
     if (PRI != none && PRI.Team != none)
     {
@@ -1310,7 +1310,7 @@ function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool b
 }
 
 // Modified to avoid "accessed none" errors on PRI.Team
-function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestType, optional vector RequestLocation)
+function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestType, optional Vector RequestLocation)
 {
     if (PRI != none && PRI.Team != none)
     {
@@ -1603,7 +1603,7 @@ simulated function array<MapMarker> GetMapMarkers(DHPlayer PC)
     return MapMarkers;
 }
 
-simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer PC, vector WorldLocation)
+simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer PC, Vector WorldLocation)
 {
     local int i;
     local array<MapMarker> MapMarkers;
@@ -1693,7 +1693,7 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
     }
 }
 
-function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation, vector WorldLocation)
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, Vector MapLocation, Vector WorldLocation)
 {
     local int i;
     local MapMarker M;
@@ -1936,10 +1936,10 @@ simulated function float GetMapIconYaw(float WorldYaw)
 }
 
 // Gets the map coordindates (0..1) from a world location.
-simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
+simulated function GetMapCoords(Vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
 {
     local float  MapScale;
-    local vector MapCenter;
+    local Vector MapCenter;
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
@@ -1955,10 +1955,10 @@ simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, 
 }
 
 // Gets the world location from map coordinates.
-simulated function vector GetWorldCoords(float X, float Y)
+simulated function Vector GetWorldCoords(float X, float Y)
 {
     local float MapScale;
-    local vector MapCenter, WorldLocation;
+    local Vector MapCenter, WorldLocation;
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
@@ -1971,9 +1971,9 @@ simulated function vector GetWorldCoords(float X, float Y)
 }
 
 // Gets surface location from map coordinates
-simulated function vector GetWorldSurfaceCoords(float X, float Y, float TraceHeight)
+simulated function Vector GetWorldSurfaceCoords(float X, float Y, float TraceHeight)
 {
-    local vector TraceStart, TraceEnd, HitNormal, HitLocation;
+    local Vector TraceStart, TraceEnd, HitNormal, HitLocation;
     local Actor HitActor;
 
     TraceStart = GetWorldCoords(X, Y);
@@ -1995,7 +1995,7 @@ simulated function vector GetWorldSurfaceCoords(float X, float Y, float TraceHei
 // NOTE: This is functionally identical to same function in ROHud. It has been
 // moved here because it had no business being in that class since it only
 // referenced things in the GRI class.
-simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+simulated function Vector GetAdjustedHudLocation(Vector HudLoc, optional bool bInvert)
 {
     local float SwapX, SwapY;
     local int Offset;

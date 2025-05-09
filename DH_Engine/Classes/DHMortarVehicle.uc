@@ -117,7 +117,7 @@ function KDriverEnter(Pawn P)
 }
 
 // No possibility of damage to mortar base
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 }
 
@@ -171,7 +171,7 @@ function DriverDied();
 function DriverLeft();
 function bool PlaceExitingDriver() { return false; }
 simulated function SetPlayerPosition();
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
 simulated function int LimitYaw(int yaw) { return yaw; }

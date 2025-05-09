@@ -43,12 +43,12 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
     if (Rec.BodySkinName != "")
     {
-        ROP.Skins[0] = material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
+        ROP.Skins[0] = Material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
     }
 
     if (Rec.FaceSkinName != "")
     {
-        ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
+        ROP.Skins[1] = Material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
     }
 
     // Fix to get PRI if player is in a vehicle when his DHPawn spawns on a net client (the vehicle, not the DHPawn, now holds the PRI reference)
@@ -132,12 +132,12 @@ static function LoadResources(xUtil.PlayerRecord Rec, LevelInfo Level, PlayerRep
     {
         if (Rec.BodySkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.BodySkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.BodySkinName, class'Material')));
         }
 
         if (Rec.FaceSkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.FaceSkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.FaceSkinName, class'Material')));
         }
 
         if (Rec.Portrait != none)

@@ -219,7 +219,7 @@ simulated function Projectile SpawnProjectile()
     local Vector ProjectileLocation;
 
     ProjectileRotation = GetProjectileRotation();
-    ProjectileLocation = Location + vector(Rotation) * ProjectileOffset;
+    ProjectileLocation = Location + Vector(Rotation) * ProjectileOffset;
     
     return Spawn(GetProjectileClass(),,, Location, ProjectileRotation);
 }

@@ -63,7 +63,7 @@ var     bool                bNewOrResumedAltReload;  // tells Timer we're starti
 const   SMOKELAUNCHER_AMMO_INDEX = 4;                         // ammo index for smoke launcher fire
 var     class<DHVehicleSmokeLauncher>   SmokeLauncherClass;   // class containing the properties of the smoke launcher
 var     byte                NumSmokeLauncherRounds;           // no. of current smoke rounds
-var     array<vector>       SmokeLauncherFireOffset;          // positional offset(s) for spawning smoke projectiles - can be multiple for external launchers
+var     array<Vector>       SmokeLauncherFireOffset;          // positional offset(s) for spawning smoke projectiles - can be multiple for external launchers
 var     byte                SmokeLauncherAdjustmentSetting;   // current setting for either the rotation or range setting of smoke launcher
 var     EReloadState        SmokeLauncherReloadState;         // the stage of smoke launcher reload or readiness
 var     bool                bSmokeLauncherReloadPaused;       // a smoke launcher reload has started but was paused, as no longer had a player in a valid reloading position
@@ -484,7 +484,7 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     // Return direction to fire projectile, including any random spread
     if (ProjectileSpread > 0.0)
     {
-        FireRotation = rotator(vector(FireRotation) + (VRand() * FRand() * ProjectileSpread));
+        FireRotation = Rotator(Vector(FireRotation) + (VRand() * FRand() * ProjectileSpread));
     }
 
     return FireRotation;
@@ -599,7 +599,7 @@ simulated function InitEffects()
 }
 
 // Modified to use random cannon fire sounds
-simulated function sound GetFireSound()
+simulated function Sound GetFireSound()
 {
     return CannonFireSound[Rand(3)];
 }
@@ -634,8 +634,8 @@ simulated function AttemptFireSmokeLauncher()
 function ServerFireSmokeLauncher()
 {
     local Projectile Projectile;
-    local vector     FireLocation;
-    local rotator    VehicleRotation, FireRotation;
+    local Vector     FireLocation;
+    local Rotator    VehicleRotation, FireRotation;
     local int        LauncherIndex, i;
     local bool       bSpawnedProjectile;
 
@@ -659,7 +659,7 @@ function ServerFireSmokeLauncher()
             FireRotation.Yaw += float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536;
         }
 
-        FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
+        FireRotation = Rotator((Vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
 
         // Spawn the smoke projectile
         Projectile = Spawn(SmokeLauncherClass.default.ProjectileClass, none,, FireLocation, FireRotation);
@@ -694,7 +694,7 @@ function ServerFireSmokeLauncher()
 // New function to calculate the firing location for a smoke launcher projectile
 // Also used by the projectile to work out where to spawn the firing effect
 // That's because the vehicle location can differ between server & net client, so client is better working out its own local location so effect looks right
-simulated function vector GetSmokeLauncherFireLocation(optional out int LauncherIndex, optional out rotator VehicleRotation)
+simulated function Vector GetSmokeLauncherFireLocation(optional out int LauncherIndex, optional out Rotator VehicleRotation)
 {
     // Get the world rotation of the turret, or the vehicle base (for vehicles without a turret)
     if (bHasTurret)
@@ -1488,11 +1488,11 @@ simulated function bool PlayerUsesManualReloading()
 
 // New generic function to handle turret penetration calcs for any shell type
 // Based on same function in DHArmoredVehicle, but some adjustments for turret, especially the need to factor in turret's independent traverse
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
     local DHArmoredVehicle AV;
-    local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
-    local rotator TurretRelativeRotation, TurretNonRelativeRotation, ArmourSlopeRotator;
+    local Vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
+    local Rotator TurretRelativeRotation, TurretNonRelativeRotation, ArmourSlopeRotator;
     local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope, ShatterChance;
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local string  HitSide, OppositeSide, DebugString1, DebugString2, DebugString3;
@@ -1510,10 +1510,10 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if (bHasTurret)
     {
         TurretRelativeRotation.Yaw = CurrentAim.Yaw;
-        TurretNonRelativeRotation = rotator(vector(TurretRelativeRotation) >> Rotation);
+        TurretNonRelativeRotation = Rotator(Vector(TurretRelativeRotation) >> Rotation);
         GetAxes(TurretNonRelativeRotation, X, Y, Z);
         HitLocationRelativeOffset = (HitLocation - Location) << TurretNonRelativeRotation;
-        HitLocationAngle = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+        HitLocationAngle = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
         if (HitLocationAngle < 0.0)
         {
@@ -1659,7 +1659,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         if (bHasTurret)
         {
             ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
-            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
+            ArmorNormal = Normal(Vector(ArmourSlopeRotator) >> Rotator(HitSideAxis));
             AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
         }
         else
@@ -1761,7 +1761,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
 // Modified as shell's ProcessTouch() now calls TakeDamage() on VehicleWeapon instead of directly on vehicle itself
 // But for a cannon it's counted as a vehicle hit, so we call TD() on the vehicle (can also be subclassed for any custom handling of cannon hits)
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     if (Base != none)
     {
@@ -1968,8 +1968,8 @@ function DebugModifyAddedPitch(int PitchAdjustment)
 function BeginAutoDebugRange()
 {
     local DHDecoAttachment TargetWall;
-    local vector           ViewLocation, WallLocation;
-    local rotator          AimRotation, WallRotation;
+    local Vector           ViewLocation, WallLocation;
+    local Rotator          AimRotation, WallRotation;
     local float            RangeUU;
 
     if (class<DHCannonShell>(ProjectileClass) == none || !class<DHCannonShell>(ProjectileClass).default.bMechanicalAiming || WeaponPawn == none)
@@ -1991,7 +1991,7 @@ function BeginAutoDebugRange()
     // We calculate our gunsight view position & aim exactly as it's done for our gunsight view (in cannon pawn's SpecialCalcFirstPersonView())
     AimRotation = GetBoneRotation(WeaponPawn.CameraBone);
     ViewLocation = GetBoneCoords(WeaponPawn.CameraBone).Origin + (WeaponPawn.DriverPositions[0].ViewLocation >> AimRotation);
-    WallLocation = ViewLocation + (RangeUU * vector(AimRotation)) + (vect(0.0, -100000.0, 0.0) >> AimRotation);
+    WallLocation = ViewLocation + (RangeUU * Vector(AimRotation)) + (vect(0.0, -100000.0, 0.0) >> AimRotation);
     WallRotation = AimRotation;
     WallRotation.Yaw += 16384;
     TargetWall = Spawn(class'DHDecoAttachment',, 'DebugTargetWall', WallLocation, WallRotation);
@@ -2024,10 +2024,10 @@ function BeginAutoDebugRange()
 // New debug function used when automatically calibrating the range setting
 // Called by the projectile when it hits the target wall, passing us the hit location, which we then use to adjust aim pitch & fire again
 // We vertically bracket the ideal hit location with shots until we've recorded shots within 1 pitch unit of each other, then the closest is best result
-function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
+function UpdateAutoDebugRange(Actor HitActor, Vector HitLocation)
 {
-    local vector  ViewLocation, IdealHitLocation, HitNormal;
-    local rotator AimRotation;
+    local Vector  ViewLocation, IdealHitLocation, HitNormal;
+    local Rotator AimRotation;
     local float   HitHeightAboveIdeal, DistanceSpread;
     local int     PitchSpread, FinalPitchAdjustment;
     local string  MessageText;
@@ -2042,7 +2042,7 @@ function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
             AimRotation = GetBoneRotation(WeaponPawn.CameraBone);
             ViewLocation = GetBoneCoords(WeaponPawn.CameraBone).Origin + (WeaponPawn.DriverPositions[0].ViewLocation >> AimRotation);
 
-            if (!HitActor.TraceThisActor(IdealHitLocation, HitNormal, ViewLocation + (999999.0 * vector(AimRotation)), ViewLocation))
+            if (!HitActor.TraceThisActor(IdealHitLocation, HitNormal, ViewLocation + (999999.0 * Vector(AimRotation)), ViewLocation))
             {
                 HitHeightAboveIdeal = ((HitLocation - IdealHitLocation) << AimRotation).Z;
 

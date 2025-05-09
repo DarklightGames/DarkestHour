@@ -19,8 +19,8 @@ var     float   SelectFireVolume;
 
 // Fire select switch
 var     name            FireSelectSwitchBoneName;
-var     rotator         FireSelectSemiRotation;
-var     rotator         FireSelectAutoRotation;
+var     Rotator         FireSelectSemiRotation;
+var     Rotator         FireSelectAutoRotation;
 
 replication
 {

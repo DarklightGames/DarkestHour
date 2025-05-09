@@ -7,9 +7,9 @@ class DHCannonShellHE extends DHCannonShell
     abstract;
 
 // Modified to move karma ragdolls around when HE round explodes (moved here from Destroyed)
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local vector Start, Direction;
+    local Vector Start, Direction;
     local float  DamageScale, Distance;
     local ROPawn Victims;
 

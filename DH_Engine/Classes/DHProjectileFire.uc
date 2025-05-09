@@ -8,14 +8,14 @@ class DHProjectileFire extends DHWeaponFire;
 struct WhizInfo
 {
     var DHPawn  Player;
-    var vector  SoundLocation;
+    var Vector  SoundLocation;
     var byte    Type;
 };
 
 // Projectile spawning & pre-launch trace
 var     int             ProjPerFire;                 // how many projectiles are spawned each fire (normally 1)
-var     vector          ProjSpawnOffset;             // positional offset to spawn projectile
-var     vector          FAProjSpawnOffset;           // positional offset to spawn projectile for free-aim mode
+var     Vector          ProjSpawnOffset;             // positional offset to spawn projectile
+var     Vector          FAProjSpawnOffset;           // positional offset to spawn projectile for free-aim mode
 var     int             AddedYaw;                    // additional yaw to add to firing calculations (added as the scoped enfield seemed to fire to the left)
 var     int             AddedPitch;                  // additional pitch to add to firing calculations (primarily used for rocket launchers)
 var     bool            bUsePreLaunchTrace;          // use pre-projectile spawn trace to see if we hit anything close before launching projectile (saves CPU and net usage)
@@ -81,9 +81,9 @@ function float MaxRange()
 function DoFireEffect()
 {
     local Actor   TracedActor;
-    local coords  MuzzlePosition;
-    local vector  StartTrace, FireLocation, HitLocation, HitNormal, FireDirection, X, Y, Z;
-    local rotator RandomSpread;
+    local Coords  MuzzlePosition;
+    local Vector  StartTrace, FireLocation, HitLocation, HitNormal, FireDirection, X, Y, Z;
+    local Rotator RandomSpread;
     local float   AppliedSpread;
     local int     NumProjectiles, i, j, k;
 
@@ -130,7 +130,7 @@ function DoFireEffect()
     // Otherwise we call AdjustAim to confirm our aimed direction, but for human players that simply returns where the player is looking
     else
     {
-        FireDirection = vector(AdjustAim(FireLocation, AimError));
+        FireDirection = Vector(AdjustAim(FireLocation, AimError));
     }
 
     // Calculate random spread
@@ -157,7 +157,7 @@ function DoFireEffect()
             RandomSpread.Roll = AppliedSpread * (FRand() - 0.5);
         }
 
-        SpawnProjectile(FireLocation, rotator(FireDirection >> RandomSpread));
+        SpawnProjectile(FireLocation, Rotator(FireDirection >> RandomSpread));
     }
 
     // Debug option to show limits of spread as red lines
@@ -248,7 +248,7 @@ function CalcSpreadModifiers()
 
 // Launches/spawns a projectile, including option to do a pre-launch trace to see if we would hit something close before spawning a bullet
 // If we do then we can avoid spawning the projectile if we'd hit something so close that the ballistics wouldn't matter anyway (don't use this for things like rocket launchers)
-function Projectile SpawnProjectile(vector Start, rotator Dir)
+function Projectile SpawnProjectile(Vector Start, Rotator Dir)
 {
     local class<Projectile>     ProjectileClassToSpawn;
     local ROWeaponAttachment    WeapAttach;
@@ -292,7 +292,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     {
         // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here.
         // We only want to do this if we're not spawning a tracer, otherwise tracers will not be spawned when firing at things close to the player.
-        if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
+        if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, Vector(Dir)))
         {
             return none;
         }
@@ -310,11 +310,11 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 // New function to perform a pre-launch trace to see if we hit something fairly close, where ballistics aren't a factor & a simple trace will give an accurate hit result
 // If we do hit something valid, we handle the damage & hit effects here, meaning we can avoid spawning the projectile (& replicating it on a server)
 // In multiplayer, this only happens on server, so have to record players that would have been whizzed & play whizzes after trace, if we are going to stop bullet spawning[
-function bool PreLaunchTrace(vector Start, vector Direction)
+function bool PreLaunchTrace(Vector Start, Vector Direction)
 {
     local Actor           Other, A;
     local DHPawn          HitPlayer, WhizzedPlayer;
-    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal;
+    local Vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal;
     local int             WhizType, i;
     local array<int>      HitPoints;
     local array<WhizInfo> SavedWhizzes;
@@ -659,7 +659,7 @@ simulated function float CustomHandleRecoil()
 
 simulated function HandleRecoil()
 {
-    local rotator       NewRecoilRotation;
+    local Rotator       NewRecoilRotation;
     local DHPlayer      PC;
     local DHPawn        P;
 

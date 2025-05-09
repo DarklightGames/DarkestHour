@@ -59,11 +59,11 @@ var     float           DampenFactorParallel;
 var     float           BlurTime;         // how long blur effect should last for this projectile
 var     float           BlurEffectScalar;
 var     float           ShakeScale;       // how much larger than the explosion radius should the view shake
-var     vector          ShakeRotMag;      // how far to rot view
-var     vector          ShakeRotRate;     // how fast to rot view
+var     Vector          ShakeRotMag;      // how far to rot view
+var     Vector          ShakeRotRate;     // how fast to rot view
 var     float           ShakeRotTime;     // how much time to rot the instigator's view
-var     vector          ShakeOffsetMag;   // max view offset vertically
-var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     Vector          ShakeOffsetMag;   // max view offset vertically
+var     Vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
 var     bool            bHasExploded;
@@ -87,7 +87,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Velocity = Speed * vector(Rotation);
+        Velocity = Speed * Vector(Rotation);
 
         if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
@@ -140,7 +140,7 @@ simulated function Destroyed()
 {
     local ESurfaceTypes ST;
     local ROPawn        Victims;
-    local vector        Start, Direction;
+    local Vector        Start, Direction;
     local float         DamageScale, Distance;
 
     if (bDud)
@@ -161,7 +161,7 @@ simulated function Destroyed()
         // If the projectile is still moving we'll need to spawn a different explosion effect
         if (Physics == PHYS_Falling && FuzeType == FT_Timed)
         {
-            Spawn(ExplodeMidAirEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+            Spawn(ExplodeMidAirEffectClass,,, Start, Rotator(vect(0.0, 0.0, 1.0)));
         }
         // If the projectile has stopped and is on the ground (or is an impact fuze grenade) we'll spawn a ground explosion effect and spawn some dirt flying out
         else if (Physics == PHYS_None || FuzeType == FT_Impact)
@@ -170,13 +170,13 @@ simulated function Destroyed()
 
             if (ST == EST_Snow || ST == EST_Ice)
             {
-                Spawn(ExplodeSnowEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
+                Spawn(ExplodeSnowEffectClass,,, Start, Rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecalSnow, self,, Location, Rotator(-vect(0.0, 0.0, 1.0)));
             }
             else
             {
-                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-                Spawn(ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
+                Spawn(ExplodeDirtEffectClass,,, Start, Rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecal, self,, Location, Rotator(-vect(0.0, 0.0, 1.0)));
             }
         }
     }
@@ -210,7 +210,7 @@ simulated function Timer()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
@@ -218,7 +218,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked;
-    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local Vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
     local int           i;
 
@@ -405,7 +405,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius()
-function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WP;
     local int i;
@@ -428,11 +428,11 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, floa
 }
 
 // New function to handle blast damage to vehicle occupants
-function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local Coords HeadBoneCoords;
+    local Vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
     local float  Distance, DamageScale;
 
     if (P != none)
@@ -476,12 +476,12 @@ simulated function UpdateInstigator()
 }
 
 // Modified from ROGrenadeProjectile/ROSatchelChargeProjectile to add SetRotation
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     if (Bounces <= 0)
     {
         SetPhysics(PHYS_None);
-        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(Rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
 
         if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud && !bHasExploded)
         {
@@ -523,7 +523,7 @@ state TripMine
         }
     }
 
-    function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         if (!DamageType.default.bCausesBlood)
         {
@@ -570,10 +570,10 @@ simulated function float GetSurfaceTypeMomentumTransfer(ESurfaceTypes SurfaceTyp
 
 // Modified from ROGrenadeProjectile/ROSatchelChargeProjectile to add handling if projectile hits a weak destroyable mesh (e.g. glass)
 // The projectile breaks the mesh & continues its flight, instead of bouncing off
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
-    local vector        VNorm;
+    local Vector        VNorm;
     local ESurfaceTypes ST;
     local int           i;
     local float         ImpactMomentumTransfer, ImpactSoundVolume;
@@ -663,7 +663,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // Added splash if projectile hits a fluid surface
     if (FluidSurfaceInfo(Other) != none)
@@ -706,14 +706,14 @@ simulated singular function Touch(Actor Other)
 
 // Emptied out as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
 // No longer even called as has been removed from Touch()
-simulated function ClientSideTouch(Actor Other, vector HitLocation)
+simulated function ClientSideTouch(Actor Other, Vector HitLocation)
 {
 }
 
 // Modified from ROThrowableExplosiveProjectile to call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
-    local vector TempHitLocation, HitNormal;
+    local Vector TempHitLocation, HitNormal;
 
     if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
     {
@@ -725,7 +725,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // From ROGrenadeProjectile
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (bDud)
     {
@@ -741,7 +741,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // From ROGrenadeProjectile & ROSatchelChargeProjectile, combined
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
@@ -787,7 +787,7 @@ simulated function DoShakeEffect()
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PC;
 
@@ -822,7 +822,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    if (PC.Pawn != Instigator && Vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
     {
         return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
@@ -832,10 +832,10 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
 }
 
 // From ROGrenadeProjectile/ROSatchelChargeProjectile
-simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
+simulated function GetHitSurfaceType(out ESurfaceTypes ST, Vector HitNormal)
 {
-    local vector   HitLoc, HitNorm;
-    local material HitMat;
+    local Vector   HitLoc, HitNorm;
+    local Material HitMat;
 
     Trace(HitLoc, HitNorm, Location - (HitNormal * 16.0), Location, false,, HitMat);
 
@@ -969,10 +969,10 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 }
 
 // New function, same as bullet & shell classes, to play a water splash effect
-simulated function CheckForSplash(vector SplashLocation)
+simulated function CheckForSplash(Vector SplashLocation)
 {
     local Actor  HitActor;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low

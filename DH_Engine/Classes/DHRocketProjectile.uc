@@ -94,7 +94,7 @@ simulated function Timer()
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     super.BlowUp(HitLocation);
 

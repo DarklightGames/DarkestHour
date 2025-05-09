@@ -20,7 +20,7 @@ var     float               VehicleDeflectSoundVolume;
 // But removing the bIsBulletProof checks if we hit a collision mesh, as this is an armour-piercing bullet
 simulated singular function Touch(Actor Other)
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     if (FluidSurfaceInfo(Other) != none)
     {
@@ -67,13 +67,13 @@ simulated singular function Touch(Actor Other)
 }
 
 // From DHBullet, just with a penetration check if hit a vehicle weapon, & using differently named variables/functions from different class inheritance
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
     local Pawn         InstigatorPlayer;
     local Actor        A;
     local array<Actor> SavedHitActors;
-    local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
+    local Vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
     local bool         bPenetratedVehicle;
     local float        V;
     local array<int>   HitPoints;
@@ -147,7 +147,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (V < 25.0)
         {
             V = default.Speed;
-            Direction = vector(Rotation);
+            Direction = Vector(Rotation);
         }
     }
 
@@ -304,7 +304,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // From DHBullet, just using different penetration check if hit a vehicle, & using differently named variables/functions from different class inheritance
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local ROVehicle        HitVehicle;
     local DHArmoredVehicle AV;
@@ -348,7 +348,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Spawn the bullet hit effect on anything other than a vehicle
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
-        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
+        Spawn(ImpactEffect, self,, Location, Rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
     }
 
     if (!HasDeflected())
@@ -417,7 +417,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // From DHBullet
-simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, vector HitNormal)
+simulated function PlayVehicleHitEffects(bool bPenetrated, Vector HitLocation, Vector HitNormal)
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -427,7 +427,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && ShellHitVehicleEffectClass != none)
             {
-                Spawn(ShellHitVehicleEffectClass,,, HitLocation, rotator(-HitNormal));
+                Spawn(ShellHitVehicleEffectClass,,, HitLocation, Rotator(-HitNormal));
             }
         }
         else
@@ -436,14 +436,14 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && ShellDeflectEffectClass != none)
             {
-                Spawn(ShellDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
+                Spawn(ShellDeflectEffectClass,,, HitLocation, Rotator(-HitNormal));
             }
         }
     }
 }
 
 // Modified so tracer bullet switches to DeflectedMesh & to destroy TracerEffect if bullet speed is very low (from DHBullet)
-simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
+simulated function Deflect(Vector HitLocation, Vector HitNormal, Actor Wall)
 {
     if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
     {
@@ -465,7 +465,7 @@ simulated function bool HasDeflected()
 }
 
 // From DHBullet
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     if (bHasTracer)
     {
@@ -475,7 +475,7 @@ simulated function Landed(vector HitNormal)
 }
 
 // Modified as not an exploding shell
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     Destroy();
 }

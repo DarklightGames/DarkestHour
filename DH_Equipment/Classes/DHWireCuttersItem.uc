@@ -173,7 +173,7 @@ simulated function Fire(float F)
 {
     local DHConstruction C;
     local DHObstacleInstance O;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     if (Instigator == none ||
         Instigator.Controller == none ||
@@ -185,7 +185,7 @@ simulated function Fire(float F)
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + (vector(Instigator.Controller.Rotation) * CutDistance);
+    TraceEnd = TraceStart + (Vector(Instigator.Controller.Rotation) * CutDistance);
 
     // Support for obstacles
     foreach TraceActors(class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))

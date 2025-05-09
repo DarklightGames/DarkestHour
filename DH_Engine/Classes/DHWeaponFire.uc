@@ -23,7 +23,7 @@ var array<ShellEjector> ShellEjectors;
 
 var bool bIgnoresWeaponLock;
 
-var vector MuzzleOffset;
+var Vector MuzzleOffset;
 
 simulated function PostBeginPlay()
 {

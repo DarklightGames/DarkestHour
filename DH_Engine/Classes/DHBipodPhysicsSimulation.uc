@@ -71,7 +71,7 @@ function UnlockBipod()
 
 function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 {
-    local rotator BarrelBoneRotation, BipodBoneRotation;
+    local Rotator BarrelBoneRotation, BipodBoneRotation;
     local Controller Controller;
     local float InstigatorYaw;
     local float YawDeltaAngularAcceleration;
