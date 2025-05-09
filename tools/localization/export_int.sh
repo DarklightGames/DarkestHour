@@ -9,5 +9,5 @@ DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 pushd "$DIR"
 virtualenv venv
-source ./venv/bin/activate && pip3 install -r requirements.txt && python ./localization.py sync --mod DarkestHourDev ../..
+source ./venv/bin/activate && pip3 install -r requirements.txt && python ./localization.py export ../.. --mod=DarkestHourDev
 popd
