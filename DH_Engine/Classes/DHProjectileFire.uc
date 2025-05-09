@@ -518,21 +518,16 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 
 simulated function float GetFiringSoundPitch()
 {
-    local float                 Pitch;
-    local DHProjectileWeapon    W;
-
-    // Set default pitch
-    Pitch = 1.0;
+    local DHProjectileWeapon W;
 
     W = DHProjectileWeapon(Weapon);
 
-    if (W != none && W.bBarrelDamaged)
+    if (W != none && W.default.BarrelClass != none)
     {
-        // 0.8125 is 64/52.0 (the value used for MG overheating (weapons with looping sounds)
-        Pitch = FMax(0.8125, 1.0 - ((W.BarrelTemperature - W.default.BarrelClass.default.CriticalTemperature) / (W.default.BarrelClass.default.FailureTemperature - W.default.BarrelClass.default.CriticalTemperature)));
+        return W.default.BarrelClass.static.GetFiringSoundPitch(W.BarrelTemperature);
     }
 
-    return Pitch;
+    return 1.0;
 }
 
 // Modified to handle low pitch from barrels

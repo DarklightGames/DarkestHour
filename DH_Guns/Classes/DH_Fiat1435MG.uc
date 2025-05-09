@@ -7,7 +7,7 @@
 // [ ] *maybe* mid-clip reloading.
 // [ ] Sound notifications for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.
-// [ ] Fix timing of reload stages and remove the sounds.
+// [ ] Have only ONE reload stage, time it to the duration of the animation.
 // [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
 // [ ] Hide hands actor in third person.
@@ -71,7 +71,7 @@ var StaticMesh              EmptyAmmoRoundStaticMesh;
 var array<name>             EmptyAmmoRoundBones;
 var() Rotator               EmptyAmmoRoundRelativeRotation;
 
-var int                     RoundsInStaticMesh; // The number of rounds depicted in the static mesh.
+var int                     NumRoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
 // Range Table
 struct RangeTableItem
@@ -82,10 +82,10 @@ struct RangeTableItem
 var array<RangeTableItem> RangeTable;
 
 // Reload
-var()   name                    ReloadSequence;
-var     float                   ReloadStartTimeSeconds; // The time that the reload animation started.
-var     float                   ReloadEndTimeSeconds;   // The time that the reload animation will end.
-var()   float                   ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
+var()   name        ReloadSequence;
+var     float       ReloadStartTimeSeconds; // The time that the reload animation started.
+var     float       ReloadEndTimeSeconds;   // The time that the reload animation will end.
+var()   float       ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
 
 replication
 {
@@ -370,7 +370,7 @@ simulated function UpdateAmmoRounds(int Ammo)
     local int i;
     local int VisibleCount, ExpendedCount;
 
-    VisibleCount = Ceil(float(Ammo) / RoundsInStaticMesh);
+    VisibleCount = Ceil(float(Ammo) / NumRoundsInStaticMesh);
 
     for (i = AmmoRounds.Length - 1; i >= 0; --i)
     {
@@ -415,7 +415,7 @@ simulated function UpdateClipDriver(int Ammo)
         return;
     }
 
-    ClipsVisible = Ceil(float(Ammo) / RoundsInStaticMesh);
+    ClipsVisible = Ceil(float(Ammo) / NumRoundsInStaticMesh);
     ClipFrame = CLIP_DRIVER_FRAMES - (ClipsVisible + 1);
 
     FreezeAnimAt(ClipFrame, ClipChannel);
@@ -544,5 +544,5 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    RoundsInStaticMesh=1
+    NumRoundsInStaticMesh=1
 }

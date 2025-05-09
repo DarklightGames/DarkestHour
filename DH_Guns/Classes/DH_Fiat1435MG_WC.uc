@@ -23,7 +23,7 @@ defaultproperties
     ClipAnim="CLIP_DRIVER"
     ClipChannel=3
 
-    RoundsInStaticMesh=5
+    NumRoundsInStaticMesh=5
     AmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_CLIP_CARTRIDGE_1ST'
     AmmoRoundBones(0)="CLIP_CARTRIDGES_10"
     AmmoRoundBones(1)="CLIP_CARTRIDGES_09"
@@ -40,4 +40,7 @@ defaultproperties
 
     HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
 
+    // TODO: water cooled version should have a different barrel class with better
+    // cooling attributes.
+    Barrels(0)=(MuzzleBone="MUZZLE_WC",BarrelClass=class'DH_Fiat1435MGBarrel')
 }

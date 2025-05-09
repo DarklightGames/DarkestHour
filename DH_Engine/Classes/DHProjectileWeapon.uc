@@ -3087,39 +3087,41 @@ Begin:
 
 function PerformBarrelChange()
 {
-    // We only have the 1 barrel in our weapon, don't do anything
-    if (bHasSpareBarrel)
+    if (!bHasSpareBarrel)
     {
-        if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length && Barrels[BarrelIndex] != none)
+        // We only have the 1 barrel in our weapon, don't do anything
+        return;
+    }
+
+    if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length && Barrels[BarrelIndex] != none)
+    {
+        // If the barrel has failed, we're going to toss it, so remove it from the barrel array
+        if (Barrels[BarrelIndex].Condition == BC_Failed)
         {
-            // If the barrel has failed, we're going to toss it, so remove it from the barrel array
-            if (Barrels[BarrelIndex].bBarrelFailed)
+            Barrels[BarrelIndex].Destroy();
+            Barrels.Remove(BarrelIndex, 1);
+
+            if (Barrels.Length < 2)
             {
-                Barrels[BarrelIndex].Destroy();
-                Barrels.Remove(BarrelIndex, 1);
-
-                if (Barrels.Length < 2)
-                {
-                    bHasSpareBarrel = false;
-                }
-
-                // If just removed the last barrel in array, cycle back to 0 (otherwise BarrelIndex stays the same, as next barrel has dropped back into current index position)
-                if (BarrelIndex >- Barrels.Length)
-                {
-                    BarrelIndex = 0;
-                }
+                bHasSpareBarrel = false;
             }
-            else
+
+            // If just removed the last barrel in array, cycle back to 0 (otherwise BarrelIndex stays the same, as next barrel has dropped back into current index position)
+            if (BarrelIndex >- Barrels.Length)
             {
-                Barrels[BarrelIndex].SetCurrentBarrel(false); // old barrel is no longer current
-                BarrelIndex = ++BarrelIndex % Barrels.Length; // cycle BarrelIndex (loops back to 0 when goes past the last barrel in array)
+                BarrelIndex = 0;
             }
         }
-
-        if (Barrels[BarrelIndex] != none)
+        else
         {
-            Barrels[BarrelIndex].SetCurrentBarrel(true);
+            Barrels[BarrelIndex].SetCurrentBarrel(false); // old barrel is no longer current
+            BarrelIndex = ++BarrelIndex % Barrels.Length; // cycle BarrelIndex (loops back to 0 when goes past the last barrel in array)
         }
+    }
+
+    if (Barrels[BarrelIndex] != none)
+    {
+        Barrels[BarrelIndex].SetCurrentBarrel(true);
     }
 }
 
@@ -3276,7 +3278,6 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local DHWeaponBarrel B;
-    local float          SoundModifier;
 
     if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
     {
@@ -3291,8 +3292,7 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
         {
             if (bBarrelDamaged && B != none)
             {
-                SoundModifier = FMax(52.0, 64.0 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature) * 52.0));
-                ThirdPersonActor.SoundPitch = SoundModifier;
+                ThirdPersonActor.SoundPitch = B.static.GetFiringSoundPitch(B.Temperature) * 64;
             }
             else if (ThirdPersonActor.SoundPitch != 64)
             {
