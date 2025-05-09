@@ -16,15 +16,10 @@
 // BUGS
 //==============================================================================
 // [ ] clicking fire or reload after all HE has been fired doesn't swap to new
-//     ammo type
-// [ ] some sort of bug happening when the player gets into a bad state when
-//     interacting with the pickups (slows down, can't switch weapons etc.)
-//     PRONE-TOGGLING FIXES IT [might not be an issue, could have been missing
-//     TP anims]
+//     ammo type (affects all AT guns etc.)
 // [ ] can get into the "rotating" state without the rotating weapon, leaving a
 //     permanent rotating decal under the gun. (seems to just be trying to 
 //     switch weapons fsr)
-// [ ] when player dies on it, why is the ragdoll half into the ground?
 // [ ] player can still "move" camera while in locked view modes (gunsight etc.)
 //==============================================================================
 // NICE TO HAVE
@@ -35,6 +30,11 @@
 //     rigging).
 // [ ] when a player runs out of ammo, prompt them to press X to change round
 //     type.
+// [ ] when player dies on it, why is the ragdoll half into the ground?
+//==============================================================================
+// FINISHING TOUCHES
+//==============================================================================
+// [ ] validate that this all works in MP
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;
