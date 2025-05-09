@@ -543,7 +543,7 @@ class BuildManifest:
                f'        Major={self.version[0]}\n'\
                f'        Minor={self.version[1]}\n'\
                f'        Patch={self.version[2]}\n'\
-               f'        Prerelease="{self.prerelease}"\n'\
+               f'        Prerelease="{self.prerelease if self.prerelease else ""}"\n'\
                f'        Metadata="{self.commit}"\n'\
                f'    End Object\n'\
                f'    Version=VersionObject\n'\
