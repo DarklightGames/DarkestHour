@@ -4982,7 +4982,7 @@ function DrawSpectatingHud(Canvas C)
             // Indicate that the current view is being blacked out
             Y += StrY;
             C.Font = GetConsoleFont(C);
-            S = "(" $ Caps(BlackoutText) @ ")";
+            S = "(" $ Caps(BlackoutText) $ ")";
             C.TextSize(S, StrX, StrY);
             C.SetPos(X - StrX / 2.0, Y  - StrY);
             C.DrawTextClipped(S);
