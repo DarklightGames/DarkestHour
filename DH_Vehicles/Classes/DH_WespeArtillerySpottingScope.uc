@@ -7,7 +7,7 @@ class DH_WespeArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'
 
     YawScaleStep=10.0
     YawAngleUnit=AU_Milliradians

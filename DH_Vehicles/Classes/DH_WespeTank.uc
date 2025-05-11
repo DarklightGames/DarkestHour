@@ -10,6 +10,8 @@
 // [ ] Damage effect positions
 // [ ] Armor values
 // [ ] Add to maps
+// [ ] add sounds to hatch opening/closing
+// [ ] driver animations
 //==============================================================================
 // BUGS
 //==============================================================================
