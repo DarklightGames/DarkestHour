@@ -12,9 +12,13 @@ This has been a huge undertaking for our team, and speaking as the team lead, I'
 
 < INSERT BLURB OF ITALIAN FORCES >
 
+< MORE CLOSE-UP PICTURES >
+
+## Interface
+
 ## Localization
 
-The game has now been fully localized to Russian and Ukrainian. As a result, players are now able to type in Cyrillic characters in the game's chat.
+The game has now been fully localized to **Russian** and **Ukrainian**. As a result, players are now able to type in Cyrillic characters in the game's chat.
 
 ![title info](./Media/Localization%20Ukrainian.png)
 
@@ -103,6 +107,9 @@ The Cannone da 47/32 is a light 47mm anti-tank gun capable of decent penetration
 
 ## Mortaio da 81/14 mod. 35
 Based on the French Brandt mortar, this was the most successful mortar of the Italian armed forces during the war. It can fire high-explosive shells, smoke shells and an extra large high-explosive shell with additional 
+The most successful mortar of the Italian armed forces during the war. Based on the French Brandt Mle 27/31, the Mortaio da 81/14 mod. 35 is a medium 81mm mortar capable of firing a variety of rounds, as well as an ultra-heavy high-explosive round, as pictured below.
+
+![Mortaio da 81/14 mod. 35](./Media/8cm%20Mortar.png)
 
 ## Weapons
 
