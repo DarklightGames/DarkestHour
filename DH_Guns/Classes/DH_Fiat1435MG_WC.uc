@@ -42,5 +42,5 @@ defaultproperties
 
     // TODO: water cooled version should have a different barrel class with better
     // cooling attributes.
-    Barrels(0)=(MuzzleBone="MUZZLE_WC",BarrelClass=class'DH_Fiat1435MGBarrel')
+    Barrels(0)=(MuzzleBone="MUZZLE_WC",BarrelClass=class'DH_Fiat1435MGWCBarrel')
 }
