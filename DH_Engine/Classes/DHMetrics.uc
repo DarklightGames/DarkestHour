@@ -259,7 +259,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     Rounds[0].Constructions[Rounds[0].Constructions.Length] = C;
 }
 
-function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
+function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, Vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
     local DHVehicle KillerVehicle, VictimVehicle;
@@ -311,7 +311,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     Rounds[0].Frags[Rounds[0].Frags.Length] = F;
 }
 
-function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int RoundTime)
+function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, Vector HitLocation, int RoundTime)
 {
     local DHMetricsVehicleFrag F;
     local DHVehicle KillerVehicle;

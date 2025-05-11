@@ -81,7 +81,7 @@ function Timer()
             bIsEstablished = true;
 
             // "A Command Post has been established."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 0,,, self);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 0,,, Construction);
         }
     }
 

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSnowEffect extends emitter;
+class DHBulletHitSnowEffect extends Emitter;
 
 defaultproperties
 {

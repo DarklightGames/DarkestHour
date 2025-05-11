@@ -19,10 +19,4 @@ defaultproperties
     CameraBone="RU_GUNSIGHT_CAMERA"
 
     ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
-
-    // Spotting Scope
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.bm36mortar_tube_ext')
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.bm36mortar_tube_ext')
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.bm36mortar_tube_ext')
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.bm36mortar_tube_ext')
 }

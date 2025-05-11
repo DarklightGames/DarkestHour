@@ -8,15 +8,15 @@ class DHCommandMenu extends Object
 
 const MAX_LABELS = 3;
 
-var color SpottingMarkerDisabledColor;
-var color SpottingMarkerEnabledColor;
+var Color SpottingMarkerDisabledColor;
+var Color SpottingMarkerEnabledColor;
 
 struct OptionRenderInfo
 {
     var string      OptionName;
     var string      InfoText[MAX_LABELS];
     var Material    InfoIcon;
-    var color       InfoColor;
+    var Color       InfoColor;
     var string      DescriptionText;
 };
 
@@ -158,7 +158,7 @@ function OnActive();                    // Called when a menu becomes the topmos
 function OnPassive();                   // Called when a menu is no longer the topmost menu on the stack
 function OnHoverIn(int OptionIndex);    // Called when a menu option is hovered over
 function OnHoverOut(int OptionIndex);   // Called when a menu option is no longer being hovered over
-function OnSelect(int OptionIndex, vector Location, optional vector HitLocation);
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitLocation);
 
 function Tick();                        // Called every frame if bShouldTick is true and the menu is at the top of the stack
 

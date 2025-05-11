@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CSAZLeaf1942Pawn extends DH_CSAZPawn;  
+class DH_CSAZLeaf1942Pawn extends DH_CSAZPawn;
 
 defaultproperties
 {

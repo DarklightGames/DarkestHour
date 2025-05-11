@@ -20,7 +20,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=84,G=96,R=101,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
         MaxParticles=2
-        Name="flash"     
+        Name="flash"
         StartLocationOffset=(Z=-50.000000)
         StartLocationRange=(X=(Min=-15.000000,Max=15.000000),Y=(Min=-15.000000,Max=15.000000),Z=(Max=50.000000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -129,7 +129,7 @@ defaultproperties
         ColorScale(0)=(Color=(G=128,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(G=128,R=255,A=255))
         MaxParticles=1
-        name="shockwave"     
+        name="shockwave"
         StartLocationOffset=(Z=-50.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)

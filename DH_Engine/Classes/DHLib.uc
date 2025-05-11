@@ -10,7 +10,7 @@ struct ServerHealthStage
 {
     var byte                    MinTick;
     var localized string        Text;
-    var color                   TextColor;
+    var Color                   TextColor;
 };
 
 var ServerHealthStage           ServerHealthStages[6];
@@ -156,10 +156,10 @@ final static function string GetDurationString(int Seconds, string Format)
 }
 
 // Draws a debugging cylinder out of wireframe lines - same as in ROHud but uses DrawStayingDebugLine(), so they stay on the screen
-final static function DrawStayingDebugCylinder(Actor A, vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
+final static function DrawStayingDebugCylinder(Actor A, Vector Base, Vector X, Vector Y, Vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
 {
     local float  AngleDelta;
-    local vector LastVertex, Vertex;
+    local Vector LastVertex, Vertex;
     local int    SideIndex;
 
     if (A != none && Radius > 0.0 && HalfHeight > 0.0 && NumSides > 0)
@@ -180,7 +180,7 @@ final static function DrawStayingDebugCylinder(Actor A, vector Base, vector X, v
     }
 }
 
-final static function String GetServerHealthString(byte Tick, optional out color TextColor)
+final static function String GetServerHealthString(byte Tick, optional out Color TextColor)
 {
     local int i;
 

@@ -44,10 +44,10 @@ var     name        OverlaySecondaryShellBone;
 var     bool        bSwapShellBonesBasedOnSelectedAmmo;
 
 // HUD
-var     texture     HUDArcTexture;           // the elevation display
+var     Texture     HUDArcTexture;           // the elevation display
 var     TexRotator  HUDArrowTexture;         // indicator icon for current elevation
-var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
-var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
+var     Texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
+var     Texture     HUDSmokeTexture;         // ammo icon for smoke rounds
 var     ROHud.NumericWidget AmmoAmount;
 var     ROHud.SpriteWidget AmmoIcon;
 
@@ -93,10 +93,10 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local coords  CameraCoords;
-    local rotator WeaponAimRot;
+    local Coords  CameraCoords;
+    local Rotator WeaponAimRot;
 
     ViewActor = self;
 
@@ -111,13 +111,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         {
             WeaponAimRot = Gun.CurrentAim;
             WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-            WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
+            WeaponAimRot = Rotator(Vector(WeaponAimRot) >> Gun.Rotation);
             WeaponAimRot.Roll = Gun.Rotation.Roll;
             CameraLocation += FPCamPos >> WeaponAimRot;
         }
 
         // Set camera rotation
-        CameraRotation = rotator(CameraCoords.XAxis);
+        CameraRotation = Rotator(CameraCoords.XAxis);
         CameraRotation.Roll = 0; // make the mortar view have no roll
 
         // Finalise the camera with any shake
@@ -133,8 +133,8 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 {
     local int Deflection;
     local string DeflectionSign;
-    local vector WeaponLocation, Target;
-    local rotator WeaponRotation;
+    local Vector WeaponLocation, Target;
+    local Rotator WeaponRotation;
     local DHGameReplicationInfo.MapMarker TargetMarker;
 
     if (PC == none)
@@ -154,13 +154,13 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 
     WeaponRotation = Gun.CurrentAim;
     WeaponRotation.Yaw = -WeaponRotation.Yaw; // reversed due to messed up rigging
-    WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+    WeaponRotation = Rotator(Vector(WeaponRotation) >> Gun.Rotation);
     WeaponRotation.Roll = 0;
     WeaponRotation.Pitch = 0;
 
     Target = TargetMarker.WorldLocation - WeaponLocation;
 
-    Deflection = -class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1));
+    Deflection = -class'UVector'.static.SignedAngle(Target, Vector(WeaponRotation), vect(0, 0, 1));
     Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
     if (Abs(Deflection) > 500)
@@ -375,7 +375,7 @@ simulated function SetPlayerPosition()
 // Also to destroy the mortar if player just un-deployed it
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local rotator NewRotation;
+    local Rotator NewRotation;
 
     if (PC != none && Gun != none)
     {

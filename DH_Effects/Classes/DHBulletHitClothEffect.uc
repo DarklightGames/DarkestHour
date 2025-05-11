@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitClothEffect extends emitter;
+class DHBulletHitClothEffect extends Emitter;
 
 defaultproperties
 {

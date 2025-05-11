@@ -14,160 +14,160 @@ struct HSV
     var float V;
 };
 
-var color AliceBlue;
-var color AntiqueWhite;
-var color Aqua;
-var color Aquamarine;
-var color Azure;
-var color Beige;
-var color Bisque;
-var color Black;
-var color BlanchedAlmond;
-var color Blue;
-var color BlueViolet;
-var color Brown;
-var color BurlyWood;
-var color CadetBlue;
-var color Chartreuse;
-var color Chocolate;
-var color Coral;
-var color CornflowerBlue;
-var color Cornsilk;
-var color Crimson;
-var color Cyan;
-var color DarkBlue;
-var color DarkCyan;
-var color DarkGoldenrod;
-var color DarkGray;
-var color DarkGreen;
-var color DarkKhaki;
-var color DarkMagena;
-var color DarkOliveGreen;
-var color DarkOrange;
-var color DarkOrchid;
-var color DarkRed;
-var color DarkSalmon;
-var color DarkSeaGreen;
-var color DarkSlateBlue;
-var color DarkSlateGray;
-var color DarkTurquoise;
-var color DarkViolet;
-var color DeepPink;
-var color DeepSkyBlue;
-var color DimGray;
-var color DodgerBlue;
-var color Firebrick;
-var color FloralWhite;
-var color ForestGreen;
-var color Fuschia;
-var color Gainsboro;
-var color GhostWhite;
-var color Gold;
-var color Goldenrod;
-var color Gray;
-var color Green;
-var color GreenYellow;
-var color Honeydew;
-var color HotPink;
-var color IndianRed;
-var color Indigo;
-var color Ivory;
-var color Khaki;
-var color Lavender;
-var color LavenderBlush;
-var color LawnGreen;
-var color LemonChiffon;
-var color LightBlue;
-var color LightCoral;
-var color LightCyan;
-var color LightGoldenrodYellow;
-var color LightGray;
-var color LightGreen;
-var color LightPink;
-var color LightSalmon;
-var color LightSeaGreen;
-var color LightSkyBlue;
-var color LightSlateGray;
-var color LightSteelBlue;
-var color LightYellow;
-var color Lime;
-var color LimeGreen;
-var color Linen;
-var color Magenta;
-var color Maroon;
-var color MediumAquamarine;
-var color MediumBlue;
-var color MediumOrchid;
-var color MediumPurple;
-var color MediumSeaGreen;
-var color MediumSlateBlue;
-var color MediumSpringGreen;
-var color MediumTurquoise;
-var color MediumVioletRed;
-var color MidnightBlue;
-var color MintCream;
-var color MistyRose;
-var color Moccasin;
-var color NavajoWhite;
-var color Navy;
-var color OldLace;
-var color Olive;
-var color OliveDrab;
-var color Orange;
-var color OrangeRed;
-var color Orchid;
-var color PaleGoldenrod;
-var color PaleGreen;
-var color PaleTurquoise;
-var color PaleVioletRed;
-var color PapayaWhip;
-var color PeachPuff;
-var color Peru;
-var color Pink;
-var color Plum;
-var color PowderBlue;
-var color Purple;
-var color Red;
-var color RosyBrown;
-var color RoyalBlue;
-var color SaddleBrown;
-var color Salmon;
-var color SandyBrown;
-var color SeaGreen;
-var color Seashell;
-var color Sienna;
-var color Silver;
-var color SkyBlue;
-var color SlateBlue;
-var color SlateGray;
-var color Snow;
-var color SpringGreen;
-var color SteelBlue;
-var color Tan_;
-var color Teal;
-var color Thistle;
-var color Tomato;
-var color Turquoise;
-var color Violet;
-var color Wheat;
-var color White;
-var color WhiteSmoke;
-var color Yellow;
-var color YellowGreen;
+var Color AliceBlue;
+var Color AntiqueWhite;
+var Color Aqua;
+var Color Aquamarine;
+var Color Azure;
+var Color Beige;
+var Color Bisque;
+var Color Black;
+var Color BlanchedAlmond;
+var Color Blue;
+var Color BlueViolet;
+var Color Brown;
+var Color BurlyWood;
+var Color CadetBlue;
+var Color Chartreuse;
+var Color Chocolate;
+var Color Coral;
+var Color CornflowerBlue;
+var Color Cornsilk;
+var Color Crimson;
+var Color Cyan;
+var Color DarkBlue;
+var Color DarkCyan;
+var Color DarkGoldenrod;
+var Color DarkGray;
+var Color DarkGreen;
+var Color DarkKhaki;
+var Color DarkMagena;
+var Color DarkOliveGreen;
+var Color DarkOrange;
+var Color DarkOrchid;
+var Color DarkRed;
+var Color DarkSalmon;
+var Color DarkSeaGreen;
+var Color DarkSlateBlue;
+var Color DarkSlateGray;
+var Color DarkTurquoise;
+var Color DarkViolet;
+var Color DeepPink;
+var Color DeepSkyBlue;
+var Color DimGray;
+var Color DodgerBlue;
+var Color Firebrick;
+var Color FloralWhite;
+var Color ForestGreen;
+var Color Fuschia;
+var Color Gainsboro;
+var Color GhostWhite;
+var Color Gold;
+var Color Goldenrod;
+var Color Gray;
+var Color Green;
+var Color GreenYellow;
+var Color Honeydew;
+var Color HotPink;
+var Color IndianRed;
+var Color Indigo;
+var Color Ivory;
+var Color Khaki;
+var Color Lavender;
+var Color LavenderBlush;
+var Color LawnGreen;
+var Color LemonChiffon;
+var Color LightBlue;
+var Color LightCoral;
+var Color LightCyan;
+var Color LightGoldenrodYellow;
+var Color LightGray;
+var Color LightGreen;
+var Color LightPink;
+var Color LightSalmon;
+var Color LightSeaGreen;
+var Color LightSkyBlue;
+var Color LightSlateGray;
+var Color LightSteelBlue;
+var Color LightYellow;
+var Color Lime;
+var Color LimeGreen;
+var Color Linen;
+var Color Magenta;
+var Color Maroon;
+var Color MediumAquamarine;
+var Color MediumBlue;
+var Color MediumOrchid;
+var Color MediumPurple;
+var Color MediumSeaGreen;
+var Color MediumSlateBlue;
+var Color MediumSpringGreen;
+var Color MediumTurquoise;
+var Color MediumVioletRed;
+var Color MidnightBlue;
+var Color MintCream;
+var Color MistyRose;
+var Color Moccasin;
+var Color NavajoWhite;
+var Color Navy;
+var Color OldLace;
+var Color Olive;
+var Color OliveDrab;
+var Color Orange;
+var Color OrangeRed;
+var Color Orchid;
+var Color PaleGoldenrod;
+var Color PaleGreen;
+var Color PaleTurquoise;
+var Color PaleVioletRed;
+var Color PapayaWhip;
+var Color PeachPuff;
+var Color Peru;
+var Color Pink;
+var Color Plum;
+var Color PowderBlue;
+var Color Purple;
+var Color Red;
+var Color RosyBrown;
+var Color RoyalBlue;
+var Color SaddleBrown;
+var Color Salmon;
+var Color SandyBrown;
+var Color SeaGreen;
+var Color Seashell;
+var Color Sienna;
+var Color Silver;
+var Color SkyBlue;
+var Color SlateBlue;
+var Color SlateGray;
+var Color Snow;
+var Color SpringGreen;
+var Color SteelBlue;
+var Color Tan_;
+var Color Teal;
+var Color Thistle;
+var Color Tomato;
+var Color Turquoise;
+var Color Violet;
+var Color Wheat;
+var Color White;
+var Color WhiteSmoke;
+var Color Yellow;
+var Color YellowGreen;
 
-final static function bool IsZero(color C)
+final static function bool IsZero(Color C)
 {
     return C.R == 0 && C.G == 0 && C.B == 0 && C.A == 0;
 }
 
-final static function string ToString(color C)
+final static function string ToString(Color C)
 {
     return "(R=" $ C.R $ ",G=" $ C.G $ ",B=" $ C.B $ ",A=" $ C.A $ ")";
 }
 
-final static function color Interp(float X, color A, color B)
+final static function Color Interp(float X, Color A, Color B)
 {
-    local color C;
+    local Color C;
 
     C.R = byte(Lerp(X, A.R, B.R));
     C.G = byte(Lerp(X, A.G, B.G));
@@ -178,9 +178,9 @@ final static function color Interp(float X, color A, color B)
 }
 
 // Given a string eg. #ffba23, will return the color (R=255,G=181,B=35)
-final static function color FromHex(string S)
+final static function Color FromHex(string S)
 {
-    local color C;
+    local Color C;
 
     C.A = 255;
 
@@ -189,11 +189,11 @@ final static function color FromHex(string S)
     return C;
 }
 
-final static function color HSV2RGB(HSV HSV)
+final static function Color HSV2RGB(HSV HSV)
 {
     local int i;
     local float P, Q, T, FF;
-    local color RGB;
+    local Color RGB;
 
     if (HSV.S <= 0.0)
     {
@@ -254,7 +254,7 @@ final static function color HSV2RGB(HSV HSV)
 }
 
 // http://www.javascripter.net/faq/rgb2hsv.htm
-final static function HSV RGB2HSV(color RGB)
+final static function HSV RGB2HSV(Color RGB)
 {
     local float R, G, B, MinRGB, MaxRGB, D, H;
     local HSV HSV;

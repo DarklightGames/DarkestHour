@@ -50,7 +50,7 @@ simulated function PostBeginPlay()
 {
     OrigLoc = Location;
     BCInverse = 1.0 / BallisticCoefficient;
-    Velocity = vector(Rotation) * Speed;
+    Velocity = Vector(Rotation) * Speed;
 
     if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
     {
@@ -62,7 +62,7 @@ simulated function PostBeginPlay()
 simulated function PostNetBeginPlay()
 {
     local Actor  TraceHitActor;
-    local vector HitNormal;
+    local Vector HitNormal;
     local float  TraceRadius;
 
     if (Instigator != none)
@@ -73,7 +73,7 @@ simulated function PostNetBeginPlay()
     if (bIsTracerBullet && Level.NetMode != NM_DedicatedServer)
     {
         SetDrawType(DT_StaticMesh);
-//      SetRotation(rotator(Velocity)); // removed as simply setting bOrientToVelocity handles this natively (replacing use of Tick)
+//      SetRotation(Rotator(Velocity)); // removed as simply setting bOrientToVelocity handles this natively (replacing use of Tick)
         bOrientToVelocity = true;
 
         if (Level.bDropDetail)
@@ -111,11 +111,11 @@ simulated function PostNetBeginPlay()
             TraceRadius += Instigator.CollisionRadius;
         }
 
-        TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + TraceRadius * vector(Rotation), true);
+        TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * Vector(Rotation), Location + TraceRadius * Vector(Rotation), true);
 
         if (ROBulletWhipAttachment(TraceHitActor) != none)
         {
-            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), TraceHitLoc + 5.0 * vector(Rotation), true);
+            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * Vector(Rotation), TraceHitLoc + 5.0 * Vector(Rotation), true);
         }
 
         Log("Bullet debug tracing: TraceHitActor =" @ TraceHitActor);
@@ -141,7 +141,7 @@ simulated function Tick(float DeltaTime)
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
 
     // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
@@ -211,13 +211,13 @@ simulated singular function Touch(Actor Other)
 }
 
 // Modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
     local Pawn         InstigatorPlayer;
     local Actor        A;
     local array<Actor> SavedHitActors;
-    local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
+    local Vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
     local float        V;
     local array<int>   HitPoints;
     local int          TraceWhizType, i, MyDamage;
@@ -281,7 +281,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (V < 25.0)
         {
             V = default.Speed;
-            Direction = vector(Rotation);
+            Direction = Vector(Rotation);
         }
     }
 
@@ -444,7 +444,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Bullet is bNetTemporary, meaning it gets torn off on client as soon as it replicates, receiving no further input from server, so delaying destruction on server has no effect
 // Also to handle tracer bullet clientside effects, as well as normal bullet functionality
 // Note this gets called when bullet collides with an ROVehicle (not a VehicleWeapon), as well as world geometry
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local ROVehicle        HitVehicle;
     local DHArmoredVehicle AV;
@@ -489,7 +489,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Spawn the bullet hit effect on anything other than a vehicle
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
-        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
+        Spawn(ImpactEffect, self,, Location, Rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
     }
 
     if (!bHasDeflected)
@@ -567,7 +567,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)
-simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, vector HitNormal)
+simulated function PlayVehicleHitEffects(bool bPenetrated, Vector HitLocation, Vector HitNormal)
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -577,7 +577,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
             {
-                Spawn(VehiclePenetrateEffectClass,,, HitLocation, rotator(-HitNormal));
+                Spawn(VehiclePenetrateEffectClass,,, HitLocation, Rotator(-HitNormal));
             }
         }
         else
@@ -586,14 +586,14 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && VehicleDeflectEffectClass != none)
             {
-                Spawn(VehicleDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
+                Spawn(VehicleDeflectEffectClass,,, HitLocation, Rotator(-HitNormal));
             }
         }
     }
 }
 
 // New helper function, just to improve readability & to avoid repeating functionality in other classes (e.g. bullet's pre-launch trace)
-simulated static function GetWhizType(out int TraceWhizType, DHPawn WhizzedPlayer, Pawn Instigator, vector LaunchLocation)
+simulated static function GetWhizType(out int TraceWhizType, DHPawn WhizzedPlayer, Pawn Instigator, Vector LaunchLocation)
 {
     local bool  bFriendlyFire;
     local float BulletDistance;
@@ -628,7 +628,7 @@ simulated static function GetWhizType(out int TraceWhizType, DHPawn WhizzedPlaye
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PC;
 
@@ -663,7 +663,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    if (PC.Pawn != Instigator && Vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
     {
         return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
@@ -673,9 +673,9 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
 }
 
 // New function to handle tracer deflection off things
-simulated function Deflect(vector HitNormal)
+simulated function Deflect(Vector HitNormal)
 {
-    local vector VNorm;
+    local Vector VNorm;
 
     bHasDeflected = true;
 
@@ -720,10 +720,10 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 }
 
 // Modified to add water splash sound, & to add an EffectIsRelevant check before spawning visual splash effect
-simulated function CheckForSplash(vector SplashLocation)
+simulated function CheckForSplash(Vector SplashLocation)
 {
     local Actor  HitActor;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
@@ -761,7 +761,7 @@ simulated function UpdateInstigator()
 }
 
 // Modified to destroy tracer when it falls to ground
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     if (bIsTracerBullet)
     {

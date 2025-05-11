@@ -93,12 +93,12 @@ state ReleasingSmoke
         LifeSpan = SmokeAttachmentClass.default.SmokeSoundDuration + 10.0;
     }
 
-    simulated function Explode(vector HitLocation, vector HitNormal);
+    simulated function Explode(Vector HitLocation, Vector HitNormal);
 }
 
 // Modified to add smoke effects & to remove actor destruction on client
 // Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {

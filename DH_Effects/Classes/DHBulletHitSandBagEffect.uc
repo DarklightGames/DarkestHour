@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSandBagEffect extends emitter;
+class DHBulletHitSandBagEffect extends Emitter;
 
 defaultproperties
 {

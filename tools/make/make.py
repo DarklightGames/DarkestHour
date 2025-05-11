@@ -79,17 +79,32 @@ class ConfigParserMultiOpt(configparser.RawConfigParser):
         e = None  # None, or an exception
         for lineno, line in enumerate(fp, start=1):
             comment_start = None
+            # TODO: There is some sort of screw-up between Linux and Windows versions of configparser where Windows doesn't have `_prefixes`.
             # strip inline comments
-            for prefix in self._inline_comment_prefixes:
-                index = line.find(prefix)
-                if index == 0 or (index > 0 and line[index - 1].isspace()):
-                    comment_start = index
-                    break
+            if hasattr(self, '_prefixes'):
+                for prefix in self._prefixes.inline:
+                    index = line.find(prefix)
+                    if index == 0 or (index > 0 and line[index - 1].isspace()):
+                        comment_start = index
+                        break
+                # strip full line comments
+                for prefix in self._prefixes.full:
+                    if line.strip().startswith(prefix):
+                        comment_start = 0
+                        break
+            # strip inline comments
+            if hasattr(self, '_inline_comment_prefixes'):
+                for prefix in self._inline_comment_prefixes:
+                    index = line.find(prefix)
+                    if index == 0 or (index > 0 and line[index - 1].isspace()):
+                        comment_start = index
+                        break
             # strip full line comments
-            for prefix in self._comment_prefixes:
-                if line.strip().startswith(prefix):
-                    comment_start = 0
-                    break
+            if hasattr(self, '_comment_prefixes'):
+                for prefix in self._comment_prefixes:
+                    if line.strip().startswith(prefix):
+                        comment_start = 0
+                        break
             value = line[:comment_start].strip()
             if not value:
                 if self._empty_lines_in_values:
@@ -202,48 +217,46 @@ def main():
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     argparser.add_argument('-debug', required=False, action='store_true', default=False,
                            help='compile debug packages (for use with UDebugger)')
+    
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
 
     if not os.path.isdir(args.dir):
-        print('error: "{}" is not a directory'.format(dir))
+        print('Error: "{}" is not a directory'.format(dir))
         sys.exit(1)
 
     # System directory.
     sys_dir = os.path.join(args.dir, 'System')
-
     if not os.path.isdir(sys_dir):
-        print('error: could not resolve System directory')
+        print(f'Error: Could not resolve System directory ({sys_dir})')
         sys.exit(1)
 
     # Mod directory.
     mod_dir = os.path.join(args.dir, args.mod)
-
     if not os.path.isdir(mod_dir):
-        print('error: could not resolve mod directory')
+        print(f'Error: Could not resolve mod directory ({mod_dir})')
         sys.exit(1)
 
     # Mod system directory.
     mod_sys_dir = os.path.join(mod_dir, 'System')
-
     if not os.path.isdir(mod_sys_dir):
-        print('error could not resolve mod system directory')
+        print(f'Error: Could not resolve mod System directory ({mod_sys_dir})')
         sys.exit(1)
 
     # Read the default config.
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
-    if os.path.isfile(default_config_path):
-        # Calculate the CRC of the default config.
-        # We will check this against the one logged in the manifest and force a clean build if it has changed.
-        default_ini_crc = crc32(Path(default_config_path).read_bytes())
-
-        config = ConfigParserMultiOpt()
-        config.read(default_config_path)
-        default_packages = config.get('Editor.EditorEngine', '+editpackages')
-    else:
-        print('error: could not resolve mod config file')
+    if not os.path.isfile(default_config_path):
+        print('Error: Could not resolve mod config file ({default_config_path})')
         sys.exit(1)
+    
+    # Calculate the CRC of the default config.
+    # We will check this against the one logged in the manifest and force a clean build if it has changed.
+    default_ini_crc = crc32(Path(default_config_path).read_bytes())
+
+    config = ConfigParserMultiOpt()
+    config.read(default_config_path)
+    default_packages = config.get('Editor.EditorEngine', '+editpackages')
 
     # Read the paths and make sure that there are no ambiguous file names.
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
@@ -287,7 +300,7 @@ def main():
     for filename, paths in filename_paths.items():
         if len(paths) > 1:
             did_error = True
-            print('ERROR: Ambiguous file resolution for "' + filename + '"')
+            print('Error: Ambiguous file resolution for "' + filename + '"')
             print('    Files with that file name were found in the following paths:')
             for path in paths:
                 print('        ' + path)
@@ -303,7 +316,7 @@ def main():
             try:
                 os.remove(package_path)
             except OSError:
-                print('error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
+                print('Error: Failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
                 sys.exit(1)
 
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
@@ -352,11 +365,18 @@ def main():
 
     print('Checking for out-of-date packages...')
 
-    for package in packages:
-        sys_package_path = os.path.join(sys_dir, package + '.u')
+    # Get a list of the compiled files that exist in root System folder.
+    # This is cross-platform solution since os.path.isfile behaves different depending on casing.
+    files_in_root_system_folder = [x.upper() for x in os.listdir(sys_dir) if os.path.isfile(os.path.join(sys_dir, x))]
 
-        if os.path.isfile(sys_package_path):
-            # Compiled file exists in root System folder.
+    def is_compiled_package_in_root_system_folder(package: str):
+        return package.upper() in files_in_root_system_folder
+
+    for package in packages:
+        package_filename = f'{package}.u'
+        sys_package_path = os.path.join(sys_dir, package_filename)
+
+        if is_compiled_package_in_root_system_folder(package_filename):
             continue
 
         package_status = PACKAGE_OK
@@ -376,7 +396,7 @@ def main():
             changed_packages.add(package + '.u')
             package_status = PACKAGE_SOURCE_MISMATCH
 
-        package_statuses[package + '.u'] = package_status
+        package_statuses[package_filename] = package_status
         manifest.package_crcs[package] = package_crc
 
         if package_status != PACKAGE_OK:
@@ -387,15 +407,9 @@ def main():
     compiled_packages = set()
     did_build_succeed = True
 
-    ucc_log_path = os.path.join(sys_dir, 'UCC.log')
+    has_packages_to_compile = len(packages_to_compile) > 0
 
-    # Write out an empty log file, so that even if there are no
-    # packages to compile, WOTgreal still has a log file to parse.
-    ucc_log_file = open(ucc_log_path, 'w')
-    ucc_log_file.write('Warning: No packages were marked for compilation')
-    ucc_log_file.close()
-
-    if len(packages_to_compile) > 0:
+    if has_packages_to_compile:
         print_header('Build started for mod: {}'.format(args.mod))
 
         sorted_package_statuses = filter(
@@ -414,26 +428,32 @@ def main():
                         os.remove(package_path)
                     except OSError:
                         print(
-                            'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
+                            'Error: Failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
                         sys.exit(1)
 
         os.chdir(sys_dir)
 
-        if not os.path.exists(os.path.join(sys_dir, 'ucc.exe')):
-            print('error: compiler executable not found (do you have the SDK installed?)')
+        ucc_path = os.path.join(sys_dir, 'UCC.exe')
+        if not os.path.exists(ucc_path):
+            print(f'Error: Compiler executable ({ucc_path}) not found (do you have the SDK installed?)')
             sys.exit(1)
 
         # Run ucc make.
         ucc_args = ['ucc', 'make', '-mod=' + args.mod]
         if args.debug:
             ucc_args.append('-debug')
+        if sys.platform == 'linux':
+            # Run `ucc` through wine.
+            ucc_args.insert(0, 'wine')
+
         proc = subprocess.Popen(ucc_args)
         proc.communicate()
 
         # Store contents of ucc.log before it's overwritten.
+        ucc_log_path = os.path.join(sys_dir, 'UCC.log')
         ucc_log_file = open(ucc_log_path, 'rb')
         ucc_log_contents = ucc_log_file.read()
-        ucc_log_file.close()
+        ucc_log_file.close() 
 
         # Move compiled packages to mod directory.
         for root, dirs, filenames in os.walk(sys_dir):
@@ -445,10 +465,13 @@ def main():
 
         # Run dumpint on changed and compiled packages.
         if args.dumpint:
-            print('running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
+            print('Running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
             processes = []
             for package in (compiled_packages & changed_packages):
-                processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
+                ucc_args = ['ucc', 'dumpint', package, '-mod=' + args.mod]
+                if sys.platform == 'linux':
+                    ucc_args.insert(0, 'wine')
+                processes.append(subprocess.Popen(ucc_args))
 
             [p.wait() for p in processes]
 
@@ -474,7 +497,8 @@ def main():
         # Delete the CRCs of changed packages that failed to compile.
         for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
             package_name = os.path.splitext(package_name)[0]
-            del old_package_crcs[package_name]
+            if package_name in old_package_crcs:
+                del old_package_crcs[package_name]
 
         # Write package manifest.
         manifest.default_ini_crc = default_ini_crc
@@ -519,7 +543,7 @@ class BuildManifest:
                f'        Major={self.version[0]}\n'\
                f'        Minor={self.version[1]}\n'\
                f'        Patch={self.version[2]}\n'\
-               f'        Prerelease="{self.prerelease}"\n'\
+               f'        Prerelease="{self.prerelease if self.prerelease else ""}"\n'\
                f'        Metadata="{self.commit}"\n'\
                f'    End Object\n'\
                f'    Version=VersionObject\n'\

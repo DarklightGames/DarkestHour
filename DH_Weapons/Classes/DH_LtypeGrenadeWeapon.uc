@@ -7,7 +7,7 @@ class DH_LTypeGrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="OTO bomba Tipo L" //placeholder until we figure the actual name for this thing
+    ItemName="O.T.O Tipo L Anti-Tank Grenade"
     FireModeClass(0)=class'DH_Weapons.DH_LTypeGrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_LTypeGrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_LTypeGrenadeAttachment'

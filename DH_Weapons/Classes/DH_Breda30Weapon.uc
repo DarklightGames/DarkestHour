@@ -28,7 +28,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     BredaHideSpillBulletBones();
 }
 
-// This hides the two rounds that will spill out of the gun when the 
+// This hides the two rounds that will spill out of the gun when the
 simulated function HideProxySpillBullets()
 {
     local int i, j, k;
@@ -146,7 +146,7 @@ defaultproperties
     //MGBeltBones(18)="MAGAZINE_BULLET_19"
     //MGBeltBones(19)="MAGAZINE_BULLET_20"
 
-    ItemName="Breda modello 30"
+    ItemName="Breda mod. 30"
     TeamIndex=0 // TODO: weapons "belonging" to teams is a flawed concept with the introduction of the Italians.
     FireModeClass(0)=class'DH_Weapons.DH_Breda30Fire'
     AttachmentClass=class'DH_Weapons.DH_Breda30Attachment'

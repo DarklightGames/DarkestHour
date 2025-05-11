@@ -20,11 +20,11 @@ var globalconfig float PenetrationScale; // global penetration depth scale facto
 var globalconfig float DistortionScale;  // global distortion scale factor
 
 // Modified to handle world object penetration
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
     local Actor           TraceHitActor;
-    local vector          Direction, TempHitLocation, TempHitNormal;
+    local Vector          Direction, TempHitLocation, TempHitNormal;
     local float           xH, TempMaxWall;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
@@ -110,7 +110,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     bInHitWall = true; // set flag to prevent recursive calls
 
     // Do the MaxWall calculations
-    Direction = vector(Rotation);
+    Direction = Vector(Rotation);
     CheckWall(HitNormal, Direction);
     xH = 1.0 / Hardness;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
@@ -160,7 +160,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // Modified to handle shell destruction only if we didn't hit & penetrate a world object (if we did then we leave it to WorldPenetrationExplode)
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bHitWorldObject)
     {
@@ -185,7 +185,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Alternative version of Explode if we have penetrated a world object (renamed from original PenetrationExplode, which misleadingly implied it related to vehicle penetration)
-simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
+simulated function WorldPenetrationExplode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -200,11 +200,11 @@ simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
 }
 
 // Sets Hardness based on the surface type hit
-simulated function CheckWall(vector HitNormal, vector X)
+simulated function CheckWall(Vector HitNormal, Vector X)
 {
-    local material      HitMaterial;
+    local Material      HitMaterial;
     local ESurfaceTypes HitSurfaceType;
-    local vector        TempHitLocation, TempHitNormal;
+    local Vector        TempHitLocation, TempHitNormal;
 
     Trace(TempHitLocation, TempHitNormal, Location, Location + X * 16.0, false,, HitMaterial);
 

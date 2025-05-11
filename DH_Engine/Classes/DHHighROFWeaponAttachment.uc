@@ -9,7 +9,7 @@ class DHHighROFWeaponAttachment extends DHWeaponAttachment
 // Struct that holds the info we need to launch our client side hit effect
 struct ShotInfo
 {
-    var vector  ShotLocation;
+    var Vector  ShotLocation;
     var int     ShotRotation;
 };
 
@@ -43,7 +43,7 @@ replication
         SavedDualShot, DualShotCount;
 }
 
-simulated function Int2Rot(int N, out rotator R)
+simulated function Int2Rot(int N, out Rotator R)
 {
     // Unpack rotation integer:
     // 0x0 - Pitch (16-bit signed integer)
@@ -52,7 +52,7 @@ simulated function Int2Rot(int N, out rotator R)
     R.Yaw = N & 0xFFFF;
 }
 
-simulated function Rot2Int(rotator R, out int N)
+simulated function Rot2Int(Rotator  R, out int N)
 {
     // Pack pitch and yaw components into a 32-bit integer:
     // 0x0 - Pitch (16-bit signed integer)
@@ -105,8 +105,8 @@ simulated function bool ShouldSpawnTracer()
 // Also some re-factoring to optimise & make clearer, by removing repetition & redundancy
 simulated function SpawnClientRounds(bool bFirstRoundOnly)
 {
-    local vector  ProjectileLoc, HitLocation, TestHitLocation, HitNormal, TraceEnd, MuzzleLocation;
-    local rotator ProjectileDir;
+    local Vector  ProjectileLoc, HitLocation, TestHitLocation, HitNormal, TraceEnd, MuzzleLocation;
+    local Rotator ProjectileDir;
 
     // First shot, or single shot
     // Get replicated start location & direction for this shot
@@ -122,7 +122,7 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 
             // As we're adjusting tracer's start location, we also adjust its direction a little so it hits approx the same place it would have
             // We trace to get location it would hit in a straight line along its original replicated direction
-            TraceEnd = ProjectileLoc + (65525.0 * vector(ProjectileDir));
+            TraceEnd = ProjectileLoc + (65525.0 * Vector(ProjectileDir));
 
             // If trace didn't hit anything, e.g. it's a sky shot, we'll just use trace's end location for tracer direction adjustment
             // Added this to fix bug where sky shots were seen to come from player's head, because they weren't adjusted to spawn from the muzzle
@@ -134,9 +134,9 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             // Switch the spawn location to the muzzle location & adjust tracer direction based on our hit location
             // But first just make sure the tracer wouldn't spawn inside something if we spawn it from the 3rd person weapon's muzzle
             // So do another very short trace forwards from our hit location to make sure there's nothing right in front of it
-            if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
+            if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (Vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
             {
-                ProjectileDir = rotator(Normal(HitLocation - ProjectileLoc));
+                ProjectileDir = Rotator(Normal(HitLocation - ProjectileLoc));
                 ProjectileLoc = MuzzleLocation;
             }
         }
@@ -161,16 +161,16 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             if (Instigator == none || !Instigator.IsFirstPerson())
             {
                 MuzzleLocation = GetBoneCoords(MuzzleBoneName).Origin;
-                TraceEnd = ProjectileLoc + (65525.0 * vector(ProjectileDir));
+                TraceEnd = ProjectileLoc + (65525.0 * Vector(ProjectileDir));
 
                 if (Trace(HitLocation, HitNormal, TraceEnd, ProjectileLoc, true) == none)
                 {
                     HitLocation = TraceEnd;
                 }
 
-                if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
+                if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (Vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
                 {
-                    ProjectileDir = rotator(Normal(HitLocation - ProjectileLoc));
+                    ProjectileDir = Rotator(Normal(HitLocation - ProjectileLoc));
                     ProjectileLoc = MuzzleLocation;
                 }
             }
@@ -185,7 +185,7 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 }
 
 // This function will take the information about a shot and turn it into a shotinfo struct
-function ShotInfo MakeShotInfo(vector NewLocation, rotator SetRotation)
+function ShotInfo MakeShotInfo(Vector NewLocation, Rotator SetRotation)
 {
     local ShotInfo SI;
 

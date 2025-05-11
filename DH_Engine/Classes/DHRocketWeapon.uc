@@ -182,7 +182,7 @@ simulated function NotifyOwnerJumped()
 // New function to spawn any RocketAttachment actor (note this may get called by a reload animation notify, so the timing is spot on, e.g. PIAT)
 simulated event SpawnRocketAttachment()
 {
-    local vector ProjectileLocation;
+    local Vector ProjectileLocation;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -490,10 +490,10 @@ static function StaticPrecache(LevelInfo L)
 
 // Modified to stop backblast damage from hurting the shooter (nothing else calls HurtRadius, so this hack should not be harmful)
 // This is a hack, but is also a temporary solution until the backblast system is redesigned
-simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local actor  Victims;
-    local vector Dir;
+    local Vector Dir;
     local float  Dist, DamageScale;
 
     if (bHurtEntry)

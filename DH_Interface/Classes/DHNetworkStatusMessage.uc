@@ -59,7 +59,6 @@ defaultproperties
 
     Begin Object Class=GUIButton Name=NetStatOk
         Caption="OK"
-        StyleName="MidGameButton"
         WinTop=0.675
         WinLeft=0.375
         WinWidth=0.25
@@ -73,7 +72,7 @@ defaultproperties
     Begin Object Class=GUILabel Name=NetStatLabel
         TextAlign=TXTA_Center
         TextColor=(B=255,G=255,R=255)
-        TextFont="UT2HeaderFont"
+        TextFont="DHLargeFont"
         bMultiLine=true
         WinTop=0.125
         WinHeight=0.5

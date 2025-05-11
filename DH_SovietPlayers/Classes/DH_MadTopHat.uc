@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHGUISpinnerButton extends GUISpinnerButton;
+class DH_MadTopHat extends DHHeadgear;
 
 defaultproperties
 {
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
+    // TODO: These assets got lost in a merge & need to be added back.
+    // Mesh=SkeletalMesh'dhgear_anm.MadHat'
+    // Skins(0)=Texture'DH_Halloween_tex.gear.MadHat'
 }

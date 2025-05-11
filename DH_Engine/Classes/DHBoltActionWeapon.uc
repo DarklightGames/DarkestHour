@@ -133,7 +133,7 @@ simulated state WorkingBolt extends WeaponBusy
         {
             GetAnimParams(0, Anim, Frame, Rate);
 
-            if (Anim == BoltIronAnim || 
+            if (Anim == BoltIronAnim ||
                 Anim == BoltHipAnim ||
                 Anim == BoltIronLastAnim ||
                 Anim == BoltHipLastAnim)

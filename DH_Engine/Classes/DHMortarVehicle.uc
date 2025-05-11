@@ -35,28 +35,6 @@ function ServerDestroyMortar()
     Destroy();
 }
 
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (NotifyParameters != none)
-    {
-        NotifyParameters.Clear();
-    }
-}
-
-// Modified to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
-    }
-}
-
 // Modified to handle special requirements to use mortar, with custom messages
 function bool TryToDrive(Pawn P)
 {
@@ -139,7 +117,7 @@ function KDriverEnter(Pawn P)
 }
 
 // No possibility of damage to mortar base
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 }
 
@@ -154,7 +132,6 @@ simulated function int GetTeamNum()
     return VehicleTeam;
 }
 
-// Modified to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
     local DHPawn P;
@@ -194,7 +171,7 @@ function DriverDied();
 function DriverLeft();
 function bool PlaceExitingDriver() { return false; }
 simulated function SetPlayerPosition();
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
 simulated function int LimitYaw(int yaw) { return yaw; }

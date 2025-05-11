@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitGravelEffect extends emitter;
+class DHBulletHitGravelEffect extends Emitter;
 
 defaultproperties
 {

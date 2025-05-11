@@ -11,7 +11,7 @@ class DH_Semovente9053CannonShellHE extends DHCannonShellHE;
 defaultproperties
 {
     Speed=50092.0               // 830m/s [1]
-    MaxSpeed=50092.0            
+    MaxSpeed=50092.0
     ShellDiameter=9.0           // 90mm [1]
     BallisticCoefficient=2.5    // TODO: Find real value
 

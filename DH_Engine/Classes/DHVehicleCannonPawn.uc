@@ -106,10 +106,10 @@ exec function SetCamPos(int X, int Y, int Z)
 
 // Modified so player's view turns with a turret, to properly handle vehicle roll, to handle dual-magnification optics,
 // to handle FPCamPos camera offset for any position (not just overlays), & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local rotator BaseRotation;
+    local Quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Rotator BaseRotation;
     local bool    bOnGunsight;
 
     ViewActor = self;
@@ -361,7 +361,7 @@ simulated function DrawGunsightOverlay(Canvas C)
 function DrawGunsightRangeSetting(Canvas C)
 {
     local float XL, YL, MapX, MapY;
-    local color SavedColor, WhiteColor;
+    local Color SavedColor, WhiteColor;
     local string RangeUnitName;
 
     if (Cannon == none || Cannon.RangeSettings.Length <= 0)
@@ -1088,7 +1088,7 @@ simulated function ClientDamageCannonOverlay()
 // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
 function float ModifyThreat(float Current, Pawn Threat)
 {
-    local vector to, t;
+    local Vector to, t;
     local float  r;
 
     if (Vehicle(Threat) != none)
@@ -1102,7 +1102,7 @@ function float ModifyThreat(float Current, Pawn Threat)
             // Big bonus points for perpendicular tank targets
             to = Normal(Threat.Location - Location);
             to.z = 0.0;
-            t = Normal(vector(Threat.Rotation));
+            t = Normal(Vector(Threat.Rotation));
             t.z = 0.0;
             r = to dot t;
 
@@ -1318,11 +1318,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
             if (BP != none)
             {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugAngleValue = Mils;
-                BP.DebugAngleUnit = AU_Milliradians;
-                BP.StartLocation = BP.Location;
+                BP.CreateCalibrationInfo(VehWep, BP.Location, Mils, AU_Milliradians);
             }
         }
     }
@@ -1360,7 +1356,7 @@ exec function SetPeriscopeSize(float NewValue)
     if (IsDebugModeAllowed())
     {
         Log(Tag @ "PeriscopeSize =" @ NewValue @ " (was" @ PeriscopeSize $ ")");
-        PeriscopeSize = NewValue;        
+        PeriscopeSize = NewValue;
     }
 }
 

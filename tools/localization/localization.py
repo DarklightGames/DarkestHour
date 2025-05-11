@@ -16,23 +16,27 @@ from parsimonious.nodes import NodeVisitor
 from typing import List, Optional, Tuple
 from unt import iso639_to_language_extension, unt_from_key_value_pairs
 import yaml
+import colorama
+import time
+from colorama import Fore
 
+colorama.init()
 
-grammar = Grammar(
-    """
-    value = string / name / array / struct
-    string = ~'"[^\"]*"'
-    name = ~"[A-Z_0-9\.]+"i
-    comma = ","
-    empty_value = ","
-    array_values = (comma / value)*
-    array = "(" array_values? ")"
-    struct_key = ~"[A-Z0-9]*"i
-    struct_value = struct_key '=' value
-    struct_values = struct_value (',' struct_value)*
-    struct = '(' struct_values? ')'
-    """
-)
+grammar_string = r"""
+value = string / name / array / struct
+string = ~'"[^\"]*"'
+name = ~r"[A-Z_0-9\.]+"i
+comma = ","
+empty_value = ","
+array_values = (comma / value)*
+array = "(" array_values? ")"
+struct_key = ~r"[A-Z0-9]*"i
+struct_value = struct_key '=' value
+struct_values = struct_value (',' struct_value)*
+struct = '(' struct_values? ')'
+"""
+
+grammar = Grammar(grammar_string)
 
 
 class ValueVisitor(NodeVisitor):
@@ -238,7 +242,7 @@ def po_to_unt(contents: str) -> str:
         try:
             add_entry(entry.msgid, entry.msgstr, sections)
         except Exception as e:
-            print(f'Failed to add entry {entry.msgid}: {e}')
+            print(f'{Fore.YELLOW}Failed to add entry: {Fore.WHITE}{entry.msgid}: {e}')
 
     def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
         for key, value in key_value_pairs:
@@ -278,7 +282,7 @@ def command_export_file(args):
 
     # Make sure the extension is 4 characters long (e.g., ".int")
     if len(extension) != 4:
-        print('Invalid file extension "{extension}"')
+        print(f'{Fore.RED}Invalid file extension "{extension}"')
         return
 
     # Get the first 2 characters of the extension and map it to an ISO 639-1 language code.
@@ -292,7 +296,7 @@ def command_export_file(args):
     try:
         Language.from_part1(language_code)
     except LanguageNotFoundError:
-        print(f'Unknown language code {language_code} for file {basename}')
+        print(f'{Fore.RED}Unknown language code {language_code} for file {basename}')
         return
 
     with open(input_path, 'r') as file:
@@ -362,7 +366,7 @@ def command_export(args):
             try:
                 language = get_language_from_unt_extension(extension)
             except LanguageNotFoundError:
-                print(f'Unknown language code for file {filename}')
+                print(f'{Fore.YELLOW}Unknown language code for file {filename}')
                 continue
 
             if args.verbose:
@@ -371,7 +375,7 @@ def command_export(args):
             try:
                 key_value_pairs = read_unt(input_path)
             except RuntimeError as e:
-                print(f'Failed to parse file {filename}: {e}')
+                print(f'{Fore.RED}Failed to parse file {filename}: {e}')
                 continue
 
             if args.verbose:
@@ -394,7 +398,7 @@ def command_export(args):
 
                 count += 1
 
-    print(f'Exported {count} file(s)')
+    print(f'{Fore.GREEN}Exported {count} file(s)')
 
 
 def read_unt(path: str) -> List[Tuple[str, str]]:
@@ -421,6 +425,9 @@ def write_unt(path: str, unt_contents: str):
 
 
 def sync(args):
+    # Add timing mechanism.
+    start_time = time.time()
+
     root_path = Path(args.path).absolute().resolve()
     localization_data = read_localization_config(root_path, args.mod)
     repository_path = root_path / localization_data['repository']['path']
@@ -431,7 +438,18 @@ def sync(args):
     # Print out the latest commit info (author, date, message etc.)
     repo = git.Repo(repository_path)
     latest_commit = repo.head.commit
-    print(f'Latest commit: {latest_commit} by {latest_commit.author} on {latest_commit.authored_datetime} with message "{latest_commit.message}"')
+
+    data_table = [
+        ('Commit', latest_commit.hexsha),
+        ('Author', latest_commit.author),
+        ('Date', latest_commit.authored_datetime),
+        ('Message', latest_commit.message),
+    ]
+
+    print('Syncing with repository:')
+    print(f'{Fore.GREEN}{repository_path}{Fore.WHITE}')
+    for key, value in data_table:
+        print(f'{Fore.GREEN}{key}:{Fore.WHITE} {value}')
 
     files_processed = 0
     language_files_processed = dict()
@@ -486,9 +504,12 @@ def sync(args):
 
         files_processed += 1
 
-    print(f'Processed {files_processed} file(s)')
     for language_code, count in language_files_processed.items():
-        print(f'{language_code.name}: {count} file(s)')
+        print(f'{Fore.GREEN}{language_code.name}: {Fore.WHITE}{count} file(s)')
+
+    elapsed_time = time.time() - start_time
+
+    print(f'Sync completed in {elapsed_time:.2f} seconds')
 
 
 # Compare
@@ -562,7 +583,7 @@ file_export_parser.add_argument('input_path')
 file_export_parser.add_argument('output_path')
 file_export_parser.set_defaults(func=command_export_file)
 
-export_parser = subparsers.add_parser('export', help='Export all Unreal translation files in a directory to .po files')
+export_parser = subparsers.add_parser('export', help='Export the game\'s localization files to .po files in the submodule.')
 export_parser.add_argument('path', default='.', help='The game\'s root directory')
 export_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
 export_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
@@ -570,7 +591,7 @@ export_parser.add_argument('-l', '--language_code', help='The language to export
 export_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 export_parser.set_defaults(func=command_export)
 
-sync_parser = subparsers.add_parser('sync', help='Sync a Git repository with a directory of .po files.')
+sync_parser = subparsers.add_parser('sync', help='Sync the submodule\'s translation files to the game.')
 sync_parser.add_argument('path', help='The game\'s root directory')
 sync_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
 sync_parser.add_argument('-a', '--all', help='Sync all available translations, regardless of the configuration.', default=False, action='store_true', required=False)

@@ -11,7 +11,7 @@ var     name        ElevationControlBone;
 // New function to animate the traverse & elevation controls, called by cannon pawn when gun moves
 simulated function UpdateControlsRotation()
 {
-    local rotator ControlRotation;
+    local Rotator ControlRotation;
 
     ControlRotation.Pitch = -CurrentAim.Pitch * 32;
     SetBoneRotation(TraverseControlBone, ControlRotation);
@@ -21,7 +21,7 @@ simulated function UpdateControlsRotation()
 }
 
 // From DHATGunCannon, as gun will always be penetrated by a shell
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
    return true;
 }

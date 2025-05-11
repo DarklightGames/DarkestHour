@@ -74,7 +74,7 @@ defaultproperties
     bIsArtillery=true
     ResupplyInterval=12.0
 
-    // No 
+    // No
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"
 

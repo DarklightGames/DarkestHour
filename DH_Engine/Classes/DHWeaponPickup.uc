@@ -21,7 +21,7 @@ var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
-var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+var     Vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
 var     StaticMesh              EmptyStaticMesh;
 
@@ -32,8 +32,7 @@ replication
         bBarrelSteamActive;
 }
 
-// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
-// Also to set up new NotifyParameters object, including pickup's InventoryType, which gets passed to screen messages & allows them to display weapon's name
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles.
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();

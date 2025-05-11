@@ -15,8 +15,4 @@ defaultproperties
     ComponentClassName="DH_Interface.DHGUIComboBox"
     LabelStyleName="DHLargeText"
     StyleName="DHSmallText"
-    
-	Begin Object Class=DHGUIToolTip Name=GUIMenuOptionToolTip
-	End Object
-	ToolTip=GUIMenuOptionToolTip
 }

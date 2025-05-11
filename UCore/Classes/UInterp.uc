@@ -61,7 +61,7 @@ final static function float Linear(float T, float A, float B)
     return A + T * (B - A);
 }
 
-final static function rotator RLinear(float T, rotator A, rotator B)
+final static function Rotator RLinear(float T, Rotator A, Rotator B)
 {
     return QuatToRotator(QuatSlerp(QuatFromRotator(A), QuatFromRotator(B), T));
 }
@@ -71,7 +71,7 @@ final static function float SmoothStep(float T, float A, float B)
     return Linear((T ** 2) * (3 - (2 * T)), A, B);
 }
 
-final static function rotator RSmoothStep(float T, rotator A, rotator B)
+final static function Rotator RSmoothStep(float T, Rotator A, Rotator B)
 {
     return RLinear(SmoothStep(T, 0.0, 1.0), A, B);
 }
@@ -81,7 +81,7 @@ final static function float Cosine(float T, float A, float B)
     return Linear((-Cos(Pi * T) / 2) + 0.5, A, B);
 }
 
-final static function rotator RCosine(float T, rotator A, rotator B)
+final static function Rotator RCosine(float T, Rotator A, Rotator B)
 {
     return RLinear(Cosine(T, 0.0, 1.0), A, B);
 }
@@ -91,7 +91,7 @@ final static function float Acceleration(float T, float A, float B)
     return Linear(T ** 2, A, B);
 }
 
-final static function rotator RAcceleration(float T, rotator A, rotator B)
+final static function Rotator RAcceleration(float T, Rotator A, Rotator B)
 {
     return RLinear(Acceleration(T, 0.0, 1.0), A, B);
 }
@@ -101,7 +101,7 @@ final static function float Deceleration(float T, float A, float B)
     return Linear(1.0 - ((1.0 - T) ** 2), A, B);
 }
 
-final static function rotator RDeceleration(float T, rotator A, rotator B)
+final static function Rotator RDeceleration(float T, Rotator A, Rotator B)
 {
     return RLinear(Deceleration(T, 0.0, 1.0), A, B);
 }

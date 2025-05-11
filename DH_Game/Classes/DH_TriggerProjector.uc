@@ -107,7 +107,7 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-simulated function SetColors(color NewColor, color NewTint)
+simulated function SetColors(Color NewColor, Color NewTint)
 {
     // Check to see if it's a new color
     if (CurrentColor != NewColor || CurrentTint != NewTint)
@@ -131,7 +131,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 simulated function Tick(float DeltaTime)
 {
     local float Percent;
-    local color NewColor, NewTint;
+    local Color NewColor, NewTint;
 
     TimeSinceTriggered += DeltaTime;
     Percent = TimeSinceTriggered / SwapTime;

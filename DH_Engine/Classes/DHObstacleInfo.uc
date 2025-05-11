@@ -151,7 +151,7 @@ simulated function int GetDamageThreshold(int Index, bool bIsDefault)
     }
 }
 
-simulated function sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
+simulated function Sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
 {
     if (bIsDefault)
     {

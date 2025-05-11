@@ -83,8 +83,8 @@ defaultproperties
     RearRightAngle=153
 
     // Damage
-    Health=420
-    HealthMax=420.0
+    Health=300
+    HealthMax=300
     EngineHealth=300
     AmmoIgnitionProbability=0.5  // 0.75 default
     TurretDetonationThreshold=4000.0 // increased from 1750

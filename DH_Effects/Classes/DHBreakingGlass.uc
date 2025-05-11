@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBreakingGlass extends emitter;
+class DHBreakingGlass extends Emitter;
 
 defaultproperties
 {

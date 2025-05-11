@@ -8,7 +8,7 @@ class DHVehicleWeapon extends ROVehicleWeapon
 
 // Vehicle weapon & weapon pawn
 var     DHVehicleWeaponPawn WeaponPawn;         // convenient reference to VehicleWeaponPawn actor
-var     vector              WeaponAttachOffset; // optional positional offset when attaching VehicleWeapon to the hull
+var     Vector              WeaponAttachOffset; // optional positional offset when attaching VehicleWeapon to the hull
 var     bool                bHasTurret;         // this weapon is in a fully rotating turret
 
 // Clientside flags to do set up when key actors are received, to fix problems caused by replication timing issues
@@ -91,7 +91,7 @@ var     bool                bNewOrResumedReload;  // tells Timer we're starting 
 var     DHTurretFireEffect          TurretFireEffect;
 var     class<DHTurretFireEffect>   FireEffectClass;
 var     name                        FireAttachBone;
-var     vector                      FireEffectOffset;
+var     Vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
 // Driver animation channel
@@ -485,11 +485,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (P != none)
     {
-        if (bIsArtillery && P.IsA('DHBallisticProjectile'))
-        {
-            DHBallisticProjectile(P).VehicleWeapon = self;
-        }
-
         // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
         if (!bSkipFiringEffects)
         {
@@ -527,9 +522,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 }
 
 // New function to calculate the firing location for a projectile (allows easy subclassing)
-function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+function Vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
-    local vector Extent, HitLocation, HitNormal;
+    local Vector Extent, HitLocation, HitNormal;
 
     // bDoOffsetTrace option to make sure we don't try to spawn projectile inside weapon's own vehicle (re-factored from VehicleWeapon to simplify)
     // Traces from outside vehicle's collision back towards planned spawn location, & if it hits our vehicle we adjust spawn location
@@ -541,13 +536,13 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
         Extent.Z = ProjClass.default.CollisionHeight;
 
         if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + (vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5)), Extent))
+                WeaponFireLocation + (Vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5)), Extent))
         {
             return HitLocation;
         }
         else
         {
-            return WeaponFireLocation + (vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1));
+            return WeaponFireLocation + (Vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1));
         }
     }
 
@@ -556,7 +551,7 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
 
 simulated function Rotator GetWeaponFireRotation()
 {
-    return rotator(vector(CurrentAim) >> Rotation);
+    return Rotator(Vector(CurrentAim) >> Rotation);
 }
 
 // New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
@@ -575,7 +570,7 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
 
     if (ProjectileSpread > 0.0)
     {
-        return rotator(vector(WeaponFireRotation) + (VRand() * FRand() * ProjectileSpread));
+        return Rotator(Vector(WeaponFireRotation) + (VRand() * FRand() * ProjectileSpread));
     }
 
     return WeaponFireRotation;
@@ -777,7 +772,7 @@ Begin:
 }
 
 // New helper function to get the main weapon firing sound (allows easy subclassing)
-simulated function sound GetFireSound()
+simulated function Sound GetFireSound()
 {
     return FireSoundClass;
 }
@@ -1030,17 +1025,17 @@ simulated function bool PlayerUsesManualReloading()
 // Note that shell's ProcessTouch also now calls TakeDamage on VehicleWeapon instead of Vehicle itself, so this function decides what to do with that damage
 // Add here if want to pass damage on to vehicle (& if DamageType is bDelayedDamage, need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on relevant pawn)
 // Can also add any desired functionality in subclasses, e.g. a shell impact could wreck an exposed MG
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 }
 
 // Deprecated functions - return false just in case they get called
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+simulated function bool HitDriverArea(Vector HitLocation, Vector Momentum)
 {
     return false;
 }
 
-simulated function bool HitDriver(vector HitLocation, vector Momentum)
+simulated function bool HitDriver(Vector HitLocation, Vector Momentum)
 {
     return false;
 }
@@ -1242,7 +1237,7 @@ simulated function StartHatchFire()
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PC;
 
@@ -1277,7 +1272,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player in the cannon)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    if (PC.Pawn != Instigator && Vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
     {
         return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
@@ -1390,12 +1385,12 @@ state InstantFireMode
     function Fire(Controller C);
     function AltFire(Controller C);
     simulated event ClientSpawnHitEffects();
-    simulated function SpawnHitEffects(Actor HitActor, vector HitLocation, vector HitNormal);
+    simulated function SpawnHitEffects(Actor HitActor, Vector HitLocation, Vector HitNormal);
     simulated function AnimEnd(int Channel);
 }
 
-simulated function SimulateTraceFire(out vector Start, out rotator Dir, out vector HitLocation, out vector HitNormal);
-function TraceFire(vector Start, rotator Dir);
+simulated function SimulateTraceFire(out Vector Start, out Rotator Dir, out Vector HitLocation, out Vector HitNormal);
+function TraceFire(Vector Start, Rotator Dir);
 
 defaultproperties
 {
