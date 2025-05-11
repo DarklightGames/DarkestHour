@@ -1,18 +1,24 @@
 # v12.0.0 - Darkest Hour: Europe '44-'45 - Italy Expansion Change Log
 
-At long last and after much anticipation, we are proud to announce the release of the Italy Expansion for Darkest Hour: Europe '44-'45!
+At *long last* and after much anticipation, we are proud to announce the release of the Italy Expansion for Darkest Hour: Europe '44-'45!
 
 As the name implies, this expansion adds the Italian faction to the game, as well as a bevy of new vehicles, weapons, and maps.
 
 This has been a huge undertaking for our team, and speaking as the team lead, I'm very proud of everything that we've accomplished. We know that all the content we've created for this update is by far the best we've ever made, and think you'll agree.
 
-## Meet the Italians
+## The Italian Army
 
 ![Italian Soldiers](./Media/Meet%20the%20Italians.png)
 
-< INSERT BLURB OF ITALIAN FORCES >
+Coming out of the crucible of World War I, Italian did not fare very well. Although it had ostensibly been victorious, its ambitions of vast territorial expansion had been thwarted by post-war treaties, leaving the political landscape of Italy in turmoil.
 
-< MORE CLOSE-UP PICTURES >
+The rise of Benito Mussolini and the fascist party in the 1920s saw a renewed interest in military expansionism, culminating in the successful Italian invasions of Ethiopia and Albania in the 1930s in an attempt to restore the lost glory of the Roman Empire around the Mediterranean Sea (the "Mare Nostrum", lit. "Our Sea").
+
+Italy declared war on the Allies in 1940 during the invasion of France, launching a very unsuccessful attack through the Alps. Soon after, it launched a disastrous invasion of Greece in 1940. What was expected to be a quick victory against a relatively weak opponent turned into a prolonged and costly campaign, requiring German assistance to stabilize the front.
+
+The war dragged on, and following the Axis' stunning defeat at Stalingrad in February of 1943, Axis territorial gains in the east were being erased with increasing speed. The Axis forces had been pushed out of North Africa in May of 1943, undoing virtually all of the Italian conquests of the previous decade.
+
+It is amidst this backdrop that Operation Husky, the Allied invasion of Sicily, began in July 1943.
 
 ## Interface
 
@@ -149,17 +155,27 @@ The Italy expansion sees the addition of 5 brand new maps.
 
 The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
-### Gela (32-64 players)
-The town of Gela was one of the main landing points for the invasion of Sicily due to its proximity to the airfield at Ponte Olivo.
+### Gela (32+ players)
+
+The town of Gela was one of the main landing points for the invasion of Sicily due to its proximity to the Ponte Olivo airfield.
+
+The invaders will have to fight their way off the beaches, ascend through a dense urban area, then push outwards into the sprawling Sicilan countryside.
+
+|||
+|-|-|
+|![Gela](./Media/Gela%2001.png)|![Gela](./Media/Gela%2004.png)|
+![Gela](./Media/Gela%2002.png)|!![Gela](./Media/Gela%2003.png)|
 
 ### Niscemi Outkirts (24-64 players)
 
 
 ### Ponte Olivo Airfield (32-64 players)
-Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily
+Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
 
 ### San Valentino (24-64 players)
 This popular map has been completely re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
+
+This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division back to more defensible positions once the Allies had established unassailable beachheads.
 
 ### Villa Cecila (8-32 players)
 This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only map with a focus on close-quarters combat in and around the villa.
