@@ -9,16 +9,17 @@ defaultproperties
 {
     VehicleNameString="Opel Blitz (Transport)"
     
-    PassengerPawns(1)=(AttachBone="BODY",DrivePos=(X=-14.6685,Y=-39.0043,Z=128.4928),DriveRot=(Yaw=16384),DriveAnim="fiat626_passenger_fl")
-    PassengerPawns(2)=(AttachBone="BODY",DrivePos=(X=-13.0834,Y=46.0305,Z=128.4928),DriveRot=(Yaw=-16384),DriveAnim="fiat626_passenger_fr")
-    PassengerPawns(3)=(AttachBone="BODY",DrivePos=(X=-51.4899,Y=-39.0043,Z=128.4928),DriveRot=(Yaw=16384),DriveAnim="fiat626_passenger_03")
-    PassengerPawns(4)=(AttachBone="BODY",DrivePos=(X=-48.8605,Y=37.6865,Z=128.4928),DriveRot=(Yaw=-16384),DriveAnim="fiat626_passenger_04")
-    PassengerPawns(5)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(6)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(7)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(8)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(9)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="fiat626_passenger_bl")
-    PassengerPawns(10)=(AttachBone="BODY",DrivePos=(X=0,Y=0,Z=0),DriveRot=(Yaw=0),DriveAnim="fiat626_passenger_br")
+    // TODO: offset these by once once we add the front passenger
+    PassengerPawns(1)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-14.67,Y=-39.00,Z=128.49),DriveAnim="fiat626_passenger_fl")
+    PassengerPawns(2)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-18.49,Y=44.09,Z=128.49),DriveAnim="opeblitz_passenger_fr")
+    PassengerPawns(3)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-51.49,Y=-39.00,Z=128.49),DriveAnim="fiat626_passenger_03")
+    PassengerPawns(4)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-48.86,Y=37.69,Z=128.89),DriveAnim="fiat626_passenger_04")
+    PassengerPawns(5)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-88.14,Y=-35.13,Z=130.29),DriveAnim="fiat626_passenger_04")
+    PassengerPawns(6)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-94.73,Y=41.01,Z=130.29),DriveAnim="fiat626_passenger_02")
+    PassengerPawns(7)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-128.17,Y=-39.90,Z=131.24),DriveAnim="fiat626_passenger_02")
+    PassengerPawns(8)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-132.18,Y=39.90,Z=131.24),DriveAnim="fiat626_passenger_03")
+    PassengerPawns(9)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-165.40,Y=-41.93,Z=131.75),DriveAnim="opelblitz_passenger_bl")
+    PassengerPawns(10)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-168.31,Y=46.43,Z=132.21),DriveAnim="opelblitz_passenger_br")
 
     ExitPositions(2)=(X=-267,Y=-41,Z=60)
     ExitPositions(3)=(X=-267,Y=41,Z=60)

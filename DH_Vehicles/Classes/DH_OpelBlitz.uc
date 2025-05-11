@@ -2,14 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] occupant animations
 // [ ] finalize textures
-// [ ] window texture
 // [ ] destroyed mesh
 // [ ] set up variants (no canvas, transport, snow etc.)
-// [ ] engine hitpoint
 // [ ] new interface art
-// [ ] lower bench in the back so we can reuse the fiat 626 passenger animations
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -34,15 +30,17 @@ defaultproperties
     BeginningIdleAnim="idle"
 
     // Passengers
-    PassengerPawns(0)=(AttachBone="passenger1",DrivePos=(X=2.0,Y=0.0,Z=-6.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(0)=(AttachBone="BODY",DrivePos=(X=71.79,Y=24.04,Z=107.39),DriveAnim="opelblitz_passenger_f")
 
     // Driver
     DriverPositions(0)=(TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(1)=(TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     InitialPositionIndex=0
-    DriverAttachmentBone="driver_player"
-    DrivePos=(X=0,Y=0,Z=0)
-    DriveAnim="VUC_driver_idle_close"
+
+    DriverAttachmentBone="BODY"
+    DrivePos=(X=71.79,Y=-21.16,Z=107.39)
+    DriveRot=(Yaw=0)
+    DriveAnim="opelblitz_driver"
 
     // Engine/Transmission
     TorqueCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=500.0,OutVal=5.0),(InVal=600.0,OutVal=1.25),(InVal=1200.0,OutVal=1.0),(InVal=2500.0,OutVal=0)))
@@ -101,11 +99,7 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",PointOffset=(X=16.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointBone="WHEEL_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointBone="WHEEL_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=24.0,PointBone="WHEEL_B_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(4)=(PointRadius=24.0,PointBone="WHEEL_B_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="BODY",PointOffset=(X=109,Z=65),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
@@ -208,7 +202,7 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
-        KCOMOffset=(Z=0.8)
+        KCOMOffset=(Z=0.785)
     End Object
     KParams=KParams0
 }
