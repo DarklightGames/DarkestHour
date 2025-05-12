@@ -30,7 +30,7 @@ The game has now been fully localized to **Russian** and **Ukrainian**. As a res
 
 Historically, the game only had partial localization support for German. However, the localizations had never been updated after its initial release well over a decade ago.
 
-We have developed a system that will allow us to easily add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
+We have developed a system that will allow us to add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
 
 If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
 
@@ -106,18 +106,18 @@ The DUKW is a versatile amphibious vehicle used by the United States landing for
 
 ## Guns
 
-## Cannone da 47/32
+### Cannone da 47/32
 The Cannone da 47/32 is a light 47mm anti-tank gun capable of decent penetration, though it will struggle against heavier tanks like the M4 Sherman, especially from the front. Despite this, it's very low profile makes it difficult to spot, especially when the wheels are removed.
 
 ![Cannone da 47/32](./Media/Cannone%2047%20Back%20Right.png)
 
-## Mortaio da 81/14 mod. 35
+### Mortaio da 81/14 mod. 35
 Based on the French Brandt mortar, this was the most successful mortar of the Italian armed forces during the war. It can fire high-explosive shells, smoke shells and an extra large high-explosive shell with additional 
 The most successful mortar of the Italian armed forces during the war. Based on the French Brandt Mle 27/31, the Mortaio da 81/14 mod. 35 is a medium 81mm mortar capable of firing a variety of rounds, as well as an ultra-heavy high-explosive round, as pictured below.
 
 ![Mortaio da 81/14 mod. 35](./Media/8cm%20Mortar.png)
 
-## Weapons
+### Weapons
 
 ### Beretta mod. 34
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
