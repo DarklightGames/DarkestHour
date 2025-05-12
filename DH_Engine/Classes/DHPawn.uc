@@ -7191,7 +7191,7 @@ function EnterATRotation(DHATGun Gun)
     GunToRotate = Gun;
     WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, false);
 }
 
 function ServerExitATRotation()
@@ -7252,6 +7252,8 @@ exec function RotateAT()
     WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
 
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
+
+    Log("RotateAT" @ GunToRotate @ WeaponClass);
 }
 
 exec simulated function IronSightDisplayFOV(float FOV)
