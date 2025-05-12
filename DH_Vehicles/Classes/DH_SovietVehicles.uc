@@ -6,4 +6,7 @@
 class DH_SovietVehicles extends DHVehicleFactory
     abstract;
 
-
+defaultproperties
+{
+    TeamNum=ALLIES
+}
