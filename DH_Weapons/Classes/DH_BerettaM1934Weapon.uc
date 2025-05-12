@@ -10,7 +10,7 @@ class DH_BerettaM1934Weapon extends DHPistolWeapon;
 defaultproperties
 {
     TeamIndex=0
-    ItemName="Beretta M1934"
+    ItemName="Beretta mod. 34"
     FireModeClass(0)=class'DH_Weapons.DH_BerettaM1934Fire'
     FireModeClass(1)=class'DH_Weapons.DH_BerettaM1934MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BerettaM1934Attachment'

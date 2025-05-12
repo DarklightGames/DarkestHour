@@ -18,15 +18,15 @@ function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon Vehic
     return DebugCalibrationInfo;
 }
 
-function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
+function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
     local DHPlayer PC, SpotterPC;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local int i;
     local float Distance, Threshold;
-    local vector RequestLocation;
+    local Vector RequestLocation;
     local array<int> HitMarkerIndices;
 
     PC = DHPlayer(InstigatorController);
@@ -76,7 +76,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     if (DebugCalibrationInfo != none)
     {

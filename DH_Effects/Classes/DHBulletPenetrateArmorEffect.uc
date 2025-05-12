@@ -22,8 +22,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=50.0,Y=50.0,Z=0.5)
-        ColorScale(0)=(color=(B=104,G=123,R=132,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=104,G=123,R=132,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.99
         MaxParticles=1
         StartLocationRange=(X=(Min=-25.0,Max=25.0),Y=(Min=-25.0,Max=25.0))
@@ -52,8 +52,8 @@ defaultproperties
         AutomaticInitialSpawning=false
         UseRandomSubdivision=true
         Acceleration=(Z=50.0)
-        ColorScale(0)=(color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.1025
         FadeInEndTime=0.05
         MaxParticles=1
@@ -83,8 +83,8 @@ defaultproperties
         UseRandomSubdivision=true
         Acceleration=(Z=-1200.0)
         DampingFactorRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=192,G=192,R=192,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=1.4
         MaxParticles=3
         UseRotationFrom=PTRS_Actor
@@ -115,8 +115,8 @@ defaultproperties
         TriggerDisabled=false
         ResetOnTrigger=true
         Acceleration=(X=50.0,Y=50.0,Z=50.0)
-        ColorScale(0)=(color=(B=91,G=91,R=91,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=128,G=128,R=128,A=255))
+        ColorScale(0)=(Color=(B=91,G=91,R=91,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=128,G=128,R=128,A=255))
         FadeOutStartTime=1.47
         FadeInEndTime=0.18
         MaxParticles=1
@@ -152,8 +152,8 @@ defaultproperties
         UseRandomSubdivision=true
         Acceleration=(Z=-1200.0)
         DampingFactorRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=192,G=192,R=192,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=1.4
         MaxParticles=3
         UseRotationFrom=PTRS_Actor

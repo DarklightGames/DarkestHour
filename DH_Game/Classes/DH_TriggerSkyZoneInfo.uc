@@ -5,8 +5,8 @@
 
 class DH_TriggerSkyZoneInfo extends SkyZoneInfo;
 
-var()   color   OnColor;          // color when light is on
-var()   color   OffColor;         // color when light is off
+var()   Color   OnColor;          // color when light is on
+var()   Color   OffColor;         // color when light is off
 var()   float   ChangeTime;       // time light takes to change from on to off
 var()   bool    bInitiallyOn;     // whether it's initially on
 var()   bool    bInitiallyFading; // whether it's initially fading up or down

@@ -21,8 +21,8 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_ZF41_3rd' 
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_zf41_icon' 
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_ZF41_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_zf41_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true

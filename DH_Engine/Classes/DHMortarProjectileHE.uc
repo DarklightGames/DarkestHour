@@ -12,15 +12,15 @@ var     class<DHHitEffect>      ImpactEffect; // effect to spawn when round hits
 // View shake
 var     float           BlurTime;         // how long blur effect should last for this shell
 var     float           BlurEffectScalar; // how much to scale blur & shake effect
-var     vector          ShakeRotMag;      // how far to rot view
-var     vector          ShakeRotRate;     // how fast to rot view
+var     Vector          ShakeRotMag;      // how far to rot view
+var     Vector          ShakeRotRate;     // how fast to rot view
 var     float           ShakeRotTime;     // how much time to rot the instigator's view
-var     vector          ShakeOffsetMag;   // max view offset vertically
-var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     Vector          ShakeOffsetMag;   // max view offset vertically
+var     Vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
 // Modified to stop shell from blowing up if it's in a no arty volume (just make the shell a dud if it is)
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     local DHVolumeTest VT;
 
@@ -40,7 +40,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Modified to cause blast damage
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     super.BlowUp(HitLocation);
 
@@ -51,7 +51,7 @@ function BlowUp(vector HitLocation)
 }
 
 // Modified to only play impact effects for a dud HE shell, as if it does explode the explosion effects will 'drown out' the smaller impact effects
-simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnImpactEffects(Vector HitLocation, Vector HitNormal)
 {
     if (bDud)
     {
@@ -62,14 +62,14 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
 // Implemented for HE shell explosion
 // TODO: Need to add throwing ragdoll bodies around, same as other HE shells exploding
 // But also need to add a mechanism to stop server destroying projectile before client has time to trigger this locally & play explosion effects (there are several solutions)
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
     // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
     if (Level.NetMode != NM_DedicatedServer)
     {
-        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal));
+        Spawn(ImpactEffect, self,, Location, Rotator(-HitNormal));
         //GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
-        //Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+        //Spawn(ExplosionDecalClass, self,, HitLocation, Rotator(vect(0.0, 0.0, -1.0)));
 
         DoShakeEffect();
     }

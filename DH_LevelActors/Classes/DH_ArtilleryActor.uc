@@ -78,7 +78,7 @@ state Activated
     function Timer()
     {
         local int    RandomNum;
-        local vector FallOffset;
+        local Vector FallOffset;
 
         RandomNum = Rand(100); // gets a random # between 0 & 99
 
@@ -112,7 +112,7 @@ state Activated
                     FallOffset.Y *= -1.0;
                 }
 
-                Spawn(class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
+                Spawn(class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, Rotator(PhysicsVolume.Gravity));
             }
             else
             {
@@ -133,7 +133,7 @@ state Activated
                 }
 
                 // Spawn the artillery round with the random offset
-                Spawn(class'DHArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
+                Spawn(class'DHArtilleryShell',,, Location + FallOffset, Rotator(PhysicsVolume.Gravity));
             }
         }
 

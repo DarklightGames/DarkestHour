@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitFleshEffect extends emitter;
+class DHBulletHitFleshEffect extends Emitter;
 
 defaultproperties
 {

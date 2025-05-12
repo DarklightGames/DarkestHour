@@ -15,7 +15,7 @@ simulated function PostBeginPlay()
     LoopAnim('Point');
 }
 
-simulated function SetColor(color C)
+simulated function SetColor(Color C)
 {
     FC.Color1 = C;
     FC.Color1.A = 64;

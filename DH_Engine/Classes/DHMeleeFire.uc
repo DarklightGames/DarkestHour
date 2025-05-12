@@ -35,13 +35,13 @@ var         name        BayoFinishEmptyAnim;
 
 // Modified to stop trying to make the weapon attachment play visual hit effects - they don't play & we don't want them anyway; it just creates pointless replication to all clients
 // Also to increase damage if striking a player from behind, & to generally optimised
-function DoTrace(vector Start, rotator Dir)
+function DoTrace(Vector Start, Rotator Dir)
 {
     local ROPawn            HitPawn;
     local Actor             Other;
     local class<DamageType> ThisDamageType;
-    local vector            End, HitLocation, HitNormal, TempVec, X, Y, Z;
-    local rotator           RotationDifference;
+    local Vector            End, HitLocation, HitNormal, TempVec, X, Y, Z;
+    local Rotator           RotationDifference;
     local float             Damage, Scale;
     local array<int>        HitPoints;
     local array<int>        DamageHitPoint;
@@ -391,8 +391,8 @@ function PlayFiring()
 
 function DoFireEffect()
 {
-    local vector  StartTrace;
-    local rotator Aim;
+    local Vector  StartTrace;
+    local Rotator Aim;
 
     if (Instigator != none)
     {
@@ -400,7 +400,7 @@ function DoFireEffect()
 
         StartTrace = Instigator.Location + Instigator.EyePosition(); // the to-hit trace starts right in front of player's eye
         Aim = AdjustAim(StartTrace, AimError);
-        Aim = rotator(vector(Aim) + (VRand() * FRand() * Spread));
+        Aim = Rotator(Vector(Aim) + (VRand() * FRand() * Spread));
         DoTrace(StartTrace, Aim);
     }
 }

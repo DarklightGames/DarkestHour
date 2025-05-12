@@ -26,9 +26,9 @@ var     name        HudOverlayFireEndAnim;
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to make into a generic function, avoiding need for overrides in subclasses, to properly handle vehicle roll, & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
     local bool bOnTheGun;
 
     ViewActor = self;
@@ -89,7 +89,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           GunOffset;
+    local Vector           GunOffset;
     local float            SavedOpacity;
 
     PC = PlayerController(Controller);
@@ -429,8 +429,8 @@ simulated function UpdatePrecacheMaterials()
 // RelativeRotation & RelativeLocation are set on server & get replicated to net clients, but we still set them on clients so it happens instantly, without waiting for replication
 simulated function HandleBinoculars(bool bMovingOntoBinocs)
 {
-    local rotator DesiredRelativeRotation;
-    local vector  DesiredRelativeLocation;
+    local Rotator DesiredRelativeRotation;
+    local Vector  DesiredRelativeLocation;
 
     // On binocs, remove any player rotation (DriveRot), as some MGs turn player sideways when on the gun & that's no good for the binocs pose
     if (DriveRot != rot(0, 0, 0))

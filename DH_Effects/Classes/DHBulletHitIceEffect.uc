@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitIceEffect extends emitter;
+class DHBulletHitIceEffect extends Emitter;
 
 defaultproperties
 {

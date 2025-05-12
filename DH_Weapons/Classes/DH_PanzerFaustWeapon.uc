@@ -6,7 +6,7 @@
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
 
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     if (!HasAmmo())
     {

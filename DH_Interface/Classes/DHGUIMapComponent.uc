@@ -18,7 +18,7 @@ var             DHPlayerReplicationInfo     PRI;
 var             GUIContextMenu              SquadRallyPointContextMenu;
 var             Material                    SpawnPointBlockedOverlay;
 
-var             vector                      MapClickLocation;
+var             Vector                      MapClickLocation;
 var             array<class<DHMapMarker> >  MapMarkerMenuItems;
 var             int                         MapMarkerIndexToRemove;
 var             bool                        bRemoveMapMarker;
@@ -86,13 +86,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
-function SetViewport(vector Origin, int ZoomLevel)
+function SetViewport(Vector Origin, int ZoomLevel)
 {
     SetZoomLevel(ZoomLevel);
     Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
-function vector GetViewportOrigin()
+function Vector GetViewportOrigin()
 {
     return (Viewport.Min + Viewport.Max) * 0.5;
 }
@@ -228,9 +228,9 @@ function bool InternalOnDraw(Canvas C)
     return false;
 }
 
-function Box ConstrainViewport(Box Viewport, vector Min, vector Max)
+function Box ConstrainViewport(Box Viewport, Vector Min, Vector Max)
 {
-    local vector Translation;
+    local Vector Translation;
 
     Translation = -class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
     Viewport = class'UBox'.static.Translate(Viewport, Translation);
@@ -425,9 +425,9 @@ function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
 }
 
 // Gets the normalized location given an absolute screen coordinate.
-function vector GetNormalizedLocation(float X, float Y)
+function Vector GetNormalizedLocation(float X, float Y)
 {
-    local vector Location;
+    local Vector Location;
 
     Location.X = (X - ActualLeft(WinLeft)) / ActualWidth(WinWidth);
     Location.Y = (Y - ActualTop(WinTop)) / ActualHeight(WinHeight);
@@ -696,7 +696,7 @@ function SetZoomLevel(int NewZoomLevel)
 }
 
 // Given a viewport and a location within that viewport, get the frame coordinates.
-function vector ViewportToFrame(Box Viewport, vector Location)
+function Vector ViewportToFrame(Box Viewport, Vector Location)
 {
     Location.X = Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X));
     Location.Y = Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y));
@@ -727,7 +727,7 @@ function InterpolateToViewport(Box NewViewport)
 
 function ZoomIn()
 {
-    local vector ViewportLocation;
+    local Vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 
@@ -757,7 +757,7 @@ function ZoomIn()
 
 function ZoomOut()
 {
-    local vector ViewportLocation;
+    local Vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 
@@ -828,7 +828,7 @@ function InternalOnMouseRelease(GUIComponent Sender)
 function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
 {
     local float W, H;
-    local vector OriginDelta;
+    local Vector OriginDelta;
 
     if (!bIsViewportInterpolating && bIsPanning)
     {

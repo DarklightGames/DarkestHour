@@ -37,7 +37,7 @@ simulated function PostBeginPlay()
 
 simulated function OnConstructed()
 {
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
 
     super.OnConstructed();
 

@@ -18,7 +18,7 @@ function bool ShouldHideMenu()
     return PC == none || PC.Pawn == none || PC.Pawn.Health <= 0 || PRI == none || !PRI.IsInSquad();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
 

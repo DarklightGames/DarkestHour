@@ -47,7 +47,7 @@ static function Sound GetSound(ESoundType SoundType, optional int SurfaceID)
     }
 }
 
-static function sound GetHitSound(optional class<DamageType> DamageType)
+static function Sound GetHitSound(optional class<DamageType> DamageType)
 {
     // If they are taking damage because they fell, return a falling pain sound
     if (DamageType.Name == 'Fell')

@@ -12,7 +12,7 @@ defaultproperties
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
     Spread=35.0
-    FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.vz24.vz24_shootA'  
+    FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.vz24.vz24_shootA'
     FireSounds(1)=SoundGroup'DH_CC_Inf_Weapons.vz24.vz24_shootB'
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'

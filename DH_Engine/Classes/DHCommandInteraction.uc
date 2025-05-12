@@ -569,7 +569,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
     local DHCommandMenu Menu;
     local Sound HoldSound;
     
@@ -688,7 +688,7 @@ function bool CanSelectOption(int OptionIndex)
     return Menu != none && OptionIndex >= 0 && OptionIndex < Menu.Options.Length && !Menu.IsOptionDisabled(OptionIndex);
 }
 
-function OnSelect(int OptionIndex, optional vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, optional Vector Location, optional Vector HitNormal)
 {
     local DHCommandMenu Menu;
 

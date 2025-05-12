@@ -176,7 +176,7 @@ function bool SpawnPlayer(DHPlayer PC)
     return bResult;
 }
 
-function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator SpawnRotation)
+function ROVehicle SpawnVehicle(DHPlayer PC, Vector SpawnLocation, Rotator SpawnRotation)
 {
     local DHPlayerReplicationInfo   PRI;
     local DHSpawnPointBase          SP;

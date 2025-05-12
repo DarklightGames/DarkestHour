@@ -50,8 +50,8 @@ struct SBackpack
 {
     var class<DHBackpack> BackpackClass;
     var float             Probability;
-    var vector            LocationOffset;
-    var rotator           RotationOffset;
+    var Vector            LocationOffset;
+    var Rotator           RotationOffset;
 };
 
 var array<SBackpack> Backpacks;
@@ -150,12 +150,12 @@ simulated function HandlePrecache()
 
             if (PR.BodySkinName != "")
             {
-                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
             }
 
             if (PR.FaceSkinName != "")
             {
-                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
             }
         }
     }
@@ -202,7 +202,7 @@ static function string GetPawnClass()
 }
 
 // TODO: Refactor offset stuff!
-function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator RotationOffset)
+function class<DHBackpack> GetBackpack(out Vector LocationOffset, out Rotator RotationOffset)
 {
     local float R, ProbabilitySum;
     local int   i;

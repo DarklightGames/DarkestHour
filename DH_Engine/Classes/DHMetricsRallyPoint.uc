@@ -21,7 +21,7 @@ enum EDestroyedReason
 var int                 TeamIndex;
 var int                 SquadIndex;
 var string              PlayerID;
-var vector              Location;
+var Vector              Location;
 var int                 SpawnCount;
 var bool                bIsEstablished;
 var int                 EstablisherCount;

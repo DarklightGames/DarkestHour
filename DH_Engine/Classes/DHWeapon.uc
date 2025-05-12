@@ -118,10 +118,10 @@ function int GetNumberOfDroppedPickups()
 }
 
 // Modfied to add randomize to a drop and to be more modular (please try to avoid duplicating this function everywhere)
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     local Pickup  Pickup;
-    local rotator R;
+    local Rotator R;
     local int     i;
 
     if (bCanThrow)
@@ -849,7 +849,7 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
 {
     local int i;
     local DHWeaponFire WF;
-    local vector V;
+    local Vector V;
 
     V.X = X;
     V.Y = Y;

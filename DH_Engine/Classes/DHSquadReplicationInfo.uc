@@ -153,16 +153,16 @@ struct RallyPointPlacementError
     var int OptionalInt;
     var string OptionalString;
     var Object OptionalObject;
-    var vector HitLocation;
-    var vector HitNormal;
+    var Vector HitLocation;
+    var Vector HitNormal;
 };
 
 struct RallyPointPlacementResult
 {
     var RallyPointPlacementError Error;
     var bool    bIsInDangerZone;
-    var vector  HitLocation;
-    var vector  HitNormal;
+    var Vector  HitLocation;
+    var Vector  HitNormal;
 };
 
 replication
@@ -1916,7 +1916,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 // SQUAD SIGNALS
 //==============================================================================
 
-function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
+function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSignal> SignalClass, Vector Location, optional Object OptionalObject)
 {
     local float Radius;
     local DHPlayer Sender, Recipient;
@@ -2076,7 +2076,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     local DHPawnCollisionTest CT;
     local DHConstructionManager CM;
     local array<DHConstruction> Constructions;
-    local vector L;
+    local Vector L;
 
     MyGRI = GetGameReplicationInfo();
 
@@ -2303,8 +2303,8 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 {
     local int i, RallyPointIndex;
     local DHSpawnPoint_SquadRallyPoint RP;
-    local vector V;
-    local rotator R;
+    local Vector V;
+    local Rotator R;
     local DarkestHourGame G;
     local RallyPointPlacementResult Result;
 
@@ -2364,10 +2364,10 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     R.Pitch = 0;
     R.Roll = 0;
 
-    V = Result.HitNormal cross vector(R);
+    V = Result.HitNormal cross Vector(R);
     V = V cross Result.HitNormal;
 
-    R = rotator(V);
+    R = Rotator(V);
     RP = Spawn(class'DHSpawnPoint_SquadRallyPoint', none,, Result.HitLocation, R);
 
     if (RP == none)

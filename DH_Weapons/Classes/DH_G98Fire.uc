@@ -12,7 +12,7 @@ defaultproperties
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
     Spread=45.0   //worn-out barrel
-    FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.vz24.G98_shootA'  
+    FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.vz24.G98_shootA'
     FireSounds(1)=SoundGroup'DH_CC_Inf_Weapons.vz24.G98_shootB'
     
     MuzzleBone="MuzzleG98"

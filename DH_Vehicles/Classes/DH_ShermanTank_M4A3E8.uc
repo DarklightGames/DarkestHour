@@ -67,7 +67,7 @@ simulated function CreateAttachments()
     }
 }
 
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 

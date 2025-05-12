@@ -170,7 +170,6 @@ defaultproperties
     Records(110)=(ClasSName="DH_Weapons.DH_MKB42HWeapon",WeaponNames=("mkb42","mkb42h"))
     Records(111)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
     Records(112)=(ClassName="DH_Weapons.DH_WitchEnder666Weapon",WeaponNames=("WitchEnder", "satansbane"))
-
     Records(113)=(ClassName="DH_Weapons.DH_Breda30Weapon",WeaponNames=("breda", "breda30"))
     Records(114)=(ClassName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
     Records(115)=(ClassName="DH_Weapons.DH_MAB42Weapon",WeaponNames=("mab42"))
