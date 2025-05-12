@@ -414,8 +414,6 @@ function bool IsARelevantPawn(Pawn P)
         PawnTeam = P.GetTeamNum();
     }
 
-    Log("IsARelevantPawn" @ P @ "Team=" @ PawnTeam);
-
     return (PawnTeam == AXIS_TEAM_INDEX && MineKillStyle == KS_Axis) || (PawnTeam == ALLIES_TEAM_INDEX && MineKillStyle == KS_Allies);
 }
 

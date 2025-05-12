@@ -88,7 +88,7 @@ defaultproperties
     YawRotation=(Pitch=0,Yaw=0,Roll=0)
     RemoteRole=ROLE_SimulatedProxy
 
-    Texture = none
+    Texture=none
 
     bReplicateMovement=true
     bNetInitialRotation=true
