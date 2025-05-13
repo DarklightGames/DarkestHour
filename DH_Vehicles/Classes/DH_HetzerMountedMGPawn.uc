@@ -5,6 +5,10 @@
 
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
 
+var name DriverReloadAnim;
+var name GunReloadAnim;
+var name GunReloadRootBone;
+
 var() RangeInt HatchClearRange;
 
 simulated function bool IsHatchBlocked()
@@ -85,7 +89,4 @@ defaultproperties
     DriveAnim="hetzer_mg_idle"
     GunsightCameraBone="GUNSIGHT_CAMERA"
     CameraBone="COM_CAMERA"
-    DriverReloadAnim="hetzer_mg_reload"
-    GunReloadAnim="reload"
-    GunReloadRootBone="yaw"
 }
