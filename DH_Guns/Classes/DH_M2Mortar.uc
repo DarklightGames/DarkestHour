@@ -4,37 +4,36 @@
 //==============================================================================
 // ART
 //==============================================================================
-// [~] third person carrying animations
-// [ ] third person raise/lower/binoc animations
-// [ ] add tube sliding sounds to the TP firing anims
+// [~] Third person carrying animations
+// [ ] Add tube sliding sounds to the TP firing anims
 //==============================================================================
 // AUDIO
 //==============================================================================
-// [ ] no distant sound for 60mm explosion?
-// [ ] replace firing sound to distinguish from the 8cm
+// [ ] No distant sound for 60mm explosion?
+// [ ] Replace firing sound to distinguish from the 8cm
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] clicking fire or reload after all HE has been fired doesn't swap to new
+// [ ] Clicking fire or reload after all HE has been fired doesn't swap to new
 //     ammo type (affects all AT guns etc.)
-// [ ] can get into the "rotating" state without the rotating weapon, leaving a
-//     permanent rotating decal under the gun. (seems to just be trying to 
-//     switch weapons fsr)
-// [ ] player can still "move" camera while in locked view modes (gunsight etc.)
+// [ ] Player can still "move" camera while in locked view modes (gunsight etc.)
+// [ ] Player can somehow fail to deploy the mortar due to a "no room" error.
+//     Seems to happen if the player doesn't move the mouse at all. Seems
+//     impossible to reproduce after successfully deploying.
 //==============================================================================
 // NICE TO HAVE
 //==============================================================================
-// [ ] make smoke grenade actually WP
-// [ ] add a "point to" animation driver for the arm thing (when yawing the gun
+// [ ] Make smoke grenade actually WP
+// [ ] Add a "point to" animation driver for the arm thing (when yawing the gun
 //     to the side, parts of the model don't line up because of the simplified
 //     rigging).
-// [ ] when a player runs out of ammo, prompt them to press X to change round
+// [ ] When a player runs out of ammo, prompt them to press X to change round
 //     type.
-// [ ] when player dies on it, why is the ragdoll half into the ground?
+// [ ] When player dies on it, why is the ragdoll half into the ground?
 //==============================================================================
 // FINISHING TOUCHES
 //==============================================================================
-// [ ] validate that this all works in MP
+// [ ] Validate that this all works in MP
 //==============================================================================
 
 class DH_M2Mortar extends DHMortar;
