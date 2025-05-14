@@ -3,20 +3,22 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] top MG shells not ejected the right direction & don't collide with top of tank (done with an emitter)
-// [ ] you can destroy the thing by penetrating the MG
-// [ ] late variant
-// [ ] if we want to go FULL HOG, we could force the MG to a particular orientation
-//     and do a reload sequence, at least in third person; would look SWEET
-// [ ] TP and FP anims for all
+// [ ] you can destroy the thing by penetrating the MG lol
 // [ ] add passengers in right spot
 // [ ] UI art (do against straight dunkelgelb)
 // [ ] fix rear cmd hatch collision
-// [ ] play a sound when the player tries to open the hatch when the MG is in the way
-// [ ] exhaust position on late variant
+// [ ] play a sound when the player tries to open the hatch when the MG is in the way (also the UI element that
+//     dirtybirdy made) [maybe steal part of the sound from the IS2 reload where he bangs on the hatch?]
 // [ ] destroyed mesh
 // [ ] destroyed textures (for statics)
-// [ ] bushes
 // [ ] hatch opening/closing sounds in animations
+// [ ] add MG reloading sounds to the animation notifies
+// [ ] re-import player anims
+// [ ] Lock camera during MG raise/lower anims
+// [ ] maybe add an intermediate position on the MG where you're just in the compartment and can look around
+// [ ] the gunner first person animations are disorienting
+// [ ] fix MG reloading desync
+// [ ] maybe make it so you need to explicitly press R to reload the MG?
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
@@ -128,8 +130,8 @@ defaultproperties
     RandomAttachmentGroups(4)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_5',AttachBone="body"))))
     RandomAttachmentGroups(5)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_6',AttachBone="body"))))
 
-    LeftTrackSoundBone="WHEEL_4_L"
-    RightTrackSoundBone="WHEEL_4_R"
+    LeftTrackSoundBone="DRIVE_WHEEL_L"
+    RightTrackSoundBone="DRIVE_WHEEL_R"
 
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=True
