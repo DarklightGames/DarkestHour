@@ -8,19 +8,19 @@ class DH_OpelBlitzSupport extends DH_OpelBlitz;
 defaultproperties
 {
     VehicleNameString="Opel Blitz (Logistics)"
-    PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(2)=(AttachBone="passenger_r_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider1_idle")
-    ExitPositions(2)=(X=-255.0,Y=-30.0,Z=60.0)
-    ExitPositions(3)=(X=-255.0,Y=30.0,Z=60.0)
-    VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.8
-    VehicleHudOccupantsX(3)=0.55
-    VehicleHudOccupantsY(3)=0.8
+    PassengerPawns(1)=(AttachBone="BODY",DriveRot=(Yaw=-49151),DrivePos=(X=-165.40,Y=-41.93,Z=131.75),DriveAnim="opelblitz_passenger_bl")
+    PassengerPawns(2)=(AttachBone="BODY",DriveRot=(Yaw=-16384),DrivePos=(X=-168.31,Y=46.43,Z=132.21),DriveAnim="opelblitz_passenger_br")
+    ExitPositions(2)=(X=-267,Y=-41,Z=60)
+    ExitPositions(3)=(X=-267,Y=41,Z=60)
+    VehicleHudOccupantsX(2)=0.43
+    VehicleHudOccupantsY(2)=0.825
+    VehicleHudOccupantsX(3)=0.57
+    VehicleHudOccupantsY(3)=0.825
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
-    SupplyAttachmentRotation=(Yaw=-16384)
-    SupplyAttachmentOffset=(X=0.0,Y=55.0,Z=-10.0)
-    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'
+    SupplyAttachmentRotation=(Yaw=32768,Pitch=273)
+    SupplyAttachmentOffset=(X=-64.35,Y=0.0,Z=71.46)
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'   // TODO: get a real one made
     MapIconMaterial=Texture'DH_GUI_tex.GUI.supply_point'
     ResupplyAttachmentBone="supply"
     VehHitpoints(5)=(PointRadius=40.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -29,4 +29,6 @@ defaultproperties
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
+    RandomAttachmentGroups(3)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS'))))
+    RandomAttachmentGroups(4)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER'))))
 }

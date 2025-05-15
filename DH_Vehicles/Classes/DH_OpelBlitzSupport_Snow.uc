@@ -7,6 +7,6 @@ class DH_OpelBlitzSupport_Snow extends DH_OpelBlitzSupport;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow'
-    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow'
+    RandomAttachmentGroups(4)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER'))))
+    RandomAttachmentGroups(5)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_ENGINE_COVER'))))
 }

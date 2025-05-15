@@ -3,9 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] finalize textures
-// [ ] destroyed mesh
-// [ ] set up variants (no canvas, transport, snow etc.)
-// [ ] new interface art
+// [ ] destroyed meshes
+// [ ] set up the variants correctly
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -24,7 +23,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    // Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
+    // Skins(0)=Texture'DH_VehiclesGE_texmaterial2.ext_vehicles.OpelBlitz_body_ext'
     // Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     // Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
     BeginningIdleAnim="idle"
@@ -130,19 +129,16 @@ defaultproperties
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_01')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_02'))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TOOLS'))))
-    RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE'))))   // WH front plate
-    RandomAttachmentGroups(3)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS'))))
-    RandomAttachmentGroups(4)=(Options=((Probability=0.2,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=0.2,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_ENGINE_COVER'))))
+    RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE'))))
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
-    VehicleHudEngineY=0.25
+    VehicleHudImage=Texture'DH_OpelBlitz_tex.interface.opelblitz_body'
+    VehicleHudEngineY=0.125
     VehicleHudOccupantsX(0)=0.45
-    VehicleHudOccupantsY(0)=0.35
+    VehicleHudOccupantsY(0)=0.325
     VehicleHudOccupantsX(1)=0.55
-    VehicleHudOccupantsY(1)=0.35
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.opelblitz'
+    VehicleHudOccupantsY(1)=0.325
+    SpawnOverlay(0)=Material'DH_OpelBlitz_tex.interface.opelblitz_profile'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -202,7 +198,7 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
-        KCOMOffset=(Z=0.785)
+        KCOMOffset=(Z=0.73)
     End Object
     KParams=KParams0
 }

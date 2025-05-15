@@ -32,16 +32,24 @@ defaultproperties
     ExitPositions(10)=(X=-267,Y=-41,Z=60)
     ExitPositions(11)=(X=-267,Y=41,Z=60)
 
-    VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.6
-    VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsY(3)=0.7
-    VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsY(5)=0.6
-    VehicleHudOccupantsX(6)=0.55
-    VehicleHudOccupantsY(6)=0.7
-    VehicleHudOccupantsX(7)=0.55
-    VehicleHudOccupantsY(7)=0.8
+    VehicleHudOccupantsX(2)=0.43
+    VehicleHudOccupantsY(2)=0.475
+    VehicleHudOccupantsX(3)=0.57
+    VehicleHudOccupantsY(3)=0.475
+    VehicleHudOccupantsX(4)=0.43
+    VehicleHudOccupantsY(4)=0.5625
+    VehicleHudOccupantsX(5)=0.57
+    VehicleHudOccupantsY(5)=0.5625
+    VehicleHudOccupantsX(6)=0.43
+    VehicleHudOccupantsY(6)=0.65
+    VehicleHudOccupantsX(7)=0.57
+    VehicleHudOccupantsY(7)=0.65
+    VehicleHudOccupantsX(8)=0.43
+    VehicleHudOccupantsY(8)=0.7375
+    VehicleHudOccupantsX(9)=0.57
+    VehicleHudOccupantsY(9)=0.7375
+    VehicleHudOccupantsX(10)=0.43
+    VehicleHudOccupantsY(10)=0.825
+    VehicleHudOccupantsX(11)=0.57
+    VehicleHudOccupantsY(11)=0.825
 }

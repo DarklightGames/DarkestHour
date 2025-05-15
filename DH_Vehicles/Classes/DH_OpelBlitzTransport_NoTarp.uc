@@ -7,7 +7,5 @@ class DH_OpelBlitzTransport_NoTarp extends DH_OpelBlitzTransport;
 
 defaultproperties
 {
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_noTarp_dest'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.opelblitz_notarp'
+    RandomAttachmentGroups(3)=()    // Empty out canvas attachment slot
 }
