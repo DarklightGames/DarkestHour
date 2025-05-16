@@ -6,4 +6,7 @@
 class DH_GermanVehicles extends DHVehicleFactory
     abstract;
 
-
+defaultproperties
+{
+    TeamNum=AXIS
+}
