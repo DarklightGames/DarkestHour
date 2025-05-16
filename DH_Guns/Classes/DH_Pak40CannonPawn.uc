@@ -23,4 +23,5 @@ defaultproperties
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     TPCamLookat=(Z=-50)
+    OverlayCorrectionX=8
 }
