@@ -110,7 +110,7 @@ simulated function SetImage()
 
     DrawOpImage(Operations[0]).Image = M;
 
-    M = material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
+    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
 
     if (M == none)
     {

@@ -21,7 +21,7 @@ event ModeDoFire()
 defaultproperties
 {
     bWaitForRelease=true
-    FireRate=0.25
+    FireRate=0.20
     FAProjSpawnOffset=(X=-15.0)
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'

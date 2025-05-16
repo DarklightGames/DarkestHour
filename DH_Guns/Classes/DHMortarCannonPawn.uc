@@ -24,7 +24,7 @@ var()   float ProjectileLifeSpan;       // The life span of the projectile attac
 // First person hands.
 var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
 var     Mesh                HandsMesh;              // The first person hands mesh.
-var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
+var     DHDecoAttachment    HandsProjectile;        // The first person projectile actor.
 
 var()   Vector              HandsRelativeLocation;  // The location of the hands in actor relation to it's attachment bone.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
@@ -121,11 +121,7 @@ exec function CalibrateMortar(string AngleUnitString, int Samples)
 
             if (BP != none)
             {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugAngleValue = Pitch + GunPitchOffset;
-                BP.DebugAngleUnit = AngleUnit;
-                BP.StartLocation = BP.Location;
+                BP.CreateCalibrationInfo(VehWep, BP.Location, Pitch + GunPitchOffset, AngleUnit);
             }
         }
     }
@@ -356,7 +352,7 @@ simulated state Firing
         return Theta;
     }
 
-    simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+    simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
     {
         local float Theta;
         local Vector NormalCameraLocation, FiringCameraLocation;
@@ -400,6 +396,7 @@ simulated state Firing
     simulated function BeginState()
     {
         local DHPlayer PC;
+        local Rotator ProjectileRelativeRotation;
         
         PC = DHPlayer(Controller);
 
@@ -424,6 +421,10 @@ simulated state Firing
 
             // Update the hands projectile mesh to the round we are about to fire.
             UpdateHandsProjectileStaticMesh();
+
+            // Randomly spin the projectile so it's not always the same.
+            ProjectileRelativeRotation.Roll = Rand(65535);
+            HandsProjectile.SetRelativeRotation(ProjectileRelativeRotation);
         }
 
         FiringStartTimeSeconds = Level.TimeSeconds;
@@ -465,6 +466,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
 }
 
 defaultproperties
-{    
+{
     bNetNotify=true
 }

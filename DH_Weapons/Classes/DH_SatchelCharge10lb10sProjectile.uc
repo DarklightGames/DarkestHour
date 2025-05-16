@@ -35,7 +35,7 @@ simulated function PostBeginPlay()
 }
 
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     if (Instigator != none)
     {
@@ -54,7 +54,7 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-function HandleObjSatchels(vector HitLocation)
+function HandleObjSatchels(Vector HitLocation)
 {
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
@@ -78,10 +78,10 @@ function HandleObjSatchels(vector HitLocation)
     }
 }
 
-function HandleVehicles(vector HitLocation)
+function HandleVehicles(Vector HitLocation)
 {
     local Actor         A;
-    local vector        HitLoc, HitNorm;
+    local Vector        HitLoc, HitNorm;
     local DHVehicle     Veh;
     local int           TrackNum;
     local float         Distance, DistanceFactor;
@@ -152,7 +152,7 @@ function HandleVehicles(vector HitLocation)
 }
 
 // Allows satchels to damage obstacles when behind world geometry
-function HandleObstacles(vector HitLocation)
+function HandleObstacles(Vector HitLocation)
 {
     local DHObstacleInstance O;
     local float              Distance;
@@ -169,7 +169,7 @@ function HandleObstacles(vector HitLocation)
 }
 
 // Allows satchels to do damage to constructions when traces fail (useful if construction is on the otherside of terrain or origin under world)
-function HandleConstructions(vector HitLocation)
+function HandleConstructions(Vector HitLocation)
 {
     local DHConstruction    C;
     local float             Distance;

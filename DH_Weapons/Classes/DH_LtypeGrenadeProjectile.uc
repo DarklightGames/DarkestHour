@@ -25,7 +25,7 @@ defaultproperties
 
     // Armour penetration
     //Not a HEAT grenade but still an AT grenade
-    DHPenetrationTable(0)=1.0  
+    DHPenetrationTable(0)=1.0
     DHPenetrationTable(1)=1.0
     DHPenetrationTable(2)=1.0
     DHPenetrationTable(3)=1.0
@@ -42,7 +42,7 @@ defaultproperties
     Damage=600.0
     DamageRadius=910 //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
                      //calculated that the lethal effective radius is around 15 meters give or take
-    EngineFireChance=0.9 
+    EngineFireChance=0.9
     ShellImpactDamage=class'DH_Weapons.DH_LTypeGrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'
 

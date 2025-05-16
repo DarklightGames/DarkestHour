@@ -27,7 +27,7 @@ struct NewHitpoint
 {
     var   float             PointRadius;
     var   name              PointBone;
-    var   vector            PointOffset;
+    var   Vector            PointOffset;
     var   float             DamageMultiplier;
     var   ENewHitPointType  NewHitPointType;
 };
@@ -35,7 +35,7 @@ struct NewHitpoint
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
 var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
-var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
+var     Vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 
 // Vehicle locking
 var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
@@ -76,7 +76,7 @@ var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
 var     name        FireAttachBone;
-var     vector      FireEffectOffset;
+var     Vector      FireEffectOffset;
 var     float       HullFirePercent; //helper variable
 var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
@@ -1088,10 +1088,10 @@ simulated function bool IsEngineBurning()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
-function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, optional float CheckDistance)
+function bool IsNewPointShot(Vector HitLocation, Vector LineCheck, int Index, optional float CheckDistance)
 {
-    local coords HitPointCoords;
-    local vector HitPointLocation, Difference;
+    local Coords HitPointCoords;
+    local Vector HitPointLocation, Difference;
     local float  t, DotMM, ClosestDistance;
 
     if (NewVehHitpoints[Index].PointBone == '')
@@ -1113,7 +1113,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
     if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
+        HitPointLocation += NewVehHitpoints[Index].PointOffset >> Rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -1153,10 +1153,10 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
 // Re-written from deprecated ROTreadCraft class for DH's armour penetration system
 // Handles penetration calcs for any shell type, & adds including an option for multiple armor sections for each side
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
-    local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
-    local rotator ArmourSlopeRotator;
+    local Vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
+    local Rotator ArmourSlopeRotator;
     local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio, ShatterChance;
     local int     i;
@@ -1172,7 +1172,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Then convert to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
     HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
-    HitLocationAngle = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+    HitLocationAngle = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
     if (HitLocationAngle < 0.0)
     {
@@ -1316,7 +1316,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Calculate the projectile's angle of incidence to the actual armor slope
         // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
         ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
-        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
+        ArmorNormal = Normal(Vector(ArmourSlopeRotator) >> Rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
         // Check if round is to be deflected because the AOI is too high.
@@ -1601,7 +1601,7 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 
 // Modified to DH special damage points, random special damage and/or crew deaths if penetrated, & possibility of setting engine or vehicle on fire
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<ROWeaponDamageType> WepDamageType;
     local DHVehicleCannonPawn       CannonPawn;
@@ -2004,7 +2004,7 @@ function ResetTakeDamageVariables()
 }
 
 // Modified to add random chance of engine fire breaking out
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
     if (EngineHealth > 0)
@@ -2303,7 +2303,7 @@ function bool StronglyRecommended(Actor S, int TeamIndex, Actor Objective)
 
 function float ModifyThreat(float Current, Pawn Threat)
 {
-    local vector to, t;
+    local Vector to, t;
     local float  r;
 
     if (Vehicle(Threat) != none)
@@ -2317,7 +2317,7 @@ function float ModifyThreat(float Current, Pawn Threat)
             // Big bonus points for perpendicular tank targets
             to = Normal(Threat.Location - Location);
             to.z = 0.0;
-            t = Normal(vector(Threat.Rotation));
+            t = Normal(Vector(Threat.Rotation));
             t.z = 0.0;
             r = to dot t;
 

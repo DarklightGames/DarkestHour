@@ -17,7 +17,7 @@ var localized string BusyText;
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;

@@ -447,7 +447,7 @@ simulated function int GetSpawnTimePenalty()
     return SpawnTimePenalty;
 }
 
-function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     if (EventInstigator == none || EventInstigator.GetTeamNum() == GetTeamIndex())
     {

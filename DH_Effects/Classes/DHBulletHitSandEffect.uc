@@ -3,14 +3,14 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSandEffect extends emitter;
+class DHBulletHitSandEffect extends Emitter;
 
-var texture Impacts[4];
+var Texture Impacts[4];
 
 simulated function PostBeginPlay()
 {
     Emitters[0].Texture = Impacts[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

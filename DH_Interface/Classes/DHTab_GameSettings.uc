@@ -524,6 +524,8 @@ function ResetClicked()
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     PanelCaption="Game"
     WinTop=0.15
     WinHeight=0.72

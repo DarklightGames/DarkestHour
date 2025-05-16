@@ -7,7 +7,7 @@ class DHSmokeEffect_LargeShellWP extends DHSmokeEffectBase;
 
 defaultproperties
 {
-  Begin Object Class=SpriteEmitter Name=SpriteEmitter0
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=True
         FadeOut=True
         FadeIn=True

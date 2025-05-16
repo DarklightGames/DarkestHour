@@ -25,6 +25,8 @@ var() bool              bResetRoundTimer;                   // If true will rese
 
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
 
+var() name              PhaseEndEventName;                  // Event to call when the phase ends
+
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
@@ -267,6 +269,12 @@ auto state Timing
 
         // Tell GRI that we are no longer in setup phase (to allow player mantling)
         GRI.bIsInSetupPhase = false;
+
+        // Call the event
+        if (PhaseEndEventName != '')
+        {
+            TriggerEvent(PhaseEndEventName, self, none);
+        }
 
         GotoState('Done');
     }

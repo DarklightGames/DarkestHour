@@ -38,7 +38,7 @@ static function Color GetColor(optional Object OptionalObject)
     }
 }
 
-static function OnSent(DHPlayer PC, vector Location, optional Object OptionalObject)
+static function OnSent(DHPlayer PC, Vector Location, optional Object OptionalObject)
 {
     local class<DHMapMarker> MapMarkerClass;
 

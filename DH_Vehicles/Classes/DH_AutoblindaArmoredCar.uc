@@ -90,8 +90,8 @@ defaultproperties
     // Damage
 	// pros: diesel fuel; 20mm ammo is very unlikely to detonate;
 	// 4 men crew
-    Health=525
-    HealthMax=525.0
+    Health=500
+    HealthMax=500
 	EngineHealth=300
 	AmmoIgnitionProbability=0.2  // 0.75 default
     TurretDetonationThreshold=5000.0 // increased from 1750

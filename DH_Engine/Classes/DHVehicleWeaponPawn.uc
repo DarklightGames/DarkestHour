@@ -326,7 +326,7 @@ simulated function int GetGunPitchMax()
 // This is because when we enter a vehicle we now call SetInitialViewRotation(), which is already relative to vehicle
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
-    local rotator ViewRelativeRotation;
+    local Rotator ViewRelativeRotation;
 
     if (PC == none)
     {
@@ -373,7 +373,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     ViewRelativeRotation.Yaw -= VehWep.CurrentAim.Yaw;
                 }
 
-                PC.SetRotation(rotator(vector(ViewRelativeRotation) << VehicleBase.Rotation));
+                PC.SetRotation(Rotator(Vector(ViewRelativeRotation) << VehicleBase.Rotation));
                 SetRotation(PC.Rotation);
             }
 
@@ -1404,7 +1404,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local DHArmoredVehicle AV;
     local Controller       SavedController;
-    local vector           ExitVelocity;
+    local Vector           ExitVelocity;
     local bool             bSwitchingVehiclePosition, bAllowedCrewmanExitingLockedVehicle;
 
     // Prevent exit if player is buttoned up (or if game type or mutator prevents exit)
@@ -1672,7 +1672,7 @@ simulated function bool CanExit()
 function bool PlaceExitingDriver()
 {
     local array<Vector> MyExitPositions;
-    local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
+    local Vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    StartIndex, i;
     local DHVehicle DHV;
 
@@ -1741,7 +1741,7 @@ function bool PlaceExitingDriver()
 }
 
 // Overriden to support metrics.
-function Died(Controller Killer, class<DamageType> damageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> damageType, Vector HitLocation)
 {
     local PlayerController PC;
     local Controller C;
@@ -2242,7 +2242,7 @@ simulated function SetVehicleBaseMesh(bool bInternalMesh)
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
     local Mesh    NewMesh;
-    local rotator WeaponYaw, WeaponPitch;
+    local Rotator WeaponYaw, WeaponPitch;
 
     if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
     {
@@ -2291,7 +2291,7 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
 // Doing this in a more direct & generic way here avoids previous workarounds in ClientKDriverLeave
 simulated function FixPCRotation(PlayerController PC)
 {
-    local rotator ViewRelativeRotation;
+    local Rotator ViewRelativeRotation;
 
     if (VehicleBase != none && PC != none)
     {
@@ -2303,7 +2303,7 @@ simulated function FixPCRotation(PlayerController PC)
             ViewRelativeRotation.Yaw += VehWep.CurrentAim.Yaw;
         }
 
-        PC.SetRotation(rotator(vector(ViewRelativeRotation) >> VehicleBase.Rotation));
+        PC.SetRotation(Rotator(Vector(ViewRelativeRotation) >> VehicleBase.Rotation));
     }
 }
 
@@ -2359,29 +2359,29 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
 }
 
 // Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
-function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
 }
 
 // Functions emptied out as not relevant to a VehicleWeaponPawn in RO/DH:
 simulated event StartDriving(Vehicle V);
 simulated event StopDriving(Vehicle V);
-function bool IsHeadShot(vector Loc, vector Ray, float AdditionalScale) { return false; }
+function bool IsHeadShot(Vector Loc, Vector Ray, float AdditionalScale) { return false; }
 function AttachFlag(Actor FlagActor);
 function ShouldCrouch(bool Crouch);
 function ShouldProne(bool Prone);
 event EndCrouch(float HeightAdjust);
 event StartCrouch(float HeightAdjust);
 function bool DoJump(bool bUpdating) { return false; }
-function bool CheckWaterJump(out vector WallNormal) { return false; }
-function JumpOutOfWater(vector JumpDir);
+function bool CheckWaterJump(out Vector WallNormal) { return false; }
+function JumpOutOfWater(Vector JumpDir);
 function ClimbLadder(LadderVolume L);
 function EndClimbLadder(LadderVolume OldLadder);
 function ShouldTargetMissile(Projectile P);
 function ShootMissile(Projectile P);
 function GiveWeapon(string aClassName);
 simulated function bool CanThrowWeapon() { return false; }
-function TossWeapon(vector TossVel);
+function TossWeapon(Vector TossVel);
 exec function SwitchToLastWeapon();
 simulated function ChangedWeapon();
 function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon);

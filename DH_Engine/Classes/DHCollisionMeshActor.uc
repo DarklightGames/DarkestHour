@@ -83,7 +83,7 @@ simulated function PostBeginPlay()
 
 // New function to spawn, attach & align a collision static mesh actor (used by the classes that spawn a col mesh)
 simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMeshOwner, StaticMesh ColStaticMesh,
-    name AttachBone, optional vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
+    name AttachBone, optional Vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
 {
     local DHCollisionMeshActor ColMeshActor;
 
@@ -136,7 +136,7 @@ simulated event NotifySelected(Pawn User)
 }
 
 // Col mesh actor should never take damage, so just in case we'll call TakeDamage on the owning actor, which would have otherwise have received the damage call
-function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Owner.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 }

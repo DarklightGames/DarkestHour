@@ -74,9 +74,9 @@ function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -129,7 +129,7 @@ simulated function DrawHUD(Canvas C)
 }
 
 // Modified (from deprecated ROPassengerPawn) to use the vehicle's WeaponBone we now use to attach this passenger, instead of the confusing CameraBone
-simulated function vector GetCameraLocationStart()
+simulated function Vector GetCameraLocationStart()
 {
     if (VehicleBase != none)
     {

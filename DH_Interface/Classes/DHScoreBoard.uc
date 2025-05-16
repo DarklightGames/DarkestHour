@@ -27,10 +27,10 @@ var localized string NoPlayersText;
 var string TabSpaces;
 var string LargeTabSpaces;
 
-var color ScoreboardLabelColor;
-var color SquadHeaderColor;
-var color PlayerBackgroundColor;
-var color SelfBackgroundColor;
+var Color ScoreboardLabelColor;
+var Color SquadHeaderColor;
+var Color PlayerBackgroundColor;
+var Color SelfBackgroundColor;
 
 var array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
 
@@ -73,7 +73,7 @@ struct RowRenderInfo
 struct CellRenderInfo
 {
     var string      Text;
-    var color       TextColor;
+    var Color       TextColor;
     var byte        Justification;
     var Material    Icon;
     var float       U, V, UL, VL;
@@ -407,7 +407,7 @@ function UpdateScoreBoard(Canvas C)
     local string S;
     local float LineHeight, X, Y, XL, YL;
     local int i;
-    local color HealthColor;
+    local Color HealthColor;
     local string HealthString;
 
     PC = DHPlayer(Owner);
@@ -605,7 +605,7 @@ function string GetTotalColumnTitle(int TeamIndex, int ColumnIndex)
 function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> TeamPRI, out float X, out float Y, float LineHeight)
 {
     local string S, TeamName, TeamInfoString;
-    local color  TeamColor;
+    local Color  TeamColor;
     local int i, j, SquadIndex;
     local array<int> ScoreboardColumnIndices;
     local CellRenderInfo CRI;

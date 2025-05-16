@@ -52,7 +52,7 @@ defaultproperties
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'  
+    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=2
@@ -79,7 +79,7 @@ defaultproperties
     bIsArtillery=true
     ResupplyInterval=12.0
 
-    // No 
+    // No
     YawBone="YAW"
     PitchBone="PITCH"
 

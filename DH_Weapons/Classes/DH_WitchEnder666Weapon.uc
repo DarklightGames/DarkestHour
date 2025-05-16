@@ -58,5 +58,5 @@ defaultproperties
     
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
-    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer") 
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer")
 }

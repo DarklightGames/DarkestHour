@@ -255,7 +255,7 @@ state Responding extends Busy
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
         local DHGameReplicationInfo GRI;
-        local vector MapLocation;
+        local Vector MapLocation;
 
         super.BeginState();
 

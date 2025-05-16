@@ -78,11 +78,8 @@ defaultproperties
     GearRatios(4)=0.72
     TransRatio=0.1
 
-    // Damage
-	// cons: petrol fuel
-	// note: 4 men crew
-    Health=525
-    HealthMax=525.0
+    Health=500
+    HealthMax=500
 	EngineHealth=300
 
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines

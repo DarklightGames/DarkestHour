@@ -39,7 +39,7 @@ var     float           SpawnProtectionTime;     // how many seconds a player wi
 var     float           SpawnKillProtectionTime; // how many seconds a kill on a player will be considered a spawn kill after spawning on this spawn point
 
 // Parameters for spawning in a radius (NOTE: currently only works for infantry!)
-var     vector          SpawnLocationOffset;
+var     Vector          SpawnLocationOffset;
 var     float           SpawnRadius;
 var     int             SpawnRadiusSegmentCount;
 var     bool            bShouldTraceCheckSpawnLocations;
@@ -201,8 +201,8 @@ event Destroyed()
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
+    local Vector SpawnLocation;
+    local Rotator SpawnRotation;
     local Pawn P;
 
     G = DarkestHourGame(Level.Game);
@@ -267,10 +267,10 @@ simulated function bool CanSpawnRole(DHRoleInfo RI)
 }
 
 // Override to specify a different spawn pose, otherwise it just uses the spawn point's pose
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local DHPawnCollisionTest CT;
-    local vector              L;
+    local Vector              L;
     local float               Angle, AngleInterval;
     local int                 i, j, k;
 

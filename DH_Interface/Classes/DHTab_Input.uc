@@ -231,6 +231,8 @@ function SaveSettings()
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     Begin Object class=DHGUISectionBackground Name=InputBK1
         Caption="Options"
         WinTop=0.18036

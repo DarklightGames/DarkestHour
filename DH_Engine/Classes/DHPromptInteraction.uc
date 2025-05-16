@@ -19,7 +19,7 @@ struct Option
 };
 var array<Option> Options;
 var string OptionsText;
-var color KeyTextColor;
+var Color KeyTextColor;
 
 function OnOptionSelected(int Index)
 {

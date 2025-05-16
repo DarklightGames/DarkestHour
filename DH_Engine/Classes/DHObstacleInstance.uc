@@ -52,7 +52,7 @@ simulated state Intact
         super.Touch(Other);
     }
 
-    simulated function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    simulated function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         local DarkestHourGame G;
 

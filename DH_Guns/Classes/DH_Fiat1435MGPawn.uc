@@ -151,7 +151,7 @@ simulated function bool IsReloading()
     return MG != none && MG.IsReloading();
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local float T;
     local DH_Fiat1435MG VW;
@@ -244,7 +244,7 @@ simulated exec function SpawnRangeTarget()
 
     TargetLocation = MuzzleCoords.Origin + (Direction * class'DHUnits'.static.MetersToUnreal(MG.RangeTable[MG.RangeIndex].Range));
 
-    TargetActor = Spawn(class'DHRangeTargetActor', self,, TargetLocation, rotator(-Direction));
+    TargetActor = Spawn(class'DHRangeTargetActor', self,, TargetLocation, Rotator(-Direction));
     TargetActor.SetStaticMesh(TargetStaticMesh);
 }
 

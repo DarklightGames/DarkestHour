@@ -137,8 +137,8 @@ event InitGame(string Options, out string Error)
     // Handle single-player voting
     if (Level.NetMode == NM_Standalone &&
         class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
-        VotingHandlerClass != None &&
-        VotingHandlerClass.Static.IsEnabled())
+        VotingHandlerClass != none &&
+        VotingHandlerClass.static.IsEnabled())
     {
         VotingHandler = Spawn(VotingHandlerClass);
 
@@ -1102,7 +1102,7 @@ function SendScoreEvent(Controller C, DHScoreEvent ScoreEvent)
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
-function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
+function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, Vector HitLocation, out Vector Momentum, class<DamageType> DamageType)
 {
     local DHRoleInfo  RoleInfo;
     local ROSpawnArea SpawnArea;
@@ -1212,7 +1212,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    Options = StripColor(Options); // strip out color codes
+    Options = StripColor(Options); // strip out Color codes
 
     BaseMutator.ModifyLogin(Portal, Options);
 
@@ -1455,7 +1455,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         return;
     }
 
-    S = StripColor(S); // strip out color codes
+    S = StripColor(S); // strip out Color codes
 
     if (Other == none || Other.PlayerReplicationInfo == none || Other.PlayerReplicationInfo.PlayerName ~= S)
     {
@@ -5446,7 +5446,7 @@ function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Ty
 // TODO: This function uses different systems for spawning players depending
 // on whether the spawn is blocked or not. This can lead to players spawning in
 // different states. Fix it!
-function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
+function Pawn SpawnPawn(DHPlayer C, Vector SpawnLocation, Rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)
     {
@@ -5611,7 +5611,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
     local DHPlayerReplicationInfo PRI;
-    local vector MapLocation;
+    local Vector MapLocation;
     local int Interval;
 
     if (Request == none ||
@@ -5839,7 +5839,7 @@ defaultproperties
     SurrenderRoundTimeRequiredSeconds=900
     SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
     SurrenderNominationsThresholdPercent=0.15
-    SurrenderVotesThresholdPercent=0.5
+    SurrenderVotesThresholdPercent=0.6
 
     GameDifficulty=4    // For arcane reasons, this has to be >3 so that self-inflicted damage isn't reduced.
 }

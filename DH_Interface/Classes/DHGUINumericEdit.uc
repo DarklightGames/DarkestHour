@@ -18,7 +18,7 @@ defaultproperties
         OnKeyEvent=cMyEditBox.InternalOnKeyEvent
     End Object
     MyEditBox=cMyEditBox
-    Begin Object Class=DHGUISpinnerButton Name=cMySpinner
+    Begin Object Class=GUISpinnerButton Name=cMySpinner
         StyleName="DHSpinner"
         bTabStop=false
         bNeverScale=true
@@ -26,8 +26,4 @@ defaultproperties
         OnKeyEvent=cMySpinner.InternalOnKeyEvent
     End Object
     MySpinner=cMySpinner
-
-    Begin Object Class=DHGUIToolTip Name=GUIButtonTooltip
-	End Object
-	ToolTip=GUIButtonTooltip
 }

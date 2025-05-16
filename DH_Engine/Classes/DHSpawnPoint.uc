@@ -320,8 +320,8 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector          SpawnLocation;
-    local rotator         SpawnRotation;
+    local Vector          SpawnLocation;
+    local Rotator         SpawnRotation;
     local Pawn            P;
 
     G = DarkestHourGame(Level.Game);
@@ -351,11 +351,11 @@ function bool PerformSpawn(DHPlayer PC)
 
 // Modified to try to use one of the spawn point's linked LocationHint actors for the spawn location & rotation
 // A random selection, ignoring any locations that have enemy nearby, or that are blocked by another pawn
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local array<DHLocationHint> LocationHints;
     local DHLocationHint        LocationHint;
-    local array<vector>         EnemyLocations;
+    local array<Vector>         EnemyLocations;
     local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;

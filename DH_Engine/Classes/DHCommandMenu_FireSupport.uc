@@ -17,12 +17,12 @@ var localized string AvailableAirstrikesText;
 var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 var bool bIsArtilleryTargetValid;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PC = GetPlayerController();
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -118,7 +118,7 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
 function Tick()
 {
     local DHPlayer              PC;
-    local vector                HitLocation, HitNormal;
+    local Vector                HitLocation, HitNormal;
     local DHGameReplicationInfo GRI;
     local Actor                 HitActor;
 

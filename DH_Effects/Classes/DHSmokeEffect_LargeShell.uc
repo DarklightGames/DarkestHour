@@ -17,8 +17,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=10.0,Y=10.0)
-        ColorScale(0)=(color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.6
         FadeOutStartTime=2.56
         FadeInEndTime=0.48
@@ -46,8 +46,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(Z=-0.2)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.8
         FadeOutStartTime=35.0
         FadeInEndTime=10.0
@@ -79,8 +79,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(Z=-0.2)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.8
         FadeOutStartTime=52.0
         FadeInEndTime=8.0
@@ -111,8 +111,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=1.0,Y=1.0)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=128,G=128,R=128,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=128,G=128,R=128,A=255))
         Opacity=0.9
         FadeOutStartTime=6.0
         FadeInEndTime=2.0

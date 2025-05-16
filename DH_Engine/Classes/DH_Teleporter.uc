@@ -116,9 +116,9 @@ simulated function bool Accept(Actor Incoming, Actor Source)
                 OldRotation.Pitch = 0;
             }
 
-            OldDirection = vector(OldRotation);
+            OldDirection = Vector(OldRotation);
             Magnitude = Incoming.Velocity dot OldDirection;
-            Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * vector(Incoming.Rotation);
+            Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * Vector(Incoming.Rotation);
         }
 
         if (bReversesX)

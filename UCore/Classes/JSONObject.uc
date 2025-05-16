@@ -65,7 +65,7 @@ function JSONObject PutFloat(string Key, float Value)
     return Put(Key, class'JSONNumber'.static.Create(string(Value)));
 }
 
-function JSONObject PutVector(string Key, vector Value)
+function JSONObject PutVector(string Key, Vector Value)
 {
     return Put(Key, class'JSONArray'.static.FromVector(Value));
 }
@@ -75,7 +75,7 @@ function JSONObject PutNull(string Key)
     return Put(Key, class'JSONLiteral'.static.CreateNull());
 }
 
-function JSONObject PutIVector(string Key, vector Value)
+function JSONObject PutIVector(string Key, Vector Value)
 {
     return Put(Key, class'JSONArray'.static.IFromVector(Value));
 }

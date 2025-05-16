@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
         SetTimer(0.1, false);
     }
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function Timer()
@@ -25,7 +25,7 @@ simulated function Timer()
 }
 
 // Always have this be relevant because these things are huge and should always be seen.
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     return true;
 }

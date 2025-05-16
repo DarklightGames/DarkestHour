@@ -35,7 +35,7 @@ var  localized string  Label_PageNumber, Label_PreviousMenu, Label_PreviousPage,
 
 // Config variables that can be set (or overridden) in any player's DarkestHour.ini file
 var  config  string    AdminName, AdminPassword;    // local player's own admin account details - if added to their config file, menu automatically logs them in & out
-var  config  color     MenuColour;                  // a default is set but can be overridden in config
+var  config  Color    MenuColour;                  // a default is set but can be overridden in config
 var  config  float     MenuPosX, MenuPosY;          // top left positioning of menus on the screen, ranging from 0 to 1 (a default is set but can be overridden in config)
 var  config  bool      bDebug;                      // if true, various events will be logged
 

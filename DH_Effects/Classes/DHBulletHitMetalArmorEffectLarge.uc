@@ -5,8 +5,8 @@
 
 class DHBulletHitMetalArmorEffectLarge extends Emitter;
 
-var texture SparkGroup[4];
-var texture ShrapGroup[4];
+var Texture SparkGroup[4];
+var Texture ShrapGroup[4];
 
 //particles: 34
 
@@ -14,7 +14,7 @@ simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
     Emitters[6].Texture = ShrapGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

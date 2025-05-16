@@ -8,7 +8,7 @@ class DHVehicleVoiceSayMessage extends DHLocalMessage
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
-    local color ConsoleColor, NameColor;
+    local Color ConsoleColor, NameColor;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
 
     if (RelatedPRI_1 == none || RelatedPRI_1.PlayerName == "")
@@ -32,7 +32,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     return default.MessagePrefix @ class'GameInfo'.static.MakeColorCode(NameColor) $ RelatedPRI_1.PlayerName $ class'GameInfo'.static.MakeColorCode(ConsoleColor) @ ":" @ MessageString;
 }
 
-static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
 {
     return default.DrawColor;
 }

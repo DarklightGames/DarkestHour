@@ -11,7 +11,7 @@ class DH_SRCMMod35GrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="SRCM Mod.35 Grenade"
+    ItemName="SRCM mod. 35 Grenade"
     FireModeClass(0)=class'DH_Weapons.DH_SRCMMod35GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_SRCMMod35GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_SRCMMod35GrenadeAttachment'

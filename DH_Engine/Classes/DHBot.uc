@@ -255,7 +255,7 @@ function FightEnemy(bool bCanCharge, float EnemyStrength)
 {
     local float  EnemyDistance, AdjustedCombatStyle;
     local bool   bOldForcedCharge, bFarAway;
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
 
     if (Squad == none || Enemy == none || Pawn == none)
     {
@@ -463,7 +463,7 @@ function SetAttractionState()
 // Modified so entering a shallow water volume doesn't send bot into swimming state (also stripped out some redundancy)
 function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    local vector JumpDir;
+    local Vector JumpDir;
 
     if (Pawn == none || Pawn.IsA('Vehicle'))
     {

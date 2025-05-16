@@ -7,8 +7,8 @@ class DH_G98Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g98_3rd'  
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.g98_icon' 
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g98_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.g98_icon'
     MuzzleBoneName="tipnew"
     MuzzleFlashOffset=(X=-4.000000)
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'

@@ -8,10 +8,7 @@ class DHLargeFont extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    local int ResYGuess;
-    ResYGuess = ResX * (9.0 / 16.0);
-
-    return class'DHFonts'.static.GetDHLargeFontByResolution(ResYGuess);
+    return class'DHFonts'.static.GetDHLargeFontByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

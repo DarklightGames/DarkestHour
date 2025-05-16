@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitGrassEffect extends emitter;
+class DHBulletHitGrassEffect extends Emitter;
 
 defaultproperties
 {

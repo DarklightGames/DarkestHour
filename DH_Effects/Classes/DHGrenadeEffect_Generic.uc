@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
         SetTimer(0.1, false);
     }
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function Timer()
@@ -119,7 +119,7 @@ defaultproperties
         FadeOutStartTime=0.025000
         MaxParticles=15 // was 8
       
-        StartSizeRange=(X=(Min=1.3,Max=2.8),Y=(Min=1.3,Max=2.8),Z=(Min=5.000000,Max=6.000000)) //increased size 
+        StartSizeRange=(X=(Min=1.3,Max=2.8),Y=(Min=1.3,Max=2.8),Z=(Min=5.000000,Max=6.000000)) //increased size
         InitialParticlesPerSecond=64.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.stonechunksfinal'

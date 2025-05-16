@@ -23,7 +23,7 @@ simulated static function int GetPitchForRange(int Range) { return 0; }
 simulated static function float GetYAdjustForRange(int Range) { return 0; }
 simulated function bool ShouldDrawDebugLines() { return false; }
 function DebugShotDistanceAndSpeed();
-simulated function HandleShellDebug(vector RealHitLocation);
+simulated function HandleShellDebug(Vector RealHitLocation);
 
 // From DHThrowableExplosiveProjectile with ThrowerTeam stuff removed as not relevant
 // Ignoring the DHGrenadeProjectile function as this doesn't use fuzed timer & we don't want grenade spin stuff as this grenade was stablised by a trailing crude 'minute chute'
@@ -38,7 +38,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Velocity = Speed * vector(Rotation);
+        Velocity = Speed * Vector(Rotation);
 
         if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
@@ -76,7 +76,7 @@ simulated function Destroyed()
 // From DHThrowableExplosiveProjectile (collision mesh block checks bWontStopThrownProjectile instead of bWontStopShell)
 simulated singular function Touch(Actor Other)
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     if (FluidSurfaceInfo(Other) != none)
     {
@@ -110,9 +110,9 @@ simulated singular function Touch(Actor Other)
 }
 
 // From DHThrowableExplosiveProjectile, with slight modification to use exclusion list from start of DHAntiVehicleProjectile & to record SavedTouchActor
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
-    local vector TempHitLocation, HitNormal;
+    local Vector TempHitLocation, HitNormal;
 
     if (Other == none || SavedTouchActor == Other || Other.IsA('ROBulletWhipAttachment') || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
         || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
@@ -130,11 +130,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
 // Based on DHCannonShellHEAT with elements from DHGrenadeProjectile
 // Modified to handle possible explosion on impact, depending on impact speed
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
     local Actor  TraceHitActor;
-    local vector Direction, TempHitLocation, TempHitNormal, VehicleRelativeVertical, X, Y;
+    local Vector Direction, TempHitLocation, TempHitNormal, VehicleRelativeVertical, X, Y;
     local int    ImpactSpeed, xH, TempMaxWall, i;
     local bool   bExplodeOnImpact, bFailedToPenetrate;
     local float  ImpactAOI;  // Angle of incidence, in degrees
@@ -299,7 +299,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     bInHitWall = true; // set flag to prevent recursive calls
 
     // Do the MaxWall calculations
-    Direction = vector(Rotation);
+    Direction = Vector(Rotation);
     CheckWall(HitNormal, Direction);
     xH = 1.0 / Hardness;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
@@ -350,10 +350,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
 // Modified to use grenade bounce functionality from DHThrowableExplosiveProjectile
 // In that class it's at the end of HitWall(), but here conveniently moved into Deflect() function of our DHAntiVehicleProjectile parent class
-simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
+simulated function Deflect(Vector HitLocation, Vector HitNormal, Actor Wall)
 {
     local ESurfaceTypes ST;
-    local vector        VNorm;
+    local Vector        VNorm;
 
     GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
@@ -379,10 +379,10 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 }
 
 // From DHThrowableExplosiveProjectile
-simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
+simulated function GetHitSurfaceType(out ESurfaceTypes ST, Vector HitNormal)
 {
-    local vector   HitLoc, HitNorm;
-    local material HitMat;
+    local Vector   HitLoc, HitNorm;
+    local Material HitMat;
 
     Trace(HitLoc, HitNorm, Location - (HitNormal * 16.0), Location, false,, HitMat);
 

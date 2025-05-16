@@ -24,7 +24,7 @@ var     PlayerController    Admin;                  // temporarily saves the adm
 var     array<Minefield>    SavedMinefields;        // an array of minefields that records their original properties, so they can be re-enabled later
 var     int                 ParaDropHeight;         // the Z co-ordinate used for the starting height in all paradrop options
 var     float               MapScale;               // size/scale of current map, used to calculate grid locations for paradrops
-var     vector              MapCenter;              // centre location of map, also used to calculate grid locations for paradrops
+var     Vector              MapCenter;              // centre location of map, also used to calculate grid locations for paradrops
 
 // Settings that are replicated to clients via the Replicator
 var     bool                bRealismMutPresent;     // flags whether the realism match mutator is present on the server
@@ -594,7 +594,7 @@ function SetGamePassword(string NewPassword)
 function ParaDropPlayer(string PlayerName, string TypeOfDropTarget, optional string DropTarget, optional string ObjectiveIndex)
 {
     local Controller PlayerToDrop;
-    local vector     ParaDropVector;
+    local Vector     ParaDropVector;
 
     if (!IsLoggedInAsAdmin())
     {
@@ -743,7 +743,7 @@ function ForceRealismMatchLive()
 function ParaDropAll(string TeamName, string TypeOfDropTarget, string DropTarget, optional string ObjectiveIndex)
 {
     local int        SelectedTeamIndex;
-    local vector     ParaDropVector;
+    local Vector     ParaDropVector;
     local Controller C;
 
     if (!bShowRealismMenu || !IsLoggedInAsAdmin())
@@ -984,7 +984,7 @@ function ToggleAdminCanPauseGame()
 function DestroyActorInSights()
 {
     local int    TraceDistance;
-    local vector AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
+    local Vector AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
     local Actor  HitActor;
 
     if (!bShowRealismMenu || !IsLoggedInAsAdmin())
@@ -995,7 +995,7 @@ function DestroyActorInSights()
     if (Admin.IsA('ROPlayer') && Admin.Pawn != none)
     {
         TraceDistance = ROPlayer(Admin).GetMaxViewDistance();
-        AimDirection = vector(Admin.Pawn.GetViewRotation());
+        AimDirection = Vector(Admin.Pawn.GetViewRotation());
         StartTrace = Admin.Pawn.Location + Admin.Pawn.EyePosition();
         EndTrace = StartTrace + (AimDirection * TraceDistance);
 
@@ -1309,7 +1309,7 @@ function int GetTeamIndexFromName(out string TeamName)
 /////////////////////////////////////  PARADROP FUNCTIONS  /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Generic function that actually actions a player paradrop - called as required from other functions that are called directly from Mutate (e.g. ParaDropPlayer & ParaDropAll)
-function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, optional string PlayerName)
+function ParaDropThisPlayer(Controller PlayerToDrop, Vector ParaDropVector, optional string PlayerName)
 {
     local Pawn PlayerPawn;
 
@@ -1337,7 +1337,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
             DHPawn(PlayerPawn).GiveChute();
         }
 
-        PlayerPawn.SetLocation(ParaDropVector + RandRange(10.0, 20.0) * 60.0 * vector(RotRand()));
+        PlayerPawn.SetLocation(ParaDropVector + RandRange(10.0, 20.0) * 60.0 * Vector(RotRand()));
 
         if (PlayerPawn.IsA('Vehicle')) // if we dropped a vehicle, we must now reset it's normal physics, otherwise it just hangs in the sky !
         {
@@ -1374,12 +1374,12 @@ function string ConcatenateGridRef(array<string> Characters, byte StartIndex)
 // Coverts a grid reference into paradrop location coordinates
 // For quick typing it accepts the format "e25" for map grid E2 keypad 5, is not case sensitive & ignores any spaces between characters
 // Also accepts "e2" format & assumes a central keypad 5 sub-grid position if a keypad number is not specified
-function vector GetGridDropLocation(string GridRef)
+function Vector GetGridDropLocation(string GridRef)
 {
     local string GridLetter;
     local byte   GridNumber, KeypadNumber;
     local float  GridX, GridY;
-    local vector DropLocation;
+    local Vector DropLocation;
 
     GridRef = Repl(GridRef, " ", "");  // remove any unwanted spaces
     GridRef = Repl(GridRef, "kp", ""); // remove "kp" if the admin has entered a grid ref in format of "E 4 kp 3" (the original Builder mutator format)
@@ -1490,10 +1490,10 @@ function vector GetGridDropLocation(string GridRef)
 }
 
 // Finds a map objective & returns its location for paradrop coordinates
-function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveIndexString)
+function Vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveIndexString)
 {
     local DarkestHourGame DHG;
-    local vector          DropLocation;
+    local Vector          DropLocation;
     local int             ObjectiveIndex;
     local DHObjective     Objective;
 
@@ -1520,9 +1520,9 @@ function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveI
 }
 
 // Returns player's current location for paradrop coordinates
-function vector GetCurrentDropLocation(Controller PlayerToDrop)
+function Vector GetCurrentDropLocation(Controller PlayerToDrop)
 {
-    local vector DropLocation;
+    local Vector DropLocation;
 
     if (PlayerToDrop == none || PlayerToDrop.Pawn == none)
     {
@@ -1539,7 +1539,7 @@ function vector GetCurrentDropLocation(Controller PlayerToDrop)
 
 // This function will adjust a hud map location based on the rotation offset of the overhead map (used by GetGridDropLocation function)
 // Note this is from ROHud but that is not accessible serverside, so we need the same function here
-function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+function Vector GetAdjustedHudLocation(Vector HudLoc, optional bool bInvert)
 {
     local int   OverheadOffset;
     local float SwapX, SwapY;
@@ -1590,7 +1590,7 @@ function SetParaDropVariables()
 {
     local ROGameReplicationInfo GRI;
     local TerrainInfo           TI;
-    local vector                TestLocation, MapDiagonal;
+    local Vector                TestLocation, MapDiagonal;
     local Actor                 TestActor;
     local int                   i;
 

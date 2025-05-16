@@ -199,7 +199,7 @@ function bool PerformSpawn(DHPlayer PC)
     local RORoleInfo RoleInfo;
     local Vehicle    EntryVehiclePosition;
     local Pawn       P;
-    local vector     Offset;
+    local Vector     Offset;
     local array<int> ExitPositionIndices;
     local int        RoleIndex, i;
     local bool       bCanEnterTankCrewPositions;
@@ -284,8 +284,8 @@ simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScal
     Style = GUIController.GetStyle(GetMapStyleName(), FontScale);
 
     // Set all the images to be the icon used for the vehicle.
-    if (VehicleClass != none && 
-        VehicleClass.default.MapIconAttachmentClass != none && 
+    if (VehicleClass != none &&
+        VehicleClass.default.MapIconAttachmentClass != none &&
         VehicleClass.default.MapIconAttachmentClass.default.IconMaterial != none)
     {
         M = VehicleClass.default.MapIconAttachmentClass.default.IconMaterial;

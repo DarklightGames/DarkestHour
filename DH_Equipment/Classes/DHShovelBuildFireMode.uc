@@ -14,7 +14,7 @@ var     float           TraceDistanceInMeters; // player has to be within this d
 simulated function bool AllowFire()
 {
     local Actor  HitActor;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local DHPawn Pawn;
 
     if (Weapon == none ||
@@ -28,7 +28,7 @@ simulated function bool AllowFire()
     }
 
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Instigator.GetViewRotation()));
+    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
 
     foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
@@ -67,7 +67,7 @@ event ModeDoFire()
     {
         GotoState('Building');
     }
-    else 
+    else
     {
         Weapon.StopFire(ThisModeNum);
     }

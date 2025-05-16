@@ -52,7 +52,7 @@ defaultproperties
 
     //reload anims
     PA_PreReloadAnim="reload_start_1897"
-    PA_PronePreReloadAnim="prone_reload_start_1897" 
+    PA_PronePreReloadAnim="prone_reload_start_1897"
     PA_ReloadAnim="reload_single_1897"
     PA_ReloadEmptyAnim="reload_single_1897"
     PA_ProneReloadAnim="prone_reload_single_1897"
@@ -111,8 +111,8 @@ defaultproperties
     PA_ProneIronAnims(7)="prone_slowcrawlB_1897"
 
     //sprint, anims match up, no change
-    PA_SprintAnims(0)="stand_sprintF_kar" 
-    PA_SprintAnims(1)="stand_sprintB_kar" 
+    PA_SprintAnims(0)="stand_sprintF_kar"
+    PA_SprintAnims(1)="stand_sprintB_kar"
     PA_SprintAnims(2)="stand_sprintL_kar"
     PA_SprintAnims(3)="stand_sprintR_kar"
     PA_SprintAnims(4)="stand_sprintFL_kar"
@@ -156,7 +156,7 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_1897"
     PA_IdleIronWeaponAnim="stand_idleiron_1897"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_1897"
-    PA_ProneIdleRestAnim="prone_idle_1897"  
+    PA_ProneIdleRestAnim="prone_idle_1897"
     PA_IdleProneAnim="prone_idle_1897"
 
     //shooting

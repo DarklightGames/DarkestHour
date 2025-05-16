@@ -3,9 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHGUIToolTip extends GUIToolTip;
+class DHLocationHintMover extends DHLocationHint;
 
 defaultproperties
 {
-    StyleName="DHMouseOver"
+    bStatic=false
 }
