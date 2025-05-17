@@ -90,4 +90,6 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0
+
+    GunMantletArmorFactor=1.0
 }

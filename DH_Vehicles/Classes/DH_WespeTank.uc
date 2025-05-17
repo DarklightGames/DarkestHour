@@ -2,13 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// TODO
+// https://tanks-encyclopedia.com/ww2/nazi_germany/sdkfz-124_wespe.php
 //==============================================================================
 // [ ] Rename Shells & Set up Classes/loadout
 // [ ] Fix handling to be less bouncy
 // [ ] Fix muzzle smoke to use sideways smoke (do we even have this?)
 // [ ] Damage effect positions
-// [ ] Armor values
 // [ ] Add to maps
 // [ ] add sounds to hatch opening/closing
 // [ ] driver animations
@@ -110,22 +109,24 @@ defaultproperties
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000,bExposed=true)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=-47.6,LocationName="lower nose")
-    FrontArmor(1)=(Thickness=5.08,MaxRelativeHeight=-32.2,LocationName="mid nose") // represents flattest, front facing part of rounded nose plate
-    FrontArmor(2)=(Thickness=5.08,Slope=45.0,MaxRelativeHeight=-6.4,LocationName="upper nose")
-    FrontArmor(3)=(Thickness=1.27,Slope=70.0,MaxRelativeHeight=8.0,LocationName="upper")
-    FrontArmor(4)=(Thickness=1.27,Slope=30.0,LocationName="superstructure")
-    RightArmor(0)=(Thickness=3.81,MaxRelativeHeight=-16.0,LocationName="lower") // TODO: query AFV database notes this 1.5" lower side armour is "soft"?
-    RightArmor(1)=(Thickness=1.27,LocationName="superstructure")
-    LeftArmor(0)=(Thickness=3.81,MaxRelativeHeight=-16.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=1.27,LocationName="superstructure")
-    RearArmor(0)=(Thickness=3.81,Slope=-23.0,MaxRelativeHeight=-9.0,LocationName="lower")
-    RearArmor(1)=(Thickness=1.27,LocationName="upper/super") // rear upper hull & superstructure are same, so no point splitting
+    FrontArmor(0)=(Thickness=3.0,Slope=-70.0,MaxRelativeHeight=30.6597)
+    FrontArmor(1)=(Thickness=3.0,Slope=-20.0,MaxRelativeHeight=56.3219)
+    FrontArmor(2)=(Thickness=5.08,Slope=75.0,MaxRelativeHeight=85.894)
+    FrontArmor(3)=(Thickness=1.0,Slope=18.0)
 
-    FrontLeftAngle=335.0
-    FrontRightAngle=25.0
-    RearRightAngle=155.0
-    RearLeftAngle=205.0
+    RightArmor(0)=(Thickness=1.45,MaxRelativeHeight=85.894)
+    RightArmor(1)=(Thickness=1.0)
+
+    LeftArmor(0)=(Thickness=1.45,MaxRelativeHeight=85.894)
+    LeftArmor(1)=(Thickness=1.0)
+
+    RearArmor(0)=(Thickness=3.81,MaxRelativeHeight=85.894)
+    RearArmor(1)=(Thickness=1.0)
+
+    FrontLeftAngle=334.7
+    FrontRightAngle=26.7
+    RearRightAngle=153.4
+    RearLeftAngle=206.6
 
     // Movement
     GearRatios(4)=0.72
