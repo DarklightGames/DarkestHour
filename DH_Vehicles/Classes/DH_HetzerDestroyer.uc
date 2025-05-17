@@ -35,14 +35,19 @@ defaultproperties
     PlayerCameraBone="PLAYER_CAMERA"
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
     ReinforcementCost=4
-    FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=9.900000,LocationName="lower")
+
+    FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=61.624,LocationName="lower")
     FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")
-    RightArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=13.000000,LocationName="lower")
+
+    RightArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=73.6533,LocationName="lower")
     RightArmor(1)=(Thickness=2.000000,Slope=40.000000,LocationName="upper")
-    LeftArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=13.000000,LocationName="lower")
+
+    LeftArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=73.6533,LocationName="lower")
     LeftArmor(1)=(Thickness=2.000000,Slope=40.000000,LocationName="upper")
-    RearArmor(0)=(Thickness=2.000000,Slope=15.000000,MaxRelativeHeight=20.299999,LocationName="lower")
+
+    RearArmor(0)=(Thickness=2.000000,Slope=15.000000,MaxRelativeHeight=78.5234,LocationName="lower")
     RearArmor(1)=(Thickness=0.800000,Slope=70.000000,LocationName="upper")
+
     NewVehHitpoints(0)=(PointRadius=2.000000,PointBone="body",PointOffset=(X=32.000000,Y=-9.800000,Z=64.699997),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=15.000000,PointBone="Turret",PointOffset=(X=-12.000000),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=15.000000,PointBone="Turret",PointOffset=(X=-12.000000),NewHitPointType=NHP_GunPitch)
