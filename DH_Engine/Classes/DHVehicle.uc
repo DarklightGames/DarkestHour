@@ -2227,6 +2227,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     local Controller InstigatorController;
     local float      DamageModifier, TreadDamageMod;
     local int        InstigatorTeam, i;
+    local bool       bIsFriendlyFire;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -2265,12 +2266,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
             // Is this friendly damage
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                // Inform the instigator they are doing something wrong
-                if (PlayerController(InstigatorController) != none)
-                {
-                    PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
-                }
-
+                bIsFriendlyFire = true;
+                
                 // If no one has ever entered the vehicle, then don't allow team damage
                 if (!bDriverAlreadyEntered)
                 {
@@ -2311,6 +2308,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     {
         return;
     }
+
+    // Inform the instigator they are doing something wrong
+    if (bIsFriendlyFire && PlayerController(InstigatorController) != none)
+    {
+        PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
+    }
+
 
     // Check RO VehHitpoints (engine, ammo)
     // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
