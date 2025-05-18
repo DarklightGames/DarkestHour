@@ -3,7 +3,6 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Ammo hitpoint areas
-// [ ] Armor values (wolfkraut)
 // [ ] Fix collision area for the driver's hatch on the body
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
@@ -46,23 +45,28 @@ defaultproperties
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="VBA64_driver_idle_close" // default driver anim
 
-    // Hull armor   // TODO: get all this
-    FrontArmor(0)=(Thickness=3.0,Slope=-41.0,MaxRelativeHeight=40.0,LocationName="lower nose") // assumed 30mm to all front & 8mm elsewhere; measured all the slopes in the hull mesh
-    FrontArmor(1)=(Thickness=3.0,Slope=42.0,MaxRelativeHeight=61.0,LocationName="upper nose")
-    FrontArmor(2)=(Thickness=3.0,Slope=73.0,MaxRelativeHeight=77.0,LocationName="upper")
-    FrontArmor(3)=(Thickness=3.0,Slope=37.0,LocationName="driver plate")
-    RightArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower") // composite slope & height for sides, as varies along length of hull
-    RightArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
-    RearArmor(0)=(Thickness=0.8,Slope=-27.5,MaxRelativeHeight=46.0,LocationName="lower")
-    RearArmor(1)=(Thickness=0.8,Slope=24.0,MaxRelativeHeight=75.5,LocationName="upper")
-    RearArmor(2)=(Thickness=0.8,Slope=38.0,LocationName="turret upstand")
+    FrontArmor(0)=(Thickness=0.9,Slope=-50.0,MaxRelativeHeight=27.3843)
+    FrontArmor(1)=(Thickness=0.9,Slope=-15.0,MaxRelativeHeight=43.1217)
+    FrontArmor(2)=(Thickness=0.9,Slope=50.0,MaxRelativeHeight=70.8217)
+    FrontArmor(3)=(Thickness=0.9,Slope=74.0,MaxRelativeHeight=79.1801)
+    FrontArmor(4)=(Thickness=0.9,Slope=18.0)
 
-    FrontLeftAngle=338.0
-    FrontRightAngle=22.0
-    RearRightAngle=158.0
-    RearLeftAngle=202.0
+    RightArmor(0)=(Thickness=0.9,Slope=-8.0,MaxRelativeHeight=79.1801)
+    RightArmor(1)=(Thickness=0.9,Slope=32.0)
+
+    LeftArmor(0)=(Thickness=0.9,Slope=-8.0,MaxRelativeHeight=79.1801)
+    LeftArmor(1)=(Thickness=0.9,Slope=32.0)
+
+    RearArmor(0)=(Thickness=0.9,Slope=-62.0,MaxRelativeHeight=31.8721)
+    RearArmor(1)=(Thickness=0.9,Slope=-33.0,MaxRelativeHeight=56.2083)
+    RearArmor(2)=(Thickness=0.8,Slope=40.0,MaxRelativeHeight=76.9121)
+    RearArmor(3)=(Thickness=0.8,Slope=6.60,MaxRelativeHeight=85.9233)
+    RearArmor(4)=(Thickness=0.8,Slope=20.0)
+
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=160.0
+    RearLeftAngle=200.0
 
     // Movement
     GearRatios(0)=-0.35
