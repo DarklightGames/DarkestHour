@@ -5,7 +5,7 @@
 // [ ] Third person gunner animations
 // [ ] Destroyed mesh
 // [ ] Re-evaluate ammo loadout (add HEAT shell etc.)
-// [ ] Recalibrate sight (correct X/Y)
+// [ ] foliage variants/attachments
 //==============================================================================
 
 class DH_Pak40ATGun extends DHATGun;
@@ -21,9 +21,6 @@ defaultproperties
     VehicleHudImage=Texture'DH_Pak40_tex.interface.Pak40_base'
     VehicleHudTurret=TexRotator'DH_Pak40_tex.interface.Pak40_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak40_tex.interface.Pak40_turret_look'
-
-    VehicleHudOccupantsX(1)=0.47
-    VehicleHudOccupantsY(1)=0.6
 
     ExitPositions(1)=(X=-120.00,Y=-27.00,Z=35.00)
     VehicleMass=11.0
