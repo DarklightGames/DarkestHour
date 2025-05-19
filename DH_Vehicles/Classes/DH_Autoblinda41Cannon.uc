@@ -25,19 +25,19 @@ defaultproperties
 
     // Turret armor
     FrontArmorFactor=4.0
-    RightArmorFactor=2.0
-    LeftArmorFactor=2.0
-    RearArmorFactor=0.6
+    RightArmorFactor=3.0
+    LeftArmorFactor=3.0
+    RearArmorFactor=3.0
     
-    FrontArmorSlope=10.5
-    RightArmorSlope=30.0
-    LeftArmorSlope=30.0
-    RearArmorSlope=12.2
+    FrontArmorSlope=15.0
+    RightArmorSlope=22.0
+    LeftArmorSlope=22.0
+    RearArmorSlope=19.0
 
-    FrontLeftAngle=331.0
-    FrontRightAngle=29.0
-    RearRightAngle=151.0
-    RearLeftAngle=209.0
+    FrontLeftAngle=333.0
+    FrontRightAngle=27.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
 
     // Cannon movement
     ManualRotationsPerSecond=0.058  // 21 degrees per second
