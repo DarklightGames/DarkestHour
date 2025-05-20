@@ -8,12 +8,17 @@ class DH_Pak38Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_turret'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
-    Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll')
-    GunnerAttachmentBone="com_player"
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_turret_ext'
+    // Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
+    // Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    // Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll')
+    GunnerAttachmentBone="GUN_YAW"
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
 
     // Turret movement
     MaxPositiveYaw=5825
@@ -83,4 +88,10 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
+
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=7.0
 }

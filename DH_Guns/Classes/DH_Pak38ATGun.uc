@@ -2,29 +2,29 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] Karma box
+// [ ] Collision meshes
+// [ ] Pitch driver animation
+// [ ] Third-person player animations
+// [ ] Cannon animations (camera transition, firing etc.)
+// [ ] Destroyed mesh
+// [ ] Variants
+// [ ] Foliage attachments
+// [ ] UI elements
+// [ ] Finalize mesh
+// [ ] Finalize textures
+// [ ] Gun wheels
+// [ ] Set up firing bone channel
+//==============================================================================
 
 class DH_Pak38ATGun extends DHATGun;
 
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-    DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-    DestroyedSkin.FallbackMaterial = Skins[0];
-    DestroyedSkin.CombineOperation = CO_Multiply;
-    DestroyedMeshSkins[0] = DestroyedSkin;
-
-    super.DestroyAppearance();
-}
-
 defaultproperties
 {
-    VehicleNameString="5.0 cm Pak38 AT gun"
+    VehicleNameString="5,0cm PaK 38"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
-    Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
+    //Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_dest'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
