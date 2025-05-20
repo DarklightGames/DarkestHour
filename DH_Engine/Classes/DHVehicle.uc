@@ -28,15 +28,17 @@ struct SkinIndexMap
 
 struct VehicleAttachment
 {
-    var class<Actor>        AttachClass;
-    var Actor               Actor;
-    var StaticMesh          StaticMesh;
-    var name                AttachBone;
-    var Vector              Offset;
-    var Rotator             Rotation;
-    var array<Material>     Skins;
-    var bool                bHasCollision;
-    var float               CullDistance;
+    var class<Actor>    AttachClass;
+    var Actor           Actor;
+    var StaticMesh      StaticMesh;
+    var name            AttachBone;
+    var Vector          Offset;
+    var Rotator         Rotation;
+    var array<Material> Skins;
+    var bool            bHasCollision;
+    var float           CullDistance;
+    var bool            bAttachToWeapon;
+    var int             WeaponAttachIndex;
     // Maps the vehicle skin to the attachment skin.
     // Used so that attachments on skin variants automatically use the correct textures.
     var array<SkinIndexMap> SkinIndexMap;
@@ -2236,6 +2238,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     local Controller InstigatorController;
     local float      DamageModifier, TreadDamageMod;
     local int        InstigatorTeam, i;
+    local bool       bIsFriendlyFire;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -2274,12 +2277,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
             // Is this friendly damage
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                // Inform the instigator they are doing something wrong
-                if (PlayerController(InstigatorController) != none)
-                {
-                    PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
-                }
-
+                bIsFriendlyFire = true;
+                
                 // If no one has ever entered the vehicle, then don't allow team damage
                 if (!bDriverAlreadyEntered)
                 {
@@ -2320,6 +2319,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     {
         return;
     }
+
+    // Inform the instigator they are doing something wrong
+    if (bIsFriendlyFire && PlayerController(InstigatorController) != none)
+    {
+        PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
+    }
+
 
     // Check RO VehHitpoints (engine, ammo)
     // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -3267,10 +3273,17 @@ simulated function SpawnVehicleAttachments()
         }
     }
 
-    // Spawn any decorative attachments
+    // Spawn any attachments.
     for (i = 0; i < VehicleAttachments.Length; ++i)
     {
         VA = VehicleAttachments[i];
+
+        if (VA.bAttachToWeapon)
+        {
+            // Do not do the attachment here. The weapon will handle it when it is spawned client-side in InitializeVehicleBase.
+            // This guarantees that it has a valid reference to this vehicle.
+            continue;
+        }
 
         // Spawn on a server only if attachment has collision, & only spawn if either has specified static mesh or a specified actor class
         if ((Level.NetMode != NM_DedicatedServer || VA.bHasCollision) && (VA.StaticMesh != none || VA.AttachClass != none))
@@ -3321,40 +3334,45 @@ simulated function SpawnVehicleAttachments()
 }
 
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
-simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation)
+// New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
+simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation, optional Actor AttachTarget)
 {
     local Actor A;
 
-    if (AttachClass != none)
+    A = Spawn(AttachClass);
+
+    if (A == none)
     {
-        A = Spawn(AttachClass);
+        return none;
+    }
 
-        if (A != none)
-        {
-            if (AttachStaticMesh != none && A.DrawType == DT_StaticMesh)
-            {
-                A.SetStaticMesh(AttachStaticMesh);
-            }
+    if (AttachStaticMesh != none && A.DrawType == DT_StaticMesh)
+    {
+        A.SetStaticMesh(AttachStaticMesh);
+    }
 
-            if (AttachBone != '')
-            {
-                AttachToBone(A, AttachBone);
-            }
-            else
-            {
-                A.SetBase(self);
-            }
+    if (AttachTarget == none)
+    {
+        AttachTarget = self;
+    }
 
-            if (AttachRotation != rot(0, 0, 0))
-            {
-                A.SetRelativeRotation(AttachRotation);
-            }
+    if (AttachBone != '')
+    {
+        AttachTarget.AttachToBone(A, AttachBone);
+    }
+    else
+    {
+        A.SetBase(AttachTarget);
+    }
 
-            if (AttachOffset != vect(0.0, 0.0, 0.0))
-            {
-                A.SetRelativeLocation(AttachOffset);
-            }
-        }
+    if (AttachRotation != rot(0, 0, 0))
+    {
+        A.SetRelativeRotation(AttachRotation);
+    }
+
+    if (AttachOffset != vect(0.0, 0.0, 0.0))
+    {
+        A.SetRelativeLocation(AttachOffset);
     }
 
     return A;

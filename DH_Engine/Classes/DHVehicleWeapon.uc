@@ -208,6 +208,73 @@ simulated function SpawnVehicleAttachments()
     }
 }
 
+// In order to stem a proliferation of vehicle weapon classes whose only difference is the attachment,
+// we use the vehicle's attachment system to specify the attachments for the vehicle weapon as well.
+simulated function SpawnWeaponAttachments()
+{
+    local int i, j, k;
+    local DHVehicle V;
+    local DHVehicle.VehicleAttachment VA;
+    local Actor Attachment;
+
+    if (Base == none)
+    {
+        Warn("Attempting to spawn weapon attachments on a vehicle weapon (" $ self $ ") without a vehicle base.");
+        return;
+    }
+
+    V = DHVehicle(Base);
+
+    if (V == none)
+    {
+        return;
+    }
+
+    // Check for any attachments that we need to add to this vehicle.
+    for (i = 0; i < V.VehicleAttachments.Length; ++i)
+    {
+        VA = V.VehicleAttachments[i];
+
+        if (!VA.bAttachToWeapon)
+        {
+            continue;
+        }
+
+        for (j = 0; j < V.WeaponPawns.Length; ++j)
+        {
+            if (V.WeaponPawns[j].Gun == self && j == VA.WeaponAttachIndex)
+            {
+                if (VA.AttachClass == none)
+                {
+                    VA.AttachClass = class'DHDecoAttachment';
+                }
+
+                Attachment = V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
+
+                for (k = 0; k < VA.Skins.Length; ++k)
+                {
+                    if (VA.Skins[k] != none)
+                    {
+                        Attachment.Skins[k] = VA.Skins[k];
+                    }
+                }
+
+                if (VA.bHasCollision)
+                {
+                    Attachment.SetCollision(true, true);
+                    Attachment.bWorldGeometry = true;
+                }
+
+                Attachment.CullDistance = VA.CullDistance;
+
+                V.VehicleAttachments[i].Actor = Attachment;
+
+                break;
+            }
+        }
+    }
+}
+
 simulated function AttachCollisionMeshes()
 {
     local name AttachBone;
@@ -1166,6 +1233,8 @@ simulated function InitializeVehicleBase()
     {
         InitializeVehicleAndWeaponPawn();
     }
+
+    SpawnWeaponAttachments();
 }
 
 // New function to do any set up that requires both the 'Base' & 'WeaponPawn' references to the Vehicle & VehicleWeaponPawn actors
