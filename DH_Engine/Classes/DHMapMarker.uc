@@ -54,7 +54,7 @@ var int                       OnPlacedMessageIndex;
 var localized string    MarkerName;
 var Material            IconMaterial;
 var IntBox              IconCoords;
-var color               IconColor;
+var Color               IconColor;
 var int                 LifetimeSeconds;        // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
 var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
@@ -163,7 +163,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
     return CheckPermissions(default.Permissions_CanSee, PRI, Marker);
 }
 
-static function color GetBeeLineColor()
+static function Color GetBeeLineColor()
 {
     return default.IconColor;
 }
@@ -235,7 +235,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local int Distance;
-    local vector V;
+    local Vector V;
 
     if (PC == none || PC.Pawn == none)
     {

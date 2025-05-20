@@ -140,9 +140,9 @@ Begin:
 }
 
 // Modified to allow for different free aim conditions in this class (due to possibility of hip fire from ironsights key))
-function SetServerOrientation(rotator NewRotation)
+function SetServerOrientation(Rotator  NewRotation)
 {
-    local rotator WeaponRotation;
+    local Rotator WeaponRotation;
 
     if (bUsesFreeAim && bUsingSights && Instigator != none)
     {

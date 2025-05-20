@@ -170,7 +170,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
     local DHGUISquadComponent SquadComponent;
     local DHPlayerReplicationInfo PRI, SelectedPRI;
     local DHPlayer PC;
-    local vector ParadropLocation;
+    local Vector ParadropLocation;
 
     PC = GetComponentController(Component);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);

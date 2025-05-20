@@ -493,7 +493,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -570,7 +570,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function OnSelect(int OptionIndex, optional vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, optional Vector Location, optional Vector HitNormal)
 {
     local DHCommandMenu Menu;
 

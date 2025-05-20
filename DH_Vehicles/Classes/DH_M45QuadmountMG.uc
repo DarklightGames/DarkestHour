@@ -18,7 +18,7 @@ simulated function InitializeVehicleBase()
 }
 
 // Modified to pass damage on to vehicle base, same as a vehicle cannon
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
@@ -129,7 +129,7 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
 
     // Reload
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14) 
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)

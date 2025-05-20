@@ -51,7 +51,7 @@ static function bool CanPlayerRecieve(DHPlayer Sender, DHPlayer Recipient)
 }
 
 // Called when this signal is sent.
-static function OnSent(DHPlayer PC, vector Location, optional Object OptionalObject);
+static function OnSent(DHPlayer PC, Vector Location, optional Object OptionalObject);
 
 defaultproperties
 {

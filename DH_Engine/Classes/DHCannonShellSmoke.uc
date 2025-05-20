@@ -12,7 +12,7 @@ var  sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
 // Modified to add smoke effects
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -20,7 +20,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
+            Spawn(SmokeEmitterClass, self,, HitLocation, Rotator(-HitNormal));
             PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
             AmbientSound = SmokeLoopSound;
             AmbientVolumeScale = 1.0; // overriding defaults for shells, which are intended for their in-flight 'whistle' - this (& radius) match smoke grenade sounds

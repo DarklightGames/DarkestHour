@@ -409,5 +409,5 @@ defaultproperties
         LifetimeRange=(Min=1.500000,Max=1.500000)
         InitialDelayRange=(Min=0.300000,Max=0.400000)
     End Object
-    Emitters(13)=SpriteEmitter'SpriteEmitter13'  
+    Emitters(13)=SpriteEmitter'SpriteEmitter13'
 }

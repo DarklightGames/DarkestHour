@@ -21,8 +21,8 @@ var array<Control> Controls;
 
 // Override these functions to customize the message based on the context.
 static function string GetHeaderString(
-    optional PlayerReplicationInfo RelatedPRI_1, 
-    optional PlayerReplicationInfo RelatedPRI_2, 
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject
     )
 {

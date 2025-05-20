@@ -26,7 +26,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
            MessageString;
 }
 
-static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
 {
     return default.DrawColor;
 }

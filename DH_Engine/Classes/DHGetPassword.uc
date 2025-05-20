@@ -19,21 +19,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set button positions
 	ButtonRowLeft = 0.5 - BUTTON_SPACING * 0.5 - BUTTON_WIDTH;
 
-	b_Cancel.SetPosition(ButtonRowLeft, 
-                         BUTTON_POS_TOP, 
-                         BUTTON_WIDTH, 
+	b_Cancel.SetPosition(ButtonRowLeft,
+                         BUTTON_POS_TOP,
+                         BUTTON_WIDTH,
                          BUTTON_HEIGHT);
 
-	b_Ok.SetPosition(ButtonRowLeft + BUTTON_SPACING + BUTTON_WIDTH, 
-                     BUTTON_POS_TOP, 
-                     BUTTON_WIDTH, 
+	b_Ok.SetPosition(ButtonRowLeft + BUTTON_SPACING + BUTTON_WIDTH,
+                     BUTTON_POS_TOP,
+                     BUTTON_WIDTH,
                      BUTTON_HEIGHT);
 }
 
 function bool InternalOnPreDraw(Canvas C)
 {
-    // Bypass button positioning code in UT2K4GetDataMenu. 
-    // Button positions don't rely on ActualHeight() anymore, so we don't need 
+    // Bypass button positioning code in UT2K4GetDataMenu.
+    // Button positions don't rely on ActualHeight() anymore, so we don't need
     // to adjust them on every draw call.
 	return super(UT2K4GenericMessageBox).InternalOnPreDraw(C);
 }
@@ -46,7 +46,7 @@ function RetryPassword()
     EntryString = ed_Data.GetText();
     MyConsole = ExtendedConsole(PlayerOwner().Player.Console);
 
-    if (MyConsole != None && EntryString != "")
+    if (MyConsole != none && EntryString != "")
     {
         SavePassword(MyConsole, EntryString);
     }

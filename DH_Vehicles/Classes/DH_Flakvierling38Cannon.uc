@@ -48,7 +48,7 @@ function Fire(Controller C)
 }
 
 // Modified to get the firing location for the barrel that is next to fire
-function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+function Vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
     return GetBoneCoords(BarrelBones[NextFiringBarrelIndex]).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
 }

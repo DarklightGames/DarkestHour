@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitWoodEffectLarge extends emitter;
+class DHBulletHitWoodEffectLarge extends Emitter;
 
 //particles: 45
 

@@ -18,7 +18,7 @@ defaultproperties
     // Recoil
     RecoilRate=0.05
     PctBipodDeployRecoil=0.1
-    MaxVerticalRecoilAngle=540 
+    MaxVerticalRecoilAngle=540
     MaxHorizontalRecoilAngle=265
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=8.0,OutVal=1.1),(InVal=14.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
@@ -40,7 +40,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
     ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
-    ShellRotOffsetIron=(Pitch=-16384)  
+    ShellRotOffsetIron=(Pitch=-16384)
     ShellRotOffsetHip=(Pitch=-16384)
 
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)

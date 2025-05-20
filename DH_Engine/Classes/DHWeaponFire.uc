@@ -23,7 +23,7 @@ var array<ShellEjector> ShellEjectors;
 
 var bool bIgnoresWeaponLock;
 
-var vector MuzzleOffset;
+var Vector MuzzleOffset;
 
 simulated function PostBeginPlay()
 {
@@ -67,7 +67,7 @@ simulated function InitEffects()
     {
         SmokeEmitter = Weapon.Spawn(SmokeEmitterClass, Instigator);
 
-        if (SmokeEmitter != None && MuzzleBone != '')
+        if (SmokeEmitter != none && MuzzleBone != '')
         {
             Weapon.AttachToBone(SmokeEmitter, MuzzleBone);
             SmokeEmitter.SetRelativeLocation(MuzzleOffset);

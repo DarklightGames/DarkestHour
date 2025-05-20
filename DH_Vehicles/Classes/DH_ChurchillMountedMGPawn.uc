@@ -6,7 +6,7 @@
 class DH_ChurchillMountedMGPawn extends DHVehicleMGPawn; // TODO: make this extra functionality generic in DHVehicleMGPawn and/or DHVehicleWeaponPawn
 
 var     int         PeriscopePositionIndex;
-var     texture     PeriscopeOverlay;
+var     Texture     PeriscopeOverlay;
 
 // Can't fire if on binoculars or if moving between positions
 function bool CanFire()
@@ -15,9 +15,9 @@ function bool CanFire()
 }
 
 // Modified to only use the position 0 for the gunsight, as player can fire the gun in other 'look around' positions (also some redundancy removed)
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 

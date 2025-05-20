@@ -112,9 +112,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 // Modified for unique handling of mortar projectile's random spread
 // Spread is only applied to yaw, as pitch/distance spread is represented by a velocity adjustment in SpawnProjectile()
-function rotator GetProjectileFireRotation(optional bool bAltFire)
+function Rotator GetProjectileFireRotation(optional bool bAltFire)
 {
-    local rotator FireRotation;
+    local Rotator FireRotation;
     local float   SpreadYaw;
 
     FireRotation = WeaponFireRotation;
@@ -134,8 +134,8 @@ function rotator GetProjectileFireRotation(optional bool bAltFire)
 // Modified for unique handling of mortar's elevation setting
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
-    local vector  CurrentFireOffset, X, Y, Z;
-    local rotator R;
+    local Vector  CurrentFireOffset, X, Y, Z;
+    local Rotator R;
 
     // Calculate WeaponFireRotation
     R = Rotation - CurrentAim;
@@ -147,7 +147,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     Y.Z = 0.0;
     Y = Normal(Y);
 
-    WeaponFireRotation = rotator(QuatRotateVector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
+    WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
 
     // Calculate WeaponFireLocation
     WeaponFireLocation = GetBoneCoords(WeaponFireAttachmentBone).Origin;

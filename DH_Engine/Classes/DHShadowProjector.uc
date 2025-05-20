@@ -13,7 +13,7 @@ function InitShadow()
 {
     super.InitShadow();
 
-    SetRotation(rotator(Normal(-LightDirection)));
+    SetRotation(Rotator(Normal(-LightDirection)));
 }
 
 // Modified to use ShadowZOffset for the vertical position offset for shadow, instead of a hard-coded literal (was +5)
@@ -22,7 +22,7 @@ function InitShadow()
 // No longer update shadow rotation, as it never changes, so we now do it once in InitShadow(), & removed the RootMotion block as it's never true
 function UpdateShadow()
 {
-    local vector ShadowLocation;
+    local Vector ShadowLocation;
 
     DetachProjector(true);
 

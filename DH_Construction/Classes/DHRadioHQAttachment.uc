@@ -9,7 +9,7 @@ var byte           TeamIndex;
 
 var DHRadio        Radio;
 var class<DHRadio> RadioClass;
-var vector         RadioOffset;
+var Vector         RadioOffset;
 
 simulated function MakeVisible();
 simulated function MakeInvisible() { GotoState('Invisible'); }

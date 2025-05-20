@@ -32,8 +32,8 @@ defaultproperties
     IronSightDisplayFOV=38.0
     IronSightDisplayFOVHigh=38.0
     PlayerFOVZoom=14.11
-    ScopePortalFOV=7.1     
-    ScopePortalFOVHigh=7.1 // "4,25x28" which appears to be 6.6 degrees? 
+    ScopePortalFOV=7.1
+    ScopePortalFOVHigh=7.1 // "4,25x28" which appears to be 6.6 degrees?
     LensMaterialID=5
 
     PlayerIronsightFOV=60.0

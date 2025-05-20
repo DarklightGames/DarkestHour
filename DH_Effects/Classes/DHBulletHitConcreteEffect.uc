@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitConcreteEffect extends emitter;
+class DHBulletHitConcreteEffect extends Emitter;
 
 defaultproperties
 {

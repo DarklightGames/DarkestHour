@@ -132,7 +132,7 @@ function OnActive()
     }
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local int Index;

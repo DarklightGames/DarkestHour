@@ -6,7 +6,7 @@
 class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
-var color             ActivatedIconColor; // for off-map artillery requests
+var Color             ActivatedIconColor; // for off-map artillery requests
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {

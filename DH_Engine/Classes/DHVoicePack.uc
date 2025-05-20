@@ -18,7 +18,7 @@ static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNation
 
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
-    local vector MyLocation;
+    local Vector MyLocation;
     local Controller C;
 
     C = Controller(PackOwner);

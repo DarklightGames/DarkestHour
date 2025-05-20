@@ -63,13 +63,13 @@ simulated function PostBeginPlay()
         RandSpin(100000.0);
         break;
     case ST_Tumble:
-        RotationRate.Pitch = -(90000 + Rand(30000)); 
+        RotationRate.Pitch = -(90000 + Rand(30000));
         break;
     }
 }
 
 // TODO: pretty sure this is obsolete & can be deleted, as only ROCollisionAttachment in game is bullet whip attachment, which triggers Touch() not HitWall() & is already ignored by ProcessTouch()
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     // Return here, this was causing the famous "nade bug"
     if (ROCollisionAttachment(Wall) != none)
@@ -81,7 +81,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // Modified to allow players to dive on grenades to save teammates
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     local DHPawn DHP;
 

@@ -233,9 +233,9 @@ final simulated function byte GetTeamIndex()
     return TeamIndex;
 }
 
-final simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
+final simulated function Vector GetWorldCoords(DHGameReplicationInfo GRI)
 {
-    local vector L;
+    local Vector L;
     local float X, Y;
 
     if (AttachedTo != none)
@@ -297,7 +297,7 @@ static function OnError(EMapIconAttachmentError Error)
 delegate bool IsInDangerZone()
 {
     local DHGameReplicationInfo GRI;
-    local vector L;
+    local Vector L;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 

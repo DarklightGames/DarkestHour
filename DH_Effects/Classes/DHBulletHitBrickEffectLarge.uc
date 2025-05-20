@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitBrickEffectLarge extends emitter;
+class DHBulletHitBrickEffectLarge extends Emitter;
 
 //particles: 34
 

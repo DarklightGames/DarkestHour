@@ -219,7 +219,7 @@ function UpdateTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBou
 
 function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
 {
-    local vector                                        Delta;
+    local Vector                                        Delta;
     local float                                         Deflection;
     local int                                           Distance, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
     local array<STargetInfo>                            Targets;
@@ -228,8 +228,8 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
     local DHGameReplicationInfo.MapMarker               MapMarker;
     local DHGameReplicationInfo                         GRI;
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers, GlobalArtilleryRequests, PersonalMapMarkers;
-    local rotator WeaponRotation;
-    local vector WeaponLocation;
+    local Rotator WeaponRotation;
+    local Vector WeaponLocation;
 
     if (PC == none || PC.SquadReplicationInfo == none || VW == none)
     {
@@ -282,7 +282,7 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
         Delta = MapMarker.WorldLocation - WeaponLocation;
         Delta.Z = 0;
         // calculate deflection between target's shift (Delta) and weapon's direction (VehicleRotation)
-        Deflection = class'UVector'.static.SignedAngle(vector(rotator(Normal(Delta))), vector(WeaponRotation), vect(0, 0, 1));
+        Deflection = class'UVector'.static.SignedAngle(Vector(Rotator(Normal(Delta))), Vector(WeaponRotation), vect(0, 0, 1));
         Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
         SquadName = PC.SquadReplicationInfo.GetSquadName(PC.GetTeamNum(), MapMarker.SquadIndex);
@@ -383,7 +383,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
 {
     local string Labels[2];
     local int Deflection;
-    local color IconColor, LabelColors[2];
+    local Color IconColor, LabelColors[2];
     local float XL, YL;
     local int LabelIndex, LineIndex, MaxLines, LineOffsetX, i;
 

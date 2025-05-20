@@ -393,7 +393,7 @@ defaultproperties
 
     SpawnOverlay(0)=Material'DH_DUKW_tex.interface.DUKW_icon'
 
-    // Splashguard 
+    // Splashguard
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
 
     VehicleComponentControllers(0)=(Channel=2,BoneName="SPLASH_GUARD",RaisingAnim="splash_guard_up",LoweringAnim="splash_guard_down")

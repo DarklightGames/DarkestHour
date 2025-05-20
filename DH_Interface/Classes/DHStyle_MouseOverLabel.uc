@@ -5,7 +5,7 @@
 
 class DHStyle_MouseOverLabel extends GUI2Styles;
 
-DefaultProperties
+defaultproperties
 {
 	KeyName="MouseOver"
 

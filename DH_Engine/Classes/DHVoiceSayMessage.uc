@@ -8,7 +8,7 @@ class DHVoiceSayMessage extends DHLocalMessage
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
-    local color ConsoleColor, NameColor;
+    local Color ConsoleColor, NameColor;
     local DHPlayerReplicationInfo MyPRI;
     local string SquadMemberID;
 
