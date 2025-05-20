@@ -33,28 +33,28 @@ defaultproperties
     MaxNegativeYaw=-5642
     YawStartConstraint=-5642    // -31 degrees
     YawEndConstraint=5642       // +31 degrees
-    PitchDownLimit=64626        // -5 degrees
-    PitchUpLimit=3458           // +19 degrees
+
     CustomPitchUpLimit=3094     // +17 degrees
     CustomPitchDownLimit=64444  // -6 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellAPCR'
+    TertiaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHEAT'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.34"
-    nProjectileDescriptions(2)="PzGr.40"
+    nProjectileDescriptions(2)="Gr.38 Hl/B"
 
-    ProjectileDescriptions(2)="APCR"
+    ProjectileDescriptions(2)="HEAT"
 
-    InitialTertiaryAmmo=2
-    MaxTertiaryAmmo=2
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=5
-    MaxPrimaryAmmo=20
-    MaxSecondaryAmmo=10
+    // Ammo apparently came in cases of 3, so we keep the rounds as multiples of 3
+    InitialPrimaryAmmo=9
+    InitialSecondaryAmmo=6
+    InitialTertiaryAmmo=6
+    MaxPrimaryAmmo=12
+    MaxSecondaryAmmo=9
+    MaxTertiaryAmmo=12
     SecondarySpread=0.00127
 
     // Weapon fire
@@ -93,9 +93,9 @@ defaultproperties
 
     ResupplyInterval=7.5
 
-    ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
+    ShakeOffsetMag=(X=12.0,Y=4.0,Z=20.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=4.0
+    ShakeOffsetTime=8.0
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0

@@ -2,10 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Third person gunner animations
-// [ ] Destroyed mesh
-// [ ] Re-evaluate ammo loadout (add HEAT shell etc.)
-// [ ] foliage variants/attachments
+// [ ] Add foliage adding mechanics.
 //==============================================================================
 
 class DH_Pak40ATGun extends DHATGun;
@@ -17,7 +14,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
     Skins(0)=Texture'DH_Pak40_tex.Pak40.pak40_ext_gray'
 
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_destroyed' // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_Pak40_stc.pak40_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak40_tex.pak40_ext_gray_destroyed'
     VehicleHudImage=Texture'DH_Pak40_tex.interface.Pak40_base'
     VehicleHudTurret=TexRotator'DH_Pak40_tex.interface.Pak40_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak40_tex.interface.Pak40_turret_look'

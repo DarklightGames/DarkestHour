@@ -9,6 +9,7 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_camo1'
     CannonSkins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_camo1'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak40_tex.pak40_ext_camo1_destroyed'
     VehicleAttachments(0)=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Pak40_stc.PAK40_BODY_FOLIAGE',Skins=(Texture'WildBush_A'))
     VehicleAttachments(1)=(AttachBone="GUN_YAW",StaticMesh=StaticMesh'DH_Pak40_stc.PAK40_YAW_FOLIAGE',Skins=(Texture'WildBush_A'),bAttachToWeapon=true)
 }
