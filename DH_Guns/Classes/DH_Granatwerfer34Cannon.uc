@@ -27,6 +27,7 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
     GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-320,RotationAxis=AXIS_Y)
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_Z)
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=44,RotationType=ROTATION_Pitch,bIsReversed=true)
 
     // Turret movement
     ManualRotationsPerSecond=0.0125

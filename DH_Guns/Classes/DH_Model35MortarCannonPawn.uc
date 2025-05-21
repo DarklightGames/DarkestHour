@@ -7,8 +7,6 @@ class DH_Model35MortarCannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    PitchAnimationDriver=(Channel=1,BoneName="PITCH_ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=30)
-
     GunClass=class'DH_Guns.DH_Model35MortarCannon'
 
     // Spotting Scope
