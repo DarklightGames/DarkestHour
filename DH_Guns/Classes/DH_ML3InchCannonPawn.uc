@@ -7,8 +7,6 @@ class DH_ML3InchCannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    PitchAnimationDriver=(Channel=1,BoneName="BIPOD_ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=34)
-
     GunClass=class'DH_Guns.DH_ML3InchCannon'
 
     // Spotting Scope

@@ -1049,6 +1049,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
             ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
         {
             Cannon.UpdateGunWheels();
+            Cannon.UpdateAnimationDrivers();
         }
     }
 }
