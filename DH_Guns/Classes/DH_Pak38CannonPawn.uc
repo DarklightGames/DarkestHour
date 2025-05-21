@@ -15,6 +15,21 @@ defaultproperties
     DriverPositions(1)=(ViewLocation=(X=0.0,Y=0.0,Z=5.0),TransitionDownAnim=none,DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewLocation=(X=0.0,Y=0.0,Z=5.0),ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
+    // // struct SAnimationDriver
+    // // {
+    // //     var EAnimationDriverType Type;
+    // //     var RangeInt DriverPositionIndexRange;  // Range is inclusive
+    // //     var int Channel;
+    // //     var name BoneName;
+    // //     var name Sequence;
+    // //     var int FrameCount; // The number of frames in the animation.
+
+    // //     // Runtime State
+    // //     var bool bActive;
+    // // };
+
+    // AnimationDrivers(0)=(Type=AD_)
+
     BinocPositionIndex=2
     DrivePos=(Z=58)
     DriveAnim="crouch_idle_binoc"

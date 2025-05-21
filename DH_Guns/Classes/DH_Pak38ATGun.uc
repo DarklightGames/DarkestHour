@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Karma box
-// [ ] Collision meshes
 // [ ] Pitch driver animation
 // [ ] Third-person player animations
 // [ ] Cannon animations (camera transition, firing etc.)
@@ -13,7 +11,6 @@
 // [ ] UI elements
 // [ ] Finalize mesh
 // [ ] Finalize textures
-// [ ] Gun wheels
 // [ ] Set up firing bone channel
 //==============================================================================
 

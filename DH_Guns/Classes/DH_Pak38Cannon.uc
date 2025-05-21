@@ -22,6 +22,8 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
 
+    DriverAnimationChannel=2
+
     // Turret movement
     MaxPositiveYaw=5825
     MaxNegativeYaw=-5825

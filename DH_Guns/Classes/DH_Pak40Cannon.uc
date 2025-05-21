@@ -23,6 +23,8 @@ defaultproperties
     CustomPitchUpLimit=3000
     CustomPitchDownLimit=63850
 
+    // AnimationDrivers(0)=(Channel=1,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=37,RotationType=ROTATION_Pitch)
+
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
