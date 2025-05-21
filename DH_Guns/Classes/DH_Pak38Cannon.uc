@@ -12,7 +12,9 @@ defaultproperties
     // Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
     // Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     // Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_yaw_collision',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_pitch_collision',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_barrel_collision',AttachBone="BARREL")
     GunnerAttachmentBone="GUN_YAW"
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"
@@ -52,6 +54,7 @@ defaultproperties
     TertiarySpread=0.0013
 
     // Weapon fire
+    WeaponFireAttachmentBone="MUZZLE"
     WeaponFireOffset=1.0
 
     //Anims
