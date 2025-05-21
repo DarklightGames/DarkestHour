@@ -11,26 +11,12 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Pak38Cannon'
 
     //Driver's position and animations
-    DriverPositions(0)=(ViewLocation=(X=25.0,Y=-23.0,Z=3.0),ViewFOV=25.0,TransitionUpAnim=none,DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(ViewLocation=(X=0.0,Y=0.0,Z=5.0),TransitionDownAnim=none,DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(ViewLocation=(X=0.0,Y=0.0,Z=5.0),ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewFOV=25.0,TransitionUpAnim="overlay_out",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(TransitionDownAnim="overlay_in",TransitionUpAnim="raise",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
-    // // struct SAnimationDriver
-    // // {
-    // //     var EAnimationDriverType Type;
-    // //     var RangeInt DriverPositionIndexRange;  // Range is inclusive
-    // //     var int Channel;
-    // //     var name BoneName;
-    // //     var name Sequence;
-    // //     var int FrameCount; // The number of frames in the animation.
-
-    // //     // Runtime State
-    // //     var bool bActive;
-    // // };
-
-    // AnimationDrivers(0)=(Type=AD_)
-
-    BinocPositionIndex=2
+    BinocPositionIndex=3
     DrivePos=(Z=58)
     DriveAnim="crouch_idle_binoc"
 
