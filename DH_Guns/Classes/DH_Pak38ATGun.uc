@@ -2,7 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Pitch driver animation
 // [ ] Third-person player animations
 // [ ] Cannon animations (camera transition, firing etc.)
 // [ ] Destroyed mesh
@@ -11,7 +10,6 @@
 // [ ] UI elements
 // [ ] Finalize mesh
 // [ ] Finalize textures
-// [ ] Set up firing bone channel
 //==============================================================================
 
 class DH_Pak38ATGun extends DHATGun;
