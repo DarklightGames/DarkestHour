@@ -108,6 +108,37 @@ var() enum EProjectileRotationMode {
 var()   float               FireBlurTime;
 var()   float               FireBlurScale;
 
+// TODO: this can go into the top-level weapon class.
+// Gun wheels
+enum ERotationType
+{
+    ROTATION_Yaw,
+    ROTATION_Pitch
+};
+
+struct SGunWheel
+{
+    var() ERotationType   RotationType;
+    var() name            BoneName;
+    var() float           Scale;
+    var() EAxis           RotationAxis;
+};
+
+var() array<SGunWheel> GunWheels;
+
+// Animation drivers for playing animations based on the turret's rotation.
+struct SAnimationDriver
+{
+    var() name          BoneName;
+    var() name          AnimationName;
+    var() int           AnimationFrameCount;
+    var() int           Channel;
+    var() ERotationType RotationType;
+    var() bool          bIsReversed;
+};
+
+var() array<SAnimationDriver> AnimationDrivers;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -137,6 +168,11 @@ simulated function PostBeginPlay()
     {
         // Separate animation channel for driver camera.
         AnimBlendParams(DriverAnimationChannel, 1.0,,, DriverAnimationChannelBone);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupAnimationDrivers();
     }
 }
 
@@ -206,6 +242,88 @@ simulated function SpawnVehicleAttachments()
 
         VehicleAttachments[i] = VA;
     }
+}
+
+// In order to stem a proliferation of vehicle weapon classes whose only difference is the attachment,
+// we use the vehicle's attachment system to specify the attachments for the vehicle weapon as well.
+simulated function SpawnWeaponAttachments()
+{
+    local int i, j, k;
+    local DHVehicle V;
+    local DHVehicle.VehicleAttachment VA;
+    local Actor Attachment;
+
+    if (Base == none)
+    {
+        Warn("Attempting to spawn weapon attachments on a vehicle weapon (" $ self $ ") without a vehicle base.");
+        return;
+    }
+
+    V = DHVehicle(Base);
+
+    if (V == none)
+    {
+        return;
+    }
+
+    // Check for any attachments that we need to add to this vehicle.
+    for (i = 0; i < V.VehicleAttachments.Length; ++i)
+    {
+        VA = V.VehicleAttachments[i];
+
+        if (!VA.bAttachToWeapon)
+        {
+            continue;
+        }
+
+        for (j = 0; j < V.WeaponPawns.Length; ++j)
+        {
+            if (V.WeaponPawns[j].Gun == self && j == VA.WeaponAttachIndex)
+            {
+                if (VA.AttachClass == none)
+                {
+                    VA.AttachClass = class'DHDecoAttachment';
+                }
+
+                Attachment = V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
+
+                for (k = 0; k < VA.Skins.Length; ++k)
+                {
+                    if (VA.Skins[k] != none)
+                    {
+                        Attachment.Skins[k] = VA.Skins[k];
+                    }
+                }
+
+                if (VA.bHasCollision)
+                {
+                    Attachment.SetCollision(true, true);
+                    Attachment.bWorldGeometry = true;
+                }
+
+                Attachment.CullDistance = VA.CullDistance;
+
+                V.VehicleAttachments[i].Actor = Attachment;
+
+                break;
+            }
+        }
+    }
+}
+
+simulated function int GetGunPitchMin()
+{
+    if (CustomPitchDownLimit >= 32768)
+    {
+        return CustomPitchDownLimit - 65535;
+    }
+    
+    return CustomPitchDownLimit;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return CustomPitchUpLimit;
 }
 
 simulated function AttachCollisionMeshes()
@@ -284,6 +402,8 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = false;
         bInitializedVehicleAndWeaponPawn = false;
     }
+    
+    UpdateGunWheels();
 }
 
 // Implemented here to handle multi-stage reload
@@ -1189,6 +1309,8 @@ simulated function InitializeVehicleBase()
     {
         InitializeVehicleAndWeaponPawn();
     }
+
+    SpawnWeaponAttachments();
 }
 
 // New function to do any set up that requires both the 'Base' & 'WeaponPawn' references to the Vehicle & VehicleWeaponPawn actors
@@ -1439,6 +1561,96 @@ function SetVehicleWeaponState(DHVehicleWeaponState WeaponState)
     AltAmmoCharge = WeaponState.AltAmmoCharge;
     NumMGMags = WeaponState.NumMGMags;
     ReloadState = EReloadState(WeaponState.ReloadState);
+}
+
+// Animation Drivers & Gun Wheels
+simulated function SetupAnimationDrivers()
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        AnimBlendParams(AnimationDrivers[i].Channel, 1.0,,, AnimationDrivers[i].BoneName);
+        PlayAnim(AnimationDrivers[i].AnimationName, 1.0, 0.0, AnimationDrivers[i].Channel);
+    }
+
+    UpdateAnimationDrivers();
+}
+
+simulated function UpdateAnimationDrivers()
+{
+    local int i, CurrentPitch, Frame;
+    local float Theta;
+
+    for (i = 0;  i < AnimationDrivers.Length; ++i)
+    {
+        switch (AnimationDrivers[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                // Get the yaw min->max range.
+                Theta = class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                break;
+            case ROTATION_Pitch:
+                if (CurrentAim.Pitch > 32768)
+                {
+                    CurrentPitch = CurrentAim.Pitch - 65536;
+                }
+                else
+                {
+                    CurrentPitch = CurrentAim.Pitch;
+                }
+
+                Theta = class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                break;
+        }
+
+        if (AnimationDrivers[i].bIsReversed)
+        {
+            Theta = 1.0 - Theta;
+        }
+
+        FreezeAnimAt(Theta * AnimationDrivers[i].AnimationFrameCount, AnimationDrivers[i].Channel);
+    }
+}
+
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateGunWheels()
+{
+    local int i;
+    local Rotator BoneRotation;
+    local int Value;
+
+    for (i = 0; i < GunWheels.Length; ++i)
+    {
+        BoneRotation = rot(0, 0, 0);
+
+        switch (GunWheels[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                Value = CurrentAim.Yaw * GunWheels[i].Scale;
+                break;
+            case ROTATION_Pitch:
+                Value = CurrentAim.Pitch * GunWheels[i].Scale;
+                break;
+            default:
+                break;
+        }
+
+        switch (GunWheels[i].RotationAxis)
+        {
+            case AXIS_X:
+                BoneRotation.Roll = Value;
+                break;
+            case AXIS_Y:
+                BoneRotation.Pitch = Value;
+                break;
+            case AXIS_Z:
+                BoneRotation.Yaw = Value;
+                break;
+        }
+
+        SetBoneRotation(GunWheels[i].BoneName, BoneRotation);
+    }
 }
 
 defaultproperties

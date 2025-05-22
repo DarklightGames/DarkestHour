@@ -86,23 +86,6 @@ var     int                 ClosestLowDebugPitch;
 var     float               ClosestHighDebugHeight;    // height (in UU) above & below target from current closest recorded high & low shots during auto range calibration
 var     float               ClosestLowDebugHeight;
 
-// Gun wheels
-enum ERotationType
-{
-    ROTATION_Yaw,
-    ROTATION_Pitch
-};
-
-struct SGunWheel
-{
-    var() ERotationType   RotationType;
-    var() name            BoneName;
-    var() float           Scale;
-    var() EAxis           RotationAxis;
-};
-
-var() array<SGunWheel> GunWheels;
-
 // This is a value replicated to clients so that they can update
 // effects based on the amount of rounds left (e.g., ammo cache
 // will empty as the rounds are fired).
@@ -183,8 +166,6 @@ simulated function PostNetReceive()
 
         OnTotalRoundsRemainingChanged(TotalRoundsRemaining);
     }
-
-    UpdateGunWheels();
 }
 
 // Called when the total rounds remaining value changes on the client.
@@ -2198,47 +2179,6 @@ simulated function DebugModifyOverlayCorrection(float Adjustment)
         }
     }
 }
-
-// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
-simulated function UpdateGunWheels()
-{
-    local int i;
-    local Rotator BoneRotation;
-    local int Value;
-
-    for (i = 0; i < GunWheels.Length; ++i)
-    {
-        BoneRotation = rot(0, 0, 0);
-
-        switch (GunWheels[i].RotationType)
-        {
-            case ROTATION_Yaw:
-                Value = CurrentAim.Yaw * GunWheels[i].Scale;
-                break;
-            case ROTATION_Pitch:
-                Value = CurrentAim.Pitch * GunWheels[i].Scale;
-                break;
-            default:
-                break;
-        }
-
-        switch (GunWheels[i].RotationAxis)
-        {
-            case AXIS_X:
-                BoneRotation.Roll = Value;
-                break;
-            case AXIS_Y:
-                BoneRotation.Pitch = Value;
-                break;
-            case AXIS_Z:
-                BoneRotation.Yaw = Value;
-                break;
-        }
-
-        SetBoneRotation(GunWheels[i].BoneName, BoneRotation);
-    }
-}
-
 
 // State serialization and deserialization functions.
 function DHVehicleWeaponState GetVehicleWeaponState()

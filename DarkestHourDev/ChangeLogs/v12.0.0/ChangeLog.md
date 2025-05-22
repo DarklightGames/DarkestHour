@@ -123,14 +123,12 @@ The most successful mortar of the Italian armed forces during the war. Based on 
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
 
 ### Breda mod. 30
-There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and bizarre loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
+There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and *unique* loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
 
 ### Carcano M91/38
 The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
 
 > Developer Highlight: When chambering the final round, you can hear the distinctive "ping" of the en-bloc clip being ejected from the bottom of the rifle.
-
-> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see the spring decompress and well as how many rounds are left in the magazine as it's emptied. To our knowledge, this is the first time this has been accurately modeled in a video game.
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
@@ -155,7 +153,7 @@ The Italy expansion sees the addition of 5 brand new maps.
 
 The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
-### Gela (32+ players)
+### Gela (32-64 players)
 
 The town of Gela was one of the main landing points for the invasion of Sicily due to its proximity to the Ponte Olivo airfield.
 
@@ -168,6 +166,12 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 ### Niscemi Outkirts (24-64 players)
 
+Niscemi was a small town on the road from Gela to the Ponte Olivo airfield. The Allies will have to fight their way up steep terrain and overcome a nest of defensive positions to reach the town.
+
+|||
+|-|-|
+|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2001.png)|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2002.png)|
+![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2003.png)|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2004.png)|
 
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.

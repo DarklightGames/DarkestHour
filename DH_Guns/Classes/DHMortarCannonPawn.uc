@@ -46,16 +46,6 @@ struct FireAnim
 };
 var private array<FireAnim> PlayerFireAnims;
 
-struct SAnimationDriver
-{
-    var int Channel;
-    var name BoneName;
-    var name SequenceName;
-    var int SequenceFrameCount;
-};
-
-var SAnimationDriver PitchAnimationDriver;
-
 // Used for triggering the firing animation on the client since
 // server-to-client functions are for the owning client only.
 var byte PlayerFireCount;
@@ -161,17 +151,6 @@ simulated function Destroyed()
     }
 
     super.Destroyed();
-}
-
-simulated function InitializeVehicleAndWeapon()
-{
-    super.InitializeVehicleAndWeapon();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SetupGunAnimationDrivers();
-        UpdateGunAnimationDrivers();
-    }
 }
 
 simulated function InitializeHands()
@@ -470,54 +449,6 @@ Begin:
 function SuperFire()
 {
     super.Fire();
-}
-
-simulated function SetupGunAnimationDrivers()
-{
-    Gun.AnimBlendParams(PitchAnimationDriver.Channel, 1.0, 0.0, 0.0, PitchAnimationDriver.BoneName);
-    Gun.PlayAnim(PitchAnimationDriver.SequenceName, 1.0, 0.0, PitchAnimationDriver.Channel);
-    UpdateGunAnimationDrivers();
-}
-
-simulated function UpdateGunAnimationDrivers()
-{
-    local float Time;
-
-    if (Gun != none)
-    {
-        Time = class'UInterp'.static.MapRangeClamped(
-            GetGunPitch(),
-            GetGunPitchMin(), GetGunPitchMax(),
-            PitchAnimationDriver.SequenceFrameCount, 0.0
-            );
-
-        Gun.FreezeAnimAt(Time, PitchAnimationDriver.Channel);
-    }
-}
-
-// Modified so that we call our special tick function here.
-// TODO: Just move this to the base class.
-simulated state ViewTransition
-{
-    simulated function Tick(float DeltaTime)
-    {
-        super.Tick(DeltaTime);
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            UpdateGunAnimationDrivers();
-        }
-    }
-}
-
-simulated function Tick(float DeltaTime)
-{
-    super.Tick(DeltaTime);
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        UpdateGunAnimationDrivers();
-    }
 }
 
 simulated function ClientKDriverEnter(PlayerController PC)

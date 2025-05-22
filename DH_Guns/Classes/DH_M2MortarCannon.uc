@@ -28,6 +28,8 @@ defaultproperties
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=360,RotationAxis=AXIS_Z)
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
 
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=45)
+
     // Turret movement
     MaxPositiveYaw=1274.0    // +/- 7 degrees
     MaxNegativeYaw=-1274.0
