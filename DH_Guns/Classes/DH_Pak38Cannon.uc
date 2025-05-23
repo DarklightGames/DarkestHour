@@ -24,7 +24,7 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
 
-    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=35,RotationType=ROTATION_Pitch,bIsReversed=true)
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=35,RotationType=ROTATION_Pitch)
 
     DriverAnimationChannel=2
     DriverAnimationChannelBone="CAMERA_COM"
