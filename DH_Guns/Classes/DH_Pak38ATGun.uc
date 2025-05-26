@@ -3,13 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Third-person player animations
-// [ ] Cannon animations (camera transition, firing etc.)
-// [ ] Destroyed mesh
-// [ ] Variants
+// [~] Destroyed mesh
 // [ ] Foliage attachments
 // [ ] UI elements
-// [ ] Finalize mesh
-// [ ] Finalize textures
+// [ ] fix overlay in/out animations (shave 5 frames too)
 //==============================================================================
 
 class DH_Pak38ATGun extends DHATGun;
