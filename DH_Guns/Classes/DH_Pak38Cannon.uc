@@ -9,9 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak38_anm.pak38_turret_ext'
-    // Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    // Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
-    // Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_yaw_collision',AttachBone="GUN_YAW")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_pitch_collision',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_barrel_collision',AttachBone="BARREL")

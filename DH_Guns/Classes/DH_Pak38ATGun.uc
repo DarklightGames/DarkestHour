@@ -19,13 +19,12 @@ defaultproperties
     VehicleNameString="5,0cm PaK 38"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
-    //Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
+    CannonSkins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_dest'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
-    VehicleHudOccupantsX(1)=0.47
-    VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
     VehicleMass=11.0
     bCanBeRotated=true
