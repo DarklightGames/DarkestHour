@@ -3,10 +3,6 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Third-person player animations
-// [~] Destroyed mesh
-// [ ] Foliage attachments
-// [ ] UI elements
-// [ ] fix overlay in/out animations (shave 5 frames too)
 //==============================================================================
 
 class DH_Pak38ATGun extends DHATGun;
@@ -18,10 +14,11 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
     Skins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
     CannonSkins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak38_stc.pak38_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_Pak38_tex.pak38_ext_yellow_destroyed'
+    VehicleHudImage=Texture'DH_Pak38_tex.pak38_body_icon'
+    VehicleHudTurret=TexRotator'DH_Pak38_tex.pak38_turret_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak38_tex.pak38_turret_icon_look'
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
     VehicleMass=11.0
     bCanBeRotated=true
@@ -45,5 +42,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak38ATGun.KParams0'
+    KParams=KParams0
 }
