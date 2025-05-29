@@ -5,8 +5,61 @@
 
 class DH_Pak36Cannon extends DHATGunCannon;
 
+var bool bIsHEATLoaded;
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsHEATLoaded;
+}
+
+simulated function SetAttachmentsHidden(bool bNewHidden)
+{
+    local int i;
+
+    for (i = 0; i < VehicleAttachments.Length; ++i)
+    {
+        if (VehicleAttachments[i].Actor != none)
+        {
+            VehicleAttachments[i].Actor.bHidden = bNewHidden;
+        }
+    }
+}
+
+function OnReloadFinished(int AmmoIndex)
+{
+    if (AmmoIndex == 2)
+    {
+        bIsHEATLoaded = true;
+    }
+    
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetAttachmentsHidden(!bIsHEATLoaded);
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    SetAttachmentsHidden(!bIsHEATLoaded);
+}
+
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+    super.FlashMuzzleFlash(bWasAltFire);
+    
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetAttachmentsHidden(true);
+    }
+}
+
 defaultproperties
 {
+    VehicleAttachments(0)=(AttachBone="MUZZLE",StaticMesh=StaticMesh'DH_Pak36_stc.STIELGRANATE_41')
+
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak36_anm.pak36_turret_ext'
     //Skins(0)=Texture'DH_Pak36_tex.pak38_ext_yellow'
@@ -36,15 +89,15 @@ defaultproperties
     CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Guns.DH_Pak36CannonShellHEAT'
+    PrimaryProjectileClass=class'DH_Pak36CannonShell'
+    SecondaryProjectileClass=class'DH_Pak38CannonShellAPCR'
+    TertiaryProjectileClass=class'DH_Pak36CannonShellHEAT'
 
-    ProjectileDescriptions(1)="APCR"
-    ProjectileDescriptions(2)="HE"
+    ProjectileDescriptions(1)="AP-HE-T"
+    ProjectileDescriptions(2)="APCR-T"
     ProjectileDescriptions(3)="HEAT"
 
-    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(0)="PzGr.36"
     nProjectileDescriptions(1)="PzGr.40"
     nProjectileDescriptions(2)="StGr.41"
 
