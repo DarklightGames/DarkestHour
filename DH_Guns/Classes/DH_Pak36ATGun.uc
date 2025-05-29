@@ -2,7 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Exit positions
+// [ ] UI
+// [ ] Third person animations
+// [ ] Finalize mesh & textures
+// [ ] Variants
+// [ ] Destroyed mesh
+// [ ] Projectiles
+// [ ] Ammo loadout
 //==============================================================================
 
 class DH_Pak36ATGun extends DHATGun;
