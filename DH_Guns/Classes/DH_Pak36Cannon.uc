@@ -90,12 +90,12 @@ defaultproperties
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Pak36CannonShell'
-    SecondaryProjectileClass=class'DH_Pak38CannonShellAPCR'
+    SecondaryProjectileClass=class'DH_Pak36CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Pak36CannonShellHEAT'
 
-    ProjectileDescriptions(1)="AP-HE-T"
-    ProjectileDescriptions(2)="APCR-T"
-    ProjectileDescriptions(3)="HEAT"
+    ProjectileDescriptions(0)="AP-HE-T"
+    ProjectileDescriptions(1)="APCR-T"
+    ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="PzGr.36"
     nProjectileDescriptions(1)="PzGr.40"

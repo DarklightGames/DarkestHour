@@ -16,6 +16,9 @@ defaultproperties
     SpeedFudgeScale=1.0
     DrawScale=1.0
 
+    bHasTracer=false
+    bHasShellTrail=false
+
     // TODO: below damage is same as pfaust, probably needs to be boosted because of huge explosive amount
     //Damage
     ImpactDamage=455  //couldnt find info on filler, so i assume something about 1 KG
