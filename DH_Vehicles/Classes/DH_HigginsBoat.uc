@@ -1,18 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HigginsBoat extends DHBoatVehicle;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
-#exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-
 var     name        RampUpIdleAnim; // effectively replacements for BeginningIdleAnim, which is set to null (easier that overriding functions to stop unwanted BeginningIdleAnim)
 var     name        RampDownIdleAnim;
 
-var     texture     BinocsOverlay;
+// TODO: Just use animation notifies!
+var     Sound       RampOpenSound;
+var     Sound       RampCloseSound;
+
+var     Texture     BinocsOverlay;
 
 // Modified to loop either the ramp up or down idle animation based on current position index, & set the destroyed vehicle animation to be the same
 // But don't bother on dedicated server as (1) visuals aren't relevant & (2) due to continuous wave motion of animation, which starts at different times on server & net clients,
@@ -88,6 +88,8 @@ function KDriverEnter(Pawn P)
 // Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local DHPlayer DHPC;
+
     if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
     {
         InitialPositionIndex = DriverPositionIndex;
@@ -96,6 +98,14 @@ simulated function ClientKDriverEnter(PlayerController PC)
     super.ClientKDriverEnter(PC);
 
     InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
+
+    DHPC = DHPlayer(PC);
+
+    if (DHPC != none)
+    {
+        // Send hint so the player is told how to raise and lower the ramp.
+        DHPC.QueueHint(42, false);
+    }
 }
 
 // Modified to to add ramp sounds // Matt: alternative would be to add these as notifies to the ramp animations
@@ -111,11 +121,11 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex) // ramp lowering
             {
-                RampSound = Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
+                RampSound = RampOpenSound;
             }
             else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex) // ramp raising
             {
-                RampSound = Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
+                RampSound = RampCloseSound;
             }
 
             if (RampSound != none)
@@ -284,9 +294,9 @@ defaultproperties
     VehicleMass=6.0
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
     CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
-    bEngineOff=false
-    bSavedEngineOff=false
     MaxDesireability=1.9
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_topdown'
 
     // Spawning
     bHasSpawnKillPenalty=false
@@ -392,6 +402,9 @@ defaultproperties
     VehicleHudOccupantsY(7)=0.5
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.higgins'
 
+    RampCloseSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
+    RampOpenSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
+
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
         bPoweredWheel=true
@@ -402,7 +415,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
+    Wheels(0)=LFWheel
     Begin Object Class=SVehicleWheel Name=RFWheel
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -411,7 +424,7 @@ defaultproperties
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RFWheel'
+    Wheels(1)=RFWheel
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -421,7 +434,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
+    Wheels(2)=LRWheel
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -430,7 +443,7 @@ defaultproperties
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RRWheel'
+    Wheels(3)=RRWheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -451,5 +464,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=850.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
+    KParams=KParams0
 }

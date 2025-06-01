@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RPG43GrenadeFire extends DHThrownExplosiveFire;
@@ -9,7 +9,6 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_RPG43GrenadeProjectile'
     AmmoClass=class'DH_Weapons.DH_RPG43GrenadeAmmo'
-    MaxHoldTime=160.0
     MinHoldTime=0.5
     bSplashDamage=false
     bRecommendSplashDamage=false
@@ -17,4 +16,5 @@ defaultproperties
     MinimumThrowSpeed=600.0
     MaximumThrowSpeed=780.0
     SpeedFromHoldingPerSec=600.0
+    
 }

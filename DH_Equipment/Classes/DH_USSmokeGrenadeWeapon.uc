@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_USSmokeGrenadeWeapon extends DHExplosiveWeapon;
@@ -26,5 +26,6 @@ defaultproperties
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
     DisplayFOV=80.0
+    FuzeLengthRange=(Min=2.0,Max=2.0)
 }
 

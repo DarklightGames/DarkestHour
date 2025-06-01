@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3476TankSnow extends DH_T3476Tank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T3476_ext_Snow'
     Skins(1)=Texture'DH_VehiclesSOV_tex.Treads.T3476_treadsnow'
     Skins(2)=Texture'DH_VehiclesSOV_tex.Treads.T3476_treadsnow'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_FireSupport_OffMap extends DHMapMarker
@@ -23,7 +23,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PRI != none && PC != none && !PC.IsPositionOfParadrop(Marker.WorldLocation);
+    return PRI != none && PC != none && !PC.IsPositionOfParadrop(Marker.WorldLocation) && PC.IsSquadLeader();
 }
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCSEngineerRoles extends DHAlliedEngineerRoles
@@ -9,7 +9,7 @@ class DHCSEngineerRoles extends DHAlliedEngineerRoles
 defaultproperties
 {
     AltName="Zenista"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch') 
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"  //to do: RPG-40

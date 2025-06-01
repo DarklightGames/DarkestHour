@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHInventorySpawner extends Actor
     abstract
     placeable;
-
-var DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
 var class<Weapon>       WeaponClass;
 
@@ -18,6 +16,7 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
+var bool                bIsTeamLocked;
 var() ETeamOwner        TeamOwner;
 var private int         TeamIndex;
 
@@ -43,7 +42,8 @@ var array<Actor>        Proxies;
 var class<Actor>        ProxyClass;
 var StaticMesh          ProxyStaticMesh;
 
-var localized string    ContainerNoun;
+var localized string    MenuNoun;
+var localized string    MenuNameFormat;
 
 // Client-side variable for keeping track if the box is open or closed.
 var bool                bIsOpen;
@@ -86,9 +86,6 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
-        TouchMessageParameters.InventoryClass = WeaponClass;
-
         UpdateProxies();
     }
 }
@@ -201,7 +198,7 @@ simulated event Timer()
 
 simulated function bool CanBeUsedByTeam(int TeamIndex)
 {
-    return self.TeamIndex == NEUTRAL_TEAM_INDEX || self.TeamIndex == TeamIndex;
+    return !bIsTeamLocked || self.TeamIndex == NEUTRAL_TEAM_INDEX || self.TeamIndex == TeamIndex;
 }
 
 simulated function bool CanBeUsedByPawn(Pawn User)
@@ -285,8 +282,7 @@ simulated event NotifySelected(Pawn User)
     if (Level.NetMode == NM_DedicatedServer ||
         !CanBeUsedByPawn(User) ||
         PickupCount <= 0 ||
-        WeaponClass == none ||
-        TouchMessageParameters == none)
+        WeaponClass == none)
     {
         return;
     }
@@ -298,9 +294,7 @@ simulated event NotifySelected(Pawn User)
         return;
     }
 
-    TouchMessageParameters.PlayerController = PlayerController(User.Controller);
-
-    User.ReceiveLocalizedMessage(PickupClass.default.TouchMessageClass, 1,,, TouchMessageParameters);
+    User.ReceiveLocalizedMessage(PickupClass.default.TouchMessageClass, 1, User.PlayerReplicationInfo,, WeaponClass);
 }
 
 simulated function StaticMesh GetProxyStaticMesh()
@@ -362,16 +356,17 @@ simulated event Destroyed()
 
         Proxies.Length = 0;
     }
-
-    if (TouchMessageParameters != none)
-    {
-        TouchMessageParameters.PlayerController = none;
-    }
 }
 
-static function string GetMenuName()
+static function string GetMenuName(DHPlayer PC)
 {
-    return default.WeaponClass.default.ItemName @ default.ContainerNoun;
+    local string S;
+    
+    S = default.MenuNameFormat;
+    S = Repl(S, "{name}", PC.GetInventoryName(default.WeaponClass));
+    S = Repl(S, "{noun}", default.MenuNoun);
+
+    return S;
 }
 
 defaultproperties
@@ -390,12 +385,13 @@ defaultproperties
     ExhaustedLifespan=15.0
     UsesMax=-1
     ProxyClass=class'DHWeaponPickupSpawnerProxy'
-    ContainerNoun="crate"
+    MenuNoun="Crate"
+    MenuNameFormat="{name} {noun}"
     OpenAnimation="open"
     CloseAnimation="close"
     OpenedAnimation="opened"
     ClosedAnimation="closed"
     SavedPickupCount=-1
+    bIsTeamLocked=false
     TeamOwner=TEAM_Neutral
 }
-

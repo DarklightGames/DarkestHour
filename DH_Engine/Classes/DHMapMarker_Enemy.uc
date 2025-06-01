@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_Enemy extends DHMapMarker
@@ -17,7 +17,7 @@ static function float GetMapMarkerLifetimePercent(int ElapsedTime, DHGameReplica
 static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local Color C;
-    local float T, MinA;
+    local float T;
     local int ElapsedTime;
 
     C = default.IconColor;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1GrenadeProjectile extends DHGrenadeProjectile;
@@ -15,4 +15,5 @@ defaultproperties
     Damage=140.0
     DamageRadius=785.0
     Speed=1000.0
+    SpoonProjectileClass=class'DH_Weapons.DH_M1GrenadeSpoonProjectile'
 }

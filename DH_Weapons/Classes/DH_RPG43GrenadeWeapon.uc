@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RPG43GrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="RPG43 Anti-Tank Grenade"
+    ItemName="RPG-43 Anti-Tank Grenade"
+    NativeItemName="RPG-43"
     FireModeClass(0)=class'DH_Weapons.DH_RPG43GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_RPG43GrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_RPG43GrenadeAttachment'

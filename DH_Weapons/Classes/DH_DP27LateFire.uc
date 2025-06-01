@@ -1,27 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_DP27LateFire extends DHFastAutoFire;
-
-// Modified to rotate the magazine after a shot.
-event ModeDoFire()
-{
-    local DH_DP27Weapon W;
-
-    super.ModeDoFire();
-
-    if (Instigator.IsLocallyControlled())
-    {
-        W = DH_DP27Weapon(Weapon);
-
-        if (W != none)
-        {
-            W.UpdateMagRotation();
-        }
-    }
-}
 
 defaultproperties
 {
@@ -58,7 +40,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
     ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
-    ShellRotOffsetIron=(Pitch=-16384)  
+    ShellRotOffsetIron=(Pitch=-16384)
     ShellRotOffsetHip=(Pitch=-16384)
 
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)

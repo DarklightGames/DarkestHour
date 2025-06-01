@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_G43ScopedWeapon extends DHSniperWeapon;
 
 defaultproperties
 {
-    ItemName="Gewehr 43 (ZF4)"
+    ItemName="G 43 (ZF4)"
+    NativeItemName="Gewehr 43 (ZF4)"
     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_G43ScopedAttachment'

@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHDangerZone extends Object
     abstract;
 
-final static function vector IndicesToCoords(int X, int Y, float StepX, float StepY, vector Origin)
+final static function Vector IndicesToCoords(int X, int Y, float StepX, float StepY, Vector Origin)
 {
-    local vector L;
+    local Vector L;
 
     L.X = X * StepX;
     L.Y = Y * StepY;
@@ -16,7 +16,7 @@ final static function vector IndicesToCoords(int X, int Y, float StepX, float St
     return L + Origin;
 }
 
-final static function vector GetInterpCoords(float Value, float ValueA, float ValueB, vector A, vector B)
+final static function Vector GetInterpCoords(float Value, float ValueA, float ValueB, Vector A, Vector B)
 {
     return class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
 }
@@ -26,7 +26,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 {
     local float Intensity, AxisIntensity, AlliedIntensity, NeutralIntensity, NeutralMagnitude;
     local int AxisCount, AlliedCount, NeutralCount, TeamModifier, i;
-    local vector V1, V2;
+    local Vector V1, V2;
 
     if (GRI == none)
     {
@@ -212,16 +212,16 @@ final static function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bo
     return Indices;
 }
 
-static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamIndex, int Resolution, int SubResolution)
+static function array<Vector> GetContour(DHGameReplicationInfo GRI, byte TeamIndex, int Resolution, int SubResolution)
 {
     local int i, j, k, PairIndex, InitLength, PointCount;
     local float XL, YL, StepX, StepY, PointInterval, AdjustedPointInterval;
-    local vector Origin, CellCoords, V0, V1;
+    local Vector Origin, CellCoords, V0, V1;
     local byte Mask;
     local array<byte> Normal;
     local array<float> Intensity;
     local array<Intbox> VertexIndices;
-    local array<vector> Segments, Contour;
+    local array<Vector> Segments, Contour;
     local array<InterpCurve> LineStringsX;
     local array<InterpCurve> LineStringsY;
 

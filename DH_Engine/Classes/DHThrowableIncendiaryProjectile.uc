@@ -101,7 +101,7 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
     local coords HeadBoneCoords;
@@ -148,7 +148,7 @@ simulated function UpdateInstigator()
     }
 }
 
-simulated function Landed(vector hitNormal)
+simulated function Landed(Vector hitNormal)
 {
     if (Bounces <= 0)
     {
@@ -169,7 +169,7 @@ simulated function Landed(vector hitNormal)
     }
 }
 
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
     local Class<DamageType> NextDamageType;
@@ -325,7 +325,7 @@ simulated singular function Touch(Actor Other)
     ProcessTouch(Other, HitLocation);
 }
 
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     local vector TempHitLocation, HitNormal;
 
@@ -345,7 +345,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-simulated function SpawnEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnEffects(Vector HitLocation, Vector HitNormal)
 {
     local actor  TraceHitActor;
     local vector TraceHitLocation;
@@ -385,7 +385,7 @@ simulated function SpawnEffects(vector HitLocation, vector HitNormal)
     }
 }
 
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bDud)
     {
@@ -393,7 +393,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     local Actor SubProjectile, TracedActorHit;
     local ESurfaceTypes HitSurfaceType;
@@ -448,7 +448,7 @@ function BlowUp(vector HitLocation)
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PlayerController;
 
@@ -493,7 +493,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return CheckMaxEffectDistance(PlayerController, SpawnLocation);
 }
 
-simulated function ESurfaceTypes TraceForHitSurfaceType(vector Direction, optional out vector HitLocation, optional out vector HitNormal, optional out Actor ActorTraced)
+simulated function ESurfaceTypes TraceForHitSurfaceType(Vector Direction, optional out vector HitLocation, optional out vector HitNormal, optional out Actor ActorTraced)
 {
     local material  HitMaterial;
 
@@ -524,7 +524,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 }
 
-simulated function CheckForSplash(vector Position)
+simulated function CheckForSplash(Vector Position)
 {
     local Actor  HitActor;
     local vector HitLocation, HitNormal;

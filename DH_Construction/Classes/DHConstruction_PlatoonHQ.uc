@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
@@ -8,6 +8,7 @@ class DHConstruction_PlatoonHQ extends DHConstruction
 
 var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
+var Material                        FlagMaterial;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
 var localized string                CustomErrorString;
@@ -17,8 +18,8 @@ var float                           PermittedFriendlyControlledDistanceMeters;  
 // Radio attachment
 var DHRadioHQAttachment        Radio;
 var class<DHRadioHQAttachment> RadioClass;
-var vector                     RadioLocationOffset;
-var rotator                    RadioRotationOffset;
+var Vector                     RadioLocationOffset;
+var Rotator                    RadioRotationOffset;
 
 simulated state Dummy
 {
@@ -57,9 +58,9 @@ simulated state Constructed
             return true;
         }
 
-        // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
+            // "You must have another teammate nearby to deconstruct an enemy Command Post!"
             P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
         }
 
@@ -69,7 +70,7 @@ simulated state Constructed
 
 simulated function OnConstructed()
 {
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     super.OnConstructed();
 
@@ -82,8 +83,8 @@ simulated function OnConstructed()
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been constructed and will be established in N seconds."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+            // "A Command Post has been constructed and will be established in N seconds."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 4,,, self);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -122,7 +123,7 @@ simulated function OnConstructed()
             Warn("Failed to spawn a radio attachment!");
         }
 
-        // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+        // TODO: Find any nearby friendly "Build Command Post" icons within 50m and remove them.
     }
 
     if (Radio != none)
@@ -157,70 +158,22 @@ simulated state Broken
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been destroyed."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+            // "A Command Post has been destroyed."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 3,,, self);
         }
 
         DestroyAttachments();
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = Context.LevelInfo.GetTeamNationClass(Context.TeamIndex);
-
-    return NationClass.default.PlatoonHQConstructedStaticMesh;
-}
-
-function StaticMesh GetBrokenStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQBrokenStaticMesh;
-}
-
-function StaticMesh GetStageStaticMesh(int StageIndex)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQUnpackedStaticMesh;
-}
-
-function StaticMesh GetTatteredStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQTatteredStaticMesh;
-}
-
 simulated function OnTeamIndexChanged()
 {
-    local Material FlagMaterial;
-
     super.OnTeamIndexChanged();
 
-    if (FlagSkinIndex != -1)
+    if (FlagSkinIndex != -1 && FlagMaterial != none)
     {
-        FlagMaterial = GetFlagMaterial();
-
-        if (FlagMaterial != none)
-        {
-            Skins[FlagSkinIndex] = FlagMaterial;
-        }
+        Skins[FlagSkinIndex] = FlagMaterial;
     }
-}
-
-simulated function Material GetFlagMaterial()
-{
-    return LevelInfo.GetTeamNationClass(GetTeamIndex()).default.PlatoonHQFlagTexture;
 }
 
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
@@ -242,7 +195,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     {
         C = DHConstruction(A);
 
-        if (C != none && !C.IsInState('Dummy') && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
         {
             bFoundFriendlyDuplicate = true;
             break;
@@ -318,27 +271,21 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
 // Modified to put the correct nation flag on the flag skin.
 function static UpdateProxy(DHActorProxy CP)
 {
-    local class<DHNation> NationClass;
-
     super.UpdateProxy(CP);
-
-    NationClass = CP.GetContext().LevelInfo.GetTeamNationClass(CP.GetContext().TeamIndex);
-
-    if (NationClass != none)
-    {
-        CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(NationClass.default.PlatoonHQFlagTexture);
-    }
+    
+    CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(default.FlagMaterial);
 }
 
 defaultproperties
 {
-    MenuName="Platoon HQ"
+    MenuName="Command Post"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
     SupplyCost=750
     MinDamagetoHurt=50
+    ExplosionDamageTraceOffset=(Z=40.0)
 
     // Placement
     bCanPlaceIndoors=false
@@ -351,7 +298,7 @@ defaultproperties
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
-    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of controlled territory."
+    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of a controlled objective."
     bCanBePlacedInDangerZone=false
 
     StartRotationMin=(Yaw=32768)
@@ -364,7 +311,7 @@ defaultproperties
     // Health
     HealthMax=500
     TatteredHealthThreshold=250
-
+    
     // Damage
     DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
     DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
@@ -390,4 +337,6 @@ defaultproperties
     RadioClass=class'DHRadioHQAttachment'
     RadioLocationOffset=(X=65,Y=-115,Z=2)
     RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
+
+    FlagMaterial=Texture'DH_Construction_tex.Base.flags_01_blank'
 }

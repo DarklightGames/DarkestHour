@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GLProjectile extends DH_SatchelCharge10lb10sProjectile;
@@ -25,8 +25,6 @@ defaultproperties
     TreadDamageMassThreshold=12.0
     TreadDamageRadius=64.0
     TreadDamageMax=120.0
-
-    FuzeLengthTimer=5.7 //doesnt seem to work here
 
     BlurTime=4.0
     ShakeRotTime=2.0

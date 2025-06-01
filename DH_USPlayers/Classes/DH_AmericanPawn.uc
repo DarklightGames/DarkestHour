@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_AmericanPawn extends DHPawn;
@@ -13,7 +13,7 @@ defaultproperties
     Skins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=Texture'DHUSCharactersTex.GI.GI_1'
 	
-	BodySkins(0)=Texture'DHUSCharactersTex.GI.GI_1'
+    BodySkins(0)=Texture'DHUSCharactersTex.GI.GI_1'
     BodySkins(1)=Texture'DHUSCharactersTex.GI.GI_2'
 
     bReversedSkinsSlots=true
@@ -31,4 +31,6 @@ defaultproperties
 
     SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
+
+    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
 }

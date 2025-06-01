@@ -1,10 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
   dependson(DHActorProxy);
+
+#exec OBJ LOAD FILE=../Textures/DH_VehiclesGE_tex2.utx
 
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
@@ -75,7 +77,6 @@ var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
 var()   config string               ServerLocation;
-var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
@@ -136,8 +137,8 @@ event InitGame(string Options, out string Error)
     // Handle single-player voting
     if (Level.NetMode == NM_Standalone &&
         class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
-        VotingHandlerClass != None &&
-        VotingHandlerClass.Static.IsEnabled())
+        VotingHandlerClass != none &&
+        VotingHandlerClass.static.IsEnabled())
     {
         VotingHandler = Spawn(VotingHandlerClass);
 
@@ -152,9 +153,6 @@ event InitGame(string Options, out string Error)
     // This command will unlock a server so it can allow clients to have more
     // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
-
-    // Initialize geolocation service (verifies cache integrity)
-    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -1104,7 +1102,7 @@ function SendScoreEvent(Controller C, DHScoreEvent ScoreEvent)
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
-function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
+function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, Vector HitLocation, out Vector Momentum, class<DamageType> DamageType)
 {
     local DHRoleInfo  RoleInfo;
     local ROSpawnArea SpawnArea;
@@ -1214,7 +1212,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    Options = StripColor(Options); // strip out color codes
+    Options = StripColor(Options); // strip out Color codes
 
     BaseMutator.ModifyLogin(Portal, Options);
 
@@ -1457,7 +1455,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         return;
     }
 
-    S = StripColor(S); // strip out color codes
+    S = StripColor(S); // strip out Color codes
 
     if (Other == none || Other.PlayerReplicationInfo == none || Other.PlayerReplicationInfo.PlayerName ~= S)
     {
@@ -1907,7 +1905,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
+                    
                     SetCharacter(aPlayer);
                 }
             }
@@ -2156,20 +2154,27 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
 
-                    // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
-                    DHKiller.WeaponLockViolations++;
-
-                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    if (DHKiller.PlayerReplicationInfo != none)
                     {
-                        // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
-                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
-
-                        // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
-                        if (!bInformedKillerOfWeaponLock)
+                        // Don't lock weapons on players that haven't gotten a team kill in the last 30 seconds.
+                        if (Level.TimeSeconds < DHKiller.LastTeamKillTimeSeconds + 30.0)
                         {
-                            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
+                            DHKiller.WeaponLockViolations++;
+
+                            // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
+                            DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
+
+                            // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
+                            if (!bInformedKillerOfWeaponLock)
+                            {
+                                DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            }
                         }
                     }
+
+                    // Record the last time the player had a team-kill.
+                    DHKiller.LastTeamKillTimeSeconds = Level.TimeSeconds;
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
                     if (bForgiveFFKillsEnabled && DHKilled != none)
@@ -2294,18 +2299,16 @@ function UpdateArtilleryAvailability()
     }
 
     // Build context struct
-    Context.LevelInfo = DH_LevelInfo(LevelInfo);
+    Context.LevelInfo = DHLevelInfo;
 
-    // TODO: This won't actually work because some nations don't have an artillery piece in their constructions.
     // Check if artillery constructions are enabled (on-map artillery)
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    for (i = 0; i < Context.LevelInfo.ConstructionsEvaluated.Length; ++i)
     {
-        Construction = class<DHConstruction_Vehicle>(GRI.ConstructionClasses[i]);
+        Construction = class<DHConstruction_Vehicle>(Context.LevelInfo.ConstructionsEvaluated[i].ConstructionClass);
 
         if (GRI.bAreConstructionsEnabled
           && Construction != none
-          && Construction.static.IsArtillery()
-          && !DHLevelInfo.IsConstructionRestricted(Construction))
+          && Construction.static.IsArtillery())
         {
             Context.TeamIndex = AXIS_TEAM_INDEX;
             VehicleClass = Construction.static.GetVehicleClass(Context);
@@ -2392,7 +2395,7 @@ function UpdatePlayerScore(Controller C)
 }
 
 // Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
-// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out for itself whether it needs to display a suicide message
+// Also to pass Killer's PRI even if Killer is same as Killed, so RODeathMessage class can work out for itself whether it needs to display a suicide message
 // And fixed bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
 function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
 {
@@ -2586,13 +2589,7 @@ state RoundInPlay
         }
 
         // Team constructions
-        for (i = 0; i < DHLevelInfo.TeamConstructions.Length; ++i)
-        {
-            GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
-            GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
-            GRI.TeamConstructions[i].Remaining = DHLevelInfo.TeamConstructions[i].Limit;
-            GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
-        }
+        GRI.ResetConstructionRuntimeInfo();
 
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
         {
@@ -2611,6 +2608,11 @@ state RoundInPlay
                 if (PlayerController(P) != none)
                 {
                     PlayerController(P).ClientReset();
+                }
+
+                if (DHPlayer(P) != none)
+                {
+                    DHPlayer(P).ClearMapMarkerCooldowns();
                 }
 
                 P.Reset();
@@ -3035,8 +3037,6 @@ state RoundInPlay
             }
         }
 
-        UpdateTeamConstructions();
-
         // If round time is up, decide the winner
         if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
@@ -3047,52 +3047,6 @@ state RoundInPlay
         if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
-        }
-    }
-}
-
-function UpdateTeamConstructions()
-{
-    local int i, Count;
-
-    // Check for if we can replenish any team constructions
-    for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
-    {
-        // Check if all available constructions are remaining.
-        if (GRI.TeamConstructions[i].Remaining == DHLevelInfo.TeamConstructions[i].Limit)
-        {
-            continue;
-        }
-
-        // Check if this construction replenishes over time.
-        if (DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0)
-        {
-            // Get the number of extant constructions that this team has on the field.
-            Count = ConstructionManager.CountOf(DHLevelInfo.TeamConstructions[i].TeamIndex, DHLevelInfo.TeamConstructions[i].ConstructionClass);
-
-            // Check if we need to set the NextIncrementTimeSeconds variable
-            // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
-            if (Count == DHLevelInfo.TeamConstructions[i].Limit)
-            {
-                // We have the maximum amount of this type of construction.
-                // Make sure the next increment time is -1 so that we don't
-                // display any countdown on the UI.
-                GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
-            }
-            else if (Count < DHLevelInfo.TeamConstructions[i].Limit)
-            {
-                if (GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
-                {
-                    // Our next increment time has not been set.
-                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
-                }
-
-                if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
-                {
-                    GRI.TeamConstructions[i].Remaining += 1;
-                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
-                }
-            }
         }
     }
 }
@@ -3121,7 +3075,7 @@ state ResetGameCountdown
             AS.Destroy();
         }
 
-        Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+        Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 10);
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
@@ -3148,14 +3102,14 @@ state ResetGameCountdown
                 SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
         {
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
 }
@@ -3536,6 +3490,24 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
     }
 }
 
+// Destroys all leveler-placed artillery spawners to maintain the sanity of those testing.
+exec function StopArty()
+{
+    local Actor A;
+    local int Count;
+
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.IsA('DH_ArtilleryActor'))
+        {
+            A.Destroy();
+            ++Count;
+        }
+    }
+
+    Level.Game.Broadcast(self, "Destroyed" @ Count @ "artillery spawners");
+}
+
 // Function for changing the AlliesToAxisRatio for testing and real time balance changes
 exec function SetAlliesToAxisRatio(float Value)
 {
@@ -3755,6 +3727,36 @@ exec function MidGameVote()
     }
 }
 
+exec function ResetAllInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Objectives
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] != none)
+        {
+            GRI.DHObjectives[i].ResetInfluenceModifiers();
+        }
+    }
+
+    // Spawn points
+    for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none)
+        {
+            GRI.SpawnPoints[i].BaseInfluenceModifier = GRI.SpawnPoints[i].InitialBaseInfluenceModifier;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
 // Debug function that changes Danger Zone influence for objectives AND
 // main spawns.
 //
@@ -3783,7 +3785,7 @@ exec function SetInfluence(string InfluenceType, int Index, float Value)
             return;
         }
 
-        if (GRI.SpawnPoints[Index].bMainSpawn)
+        if (!GRI.SpawnPoints[Index].bMainSpawn)
         {
             Log("Spawn [" $ Index $ "] is not a main spawn!");
             return;
@@ -5063,7 +5065,25 @@ function NotifyLogout(Controller Exiting)
         }
     }
 
+    NeutralizeAndDestroyThrowableExplosiveProjectiles(PC.PlayerReplicationInfo);
+
     super.Destroyed();
+}
+
+// Neutralize and destroy any active throwable projectiles from this player.
+// This is to prevent players from team-killing with throwables and then logging out to avoid punishment.
+function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo PRI)
+{
+    local DHThrowableExplosiveProjectile TEP;
+
+    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    {
+        if (PRI != none && TEP.SavedPRI == PRI)
+        {
+            TEP.bDud = true;
+            TEP.Destroy();
+        }
+    }
 }
 
 // Overriden to write out metrics data
@@ -5176,7 +5196,6 @@ event PostLogin(PlayerController NewPlayer)
     local Object                  O;
     local DHPlayerSession         S;
     local string                  ROIDHash;
-    local int i;
 
     if (NewPlayer == none)
     {
@@ -5305,26 +5324,7 @@ event PostLogin(PlayerController NewPlayer)
 
             if (S != none)
             {
-                PRI.Deaths = S.Deaths;
-                PRI.DHKills = S.Kills;
-                PRI.Score = S.TotalScore;
-                PRI.TotalScore = S.TotalScore;
-
-                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
-                {
-                    PRI.CategoryScores[i] = S.CategoryScores[i];
-                }
-
-                Teams[S.TeamIndex].AddToTeam(PC);
-
-                PC.LastKilledTime = S.LastKilledTime;
-                PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.NextChangeTeamTime = S.NextChangeTeamTime;
-
-                if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
-                {
-                    PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
-                }
+                S.Load(PC);
             }
         }
 
@@ -5341,9 +5341,9 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-    }
 
-    class'DHGeolocationService'.static.GetIpData(PC);
+        PC.OnPlayerLogin();
+    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5353,7 +5353,6 @@ function Logout(Controller Exiting)
     local DHPlayerReplicationInfo PRI;
     local Object O;
     local DHPlayerSession S;
-    local int i;
 
     super.Logout(Exiting);
 
@@ -5377,6 +5376,7 @@ function Logout(Controller Exiting)
         return;
     }
 
+    // Save the current session info
     if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
         O = new class'DHPlayerSession';
@@ -5387,24 +5387,7 @@ function Logout(Controller Exiting)
 
     if (S != none)
     {
-        S.Deaths = PRI.Deaths;
-        S.Kills = PRI.DHKills;
-        S.TotalScore = PRI.TotalScore;
-
-        for (i = 0; i < arraycount(S.CategoryScores); ++i)
-        {
-            S.CategoryScores[i] = PRI.CategoryScores[i];
-        }
-
-        S.LastKilledTime = PC.LastKilledTime;
-        S.WeaponUnlockTime = PC.WeaponUnlockTime;
-        S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.NextChangeTeamTime = PC.NextChangeTeamTime;
-
-        if (PRI.Team != none)
-        {
-            S.TeamIndex = PRI.Team.TeamIndex;
-        }
+        S.Save(PC);
     }
 }
 
@@ -5463,7 +5446,7 @@ function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Ty
 // TODO: This function uses different systems for spawning players depending
 // on whether the spawn is blocked or not. This can lead to players spawning in
 // different states. Fix it!
-function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
+function Pawn SpawnPawn(DHPlayer C, Vector SpawnLocation, Rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)
     {
@@ -5491,8 +5474,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
-
                 if (C.IQManager != none)
                 {
                     C.IQManager.OnSpawn();
@@ -5527,7 +5508,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.ClientSetRotation(C.Pawn.Rotation);
 
     AddDefaultInventory(C.Pawn);
-    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
 
     if (C.IQManager != none)
     {
@@ -5535,21 +5515,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     return C.Pawn;
-}
-
-function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
-{
-    local DHPawn P;
-
-    P = DHPawn(C.Pawn);
-
-    // Set proper spawn kill protection times
-    if (P != none && SP != none)
-    {
-        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        P.SpawnPoint = SP;
-    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5602,9 +5567,10 @@ function GetServerDetails(out ServerResponseLine ServerState)
 {
     super.GetServerDetails(ServerState);
 
-    AddServerDetail(ServerState, "Version", Version.ToString());
+    AddServerDetail(ServerState, "Version", class'DHBuildManifest'.default.Version.ToShortString());
+    AddServerDetail(ServerState, "GitCommit", class'DHBuildManifest'.default.GitCommit);
     AddServerDetail(ServerState, "Location", ServerLocation);
-    AddServerDetail(ServerState, "AverageTick", ServerTickRateAverage);
+    AddServerDetail(ServerState, "AverageTick", int(ServerTickRateAverage));
 }
 
 function string GetServerMessage(int Index)
@@ -5645,7 +5611,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
     local DHPlayerReplicationInfo PRI;
-    local vector MapLocation;
+    local Vector MapLocation;
     local int Interval;
 
     if (Request == none ||
@@ -5742,6 +5708,21 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
+// Modified so that we don't autobalance squad leaders or assistant squad leaders.
+function bool HandleDeath(ROPlayer Player)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Player);
+
+    if (PC != none && (PC.IsSLorASL() || PC.HasLimitedRole()))
+    {
+        return false;
+    }
+
+    return super.HandleDeath(Player);
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH
@@ -5825,7 +5806,6 @@ defaultproperties
     VotingHandlerClass=class'DH_Engine.DHVotingHandler'
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
-    DeathMessageClass=class'DH_Engine.DHDeathMessage'
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
@@ -5837,14 +5817,6 @@ defaultproperties
     ReinforcementMessagePercentages(3)=0.1
 
     ServerLocation="Unspecified"
-
-    Begin Object Class=UVersion Name=VersionObject
-        Major=11
-        Minor=2
-        Patch=3
-        Prerelease=""
-    End Object
-    Version=VersionObject
 
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true
@@ -5867,5 +5839,7 @@ defaultproperties
     SurrenderRoundTimeRequiredSeconds=900
     SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
     SurrenderNominationsThresholdPercent=0.15
-    SurrenderVotesThresholdPercent=0.5
+    SurrenderVotesThresholdPercent=0.6
+
+    GameDifficulty=4    // For arcane reasons, this has to be >3 so that self-inflicted damage isn't reduced.
 }

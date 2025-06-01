@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_KV1sTank extends DHArmoredVehicle;  //to do: is the standart texture really accurate? It's a light blue/grey color, i never found any images of such KV-1S
@@ -62,7 +62,6 @@ defaultproperties
     RearLeftAngle=205.0
 
     // Movement
-    MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(4)=0.7
     TransRatio=0.08
 
@@ -80,8 +79,8 @@ defaultproperties
     DisintegrationHealth=-1200.0 //diesel
       // more reliable engine and transmission due to lower weight and later, more polished design
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
-    VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=25.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=25.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=26.0
     DamagedEffectOffset=(X=-90.0,Y=0.0,Z=40.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Kv1_Destroyed'

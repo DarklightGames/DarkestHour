@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
@@ -35,7 +35,7 @@ simulated function PostBeginPlay()
 }
 
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     if (Instigator != none)
     {
@@ -54,7 +54,7 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-function HandleObjSatchels(vector HitLocation)
+function HandleObjSatchels(Vector HitLocation)
 {
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
@@ -78,13 +78,13 @@ function HandleObjSatchels(vector HitLocation)
     }
 }
 
-function HandleVehicles(vector HitLocation)
+function HandleVehicles(Vector HitLocation)
 {
     local Actor         A;
-    local vector        HitLoc, HitNorm;
+    local Vector        HitLoc, HitNorm;
     local DHVehicle     Veh;
     local int           TrackNum;
-    local float         Distance;
+    local float         Distance, DistanceFactor;
     local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
 
     // Find out if we are on a vehicle
@@ -109,17 +109,19 @@ function HandleVehicles(vector HitLocation)
             {
                 Distance = VSize(Location - Veh.GetEngineLocation());
 
-                if (Distance < EngineDamageRadius)
+                // The chance of setting the engine on fire is based on the distance from the engine.
+                // The closer the satchel is to the engine, the higher the chance of setting it on fire.
+                // The chance is 100% at the engine, and 0% at the edge of the EngineDamageRadius, using
+                // a smoothstep function.
+                DistanceFactor = class'UInterp'.static.SmoothStep(Distance / EngineDamageRadius, 1, 0);
+
+                if (FRand() < DistanceFactor)
                 {
-                    // If enough strength, set the engine on fire
-                    if (EngineDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
-                    {
-                        Veh.StartEngineFire(SavedInstigator);
-                    }
-                    else // Otherwise do minor damage to the engine
-                    {
-                        Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
-                    }
+                    Veh.StartEngineFire(SavedInstigator);
+                }
+                else // Otherwise do minor damage to the engine
+                {
+                    Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
                 }
             }
 
@@ -150,7 +152,7 @@ function HandleVehicles(vector HitLocation)
 }
 
 // Allows satchels to damage obstacles when behind world geometry
-function HandleObstacles(vector HitLocation)
+function HandleObstacles(Vector HitLocation)
 {
     local DHObstacleInstance O;
     local float              Distance;
@@ -167,7 +169,7 @@ function HandleObstacles(vector HitLocation)
 }
 
 // Allows satchels to do damage to constructions when traces fail (useful if construction is on the otherside of terrain or origin under world)
-function HandleConstructions(vector HitLocation)
+function HandleConstructions(Vector HitLocation)
 {
     local DHConstruction    C;
     local float             Distance;
@@ -181,21 +183,6 @@ function HandleConstructions(vector HitLocation)
             C.TakeDamage(ConstructionDamageMax * (Distance / ConstructionDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
         }
     }
-}
-
-// Implemented here to go to dynamic lighting for a split second, when satchel blows up // TODO: doesn't appear to do anything noticeable?
-simulated function WeaponLight()
-{
-    if (!Level.bDropDetail)
-    {
-        bDynamicLight = true;
-        SetTimer(0.15, false);
-    }
-}
-
-simulated function Timer()
-{
-    bDynamicLight = false;
 }
 
 defaultproperties
@@ -236,6 +223,12 @@ defaultproperties
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
 
     ImpactSound=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundDirt=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundWood=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundMetal=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundMud=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundGrass=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundConcrete=Sound'DH_WeaponSounds.satchel.satcheldrops'
 
     BlurTime=6.0
     BlurEffectScalar=2.1

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz2519DTransport extends DH_Sdkfz251Transport;
@@ -29,12 +29,17 @@ defaultproperties
     bIsApc=false
     bMustBeTankCommander=true
 
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_gun_topdown'
+
     Health=500
     HealthMax=500.0
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
     EngineHealth=300
 
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    FireDetonationChance=0.07 //increased fire detonation and ammo ignition probability over normal halftrack as ammo is explosive
+    AmmoIgnitionProbability=0.75
+
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
@@ -58,7 +63,4 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.53
-
-    //AmmoIgnitionProbability=0.75  // 0.75 default
-    //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
 }

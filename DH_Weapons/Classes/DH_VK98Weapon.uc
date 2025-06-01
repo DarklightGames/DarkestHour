@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_VK98Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Volkssturmkarabiner 98"
+    ItemName="VK 98"
+    NativeItemName="Volkssturmkarabiner 98"
     FireModeClass(0)=class'DH_Weapons.DH_VK98Fire'
     FireModeClass(1)=class'DH_Weapons.DH_VK98MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_VK98Attachment'

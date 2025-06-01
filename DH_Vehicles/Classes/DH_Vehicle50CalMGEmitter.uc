@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Vehicle50CalMGEmitter extends WeaponAmbientEmitter;
@@ -80,5 +80,5 @@ defaultproperties
     bUnlit=false
     bNoDelete=false
     bHardAttach=true
-    CullDistance=4000.0
+    CullDistance=1500.0     // ~25m
 }

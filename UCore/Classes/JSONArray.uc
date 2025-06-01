@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class JSONArray extends JSONValue;
@@ -86,7 +86,7 @@ static function JSONArray Create()
     return A;
 }
 
-static function JSONArray FromVector(vector V)
+static function JSONArray FromVector(Vector V)
 {
     local JSONArray A;
 
@@ -98,7 +98,7 @@ static function JSONArray FromVector(vector V)
     return A;
 }
 
-static function JSONArray IFromVector(vector V)
+static function JSONArray IFromVector(Vector V)
 {
     local JSONArray A;
 

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_ServerListPageLAN extends ROUT2k4Browser_ServerListPageLAN;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
 
     class'ROInterfaceUtil'.static.SetROStyle(MyController, Controls);
 

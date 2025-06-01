@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHDestroyableStaticMesh extends Actor
@@ -9,7 +9,7 @@ class DHDestroyableStaticMesh extends Actor
 var int             Health;
 var StaticMesh      DestroyedStaticMesh;
 var class<Emitter>  DestroyedEmitterClass;
-var vector          DestroyedEmitterOffset;
+var Vector          DestroyedEmitterOffset;
 var sound           DestroyedSound;
 var float           DestroyedSoundVolume;
 var float           DestroyedSoundRadius;
@@ -21,7 +21,7 @@ replication
         ClientPlayDestroyedEffects;
 }
 
-event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+event TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Health -= Damage;
 
@@ -68,7 +68,7 @@ state Broken // NOTE: can't name it "Destroyed" because that's the name of a fun
 simulated function ClientPlayDestroyedEffects()
 {
     local Emitter DestroyedEmitter;
-    local vector SpawnLocation;
+    local Vector SpawnLocation;
 
     if (DestroyedEmitterClass != none)
     {

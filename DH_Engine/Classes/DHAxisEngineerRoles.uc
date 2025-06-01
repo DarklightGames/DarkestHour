@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAxisEngineerRoles extends DHAxisRoles
@@ -10,8 +10,7 @@ defaultproperties
 {
     MyName="Combat Engineer"
     AltName="Sturmpionier"
-    Article="a "
-    PluralName="Combat Engineers"
     Limit=2
     bSpawnWithExtraAmmo=true
+    AddedRoleRespawnTime=15
 }

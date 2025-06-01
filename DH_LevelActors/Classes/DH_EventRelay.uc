@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_EventRelay extends DH_LevelActors;
 
 struct EventDelay
 {
-    var name EventName;
-    var float Delay;
+    var() name EventName;
+    var() float Delay;
 };
 
 var()   array<EventDelay>   Events;

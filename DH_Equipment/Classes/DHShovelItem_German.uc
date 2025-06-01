@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShovelItem_German extends DHShovelItem;
@@ -13,4 +13,6 @@ defaultproperties
     HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.German_shovel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+    
+    NativeItemName="Feldspaten"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M7Priest extends DHArmoredVehicle;
@@ -27,6 +27,8 @@ defaultproperties
     VehicleMass=11.5
     MaxDesireability=0.1
     ReinforcementCost=5
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.tank_artillery_topdown'
 
     // Artillery
     bIsArtilleryVehicle=true
@@ -77,7 +79,6 @@ defaultproperties
     RearLeftAngle=205.0
 
     // Movement
-    MaxCriticalSpeed=638.0 // 38 kph
     GearRatios(4)=0.72
     TransRatio=0.1
 
@@ -89,9 +90,9 @@ defaultproperties
     EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
-    VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointBone="hp_engine")
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-30.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)

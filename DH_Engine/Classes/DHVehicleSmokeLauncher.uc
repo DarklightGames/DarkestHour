@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 /*
@@ -16,13 +16,13 @@ var     class<Projectile>   ProjectileClass;              // the smoke projectil
 // TODO: probably delete InitialAmmo here & set NumSmokeLauncherRounds in cannon's def props, as no. of rounds carried is likely to vary from vehicle to vehicle
 var     byte                InitialAmmo;                  // the initial & maximum no. of smoke rounds carried
 var     byte                ProjectilesPerFire;           // no. of projectiles launched each time fire button is pressed (external launchers are often paired)
-var     array<rotator>      FireRotation;                 // the firing rotation to launch the projectile(s), relative to vehicle - may be multiple for external launchers
+var     array<Rotator>      FireRotation;                 // the firing rotation to launch the projectile(s), relative to vehicle - may be multiple for external launchers
 var     float               Spread;                       // random spread of launched projectiles
 var     sound               FireSound;                    // firing sound
 var     bool                bCanBeReloaded;               // whether smoke launcher can be reloaded after firing (not for external launch tubes)
 var     array<DHVehicleWeapon.ReloadStage>  ReloadStages; // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
-var     material            HUDAmmoIcon;                  // ammo icon for the HUD display
-var     material            HUDAmmoReloadTexture;         // ammo reload icon for the HUD display (the red overlay to show reloading progress)
+var     Material            HUDAmmoIcon;                  // ammo icon for the HUD display
+var     Material            HUDAmmoReloadTexture;         // ammo reload icon for the HUD display (the red overlay to show reloading progress)
 var     byte                NumRotationSettings;          // how many rotation settings there are for a smoke launcher that can be rotated to aim it
 var     array<float>        RangeSettingSpeedModifier;    // initial launch speed for projectiles fired from a smoke launcher has a range adjustment mechanism
 var     bool                bShowHUDInfo;                 // whether to show ammo & any other information on the commander's HUD
@@ -32,7 +32,7 @@ static function int GetNumberOfLauncherTubes()
     return default.FireRotation.Length;
 }
 
-static function rotator GetFireRotation(optional byte LauncherIndex)
+static function Rotator GetFireRotation(optional byte LauncherIndex)
 {
     if (LauncherIndex < default.FireRotation.Length)
     {
@@ -40,7 +40,7 @@ static function rotator GetFireRotation(optional byte LauncherIndex)
     }
 }
 
-static function sound GetReloadStageSound(byte StageIndex)
+static function Sound GetReloadStageSound(byte StageIndex)
 {
     if (StageIndex < default.ReloadStages.Length)
     {
@@ -104,8 +104,8 @@ static function StaticPrecache(LevelInfo L)
 // New debug function to set/adjust the firing offset (called from a debug exec in the cannon pawn class)
 static function SetFireOffset(DHVehicleCannon Cannon, string NewX, string NewY, string NewZ)
 {
-    local vector  FireLocation;
-    local rotator VehicleRotation;
+    local Vector  FireLocation;
+    local Rotator VehicleRotation;
 
     if (Cannon != none)
     {
@@ -125,8 +125,8 @@ static function SetFireOffset(DHVehicleCannon Cannon, string NewX, string NewY, 
 
         FireLocation = Cannon.Location + (Cannon.SmokeLauncherFireOffset[0] >> VehicleRotation);
         Cannon.ClearStayingDebugLines();
-        Cannon.DrawStayingDebugLine(FireLocation, FireLocation + (100.0 * vector(Cannon.SmokeLauncherClass.static.GetFireRotation(0)) >> VehicleRotation), 255, 0, 0);
-        Cannon.DrawStayingDebugLine(FireLocation - (20.0 * vector(VehicleRotation)), FireLocation + (20.0 * vector(VehicleRotation)), 0, 255, 0);
+        Cannon.DrawStayingDebugLine(FireLocation, FireLocation + (100.0 * Vector(Cannon.SmokeLauncherClass.static.GetFireRotation(0)) >> VehicleRotation), 255, 0, 0);
+        Cannon.DrawStayingDebugLine(FireLocation - (20.0 * Vector(VehicleRotation)), FireLocation + (20.0 * Vector(VehicleRotation)), 0, 255, 0);
     }
 }
 

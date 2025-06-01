@@ -1,28 +1,31 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBallisticProjectile extends ROBallisticProjectile
     abstract;
 
-var DHVehicleWeapon VehicleWeapon;
+var DHProjectileCalibrationInfo DebugCalibrationInfo;
 
-// debugging stuff
-var bool bIsCalibrating;
-var float LifeStart;
-var vector StartLocation;
-var float DebugMils;
+function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon VehicleWeapon, Vector StartLocation, float DebugAngleValue, UUnits.EAngleUnit DebugAngleUnit)
+{
+    DebugCalibrationInfo = new class'DHProjectileCalibrationInfo';
+    DebugCalibrationInfo.VehicleWeapon = VehicleWeapon;
+    DebugCalibrationInfo.StartLocation = StartLocation;
+    DebugCalibrationInfo.DebugAngleValue = DebugAngleValue;
+    DebugCalibrationInfo.DebugAngleUnit = DebugAngleUnit;
+}
 
-function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
+function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
     local DHPlayer PC, SpotterPC;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local int i;
     local float Distance, Threshold;
-    local vector RequestLocation;
+    local Vector RequestLocation;
     local array<int> HitMarkerIndices;
 
     PC = DHPlayer(InstigatorController);
@@ -33,6 +36,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         return;
     }
 
+    // Gather a list of artillery markers within the distance threshold of the hit location.
     GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
@@ -56,7 +60,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
     }
 
-    // For each map marker we hit, mark the hit on the map for the spotter as well.
+    // For each map marker in range, mark the hit on the map for the spotter as well.
     for (i = 0; i < HitMarkerIndices.Length; ++i)
     {
         if (MapMarkers[HitMarkerIndices[i]].Author != none)
@@ -71,14 +75,10 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
-    local float Distance;
-
-    if (Role == ROLE_Authority && VehicleWeapon != none && bIsCalibrating)
+    if (DebugCalibrationInfo != none)
     {
-        Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
-
-        Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
+        DebugCalibrationInfo.LogHit(HitLocation);
     }
 }

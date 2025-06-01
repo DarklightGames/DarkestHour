@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M38Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin M38 Carbine"
+    ItemName="Mosin M38"
     SwayModifyFactor=0.52  // -0.08
     FireModeClass(0)=class'DH_Weapons.DH_M38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_M38MeleeFire'

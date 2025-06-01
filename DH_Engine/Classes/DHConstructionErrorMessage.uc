@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionErrorMessage extends LocalMessage
@@ -24,7 +24,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
         Result = default.ErrorMessages[int(CP.ProxyError.Type)];
     }
 
-    Result = Repl(Result, "{name}", CP.ConstructionClass.static.GetMenuName(CP.GetContext()));
+    Result = Repl(Result, "{name}", CP.GetRuntimeData().MenuName);
     Result = Repl(Result, "{verb}", CP.ConstructionClass.default.ConstructionVerb);
     Result = Repl(Result, "{integer}", CP.ProxyError.OptionalInteger);
     Result = Repl(Result, "{string}", CP.ProxyError.OptionalString);
@@ -47,10 +47,6 @@ static function RenderComplexMessage(
 
     X = Canvas.CurX;
     Y = Canvas.CurY;
-
-    Canvas.DrawColor = class'UColor'.default.Black;
-    Canvas.SetPos(X + 1.0, Y + 1.0);
-    Canvas.DrawText(MessageString);
 
     Canvas.DrawColor = default.DrawColor;
     Canvas.SetPos(X, Y);
@@ -89,8 +85,8 @@ defaultproperties
     ErrorMessages(21)="You cannot {verb} a {name} while you are busy."
     ErrorMessages(22)="Too close to an objective ({string}), it must be {integer}m further away."
     ErrorMessages(23)="Too close to an uncontrolled objective ({string}), it must be {integer}m further away."
-    ErrorMessages(24)="You must {verb} a {name} within {integer}m of a friendly {string}";
-    ErrorMessages(25)="You cannot {verb} a {name} in enemy territory";
-    ErrorMessages(26)="There are no more {name} available";
+    ErrorMessages(24)="You must {verb} a {name} within {integer}m of a friendly {string}"
+    ErrorMessages(25)="You cannot {verb} a {name} in enemy territory"
+    ErrorMessages(26)="There are no more {name} available"
+    ErrorMessages(27)="This socket is already occupied"
 }
-

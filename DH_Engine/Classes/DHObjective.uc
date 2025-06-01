@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -142,6 +142,7 @@ var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents
 
 // Grouped capture operations (these will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
 var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; // array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)      array<name>                 GroupedObjectiveReliancesTags;  // TODO: populate above array based on tag lookups
 var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
 var(DH_GroupedActions)      array<SpawnPointAction>     AlliesGroupSpawnPointActions;
@@ -164,6 +165,12 @@ var(DHDangerZone) float BaseInfluenceModifier;
 var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
+var private float InitialBaseInfluenceModifier;
+var private float InitialAxisInfluenceModifier;
+var private float InitialAlliesInfluenceModifier;
+var private float InitialNeutralInfluenceModifier;
+var private int         OldInfluenceReplicationCounter;
+var private int         InfluenceReplicationCounter;
 
 // Team capture variable
 var() enum ETeamCapture
@@ -177,7 +184,8 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime;
+        UnfreezeTime, InfluenceReplicationCounter, BaseInfluenceModifier,
+        AxisInfluenceModifier, AlliesInfluenceModifier, NeutralInfluenceModifier;
 }
 
 simulated function PostBeginPlay()
@@ -217,6 +225,12 @@ simulated function PostBeginPlay()
 
         bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
         bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Set the initial influence modifiers
+        InitialBaseInfluenceModifier = BaseInfluenceModifier;
+        InitialAxisInfluenceModifier = AxisInfluenceModifier;
+        InitialAlliesInfluenceModifier = AlliesInfluenceModifier;
+        InitialNeutralInfluenceModifier = NeutralInfluenceModifier;
 
         G = DarkestHourGame(Level.Game);
 
@@ -279,6 +293,19 @@ function Reset()
 
     bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
     bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+    BaseInfluenceModifier = InitialBaseInfluenceModifier;
+    AxisInfluenceModifier = InitialAxisInfluenceModifier;
+    AlliesInfluenceModifier = InitialAlliesInfluenceModifier;
+    NeutralInfluenceModifier = InitialNeutralInfluenceModifier;
+}
+
+function ResetInfluenceModifiers()
+{
+    BaseInfluenceModifier = InitialBaseInfluenceModifier;
+    AxisInfluenceModifier = InitialAxisInfluenceModifier;
+    AlliesInfluenceModifier = InitialAlliesInfluenceModifier;
+    NeutralInfluenceModifier = InitialNeutralInfluenceModifier;
 }
 
 function SetActive(bool bActiveStatus)
@@ -1505,6 +1532,12 @@ simulated function PostNetReceive()
         bOldActive = bActive;
     }
 
+    if (OldInfluenceReplicationCounter != InfluenceReplicationCounter)
+    {
+        bHasStateChanged = true;
+        OldInfluenceReplicationCounter = InfluenceReplicationCounter;
+    }
+
     if (bHasStateChanged)
     {
         PC = DHPlayer(Level.GetLocalPlayerController());
@@ -1518,6 +1551,16 @@ simulated function PostNetReceive()
                 Hud.OnObjectiveStateChanged();
             }
         }
+    }
+}
+
+// Call this when the danger zone influences are changed
+// so that the client knows to re-calculate the danger zone.
+function OnInfluenceChanged()
+{
+    if (Role == ROLE_Authority)
+    {
+        InfluenceReplicationCounter++;
     }
 }
 

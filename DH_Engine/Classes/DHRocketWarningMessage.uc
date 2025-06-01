@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRocketWarningMessage extends ROCriticalMessage
@@ -53,7 +53,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     if (I != none)
     {
-        S = Repl(S, "{0}", I.default.ItemName);
+        S = Repl(S, "{0}", class'DHPlayer'.static.GetInventoryName(I.Class));
     }
 
     return S;

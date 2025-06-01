@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_FireSupport extends DHCommandMenu
@@ -17,12 +17,12 @@ var localized string AvailableAirstrikesText;
 var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 var bool bIsArtilleryTargetValid;
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PC = GetPlayerController();
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -30,14 +30,14 @@ function OnSelect(int Index, vector Location)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    if (PC == none || Index < 0 || Index >= Options.Length)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
-    if (PC.IsArtilleryTargetValid(Location))
+    if (PC.IsArtilleryTargetValid(Location, HitNormal))
     {
-        PC.AddMarker(class<DHMapMarker>(Options[Index].OptionalObject), MapLocation.X, MapLocation.Y, Location);
+        PC.AddMarker(class<DHMapMarker>(Options[OptionIndex].OptionalObject), MapLocation.X, MapLocation.Y, Location);
     }
     else
     {
@@ -117,9 +117,10 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
 
 function Tick()
 {
-    local DHPlayer                PC;
-    local vector                  HitLocation, HitNormal;
-    local DHGameReplicationInfo   GRI;
+    local DHPlayer              PC;
+    local Vector                HitLocation, HitNormal;
+    local DHGameReplicationInfo GRI;
+    local Actor                 HitActor;
 
     PC = GetPlayerController();
 
@@ -145,10 +146,24 @@ function Tick()
 
     if (PC.SpottingMarker != none)
     {
-        PC.GetEyeTraceLocation(HitLocation, HitNormal);
+        PC.GetEyeTraceLocation(HitLocation, HitNormal, HitActor);
+
         PC.SpottingMarker.SetLocation(HitLocation);
         PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
-        bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
+
+        if (HitActor != none)
+        {
+            bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation, HitNormal);
+
+            if (bIsArtilleryTargetValid)
+            {
+                if (VSize(PC.Pawn.Location - HitLocation) > PC.Pawn.Region.Zone.DistanceFogEnd)
+                {
+                    // Don't allow marking beyond the fog distance.
+                    bIsArtilleryTargetValid = false;
+                }
+            }
+        }
 
         if (bIsArtilleryTargetValid)
         {
@@ -292,9 +307,12 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
-    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
-    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
+    // HACK: Because engine doesn't handle arrays of empty structs properly, we have to force the array to have at least one element, otherwise
+    //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
+    //  pass on the translation files.
+    Options(0)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
+    Options(1)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
+    Options(2)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"

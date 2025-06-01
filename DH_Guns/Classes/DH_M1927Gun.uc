@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1927Gun extends DHATGun;
@@ -34,9 +34,8 @@ defaultproperties
     ExitPositions(1)=(X=-75.00,Y=-35.00,Z=50.00)
     ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
-    SupplyCost=1500
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     ShadowZOffset=20.0
     bIsArtilleryVehicle=true
     RotateCooldown=2

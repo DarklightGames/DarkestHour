@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_ATGun extends DHCommandMenu
@@ -12,11 +12,12 @@ var localized string IsBeingRotatedText;
 var localized string OccupiedText;
 var localized string FatalText;
 var localized string CooldownText;
+var localized string BusyText;
 
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -25,7 +26,7 @@ function OnSelect(int Index, vector Location)
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);
 
-    if (PC == none || Index < 0 || Index >= Options.Length || Gun == none)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length || Gun == none)
     {
         return;
     }
@@ -39,7 +40,7 @@ function OnSelect(int Index, vector Location)
 
     UpdateRotationError();
 
-    switch (Index)
+    switch (OptionIndex)
     {
         case 0: // Rotate
             if (RotationError == ERROR_None)
@@ -82,6 +83,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     switch (RotationError)
     {
+        case ERROR_Busy:
+            ORI.InfoText[0] = default.BusyText;
+            break;
         case ERROR_Occupied:
             ORI.InfoText[0] = default.OccupiedText;
             break;
@@ -157,4 +161,5 @@ defaultproperties
     OccupiedText="Gun is occupied"
     FatalText="Rotation unavailable"
     CooldownText="Wait"
+    BusyText="Busy"
 }

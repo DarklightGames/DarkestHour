@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMinefield_ATMine extends ROMine;
@@ -37,7 +37,7 @@ singular function Touch(Actor Other)
 
             if (RandomNum < 80)
             {
-                if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
+                if (Vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
                 {
                     DHVehicle(Other).DestroyTrack(true);
                 }
@@ -62,11 +62,11 @@ singular function Touch(Actor Other)
 // Also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor     Victim, TraceActor;
     local DHVehicle V;
-    local vector    VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local Vector    VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float     DamageScale, Distance;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
@@ -156,7 +156,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius()
-function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WP;
     local int i;
@@ -179,11 +179,11 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, floa
 }
 
 // New function to handle blast damage to vehicle occupants
-function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local Coords HeadBoneCoords;
+    local Vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
     local float  Distance, DamageScale;
 
     if (P != none)

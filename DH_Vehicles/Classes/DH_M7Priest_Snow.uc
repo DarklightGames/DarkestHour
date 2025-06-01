@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M7Priest_Snow extends DH_M7Priest;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_snow'
     Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2_snow'
     Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks_snow'

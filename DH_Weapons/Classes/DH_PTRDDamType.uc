@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PTRDDamType extends DHLargeCaliberDamageType
@@ -11,10 +11,10 @@ defaultproperties
     WeaponClass=class'DH_Weapons.DH_PTRDWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
-    TankDamageModifier=0.2
-    APCDamageModifier=0.3
-    VehicleDamageModifier=0.3
-    TreadDamageModifier=0.3
+    TankDamageModifier=0.09
+    APCDamageModifier=0.13
+    VehicleDamageModifier=0.13
+    TreadDamageModifier=0.08
 
     PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
     bThrowRagdoll=true

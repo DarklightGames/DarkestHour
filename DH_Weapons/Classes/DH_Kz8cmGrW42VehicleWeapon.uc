@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kz8cmGrW42VehicleWeapon extends DHMortarVehicleWeapon;
@@ -21,4 +21,5 @@ defaultproperties
     Elevation=80.0
     ElevationMaximum=88.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed'
+    PrimaryShellBone="Shell"
 }

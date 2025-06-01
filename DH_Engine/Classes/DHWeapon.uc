@@ -1,10 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeapon extends ROWeapon
     abstract;
+
+var     localized string NativeItemName;        // The designation name used by the nation that created it (not translated to English)
 
 var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
                                                 // Default: 2 which is neutral and allows anyone to reupply it
@@ -32,6 +34,13 @@ var     bool            bHasBeenDrawn;
 
 var     float           ResupplyInterval;
 var     int             LastResupplyTimestamp;
+var     bool            bCanResupplyWhenEmpty;
+
+// For some absolutely fucked reason, RO sets their sprint animation rates at 1.5x by default.
+// We allow ourselves the ability to override this nonsense.
+var     float           SprintEndAnimRate;
+var     float           SprintStartAnimRate;
+var     float           SprintLoopAnimRate;
 
 replication
 {
@@ -84,9 +93,16 @@ simulated function bool StartFire(int Mode)
 
     if (super.StartFire(Mode))
     {
-        if (FireMode[Mode].bMeleeMode && ROPawn(Instigator) != none)
+        if (FireMode[Mode].bMeleeMode)
         {
-            ROPawn(Instigator).SetMeleeHoldAnims(true);
+            if (ROPawn(Instigator) != none)
+            {
+                ROPawn(Instigator).SetMeleeHoldAnims(true);
+            }
+
+            // Pop out of the current state (e.g. WeaponSprinting) so melee
+            // animations take precedence.
+            GotoState('Idle');
         }
 
         return true;
@@ -102,10 +118,10 @@ function int GetNumberOfDroppedPickups()
 }
 
 // Modfied to add randomize to a drop and to be more modular (please try to avoid duplicating this function everywhere)
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     local Pickup  Pickup;
-    local rotator R;
+    local Rotator R;
     local int     i;
 
     if (bCanThrow)
@@ -343,10 +359,27 @@ simulated state StartMantle extends Busy
     }
 }
 
+simulated function WeaponFire GetFiringMode()
+{
+    local int i;
+
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
+    {
+        if (FireMode[i].bIsFiring)
+        {
+            return FireMode[i];
+        }
+    }
+}
+
 // Modified to include states PostFiring & AutoLoweringWeapon
 simulated function SetSprinting(bool bNewSprintStatus)
 {
-    if (FireMode[1].bMeleeMode && FireMode[1].bIsFiring)
+    local WeaponFire FiringMode;
+
+    FiringMode = GetFiringMode();
+
+    if (FiringMode != none && FiringMode.bMeleeMode)
     {
         return;
     }
@@ -816,7 +849,7 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
 {
     local int i;
     local DHWeaponFire WF;
-    local vector V;
+    local Vector V;
 
     V.X = X;
     V.Y = Y;
@@ -841,6 +874,30 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
                 }
             }
         }
+    }
+}
+
+// Function for setting the offset of the 3rd person weapon's muzzle location.
+exec function SetMuzzleFlashOffset(int X, int Y, int Z)
+{
+    local DHWeaponAttachment WA;
+    local Vector MuzzleFlashOffset;
+
+    WA = DHWeaponAttachment(ThirdPersonActor);
+
+    if (WA == none)
+    {
+        Log("SetTipOffset: ThirdPersonActor is not a DHWeaponAttachment");
+        return;
+    }
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        MuzzleFlashOffset.X = X;
+        MuzzleFlashOffset.Y = Y;
+        MuzzleFlashOffset.Z = Z;
+
+        WA.mMuzFlash3rd.SetRelativeLocation(MuzzleFlashOffset);
     }
 }
 
@@ -1075,6 +1132,10 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=true
 
     bUsesIronsightFOV=true
-
+    bCanResupplyWhenEmpty=false
     ResupplyInterval=2.5
+
+    SprintStartAnimRate=1.5
+    SprintEndAnimRate=1.5
+    SprintLoopAnimRate=1.5
 }

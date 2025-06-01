@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP41RWeapon extends DHFastAutoWeapon;
@@ -37,7 +37,8 @@ simulated function bool StartFire(int Mode)
 defaultproperties
 {
     SwayModifyFactor=0.65 // -0.5
-    ItemName="Maschinenpistole 41(r)"
+    ItemName="MP 41(r)"
+    NativeItemName="Maschinenpistole 41(r)"
 
     FireModeClass(0)=class'DH_Weapons.DH_MP41RFire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41RMeleeFire'

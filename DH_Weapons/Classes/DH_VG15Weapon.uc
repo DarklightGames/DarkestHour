@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_VG15Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
-    ItemName="Volkssturmgewehr 1-5"
+    ItemName="VG 1-5"
+    NativeItemName="Volkssturmgewehr 1-5"
     FireModeClass(0)=class'DH_Weapons.DH_VG15Fire'
     FireModeClass(1)=class'DH_Weapons.DH_VG15MeleeFire'
     PickupClass=class'DH_Weapons.DH_VG15Pickup'

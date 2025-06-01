@@ -1,18 +1,17 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GLWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="M24 x7 Geballte Ladung"
-
+    ItemName="StG 24 x7 Geballte Ladung"
     FireModeClass(0)=class'DH_Weapons.DH_GLFire'
     AttachmentClass=class'DH_Weapons.DH_GLAttachment'
     PickupClass=class'DH_Weapons.DH_GLPickup'
-    FuzeLength=6.0
+    FuzeLengthRange=(Min=6.0,Max=6.0)
 
     InventoryGroup=7
     GroupOffset=1

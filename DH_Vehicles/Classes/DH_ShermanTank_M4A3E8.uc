@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // M4A3E8/M4A3(76)W HVSS (Easy Eight) - Upgraded with widetrack Horizontal
 // Volute Spring Suspension (HVSS), fitted with the 76mm M1 cannon.
@@ -67,7 +67,7 @@ simulated function CreateAttachments()
     }
 }
 
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 
@@ -143,9 +143,9 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
 
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="body",PointOffset=(Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 
     LeftWheelBones(0)="wheel.L.001"
     LeftWheelBones(1)="wheel.L.002"

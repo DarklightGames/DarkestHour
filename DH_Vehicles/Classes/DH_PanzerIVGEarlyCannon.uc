@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVGEarlyCannon extends DHVehicleCannon;
@@ -19,6 +19,7 @@ defaultproperties
 
     // Turret armor
     bHasAddedSideArmor=true
+    bHasAddedRearArmor=true
     FrontArmorFactor=5.0
     RightArmorFactor=3.1
     LeftArmorFactor=3.1
@@ -39,7 +40,6 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShellHEAT'

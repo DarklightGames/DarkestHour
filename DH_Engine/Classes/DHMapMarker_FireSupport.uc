@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
-var color             ActivatedIconColor; // for off-map artillery requests
+var Color             ActivatedIconColor; // for off-map artillery requests
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
@@ -31,7 +31,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     }
 }
 
-static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     if (PC == none)
     {
@@ -68,7 +68,7 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     RequiredSquadMembers=2
-    Cooldown=10
+    Cooldown=3
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)

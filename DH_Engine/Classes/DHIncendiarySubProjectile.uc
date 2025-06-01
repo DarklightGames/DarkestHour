@@ -54,7 +54,7 @@ simulated function Destroyed()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     VictimVehicle;
@@ -269,7 +269,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius
-function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WeaponPawn;
     local int i, NumWeapons;
@@ -299,7 +299,7 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount
     }
 }
 
-function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
     local coords HeadBoneCoords;
@@ -346,7 +346,7 @@ simulated function UpdateInstigator()
     }
 }
 
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     local Actor         Victim;
     local DHVehicle     VictimVehicle;
@@ -382,7 +382,7 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroyMesh;
     local Class<DamageType> NextDamageType;
@@ -480,7 +480,7 @@ simulated singular function Touch(Actor Other)
     LastTouched = none;
 }
 
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     local vector tempHitLocation, hitNormal;
 
@@ -512,7 +512,7 @@ function Timer ()
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     local PlayerController PlayerController;
 

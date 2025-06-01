@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -16,7 +16,8 @@ enum ERotateError
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
     ERROR_Cooldown,
-    ERROR_TooFarAway
+    ERROR_TooFarAway,
+    ERROR_Busy,
 };
 
 var DHPawn            RotateControllerPawn;
@@ -117,9 +118,22 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Overridden to bypass attaching as a driver and go straight to the gun
+function SetVehicleTeam(int TeamIndex)
+{
+    VehicleTeam = TeamIndex;
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(VehicleTeam);
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun, and to update the owning team of the gun.
 function KDriverEnter(Pawn P)
 {
+    // Update the owning team of the gun.
+    SetVehicleTeam(P.GetTeamNum());
+
     if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
         WeaponPawns[0].KDriverEnter(P);
@@ -155,7 +169,7 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 
 // Modified to use APCDamageModifier, & to remove code preventing players damaging own team's gun that hasn't been entered (only designed to protect vehicles in spawn)
 // Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float DamageModifier;
     local int   i;
@@ -203,7 +217,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 
@@ -224,12 +238,17 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_Busy;
+    }
+
     if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
     {
         return ERROR_TooFarAway;
     }
 
-    if (Pawn.GetTeamNum() != VehicleTeam)
+    if (bTeamLocked && Pawn.GetTeamNum() != VehicleTeam)
     {
         return ERROR_EnemyGun;
     }
@@ -362,7 +381,7 @@ function ServerRotate(byte InputRotationFactor)
 simulated function ClientEnterRotation()
 {
 
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
     local Combiner CombinerMaterial;
@@ -400,7 +419,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector = Spawn(class'DHConstructionProxyProjector', self, ,Location,Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;
@@ -408,7 +427,7 @@ simulated function ClientEnterRotation()
     RotationProjector.AttachActor(self);
     RotationProjector.SetBase(self);
     RotationProjector.bNoProjectOnOwner = true;
-    RotationProjector.MaterialBlendingOp = PB_AlphaBlend;
+    RotationProjector.MaterialBlendingOp = PB_None;
     RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
     RotationProjector.FOV = 1;
     RotationProjector.MaxTraceDistance = 1024.0;
@@ -629,10 +648,10 @@ simulated function SetEngine();
 simulated function StopEmitters();
 simulated function StartEmitters();
 simulated function UpdateMovementSound(float MotionSoundVolume);
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType);
 simulated function SetupTreads();
 simulated function DestroyTreads();
-function CheckTreadDamage(vector HitLocation, vector Momentum);
+function CheckTreadDamage(Vector HitLocation, Vector Momentum);
 function DestroyTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 simulated event DrivingStatusChanged();
@@ -650,7 +669,7 @@ simulated function bool CanExit() { return false; }
 function bool PlaceExitingDriver() { return false; }
 simulated function Destroyed_HandleDriver();
 simulated function SetPlayerPosition();
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
 simulated function DrawPeriscopeOverlay(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
@@ -684,7 +703,6 @@ defaultproperties
 
     // Miscellaneous
     TouchMessageClass=class'DHATGunTouchMessage'
-    TouchMessage="Use the "
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     MaxDesireability=1.9
     CollisionRadius=75.0
@@ -753,4 +771,5 @@ defaultproperties
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+    bTeamLocked=false
 }

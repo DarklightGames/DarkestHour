@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz2519DCannon extends DHVehicleCannon;
@@ -30,21 +30,20 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEAT'
-    TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
-    ProjectileDescriptions(2)="SMOKE"
+    ProjectileDescriptions(2)="Smoke"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
     nProjectileDescriptions(1)="Gr.38 Hl/C"
     nProjectileDescriptions(2)="Nbgr.Kw.K."
 
     InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=6
+    InitialSecondaryAmmo=10
     InitialTertiaryAmmo=5
 
     MaxPrimaryAmmo=30

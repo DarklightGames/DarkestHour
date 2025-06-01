@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -11,7 +11,7 @@ const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
 const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
-const CONSTRUCTION_CLASSES_MAX = 32;
+const CONSTRUCTION_CLASSES_MAX = 63;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
 const MAP_MARKERS_MAX = 20;
@@ -86,7 +86,7 @@ var int                 AxisVictoryMusicIndex;
 
 var int                 RoundEndTime;       // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
 var int                 RoundOverTime;      // The time stamp at which the round is over
-var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
+var int                 SpawningEnableTimes[2]; // When spawning for the round should be enabled (default: 0)
 
 var int                 DHRoundLimit;       // Added this so that a changing round limit can be replicated to clients.
 var int                 DHRoundDuration;    // Added this so that a more flexible changing round duration can be replicated to clients (e.g change to unlimited)
@@ -139,19 +139,15 @@ var bool                bRoundIsOver;
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
 
-var private array<string>   ConstructionClassNames;
-var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
-var DHConstructionManager   ConstructionManager;
-
-struct STeamConstruction
+// Holds the runtime status of the construction classes.
+struct ConstructionInfo
 {
-    var class<DHConstruction> ConstructionClass;
-    var byte TeamIndex;
+    var byte Active;
     var byte Remaining;
-    var int NextIncrementTimeSeconds;
 };
 
-var STeamConstruction   TeamConstructions[16];
+var ConstructionInfo        Constructions[CONSTRUCTION_CLASSES_MAX];
+var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
@@ -175,7 +171,7 @@ struct MapMarker
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
     var int CreationTime;                   // The time this marker was created, relative to ElapsedTime
     var int ExpiryTime;                     // The expiry time, relative to ElapsedTime
-    var vector WorldLocation;               // World location of the marker
+    var Vector WorldLocation;               // World location of the marker
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
@@ -249,7 +245,7 @@ replication
         GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
-        SpawningEnableTime,
+        SpawningEnableTimes,
         bIsInSetupPhase,
         bRoundIsOver,
         bAreConstructionsEnabled,
@@ -273,7 +269,7 @@ replication
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
-        TeamConstructions,
+        Constructions,
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
         DHMineVolumeIsActives,
@@ -281,7 +277,7 @@ replication
         TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
+        AxisNationID, AlliedNationID, MapMarkerClasses;
 }
 
 simulated event PreBeginPlay()
@@ -299,7 +295,6 @@ simulated function PostBeginPlay()
     local WaterVolume                   WV;
     local FluidSurfaceInfo              FSI;
     local int                           i, j;
-    local DH_LevelInfo                  LI;
     local class<DHMapMarker>            MapMarkerClass;
 
     super.PostBeginPlay();
@@ -324,20 +319,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < ConstructionClassNames.Length; ++i)
-        {
-            if (ConstructionClassNames[i] != "")
-            {
-                AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
-            }
-        }
-
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-        if (LI != none)
-        {
-            bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
-        }
+        ResetConstructionRuntimeInfo();
 
         // Add usable map markers to the class list to be replicated!
         j = 0;
@@ -345,11 +327,7 @@ simulated function PostBeginPlay()
         for (i = 0; i < MapMarkerClassNames.Length; ++i)
         {
             MapMarkerClass = class<DHMapMarker>(DynamicLoadObject(MapMarkerClassNames[i], class'class'));
-
-            if (MapMarkerClass != none && MapMarkerClass.static.CanBeUsed(self))
-            {
-                MapMarkerClasses[j++] = MapMarkerClass;
-            }
+            MapMarkerClasses[j++] = MapMarkerClass;
         }
 
         RegisterMineVolumes();
@@ -358,61 +336,96 @@ simulated function PostBeginPlay()
     RegisterNoArtyVolumes();
 }
 
-simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
-{
-    local int i;
-
-    for (i = 0; i < arraycount(TeamConstructions); ++i)
-    {
-        if (TeamConstructions[i].ConstructionClass == none)
-        {
-            continue;
-        }
-
-        if (TeamConstructions[i].TeamIndex == TeamIndex &&
-            TeamConstructions[i].ConstructionClass == ConstructionClass)
-        {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex, class<DHConstruction> ConstructionClass)
+// TODO: All this construction stuff in here is a disaster. Move it to a separate class.
+function ResetConstructionRuntimeInfo()
 {
     local int i;
     local DH_LevelInfo LI;
-
-    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
-
-    if (i == -1)
-    {
-       return -1;
-    }
-
+    
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-    if (LI != none && LI.TeamConstructions[i].ReplenishPeriodSeconds > 0)
+    if (LI != none)
     {
-        return TeamConstructions[i].NextIncrementTimeSeconds;
-    }
+        for (i = 0; i < LI.ConstructionsEvaluated.Length; ++i)
+        {
+            Constructions[i].Active = 0;
+            Constructions[i].Remaining = LI.ConstructionsEvaluated[i].Limit;
+        }
 
-    return -1;
+        bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
+    }
 }
 
+simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local DH_LevelInfo LevelInfo;
+
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LevelInfo == none)
+    {
+        return -1;
+    }
+
+    return LevelInfo.GetConstructionIndex(TeamIndex, ConstructionClass);
+}
+
+// Returns whether a team has any construction remaining of a certain class.
+simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+    local DH_LevelInfo LevelInfo;
+
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    ConstructionIndex = LevelInfo.GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex == -1)
+    {
+        return false;
+    }
+
+    return LevelInfo.ConstructionsEvaluated[ConstructionIndex].Limit == -1 || Constructions[ConstructionIndex].Remaining > 0;
+}
+
+// Returns the remaining construction count for a team of a certain class, or -1 if the class construction is unlimited.
+// Also returns -1 if the team has no construction of that class.
 simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
-    local int i;
+    local int ConstructionIndex;
+    local DH_LevelInfo LI;
 
-    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    ConstructionIndex = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
 
-    if (i == -1)
+    if (ConstructionIndex == -1)
     {
        return -1;
     }
 
-    return TeamConstructions[i].Remaining;
+    if (LI.ConstructionsEvaluated[ConstructionIndex].Limit == -1)
+    {
+        return -1;
+    }
+
+    return Constructions[ConstructionIndex].Remaining;
+}
+
+// Returns the active construction count for a team of a certain class, or -1 if the class construction is unlimited.
+simulated function int GetTeamConstructionActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    ConstructionIndex = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex == -1 || LI.ConstructionsEvaluated[ConstructionIndex].MaxActive == -1)
+    {
+        return -1;
+    }
+
+    return Constructions[ConstructionIndex].Active;
 }
 
 simulated function PostNetBeginPlay()
@@ -435,24 +448,35 @@ simulated function PostNetBeginPlay()
     // Loop all objectives to set index variables up based on tag ones (uses hash table)
     foreach AllActors(class'DHObjective', Obj)
     {
-        if (Obj != none)
+        if (Obj == none)
         {
-            // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
-            {
-                if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AxisRequiredObjForCapture[Obj.AxisRequiredObjForCapture.Length] = ObjIndex;
-                }
-            }
+            continue;
+        }
 
-            // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
             {
-                if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AlliesRequiredObjForCapture[Obj.AlliesRequiredObjForCapture.Length] = ObjIndex;
-                }
+                class'UArray'.static.IAddUnique(Obj.AxisRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.AlliesRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Link up objective reliances from tags (add to the existing list, for backwards compatibility).
+        for (i = 0; i < Obj.GroupedObjectiveReliancesTags.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.GroupedObjectiveReliancesTags[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.GroupedObjectiveReliances, ObjIndex);
             }
         }
     }
@@ -487,12 +511,13 @@ function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
 // This function returns all objectives (via array of indices) which meets objective spawn criteria
 function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
-    local int i;
+    local int i, ObjIndex;
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
-    local array<int> ObjectiveIndices;
+    local array<int> ObjectiveIndices, RejectedObjectiveIndices;
     local UComparator_int Comparator;
     local int Depth, MinDepth;
+    local bool bWasRejected;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
@@ -503,6 +528,8 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
             continue;
         }
 
+        ObjectiveIndices.Length = 0;
+
         // Root objectives are those that are active
         if (Obj.IsActive())
         {
@@ -510,10 +537,10 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
-    // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
+    // We have the root objectives, lets traverse the trees to find the nearest objective with spawnpoint hints defined.
     for (i = 0; i < Roots.Length; ++i)
     {
-        TraverseTreeNode(Team, Roots[i], Roots[i], Indices);
+        TraverseTreeNode(Team, Roots[i], Roots[i], Indices, RejectedObjectiveIndices);
     }
 
     // Sort the indices by depth.
@@ -521,16 +548,28 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
     class'USort'.static.ISort(Indices, Comparator);
 
-    // Eliminate all indices that are below the Minimum Required Depth
+    // Eliminate all indices that are below the Minimum Required Depth or have been rejected.
     MinDepth = GetMinRequiredDepth();
     for (i = Indices.Length - 1; i >= 0; --i)
     {
-        if ((Indices[i] >> 16) < MinDepth)
+        ObjIndex = Indices[i] & 0xFFFF;
+        bWasRejected = class'UArray'.static.IIndexOf(RejectedObjectiveIndices, ObjIndex) != -1;
+
+        if (bWasRejected)
         {
+            // If the objective was rejected, remove it.
             Indices.Remove(i, 1);
+            continue;
+        }
+        else if ((Indices[i] >> 16) < MinDepth)
+        {
+            // If the objective is below the minimum depth, remove it.
+            Indices.Remove(i, 1);
+            continue;
         }
     }
 
+    // TODO: eliminate this
     // Eliminate all objective indices that do not match the lowest depth
     if (Indices.Length > 0)
     {
@@ -545,18 +584,18 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
+    // Clear the depth bits from the indices.
     for (i = 0; i < Indices.Length; ++i)
     {
         Indices[i] = Indices[i] & 0xFFFF;
     }
 }
 
-function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, out array<int> RejectedObjectiveIndices, optional int Depth)
 {
     local int i;
     local bool bIsFarEnoughAway;
     local bool bNodeHasHints;
-    local bool bAlreadyAdded;
     local bool bIsActive;
     local DH_LevelInfo LI;
 
@@ -572,19 +611,29 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
         return;
     }
 
-    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
-    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
-    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
-    bIsActive = Node.Objective.IsActive();
-
-    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
+    if (Root != Node)
     {
-        ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
+        bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+        bIsActive = Node.Objective.IsActive();
+
+        if (bNodeHasHints && !bIsActive)
+        {
+            bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
+
+            if (bIsFarEnoughAway)
+            {
+                class'UArray'.static.IAddUnique(ObjectiveIndices, (Depth << 16) | Node.Objective.ObjNum);
+            }
+            else
+            {
+                class'UArray'.static.IAddUnique(RejectedObjectiveIndices, Node.Objective.ObjNum);
+            }
+        }
     }
 
     for (i = 0; i < Node.Children.Length; ++i)
     {
-        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
+        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, RejectedObjectiveIndices, Depth + 1);
     }
 }
 
@@ -668,25 +717,6 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     }
 
     return Node;
-}
-
-function int AddConstructionClass(class<DHConstruction> ConstructionClass)
-{
-    local int i;
-
-    if (ConstructionClass != none)
-    {
-        for (i = 0; i < arraycount(ConstructionClasses); ++i)
-        {
-            if (ConstructionClasses[i] == none)
-            {
-                ConstructionClasses[i] = ConstructionClass;
-                return i;
-            }
-        }
-    }
-
-    return -1;
 }
 
 // Modified for net client to check whether local local player has his weapons locked & it's now time to unlock them
@@ -1271,7 +1301,7 @@ function RemoveRadio(DHRadio Radio)
 //------------------------------------------------------------------------------
 
 // Modified to avoid "accessed none" errors on PRI.Team
-function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
+function AddRallyPoint(PlayerReplicationInfo PRI, Vector NewLoc, optional bool bRemoveFromList)
 {
     if (PRI != none && PRI.Team != none)
     {
@@ -1280,7 +1310,7 @@ function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool b
 }
 
 // Modified to avoid "accessed none" errors on PRI.Team
-function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestType, optional vector RequestLocation)
+function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestType, optional Vector RequestLocation)
 {
     if (PRI != none && PRI.Team != none)
     {
@@ -1573,7 +1603,7 @@ simulated function array<MapMarker> GetMapMarkers(DHPlayer PC)
     return MapMarkers;
 }
 
-simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer PC, vector WorldLocation)
+simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer PC, Vector WorldLocation)
 {
     local int i;
     local array<MapMarker> MapMarkers;
@@ -1663,7 +1693,7 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
     }
 }
 
-function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation, vector WorldLocation)
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, Vector MapLocation, Vector WorldLocation)
 {
     local int i;
     local MapMarker M;
@@ -1906,29 +1936,29 @@ simulated function float GetMapIconYaw(float WorldYaw)
 }
 
 // Gets the map coordindates (0..1) from a world location.
-simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
+simulated function GetMapCoords(Vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
 {
     local float  MapScale;
-    local vector MapCenter;
+    local Vector MapCenter;
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
     WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
 
-    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width * 0.5),
                      0.0,
                      1.0 - Width);
 
-    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height * 0.5),
                      0.0,
                      1.0 - Height);
 }
 
 // Gets the world location from map coordinates.
-simulated function vector GetWorldCoords(float X, float Y)
+simulated function Vector GetWorldCoords(float X, float Y)
 {
     local float MapScale;
-    local vector MapCenter, WorldLocation;
+    local Vector MapCenter, WorldLocation;
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
@@ -1940,12 +1970,32 @@ simulated function vector GetWorldCoords(float X, float Y)
     return WorldLocation;
 }
 
+// Gets surface location from map coordinates
+simulated function Vector GetWorldSurfaceCoords(float X, float Y, float TraceHeight)
+{
+    local Vector TraceStart, TraceEnd, HitNormal, HitLocation;
+    local Actor HitActor;
+
+    TraceStart = GetWorldCoords(X, Y);
+    TraceStart.Z += TraceHeight;
+
+    TraceEnd = TraceStart + vect(0, 0, -1) * TraceHeight * 2;
+
+    foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (HitActor.bStatic && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
+        {
+            return HitLocation;
+        }
+    }
+}
+
 // This function will adjust a hud map location based on the rotation offset of
 // the overhead map.
 // NOTE: This is functionally identical to same function in ROHud. It has been
 // moved here because it had no business being in that class since it only
 // referenced things in the GRI class.
-simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+simulated function Vector GetAdjustedHudLocation(Vector HudLoc, optional bool bInvert)
 {
     local float SwapX, SwapY;
     local int Offset;
@@ -2382,52 +2432,17 @@ defaultproperties
     ReinforcementsInfiniteText="Infinite"
     RoundWinnerTeamIndex=255
 
-    // Constructions
-
-    // Logistics
-    ConstructionClassNames(0)="DH_Construction.DHConstruction_SupplyCache"
-    ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
-    ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
-    ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
-
-    // Obstacles
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
-
-    // Guns
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
-    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
-    ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_ATGun_HeavyEarly"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_AAGun_Medium"
-
-    // Defenses
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
-    ConstructionClassNames(21)="DH_Construction.DHConstruction_MolotovCrate"
-
-    // Artillery
-    ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"
-
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
     MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
     MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Squad_Attention"
-    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_CommandPost"
     MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
     MapMarkerClassNameS(6)="DH_Engine.DHMapMarker_Enemy_Vehicle"
     MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_Tank"
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_CommandPost"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
 
     // Danger Zone

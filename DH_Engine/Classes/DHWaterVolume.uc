@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWaterVolume extends PhysicsVolume;
@@ -25,7 +25,7 @@ defaultproperties
     bIsShallowWater=true // leveller can override
     LocationName=""
     FluidFriction=0.3        // 2.4 in WaterVolume
-    KExtraLinearDamping=2.5  // same as WaterVolume
+    KExtraLinearDamping=0.4
     KExtraAngularDamping=0.4 // same as WaterVolume
     bDistanceFog=true
     DistanceFogColor=(R=0,G=0,B=0,A=0) // 32/64/128/64 in WaterVolume

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
@@ -8,6 +8,7 @@ class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="F1 Grenade"
+    NativeItemName="F1 Granata"
     FireModeClass(0)=class'DH_Weapons.DH_F1GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'
@@ -18,7 +19,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    FuzeLength=4.0
+    FuzeLengthRange=(Min=4.0,Max=4.0)
     bHasReleaseLever=true
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0

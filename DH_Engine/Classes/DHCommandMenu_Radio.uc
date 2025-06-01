@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_Radio extends DHCommandMenu
@@ -132,7 +132,7 @@ function OnActive()
     }
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local int Index;

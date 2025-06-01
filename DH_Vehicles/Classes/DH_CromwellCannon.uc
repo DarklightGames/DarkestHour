@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CromwellCannon extends DHVehicleCannon;
@@ -32,12 +32,11 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
 
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(2)="WP"
 
     nProjectileDescriptions(0)="M61 APC"
     nProjectileDescriptions(1)="M48 HE-T"

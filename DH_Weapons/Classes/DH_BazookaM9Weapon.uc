@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BazookaM9Weapon extends DHRocketWeapon;
@@ -37,7 +37,8 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_empty"
 
-    RangeSettings(0)=(FirePitch=5,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
-    RangeSettings(1)=(FirePitch=200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
-    RangeSettings(2)=(FirePitch=635,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
+    RangeDistanceUnit=DU_Yards
+    RangeSettings(0)=(Range=50,FirePitch=5,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
+    RangeSettings(1)=(Range=100,FirePitch=200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
+    RangeSettings(2)=(Range=150,FirePitch=635,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
 }

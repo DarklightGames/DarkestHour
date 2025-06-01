@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kar98NoCoverWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Karabiner 98k (w/o sight hood)"
+    ItemName="Kar 98k (no sight hood)"
+    NativeItemName="Karabiner 98k (no sight hood)"
     FireModeClass(0)=class'DH_Weapons.DH_Kar98NoCoverFire'
     FireModeClass(1)=class'DH_Weapons.DH_Kar98NoCoverMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Kar98NoCoverAttachment'

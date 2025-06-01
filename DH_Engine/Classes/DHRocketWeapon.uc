@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRocketWeapon extends DHProjectileWeapon
@@ -9,6 +9,7 @@ class DHRocketWeapon extends DHProjectileWeapon
 // Range Settings
 struct RangeSetting
 {
+    var int Range;
     var int  FirePitch;
     var name IronIdleAnim;
     var name IronFireAnim;
@@ -17,6 +18,7 @@ struct RangeSetting
     var name AssistedReloadAnim;
 };
 
+var     DHUnits.EDistanceUnit   RangeDistanceUnit;            // unit of measure for range settings
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
 
@@ -60,6 +62,11 @@ exec simulated function SwitchFireMode()
         if (InstigatorIsLocallyControlled())
         {
             PlayIdle();
+
+            Instigator.ReceiveLocalizedMessage(
+                class'DHWeaponRangeMessage', 
+                class'UInteger'.static.FromShorts(RangeSettings[RangeIndex].Range, int(RangeDistanceUnit))
+            );
         }
     }
 }
@@ -182,7 +189,7 @@ simulated function NotifyOwnerJumped()
 // New function to spawn any RocketAttachment actor (note this may get called by a reload animation notify, so the timing is spot on, e.g. PIAT)
 simulated event SpawnRocketAttachment()
 {
-    local vector ProjectileLocation;
+    local Vector ProjectileLocation;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -490,10 +497,10 @@ static function StaticPrecache(LevelInfo L)
 
 // Modified to stop backblast damage from hurting the shooter (nothing else calls HurtRadius, so this hack should not be harmful)
 // This is a hack, but is also a temporary solution until the backblast system is redesigned
-simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local actor  Victims;
-    local vector Dir;
+    local Vector Dir;
     local float  Dist, DamageScale;
 
     if (bHurtEntry)

@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_STG44ScopedWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sturmgewehr 44 (ZF4)"
+    ItemName="StG 44 (ZF4)"
+    NativeItemName="Sturmgewehr 44 (ZF4)"
     FireModeClass(0)=class'DH_Weapons.DH_STG44ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_STG44ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_STG44ScopedAttachment'

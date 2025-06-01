@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SovietAmoebaLatePawn extends DH_SovietPawn;  //epaulets are hidden under camo, but pre-43 collar insignia is removed

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitWaterEffectLarge extends emitter;
+class DHBulletHitWaterEffectLarge extends Emitter;
 
 #exec OBJ LOAD FILE=..\Textures\DH_FX_Tex.utx
 

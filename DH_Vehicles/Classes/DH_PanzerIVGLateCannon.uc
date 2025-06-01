@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVGLateCannon extends DHVehicleCannon;
@@ -19,6 +19,7 @@ defaultproperties
 
     // Turret armor
     bHasAddedSideArmor=true
+    bHasAddedRearArmor=true
     FrontArmorFactor=5.0
     RightArmorFactor=3.1
     LeftArmorFactor=3.1
@@ -39,16 +40,15 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShellHEAT'
 
     ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.34"
-    nProjectileDescriptions(2)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Gr.38 Hl/B"
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=16
@@ -77,7 +77,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
+    AltFireSoundClass=Sound'Inf_Weapons.mg34_p_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSmokeEffect_LargeShellWP extends DHSmokeEffectBase;
 
 defaultproperties
 {
-  Begin Object Class=SpriteEmitter Name=SpriteEmitter0
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=True
         FadeOut=True
         FadeIn=True

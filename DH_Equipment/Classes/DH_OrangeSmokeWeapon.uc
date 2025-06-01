@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_OrangeSmokeWeapon extends DHExplosiveWeapon;
@@ -23,7 +23,8 @@ function bool CanDeadThrow()
 
 defaultproperties
 {
-    ItemName="RauchSichtzeichen Orange 160"
+    ItemName="RauchSichtzeichen Orange 160 Signal Grenade"
+    NativeItemName="RauchSichtzeichen Orange 160"
     FireModeClass(0)=class'DH_Equipment.DH_OrangeSmokeFire'
     FireModeClass(1)=class'DH_Equipment.DH_OrangeSmokeTossFire'
     AttachmentClass=class'DH_Equipment.DH_OrangeSmokeAttachment'
@@ -31,6 +32,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
 
     InventoryGroup=4
-    GroupOffset=3
+    GroupOffset=4
     Priority=1
 }

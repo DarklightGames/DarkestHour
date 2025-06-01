@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Bofors40mmCannon extends DHVehicleAutoCannon;
@@ -11,7 +11,7 @@ var     name        ElevationControlBone;
 // New function to animate the traverse & elevation controls, called by cannon pawn when gun moves
 simulated function UpdateControlsRotation()
 {
-    local rotator ControlRotation;
+    local Rotator ControlRotation;
 
     ControlRotation.Pitch = -CurrentAim.Pitch * 32;
     SetBoneRotation(TraverseControlBone, ControlRotation);
@@ -21,7 +21,7 @@ simulated function UpdateControlsRotation()
 }
 
 // From DHATGunCannon, as gun will always be penetrated by a shell
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
    return true;
 }
@@ -47,7 +47,6 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
 

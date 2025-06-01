@@ -1,6 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// TODO:
+// [ ] The shells eject the wrong direction
 //==============================================================================
 
 class DH_MAB38Fire extends DHAutomaticFire;
@@ -29,8 +32,8 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
 
     ShellRotOffsetIron=(Pitch=25000)
-    ShellRotOffsetHip=(Pitch=10000)
+    ShellRotOffsetHip=(Pitch=10000,Yaw=-16384)
 
-    FireIronLastAnim="iron_shoot_last"
+    FireIronLastAnim="iron_shoot_end_empty"
     FireLastAnim="shoot_end_empty"
 }

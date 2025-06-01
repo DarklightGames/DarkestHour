@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtilleryShell extends DHProjectile;
@@ -10,7 +10,6 @@ class DHArtilleryShell extends DHProjectile;
 var     byte                CloseSoundIndex;            // replaces SavedCloseSound as now only the server selects random CloseSound & replicates it to net clients
 var     bool                bAlreadyDroppedProjectile;  // renamed from bDroppedProjectileFirst
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
-var     AvoidMarker         Fear;                       // scare the bots away from this
 
 // Sounds & explosion effects
 var     sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
@@ -22,11 +21,11 @@ var     class<Emitter>      ShellHitDirtEffectLowClass; // artillery hitting dir
 var     class<Emitter>      ShellHitSnowEffectLowClass; // artillery hitting snow emitter low settings
 
 // Camera shake & blur
-var     vector              ShakeRotMag;                // how far to rot view
-var     vector              ShakeRotRate;               // how fast to rot view
+var     Vector              ShakeRotMag;                // how far to rot view
+var     Vector              ShakeRotRate;               // how fast to rot view
 var     float               ShakeRotTime;               // how much time to rotate the player's view
-var     vector              ShakeOffsetMag;             // max view offset vertically
-var     vector              ShakeOffsetRate;            // how fast to offset view vertically
+var     Vector              ShakeOffsetMag;             // max view offset vertically
+var     Vector              ShakeOffsetRate;            // how fast to offset view vertically
 var     float               ShakeOffsetTime;            // how much time to offset view
 var     float               BlurTime;                   // how long blur effect should last for this shell
 var     float               BlurEffectScalar;
@@ -51,17 +50,6 @@ simulated function PostBeginPlay()
 
     PlaySound(DistantSound,, 2.0,, 50000.0); // volume reduced to 2 as that's the biggest multiplier on any transient sound (same with other sounds)
     SetTimer(GetSoundDuration(DistantSound) * 0.95, false);
-}
-
-// From deprecated ROArtilleryShell class
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (Fear != none)
-    {
-        Fear.Destroy();
-    }
 }
 
 // Based on deprecated ROArtilleryShell class, but with functionality moved into called functions
@@ -90,7 +78,7 @@ simulated function Timer()
 // Also moved some functionality from Timer() here so we don't need to save DistanceToTarget as an instance variable
 simulated function SetUpStrike()
 {
-    local vector ImpactLocation, HitNormal;
+    local Vector ImpactLocation, HitNormal;
     local float  FlightTimeToTarget, CloseSoundDuration, NextTimerDuration;
 
     // First do a trace downwards to get the expected impact location
@@ -116,14 +104,6 @@ simulated function SetUpStrike()
         }
 
         SetTimer(NextTimerDuration, false);
-
-        // Scare bots away from the impact location
-        if (Role == ROLE_Authority)
-        {
-            Fear = Spawn(class'AvoidMarker',,, ImpactLocation);
-            Fear.SetCollisionSize(DamageRadius, 200.0);
-            Fear.StartleBots();
-        }
     }
     else
     {
@@ -156,7 +136,7 @@ simulated function PlayCloseSound()
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
     {
@@ -206,19 +186,19 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 }
 
 // From deprecated ROArtilleryShell class, but calling Explode() directly instead of calling Landed(), which just calls Explode() anyway
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     Explode(Location, HitNormal);
 }
 
 // From deprecated ROArtilleryShell class
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     Explode(Location, HitNormal);
 }
 
 // Modified to to call SpawnExplosionEffects() from a single, logical place, but with explosion radius damage moved to BlowUp()
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     BlowUp(HitLocation);
     SpawnExplosionEffects(Location, HitNormal);
@@ -226,7 +206,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Containing explosion radius damage from deprecated ROArtilleryShell class (moved here from Explode)
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
@@ -235,12 +215,12 @@ function BlowUp(vector HitLocation)
 }
 
 // From deprecated ROArtilleryShell class (renamed from SpawnEffects), with functionality to toss ragdolls moved here from Destroyed()
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
     local ROPawn        Victims;
     local ESurfaceTypes ST;
-    local material      HitMaterial;
-    local vector        TraceHitLocation, TraceHitNormal, Direction, Start;
+    local Material      HitMaterial;
+    local Vector        TraceHitLocation, TraceHitNormal, Direction, Start;
     local float         DamageScale, Distance;
 
     if (Level.NetMode == NM_DedicatedServer)
@@ -254,7 +234,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 
     if (EffectIsRelevant(HitLocation, false))
     {
-        Trace(TraceHitLocation, TraceHitNormal, Location + (16.0 * vector(Rotation)), Location, false,, HitMaterial);
+        Trace(TraceHitLocation, TraceHitNormal, Location + (16.0 * Vector(Rotation)), Location, false,, HitMaterial);
 
         if (HitMaterial != none)
         {
@@ -265,33 +245,33 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
             ST = EST_Default;
         }
 
-        Spawn(class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), rotator(HitNormal));
+        Spawn(class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), Rotator(HitNormal));
 
         if (ST == EST_Snow || ST == EST_Ice)
         {
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
             {
-                Spawn(ShellHitSnowEffectLowClass,,, HitLocation, rotator(HitNormal));
+                Spawn(ShellHitSnowEffectLowClass,,, HitLocation, Rotator(HitNormal));
             }
             else
             {
-                Spawn(ShellHitSnowEffectClass,,, HitLocation, rotator(HitNormal));
+                Spawn(ShellHitSnowEffectClass,,, HitLocation, Rotator(HitNormal));
             }
 
-            Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecalSnow, self,, HitLocation, Rotator(-HitNormal));
         }
         else
         {
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
             {
-                Spawn(ShellHitDirtEffectLowClass,,, HitLocation, rotator(HitNormal));
+                Spawn(ShellHitDirtEffectLowClass,,, HitLocation, Rotator(HitNormal));
             }
             else
             {
-                Spawn(ShellHitDirtEffectClass,,, HitLocation, rotator(HitNormal));
+                Spawn(ShellHitDirtEffectClass,,, HitLocation, Rotator(HitNormal));
             }
 
-            Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecal, self,, HitLocation, Rotator(-HitNormal));
         }
     }
 
@@ -315,14 +295,15 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
+    local DHConstruction C;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked;
-    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local Vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
     local int           i;
 
@@ -363,15 +344,25 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
-        // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
-        // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
-        VictimLocation = Victim.Location;
-        V = DHVehicle(Victim);
+        // Before tracing the victim, we must adjust its location for certain types of actors
+        // Tracing to origin can be unreliable as it's usually located at the bottom and can sink under the terrain, blocking the blast damage
+        C = DHConstruction(Victim);
 
-        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+        if (C != none)
         {
-            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            VictimLocation = C.GetExplosiveDamageTraceLocation();
+        }
+        else
+        {
+            VictimLocation = Victim.Location;
+
+            V = DHVehicle(Victim);
+
+            if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+            {
+                // Raise the trace location to the cannon bone height
+                VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            }
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
@@ -486,7 +477,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius()
-function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WP;
     local int i;
@@ -509,11 +500,11 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, floa
 }
 
 // New function to handle blast damage to vehicle occupants
-function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local Coords HeadBoneCoords;
+    local Vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
     local float  Distance, DamageScale;
 
     if (P != none)
@@ -582,7 +573,7 @@ simulated function DoShakeEffect()
 // wasn't as good, but certainly doesn't make sense now. This is an effect
 // that's the size of a building & it's not instantaneous; I don't care how far
 // away it is or if you're not looking at it right this instant -- it's relevant.
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
     return true;
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS5vTruckSupport extends DH_ZiS5vTruck;
@@ -20,8 +20,10 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.77
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="Construction_supply"
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
+    MapIconMaterial=Texture'DH_GUI_tex.GUI.supply_point'
     ResupplyAttachmentBone="Ammo_resupply"
-    VehHitpoints(5)=(PointRadius=40.0,PointScale=1.0,PointBone="Ammo_resupply",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(5)=(PointRadius=40.0,PointBone="Ammo_resupply",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'

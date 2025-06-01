@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // An interaction that prompts the player for a response.
 //==============================================================================
@@ -19,7 +19,7 @@ struct Option
 };
 var array<Option> Options;
 var string OptionsText;
-var color KeyTextColor;
+var Color KeyTextColor;
 
 function OnOptionSelected(int Index)
 {

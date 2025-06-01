@@ -1,9 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
+    showcategories(Events)
     placeable
     abstract;
 
@@ -29,6 +30,8 @@ var     bool                bCanBeSquadLeader;      // squad leaders can take th
 
 var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
 
+var()   bool                bStartsLocked;          // Role is locked at the start of the game.
+var     bool                bIsLocked;              // If true, role is locked and cannot be selected. Can be unlocked via DH_ModifyRole events.
 
 enum EHandType
 {
@@ -47,11 +50,24 @@ struct SBackpack
 {
     var class<DHBackpack> BackpackClass;
     var float             Probability;
-    var vector            LocationOffset;
-    var rotator           RotationOffset;
+    var Vector            LocationOffset;
+    var Rotator           RotationOffset;
 };
 
-var array<SBackpack> Backpack;
+var array<SBackpack> Backpacks;
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsLocked;
+}
+
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    bIsLocked = bStartsLocked;
+}
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -105,9 +121,9 @@ simulated function HandlePrecache()
             default.Headgear[i].static.StaticPrecache(Level);
         }
 
-        for (i = 0; i < default.Backpack.Length; ++i)
+        for (i = 0; i < default.Backpacks.Length; ++i)
         {
-            default.Backpack[i].BackpackClass.static.StaticPrecache(Level);
+            default.Backpacks[i].BackpackClass.static.StaticPrecache(Level);
         }
 
         if (default.DetachedArmClass != none)
@@ -134,12 +150,12 @@ simulated function HandlePrecache()
 
             if (PR.BodySkinName != "")
             {
-                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
             }
 
             if (PR.FaceSkinName != "")
             {
-                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
             }
         }
     }
@@ -186,35 +202,35 @@ static function string GetPawnClass()
 }
 
 // TODO: Refactor offset stuff!
-function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator RotationOffset)
+function class<DHBackpack> GetBackpack(out Vector LocationOffset, out Rotator RotationOffset)
 {
     local float R, ProbabilitySum;
     local int   i;
 
-    if (Backpack.Length == 0)
+    if (Backpacks.Length == 0)
     {
         return none;
     }
 
-    if (Backpack.Length == 1)
+    if (Backpacks.Length == 1)
     {
-        LocationOffset = Backpack[0].LocationOffset;
-        RotationOffset = Backpack[0].RotationOffset;
-        return Backpack[0].BackpackClass;
+        LocationOffset = Backpacks[0].LocationOffset;
+        RotationOffset = Backpacks[0].RotationOffset;
+        return Backpacks[0].BackpackClass;
     }
 
     R = FRand();
 
-    for (i = 0; i < Backpack.Length; ++i)
+    for (i = 0; i < Backpacks.Length; ++i)
     {
-        ProbabilitySum += Backpack[i].Probability;
+        ProbabilitySum += Backpacks[i].Probability;
 
         if (R <= ProbabilitySum)
         {
-            LocationOffset = Backpack[0].LocationOffset;
-            RotationOffset = Backpack[0].RotationOffset;
+            LocationOffset = Backpacks[0].LocationOffset;
+            RotationOffset = Backpacks[0].RotationOffset;
 
-            return Backpack[i].BackpackClass;
+            return Backpacks[i].BackpackClass;
         }
     }
 
@@ -297,6 +313,13 @@ simulated function Material GetHandTexture(DH_LevelInfo LI)
     return HandTexture;
 }
 
+simulated function Reset()
+{
+    super.Reset();
+
+    bIsLocked = bStartsLocked;
+}
+
 // New function to check whether a CharacterName for a player record is valid for this role
 // Note that player records are not used in new DH system, resulting in a null value being passed into this function & we return true if role has no defined Models array
 simulated function bool IsValidCharacterName(string InCharacterName)
@@ -333,6 +356,11 @@ simulated static function string GetDisplayName()
     }
 }
 
+simulated function bool IsLimited()
+{
+    return Limit != 255;
+}
+
 defaultproperties
 {
     Limit=255 // unlimited (0 is now deactivated)
@@ -344,4 +372,9 @@ defaultproperties
     HandType=Hand_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
+    // In order to replicate the locked state of the role, we need to enable property replication and ensure
+    // that the actor is always relevant. We'll also tone down the update frequency from 10 to 2 to reduce network load.
+    bSkipActorPropertyReplication=false
+    bAlwaysRelevant=true
+    NetUpdateFrequency=2
 }

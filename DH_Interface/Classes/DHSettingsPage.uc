@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSettingsPage extends UT2K4SettingsPage;
@@ -8,7 +8,7 @@ class DHSettingsPage extends UT2K4SettingsPage;
 // Modified to avoid "failed to load NULL" log errors
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local rotator PlayerRot;
+    local Rotator PlayerRot;
     local int     i;
 
     super(UT2K4MainPage).InitComponent(MyController, MyOwner); // skip over Super in UT2K4SettingsPage as we're re-stating it here

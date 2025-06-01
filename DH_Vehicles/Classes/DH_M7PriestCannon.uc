@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M7PriestCannon extends DHVehicleCannon;
@@ -28,13 +28,12 @@ defaultproperties
     CustomPitchDownLimit=64625 // -5 degrees
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
 
-    ProjectileDescriptions(0)="HE-1"
-    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(0)="HE-T"
+    ProjectileDescriptions(1)="WP"
     ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="M1 HE-T"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFastAutoFire extends DHAutomaticFire;
@@ -25,7 +25,7 @@ var     float                   PackingThresholdTime;   // If the shots are clos
 // Modified to support packing two shots together to save net bandwidth
 // The high rate of fire system packs shots together, replicates the shot info to net clients & then they spawn their own client bullets
 // Bullet actor replication is disabled
-function Projectile SpawnProjectile(vector Start, rotator Dir)
+function Projectile SpawnProjectile(Vector Start, Rotator Dir)
 {
     local Projectile SpawnedProjectile;
 
@@ -121,11 +121,26 @@ function PlayAmbientSound(sound aSound)
     }
 }
 
+simulated function UpdateMagazineDriver()
+{
+    local DHProjectileWeapon PW;
+
+    // Update the weapon's component animations for the magazine ammunition.
+    PW = DHProjectileWeapon(Weapon);
+
+    if (PW != none)
+    {
+        PW.UpdateWeaponComponentAnimationsWithDriverType(DRIVER_MagazineAmmunition);
+    }
+}
+
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
 {
     if (ROWeapon(Owner) != none && !ROWeapon(Owner).IsBusy() && AllowFire() && (IsInState('FireLoop') || bWaitForRelease))
     {
+        UpdateMagazineDriver();
+
         super.ModeDoFire();
     }
 }

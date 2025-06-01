@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPOLRadioOperatorRoles extends DHAlliedRadioOperatorRoles
@@ -15,5 +15,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHRadioItem"
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
-    Backpack(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack')
+    Backpacks(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack')
 }

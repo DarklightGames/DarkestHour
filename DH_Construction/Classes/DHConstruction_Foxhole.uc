@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -37,7 +37,7 @@ simulated function PostBeginPlay()
 
 simulated function OnConstructed()
 {
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
 
     super.OnConstructed();
 

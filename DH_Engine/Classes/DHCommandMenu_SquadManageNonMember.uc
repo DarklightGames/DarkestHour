@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_SquadManageNonMember extends DHCommandMenu;
@@ -41,7 +41,7 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local Pawn P;

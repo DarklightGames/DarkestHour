@@ -1,16 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMetalArmorEffect extends emitter;
+class DHBulletHitMetalArmorEffect extends Emitter;
 
-var texture SparkGroup[4];
+var Texture SparkGroup[4];
 
 simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties

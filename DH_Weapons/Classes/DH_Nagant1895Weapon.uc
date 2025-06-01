@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Nagant1895Weapon extends DHRevolverWeapon;
 
 defaultproperties
 {
-    ItemName="Nagant M1895 Revolver"
+    ItemName="Nagant M1895"
     FireModeClass(0)=class'DH_Weapons.DH_Nagant1895Fire'
     FireModeClass(1)=class'DH_Weapons.DH_Nagant1895MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Nagant1895Attachment'

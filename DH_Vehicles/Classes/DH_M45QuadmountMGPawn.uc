@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M45QuadmountMGPawn extends DHVehicleMGPawn;
@@ -47,9 +47,9 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
 // Modified so camera rotation & offset positioning is always based on the weapon's aim, so player's view always moves with turret
 // But with 'look around' rotation added in when player's head is raised above the reflector sight
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, TurretQuat, NonRelativeQuat;
+    local Quat RelativeQuat, TurretQuat, NonRelativeQuat;
 
     ViewActor = self;
 

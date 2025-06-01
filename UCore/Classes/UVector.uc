@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class UVector extends Object
     abstract;
 
-final static function vector RandomRange(rangevector Range)
+final static function Vector RandomRange(RangeVector Range)
 {
-    local vector V;
+    local Vector V;
 
     V.X = class'UFloat'.static.RandomRange(Range.X.Min, Range.X.Max);
     V.Y = class'UFloat'.static.RandomRange(Range.Y.Min, Range.Y.Max);
@@ -17,24 +17,24 @@ final static function vector RandomRange(rangevector Range)
     return V;
 }
 
-final static function float MaxElement(vector V)
+final static function float MaxElement(Vector V)
 {
     return FMax(V.X, FMax(V.Y, V.Z));
 }
 
-final static function float MinElement(vector V)
+final static function float MinElement(Vector V)
 {
     return FMin(V.X, FMin(V.Y, V.Z));
 }
 
-final static function vector VLerp(float T, vector Start, vector End)
+final static function Vector VLerp(float T, Vector Start, Vector End)
 {
     return Start + ((End - Start) * T);
 }
 
-final static function vector MinComponent(vector A, vector B)
+final static function Vector MinComponent(Vector A, Vector B)
 {
-    local vector V;
+    local Vector V;
 
     V.X = FMin(A.X, B.X);
     V.Y = FMin(A.Y, B.Y);
@@ -43,9 +43,9 @@ final static function vector MinComponent(vector A, vector B)
     return V;
 }
 
-final static function vector MaxComponent(vector A, vector B)
+final static function Vector MaxComponent(Vector A, Vector B)
 {
-    local vector V;
+    local Vector V;
 
     V.X = FMax(A.X, B.X);
     V.Y = FMax(A.Y, B.Y);
@@ -54,17 +54,17 @@ final static function vector MaxComponent(vector A, vector B)
     return V;
 }
 
-final static function float SignedAngle(vector From, vector To, vector PlaneNormal)
+final static function float SignedAngle(Vector From, Vector To, Vector PlaneNormal)
 {
     return ATan((From cross To) dot PlaneNormal, From dot To);
 }
 
-static function float InverseSquareLaw(vector PointA, vector PointB)
+static function float InverseSquareLaw(Vector PointA, Vector PointB)
 {
     return 1.0 / FMax(VSizeSquared(PointA - PointB), class'UFloat'.static.Epsilon());
 }
 
-static function bool IsInsideCylinder(vector Point, vector BaseA, vector BaseB, float Radius)
+static function bool IsInsideCylinder(Vector Point, Vector BaseA, Vector BaseB, float Radius)
 {
     local float D; // Distance to the cylinder axis
     local float T; // Position along the axis

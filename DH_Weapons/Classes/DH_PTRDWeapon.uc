@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PTRDWeapon extends DHProjectileWeapon;
@@ -80,7 +80,8 @@ simulated function Fire(float F)
 
 defaultproperties
 {
-    ItemName="PTRD-41"
+    ItemName="PTRD-41 Anti-Tank Rifle"
+    NativeItemName="PTRD-41"
     FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
     AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
     PickupClass=class'DH_Weapons.DH_PTRDPickup'

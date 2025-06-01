@@ -1,12 +1,30 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVotingReplicationInfo extends VotingReplicationInfo
     DependsOn(DHVotingHandler);
 
 var config bool bEnableSinglePlayerVoting; // for debugging purposes
+
+replication
+{
+    reliable if (Role < ROLE_Authority)
+        ServerForceMapVote;
+}
+
+function ServerForceMapVote(int MapIndex, int GameIndex)
+{
+    local DHVotingHandler DHVH;
+
+    DHVH = DHVotingHandler(VH);
+
+    if (DHVH != none)
+    {
+        DHVH.ForceMapVote(MapIndex, GameIndex, Owner);
+    }
+}
 
 // Grab data from VotingHandler on server side
 // Overriden to allow single-player debugging
@@ -104,4 +122,9 @@ simulated function Tick(float DeltaTime)
     {
         TickedReplicationQueue.Remove(i,1);
     }
+}
+
+defaultproperties
+{
+    bEnableSinglePlayerVoting=true
 }

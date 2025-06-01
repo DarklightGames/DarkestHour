@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_TanTelogreikaRadioOperatorEarly extends DHSOVRadioOperatorRoles;
@@ -14,5 +14,5 @@ defaultproperties
 
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
-	Backpack(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack',LocationOffset=(X=-0.1))
+	Backpacks(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack',LocationOffset=(X=-0.1))
 }

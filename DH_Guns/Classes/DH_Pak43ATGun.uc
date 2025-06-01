@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak43ATGun extends DHATGun;
@@ -20,11 +20,10 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
-    SupplyCost=2000
     bCanBeRotated=true
     PlayersNeededToRotate=2
     RotationsPerSecond=0.05
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

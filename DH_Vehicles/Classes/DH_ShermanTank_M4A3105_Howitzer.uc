@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanTank_M4A3105_Howitzer extends DH_ShermanTank_M4A375W;
@@ -16,7 +16,7 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a3_105'
 
     // Damage
-	// Compared to M4A375W: 105mm ammo is more likely to explode
-	AmmoIgnitionProbability=0.88  // 0.75 default
+    // Compared to M4A375W: 105mm ammo is more likely to explode
+    AmmoIgnitionProbability=0.88  // 0.75 default
 
 }

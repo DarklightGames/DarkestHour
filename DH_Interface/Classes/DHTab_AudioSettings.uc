@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_AudioSettings extends ROTab_AudioSettings;
@@ -62,6 +62,8 @@ function SaveSettings()
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     Begin Object Class=DHGUISectionBackground Name=AudioBK1
         Caption="Sound System"
         WinTop=0.1

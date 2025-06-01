@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIIINCannon extends DH_PanzerIIILCannon;
@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
@@ -32,7 +31,7 @@ defaultproperties
     ProjectileDescriptions(2)="Canister"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
-    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(1)="Gr.38 Hl/B"
     nProjectileDescriptions(2)="Kt.Kw.K"
 
     InitialPrimaryAmmo=24

@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_30calBeltRound extends ROFPAmmoRound;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.30Cal_ammo'
-    DrawScale=4.5
+    StaticMesh=StaticMesh'DH_M1919_stc.1st.M1919_bullet_1st'
+    DrawScale=5.0
 }

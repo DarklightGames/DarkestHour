@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -98,7 +98,8 @@ var localized   string                      NoneText,
                                             SquadLeadershipOnlyText,
                                             RecommendJoiningSquadText,
                                             UnassignedPlayersCaptionText,
-                                            NonSquadLeaderOnlyText
+                                            NonSquadLeaderOnlyText,
+                                            RoleLockedText
                                             ;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
@@ -587,6 +588,18 @@ function UpdateVehicles(optional bool bShowAlert)
             li_Vehicles.SetIndex(0);
         }
     }
+    
+    // Update the max vehicles number as well.
+    l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
+
+    if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+    }
+    else
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.White;
+    }
 }
 
 function OnOKButtonClick(byte Button)
@@ -649,8 +662,11 @@ function UpdateRoles()
             case RER_SquadLeaderOnly:
                 S @= "*" $ SquadLeadershipOnlyText $ "*";
                 break;
-            CASE RER_NonSquadLeaderOnly:
+            case RER_NonSquadLeaderOnly:
                 S @= "*" $ NonSquadLeaderOnlyText $ "*";
+                break;
+             case RER_Locked:
+                S @= "*" $ RoleLockedText $ "*";
                 break;
         }
         
@@ -1205,6 +1221,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
+    else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
+    {
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
+    }
 
     SetButtonsEnabled(true);
 }
@@ -1264,7 +1285,7 @@ function InternalOnChange(GUIComponent Sender)
 {
     local class<Inventory> InventoryClass;
     local RORoleInfo       RI;
-    local material         InventoryMaterial;
+    local Material         InventoryMaterial;
     local int              i, j;
 
     switch (Sender)
@@ -1291,17 +1312,17 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(RI.PrimaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
                     {
-                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
+                        cb_PrimaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(RI.SecondaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
                     {
-                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
+                        cb_SecondaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
@@ -1469,16 +1490,6 @@ function UpdateVehicleImage()
         {
             i_MaxVehicles.Show();
             l_MaxVehicles.Show();
-            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
-
-            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.Red;
-            }
-            else
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.White;
-            }
         }
     }
     else
@@ -1637,6 +1648,7 @@ function UpdateSquads()
             SetVisible(C.b_LeaveSquad, false);
             SetVisible(C.b_LockSquad, false);
             SetVisible(C.i_LockSquad, false);
+            SetVisible(C.i_NoRallyPoints, false);
         }
 
         return;
@@ -1695,6 +1707,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
 
         if (bIsSquadLeader)
         {
@@ -1728,7 +1741,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
@@ -1786,6 +1799,7 @@ function UpdateSquads()
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
         SetVisible(C.eb_SquadName, false);
+        SetVisible(C.i_NoRallyPoints, false);
     }
 
     while (j < p_Squads.SquadComponents.Length - 1)
@@ -1818,6 +1832,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
+        SetVisible(C.i_NoRallyPoints, false);
 
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
@@ -1845,6 +1860,12 @@ function UpdateSquads()
     else
     {
         SetVisible(p_Squads.SquadComponents[j], false);
+    }
+
+    // Update the background colors.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
     }
 }
 
@@ -1891,7 +1912,8 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     NonSquadLeaderOnlyText="NON-LEADERS ONLY"
-    RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+    RoleLockedText="LOCKED"
+    RecommendJoiningSquadText="It is HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional role options and closer deployment to the frontlines.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 
     SurrenderButtonCooldownSeconds=30
@@ -1954,7 +1976,7 @@ defaultproperties
     End Object
     c_Teams=TeamsContainerObject
 
-    Begin Object Class=GUIButton Name=AxisButtonObject
+    Begin Object Class=DHGUIButton Name=AxisButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.4
@@ -1987,7 +2009,7 @@ defaultproperties
     End Object
     l_Axis=AxisLabelObject
 
-    Begin Object Class=GUIButton Name=AlliesButtonObject
+    Begin Object Class=DHGUIButton Name=AlliesButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.4
@@ -2020,7 +2042,7 @@ defaultproperties
     End Object
     l_Allies=AlliesLabelObject
 
-    Begin Object Class=GUIButton Name=SpectateButtonObject
+    Begin Object Class=DHGUIButton Name=SpectateButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.2
@@ -2170,7 +2192,7 @@ defaultproperties
     End Object
     MapSquadsTabContainer=MapSquadsTabContainerObject
 
-    Begin Object Class=GUIButton Name=EquipmentButtonObject
+    Begin Object Class=DHGUIButton Name=EquipmentButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2192,7 +2214,7 @@ defaultproperties
     End Object
     i_EquipmentButton=EquipmentButtonImageObject
 
-    Begin Object Class=GUIButton Name=VehicleButtonObject
+    Begin Object Class=DHGUIButton Name=VehicleButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2214,7 +2236,7 @@ defaultproperties
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
 
-    Begin Object Class=GUIButton Name=MapButtonObject
+    Begin Object Class=DHGUIButton Name=MapButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2236,7 +2258,7 @@ defaultproperties
     End Object
     i_MapButton=MapButtonImageObject
 
-    Begin Object Class=GUIButton Name=SquadsButtonObject
+    Begin Object Class=DHGUIButton Name=SquadsButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2400,7 +2422,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.75
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.0
         OnChange=InternalOnChange
@@ -2421,7 +2443,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.5
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.333334
         OnChange=InternalOnChange

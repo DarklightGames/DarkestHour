@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_VSGunner extends DHGEMachineGunnerRoles;
@@ -19,4 +19,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon') // TO DO: some other weird sidearms?
     SecondaryWeapons(1)=(Item=none)
     SecondaryWeapons(2)=(Item=none)
+    
+    bCanBeSquadLeader=false
 }

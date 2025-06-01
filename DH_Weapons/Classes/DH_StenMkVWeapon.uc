@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StenMkVWeapon extends DHAutoWeapon;
@@ -35,6 +35,7 @@ defaultproperties
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
+    bPlusOneLoading=false
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"
     IronBringUpEmpty="Iron_in_empty"

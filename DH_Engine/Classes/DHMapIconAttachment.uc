@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment extends Actor
@@ -233,9 +233,9 @@ final simulated function byte GetTeamIndex()
     return TeamIndex;
 }
 
-final simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
+final simulated function Vector GetWorldCoords(DHGameReplicationInfo GRI)
 {
-    local vector L;
+    local Vector L;
     local float X, Y;
 
     if (AttachedTo != none)
@@ -297,7 +297,7 @@ static function OnError(EMapIconAttachmentError Error)
 delegate bool IsInDangerZone()
 {
     local DHGameReplicationInfo GRI;
-    local vector L;
+    local Vector L;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -317,7 +317,7 @@ function EVisibleFor GetVisibilityInDangerZone();
 // ICON APPEARANCE
 //==============================================================================
 
-simulated function color GetIconColor(DHPlayer PC)
+simulated function Color GetIconColor(DHPlayer PC)
 {
     local byte PlayerTeamIndex;
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
@@ -238,6 +238,7 @@ state Active
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.UpdateTime = ResupplyTime;
+            ResupplyAttachment.ResupplyStrategy.bGivesExtraAmmo = false;
         }
         else
         {
@@ -321,6 +322,8 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
 
 function OnPawnSpawned(Pawn P)
 {
+    super.OnPawnSpawned(P);
+
     SpawnsRemaining -= 1;
 
     if (InstigatorController != none &&
@@ -444,7 +447,7 @@ simulated function int GetSpawnTimePenalty()
     return SpawnTimePenalty;
 }
 
-function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     if (EventInstigator == none || EventInstigator.GetTeamNum() == GetTeamIndex())
     {
@@ -507,11 +510,6 @@ function AwardScoreOnEstablishment()
 
 function Destroyed()
 {
-    if (SRI != none)
-    {
-        SRI.OnSquadRallyPointDestroyed(self);
-    }
-
     super.Destroyed();
 
     if (MetricsObject != none)
@@ -522,6 +520,11 @@ function Destroyed()
     if (ResupplyAttachment != none)
     {
         ResupplyAttachment.Destroy();
+    }
+
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointDestroyed(self);
     }
 }
 

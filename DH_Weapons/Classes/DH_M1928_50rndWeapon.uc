@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1928_50rndWeapon extends DHFastAutoWeapon;
@@ -36,7 +36,7 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    ItemName="M1928 Thompson (50rd)"
+    ItemName="M1928A1 Thompson (50rd)"
     SwayModifyFactor=0.84 // +0.14
     FireModeClass(0)=class'DH_Weapons.DH_M1928_50rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'

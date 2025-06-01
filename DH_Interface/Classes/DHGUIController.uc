@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIController extends UT2K4GUIController;
@@ -302,7 +302,7 @@ simulated static function string GetQuitPage()
 
 defaultproperties
 {
-    FONT_NUM=15
+    FONT_NUM=17
     FontStack(0)=fntUT2k4Menu'ROInterface.ROGUIController.GUIMenuFont'
     FontStack(1)=fntUT2k4Default'ROInterface.ROGUIController.GUIDefaultFont'
     FontStack(2)=fntUT2k4Large'ROInterface.ROGUIController.GUILargeFont'
@@ -329,6 +329,15 @@ defaultproperties
     Begin Object class=DHHugeButtonFont Name=fntDHHugeButtonFont
     End Object
     FontStack(15)=fntDHHugeButtonFont
+    Begin Object class=DHConsoleFont Name=fntDHConsoleFont
+    End Object
+    FontStack(16)=fntDHConsoleFont
+    Begin Object class=DHButtonFontDS Name=fntDHButtonFontDS
+    End Object
+    FontStack(17)=fntDHButtonFontDS
+    Begin Object class=DHSmallFontDS Name=fntDHSmallFontDS
+    End Object
+    FontStack(18)=fntDHSmallFontDS
     MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
     MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'
     MouseCursors(2)=Texture'InterfaceArt_tex.Cursors.ResizeSWNE'
@@ -346,18 +355,19 @@ defaultproperties
     ImageList(7)=Texture'InterfaceArt_tex.Menu.DownMark'
     DefaultStyleNames(0)="ROInterface.ROSTY2CloseButton"
     DefaultStyleNames(1)="ROInterface.ROSTY_RoundScaledButton"
-    DefaultStyleNames(2)="ROInterface.ROSTY2SquareButton"
+    DefaultStyleNames(2)="DH_Interface.DHStyle_SquareButton"
     DefaultStyleNames(3)="ROInterface.ROSTY_ListBox"
     DefaultStyleNames(4)="ROInterface.ROSTY2ScrollZone"
     DefaultStyleNames(5)="ROInterface.ROSTY2TextButton"
-    DefaultStyleNames(7)="ROInterface.ROSTY2Header"
+    DefaultStyleNames(7)="DH_Interface.DHStyle_HeaderBar"
     DefaultStyleNames(8)="ROInterface.ROSTY_Footer"
     DefaultStyleNames(9)="ROInterface.ROSTY_TabButton"
-    DefaultStyleNames(13)="ROInterface.ROSTY_ServerBrowserGrid"
-    DefaultStyleNames(15)="ROInterface.ROSTY_ServerBrowserGridHeader"
+    DefaultStyleNames(13)="DH_Interface.DHStyle_ServerBrowserGrid"
+    DefaultStyleNames(14)="DH_Interface.DHStyle_NoBackground"
+    DefaultStyleNames(15)="DH_Interface.DHStyle_ServerBrowserGridHeader"
     DefaultStyleNames(21)="ROInterface.ROSTY_SquareBar"
     DefaultStyleNames(22)="ROInterface.ROSTY_MidGameButton"
-    DefaultStyleNames(23)="ROInterface.ROSTY_TextLabel"
+    DefaultStyleNames(23)="DH_Interface.DHStyle_TextLabel"
     DefaultStyleNames(24)="ROInterface.ROSTY2ComboListBox"
     DefaultStyleNames(26)="ROInterface.ROSTY2IRCText"
     DefaultStyleNames(27)="ROInterface.ROSTY2IRCEntry"
@@ -365,13 +375,13 @@ defaultproperties
     DefaultStyleNames(30)="ROInterface.ROSTY2ServerListContextMenu"
     DefaultStyleNames(31)="ROInterface.ROSTY_ListSelection"
     DefaultStyleNames(32)="ROInterface.ROSTY2TabBackground"
-    DefaultStyleNames(33)="ROInterface.ROSTY_BrowserListSel"
+    DefaultStyleNames(33)="DH_Interface.DHStyle_BrowserListSelection"
     DefaultStyleNames(34)="ROInterface.ROSTY2EditBox"
     DefaultStyleNames(35)="ROInterface.ROSTY2CheckBox"
     DefaultStyleNames(37)="ROInterface.ROSTY2SliderKnob"
     DefaultStyleNames(39)="ROInterface.ROSTY2ListSectionHeader"
     DefaultStyleNames(40)="ROInterface.ROSTY2ItemOutline"
-    DefaultStyleNames(42)="ROInterface.ROSTY2MouseOverLabel"
+    DefaultStyleNames(42)="DH_Interface.DHStyle_MouseOverLabel"
     DefaultStyleNames(43)="ROInterface.ROSTY2SliderBar"
     DefaultStyleNames(45)="ROInterface.ROSTY2TextButtonEffect"
     DefaultStyleNames(48)="ROInterface.ROSTY2FooterButton"
@@ -380,8 +390,8 @@ defaultproperties
     DefaultStyleNames(52)="ROInterface.ROSTY2VertDownButton"
     DefaultStyleNames(53)="ROInterface.ROSTY2_VertGrip"
     DefaultStyleNames(54)="ROInterface.ROSTY2Spinner"
-    DefaultStyleNames(55)="ROInterface.ROSTY2SectionHeaderTop"
-    DefaultStyleNames(56)="ROInterface.ROSTY2SectionHeaderBar"
+    DefaultStyleNames(55)="DH_Interface.DHStyle_SectionHeaderTop"
+    DefaultStyleNames(56)="DH_Interface.DHStyle_SectionHeaderBar"
     DefaultStyleNames(57)="DH_Interface.DHStyle_BlackText"
     DefaultStyleNames(58)="DH_Interface.DHStyle_LargeText"
     DefaultStyleNames(59)="DH_Interface.DHStyle_MenuTextButton"
@@ -422,12 +432,16 @@ defaultproperties
     DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
     DefaultStyleNames(95)="DH_Interface.DHStyle_ListSelectionGrey"
     DefaultStyleNames(96)="DH_Interface.DHStyle_ObjectiveSpawnButton"
+    DefaultStyleNames(97)="DH_Interface.DHStyle_ContextMenu"
+    DefaultStyleNames(98)="DH_Interface.DHStyle_ContextMenuSelection"
+    DefaultStyleNames(99)="DH_Interface.DHStyle_SpawnAdminButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
     MapVotingMenu="DH_Interface.DHMapVotingPage"
     EditFavoriteMenu="DH_Interface.DHEditFavoritePage"
     NetworkMsgMenu="DH_Interface.DHNetworkStatusMsg"
+	QuestionMenuClass="DH_Interface.DHGUIQuestionPage"
     MainMenuOptions(0)="DH_Interface.DHServerBrowser"
     MainMenuOptions(1)="DH_Interface.DHGamePageMP"
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"

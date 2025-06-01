@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConsole extends ROConsole;
@@ -389,21 +389,52 @@ state SpeechMenuVisible
 
         if (CanUseOrderCommands())
         {
-            for (i = 0; i < ROVP.Default.numCommands; i++)
+            for (i = 0; i < ROVP.default.numCommands; i++)
             {
-                if(ROVP.Default.OrderAbbrev[i] != "")
+                if(ROVP.default.OrderAbbrev[i] != "")
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderAbbrev[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderAbbrev[i];
                 }
                 else
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderString[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderString[i];
                 }
 
                 SMIndexArray[SMArraySize] = i;
                 SMArraySize++;
             }
         }
+    }
+
+    function buildSMVehicleDirectionArray()
+    {
+        local int i;
+		local class<ROVoicePack> VoicePack;
+
+		SMArraySize = 0;
+		PreviousStateName = ROSMS_Main;
+
+		VoicePack = GetROVoiceClass();
+        
+		if (VoicePack == none)
+        {
+			return;
+        }
+
+		for(i=0; i< VoicePack.default.numVehicleDirections; i++)
+		{
+            if (VoicePack.default.VehicleDirectionAbbrev[i] != "")
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionAbbrev[i];
+            }
+            else
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionString[i];
+            }
+
+			SMIndexArray[SMArraySize] = i;
+			SMArraySize++;
+		}
     }
 
     // Overriden to give squad leaders the ability to use order commands.
@@ -583,6 +614,68 @@ state SpeechMenuVisible
         PlayConsoleSound(SMAcceptSound);
         GotoState('');
     }
+
+    // Overridden to change the font, since it's hard-coded in the parent class.
+	function PostRender(Canvas C)
+	{
+		local float XL, YL;
+		local int SelLeft, i;
+		local float XMax, YMax;
+
+		C.Font = class'DHHud'.static.GetConsoleFont(C);
+
+		for (i = 0; i < 10; i++)
+		{
+			C.TextSize(NumberToString(i) $ "- ", XL, YL);
+			XMax = Max(XMax, XL);
+			YMax = Max(YMax, YL);
+		}
+
+		SMLineSpace = YMax * 1.1;
+		SMTab = XMax;
+		SelLeft = SMArraySize - SMOffset;
+
+		// First we figure out how big the bounding box needs to be
+		XMax = 0;
+		YMax = 0;
+
+		DrawNumbers(C, Min(SelLeft, 9), SelLeft > 9, true, XMax, YMax);
+		DrawCurrentArray(C, true, XMax, YMax);
+
+		C.TextSize(SMStateName[ROSMState], XL, YL);
+
+		XMax = Max(XMax, C.ClipX * (SMOriginX + SMMargin) + XL);
+		YMax = Max(YMax, (C.ClipY * SMOriginY) - (1.2 * SMLineSpace) + YL);
+		// XMax, YMax now contain to maximum bottom-right corner we drew to.
+
+		// Then draw the box
+		XMax -= C.ClipX * SMOriginX;
+		YMax -= C.ClipY * SMOriginY;
+		C.SetDrawColor(139, 28, 28, 255);
+		C.SetPos(C.ClipX * SMOriginX, C.ClipY * SMOriginY);
+		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), YMax + (SMMargin * C.ClipY));
+
+		// Draw highlight
+		if (bSpeechMenuUseMouseWheel)
+		{
+			C.SetDrawColor(255, 202, 180, 128);
+			C.SetPos(C.ClipX * SMOriginX, C.ClipY * (SMOriginY + SMMargin) + ((HighlightRow - 0.1) * SMLineSpace));
+			C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), 1.1 * SMLineSpace);
+		}
+
+		// Then actually draw the stuff
+		DrawNumbers(C, Min(SelLeft, 9), SelLeft > 9, false, XMax, YMax);
+		DrawCurrentArray(C, false, XMax, YMax);
+
+		// Finally, draw a nice title bar.
+		C.SetDrawColor(139, 28, 28, 255);
+		C.SetPos(C.ClipX * SMOriginX, (C.ClipY * SMOriginY) - (1.5 * SMLineSpace));
+		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), (1.5 * SMLineSpace));
+
+		C.SetDrawColor(255, 255, 128, 255);
+		C.SetPos(C.ClipX * (SMOriginX + SMMargin), (C.ClipY * SMOriginY) - (1.2 * SMLineSpace));
+        C.DrawText(SMStateName[ROSMState]);
+	}
 }
 
 exec function VehicleTalk()
@@ -940,7 +1033,55 @@ function bool CanUseVehicleCommands()
 
     P = ViewportOwner.Actor.Pawn;
 
-    return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn'));
+    return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn')) && !P.IsA('DHPassengerPawn');
+}
+
+state ConsoleVisible
+{
+    // Modified to change the font, since it's hard-coded in the parent class.
+    function PostRender(Canvas Canvas)
+	{
+		local float FW, FH;
+		local float YClip, Y;
+		local int Index;
+
+		Canvas.Font = class'DHHud'.static.GetConsoleFont(Canvas);
+        
+		YClip = Canvas.ClipY * 0.5;
+		Canvas.StrLen("X", FW, FH);
+
+		Canvas.SetPos(0, 0);
+		Canvas.SetDrawColor(255, 255, 255, 200);
+		Canvas.Style = 4;
+        
+        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.HUD.console_background',Canvas.ClipX,yClip);
+		Canvas.Style = 1;
+
+		Canvas.SetPos(0, YClip - 1);
+		Canvas.SetDrawColor(255, 255, 255, 255);
+        Canvas.DrawTile(Texture'InterfaceArt_tex.Menu.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
+		Canvas.SetDrawColor(255, 255, 255, 255);
+		Canvas.SetPos(0, YClip - 5 - FH);
+		Canvas.DrawTextClipped("(>" @ Left(TypedStr, TypedStrPos) $ Chr(4) $ Eval(TypedStrPos < Len(TypedStr), Mid(TypedStr, TypedStrPos), "_"), true);
+
+		Index = SBHead - SBPos;
+		Y = YClip - Y - 5 - (FH * 2);
+
+		if (ScrollBack.Length == 0)
+        {
+			return;
+        }
+
+		Canvas.SetDrawColor(255, 255, 255, 255);
+
+		while (Y > FH && Index >= 0)
+		{
+			Canvas.SetPos(0, Y);
+			Canvas.DrawText(Scrollback[Index], false);
+			Index--;
+			Y -= FH;
+		}
+	}
 }
 
 defaultproperties

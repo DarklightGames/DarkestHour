@@ -1,25 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_TriggerProjector extends Projector;
 
-var(Projector)  color   ProjColorOn;      // the light color if the projector is on
-var(Projector)  color   ProjColorOff;     // the light color if the projector is off
-var(Projector)  color   ProjTintOn;       // these colors are overlaid over the projection
-var(Projector)  color   ProjTintOff;      // alpha - grey will have no effect, white brightens & black darkens
+var(Projector)  Color   ProjColorOn;      // the light color if the projector is on
+var(Projector)  Color   ProjColorOff;     // the light color if the projector is off
+var(Projector)  Color   ProjTintOn;       // these colors are overlaid over the projection
+var(Projector)  Color   ProjTintOff;      // alpha - grey will have no effect, white brightens & black darkens
 var(Projector)  float   ChangeTime;       // time light takes to change from on to off
 var(Projector)  bool    bInitiallyOn;     // whether it's initially on
 var(Projector)  bool    bInitiallyFading; // whether it's initially fading up or down
 var(Projector)  float   ChangeTimeTwo;
 
 var protected ScriptedTexture ScriptTexture;
-var     material    MaskTexture;
+var     Material    MaskTexture;
 var     float       TimeSinceTriggered;
 var     float       SwapTime;
-var     color       CurrentColor;
-var     color       CurrentTint;
+var     Color       CurrentColor;
+var     Color       CurrentTint;
 var     bool        bIsOn;
 
 replication
@@ -31,8 +31,8 @@ replication
 
 simulated event PostBeginPlay()
 {
-    local texture TheProjTexture;
-    local color   StartColor, StartTint;
+    local Texture TheProjTexture;
+    local Color   StartColor, StartTint;
 
     super.PostBeginPlay();
 
@@ -42,7 +42,7 @@ simulated event PostBeginPlay()
     ScriptTexture.Client = self;
 
     // Set the scripted texture properties to match those of the ProjTexture
-    TheProjTexture = texture(ProjTexture);
+    TheProjTexture = Texture(ProjTexture);
 
     if (TheProjTexture != none)
     {
@@ -107,7 +107,7 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-simulated function SetColors(color NewColor, color NewTint)
+simulated function SetColors(Color NewColor, Color NewTint)
 {
     // Check to see if it's a new color
     if (CurrentColor != NewColor || CurrentTint != NewTint)
@@ -131,7 +131,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 simulated function Tick(float DeltaTime)
 {
     local float Percent;
-    local color NewColor, NewTint;
+    local Color NewColor, NewTint;
 
     TimeSinceTriggered += DeltaTime;
     Percent = TimeSinceTriggered / SwapTime;

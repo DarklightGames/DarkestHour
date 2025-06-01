@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_MortarPit extends DHConstruction;
 
 var class<DHMortarVehicle>  MortarClass;
 var DHMortarVehicle         Mortar;
-var vector                  MortarOffset;
+var Vector                  MortarOffset;
 
 function PostBeginPlay()
 {

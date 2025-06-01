@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -23,13 +23,11 @@ var     string                  MOTDURL;
 var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
+var     string                  PatreonURL;
 var     string                  DiscordURL;
 var     string                  ResetINIGuideURL;
 
-var     localized string        JoinTestServerString;
-var     localized string        ConnectingString;
 var     localized string        SteamMustBeRunningText;
-var     localized string        SinglePlayerDisabledText;
 var     localized string        MOTDErrorString;
 
 var     localized string        ControlsChangedMessage;
@@ -59,13 +57,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_Facebook);
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
+    sb_Social.ManageComponent(b_Patreon);
     sb_Social.ManageComponent(b_Discord);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
 
-    l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
+    l_Version.Caption = class'DHBuildManifest'.default.Version.ToString();
 
     // If they have not changed their name from the default, change their
     // name to their Steam name!
@@ -75,8 +74,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         Controller.SteamGetUserName() != "")
     {
         // This converts an underscore to a non-breaking space (0xA0)
-        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", "�"));
+        PlayerOwner().ConsoleCommand("SetName" @ Controller.SteamGetUserName());
     }
+
+    // Fix the player's name if it has been garbled with mojibake.
+    // A previous bug would replace an underscore with this string, so this undoes that.
+    if (InStr(PlayerOwner().GetUrlOption("Name"), "�") >= 0)
+    {
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(PlayerOwner().GetUrlOption("Name"), "�", "_"));
+    }
+    
+    // The default near-clip is 2.0, which is needlessly close and causes
+    // severe z-fighting. Doubling the near-clip to 4.0 alleviates (but does
+    // not completely fix) the issue. This value can be increased so long as
+    // it does not cause clipping issues.
+    PlayerOwner().ConsoleCommand("NearClip 4");
 }
 
 function ShowBadConfigMessage()
@@ -193,16 +205,9 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_Practice:
-            if (class'LevelInfo'.static.IsDemoBuild())
-            {
-                Controller.ShowQuestionDialog(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
-            }
-            else
-            {
-                Profile("InstantAction");
-                Controller.OpenMenu(Controller.GetInstantActionPage());
-                Profile("InstantAction");
-            }
+            Profile("InstantAction");
+            Controller.OpenMenu(Controller.GetInstantActionPage());
+            Profile("InstantAction");
             break;
 
         case b_MultiPlayer:
@@ -263,6 +268,10 @@ function bool ButtonClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
 
+       case b_Patreon:
+            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+            break;
+
         case b_Discord:
             PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
             break;
@@ -272,7 +281,7 @@ function bool ButtonClick(GUIComponent Sender)
             break;
 
         case i_Announcement:
-            PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
+            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
             HideAnnouncement();
             break;
     }
@@ -311,7 +320,7 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("CANCEL");
     }
 
-    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
+    if (SavedVersion != class'DHBuildManifest'.default.Version.ToString())
     {
         SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
 
@@ -380,7 +389,7 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Comma", "ToggleSelectedArtilleryTarget");
         }
 
-        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
+        SavedVersion = class'DHBuildManifest'.default.Version.ToString();
         SaveConfig();
     }
 
@@ -410,8 +419,6 @@ event Opened(GUIComponent Sender)
 
     TextureDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailWorld");
     CharacterDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailPlayerSkin");
-
-    Log(TextureDetail @ CharacterDetail);
 
     // Due to a bug introduced in 9.0, the VoiceVolume was being
     // set to 0.0 upon saving settings. Originally we thought the setting
@@ -509,10 +516,6 @@ defaultproperties
     // Render Entry.rom instead of background
     bRenderWorld=true
 
-    // IP variables
-    JoinTestServerString="Join Test Server"
-    ConnectingString="Joining"
-
     // Menu variables
     Begin Object Class=FloatingImage Name=OverlayBackground
         Image=Texture'Engine.BlackTexture'
@@ -529,7 +532,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         bVisible=false
     End Object
-    i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
+    i_Overlay=OverlayBackground
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
         Image=Texture'Engine.BlackTexture' // Removed reference, this variable could probably be deleted unless we use it for something
@@ -545,7 +548,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         bVisible=false
     End Object
-    i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
+    i_Announcement=AnnouncementImage
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
         Image=Texture'DHEngine_Tex.Transparency.Trans_50'
@@ -558,7 +561,7 @@ defaultproperties
         WinHeight=1.0
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
-    sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
+    sb_MainMenu=sbSection1
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=SocialSection
         WinTop=0.9125
@@ -582,7 +585,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=ServerButton.InternalOnKeyEvent
     End Object
-    b_MultiPlayer=GUIButton'DH_Interface.DHMainMenu.ServerButton'
+    b_MultiPlayer=ServerButton
 
     Begin Object Class=GUIButton Name=InstantActionButton
         CaptionAlign=TXTA_Left
@@ -596,7 +599,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=InstantActionButton.InternalOnKeyEvent
     End Object
-    b_Practice=GUIButton'DH_Interface.DHMainMenu.InstantActionButton'
+    b_Practice=InstantActionButton
 
     Begin Object Class=GUIButton Name=SettingsButton
         CaptionAlign=TXTA_Left
@@ -610,7 +613,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=SettingsButton.InternalOnKeyEvent
     End Object
-    b_Settings=GUIButton'DH_Interface.DHMainMenu.SettingsButton'
+    b_Settings=SettingsButton
 
     Begin Object Class=GUIButton Name=CreditsButton
         CaptionAlign=TXTA_Left
@@ -624,7 +627,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
     End Object
-    b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
+    b_Credits=CreditsButton
 
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
@@ -638,7 +641,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=QuitButton.InternalOnKeyEvent
     End Object
-    b_Quit=GUIButton'DH_Interface.DHMainMenu.QuitButton'
+    b_Quit=QuitButton
 
     Begin Object class=ROGUIContainerNoSkinAlt Name=sbSection2
         WinTop=0.624
@@ -647,7 +650,7 @@ defaultproperties
         WinHeight=0.2355
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
-    sb_HelpMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection2'
+    sb_HelpMenu=sbSection2
 
     Begin Object Class=GUIButton Name=MOTDTitleButton
         CaptionAlign=TXTA_Left
@@ -712,6 +715,21 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
+    Begin Object Class=GUIGFXButton Name=PatreonButton
+        WinWidth=0.04
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
+        OnClick=DHMainMenu.ButtonClick
+        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Support us on Patreon!"
+        bRepeatClick=false
+        StyleName="TextLabel"
+    End Object
+    b_Patreon=PatreonButton
+
     Begin Object Class=GUIGFXButton Name=DiscordButton
         WinWidth=0.04
         WinHeight=0.075
@@ -734,7 +752,7 @@ defaultproperties
         WinTop=0.185657
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
-    sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
+    sb_ShowVersion=sbSection3
 
     Begin Object class=GUILabel Name=VersionNum
         StyleName="DHSmallText"
@@ -745,7 +763,7 @@ defaultproperties
         WinTop=0.0
         RenderWeight=20.7
     End Object
-    l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
+    l_Version=VersionNum
 
     Begin Object class=GUIImage Name=LogoImage
         Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
@@ -779,7 +797,7 @@ defaultproperties
         EOLDelay=0.1
         bVisibleWhenEmpty=true
         OnCreateComponent=MyMOTDText.InternalOnCreateComponent
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.1
         WinLeft=0.0
         WinWidth=1.0
@@ -788,7 +806,7 @@ defaultproperties
         TabOrder=1
         bNeverFocus=true
     End Object
-    tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
+    tb_MOTDContent=MyMOTDText
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
         Image=Texture'DHEngine_Tex.Transparency.Trans_50'
@@ -801,7 +819,6 @@ defaultproperties
     c_MOTD=sbSection4
 
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
-    SinglePlayerDisabledText="Practice mode is only available in the full version."
     MenuSong="DH_Menu_Music"
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
@@ -813,6 +830,7 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
+    PatreonURL="http://www.patreon.com/darkesthourgame"
     DiscordURL="http://discord.gg/EEwFhtk"
     ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"

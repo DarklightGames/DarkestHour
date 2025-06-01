@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSPECIES_Human extends ROSPECIES_Human
@@ -14,8 +14,11 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {
     local ROPawn                  ROP;
     local ROPlayerReplicationInfo PRI;
-    local mesh                    NewMesh;
-    local class<VoicePack>        VoiceClass;
+    local Mesh                    NewMesh;
+    local Class<VoicePack>        VoiceClass;
+    local Class<DHVoicePack>      DHVC;
+    local DH_LevelInfo            LI;
+    local int                     EnemyTeamIndex;
 
     ROP = ROPawn(P);
 
@@ -40,12 +43,12 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
     if (Rec.BodySkinName != "")
     {
-        ROP.Skins[0] = material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
+        ROP.Skins[0] = Material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
     }
 
     if (Rec.FaceSkinName != "")
     {
-        ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
+        ROP.Skins[1] = Material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
     }
 
     // Fix to get PRI if player is in a vehicle when his DHPawn spawns on a net client (the vehicle, not the DHPawn, now holds the PRI reference)
@@ -69,6 +72,15 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
         if (ROP.VoiceType != "")
         {
             VoiceClass = class<VoicePack>(DynamicLoadObject(ROP.VoiceType, class'Class'));
+        }
+
+        DHVC = class<DHVoicePack>(VoiceClass);
+
+        if (DHVC != none)
+        {
+            LI = class'DH_LevelInfo'.static.GetInstance(P.Level);
+            EnemyTeamIndex = int(!bool(P.GetTeamNum()));
+            VoiceClass = DHVC.static.GetVoicePackClass(LI.GetTeamNationClass(EnemyTeamIndex));
         }
 
         PRI.VoiceType = VoiceClass;
@@ -120,12 +132,12 @@ static function LoadResources(xUtil.PlayerRecord Rec, LevelInfo Level, PlayerRep
     {
         if (Rec.BodySkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.BodySkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.BodySkinName, class'Material')));
         }
 
         if (Rec.FaceSkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.FaceSkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.FaceSkinName, class'Material')));
         }
 
         if (Rec.Portrait != none)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CSAZBritcoatBritpackPawn extends DH_CSAZPawn_SovGloves; //works as winter version too

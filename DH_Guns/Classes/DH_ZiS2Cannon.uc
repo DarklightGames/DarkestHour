@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2Cannon extends DHATGunCannon;
@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64100
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_ZiS2CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellHE'
     TertiaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellAPCR'

@@ -1,21 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_GeratPIIBullet extends DHBullet_ArmorPiercing; 
+class DH_GeratPIIBullet extends DHBullet_ArmorPiercing;
 
 defaultproperties
 {
     Speed=60352.0 // 1000 m/s
     MaxSpeed=60352.0
     ShellDiameter=0.9
-    BallisticCoefficient=0.675 
+    BallisticCoefficient=0.675
     
     ImpactDamage=120
-    Damage=230.0 
+    Damage=230.0
 
-    HullFireChance=0.12  
+    HullFireChance=0.12
     EngineFireChance=0.2
 
     MyDamageType=class'DH_Weapons.DH_GeratPIIDamType'

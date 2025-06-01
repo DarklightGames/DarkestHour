@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIMapComponent extends GUIPanel;
 
 const   SPAWN_POINTS_MAX =                  63; // Max spawn points total (make sure this matches GRI)
+const   ADMIN_SPAWN_TRACE_HEIGHT =          10000; // Trace height for placing admin spawns via map
 
 var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX];
 
@@ -17,10 +18,11 @@ var             DHPlayerReplicationInfo     PRI;
 var             GUIContextMenu              SquadRallyPointContextMenu;
 var             Material                    SpawnPointBlockedOverlay;
 
-var             vector                      MapClickLocation;
-var             array<class<DHMapMarker> >  MenuItemObjects;
+var             Vector                      MapClickLocation;
+var             array<class<DHMapMarker> >  MapMarkerMenuItems;
 var             int                         MapMarkerIndexToRemove;
 var             bool                        bRemoveMapMarker;
+var             int                         AdminMenuIndex; // pointer for where admin options begin in the context menu
 
 var             Box                         Viewport;
 var             Box                         ViewportInterpStart;
@@ -44,6 +46,13 @@ var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
 var localized string        ActiveTargetSelectText;
 var localized string        ActiveTargetDeselectText;
+
+var localized string        AdminPlaceAlliedSpawnText;
+var localized string        AdminPlaceAxisSpawnText;
+var localized string        AdminDestroyAlliedSpawnsText;
+var localized string        AdminDestroyAxisSpawnsText;
+var localized string        AdminDestroySpawnText;
+var localized string        AdminTeleportText;
 
 var             bool                        bSelectArtilleryTarget;
 var             bool                        bDeselectArtilleryTarget;
@@ -77,13 +86,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
-function SetViewport(vector Origin, int ZoomLevel)
+function SetViewport(Vector Origin, int ZoomLevel)
 {
     SetZoomLevel(ZoomLevel);
     Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
-function vector GetViewportOrigin()
+function Vector GetViewportOrigin()
 {
     return (Viewport.Min + Viewport.Max) * 0.5;
 }
@@ -109,17 +118,17 @@ function UpdateSpawnPointPositions()
 
         GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth * ViewportScale, b_SpawnPoints[i].WinHeight * ViewportScale);
 
-        X = 1.0 - X;
-        Y = 1.0 - Y;
+        X = FClamp(1.0 - X - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierX * b_SpawnPoints[i].WinWidth * ViewPortScale, 0.0, 1.0);
+        Y = FClamp(1.0 - Y - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierY * b_SpawnPoints[i].WinHeight * ViewPortScale, 0.0, 1.0);
 
-        X = (X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-        Y = (Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+        X = (X - Viewport.Min.X) / ViewportScale;
+        Y = (Y - Viewport.Min.Y) / ViewportScale;
 
         b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
 
         // Hide if the button is not currently within the viewport.
-        X += b_SpawnPoints[i].WinWidth / 2;
-        Y += b_SpawnPoints[i].WinHeight / 2;
+        X += b_SpawnPoints[i].WinWidth * 0.5;
+        Y += b_SpawnPoints[i].WinHeight * 0.5;
         b_SpawnPoints[i].SetVisibility(X >= 0 && X <= 1.0 && Y >= 0.0 && Y <= 1.0);
     }
 }
@@ -164,7 +173,7 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
                 b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
             }
 
-            b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetMapStyleName(), FS);
+            b_SpawnPoints[i].Style = GRI.SpawnPoints[i].GetStyle(Controller, FS);
         }
         else
         {
@@ -219,9 +228,9 @@ function bool InternalOnDraw(Canvas C)
     return false;
 }
 
-function Box ConstrainViewport(Box Viewport, vector Min, vector Max)
+function Box ConstrainViewport(Box Viewport, Vector Min, Vector Max)
 {
-    local vector Translation;
+    local Vector Translation;
 
     Translation = -class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
     Viewport = class'UBox'.static.Translate(Viewport, Translation);
@@ -284,9 +293,30 @@ function bool OnDblClick(GUIComponent Sender)
 function bool MyContextOpen(GUIContextMenu Sender)
 {
     local DHSpawnPoint_SquadRallyPoint SRP;
+    local DHSpawnPoint_Admin AdminSpawn;
     local array<DHSpawnPoint_SquadRallyPoint> RallyPoints;
 
-    if (Sender == none || PRI == none || GRI == none || PC == none || PC.SquadReplicationInfo == none || !PRI.IsSquadLeader())
+    if (Sender == none || PRI == none || GRI == none)
+    {
+        return false;
+    }
+
+    // ADMIN SPAWN MENU
+    if (PRI.IsLoggedInAsAdmin())
+    {
+        AdminSpawn = DHSpawnPoint_Admin(GRI.SpawnPoints[Sender.Tag]);
+
+        if (AdminSpawn != none)
+        {
+            Sender.ContextItems.Length = 0;
+            Sender.AddItem(AdminDestroySpawnText);
+
+            return true;
+        }
+    }
+
+    // RALLY POINT MENU
+    if (PC == none || PC.SquadReplicationInfo == none || !PRI.IsSquadLeader())
     {
         return false;
     }
@@ -320,16 +350,32 @@ function bool MyContextClose(GUIContextMenu Sender)
 function MyContextSelect(GUIContextMenu Sender, int Index)
 {
     local DHSpawnPoint_SquadRallyPoint SRP;
+    local DHSpawnPoint_Admin AdminSpawn;
 
-    if (PRI == none || !PRI.IsSquadLeader())
+    if (PRI == none || GRI == none || PC == none)
     {
         return;
     }
 
-    if (GRI != none)
+    // ADMIN SPAWN MENU
+    if (PRI.IsLoggedInAsAdmin())
     {
-        SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
+        AdminSpawn = DHSpawnPoint_Admin(GRI.SpawnPoints[Sender.Tag]);
+
+        if (AdminSpawn != none && Index == 0)
+        {
+            PC.ServerDestroyAdminSpawn(AdminSpawn);
+            return;
+        }
     }
+
+    // RALLY POINT MENU
+    if (!PRI.IsSquadLeader())
+    {
+        return;
+    }
+
+    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
 
     switch (Index)
     {
@@ -379,9 +425,9 @@ function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
 }
 
 // Gets the normalized location given an absolute screen coordinate.
-function vector GetNormalizedLocation(float X, float Y)
+function Vector GetNormalizedLocation(float X, float Y)
 {
-    local vector Location;
+    local Vector Location;
 
     Location.X = (X - ActualLeft(WinLeft)) / ActualWidth(WinWidth);
     Location.Y = (Y - ActualTop(WinTop)) / ActualHeight(WinHeight);
@@ -424,10 +470,12 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     PublicMapMarkers = GRI.GetMapMarkers(PC);
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
-    MenuItemObjects.Length = 0;
+    MapMarkerMenuItems.Length = 0;
     MapMarkerIndexToRemove = -1;
     bRemoveMapMarker = false;
     ElapsedTime = GRI.ElapsedTime;
+    bDeselectArtilleryTarget = false;
+    bSelectArtilleryTarget = false;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
@@ -439,7 +487,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
             Sender.AddItem(Repl(RemoveText, "{0}", PersonalMapMarkers[i].MapMarkerClass.default.MarkerName));
-            MenuItemObjects[MenuItemObjects.Length] = PersonalMapMarkers[i].MapMarkerClass;
+            MapMarkerMenuItems[MapMarkerMenuItems.Length] = PersonalMapMarkers[i].MapMarkerClass;
             break;
         }
     }
@@ -456,7 +504,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 bRemoveMapMarker = true;
                 MapMarkerIndexToRemove = i;
                 Sender.AddItem(Repl(RemoveText, "{0}", PublicMapMarkers[i].MapMarkerClass.default.MarkerName));
-                MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                MapMarkerMenuItems[MapMarkerMenuItems.Length] = PublicMapMarkers[i].MapMarkerClass;
                 break;
             }
 
@@ -471,7 +519,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 {
                     bDeselectArtilleryTarget = true;
                     TargetSquadIndex = -1;
-                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                    MapMarkerMenuItems[MapMarkerMenuItems.Length] = PublicMapMarkers[i].MapMarkerClass;
                     Sender.AddItem(ActiveTargetDeselectText);
                     PC.ReceiveLocalizedMessage(class'DHArtilleryMessage', 10);
                 }
@@ -479,7 +527,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 {
                     bSelectArtilleryTarget = true;
                     TargetSquadIndex = PublicMapMarkers[i].SquadIndex;
-                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                    MapMarkerMenuItems[MapMarkerMenuItems.Length] = PublicMapMarkers[i].MapMarkerClass;
                     Sender.AddItem(ActiveTargetSelectText);
                 }
 
@@ -491,7 +539,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanBeUsed(GRI) && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
@@ -514,7 +562,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     if (Sender.ContextItems.Length > 0 && MapMarkerClasses.Length > 0)
     {
         Sender.AddItem("-");
-        MenuItemObjects[MenuItemObjects.Length] = none;
+        MapMarkerMenuItems[MapMarkerMenuItems.Length] = none;
     }
 
     GroupIndex = -1;
@@ -526,12 +574,24 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         {
             // New group encountered, add a separator.
             Sender.AddItem("-");
-            MenuItemObjects[MenuItemObjects.Length] = none;
+            MapMarkerMenuItems[MapMarkerMenuItems.Length] = none;
         }
 
         Sender.AddItem(MapMarkerClasses[i].default.MarkerName);
-        MenuItemObjects[MenuItemObjects.Length] = MapMarkerClasses[i];
+        MapMarkerMenuItems[MapMarkerMenuItems.Length] = MapMarkerClasses[i];
         GroupIndex = MapMarkerClasses[i].default.GroupIndex;
+    }
+
+    // Add extra items
+    if (PRI.IsLoggedInAsAdmin())
+    {
+        Sender.AddItem(default.AdminTeleportText);
+        Sender.AddItem("-");
+        Sender.AddItem(default.AdminPlaceAlliedSpawnText);
+        Sender.AddItem(default.AdminPlaceAxisSpawnText);
+        Sender.AddItem("-");
+        Sender.AddItem(default.AdminDestroyAlliedSpawnsText);
+        Sender.AddItem(default.AdminDestroyAxisSpawnsText);
     }
 
     return Sender.ContextItems.Length > 0;
@@ -544,14 +604,59 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
+    local int ExtrasMenuClickIndex;
+
+    if (PC == none || ClickIndex < 0 || ClickIndex >= Sender.ContextItems.Length)
     {
         return;
     }
 
-    if (bRemoveMapMarker && ClickIndex == 0 && MenuItemObjects[ClickIndex] != none)
+    // Handle extra menu items
+    // HACK: The context menu system was initially designed to work only with map markers,
+    //       so extra menu options are handled separately to avoid big refactors.
+    if (ClickIndex >= MapMarkerMenuItems.Length)
     {
-        PC.RemoveMarker(MenuItemObjects[ClickIndex], MapMarkerIndexToRemove);
+        ExtrasMenuClickIndex = ClickIndex - MapMarkerMenuItems.Length;
+
+        if (GRI == none)
+        {
+            return;
+        }
+
+        if (PRI.IsLoggedInAsAdmin())
+        {
+            switch (ExtrasMenuClickIndex)
+            {
+                case 0:
+                    PC.ServerTeleportToMapLocation(MapClickLocation.X, MapClickLocation.Y);
+                    break;
+                case 2:
+                    PC.ServerPlaceAdminSpawn(GRI.GetWorldSurfaceCoords(MapClickLocation.X, MapClickLocation.Y, ADMIN_SPAWN_TRACE_HEIGHT), ALLIES_TEAM_INDEX);
+                    break;
+                case 3:
+                    PC.ServerPlaceAdminSpawn(GRI.GetWorldSurfaceCoords(MapClickLocation.X, MapClickLocation.Y, ADMIN_SPAWN_TRACE_HEIGHT), AXIS_TEAM_INDEX);
+                    break;
+                case 5:
+                    PC.ServerDestroyAllAdminSpawns(ALLIES_TEAM_INDEX);
+                    break;
+                case 6:
+                    PC.ServerDestroyAllAdminSpawns(AXIS_TEAM_INDEX);
+                    break;
+            }
+        }
+
+        return;
+    }
+
+    // Handle map marker items
+    if (MapMarkerMenuItems[ClickIndex] == none)
+    {
+        return;
+    }
+
+    if (bRemoveMapMarker && ClickIndex == 0 && MapMarkerMenuItems[ClickIndex] != none)
+    {
+        PC.RemoveMarker(MapMarkerMenuItems[ClickIndex], MapMarkerIndexToRemove);
     }
     else
     {
@@ -567,7 +672,7 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         }
         else
         {
-            PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+            PC.AddMarker(MapMarkerMenuItems[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
         }
     }
 }
@@ -591,7 +696,7 @@ function SetZoomLevel(int NewZoomLevel)
 }
 
 // Given a viewport and a location within that viewport, get the frame coordinates.
-function vector ViewportToFrame(Box Viewport, vector Location)
+function Vector ViewportToFrame(Box Viewport, Vector Location)
 {
     Location.X = Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X));
     Location.Y = Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y));
@@ -622,7 +727,7 @@ function InterpolateToViewport(Box NewViewport)
 
 function ZoomIn()
 {
-    local vector ViewportLocation;
+    local Vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 
@@ -652,7 +757,7 @@ function ZoomIn()
 
 function ZoomOut()
 {
-    local vector ViewportLocation;
+    local Vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 
@@ -723,7 +828,7 @@ function InternalOnMouseRelease(GUIComponent Sender)
 function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
 {
     local float W, H;
-    local vector OriginDelta;
+    local Vector OriginDelta;
 
     if (!bIsViewportInterpolating && bIsPanning)
     {
@@ -761,6 +866,12 @@ defaultproperties
 
     SquadRallyPointDestroyText="Destroy Rally"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
+    AdminPlaceAlliedSpawnText="ADMIN: Place ALLIED spawn"
+    AdminPlaceAxisSpawnText="ADMIN: Place AXIS spawn"
+    AdminDestroyAlliedSpawnsText="ADMIN: Destroy ALLIED admin spawns"
+    AdminDestroyAxisSpawnsText="ADMIN: Destroy AXIS admin spawns"
+    AdminDestroySpawnText="ADMIN: Destroy spawn"
+    AdminTeleportText="ADMIN: Teleport here"
     RemoveText="Remove {0}"
     ActiveTargetSelectText="Select as Active Target"
     ActiveTargetDeselectText="Deselect Active Target"
@@ -776,7 +887,7 @@ defaultproperties
 
     OnDraw=InternalOnDraw
 
-    Begin Object Class=GUIContextMenu Name=SRPContextMenu
+    Begin Object Class=DHGUIContextMenu Name=SPContextMenu
         OnOpen=DHGUIMapComponent.MyContextOpen
         OnClose=DHGUIMapComponent.MyContextClose
         OnSelect=DHGUIMapComponent.MyContextSelect
@@ -798,11 +909,11 @@ defaultproperties
         CheckedOverlay(4)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
         bCanClickUncheck=false
-        ContextMenu=SRPContextMenu
+        ContextMenu=SPContextMenu
         GetOverlayMaterial=MyGetOverlayMaterial
     End Object
 
-    Begin Object Class=GUIContextMenu Name=MapMarkerMenu
+    Begin Object Class=DHGUIContextMenu Name=MapMarkerMenu
         OnOpen=InternalOnOpen
         OnClose=InternalOnClose
         OnSelect=InternalOnSelect

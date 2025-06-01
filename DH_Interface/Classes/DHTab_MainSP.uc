@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_MainSP extends UT2K4Tab_MainSP;
@@ -9,6 +9,11 @@ var automated       DHGUISectionBackground  sb_options2;
 var automated       DHmoComboBox            co_Difficulty;
 var array<float>    Difficulties;
 var bool            bHideDifficultyControl;
+
+var localized string MapCaptionText;
+var localized string MapAuthorText;
+var localized string MapPlayersText;
+var localized string MapPlayersRangeText;
 
 delegate OnChangeDifficulty(int index);
 
@@ -48,6 +53,7 @@ function ShowPanel(bool bShow)
     {
         co_Difficulty.SetVisibility(false);
         sb_options2.SetVisibility(false);
+        b_Maplist.SetVisibility(false);
     }
 }
 
@@ -202,6 +208,73 @@ function SilentSetDifficulty(int index)
     co_Difficulty.SilentSetIndex(index);
 }
 
+// Modified to properly localize the author & player count.
+function ReadMapInfo(string MapName)
+{
+    local string mDesc;
+    local int Index;
+
+    if (MapName == "")
+    {
+        return;
+    }
+
+    if (!Controller.bCurMenuInitialized)
+    {
+        return;
+    }
+
+    Index = FindCacheRecordIndex(MapName);
+
+    if (CacheMaps[Index].FriendlyName != "")
+    {
+        asb_Scroll.Caption = CacheMaps[Index].FriendlyName;
+    }
+    else
+    {
+		asb_Scroll.Caption = MapName;
+    }
+
+	UpdateScreenshot(Index);
+
+	// Only show 1 number if min & max are the same
+	if (CacheMaps[Index].PlayerCountMin == CacheMaps[Index].PlayerCountMax)
+    {
+		l_MapPlayers.Caption = MapPlayersText;
+    }
+	else
+    {
+        l_MapPlayers.Caption = MapPlayersRangeText;
+    }
+
+    l_MapPlayers.Caption = Repl(l_MapPlayers.Caption, "{min}", CacheMaps[Index].PlayerCountMin);
+    l_MapPlayers.Caption = Repl(l_MapPlayers.Caption, "{max}", CacheMaps[Index].PlayerCountMax);
+
+	mDesc = li_Maps.GetExtra();
+
+    if (mDesc == "")
+    {
+        mDesc = MessageNoInfo;
+    }
+
+	lb_MapDesc.SetContent( mDesc );
+
+    if (CacheMaps[Index].Author != "" && !class'CacheManager'.static.IsDefaultContent(CacheMaps[Index].MapName))
+    {
+        l_MapAuthor.Caption = Repl(MapAuthorText, "{author}", CacheMaps[Index].Author);
+    }
+    else
+    {
+        l_MapAuthor.Caption = "";
+    }
+}
+
+// Modified to properly localize this caption.
+function SetGameTypeCaption()
+{
+    sb_Selection.Caption = Repl(MapCaptionText, "{game}", CurrentGameType.GameName);
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUISectionBackground Name=OptionsContainer
@@ -234,7 +307,7 @@ defaultproperties
         WinTop=0.018125
         WinLeft=0.016993
         WinWidth=0.482149
-        WinHeight=0.6
+        WinHeight=0.942417
         OnPreDraw=SelectionGroup.InternalPreDraw
     End Object
     sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
@@ -284,7 +357,7 @@ defaultproperties
         WinTop=0.169272
         WinLeft=0.045671
         WinWidth=0.422481
-        WinHeight=0.44987
+        WinHeight=0.775
         TabOrder=0
         OnChange=DHTab_MainSP.MapListChange
     End Object
@@ -344,4 +417,11 @@ defaultproperties
 
     LastSelectedMap="DH-Brecourt"
     ch_OfficialMapsOnly=none
+
+    bHideDifficultyControl=true
+
+    MapPlayersText="{min} players"
+    MapPlayersRangeText="{min}-{max} players"
+    MapAuthorText="Author: {author}"
+    MapCaptionText="{game} Maps"
 }

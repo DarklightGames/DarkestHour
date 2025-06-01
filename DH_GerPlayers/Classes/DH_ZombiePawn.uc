@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Halloween Special 2020
 
@@ -35,4 +35,6 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
 
     bAlwaysSeverBodyparts=true
+
+    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
 }

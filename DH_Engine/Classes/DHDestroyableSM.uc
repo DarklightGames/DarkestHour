@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHDestroyableSM extends RODestroyableStaticMesh
@@ -80,7 +80,7 @@ function DestroyDSM(Pawn EventInstigator)
 // Specifically requires damage to be caused by the opposing team, to prevent exploits by player switching to spectator or exiting the server
 auto state Working
 {
-    function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         if (!bActive)
         {

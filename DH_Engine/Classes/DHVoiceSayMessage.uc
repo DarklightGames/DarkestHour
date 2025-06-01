@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoiceSayMessage extends DHLocalMessage
@@ -8,7 +8,7 @@ class DHVoiceSayMessage extends DHLocalMessage
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
-    local color ConsoleColor, NameColor;
+    local Color ConsoleColor, NameColor;
     local DHPlayerReplicationInfo MyPRI;
     local string SquadMemberID;
 

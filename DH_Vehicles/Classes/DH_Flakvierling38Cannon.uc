@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Flakvierling38Cannon extends DH_Flak38Cannon;
@@ -48,7 +48,7 @@ function Fire(Controller C)
 }
 
 // Modified to get the firing location for the barrel that is next to fire
-function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+function Vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
     return GetBoneCoords(BarrelBones[NextFiringBarrelIndex]).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
 }

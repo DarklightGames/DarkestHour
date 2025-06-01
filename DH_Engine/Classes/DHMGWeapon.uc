@@ -1,68 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGWeapon extends DHProjectileWeapon
     abstract;
-
-var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
-var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
-var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
-
-// Modified to spawn the ammo belt
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SpawnAmmoBelt();
-    }
-}
-
-// Handles making ammo belt bullets disappear
-simulated function UpdateAmmoBelt()
-{
-    local int i;
-
-    if (AmmoAmount(0) < 10)
-    {
-        for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
-        {
-            if (MGBeltArray[i] != none)
-            {
-                MGBeltArray[i].SetDrawType(DT_None);
-            }
-        }
-    }
-}
-
-// Spawn the first person linked ammo belt
-simulated function SpawnAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltBones.Length; ++i)
-    {
-        MGBeltArray[i] = Spawn(BeltBulletClass, self);
-        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
-    }
-}
-
-// Make the full ammo belt visible again (called by anim notifies)
-simulated function RenewAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltArray.Length; ++i)
-    {
-        if (MGBeltArray[i] != none)
-        {
-            MGBeltArray[i].SetDrawType(DT_StaticMesh);
-        }
-    }
-}
 
 // Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
@@ -198,9 +140,9 @@ Begin:
 }
 
 // Modified to allow for different free aim conditions in this class (due to possibility of hip fire from ironsights key))
-function SetServerOrientation(rotator NewRotation)
+function SetServerOrientation(Rotator  NewRotation)
 {
-    local rotator WeaponRotation;
+    local Rotator WeaponRotation;
 
     if (bUsesFreeAim && bUsingSights && Instigator != none)
     {
@@ -258,6 +200,7 @@ defaultproperties
     IdleAnim="Rest_Idle"
     BipodIdleAnim="Bipod_Idle"
     IdleToBipodDeploy="Rest_2_Bipod"
+    IronToBipodDeploy="Hip_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     MagEmptyReloadAnims(0)="Reload"
 

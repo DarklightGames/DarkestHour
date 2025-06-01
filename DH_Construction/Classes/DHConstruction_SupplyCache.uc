@@ -1,15 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_SupplyCache extends DHConstruction;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
-
-var array<StaticMesh> StaticMeshes;
-var DHConstructionSupplyAttachment SupplyAttachment;
-var class<DHConstructionSupplyAttachment> SupplyAttachmentClass;
+var StaticMesh                              UnbuiltStaticMesh;
+var DHConstructionSupplyAttachment          SupplyAttachment;
+var class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 
 var() int InitialSupplyCount;
 var() int BonusSupplyGenerationRate;
@@ -80,7 +78,7 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
     if (CSA != none && IsConstructed())
     {
-        SetStaticMesh(CSA.StaticMesh);
+        SetStaticMesh(StaticMesh);
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
@@ -105,20 +103,12 @@ simulated function OnTeamIndexChanged()
 
 static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
-    return default.SupplyAttachmentClass.static.GetStaticMesh(Context.LevelInfo.Level, Context.TeamIndex);
+    return default.StaticMesh;
 }
 
 function StaticMesh GetStageStaticMesh(int StageIndex)
 {
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Supply_Cache.GER_supply_cache_undeployed';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Supply_Cache.USA_supply_cache_undeployed';
-    }
-
-    return none;
+    return default.UnbuiltStaticMesh;
 }
 
 simulated state Constructed
@@ -133,6 +123,8 @@ simulated state Constructed
 
 simulated function OnBroken()
 {
+    super.OnBroken();
+
     DestroySupplyAttachment();
 }
 
@@ -165,6 +157,7 @@ defaultproperties
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"
+    ExplosionDamageTraceOffset=(Z=40.0)
 
     // Essentially we are just making this a satchel explosion
     BrokenEmitterClass=class'ROEffects.ROSatchelExplosion'

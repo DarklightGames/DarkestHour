@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuH42Destroyer extends DH_Stug3GDestroyer;
@@ -20,10 +20,10 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stuh42'
 
     // Damage
-	// cons: petrol fuel; 105mm ammo is more likely to explode
-	// 4 men crew
-	AmmoIgnitionProbability=0.88  // 0.75 default
+    // cons: petrol fuel; 105mm ammo is more likely to explode
+    // 4 men crew
+    AmmoIgnitionProbability=0.88  // 0.75 default
     Health=525
     HealthMax=525.0
-	EngineHealth=300
+    EngineHealth=300
 }

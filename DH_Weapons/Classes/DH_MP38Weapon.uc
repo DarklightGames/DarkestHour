@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP38Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Maschinenpistole 38"
+    ItemName="MP 38"
+    NativeItemName="Maschinenpistole 38"
     FireModeClass(0)=class'DH_Weapons.DH_MP38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP38MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MP38Attachment'

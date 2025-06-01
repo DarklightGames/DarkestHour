@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHInterfaceUtil extends GUI;
 
-var() material HeaderTop,HeaderBar,HeaderBase;      // Top, Bar and base
+var() Material HeaderTop,HeaderBar,HeaderBase;      // Top, Bar and base
 
 final simulated static function int SetROStyle(GUIController MyController, array<GUIComponent> Components)
 {

@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz2519DTransport_Snow extends DH_SdKfz2519DTransport;
 
 defaultproperties
 {
-    bIsWinterVariant=true
 
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.halftrack_body_snow'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treadsnow'

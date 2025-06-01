@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
@@ -18,6 +18,8 @@ var automated moSlider          sl_CorpseStayTime;
 var int                         CorpseStayNum;
 
 var bool                        bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
+
+var localized string            NoneText;
 
 function SetupPositions()
 {
@@ -83,6 +85,21 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
     if (Options.Length == 0)
     {
         GetComboOptions(Combo, Options);
+    }
+
+    // Multi-sampling and aniostropy options hard-coded the "None" option so that it was not localizable.
+    // This replaces the hard-coded "None" with the localized "None" text.
+    switch (Combo)
+    {
+        case co_MultiSamples:
+        case co_Anisotropy:
+            if (Options[0].Item == "None")
+            {
+                Options[0].Item = NoneText;
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -813,14 +830,18 @@ function bool RenderDeviceClick(byte Btn)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+    DisplayPromptMenu="DH_Interface.DHVideoChangePrompt"
+
+    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
+    NoneText="None"
+
     RenderModeText(0)="Direct3D 9.0 (Recommended)"
     RenderModeText(1)="Direct3D 8.0 (Rendering Issues)"
     RenderModeText(2)="OpenGL (Unstable)"
     RenderMode(0)="D3D9Drv.D3D9RenderDevice"
     RenderMode(1)="D3DDrv.D3DRenderDevice"
     RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
-
-    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
 
     DisplayModes(0)=(Width=1024,Height=768)
     DisplayModes(1)=(Width=1280,Height=800)
@@ -910,7 +931,7 @@ defaultproperties
         Caption="Resolution"
         OnCreateComponent=VideoResolution.InternalOnCreateComponent
         IniOption="@INTERNAL"
-        IniDefault="640x480"
+        IniDefault="1600x900"
         TabOrder=1
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
@@ -935,7 +956,7 @@ defaultproperties
         Caption="Game details"
         OnCreateComponent=GlobalDetails.InternalOnCreateComponent
         IniOption="@Internal"
-        IniDefault="Higher"
+        IniDefault="Highest"
         TabOrder=3
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI

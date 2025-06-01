@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZB30Weapon extends DHAutoWeapon;
@@ -9,7 +9,8 @@ defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
 
-    ItemName="ZB vz.30 Machine Gun"
+    ItemName="ZB-30 Machine Gun"
+    NativeItemName="ZB vz.30 Kulomet"
 
     FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
     AttachmentClass=class'DH_Weapons.DH_ZB30Attachment'

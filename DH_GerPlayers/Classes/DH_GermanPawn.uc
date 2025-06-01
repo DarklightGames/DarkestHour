@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GermanPawn extends DHPawn;
@@ -35,4 +35,6 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
     SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
+
+    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
 }

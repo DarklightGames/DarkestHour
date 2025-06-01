@@ -1,11 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapVotingPage extends MapVotingPage;
 
 var localized string                            lmsgMapOutOfBounds;
+var localized string                            NoRestartMapPrivilegeText;
+var localized string                            NoChangeMapPrivilegeText;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
@@ -26,6 +28,28 @@ function bool AlignBK(Canvas C)
     i_MapCountListBackground.WinTop    = lb_VoteCountListbox.MyList.ActualTop();
 
     return false;
+}
+
+function ForceMapVote(GUIComponent Sender)
+{
+    local int MapIndex, GameConfigIndex;
+    local DHVotingReplicationInfo DHVRI;
+
+    DHVRI = DHVotingReplicationInfo(MVRI);
+
+    if (DHVRI == none)
+    {
+        return;
+    }
+
+    MapIndex = MapVoteMultiColumnList(lb_MapListBox.List).GetSelectedMapIndex();
+
+    if (MapIndex > -1)
+    {
+        GameConfigIndex = int(co_GameType.GetExtra());
+
+        DHVRI.ServerForceMapVote(MapIndex,GameConfigIndex);
+    }
 }
 
 function SendVote(GUIComponent Sender)
@@ -124,6 +148,24 @@ delegate OnFilterClear()
     DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern("");
 }
 
+function InternalOnMessage(coerce string Msg, float MsgLife)
+{
+    if (Msg ~= "NOTIFY_GUI_MAP_VOTE_RESULT")
+    {
+        switch (int(MsgLife))
+        {
+            case 0:
+                Controller.ShowQuestionDialog(NoRestartMapPrivilegeText, QBTN_OK, QBTN_OK);
+                break;
+            case 1:
+                Controller.ShowQuestionDialog(NoChangeMapPrivilegeText, QBTN_OK, QBTN_OK);
+                break;
+
+            default:
+        }
+    }
+}
+
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
@@ -140,11 +182,11 @@ defaultproperties
         bScaleToParent=true
         bBoundToParent=true
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.25 // Map Name
-        HeaderColumnPerc(1)=0.2  // Source
-        HeaderColumnPerc(2)=0.15 // Country
+        HeaderColumnPerc(0)=0.40 // Map Name
+        HeaderColumnPerc(1)=0.15 // Allied Country
+        HeaderColumnPerc(2)=0.15 // Axis Country
         HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.25 // Player Range
+        HeaderColumnPerc(4)=0.15 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
 
@@ -213,4 +255,9 @@ defaultproperties
     b_FilterClear=FilterClearButton
 
     f_Chat=none
+
+    OnMessage=InternalOnMessage
+
+    NoRestartMapPrivilegeText="You don't have sufficient admin privileges to restart a map!"
+    NoChangeMapPrivilegeText="You don't have sufficient admin privileges to change a map!"
 }

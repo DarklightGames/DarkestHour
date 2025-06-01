@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_Controls extends ROTab_Controls;
@@ -248,6 +248,8 @@ function SetUpProfileControls(int Index)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+
     SectionStyleName="DHListSection"
     PanelCaption="Controls"
 
@@ -347,7 +349,7 @@ defaultproperties
         WinHeight=0.958
         OnPreDraw=InputBK1.InternalPreDraw
     End Object
-    i_BG1=DHGUIProportionalContainer'DH_Interface.DHTab_Controls.InputBK1'
+    i_BG1=InputBK1
 
     Begin Object Class=GUILabel Name=HintLabel
         TextAlign=TXTA_Center
@@ -360,7 +362,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    l_Hint=GUILabel'DH_Interface.DHTab_Controls.HintLabel'
+    l_Hint=HintLabel
 
     Begin Object Class=DHGUIMultiColumnListBox Name=BindListBox
         HeaderColumnPerc(0)=0.5
@@ -375,7 +377,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    lb_Binds=DHGUIMultiColumnListBox'DH_Interface.DHTab_Controls.BindListBox'
+    lb_Binds=BindListBox
 
     Begin Object Class=DHmoComboBox Name=ControlProfilesComboBox
         bReadOnly=true
@@ -390,7 +392,7 @@ defaultproperties
         CaptionWidth=0.2
         OnChange=DHTab_Controls.InternalOnChange
     End Object
-    co_ControlProfiles=DHmoComboBox'DH_Interface.DHTab_Controls.ControlProfilesComboBox'
+    co_ControlProfiles=ControlProfilesComboBox
 
     //******************
     // Profile Bindings
@@ -403,8 +405,8 @@ defaultproperties
     ControlProfileCommands(0)=(Cmds=("ScoreToggle","Menu",            "ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting","",    "",    "",    "",    "",    "",     "",     ""))
 
     // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
-    ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","Enter",      "M","J",               "K","L",                "Comma","Period","LeftBracket","RightBracket","Backslash","Slash",        "Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
-    ControlProfileCommands(1)=(Cmds=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire",    "StartTyping","", "PlaceRallyPoint", "", "ToggleVehicleLock","",     "",      "",           "",            "",         "SquadJoinAuto","",         "",           "",         "",      "",        "",  "",    "",    "",     "",          "",    "",    "",    "",    "",     "",     "",     "",     ""))
+    ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","Enter",      "M","J",               "K","L",                "Comma",                         "Period","LeftBracket","RightBracket","Backslash","Slash",        "Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
+    ControlProfileCommands(1)=(Cmds=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire",    "StartTyping","", "PlaceRallyPoint", "", "ToggleVehicleLock","ToggleSelectedArtilleryTarget", "",      "",           "",            "",         "SquadJoinAuto","",         "",           "",         "",      "",        "",  "",    "",    "",     "",          "",    "",    "",    "",    "",     "",     "",     "",     ""))
 
     // RO Classic
     ControlProfileKeys(2)=    (Keys=())

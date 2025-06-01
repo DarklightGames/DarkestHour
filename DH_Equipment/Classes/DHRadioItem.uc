@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadioItem extends DHWeapon;
@@ -127,5 +127,6 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
     AttachBoneName="hip"
     RadioClass=class'DH_Engine.DHInfantryRadio'
     bCanThrow=false
+    bCanResupplyWhenEmpty=false
     bCanSway=false
 }

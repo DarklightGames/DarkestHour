@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This is a spawn point that gets attached to "spawn vehicles" like the
 // halftracks.
@@ -11,18 +11,17 @@ class DHSpawnPoint_Vehicle extends DHSpawnPointBase
 
 const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
-var     DHVehicle   Vehicle;        // Reference to the owning vehicle.
-var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon.
+var     DHVehicle   Vehicle;            // Reference to the owning vehicle.
+var     class<DHVehicle> VehicleClass;  // The class of the vehicle that this spawn point is attached to.
+var     bool        bIsTemporary;       // When true, this is a "temporary" spawn point that will be destroyed soon.
 
 var     bool        bHasSpawnKillPenalty;
-var     int         SpawnKillPenalty;
-var     int         SpawnKillPenaltyCounter;
 var     float       CreatedTimeSeconds;
 
 replication
 {
     reliable if (Role == ROLE_Authority && bNetDirty)
-        bIsTemporary;
+        bIsTemporary, VehicleClass;
 }
 
 // Modified to start a repeating timer to keep checking whether this spawn vehicle can be deployed into
@@ -48,7 +47,6 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     local int i;
     local DHObjective O;
     local Pawn P;
-    local DHGameReplicationInfo GRI;
     local bool bIsInSafeZone;
     local bool bIsNewSpawn;
 
@@ -56,9 +54,6 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     {
         return SPBR_Burning;
     }
-
-    // Check to ensure that we are in our team's safe zone.
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Check that we are not inside the danger zone.
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
@@ -204,7 +199,7 @@ function bool PerformSpawn(DHPlayer PC)
     local RORoleInfo RoleInfo;
     local Vehicle    EntryVehiclePosition;
     local Pawn       P;
-    local vector     Offset;
+    local Vector     Offset;
     local array<int> ExitPositionIndices;
     local int        RoleIndex, i;
     local bool       bCanEnterTankCrewPositions;
@@ -232,7 +227,7 @@ function bool PerformSpawn(DHPlayer PC)
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
         // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
-        if (Vehicle.bEngineOff)
+        if (!Vehicle.ShouldPlayersSpawnInsideVehicle())
         {
             ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
             class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations
@@ -250,7 +245,7 @@ function bool PerformSpawn(DHPlayer PC)
         // Otherwise vehicle may be moving, so attempt to deploy into the vehicle
         else
         {
-            bCanEnterTankCrewPositions = RoleInfo.bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn, true);
+            bCanEnterTankCrewPositions = RoleInfo.bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn);
             EntryVehiclePosition = FindEntryVehicle(bCanEnterTankCrewPositions);
 
             if (EntryVehiclePosition != none && EntryVehiclePosition.TryToDrive(PC.Pawn))
@@ -279,9 +274,36 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
+/*
+simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
+{
+    local GUIStyles Style;
+    local Material M;
+    local int i;
+
+    Style = GUIController.GetStyle(GetMapStyleName(), FontScale);
+
+    // Set all the images to be the icon used for the vehicle.
+    if (VehicleClass != none &&
+        VehicleClass.default.MapIconAttachmentClass != none &&
+        VehicleClass.default.MapIconAttachmentClass.default.IconMaterial != none)
+    {
+        M = VehicleClass.default.MapIconAttachmentClass.default.IconMaterial;
+
+        for (i = 0; i < arraycount(Style.Images); ++i)
+        {
+            Style.Images[i] = M;
+        }
+    }
+
+    return Style;
+}
+*/
+
 defaultproperties
 {
     SpawnPointStyle="DHSpawnVehicleButtonStyle"
+    SpawnPointIconOffsetMultiplierY=0.75
     bCombatSpawn=true
     bIsLowPriority=true
     bHasSpawnKillPenalty=true

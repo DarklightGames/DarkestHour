@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // http://semver.org/
 //==============================================================================
@@ -75,8 +75,8 @@ final static function UVersion FromString(string S)
     return V;
 }
 
-// Returns a string in the format "v<Major>.<Minor>.<Patch>[-<Prerelease][+<Metadata>]".
-final function string ToString()
+// Returns a string in the format "<Major>.<Minor>.<Patch>[-<Prerelease]".
+final function string ToShortString()
 {
     local string S;
 
@@ -86,6 +86,16 @@ final function string ToString()
     {
         S $= "-" $ Prerelease;
     }
+
+    return S;
+}
+
+// Returns a string in the format "v<Major>.<Minor>.<Patch>[-<Prerelease][+<Metadata>]".
+final function string ToString()
+{
+    local string S;
+
+    S = ToShortString();
 
     if (Metadata != "")
     {

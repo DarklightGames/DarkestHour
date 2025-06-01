@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak40ATGun extends DHATGun;
@@ -19,10 +19,8 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
     VehicleMass=11.0
-    SupplyCost=1200  //150 more than zis-3; its a better and heavier gun + germans get a cheaper pak38 now so it shouldnt have balance problems
-    ConstructionPlacementOffset=(Z=13.0)
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -42,5 +40,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak40ATGun.KParams0'
+    KParams=KParams0
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsFrag extends JSONSerializable;
@@ -11,13 +11,13 @@ var int                 RoundTime;
 
 var string              KillerID;
 var class<Pawn>         KillerPawn;
-var vector              KillerLocation;
+var Vector              KillerLocation;
 var byte                KillerTeam;
 var class<DHVehicle>    KillerVehicle;
 
 var string              VictimID;
 var class<Pawn>         VictimPawn;
-var vector              VictimLocation;
+var Vector              VictimLocation;
 var byte                VictimTeam;
 var class<DHVehicle>    VictimVehicle;
 

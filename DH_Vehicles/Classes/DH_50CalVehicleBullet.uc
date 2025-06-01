@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_50CalVehicleBullet extends DHBullet_ArmorPiercing;
@@ -23,8 +23,7 @@ defaultproperties
     BallisticCoefficient=0.65 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
 
 	//Damage
-    ImpactDamage=75
-    Damage=250.0
+    Damage=450.0
     HullFireChance=0.05
     EngineFireChance=0.07  //assuming that some bullets in the belt are incendiary
     MyDamageType=class'DH_Vehicles.DH_50CalDamType'

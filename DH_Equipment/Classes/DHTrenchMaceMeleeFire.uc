@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTrenchMaceMeleeFire extends DHMeleeFire;
@@ -42,4 +42,7 @@ defaultproperties
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
     TearDownSound=SoundGroup'DH_WeaponSounds.Shovel.shovel_hit'
+    // TODO: These sounds got lost in a merge & need to be added back.
+    // PlayerStabSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
+    // PlayerBashSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
 }

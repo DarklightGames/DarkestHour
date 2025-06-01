@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Resupply extends DHConstruction
@@ -79,12 +79,11 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
     ProxyTraceDepthMeters=3.0
-    DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
     SupplyCost=500
     bCanPlaceIndoors=true
-    ResupplyCount=100
+    ResupplyCount=30
     HealthMax=50
     ConstructionVerb="drop"
     StartRotationMin=(Yaw=-16384)

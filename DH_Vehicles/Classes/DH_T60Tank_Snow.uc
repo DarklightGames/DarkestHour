@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T60Tank_Snow extends DH_T60Tank;
@@ -21,7 +21,6 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T60_ext_snow'
     Skins(1)=Texture'allies_vehicles_tex.Treads.SU76_Treadsnow'
     Skins(2)=Texture'allies_vehicles_tex.Treads.SU76_Treadsnow'  //not entirely "correct" but it looks ok

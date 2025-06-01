@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz251_22Transport extends DH_Sdkfz251Transport;
@@ -27,6 +27,7 @@ defaultproperties
     HealthMax=525.0
     EngineHealth=300
     bIsApc=false
+    bMustBeTankCommander=true
 
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"
@@ -48,7 +49,7 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
 
     //Add AMMO HIT BOX for 7.5 cm shell storage
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    //AmmoIgnitionProbability=0.75  // 0.75 default
-    //^ "unknown property"
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    FireDetonationChance=0.07 //increased fire detonation and ammo ignition probability over normal halftrack as ammo is explosive
+    AmmoIgnitionProbability=0.75
 }

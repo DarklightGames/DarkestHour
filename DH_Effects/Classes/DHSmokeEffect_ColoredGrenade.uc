@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSmokeEffect_ColoredGrenade extends DHSmokeEffectBase
     abstract;
 
-var(Color)  color   SmokeColor;          // allows the smoke colour to be set in default properties, so we don't need different coloured smoke textures
+var(Color)  Color   SmokeColor;          // allows the smoke colour to be set in default properties, so we don't need different coloured smoke textures
 var(Time)   float   SmokeReductionDelay; // after this time, Timer() begins to reduce the velocity, size, lifetime & fade time of the smoke particles
 
 // Set the SpriteEmitter colour properties based on designated SmokeColor, & set a timer to start reducing the smoke effect after the SmokeReductionDelay period

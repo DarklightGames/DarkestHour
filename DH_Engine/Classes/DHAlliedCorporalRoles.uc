@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAlliedCorporalRoles extends DHAlliedRoles
@@ -11,8 +11,6 @@ defaultproperties
     bRequiresSLorASL=true
     MyName="Corporal"
     AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
     Limit=2
     bSpawnWithExtraAmmo=true
 }

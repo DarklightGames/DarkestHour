@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
@@ -17,26 +17,32 @@ var     int         RaisedPositionIndex;         // lowest position where comman
 // Camera & display
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
-var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
-var     texture     PeriscopeOverlay;            // overlay for commander's periscope
+var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
+var     Texture     PeriscopeOverlay;            // overlay for commander's periscope
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
-var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+
+// Projectile shell textures.
+// RO only allowed a single texture for all shells, but DH allows different textures for different shell types.
+// If any of these are set, they are used in place of the AmmoShellTexture.
+var     Texture     AmmoShellTextures[3];
+var     Texture     AmmoShellReloadTextures[3];
 
 // Gunsight overlay
-var     texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
+var     Texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
 var     float               RangePositionY;
-var     localized string    RangeText;                  // metres or yards
+var     DHUnits.EDistanceUnit   RangeUnit;
 var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
-var     sound       ManualRotateSound;
-var     sound       ManualPitchSound;
-var     sound       ManualRotateAndPitchSound;
-var     sound       PoweredRotateSound;
-var     sound       PoweredPitchSound;
-var     sound       PoweredRotateAndPitchSound;
+var     Sound       ManualRotateSound;
+var     Sound       ManualPitchSound;
+var     Sound       ManualRotateAndPitchSound;
+var     Sound       PoweredRotateSound;
+var     Sound       PoweredPitchSound;
+var     Sound       PoweredRotateAndPitchSound;
 var     float       ManualMinRotateThreshold;
 var     float       ManualMaxRotateThreshold;
 var     float       PoweredMinRotateThreshold;
@@ -46,10 +52,17 @@ var     float       PoweredMaxRotateThreshold;
 var     bool        bTurretRingDamaged;
 var     bool        bGunPivotDamaged;
 var     bool        bOpticsDamaged;
-var     texture     DestroyedGunsightOverlay;
+var     Texture     DestroyedGunsightOverlay;
 
 // Debug
 var     bool        bDebugSights; // shows centering cross in gunsight for testing purposes
+
+// Optics
+var     class<DHGunOptics>  GunOpticsClass;
+var     int                 ProjectileGunOpticRangeTableIndices[3]; // The index of what optical range table to use based on the projectile index.
+
+// Periscope
+var     name        PeriscopeCameraBone;
 
 replication
 {
@@ -93,10 +106,10 @@ exec function SetCamPos(int X, int Y, int Z)
 
 // Modified so player's view turns with a turret, to properly handle vehicle roll, to handle dual-magnification optics,
 // to handle FPCamPos camera offset for any position (not just overlays), & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local rotator BaseRotation;
+    local Quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Rotator BaseRotation;
     local bool    bOnGunsight;
 
     ViewActor = self;
@@ -148,6 +161,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     if (bOnGunsight && !bIsPeriscopicGunsight)
     {
         CameraLocation = VehWep.GetBoneCoords(CameraBone).Origin;
+    }
+    // Use periscope camera bone if player is on periscope and we're not in a view transition.
+    else if (DriverPositionIndex == PeriscopePositionIndex && PeriscopeCameraBone != '' && !IsInState('ViewTransition'))
+    {
+        CameraLocation = VehWep.GetBoneCoords(PeriscopeCameraBone).Origin;
     }
     // Otherwise use PlayerCameraBone for camera location
     else
@@ -263,9 +281,32 @@ simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
     local float PosX, PosY;
+    local DHVehicleWeapon VW;
+    local int RangeTableIndex;
+    local PlayerController PC;
 
-    if (GunsightOverlay != none)
+    RangeTableIndex = -1;
+
+    if (GunOpticsClass != none)
     {
+        VW = DHVehicleWeapon(Gun);
+
+        if (VW != none)
+        {
+            RangeTableIndex = ProjectileGunOpticRangeTableIndices[VW.GetAmmoIndex()];
+            RangeTableIndex = Clamp(RangeTableIndex, 0, GunOpticsClass.default.OpticalRangeTables.Length - 1);
+        }
+
+        // Draw the gunsight using the optics class if it exists.
+        GunOpticsClass.static.DrawGunsightOverlay(C, Gun.GetRange(), OverlayCorrectionX, OverlayCorrectionY, RangeTableIndex);
+    }
+    else
+    {
+        if (GunsightOverlay == none)
+        {
+            return;
+        }
+
         // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
         // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
         // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
@@ -287,27 +328,32 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
+    }
 
+    PC = PlayerController(Controller);
+
+    if (!PC.myHud.bHideHud)
+    {
         DrawGunsightRangeSetting(C);
+    }
 
-        // Debug - draw cross on center of screen to check sight overlay is properly centred
-        if (bDebugSights)
-        {
-            PosX = C.SizeX / 2.0;
-            PosY = C.SizeY / 2.0;
-            C.SetPos(0.0, 0.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, PosY + 3.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-            C.SetPos(PosX + 3.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-        }
+    // Debug - draw cross on center of screen to check sight overlay is properly centred
+    if (bDebugSights)
+    {
+        PosX = C.SizeX / 2.0;
+        PosY = C.SizeY / 2.0;
+        C.SetPos(0.0, 0.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, PosY + 3.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
+        C.SetPos(PosX + 3.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
     }
 }
 
@@ -315,12 +361,15 @@ simulated function DrawGunsightOverlay(Canvas C)
 function DrawGunsightRangeSetting(Canvas C)
 {
     local float XL, YL, MapX, MapY;
-    local color SavedColor, WhiteColor;
+    local Color SavedColor, WhiteColor;
+    local string RangeUnitName;
 
     if (Cannon == none || Cannon.RangeSettings.Length <= 0)
     {
         return;
     }
+
+    RangeUnitName = class'DHUnits'.static.GetDistanceUnitName(RangeUnit);
 
     C.Style = ERenderStyle.STY_Normal;
     SavedColor = C.DrawColor;
@@ -329,9 +378,9 @@ function DrawGunsightRangeSetting(Canvas C)
     MapX = RangePositionX * C.ClipX;
     MapY = RangePositionY * C.ClipY;
     C.SetPos(MapX, MapY);
-    C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-    C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-    C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+    C.Font = class'DHHud'.static.GetSmallMenuFont(C);
+    C.StrLen(Cannon.GetRange() @ RangeUnitName, XL, YL);
+    C.DrawTextJustified(Cannon.GetRange() @ RangeUnitName, 2, MapX, MapY, MapX + XL, MapY + YL);
     C.DrawColor = SavedColor;
 }
 
@@ -340,23 +389,24 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
-    if (PeriscopeOverlay != none)
+    if (PeriscopeOverlay == none)
     {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(PeriscopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-
-        // Draw the periscope overlay
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        return;
     }
+    // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+    // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+    // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+    // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+    TextureSize = float(PeriscopeOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+    // Draw the periscope overlay
+    C.SetPos(0.0, 0.0);
+
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 }
 
 // Modified so player faces forwards if he's on the gunsight when switching to behind view
@@ -481,12 +531,55 @@ exec function DecreaseSmokeLauncherSetting()
     }
 }
 
+simulated function bool HasPeriscopeCameraBone()
+{
+    return PeriscopeCameraBone != '';
+}
+
+simulated function bool CanFireFromPeriscope()
+{
+    return HasPeriscopeCameraBone() || (Cannon != none && Cannon.ShootAnimBoneName != '');
+}
+
 // Modified to prevent firing while player is on, or transitioning away from, periscope or binoculars
 function bool CanFire()
 {
-    return (DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex
-        && !(IsInState('ViewTransition') && (LastPositionIndex == PeriscopePositionIndex || LastPositionIndex == BinocPositionIndex)))
-        || !IsHumanControlled();
+    local bool bIsOnPeriscope;
+    local bool bIsOnBinoculars;
+    local bool bIsTransitioningFromPeriscope;
+    local bool bIsTransitioningFromBinoculars;
+
+    bIsOnPeriscope = DriverPositionIndex == PeriscopePositionIndex;
+    bIsOnBinoculars = DriverPositionIndex == BinocPositionIndex;
+    bIsTransitioningFromPeriscope = IsInState('ViewTransition') && LastPositionIndex == PeriscopePositionIndex;
+    bIsTransitioningFromBinoculars = IsInState('ViewTransition') && LastPositionIndex == BinocPositionIndex;
+
+    if (!IsHumanControlled())
+    {
+        // Bots can always fire.
+        return true;
+    }
+
+    if (bIsOnPeriscope && !CanFireFromPeriscope())
+    {
+        // For periscopes, only allow firing if the cannon has a shoot anim channel.
+        // Historically, firing while on the periscope was disallowed because the player
+        // camera bones and the cannon bones were all handled on the same channel, so
+        // when the player fired, the camera position would be driven by the fire animation.
+        return false;
+    }
+
+    if (bIsOnBinoculars)
+    {
+        return false;
+    }
+
+    if (bIsTransitioningFromPeriscope || bIsTransitioningFromBinoculars)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 // Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)
@@ -704,21 +797,33 @@ simulated state ViewTransition
     // Modified so if camera was locked to PlayerCameraBone during transition animation, we now match rotation to that bone's final rotation
     simulated function EndState()
     {
-        local rotator NewRotation;
+        local Rotator NewRotation;
 
         super.EndState();
 
-        if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0 && IsFirstPerson())
+        if (IsFirstPerson())
         {
-            NewRotation = rotator(vector(VehWep.GetBoneRotation(PlayerCameraBone)) << VehWep.Rotation); // get camera bone rotation, made relative to vehicle
-
-            if (VehWep.bHasTurret) // if vehicle has a turret, remove turret's yaw from relative rotation
+            if (DriverPositionIndex == PeriscopePositionIndex)
             {
-                NewRotation.Yaw -= VehWep.CurrentAim.Yaw;
+                // If we transitioned into the periscope, have the camera yaw start at zero.
+                // TODO: Have the periscope retain it's rotation state.
+                Controller.SetRotation(rot(0, 0, 0));
             }
+            else
+            {
+                if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0 && IsFirstPerson())
+                {
+                    NewRotation = Rotator(Vector(VehWep.GetBoneRotation(PlayerCameraBone)) << VehWep.Rotation); // get camera bone rotation, made relative to vehicle
 
-            SetRotation(NewRotation); // note that an owning net client will update this back to the server
-            Controller.SetRotation(NewRotation); // also set controller rotation as that's what's relevant if player exited mid-transition & that caused us to leave this state
+                    if (VehWep.bHasTurret) // if vehicle has a turret, remove turret's yaw from relative rotation
+                    {
+                        NewRotation.Yaw -= VehWep.CurrentAim.Yaw;
+                    }
+
+                    SetRotation(NewRotation); // note that an owning net client will update this back to the server
+                    Controller.SetRotation(NewRotation); // also set controller rotation as that's what's relevant if player exited mid-transition & that caused us to leave this state
+                }
+            }
         }
     }
 }
@@ -756,6 +861,8 @@ simulated function ClientKDriverLeave(PlayerController PC)
 // Modified to add extra material properties
 static function StaticPrecache(LevelInfo L)
 {
+    local int i;
+
     super.StaticPrecache(L);
 
     if (default.CannonScopeCenter != none)
@@ -783,6 +890,22 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.AmmoShellReloadTexture);
     }
 
+    for (i = 0; i < arraycount(default.AmmoShellTextures); i++)
+    {
+        if (default.AmmoShellTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(default.AmmoShellReloadTextures); i++)
+    {
+        if (default.AmmoShellReloadTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellReloadTextures[i]);
+        }
+    }
+
     if (default.AltAmmoReloadTexture != none)
     {
         L.AddPrecacheMaterial(default.AltAmmoReloadTexture);
@@ -792,12 +915,31 @@ static function StaticPrecache(LevelInfo L)
 // Modified to add extra material properties
 simulated function UpdatePrecacheMaterials()
 {
+    local int i;
+
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
     Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
+
+    for (i = 0; i < arraycount(AmmoShellTextures); i++)
+    {
+        if (AmmoShellTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(AmmoShellReloadTextures); i++)
+    {
+        if (AmmoShellReloadTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellReloadTextures[i]);
+        }
+    }
+
     Level.AddPrecacheMaterial(AmmoShellReloadTexture);
     Level.AddPrecacheMaterial(AltAmmoReloadTexture);
 }
@@ -907,6 +1049,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
             ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
         {
             Cannon.UpdateGunWheels();
+            Cannon.UpdateAnimationDrivers();
         }
     }
 }
@@ -946,7 +1089,7 @@ simulated function ClientDamageCannonOverlay()
 // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
 function float ModifyThreat(float Current, Pawn Threat)
 {
-    local vector to, t;
+    local Vector to, t;
     local float  r;
 
     if (Vehicle(Threat) != none)
@@ -960,7 +1103,7 @@ function float ModifyThreat(float Current, Pawn Threat)
             // Big bonus points for perpendicular tank targets
             to = Normal(Threat.Location - Location);
             to.z = 0.0;
-            t = Normal(vector(Threat.Rotation));
+            t = Normal(Vector(Threat.Rotation));
             t.z = 0.0;
             r = to dot t;
 
@@ -980,6 +1123,34 @@ function float ModifyThreat(float Current, Pawn Threat)
     }
 
     return Current;
+}
+
+simulated function Texture GetAmmoShellTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellTextures[AmmoIndex] != none)
+    {
+        return AmmoShellTextures[AmmoIndex];
+    }
+
+    return AmmoShellTexture;
+}
+
+simulated function Texture GetAmmoShellReloadTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellReloadTextures[AmmoIndex] != none)
+    {
+        return AmmoShellReloadTextures[AmmoIndex];
+    }
+
+    return AmmoShellReloadTexture;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1020,6 +1191,22 @@ exec function DebugRange()
     {
         Cannon.bDebugRangeManually = !Cannon.bDebugRangeManually;
         Log(Cannon.Tag @ "bDebugRangeManually =" @ Cannon.bDebugRangeManually);
+    }
+}
+
+exec function DebugSpeed()
+{
+    local DHAntiVehicleProjectile Projectile;
+
+    if (IsDebugModeAllowed() && Cannon != none)
+    {
+        // Spawn a shell, then set it's bDebugSpeed to true.
+        Projectile = DHAntiVehicleProjectile(Cannon.SpawnProjectile(Cannon.ProjectileClass, false));
+
+        if (Projectile != none)
+        {
+            Projectile.bDebugSpeed = true;
+        }
     }
 }
 
@@ -1132,10 +1319,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
             if (BP != none)
             {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
-                BP.StartLocation = BP.Location;
+                BP.CreateCalibrationInfo(VehWep, BP.Location, Mils, AU_Milliradians);
             }
         }
     }
@@ -1168,6 +1352,15 @@ exec function SetPrimaryAmmo(int Value)
     }
 }
 
+exec function SetPeriscopeSize(float NewValue)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(Tag @ "PeriscopeSize =" @ NewValue @ " (was" @ PeriscopeSize $ ")");
+        PeriscopeSize = NewValue;
+    }
+}
+
 defaultproperties
 {
     // Positions & entry
@@ -1185,11 +1378,10 @@ defaultproperties
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
     AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="Cmdr"
 
     // Gunsight overlay
     GunsightSize=0.5
-    RangeText="metres"
+    RangeUnit=DU_Meters
     RangePositionX=0.16
     RangePositionY=0.2
 

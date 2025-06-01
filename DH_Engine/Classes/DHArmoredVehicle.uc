@@ -1,14 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
     abstract;
-
-#exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
 struct ArmorSection
 {
@@ -31,18 +27,15 @@ struct NewHitpoint
 {
     var   float             PointRadius;
     var   name              PointBone;
-    var   vector            PointOffset;
+    var   Vector            PointOffset;
     var   float             DamageMultiplier;
     var   ENewHitPointType  NewHitPointType;
 };
 
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
-var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
-var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
-var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
-var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
-var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
+var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
+var     Vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 
 // Vehicle locking
 var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
@@ -57,12 +50,19 @@ var     bool        bVehicleHit;                // A simple check used in TakeDa
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
+var     float       TurretPenetrationHullDamageChanceModifier; // chance modifier for hull damage when a turret penetration occurs
+var     float       HullPenetrationTurretDamageChanceModifier; // chance modifier for turret damage when a hull penetration occurs
+var     float       TurretPenetrationDamageModifier; // damage modifier for incoming damage when a turret penetration occurs
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
 var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points (new DH types) that may be hit & damaged
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
+var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
+
+// The naming on these are extremely deceptive.
+// These are not "chances", but are damage thresholds that, when reached, will have a base 100% chance of doing damage to the thing in question.
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
 var     float       DriverKillChance;           // chance that shrapnel will kill driver
 var     float       CommanderKillChance;        // chance that shrapnel will kill commander
@@ -70,14 +70,13 @@ var     float       GunnerKillChance;           // chance that shrapnel will kil
 var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
-var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
 var     name        FireAttachBone;
-var     vector      FireEffectOffset;
+var     Vector      FireEffectOffset;
 var     float       HullFirePercent; //helper variable
 var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
@@ -95,7 +94,10 @@ var     float       TurretHatchFireSpawnTime;
 var     bool        bHullMGFireNeeded;
 var     float       HullMGHatchFireSpawnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a vehicle up, runs each time the fire does damage
-var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle, runs each time engine takes fire damage
+var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle
+var     bool        bEngineFireSpreadPending;  // if true, engine fire will spread to the rest of the vehicle once it has burned for a while.
+var     float       EngineFireSpreadTime;
+var     Range       EngineToHullFireDelayRange;
 var     bool        bFirstPenetratingHit;
 var     bool        bHEATPenetration;       // a penetrating round is a HEAT round
 var     Controller  WhoSetOnFire;
@@ -186,6 +188,27 @@ simulated function PostNetReceive()
     }
 }
 
+simulated function bool IsUnbuttoned()
+{
+    return DriverPositionIndex >= UnbuttonedPositionIndex && !IsInState('ViewTransition');
+}
+
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    if (!super.CanSwitchToVehiclePosition(F))
+    {
+        return false;
+    }
+
+    if (bMustBeUnbuttonedToChangePositions && !IsUnbuttoned())
+    {
+        DisplayVehicleMessage(30,, true);
+        return false;
+    }
+
+    return true;
+}
+
 // Modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
 simulated function Timer()
 {
@@ -210,6 +233,17 @@ simulated function Timer()
         if (bEngineOnFire && Now >= NextEngineFireDamageTime)
         {
             TakeEngineFireDamage();
+        }
+
+        // Handle the spread of engine fire to the rest of the vehicle.
+        if (bEngineOnFire && !bOnFire && bEngineFireSpreadPending && Now >= EngineFireSpreadTime)
+        {
+            if (bDebuggingText)
+            {
+                Log("Engine fire has spread to the rest of the vehicle!");
+            }
+
+            StartHullFire(WhoSetEngineOnFire);
         }
 
         // Check to see if we need to destroy a spiked, abandoned vehicle
@@ -383,18 +417,6 @@ simulated function DrawHUD(Canvas C)
 // New function to draw any textured driver's periscope overlay - updated in 2019 to add PeriscopeSize so that we can adjust FOV's
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
-    /*local float ScreenRatio;
-
-    if (PeriscopeOverlay != none)
-    {
-        ScreenRatio = float(C.SizeY) / float(C.SizeX);
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
-            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
-            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
-    }
-    */
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
     if (PeriscopeOverlay != none)
@@ -824,7 +846,7 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 // Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
 // If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
 // Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
-function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+function bool AreCrewPositionsLockedForPlayer(Pawn P)
 {
     if (bVehicleLocked && P != none)
     {
@@ -832,12 +854,6 @@ function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageTo
         if (IsAnAllowedCrewman(P))
         {
             return false;
-        }
-
-        // Player is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
-        if (!bNoMessageToPlayer)
-        {
-            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
         }
 
         return true;
@@ -864,7 +880,7 @@ function bool IsAnAllowedCrewman(Pawn P, optional out DHPawn DHP)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to handle starting a hull fire
-function StartHullFire(Pawn InstigatedBy)
+function StartHullFire(Controller InstigatedBy)
 {
     bOnFire = true;
 
@@ -876,7 +892,7 @@ function StartHullFire(Pawn InstigatedBy)
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
     if (InstigatedBy != none)
     {
-        WhoSetOnFire = InstigatedBy.Controller;
+        WhoSetOnFire = InstigatedBy;
         DelayedDamageInstigatorController = WhoSetOnFire;
     }
 
@@ -926,6 +942,21 @@ function StartEngineFire(Pawn InstigatedBy)
 
     // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
     NextEngineFireDamageTime = Level.TimeSeconds;
+
+    if (FRand() <= EngineToHullFireChance)
+    {
+        // Set a flag to indicate that the engine fire will spread to the hull.
+        bEngineFireSpreadPending = true;
+
+        // Set the time that the engine fire will spread to the hull.
+        EngineFireSpreadTime = Level.TimeSeconds + class'UInterp'.static.Linear(FRand(), EngineToHullFireDelayRange.Min, EngineToHullFireDelayRange.Max);
+
+        if (bDebuggingText)
+        {
+            Log("Engine fire will spread to hull!");
+        }
+    }
+
     Timer();
 
     // Engine fire effect
@@ -1063,7 +1094,7 @@ simulated function bool IsEngineBurning()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
-function bool IsTurretRingHit(vector HitLocation)
+function bool IsTurretRingHit(Vector HitLocation)
 {
     local vector TurretRingBottom;
     local vector TurretRingTop;
@@ -1081,10 +1112,10 @@ function bool IsTurretRingHit(vector HitLocation)
 }
 
 // New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
-function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, optional float CheckDistance)
+function bool IsNewPointShot(Vector HitLocation, Vector LineCheck, int Index, optional float CheckDistance)
 {
-    local coords HitPointCoords;
-    local vector HitPointLocation, Difference;
+    local Coords HitPointCoords;
+    local Vector HitPointLocation, Difference;
     local float  t, DotMM, ClosestDistance;
 
     if (NewVehHitpoints[Index].PointBone == '')
@@ -1106,7 +1137,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
     if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
+        HitPointLocation += NewVehHitpoints[Index].PointOffset >> Rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -1146,10 +1177,10 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
 // Re-written from deprecated ROTreadCraft class for DH's armour penetration system
 // Handles penetration calcs for any shell type, & adds including an option for multiple armor sections for each side
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
-    local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
-    local rotator ArmourSlopeRotator;
+    local Vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
+    local Rotator ArmourSlopeRotator;
     local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio, ShatterChance;
     local int     i;
@@ -1165,7 +1196,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Then convert to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
     HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
-    HitLocationAngle = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+    HitLocationAngle = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
     if (HitLocationAngle < 0.0)
     {
@@ -1309,7 +1340,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Calculate the projectile's angle of incidence to the actual armor slope
         // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
         ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
-        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
+        ArmorNormal = Normal(Vector(ArmourSlopeRotator) >> Rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
         // Check if round is to be deflected because the AOI is too high.
@@ -1322,7 +1353,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return false;
         }
 
-        //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45°
+        //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45ï¿½
         if (bSideHit && bHasAddedSideArmor && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
         {
             ResetTakeDamageVariables();
@@ -1592,7 +1623,7 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 //  *********************************  DAMAGE  ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageType> DamageType)
+function TakeIncendiaryDamage(Pawn Instigator, Vector HitLocation, class<DamageType> DamageType)
 {
     if (Health <= 0)
     {
@@ -1613,7 +1644,7 @@ function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageT
         if (IsTurretRingHit(HitLocation) &&
             FRand() < TurretRingIncendiaryLeakChance)
         {
-            StartHullFire(Instigator);
+            StartHullFire(Instigator.Controller);
         }
 
         // Leaking through hatches:
@@ -1623,7 +1654,7 @@ function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageT
 
 // Modified to DH special damage points, random special damage and/or crew deaths if penetrated, & possibility of setting engine or vehicle on fire
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<ROWeaponDamageType> WepDamageType;
     local DHVehicleCannonPawn       CannonPawn;
@@ -1857,13 +1888,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bTurretPenetration)
                     {
-                        HullChanceModifier = 0.25;   // 25% usual chance of damage to things in the hull
+                        HullChanceModifier = TurretPenetrationHullDamageChanceModifier;
                         TurretChanceModifier = 1.0;
+                        Damage *= TurretPenetrationDamageModifier;
                     }
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier = 0.35; // 35% usual chance of damage to things in the turret
+                        TurretChanceModifier = HullPenetrationTurretDamageChanceModifier;
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
@@ -1983,7 +2015,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
             if (FRand() < HullFirePercent)
             {
-                StartHullFire(InstigatedBy);
+                if (InstigatedBy != none)
+                {
+                    StartHullFire(InstigatedBy.Controller);
+                }
+                else
+                {
+                    StartHullFire(none);
+                }
             }
             // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations (spilled fuel, loose electrical circuits, etc)
             else if (bFirstPenetratingHit)
@@ -2018,7 +2057,7 @@ function ResetTakeDamageVariables()
 }
 
 // Modified to add random chance of engine fire breaking out
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
     if (EngineHealth > 0)
@@ -2154,12 +2193,6 @@ function TakeEngineFireDamage()
 
             DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
 
-            // Small chance each time of engine fire spreading & setting whole vehicle on fire
-            if (!bOnFire && FRand() < EngineToHullFireChance)
-            {
-                StartHullFire(PawnWhoSetOnFire);
-            }
-
             // Engine not dead, so set next engine damage due in the normal 3 seconds
             if (EngineHealth > 0)
             {
@@ -2220,29 +2253,12 @@ simulated function UpdatePrecacheMaterials()
 // Modified to include extra attachment
 simulated function DestroyAttachments()
 {
-    super. DestroyAttachments();
+    super.DestroyAttachments();
 
     if (DriverHatchFireEffect != none)
     {
         DriverHatchFireEffect.Kill();
     }
-}
-
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-
-    if (bUsesCodedDestroyedSkins)
-    {
-        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-        DestroyedSkin.Material1 = Skins[0];
-        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-        DestroyedSkin.FallbackMaterial = Skins[0];
-        DestroyedSkin.CombineOperation = CO_Multiply;
-        DestroyedMeshSkins[0] = DestroyedSkin;
-    }
-
-    super.DestroyAppearance();
 }
 
 // Modified to handle extended vehicle fire system, plus setting manual/powered turret
@@ -2340,7 +2356,7 @@ function bool StronglyRecommended(Actor S, int TeamIndex, Actor Objective)
 
 function float ModifyThreat(float Current, Pawn Threat)
 {
-    local vector to, t;
+    local Vector to, t;
     local float  r;
 
     if (Vehicle(Threat) != none)
@@ -2354,7 +2370,7 @@ function float ModifyThreat(float Current, Pawn Threat)
             // Big bonus points for perpendicular tank targets
             to = Normal(Threat.Location - Location);
             to.z = 0.0;
-            t = Normal(vector(Threat.Rotation));
+            t = Normal(Vector(Threat.Rotation));
             t.z = 0.0;
             r = to dot t;
 
@@ -2430,7 +2446,7 @@ defaultproperties
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
     PointValue=1000
     WeaponLockTimeForTK=30
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.tank_topdown'
     TurretRingHeight=20.0
     TurretRingRadius=60.0
 
@@ -2465,6 +2481,9 @@ defaultproperties
     TurretDetonationThreshold=1750.0
     // above values are misleading: the greater the number, the lower the chance is
     AmmoIgnitionProbability=0.75
+    TurretPenetrationHullDamageChanceModifier=0.25
+    HullPenetrationTurretDamageChanceModifier=0.35
+    TurretPenetrationDamageModifier=1.0
 
     // Incendiary fuel leaks / fire probabilities
     TurretRingIncendiaryLeakChance=0.10;
@@ -2485,7 +2504,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
@@ -2544,7 +2563,6 @@ defaultproperties
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
     // Driving & steering
-    MaxCriticalSpeed=700.0 // approx 42 kph
     TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO
@@ -2582,4 +2600,7 @@ defaultproperties
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
+
+    EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
+    bDebuggingText=false
 }

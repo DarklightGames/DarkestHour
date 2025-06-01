@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanCannon extends DHVehicleCannon;
@@ -47,12 +47,13 @@ defaultproperties
     CustomPitchDownLimit=64079
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellSmoke'
 
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(0)="APC"
+    ProjectileDescriptions(1)="HE"
+    ProjectileDescriptions(2)="WP"
 
     nProjectileDescriptions(0)="M61 APC"
     nProjectileDescriptions(1)="M48 HE-T"

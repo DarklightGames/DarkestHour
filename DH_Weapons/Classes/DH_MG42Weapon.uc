@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MG42Weapon extends DHMGWeapon;
@@ -18,7 +18,8 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
 
 defaultproperties
 {
-    ItemName="Maschinengewehr 42"
+    ItemName="MG 42"
+    NativeItemName="Maschinengewehr 42"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_MG42Fire'
     AttachmentClass=class'DH_Weapons.DH_MG42Attachment'

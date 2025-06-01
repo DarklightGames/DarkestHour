@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SU76Cannon extends DHVehicleCannon;
@@ -32,7 +32,6 @@ defaultproperties
     CustomPitchDownLimit=64620
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellHE'
     ProjectileDescriptions(0)="APBC"

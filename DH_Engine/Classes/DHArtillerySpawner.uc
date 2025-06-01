@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillerySpawner extends Actor;
@@ -76,7 +76,7 @@ function Destroyed()
 function Timer()
 {
     local DHVolumeTest VT;
-    local vector       RandomSpread;
+    local Vector       RandomSpread;
     local bool         bInvalid;
 
     // Cancel the strike if the arty officer has switched teams or left the server, or if the round is over
@@ -125,7 +125,7 @@ function Timer()
         RandomSpread.Y += Rand((2 * SpreadAmount) + 1) - SpreadAmount;
 
         // Altered to spawn shell a standard approx 50m above strike location & to use a different method of setting shell's InstigatorController
-        LastSpawnedShell = Spawn(class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, rotator(PhysicsVolume.Gravity));
+        LastSpawnedShell = Spawn(class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, Rotator(PhysicsVolume.Gravity));
 
         if (LastSpawnedShell != none)
         {

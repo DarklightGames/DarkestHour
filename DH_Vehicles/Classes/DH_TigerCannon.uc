@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_TigerCannon extends DHVehicleCannon;
@@ -16,7 +16,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Turret armor
-    FrontArmorFactor=13.0
+    FrontArmorFactor=13.5 // Pages 33 and 35 of WWII Ballistics: Armor and Gunnery
     RightArmorFactor=8.7
     LeftArmorFactor=8.7
     RearArmorFactor=8.7
@@ -33,7 +33,6 @@ defaultproperties
     CustomPitchDownLimit=64353
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
 

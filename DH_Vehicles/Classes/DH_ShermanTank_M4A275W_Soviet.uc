@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanTank_M4A275W_Soviet extends DH_ShermanTank_M4A375W;
@@ -28,7 +28,6 @@ defaultproperties
 
     // Movement
 	//different diesel engine
-    MaxCriticalSpeed=777.0 // 45 kph
     GearRatios(1)=0.19
     GearRatios(3)=0.62
     GearRatios(4)=0.76

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_USSmokeGrenadeFire extends DHThrownExplosiveFire;
@@ -10,7 +10,6 @@ defaultproperties
     ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
     AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
     bIsSmokeGrenade=true
-    MaxHoldTime=4.95
     bPullAnimCompensation=true
     AddedFuseTime=0.38
     bSplashDamage=false

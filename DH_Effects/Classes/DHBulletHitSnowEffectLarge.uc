@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSnowEffectLarge extends emitter;
+class DHBulletHitSnowEffectLarge extends Emitter;
 
 //particles: 37
 

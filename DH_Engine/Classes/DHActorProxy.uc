@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHActorProxy extends Actor;
@@ -15,10 +15,10 @@ var DHConstructionProxyProjector    Projector;
 var array<Actor>                    Attachments;
 
 // Rotation
-var rotator                         LocalRotation;
-var rotator                         LocalRotationRate;
-
-var bool                            bIsInterpolated;    // NOTE: this is for some unused functionality that may find a home at some point
+var Rotator                         LocalRotation;
+var Rotator                         LocalRotationRate;
+var bool                            bLimitLocalRotation;    // Whether or not the limit the local rotation.
+var Range                           LocalRotationYawRange;
 
 // A context object used for passing context-relevant values to functions that
 // determine various parameters of the construction.
@@ -29,6 +29,8 @@ struct Context
     var DHPlayer PlayerController;
     var Actor GroundActor;
     var Object OptionalObject;
+    var int VariantIndex;
+    var int SkinIndex;
 };
 
 function PostBeginPlay()
@@ -131,7 +133,7 @@ function static Material CreateProxyMaterial(Material M)
     return FB;
 }
 
-function static UpdateProxyMaterialColors(Actor A, color Color)
+function static UpdateProxyMaterialColors(Actor A, Color Color)
 {
     local FinalBlend FB;
     local Combiner C;
@@ -152,10 +154,12 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
 
                 if (FC != none)
                 {
-                    FC.Color1 = Color;
+                    // Interpolate between white and the specified color.
+                    // This allows the user to see the object's original color, which is needed when selecting skins.
+                    FC.Color1 = class'UColor'.static.Interp(0.25, class'UColor'.default.White, Color);
                     FC.Color1.A = 32;
 
-                    FC.Color2 = Color;
+                    FC.Color2 = class'UColor'.static.Interp(0.5, class'UColor'.default.White, Color);
                     FC.Color2.A = 128;
                 }
             }
@@ -163,12 +167,12 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
     }
 }
 
-function color GetProxyColor()
+function Color GetProxyColor()
 {
     return class'UColor'.default.White;
 }
 
-function UpdateColor(color Color)
+function UpdateColor(Color Color)
 {
     local int i;
 
@@ -193,11 +197,16 @@ function Tick(float DeltaTime)
     }
 
     LocalRotation += LocalRotationRate * DeltaTime;
+
+    if (bLimitLocalRotation)
+    {
+        LocalRotation.Yaw = Clamp(LocalRotation.Yaw, LocalRotationYawRange.Min, LocalRotationYawRange.Max);
+    }
 }
 
 simulated function UpdateProjector()
 {
-    local vector RL;
+    local Vector RL;
 
     // NOTE: The relative location and rotation needs to be set every tick.
     // Without it, the projector seems to "drift" away from the object it's
@@ -207,7 +216,7 @@ simulated function UpdateProjector()
 
     if (Projector != none)
     {
-        if (bHidden || bIsInterpolated)
+        if (bHidden)
         {
             RL.Z -= 2048.0;
         }

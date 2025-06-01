@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUINumericEdit extends GUINumericEdit;
@@ -17,7 +17,7 @@ defaultproperties
         OnKeyType=cMyEditBox.InternalOnKeyType
         OnKeyEvent=cMyEditBox.InternalOnKeyEvent
     End Object
-    MyEditBox=DHGUIEditBox'DH_Interface.DHGUINumericEdit.cMyEditBox'
+    MyEditBox=cMyEditBox
     Begin Object Class=GUISpinnerButton Name=cMySpinner
         StyleName="DHSpinner"
         bTabStop=false
@@ -25,5 +25,5 @@ defaultproperties
         OnClick=cMySpinner.InternalOnClick
         OnKeyEvent=cMySpinner.InternalOnKeyEvent
     End Object
-    MySpinner=GUISpinnerButton'DH_Interface.DHGUINumericEdit.cMySpinner'
+    MySpinner=cMySpinner
 }

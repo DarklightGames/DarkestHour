@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoicePack extends ROVoicePack
@@ -10,9 +10,15 @@ var SoundGroup RadioRequestSound;
 var SoundGroup RadioResponseConfirmSound;
 var SoundGroup RadioResponseDenySound;
 
+// This function is called to get voice pack variant when facing a specific enemy nation.
+static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNationClass)
+{
+    return default.Class;
+}
+
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
-    local vector MyLocation;
+    local Vector MyLocation;
     local Controller C;
 
     C = Controller(PackOwner);
@@ -47,7 +53,7 @@ function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = OrderSound[1];
-    MessageString = OrderString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(OrderString[1], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -64,7 +70,7 @@ function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = SupportSound[1];
-    MessageString = SupportString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(SupportString[1], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -81,7 +87,7 @@ function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo R
     }
 
     MessageSound = AlertSound[8];
-    MessageString = AlertString[8] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(AlertString[8], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -98,7 +104,7 @@ function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient,
     }
 
     MessageSound = VehicleDirectionSound[0];
-    MessageString = VehicleDirectionString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(VehicleDirectionString[0], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = '';
 }
 
@@ -115,22 +121,17 @@ function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = OrderSound[0];
-    MessageString = OrderString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(OrderString[0], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = AttackAnim;
 }
 
 function Timer()
 {
     local PlayerController PlayerOwner;
-    local Actor SoundPlayer;
+    local ROVoiceMessageEffect SoundPlayer;
     CONST VOICEREPEATTIME = 0.0;
 
     PlayerOwner = PlayerController(Owner);
-
-    if (bDisplayPortrait && (PhraseNum == 0) && !(bIsFromDifferentTeam && bUseAxisStrings))
-    {
-        PlayerController(Owner).myHUD.DisplayPortrait(PortraitPRI);
-    }
 
     if ((Phrase[PhraseNum] != none) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
     {
@@ -138,22 +139,34 @@ function Timer()
 
         if (bUseLocationalVoice)
         {
-            if (PawnSender != none)
+            SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+
+            if (SoundPlayer != none)
             {
-                PawnSender.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
-            }
-            else
-            {
-                SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+                if (PawnSender != none)
+                {
+                    // Set the base of the sound player to the pawn that sent the message.
+                    // This makes it so that the sound will be attached to the pawn.
+                    SoundPlayer.SetBase(PawnSender);
+                    // TODO: if we wanna get crazy with it we could attach it to the head bone.
+                    SoundPlayer.SetRelativeLocation(vect(0,0,0));
+
+                    // Set the voice message effect for the pawn that sent the message.
+                    // This will allow us to delete the effect when the pawn dies.
+                    if (DHPawn(pawnSender) != none)
+                    {
+                        DHPawn(pawnSender).VoiceMessageEffect = SoundPlayer;
+                    }
+                }
 
                 if (SoundPlayer != none)
                 {
-                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
+                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_Talk, ShoutVolume,, ShoutRadius, 1.0, true);
                 }
-                else
-                {
-                    Warn("Unable to spawn ROVoiceMessageEffect at " $ senderLoc $ "!");
-                }
+            }
+            else
+            {
+                Warn("Failed to spawn voice message effect");
             }
         }
         else
@@ -197,7 +210,13 @@ function Timer()
 defaultproperties
 {
     bUseLocationalVoice=true
+
+    AlertString(8)="Under attack at {objective}"
+    OrderString(0)="Attack {objective}"
+    OrderString(1)="Defend {objective}"
     EnemyAbbrevAxis(3)="Pioneer"
+    SupportString(1)="Need help at {objective}"
+    VehicleDirectionString(0)="Go to {objective}"
 
     unitWhisperDistance=512.0
     unitShoutDistance=2048.0

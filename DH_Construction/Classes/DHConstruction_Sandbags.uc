@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Sandbags extends DHConstruction
@@ -14,6 +14,7 @@ defaultproperties
     StartRotationMax=(Yaw=16384)
     bShouldAlignToGround=false
     bCanTakeImpactDamage=true
+    bCanDieOfStagnation=false
     bIsNeutral=true
     bAcceptsProjectors=false
 

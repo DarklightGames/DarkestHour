@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LeIG18Factory extends DHATGunFactory;
@@ -11,4 +11,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
     Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
     Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
+    TeamNum=AXIS
 }

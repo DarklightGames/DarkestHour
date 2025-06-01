@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanCannon_M4A3E8 extends DH_ShermanCannonA_76mm;
@@ -20,10 +20,9 @@ defaultproperties
     AltFireSpawnOffsetX=0.0
 
     // Projectiles
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=13
@@ -36,11 +35,11 @@ defaultproperties
 
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HE"
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(2)="HVAP"
 
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42 HE"
-    nProjectileDescriptions(2)="M88 HC"
+    nProjectileDescriptions(2)="M93 HVAP"
 
     FireAttachBone="com_attachment"
     FireEffectOffset=(X=0,Y=0,Z=50)

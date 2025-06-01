@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsRallyPoint extends JSONSerializable;
@@ -21,7 +21,7 @@ enum EDestroyedReason
 var int                 TeamIndex;
 var int                 SquadIndex;
 var string              PlayerID;
-var vector              Location;
+var Vector              Location;
 var int                 SpawnCount;
 var bool                bIsEstablished;
 var int                 EstablisherCount;

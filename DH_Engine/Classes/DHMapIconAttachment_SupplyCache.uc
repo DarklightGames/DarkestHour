@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment_SupplyCache extends DHMapIconAttachment
@@ -42,7 +42,7 @@ function EVisibleFor GetVisibilityInDangerZone()
     return VISIBLE_All;
 }
 
-simulated function color GetIconColor(DHPlayer PC)
+simulated function Color GetIconColor(DHPlayer PC)
 {
     local byte PlayerTeamIndex;
 

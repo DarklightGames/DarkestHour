@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BHPWeapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="Browning Hi-Power"
+    ItemName="Browning High-Power"
     FireModeClass(0)=class'DH_Weapons.DH_BHPFire'
     FireModeClass(1)=class'DH_Weapons.DH_BHPMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BHPAttachment'

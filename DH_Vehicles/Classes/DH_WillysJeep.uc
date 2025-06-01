@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WillysJeep extends DHVehicle;
@@ -12,7 +12,7 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
@@ -47,14 +47,13 @@ defaultproperties
     ChassisTorqueScale=0.1
     TurnDamping=5.0
     SteerSpeed=130.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=35.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=40.0),(InVal=200.0,OutVal=30.0),(InVal=900.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
     MinBrakeFriction=2.0
     MaxBrakeTorque=10.0
     EngineBrakeFactor=0.0002
     bHasHandbrake=true
     HandbrakeThresh=100.0
     EngineRPMSoundRange=6000.0
-    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.3),(InVal=800.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -73,10 +72,10 @@ defaultproperties
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=35.0,Y=0.0,Z=50.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.R.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.R.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(1)=(PointRadius=24.0,PointBone="wheel.L.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointBone="wheel.R.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=24.0,PointBone="wheel.L.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=24.0,PointBone="wheel.R.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.125
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5

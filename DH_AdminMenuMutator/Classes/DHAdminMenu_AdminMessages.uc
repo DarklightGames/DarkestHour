@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // Confirmation prompts or instructions to an admin using various menu options
@@ -138,7 +138,7 @@ defaultproperties
     ConfirmSwitchToAlliesRole="Press enter to confirm you want to SWITCH this player to a new ALLIES role"
     ConfirmSwitchToAxisRole="Press enter to confirm you want to SWITCH this player to a new AXIS role"
     ConfirmDropAtObjective="Press enter to confirm you want to PARADROP this player at the chosen objective"
-    EnterGridLocation="Please specify a grid location (example: for grid E2 keypad 5, enter \"e25\")"
+    EnterGridLocation="Please specify a grid location (example: for grid E2 keypad 5, enter 'e25')"
     ConfirmDropAtCurrentLocation="Press enter to confirm you want to PARADROP this player at their CURRENT location"
     ConfirmEnableRealism="Press enter to confirm you want to ENABLE realism mode"
     ConfirmDisableRealism="Press enter to confirm you want to DISABLE realism mode"
@@ -162,5 +162,5 @@ defaultproperties
     SetGamePasswordText="Please specify the new game password"
     ToggleWeaponLockText="Press enter to confirm you want to toggle weapon locking on/off"
     ConfirmDisableRallyPoints="Press enter to confirm you want to DISABLE rally point placement"
-    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally poiint placement"
+    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally point placement"
 }

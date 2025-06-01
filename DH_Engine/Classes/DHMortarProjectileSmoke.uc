@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarProjectileSmoke extends DHMortarProjectile
@@ -28,13 +28,13 @@ simulated function HandleDestruction()
 }
 
 // Implemented to spawn a smoke emitter & play smoke sound (if shell isn't a dud)
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
     super.SpawnExplosionEffects(HitLocation, HitNormal);
 
     if (Level.NetMode != NM_DedicatedServer && !bDud)
     {
-        Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
+        Spawn(SmokeEmitterClass, self,, HitLocation, Rotator(vect(0.0, 0.0, 1.0)));
         PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
         AmbientSound = SmokeLoopSound;
     }

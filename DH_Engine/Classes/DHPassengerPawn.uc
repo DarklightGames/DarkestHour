@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPassengerPawn extends DHVehicleWeaponPawn
@@ -34,6 +34,8 @@ And always check a WeaponPawns array member exists before trying to do anything 
 var     array<class<DHPassengerPawn> >  PassengerClasses;
 
 var     bool    bUseDriverHeadBoneCam; // use the driver's head bone for the camera location
+
+var     Rotator InitialViewRotationOffset;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS  ***********  //
@@ -72,9 +74,9 @@ function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -127,7 +129,7 @@ simulated function DrawHUD(Canvas C)
 }
 
 // Modified (from deprecated ROPassengerPawn) to use the vehicle's WeaponBone we now use to attach this passenger, instead of the confusing CameraBone
-simulated function vector GetCameraLocationStart()
+simulated function Vector GetCameraLocationStart()
 {
     if (VehicleBase != none)
     {
@@ -141,14 +143,15 @@ simulated function vector GetCameraLocationStart()
 simulated function SetInitialViewRotation()
 {
     local name    AttachBone;
-    local vector  FacingDirection;
-    local rotator NewRotation;
+    local Vector  FacingDirection;
+    local Rotator NewRotation;
 
     if (VehicleBase != none)
     {
         AttachBone = VehicleBase.PassengerWeapons[PositionInArray].WeaponBone;
-        FacingDirection = vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
-        NewRotation = rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
+        FacingDirection = Vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
+        FacingDirection = FacingDirection >> InitialViewRotationOffset;
+        NewRotation = Rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
         NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
         SetRotation(NewRotation);
     }
@@ -239,6 +242,7 @@ simulated function InitializeVehicleBase()
             DriveRot = V.PassengerPawns[Index].DriveRot;
             DriveAnim = V.PassengerPawns[Index].DriveAnim;
             FPCamPos = V.PassengerPawns[Index].FPCamPos;
+            InitialViewRotationOffset = V.PassengerPawns[Index].InitialViewRotationOffset;
         }
     }
 
@@ -283,7 +287,6 @@ defaultproperties
     bPassengerOnly=true
     bSinglePositionExposed=true
     bUseDriverHeadBoneCam=true
-    HudName="Rider"
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
     PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'

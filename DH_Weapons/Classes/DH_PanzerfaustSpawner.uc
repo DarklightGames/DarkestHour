@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerfaustSpawner extends DHInventorySpawner;
@@ -14,7 +14,7 @@ defaultproperties
     PickupBoneNames(1)="panzerfaust.002"
     PickupBoneNames(2)="panzerfaust.003"
     PickupBoneNames(3)="panzerfaust.004"
-    PickupCount=2
-    PickupsMax=2
+    PickupCount=4
+    PickupsMax=4
 }
 

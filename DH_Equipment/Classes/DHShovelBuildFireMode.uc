@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShovelBuildFireMode extends DHWeaponFire;
@@ -14,7 +14,7 @@ var     float           TraceDistanceInMeters; // player has to be within this d
 simulated function bool AllowFire()
 {
     local Actor  HitActor;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local DHPawn Pawn;
 
     if (Weapon == none ||
@@ -28,7 +28,7 @@ simulated function bool AllowFire()
     }
 
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Instigator.GetViewRotation()));
+    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
 
     foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
@@ -67,10 +67,16 @@ event ModeDoFire()
     {
         GotoState('Building');
     }
+    else
+    {
+        Weapon.StopFire(ThisModeNum);
+    }
 }
 
 simulated state Building
 {
+    event ModeDoFire();
+
     simulated function BeginState()
     {
         PlayFiring();
@@ -127,7 +133,7 @@ defaultproperties
     TraceDistanceInMeters=2.15
     bModeExclusive=true
     bFireOnRelease=false
-    bWaitForRelease=true
+    bWaitForRelease=false
     FireAnim="dig"
     FireAnimRate=1.0
     FireTweenTime=0.25

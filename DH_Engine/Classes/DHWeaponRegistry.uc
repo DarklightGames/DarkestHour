@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -159,5 +159,26 @@ defaultproperties
     Records(99)=(ClassName="DH_Equipment.DHTrenchMaceItem_Bone",WeaponNames=("bonemace"))
     Records(100)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
     Records(101)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
-    Records(102)=(ClassName="DH_Weapons.DH_IncendiaryBottleNo1Weapon",WeaponNames=("molotov"))
+    Records(102)=(ClasSName="DH_Weapons.DH_Kar98ScopedZF41Weapon",WeaponNames=("zf41","k98zf41"))
+    Records(103)=(ClasSName="DH_Weapons.DH_Vz24Weapon",WeaponNames=("vz24"))
+    Records(104)=(ClasSName="DH_Weapons.DH_Vz24ScopedWeapon",WeaponNames=("vz24scoped","vz24IOR"))
+    Records(105)=(ClasSName="DH_Weapons.DH_G98Weapon",WeaponNames=("g98"))
+    Records(106)=(ClasSName="DH_Weapons.DH_M1924Weapon",WeaponNames=("m1924"))
+    Records(107)=(ClasSName="DH_Weapons.DH_M9530Weapon",WeaponNames=("mannlicher","m9530"))
+    Records(108)=(ClasSName="DH_Weapons.DH_M9531Weapon",WeaponNames=("m9531"))
+    Records(109)=(ClasSName="DH_Weapons.DH_DT29Weapon",WeaponNames=("dt29","dt29"))
+    Records(110)=(ClasSName="DH_Weapons.DH_MKB42HWeapon",WeaponNames=("mkb42","mkb42h"))
+    Records(111)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
+    Records(112)=(ClassName="DH_Weapons.DH_WitchEnder666Weapon",WeaponNames=("WitchEnder", "satansbane"))
+    Records(113)=(ClassName="DH_Weapons.DH_Breda30Weapon",WeaponNames=("breda", "breda30"))
+    Records(114)=(ClassName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
+    Records(115)=(ClassName="DH_Weapons.DH_MAB42Weapon",WeaponNames=("mab42"))
+    Records(116)=(ClassName="DH_Weapons.DH_LtypeGrenadeWeapon",WeaponNames=("Ltype"))
+    Records(117)=(ClassName="DH_Weapons.DH_Wz35Weapon",WeaponNames=("wz35", "wz", "fc35", "fc"))
+    Records(118)=(ClassName="DH_Weapons.DH_BerettaM1934Weapon",WeaponNames=("beretta", "m34","m1934"))
+    Records(119)=(ClassName="DH_Weapons.DH_SRCMMod35GrenadeWeapon",WeaponNames=("srcm","srcm35"))
+    Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
+    Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
+    Records(122)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
+    Records(123)=(ClassName="DH_Weapons.DH_IncendiaryBottleNo1Weapon",WeaponNames=("molotov"))
 }

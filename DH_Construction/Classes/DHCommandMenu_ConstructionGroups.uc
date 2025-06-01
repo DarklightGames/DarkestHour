@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroups extends DHCommandMenu
@@ -15,6 +15,7 @@ function Setup()
     local DHGameReplicationInfo GRI;
     local array<class<DHConstructionGroup> > Groups;
     local UComparator GroupsComparator;
+    local class<DHConstruction> ConstructionClass;
 
     GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
     PC = GetPlayerController();
@@ -24,11 +25,13 @@ function Setup()
     Context.PlayerController = PC;
 
     // Compile a list of unique groups from the constructions that can be displayed.
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    for (i = 0; i < Context.LevelInfo.ConstructionsEvaluated.Length; ++i)
     {
-        if (GRI.ConstructionClasses[i] != none && GRI.ConstructionClasses[i].static.ShouldShowOnMenu(Context))
+        ConstructionClass = Context.LevelInfo.ConstructionsEvaluated[i].ConstructionClass;
+
+        if (ConstructionClass != none && ConstructionClass.static.ShouldShowOnMenu(Context))
         {
-            class'UArray'.static.AddUnique(Groups, GRI.ConstructionClasses[i].default.GroupClass);
+            class'UArray'.static.AddUnique(Groups, ConstructionClass.default.GroupClass);
         }
     }
 
@@ -49,7 +52,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroup", Options[OptionIndex].OptionalObject);
 }

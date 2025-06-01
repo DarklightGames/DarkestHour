@@ -1,20 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdpantherTank extends DHArmoredVehicle;
-
-// Hack to stop jagdpanther camo variants without a matching schurzen texture from spawning schurzen
-simulated function SpawnVehicleAttachments()
-{
-    if (RandomAttachment.Skins[0] == none)
-    {
-        RandomAttachOptions.Length = 0;
-    }
-
-    super.SpawnVehicleAttachments();
-}
 
 defaultproperties
 {
@@ -63,7 +52,6 @@ defaultproperties
     TransRatio=0.1
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
-    MaxCriticalSpeed=1002.0 // 60 kph
 
     // Damage
     // pros: 5 men crew
@@ -75,10 +63,10 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-122.0,Z=-6.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=35.0,Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=35.0,Y=45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(X=35.0,Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(Y=45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(X=35.0,Y=45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     NewVehHitpoints(0)=(PointRadius=8.0,PointBone="body",PointOffset=(X=55.0,Y=-40.0,Z=77.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=15.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=15.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_GunPitch)
@@ -120,11 +108,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:
-    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2'))
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
+    RandomAttachmentGroups(0)=(Options=((Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.3),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.15),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.10),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.15)))
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'

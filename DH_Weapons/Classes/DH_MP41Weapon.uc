@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP41Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Maschinenpistole 41"
+    ItemName="MP 41"
+    NativeItemName="Maschinenpistole 41"
     FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
     PickupClass=class'DH_Weapons.DH_MP41Pickup'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetrics extends Actor
@@ -64,7 +64,7 @@ function WriteToFile()
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
         .Put("rounds", class'JSONArray'.static.FromSerializables(Rounds))
         .Put("text_messages", class'JSONArray'.static.FromSerializables(TextMessages))
-        .PutString("version", class'DarkestHourGame'.default.Version.ToString())
+        .PutString("version", class'DHBuildManifest'.default.Version.ToString())
         .Put("server", (new class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
         .Put("map", (new class'JSONObject')
@@ -103,6 +103,23 @@ function OnRoundEnd(int Winner)
 
     // TODO: are all player sessions ended at the time we expect? do we need to
     // manually write session endings?
+}
+
+function OnPlayerClientGUIDReceived(PlayerController PC, GUID ClientGUID)
+{
+    local Object O;
+    local DHMetricsPlayer P;
+
+    Players.Get(PC.GetPlayerIDHash(), O);
+
+    if (O == none)
+    {
+        return;
+    }
+
+    P = DHMetricsPlayer(O);
+
+    class'UArray'.static.SAddUnique(P.ClientGUIDs, Caps(class'MD5Hash'.static.GetHashString(ClientGUID)));
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -242,7 +259,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     Rounds[0].Constructions[Rounds[0].Constructions.Length] = C;
 }
 
-function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
+function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, Vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
     local DHVehicle KillerVehicle, VictimVehicle;
@@ -294,7 +311,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     Rounds[0].Frags[Rounds[0].Frags.Length] = F;
 }
 
-function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int RoundTime)
+function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, Vector HitLocation, int RoundTime)
 {
     local DHMetricsVehicleFrag F;
     local DHVehicle KillerVehicle;

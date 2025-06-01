@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHHintManager extends Info
@@ -12,7 +12,7 @@ struct HintInfo
     var localized string    Text;  // hint display text
 };
 
-const                   HINT_COUNT = 64;
+const                   HINT_COUNT = 70;
 
 var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
 var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
@@ -180,7 +180,7 @@ defaultproperties
 {
     PostHintDisplayDelay=10.0
     Hints(0)=(Title="Welcome to Darkest Hour!",Text="These hint messages will show up periodically in the game. Pay attention to them, your survival might depend on it! They can be disabled from the HUD tab in the configuration menu.")
-    Hints(1)=(Title="Mantling",Text="You are able to mantle on to small obstacles! To mantle, stand in front of any low obstacle until the mantling icon to appears then press %JUMP% to mantle on top of the obstacle.")
+    Hints(1)=(Title="Mantling",Text="You are able to mantle on to small obstacles! To mantle, stand in front of any low obstacle until the mantling icon appears then press %JUMP% to mantle on top of the obstacle.")
     Hints(2)=(Title="Parachutes",Text="You can guide your parachute's trajectory with your movement keys!")
     Hints(3)=(Title="Coloured Smoke Grenades",Text="Coloured smoke grenades are used to communicate on the battlefield with your teammates. Be sure to tell your teammates what the coloured smoke indicates.")
     Hints(6)=(Title="Mortars",Text="While you are holding a mortar you cannot change weapons, sprint, prone or mantle. To deploy your mortar, crouch on flat ground and press %DEPLOY%.")
@@ -200,12 +200,20 @@ defaultproperties
     Hints(48)=(Title="Externally Mounted MG Reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
 
     Hints(49)=(Title="Spotting Scope",Text="You are operating an artillery piece equipped with a spotting scope. Press %NEXTWEAPON% to look through the spotting scope.")
-    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use [RIGHTMOUSE] on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
     Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing %JUMP%.")
     Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
     Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
     Hints(54)=(Title="Find a Radio",Text="You have marked a target for long-range fire support. Find a radio so that you can call it in!")
+    Hints(55)=(Title="Impact Grenades",Text="You are holding a grenade with an impact fuze. This grenade will explode on impact with any surface. Make sure to throw it hard or it may not detonate!")
 
     Hints(60)=(Title="Firing Range",Text="This weapon has an adjustable sight! Press %SWITCHFIREMODE% to change the range of the sight.")
-}
+    Hints(61)=(Title="Desperate measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Don't waste your shots!")
 
+    Hints(62)=(Title="Barrel Overheating",Text="Your weapon's barrel is overheating! Overheating barrels will result in reduced accuracy and eventual destruction of the barrel.")
+    Hints(63)=(Title="Barrel Swapping",Text="You can swap the barrel of this weapon. Press %ROMGOPERATION% while deployed to change to your secondary barrel.")
+    Hints(64)=(Title="Barrel Destroyed",Text="Your weapon's barrel has been destroyed by overheating! You can no longer fire this weapon.")
+
+    Hints(65)=(Title="Semovente da 90/53",Text="Although the Semovente da 90/53 has a powerful gun, it has a very limited ammunition rack. Make every shot count!")
+    Hints(66)=(Title="Incoming!",Text="You have just launched a mortar round straight up into the air. You may want to take cover!")
+}

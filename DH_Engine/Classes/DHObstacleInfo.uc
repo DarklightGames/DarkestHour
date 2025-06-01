@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHObstacleInfo extends Info
@@ -32,6 +32,11 @@ var     array<DHObstacleInstance>   Obstacles;
 
 simulated function StaticMesh GetIntactStaticMesh(int Index, bool bIsDefault)
 {
+    if (Index < 0 || Index >= Types.Length)
+    {
+        return none;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].IntactStaticMesh;
@@ -146,7 +151,7 @@ simulated function int GetDamageThreshold(int Index, bool bIsDefault)
     }
 }
 
-simulated function sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
+simulated function Sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
 {
     if (bIsDefault)
     {

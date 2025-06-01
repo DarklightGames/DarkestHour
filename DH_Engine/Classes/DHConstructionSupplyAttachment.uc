@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionSupplyAttachment extends Actor
@@ -118,7 +118,7 @@ function SetInitialSupply(optional int Amount)
     }
     else
     {
-        SetSupplyCount(default.SupplyCount);
+        SetSupplyCount(SupplyCountMax);
     }
 }
 
@@ -137,30 +137,15 @@ simulated function float GetSupplyCount()
     return SupplyCount;
 }
 
-static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
+function SetSupplyCountMax(int Amount)
 {
-    local DH_LevelInfo LI;
-
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (LI != none)
-    {
-        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheStaticMesh;
-    }
-
-    return none;
-}
-
-function UpdateAppearance()
-{
-    SetStaticMesh(GetStaticMesh(Level, TeamIndex));
-    NetUpdateTime = Level.TimeSeconds - 1.0;
+    SupplyCountMax = Amount;
+    SetSupplyCount(FMin(SupplyCount, float(SupplyCountMax)));
 }
 
 function SetSupplyCount(float Amount)
 {
     SupplyCount = FClamp(Amount, 0.0, float(SupplyCountMax));
-    UpdateAppearance();
     OnSupplyCountChanged(self);
 }
 
@@ -361,7 +346,6 @@ simulated function int GetTeamIndex()
 function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
-    UpdateAppearance();
 
     if (MapIconAttachment != none)
     {

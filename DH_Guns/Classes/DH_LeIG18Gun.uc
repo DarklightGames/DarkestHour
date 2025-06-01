@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LeIG18Gun extends DHATGun;
@@ -37,9 +37,8 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
-    SupplyCost=1500
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     RotateCooldown=2
     ShadowZOffset=10
     bIsArtilleryVehicle=true

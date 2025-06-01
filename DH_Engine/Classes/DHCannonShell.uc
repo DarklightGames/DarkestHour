@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -14,10 +14,14 @@ struct RangePoint
 
 var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
 var()   array<RangePoint>   MechanicalRanges;     // the range setting values for tank cannons that do mechanical pitch adjustments for aiming
+
+// DEPRECATED: Use the DHGunOptics system instead from now on!
 var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
 var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
 
 var()   class<DHMapMarker_ArtilleryHit>  HitMapMarkerClass;
+
+var()   float   HitSoundRadius;
 
 simulated function PostBeginPlay()
 {
@@ -56,7 +60,7 @@ simulated function PostBeginPlay()
 // Meaning the shell would explode at a zero vector location, i.e. the world origin, instead of where it actually is!
 simulated function Destroyed()
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // If shell is being destroyed without having exploded, usually it means a replicated client version of shell actor is being destroyed
     // by server just before client actor has had time to impact & explode locally - so we spawn explosion effects so the player sees them
@@ -64,7 +68,7 @@ simulated function Destroyed()
     {
         // Do a trace up to 10m forward, along shell's flight path, to get a hit location & normal for what we should be just about to hit
         // If trace fails to hit anything we fall back to using shell's current location & a 'straight up' hit normal
-        if (Trace(HitLocation, HitNormal, Location + (600.0 * vector(Rotation)), Location, true) != none)
+        if (Trace(HitLocation, HitNormal, Location + (600.0 * Vector(Rotation)), Location, true) != none)
         {
             SpawnExplosionEffects(HitLocation, HitNormal);
         }
@@ -121,12 +125,12 @@ simulated static function float GetYAdjustForRange(int Range)
     return 0.0;
 }
 
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     Explode(Location, HitNormal);
 }
 
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -150,7 +154,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
@@ -164,12 +168,12 @@ simulated function BlowUp(vector HitLocation)
 }
 
 // New function just to consolidate long code that's repeated in more than one function
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, optional float ActualLocationAdjustment)
 {
     local sound          HitSound;
     local class<Emitter> HitEmitterClass;
-    local vector         TraceHitLocation, TraceHitNormal;
-    local material       HitMaterial;
+    local Vector         TraceHitLocation, TraceHitNormal;
+    local Material       HitMaterial;
     local ESurfaceTypes  SurfType;
     local bool           bShowDecal, bSnowDecal;
 
@@ -189,7 +193,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Hit something else - get material type & set effects
     else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
-        Trace(TraceHitLocation, TraceHitNormal, HitLocation + (16.0 * vector(Rotation)), HitLocation, false,, HitMaterial);
+        Trace(TraceHitLocation, TraceHitNormal, HitLocation + (16.0 * Vector(Rotation)), HitLocation, false,, HitMaterial);
 
         if (HitMaterial == none)
         {
@@ -248,7 +252,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Play impact sound (moved effect relevance check so only affects hit effect, as impact sound should play even if effect is skipped because it's not on player's screen)
     if (HitSound != none)
     {
-        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume, false, HitSoundRadius);
     }
 
     // Play random explosion sound if this shell has any
@@ -261,7 +265,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Effect relevance check is skipped altogether for an HE explosion, as it's big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it
     if (HitEmitterClass != none && (RoundType == RT_HE || EffectIsRelevant(HitLocation, false)))
     {
-        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
+        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, Rotator(HitNormal));
     }
 
     // Spawn explosion decal
@@ -275,11 +279,11 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 
         if (bSnowDecal && ExplosionDecalSnow != none)
         {
-            Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecalSnow, self,, HitLocation, Rotator(-HitNormal));
         }
         else if (ExplosionDecal != none)
         {
-            Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecal, self,, HitLocation, Rotator(-HitNormal));
         }
     }
 
@@ -350,4 +354,6 @@ defaultproperties
     ForceType=FT_Constant
     ForceRadius=100.0
     ForceScale=5.0
+
+    HitSoundRadius=200
 }

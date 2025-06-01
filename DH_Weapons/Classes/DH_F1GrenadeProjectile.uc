@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_F1GrenadeProjectile extends DHGrenadeProjectile;
@@ -14,4 +14,5 @@ defaultproperties
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
+    SpoonProjectileClass=class'DH_Weapons.DH_F1GrenadeSpoonProjectile'
 }

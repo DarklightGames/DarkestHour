@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_AmoebaSniperLate extends DHSOVSniperRoles;
@@ -11,6 +11,6 @@ defaultproperties
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaGreenSleeves'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')  
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_Nagant1895BramitWeapon')
 }

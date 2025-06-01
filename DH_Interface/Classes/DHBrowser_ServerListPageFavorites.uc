@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_ServerListPageFavorites extends UT2k4Browser_ServerListPageFavorites;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    super.Initcomponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
@@ -35,11 +35,11 @@ defaultproperties
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
     DetailSplitterPosition=0.465621
 
-    Begin Object Class=ROGUIContextMenu Name=FavoritesContextMenu
+    Begin Object Class=DHGUIContextMenu Name=FavoritesContextMenu
         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
     End Object
-    ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    ContextMenu=DHGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
 
     bStandardized=true
     StandardHeight=0.8

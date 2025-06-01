@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -34,6 +34,7 @@ enum ERadioUsageError
     ERROR_NoTarget,
     ERROR_Busy,
     ERROR_TooFarAway,
+    ERROR_Calibrating,
     ERROR_Fatal
 };
 
@@ -91,23 +92,28 @@ state Busy
 simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 {
     local DHPawn P;
-    local DHRoleInfo RI;
     local DHPlayerReplicationInfo PRI;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
+    local VehicleWeaponPawn VWP;
 
     P = DHPawn(User);
+    VWP = VehicleWeaponPawn(User);
+
+    if (P == none && VWP != none)
+    {
+        P = DHPawn(VWP.Driver);
+    }
 
     if (P == none || P.Health <= 0 || Carrier == P)
     {
         return ERROR_Fatal;
     }
 
-    RI = P.GetRoleInfo();
-    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-    PC = DHPlayer(P.Controller);
+    PRI = DHPlayerReplicationInfo(User.PlayerReplicationInfo);
+    PC = DHPlayer(User.Controller);
 
-    if (RI == none || PRI == none || PC == none)
+    if (PRI == none || PC == none)
     {
         return ERROR_Fatal;
     }
@@ -130,9 +136,14 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NoTarget;
     }
 
-    if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
+    if (bIsBusy)
     {
         return ERROR_Busy;
+    }
+
+    if (GRI != none && GRI.bIsInSetupPhase)
+    {
+        return ERROR_Calibrating;
     }
 
     if (VSize(P.Location - Location) > class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
@@ -223,11 +234,11 @@ state Requesting extends Busy
 
         if (Request.Sender.Pawn != none)
         {
-            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
         }
 
-        // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
+        // Wait for the length of the response delay, then move to Responding state.
+        SetTimer(ResponseDelaySeconds, false);
     }
 
     function Timer()
@@ -244,7 +255,7 @@ state Responding extends Busy
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
         local DHGameReplicationInfo GRI;
-        local vector MapLocation;
+        local Vector MapLocation;
 
         super.BeginState();
 
@@ -327,6 +338,11 @@ simulated function NotifySelected(Pawn User)
 
     Error = GetRadioUsageError(User);
 
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+    
     switch (Error)
     {
         case ERROR_None:
@@ -349,8 +365,8 @@ simulated function NotifySelected(Pawn User)
             // "Radio is currently in use"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 4);
             break;
-        case ERROR_Fatal:
-            // For debugging purposes only!
+        case ERROR_Calibrating:
+            // "Radio is calibrating"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
             break;
         default:
@@ -362,7 +378,9 @@ simulated function NotifySelected(Pawn User)
 // and results in nonsense like this needing to be coded up.
 function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
 {
-    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass;
+    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass.static.GetVoicePackClass(
+        LI.GetTeamNationClass(int(!bool(TeamIndex)))
+        );
 }
 
 function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)
@@ -400,7 +418,7 @@ defaultproperties
     TeamIndex=2 // NEUTRAL_TEAM_INDEX
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
-    ResponseDelaySeconds=2.0
+    ResponseDelaySeconds=15.0   // TODO: also make italian request sounds shorter
     AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
 
     ResponseSoundRadius=100.0

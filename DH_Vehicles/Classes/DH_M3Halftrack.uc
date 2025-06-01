@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M3Halftrack extends DHArmoredVehicle
@@ -17,7 +17,7 @@ defaultproperties
     MaxDesireability=1.2
     MinRunOverSpeed=300
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
@@ -40,7 +40,6 @@ defaultproperties
     DriveAnim="VUC_driver_idle_close"
 
     // Movement
-    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5
@@ -67,21 +66,30 @@ defaultproperties
     // Damage
     Health=500.0
     HealthMax=500.0
-    DamagedEffectHealthFireFactor=0.2
+    DamagedEffectHealthFireFactor=0.1
     EngineHealth=150.0
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+   VehHitpoints(3)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
+    VehHitpoints(4)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
     DamagedWheelSpeedFactor=0.4
     EngineDamageFromGrenadeModifier=0.05
-    DirectHEImpactDamageMult=8.0
+    DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
     TreadHitMaxHeight=64.0
     DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
+    DamagedEffectOffset=(X=120.0,Y=0.0,Z=68.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    bEnableHatchFires=false
+    bEnableHatchFires=true
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireAttachBone="body"
+    FireEffectOffset=(X=-35.0,Y=30.0,Z=85.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    EngineToHullFireChance=0.05 //Unlikely for a fire to spread
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
+    FireDetonationChance=0.02
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
 
     // Vehicle destruction
     ExplosionDamage=85.0
@@ -129,10 +137,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-90.0,Y=50.0,Z=20.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
-    RandomAttachment=(AttachBone="body",bHasCollision=true)
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
-    ShadowZOffset=32.0
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',bHasCollision=true))))
 
     // HUD
     VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'

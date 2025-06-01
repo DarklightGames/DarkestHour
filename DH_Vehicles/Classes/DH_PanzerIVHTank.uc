@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVHTank extends DH_PanzerIVGLateTank;
@@ -28,7 +28,6 @@ defaultproperties
     FrontArmor(3)=(Thickness=8.5)
     RearArmor(1)=(Slope=11.0)
 
-    MaxCriticalSpeed=693.0 // 43 kph
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=13.0,Z=35.0))
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4h_body'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_h'

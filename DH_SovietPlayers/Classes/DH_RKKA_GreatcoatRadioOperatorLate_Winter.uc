@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_GreatcoatRadioOperatorLate_Winter extends DHSOVRadioOperatorRoles;
@@ -14,4 +14,5 @@ defaultproperties
     HeadgearProbabilities(0)=0.75
     HeadgearProbabilities(1)=0.25
     HandType=Hand_Gloved
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
 }

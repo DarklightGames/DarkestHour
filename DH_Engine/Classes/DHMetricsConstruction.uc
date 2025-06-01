@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsConstruction extends JSONSerializable;
 
 var int                     TeamIndex;
 var class<DHConstruction>   ConstructionClass;
-var vector                  Location;
+var Vector                  Location;
 var int                     RoundTime;
 var string                  PlayerID;
 

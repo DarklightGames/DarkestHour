@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuH42Cannon extends DH_Stug3GCannon;
@@ -10,7 +10,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_ext'
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
@@ -19,9 +18,9 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
 
-    nProjectileDescriptions(0)="Sprgr.Patr."
+    nProjectileDescriptions(0)="F.H.Gr."
     nProjectileDescriptions(1)="F.H.Gr.Nb."
-    nProjectileDescriptions(2)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Gr.39 Hl/C"
 
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=5

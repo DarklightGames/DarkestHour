@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -31,13 +31,15 @@ var()   bool            bMainSpawn;      // is a main spawn for gametype: Advanc
 var()   bool            bAirborneSpawn;  // the spawn is located on a plane or in the air
 
 var     string          SpawnPointStyle; // style name to use for spawnpoints (can be overriden in GetMapStyleName())
+var     float           SpawnPointIconOffsetMultiplierX; // offset icon horizontally by a product of its width; TODO: Replace this with pixel size?
+var     float           SpawnPointIconOffsetMultiplierY; // offset icon vertically by a product of its height
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
 var     float           SpawnKillProtectionTime; // how many seconds a kill on a player will be considered a spawn kill after spawning on this spawn point
 
 // Parameters for spawning in a radius (NOTE: currently only works for infantry!)
-var     vector          SpawnLocationOffset;
+var     Vector          SpawnLocationOffset;
 var     float           SpawnRadius;
 var     int             SpawnRadiusSegmentCount;
 var     bool            bShouldTraceCheckSpawnLocations;
@@ -70,7 +72,8 @@ var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
 
 // Danger zone
-var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone)   float BaseInfluenceModifier;
+var                 float InitialBaseInfluenceModifier;
 
 replication
 {
@@ -115,6 +118,18 @@ simulated event PostBeginPlay()
         {
             SetTimer(1.0, true);
         }
+
+        InitialBaseInfluenceModifier = BaseInfluenceModifier;
+    }
+}
+
+function Reset()
+{
+    super.Reset();
+
+    if (Role == ROLE_Authority)
+    {
+        BaseInfluenceModifier = InitialBaseInfluenceModifier;
     }
 }
 
@@ -186,8 +201,8 @@ event Destroyed()
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
+    local Vector SpawnLocation;
+    local Rotator SpawnRotation;
     local Pawn P;
 
     G = DarkestHourGame(Level.Game);
@@ -214,7 +229,30 @@ function bool PerformSpawn(DHPlayer PC)
 }
 
 // Called when a spawn is spawned from this spawn point.
-function OnPawnSpawned(Pawn P);
+function OnPawnSpawned(Pawn P)
+{
+    local DHPawn DHP;
+    local Vehicle V;
+
+    V = Vehicle(P);
+
+    if (V != none)
+    {
+        DHP = DHPawn(V.Driver);
+    }
+    else
+    {
+        DHP = DHPawn(P);
+    }
+
+    if (DHP != none)
+    {
+        DHP.bCombatSpawned = bCombatSpawn;
+        DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnKillProtectionTime;
+        DHP.SpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+        DHP.SpawnPoint = self;
+    }
+}
 
 // Called when a pawn is spawn killed from this spawn point - override in child classes
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);
@@ -229,10 +267,10 @@ simulated function bool CanSpawnRole(DHRoleInfo RI)
 }
 
 // Override to specify a different spawn pose, otherwise it just uses the spawn point's pose
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local DHPawnCollisionTest CT;
-    local vector              L;
+    local Vector              L;
     local float               Angle, AngleInterval;
     local int                 i, j, k;
 
@@ -364,6 +402,11 @@ function SetIsActive(bool bIsActive)
             }
         }
     }
+}
+
+simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
+{
+    return GUIController.GetStyle(SpawnPointStyle, FontScale);
 }
 
 // Override to change the button style for display on the deploy menu.
