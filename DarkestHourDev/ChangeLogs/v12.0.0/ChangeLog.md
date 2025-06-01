@@ -176,6 +176,11 @@ Niscemi was a small town on the road from Gela to the Ponte Olivo airfield. The 
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
 
+|||
+|-|-|
+|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2001.png)|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2002.png)|
+|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2003.png)|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2004.png)|
+
 ### San Valentino (24-64 players)
 This popular map has been completely re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
@@ -197,12 +202,10 @@ This update aims to address all the points above, as well as laying the technica
 
 ## New Mortars
 
-### 82-BM-36 Mortar (Soviet Union, Poland)
-### Granatwerfer 34 (Germany)
-### M1 Mortar (United States of America)
-### M2 Mortar (United States of America)
-### Ordnance ML 3-inch Mortar (Britain, Canada)
-Technically not a new addition, but a rework of the M2 Mortar. This is now the only mortar that can be picked up and transported by infantry.
+* 82-BM-36 Mortar (Soviet Union, Poland)
+* Granatwerfer 34 (Germany)
+* M1 Mortar (United States of America)
+* Ordnance ML 3-inch Mortar (Britain, Canada)
 
 ### Gameplay Changes
 * Mortar Operator roles have been removed.
