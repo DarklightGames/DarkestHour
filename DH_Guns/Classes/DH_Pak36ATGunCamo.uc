@@ -1,0 +1,12 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DH_Pak36ATGunCamo extends DH_Pak36ATGun;
+
+defaultproperties
+{
+    Skins(0)=Texture'DH_Pak36_tex.pak36_ext_camo'
+    CannonSkins(0)=Texture'DH_Pak36_tex.pak36_ext_camo'
+}

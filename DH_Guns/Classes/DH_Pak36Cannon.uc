@@ -5,6 +5,7 @@
 
 class DH_Pak36Cannon extends DHATGunCannon;
 
+// TODO: this is not being hidden by default
 var bool bIsHEATLoaded;
 
 replication
@@ -121,10 +122,12 @@ defaultproperties
     ShootRaisedAnim="shoot"
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
+    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.37mm.37mmAT_fire_02'
+    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.37mm.37mmAT_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.37mm.37mmAT_fire_02'
+
+    // TODO: panzergranate 41 probably needs to have a dramatically longer reload time
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') // ~3 seconds reload for a lower caliber AT gun
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')

@@ -4,11 +4,11 @@
 //==============================================================================
 // [ ] UI
 // [ ] Third person animations
-// [ ] Finalize mesh & textures
-// [ ] Variants
+// [ ] Factory classes
 // [ ] Destroyed mesh
 // [ ] Projectiles
 // [ ] Ammo loadout
+// [ ] Fix height of karma box (sinking into the ground)
 //==============================================================================
 
 class DH_Pak36ATGun extends DHATGun;
@@ -18,8 +18,8 @@ defaultproperties
     VehicleNameString="3,7cm PaK 36"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak36CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak36_anm.pak36_body_ext'
-    // Skins(0)=Texture'DH_Pak36_tex.pak38_ext_yellow'
-    // CannonSkins(0)=Texture'DH_Pak36_tex.pak38_ext_yellow'
+    Skins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
+    CannonSkins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
     // DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.pak38_destroyed'
     // DestroyedMeshSkins(0)=Material'DH_Pak36_tex.pak38_ext_yellow_destroyed'
     // VehicleHudImage=Texture'DH_Pak36_tex.pak38_body_icon'
