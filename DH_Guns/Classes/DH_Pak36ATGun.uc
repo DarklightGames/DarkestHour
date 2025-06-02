@@ -2,12 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] UI
 // [ ] Third person animations
-// [ ] Factory classes
 // [ ] Destroyed mesh
-// [ ] Projectiles
-// [ ] Ammo loadout
+// [ ] Finalize ammo loadout
+// [~] Projectiles & pen
+// [ ] New gunsight
 // [ ] Fix height of karma box (sinking into the ground)
 //==============================================================================
 
@@ -22,9 +21,9 @@ defaultproperties
     CannonSkins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
     // DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.pak38_destroyed'
     // DestroyedMeshSkins(0)=Material'DH_Pak36_tex.pak38_ext_yellow_destroyed'
-    // VehicleHudImage=Texture'DH_Pak36_tex.pak38_body_icon'
-    // VehicleHudTurret=TexRotator'DH_Pak36_tex.pak38_turret_icon_rot'
-    // VehicleHudTurretLook=TexRotator'DH_Pak36_tex.pak38_turret_icon_look'
+    VehicleHudImage=Texture'DH_Pak36_tex.pak36_body_icon'
+    VehicleHudTurret=TexRotator'DH_Pak36_tex.pak36_turret_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak36_tex.pak36_turret_icon_look'
     ExitPositions(1)=(X=-78,Y=-19,Z=58)
     VehicleMass=11.0
     bCanBeRotated=true
