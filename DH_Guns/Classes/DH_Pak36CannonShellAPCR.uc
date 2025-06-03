@@ -41,27 +41,4 @@ defaultproperties
     DHPenetrationTable(8)=1.0   // 2000
     DHPenetrationTable(9)=0.5   // 2500
     DHPenetrationTable(10)=0.0  // 3000
-
-    // TODO: to these
-    MechanicalRanges(1)=(Range=100,RangeValue=4.0)
-    MechanicalRanges(2)=(Range=200,RangeValue=10.0)
-    MechanicalRanges(3)=(Range=300,RangeValue=15.0)
-    MechanicalRanges(4)=(Range=400,RangeValue=22.0)
-    MechanicalRanges(5)=(Range=500,RangeValue=31.0)
-    MechanicalRanges(6)=(Range=600,RangeValue=42.0)
-    MechanicalRanges(7)=(Range=700,RangeValue=55.0)
-    MechanicalRanges(8)=(Range=800,RangeValue=76.0)
-    MechanicalRanges(9)=(Range=900,RangeValue=97.0)
-    MechanicalRanges(10)=(Range=1000,RangeValue=130.0)
-    MechanicalRanges(11)=(Range=1100,RangeValue=167.0)
-    MechanicalRanges(12)=(Range=1200,RangeValue=204.0)
-    MechanicalRanges(13)=(Range=1300,RangeValue=249.0)
-    MechanicalRanges(14)=(Range=1400,RangeValue=293.0)
-    MechanicalRanges(15)=(Range=1500,RangeValue=363.0)
-    MechanicalRanges(16)=(Range=1600,RangeValue=432.0)
-    MechanicalRanges(17)=(Range=1700,RangeValue=515.0)
-    MechanicalRanges(18)=(Range=1800,RangeValue=597.0)
-    MechanicalRanges(19)=(Range=1900,RangeValue=685.0)
-    MechanicalRanges(20)=(Range=2000,RangeValue=772.0)
-    bMechanicalAiming=true
 }

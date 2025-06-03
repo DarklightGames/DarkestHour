@@ -63,7 +63,7 @@ defaultproperties
 
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak36_anm.pak36_turret_ext'
-    //Skins(0)=Texture'DH_Pak36_tex.pak38_ext_yellow'
+    Skins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak36_stc.pak36_turret_yaw_collision',AttachBone="GUN_YAW")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak36_stc.pak36_turret_pitch_collision',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak36_stc.pak36_turret_barrel_collision',AttachBone="BARREL")
@@ -131,28 +131,6 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
-
-    // Cannon range settings
-    RangeSettings(1)=100
-    RangeSettings(2)=200
-    RangeSettings(3)=300
-    RangeSettings(4)=400
-    RangeSettings(5)=500
-    RangeSettings(6)=600
-    RangeSettings(7)=700
-    RangeSettings(8)=800
-    RangeSettings(9)=900
-    RangeSettings(10)=1000
-    RangeSettings(11)=1100
-    RangeSettings(12)=1200
-    RangeSettings(13)=1300
-    RangeSettings(14)=1400
-    RangeSettings(15)=1500
-    RangeSettings(16)=1600
-    RangeSettings(17)=1700
-    RangeSettings(18)=1800
-    RangeSettings(19)=1900
-    RangeSettings(20)=2000
 
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=4.0
