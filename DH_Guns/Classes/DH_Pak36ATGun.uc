@@ -3,11 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Third person animations
-// [ ] Destroyed mesh
 // [ ] Finalize ammo loadout
-// [~] Projectiles & pen
 // [ ] New gunsight
-// [ ] Fix height of karma box (sinking into the ground)
+// [~] Projectile range calibrating
 //==============================================================================
 
 class DH_Pak36ATGun extends DHATGun;
@@ -19,8 +17,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Pak36_anm.pak36_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
     CannonSkins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'
-    // DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.pak38_destroyed'
-    // DestroyedMeshSkins(0)=Material'DH_Pak36_tex.pak38_ext_yellow_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.pak36_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_Pak36_tex.pak36_ext_gray_destroyed'
     VehicleHudImage=Texture'DH_Pak36_tex.pak36_body_icon'
     VehicleHudTurret=TexRotator'DH_Pak36_tex.pak36_turret_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak36_tex.pak36_turret_icon_look'

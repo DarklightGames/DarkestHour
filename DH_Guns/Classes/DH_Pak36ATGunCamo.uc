@@ -9,4 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Pak36_tex.pak36_ext_camo'
     CannonSkins(0)=Texture'DH_Pak36_tex.pak36_ext_camo'
+    DestroyedMeshSkins(0)=Material'DH_Pak36_tex.pak36_ext_camo_destroyed'
 }
