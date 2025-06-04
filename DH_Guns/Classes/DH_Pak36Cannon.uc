@@ -5,7 +5,6 @@
 
 class DH_Pak36Cannon extends DHATGunCannon;
 
-// TODO: this is not being hidden by default
 var bool bIsHEATLoaded;
 
 replication
