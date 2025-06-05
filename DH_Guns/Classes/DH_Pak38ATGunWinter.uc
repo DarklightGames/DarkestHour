@@ -3,12 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak38Factory extends DHATGunFactory;
+class DH_Pak38ATGunWinter extends DH_Pak38ATGun;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_Pak38ATGun'
-    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
-    //Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    TeamNum=AXIS
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_winter'
+    CannonSkins(0)=Texture'DH_Pak38_tex.pak38_ext_winter'
+    DestroyedMeshSkins(0)=Material'DH_Pak38_tex.pak38_ext_winter_destroyed'
 }
