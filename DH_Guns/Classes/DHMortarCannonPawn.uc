@@ -146,9 +146,6 @@ simulated function Destroyed()
 
 simulated function InitializeHands()
 {
-    local DHPlayer PC;
-    local DHRoleInfo RI;
-
     if (Gun == none)
     {
         Warn("No gun found for mortar cannon pawn!");

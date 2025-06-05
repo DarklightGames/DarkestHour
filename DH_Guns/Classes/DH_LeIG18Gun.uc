@@ -21,7 +21,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
 defaultproperties
 {
-    VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"
+    VehicleNameString="7.5 cm le.IG 18"
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'

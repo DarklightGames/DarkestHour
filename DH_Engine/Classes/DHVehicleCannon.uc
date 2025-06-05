@@ -44,7 +44,7 @@ var     name                ShootIntermediateAnim;   // firing animation if play
 var     name                ShootRaisedAnim;         // firing animation if player is in a raised or open animation position, i.e. unbuttoned or standing
 
 // Firing animations (new system)
-var     name                ShootAnim;
+var()   name                ShootAnim;
 var     int                 ShootAnimChannel;
 var     name                ShootAnimBoneName;
 
