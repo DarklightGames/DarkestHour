@@ -186,10 +186,18 @@ This popular map has been completely re-imagined for the Italy expansion. The or
 
 This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division back to more defensible positions once the Allies had established unassailable beachheads.
 
+|||
+|-|-|
+|![San Valentino](./Media/San%20Valentino/San%20Valentino%2001.png)|![San Valentino](./Media/San%20Valentino/San%20Valentino%2002.png)|
+|![San Valentino](./Media/San%20Valentino/San%20Valentino%2003.png)|![San Valentino](./Media/San%20Valentino/San%20Valentino%2004.png)|
+
 ### Villa Cecila (8-32 players)
 This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only map with a focus on close-quarters combat in and around the villa.
 
-[more]
+|||
+|-|-|
+|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2003.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2004.png)|
+|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2001.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2002.png)|
 
 # Mortar Overhaul
 Mortars have been a part of Darkest Hour since they were introduced back in 2010 with the 5.0 update. While they were a great addition to the game, they have had a number of issues that only got more pronounced as the game continued to evolve. Our goals in this overhaul was to:
