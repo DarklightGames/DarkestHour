@@ -7,17 +7,15 @@ class DH_Pak43ATGun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="8.8 cm Pak 43"
+    VehicleNameString="8,8-cm PaK 43"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak43CannonPawn',WeaponBone="Turret_placement")
-    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    Skins(1)=Texture'DH_Artillery_Tex.Pak43.Pak43_wheel'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
-    VehicleHudOccupantsX(1)=0.47
-    VehicleHudOccupantsY(1)=0.6
+    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_body_ext'
+    // Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
+    // Skins(1)=Texture'DH_Artillery_Tex.Pak43.Pak43_wheel'
+    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
+    // VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
+    // VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
+    // VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
     bCanBeRotated=true
