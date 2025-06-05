@@ -30,5 +30,5 @@ defaultproperties
 
     CameraBone="GUNSIGHT_CAMERA"
 
-    OverlayCorrectionX=6
+    OverlayCorrectionX=0
 }
