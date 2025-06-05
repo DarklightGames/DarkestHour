@@ -11,14 +11,14 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Pak36Cannon'
 
     //Driver's position and animations
-    DriverPositions(0)=(ViewFOV=25.0,TransitionUpAnim="overlay_out",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(TransitionDownAnim="overlay_in",TransitionUpAnim="raise",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewFOV=25.0,TransitionUpAnim="overlay_out",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(TransitionDownAnim="overlay_in",TransitionUpAnim="raise",DriverTransitionAnim="pak36_gunner_lower",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="pak36_gunner_raise",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="pak36_gunner_binocs",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
     BinocPositionIndex=3
     DrivePos=(Z=58)
-    DriveAnim="crouch_idle_binoc"
+    DriveAnim="pak36_gunner_idle"
 
     //Gunsight
     GunsightOverlay=Texture'DH_Pak36_tex.PAK36_SIGHT'

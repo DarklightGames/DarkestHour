@@ -2,7 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Third person animations
 // [ ] Finalize ammo loadout
 // [ ] Fix visual bug where shell is attached at the beginning by default (and
 //     check that it works in MP)
