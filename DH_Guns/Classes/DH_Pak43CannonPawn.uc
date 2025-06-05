@@ -17,4 +17,6 @@ defaultproperties
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'
+    CameraBone="GUNSIGHT_CAMERA"
+    PlayerCameraBone="CAMERA_COM"
 }

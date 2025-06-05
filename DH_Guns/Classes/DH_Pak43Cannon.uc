@@ -10,12 +10,15 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret_ext'
     //Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_turret_coll')
     GunnerAttachmentBone="GUN_YAW"
 
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=32,RotationAxis=AXIS_Y)
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=32,RotationAxis=AXIS_Y)
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_BARREL',AttachBone="BARREL")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_PITCH',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_YAW',AttachBone="GUN_YAW")
 
     PitchBone="GUN_PITCH"
     YawBone="GUN_YAW"
