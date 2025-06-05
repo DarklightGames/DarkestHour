@@ -406,6 +406,8 @@ simulated function PostNetReceive()
     UpdateGunWheels();
 }
 
+function OnReloadFinished(int AmmoIndex);
+
 // Implemented here to handle multi-stage reload
 simulated function Timer()
 {
@@ -439,9 +441,16 @@ simulated function Timer()
     {
         ReloadState = RL_ReadyToFire;
 
-        if (bUsesMags && Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
-            FinishMagReload();
+            if (bUsesMags)
+            {
+                FinishMagReload();
+            }
+            else
+            {
+                OnReloadFinished(GetAmmoIndex(false));
+            }
         }
     }
     // Otherwise play the reloading sound for the next stage & set the next timer
@@ -1530,7 +1539,7 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i, CurrentPitch, Frame;
+    local int i, CurrentPitch;
     local float Theta;
 
     for (i = 0;  i < AnimationDrivers.Length; ++i)
