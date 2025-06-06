@@ -7,7 +7,7 @@ class DH_Flakvierling38Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="2cm Flakvierling 38 gun"
+    VehicleNameString="2,0cm Flakvierling 38"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_base'
     Skins(0)=Texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
