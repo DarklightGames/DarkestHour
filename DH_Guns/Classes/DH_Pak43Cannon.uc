@@ -29,10 +29,10 @@ defaultproperties
     RotationsPerSecond=0.017
     MaxPositiveYaw=5097
     MaxNegativeYaw=-5097
-    YawStartConstraint=-6000.0
-    YawEndConstraint=6000.0
-    CustomPitchUpLimit=6918
-    CustomPitchDownLimit=64350
+    YawStartConstraint=-5097
+    YawEndConstraint=5097
+    CustomPitchUpLimit=6916
+    CustomPitchDownLimit=64626
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
