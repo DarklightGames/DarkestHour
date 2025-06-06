@@ -193,6 +193,7 @@ simulated function InitializeHands()
     {
         UpdateHandsProjectileStaticMesh();
         HandsActor.AttachToBone(HandsProjectile, HandsProjectileBone);
+
         HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
         HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
     }
@@ -203,9 +204,16 @@ simulated function InitializeHands()
 
 simulated function UpdateHandsProjectileStaticMesh()
 {
+    local int i;
+
     if (HandsProjectile != none && Gun != none && Gun.ProjectileClass != none)
     {
         HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
+
+        for (i = 0; i < Gun.ProjectileClass.default.Skins.Length; ++i)
+        {
+            HandsProjectile.Skins[i] = Gun.ProjectileClass.default.Skins[i];
+        }
     }
 }
 

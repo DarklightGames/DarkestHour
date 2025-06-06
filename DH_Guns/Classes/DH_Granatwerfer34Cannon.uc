@@ -46,8 +46,8 @@ defaultproperties
     nProjectileDescriptions(0)="Wgr. 38"
     nProjectileDescriptions(1)="Wgr. 38 Nb."
 
-    PrimaryProjectileClass=class'DH_Guns.DH_Granatwerfer34ProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Granatwerfer34ProjectileSmoke'
+    PrimaryProjectileClass=class'DH_Granatwerfer34ProjectileHE'
+    SecondaryProjectileClass=class'DH_Granatwerfer34ProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     MaxPrimaryAmmo=28
