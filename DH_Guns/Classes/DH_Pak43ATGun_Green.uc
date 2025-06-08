@@ -3,10 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak43CamoFactory extends DH_Pak43Factory;
+class DH_Pak43ATGun_Green extends DH_Pak43ATGun;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Pak43ATGun_camo'
-    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_camo'
+    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_green'
+    CannonSkins(0)=Texture'DH_Pak43_tex.pak43_ext_green'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak43_tex.pak43_ext_green_destroyed'
 }

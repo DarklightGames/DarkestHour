@@ -3,10 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak43CamoFactory extends DH_Pak43Factory;
+class DH_Pak43FactoryWinter extends DH_Pak43Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Pak43ATGun_camo'
-    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_camo'
+    VehicleClass=class'DH_Pak43ATGun_Winter'
+    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_winter'
 }

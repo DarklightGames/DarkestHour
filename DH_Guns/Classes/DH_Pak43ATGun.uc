@@ -2,13 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] UI art
-// [ ] Third & first person anims
-// [ ] Variants
-// [ ] Foliage
-// [ ] Destroyed mesh
-// [ ] View limits
-// [ ] Screen shake on firing
+// [ ] Third person anims
+// [ ] Maybe to to do a karma impulse on the whole thing when it fires
 //==============================================================================
 
 class DH_Pak43ATGun extends DHATGun;
@@ -18,12 +13,13 @@ defaultproperties
     VehicleNameString="8,8-cm PaK 43"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak43CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_body_ext'
-    // Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    // Skins(1)=Texture'DH_Artillery_Tex.Pak43.Pak43_wheel'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
-    // VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    // VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    // VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_yellow'
+    CannonSkins(0)=Texture'DH_Pak43_tex.pak43_ext_yellow'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak43_tex.pak43_ext_yellow_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak43_stc.pak43_destroyed'
+    VehicleHudImage=Texture'DH_Pak43_tex.pak43_body_icon'
+    VehicleHudTurret=TexRotator'DH_Pak43_tex.pak43_turret_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak43_tex.pak43_turret_icon_look'
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
     bCanBeRotated=true
@@ -49,5 +45,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak43ATGun.KParams0'
+    KParams=KParams0
 }

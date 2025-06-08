@@ -8,11 +8,15 @@ class DH_Pak43CannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Pak43Cannon'
-    DriverPositions(0)=(ViewLocation=(X=50.0,Y=-24.0,Z=8.0),ViewFOV=28.33,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=6918,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-    DrivePos=(X=-33.0,Y=2.0,Z=-87.0)
-    DriveAnim="crouch_idlehold_bayo"
+    DriverPositions(0)=(ViewFOV=28.33,TransitionUpAnim="overlay_out",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(TransitionUpAnim="raise",TransitionDownAnim="overlay_in",DriverTransitionAnim="pak43_gunner_lower",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="pak43_gunner_raise",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="pak43_gunner_binocs",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    UnbuttonedPositionIndex=0
+    RaisedPositionIndex=2
+    BinocPositionIndex=3
+    DrivePos=(X=-33.0,Y=2.0,Z=-87.0)    // TODO: should be zero once we get the anims in
+    DriveAnim="pak43_gunner_idle"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
