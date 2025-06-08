@@ -9,7 +9,7 @@ defaultproperties
 {
     CameraBone="GUNSIGHT_CAMERA"
     GunClass=class'DH_Guns.DH_Pak40Cannon'
-    DriverPositions(0)=(ViewLocation=(X=28.0,Y=-19.0,Z=3.0),ViewFOV=28.33,TransitionUpAnim="overlay_out",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewFOV=28.33,TransitionUpAnim="overlay_out",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(TransitionUpAnim="raise",TransitionDownAnim="overlay_in",DriverTransitionAnim="pak40_gunner_lower",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="pak40_gunner_raise",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="pak40_gunner_binocs",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)

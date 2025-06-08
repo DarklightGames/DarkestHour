@@ -14,18 +14,13 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak40_stc.Collision.PAK40_TURRET_COLLISION_PITCH',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak40_stc.Collision.PAK40_TURRET_COLLISION_YAW',AttachBone="GUN_YAW")
     GunnerAttachmentBone="GUN_YAW"
-
     PitchBone="GUN_PITCH"
     YawBone="GUN_YAW"
-
     ShootAnim="SHOOT"
     ShootAnimBoneName="BARREL"
-
-    WeaponFireAttachmentBone="muzzle"
-    
+    WeaponFireAttachmentBone="MUZZLE"
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=128,RotationAxis=AXIS_X)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=128,RotationAxis=AXIS_Y)
-
     AnimationDrivers(0)=(Channel=2,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=22,RotationType=ROTATION_Pitch)
 
     // Turret movement
@@ -36,8 +31,6 @@ defaultproperties
 
     CustomPitchUpLimit=3094     // +17 degrees
     CustomPitchDownLimit=64444  // -6 degrees
-
-    // AnimationDrivers(0)=(Channel=1,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=37,RotationType=ROTATION_Pitch)
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'

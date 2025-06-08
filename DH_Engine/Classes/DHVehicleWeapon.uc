@@ -266,14 +266,10 @@ simulated function SpawnWeaponAttachments()
         return;
     }
 
-    Log("SpawnWeaponAttachments" @ self @ V @ V.VehicleAttachments.Length);
-
     // Check for any attachments that we need to add to this vehicle.
     for (i = 0; i < V.VehicleAttachments.Length; ++i)
     {
         VA = V.VehicleAttachments[i];
-
-        Log("Evaluating attachment" @ VA.AttachClass @ "for" @ self @ "at" @ VA.AttachBone @ "with attach to weapon" @ VA.bAttachToWeapon $ ".");
 
         if (!VA.bAttachToWeapon)
         {
