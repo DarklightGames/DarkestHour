@@ -2,20 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// Abstract parent class for each nation's infantry resupply point construction.
+// We changed the class hierarchy so that each nation gets its own
+// construction class, so this was made abstract. However, levelers had placed
+// place this in maps, so we have to keep it around until they are all removed.
+// This functionality of this class is now in `DHConstructionResupplyPlayers`.
 //==============================================================================
 
-class DHConstruction_Resupply_Players extends DHConstruction_Resupply
-    abstract;
-
-static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
-{
-    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.InfantryResupplyClass;
-}
-
-defaultproperties
-{
-    ResupplyType=RT_Players
-    MenuName="Ammo Crate (Infantry)"
-    MenuDescription="Provides a resupply point for infantry."
-}
+class DHConstruction_Resupply_Players extends DHDeprecated;

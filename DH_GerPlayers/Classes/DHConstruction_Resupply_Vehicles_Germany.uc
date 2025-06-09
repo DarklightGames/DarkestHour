@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHConstruction_Resupply_Vehicles_Germany extends DHConstruction_Resupply_Vehicles;
+class DHConstruction_Resupply_Vehicles_Germany extends DHConstructionResupplyVehicles;
 
 defaultproperties
 {
