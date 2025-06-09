@@ -10,7 +10,6 @@ defaultproperties
     NationName="Canada"
     VoicePackClass=class'DH_BritishPlayers.DHCanadianVoice'
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Britain'
-    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Britain'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_canada'

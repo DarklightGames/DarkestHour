@@ -122,6 +122,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
 
     Menu.Interaction = self;
     Menu.MenuObject = OptionalObject;
+    Menu.MenuInteger = OptionalInteger;
     Menu.Setup();
 
     OldMenu = DHCommandMenu(Menus.Peek());

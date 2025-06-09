@@ -127,8 +127,9 @@ defaultproperties
     bCanBeResupplied=false
     bCanResupplyWhenEmpty=true
 
-    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
-    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
-    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")
+    RangeDistanceUnit=DU_Meters
+    RangeSettings(0)=(Range=30,FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
+    RangeSettings(1)=(Range=60,FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
+    RangeSettings(2)=(Range=80,FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")    // The text on the weapon says 80, but the range is actually 90?
     IdleAnim="idle2"
 }

@@ -8,8 +8,8 @@ class DHSOVCorporalRoles extends DHAlliedCorporalRoles
 
 defaultproperties
 {
-    MyName="Fireteam leader"
-    AltName="Komandir zvena"
+    MyName="Fireteam Leader"
+    AltName="Komandir Zvena"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')

@@ -9,7 +9,6 @@ defaultproperties
 {
     NationName="Czechoslovakia"
     VoicePackClass=class'DH_SovietPlayers.DHCzechVoice'
-    InfantryResupplyClass=class'DHConstruction_Resupply_Players_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpac1ks.CS_backpack'
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_USSR'

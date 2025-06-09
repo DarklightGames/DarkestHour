@@ -9,7 +9,6 @@ defaultproperties
 {
     NationName="Great Britain"
     VoicePackClass=class'DH_BritishPlayers.DHBritishVoice'
-    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Britain'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack'
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Britain'
