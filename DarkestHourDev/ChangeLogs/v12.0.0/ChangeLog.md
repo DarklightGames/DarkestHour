@@ -246,16 +246,11 @@ The construction loadouts system has been overhauled to allow for easier and mor
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive ordeal that was prone to human error and oversight.
 
-Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
+Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
 
 In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
 
 [[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
-
-# Vehicles
-* Vehicle cannons can now be fired while the commander is looking through the periscope.
-
-> This is implemented on new vehicles only. This functionality will be added to pre-existing vehicles in a future update.
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
