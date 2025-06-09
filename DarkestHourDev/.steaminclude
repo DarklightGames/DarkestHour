@@ -26,3 +26,5 @@ System/dh_server_launcher.bat
 !DarkestHourDev/ChangeLogs/*
 !DarkestHourDev/BDK/*
 !DarkestHourDev/localization.yml
+!DarkestHourDev/make-config.json
+!DarkestHourDev/bdk-default.json
