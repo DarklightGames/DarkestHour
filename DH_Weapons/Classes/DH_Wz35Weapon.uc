@@ -61,6 +61,14 @@ simulated function int GetStripperClipSize()
     return 4;
 }
 
+simulated state WorkingBolt
+{
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+}
+
 defaultproperties
 {
     ItemName="Fucile Controcarro 35(P)"
