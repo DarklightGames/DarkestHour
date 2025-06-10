@@ -38,6 +38,7 @@ var DHCommandInteraction    Interaction;
 var DHCommandMenu           NextMenu;
 var DHCommandMenu           PreviousMenu;
 var Object                  MenuObject;
+var int                     MenuInteger;
 var int                     SlotCount;
 var int                     SlotCountOverride;  // If non-zero, the amount of slots will always be at least this many.
 

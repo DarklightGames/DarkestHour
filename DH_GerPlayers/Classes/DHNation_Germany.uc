@@ -10,7 +10,6 @@ defaultproperties
     NationName="Germany"
     NativeNationName="Deutschland"
     VoicePackClass=class'DH_GerPlayers.DHGerVoice'
-    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Germany'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack'
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Germany'

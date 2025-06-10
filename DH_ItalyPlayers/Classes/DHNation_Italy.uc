@@ -10,7 +10,6 @@ defaultproperties
     NationName="Kingdom of Italy"
     NativeNationName="Regno d'Italia"
     VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
-    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Italy'
     
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Italy'
 

@@ -9,9 +9,12 @@
 class DHCommandMenu_ConstructionGroup extends DHCommandMenu
     dependson(DHConstruction);
 
+const MORE_BUTTON_FLAG = 1;
+
 var Material SuppliesIcon;
 var Material SquadIcon;
 var Material DisabledIcon;
+var Material MoreIcon;
 
 var localized string NotAvailableText;
 var localized string TeamLimitText;
@@ -19,13 +22,14 @@ var localized string BusyText;
 var localized string ExhaustedText;
 var localized string RemainingText;
 var localized string MaxActiveText;
+var localized string MoreText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHActorProxy.Context Context;
 
 function Setup()
 {
-    local int i, j;
+    local int i, j, PageCount, PageIndex;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
     local class<DHConstruction> ConstructionClass;
@@ -69,6 +73,25 @@ function Setup()
         }
     }
 
+    // If we are overrunning the limit, add a "more" button, then use the
+    // MenuInteger as the page number.
+    PageCount = Max(1, Ceil(float(Options.Length) / (SlotCountOverride - 1)));
+    PageIndex = Max(0, MenuInteger % PageCount);
+
+    if (PageCount > 1)
+    {
+        // Remove all options before this page.
+        Options.Remove(0, PageIndex * (SlotCountOverride - 1));
+
+        // Add the "More" button.
+        Options.Insert(0, 1);
+        Options[0].ActionText = MoreText;
+        Options[0].OptionalInteger = MORE_BUTTON_FLAG;
+        Options[0].Material = MoreIcon;
+    }
+
+    Options.Length = Min(Options.Length, SlotCountOverride);
+
     super.Setup();
 }
 
@@ -85,15 +108,27 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
         Interaction == none ||
         Interaction.ViewportOwner == none ||
         OptionIndex < 0 ||
-        OptionIndex >= Options.Length ||
-        Options[OptionIndex].OptionalObject == none)
+        OptionIndex >= Options.Length)
+    {
+        return;
+    }
+
+    if (Options[OptionIndex].OptionalInteger == MORE_BUTTON_FLAG)
+    {
+        // More button.
+        Interaction.PopMenu();
+        Interaction.PushMenu(string(Class), MenuObject, MenuInteger + 1);
+        return;
+    }
+
+    if (Options[OptionIndex].OptionalObject == none)
     {
         return;
     }
 
     if (Options[OptionIndex].OptionalObject.IsA('UInteger'))
     {
-        Interaction.PushMenu("DH_Construction.DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
+        Interaction.PushMenu(string(Class), Options[OptionIndex].OptionalObject);
     }
     else if (Options[OptionIndex].OptionalObject.IsA('Class'))
     {
@@ -132,7 +167,8 @@ function bool IsOptionDisabled(int OptionIndex)
 {
     local class<DHConstruction> C;
 
-    if (Options[OptionIndex].OptionalObject == none)
+    if (Options[OptionIndex].OptionalInteger != MORE_BUTTON_FLAG &&
+        Options[OptionIndex].OptionalObject == none)
     {
         return true;
     }
@@ -251,11 +287,13 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     SquadIcon=Texture'DH_InterfaceArt2_tex.Icons.squad'
     DisabledIcon=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
+    MoreIcon=Texture'DH_InterfaceArt2_tex.ellipses'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
     ExhaustedText="Exhausted"
     RemainingText="{0} Remaining"
     MaxActiveText="{0}/{1} Active"
     BusyText="Busy"
+    MoreText="More"
     SlotCountOverride=8
 }

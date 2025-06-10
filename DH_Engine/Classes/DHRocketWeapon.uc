@@ -9,6 +9,7 @@ class DHRocketWeapon extends DHProjectileWeapon
 // Range Settings
 struct RangeSetting
 {
+    var int Range;
     var int  FirePitch;
     var name IronIdleAnim;
     var name IronFireAnim;
@@ -17,6 +18,7 @@ struct RangeSetting
     var name AssistedReloadAnim;
 };
 
+var     DHUnits.EDistanceUnit   RangeDistanceUnit;            // unit of measure for range settings
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
 
@@ -60,6 +62,11 @@ exec simulated function SwitchFireMode()
         if (InstigatorIsLocallyControlled())
         {
             PlayIdle();
+
+            Instigator.ReceiveLocalizedMessage(
+                class'DHWeaponRangeMessage', 
+                class'UInteger'.static.FromShorts(RangeSettings[RangeIndex].Range, int(RangeDistanceUnit))
+            );
         }
     }
 }

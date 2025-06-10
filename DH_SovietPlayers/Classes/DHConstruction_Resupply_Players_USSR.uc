@@ -2,10 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// Abstract parent class for each nation's infantry resupply point construction.
-//==============================================================================
 
-class DHConstruction_Resupply_Players_USSR extends DHConstruction_Resupply_Players;
+class DHConstruction_Resupply_Players_USSR extends DHConstructionResupplyPlayers;
 
 defaultproperties
 {

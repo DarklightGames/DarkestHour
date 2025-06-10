@@ -123,14 +123,12 @@ The most successful mortar of the Italian armed forces during the war. Based on 
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
 
 ### Breda mod. 30
-There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and bizarre loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
+There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and *unique* loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
 
 ### Carcano M91/38
 The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
 
 > Developer Highlight: When chambering the final round, you can hear the distinctive "ping" of the en-bloc clip being ejected from the bottom of the rifle.
-
-> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see the spring decompress and well as how many rounds are left in the magazine as it's emptied. To our knowledge, this is the first time this has been accurately modeled in a video game.
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
@@ -155,7 +153,7 @@ The Italy expansion sees the addition of 5 brand new maps.
 
 The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
-### Gela (32+ players)
+### Gela (32-64 players)
 
 The town of Gela was one of the main landing points for the invasion of Sicily due to its proximity to the Ponte Olivo airfield.
 
@@ -168,19 +166,38 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 ### Niscemi Outkirts (24-64 players)
 
+Niscemi was a small town on the road from Gela to the Ponte Olivo airfield. The Allies will have to fight their way up steep terrain and overcome a nest of defensive positions to reach the town.
+
+|||
+|-|-|
+|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2001.png)|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2002.png)|
+![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2003.png)|![Niscemi Outskirts](./Media/Niscemi%20Outskirts/Niscemi%20Outskirts%2004.png)|
 
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
+
+|||
+|-|-|
+|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2001.png)|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2002.png)|
+|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2003.png)|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2004.png)|
 
 ### San Valentino (24-64 players)
 This popular map has been completely re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
 This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division back to more defensible positions once the Allies had established unassailable beachheads.
 
+|||
+|-|-|
+|![San Valentino](./Media/San%20Valentino/San%20Valentino%2001.png)|![San Valentino](./Media/San%20Valentino/San%20Valentino%2002.png)|
+|![San Valentino](./Media/San%20Valentino/San%20Valentino%2003.png)|![San Valentino](./Media/San%20Valentino/San%20Valentino%2004.png)|
+
 ### Villa Cecila (8-32 players)
 This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only map with a focus on close-quarters combat in and around the villa.
 
-[more]
+|||
+|-|-|
+|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2003.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2004.png)|
+|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2001.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2002.png)|
 
 # Mortar Overhaul
 Mortars have been a part of Darkest Hour since they were introduced back in 2010 with the 5.0 update. While they were a great addition to the game, they have had a number of issues that only got more pronounced as the game continued to evolve. Our goals in this overhaul was to:
@@ -193,12 +210,10 @@ This update aims to address all the points above, as well as laying the technica
 
 ## New Mortars
 
-### 82-BM-36 Mortar (Soviet Union, Poland)
-### Granatwerfer 34 (Germany)
-### M1 Mortar (United States of America)
-### M2 Mortar (United States of America)
-### Ordnance ML 3-inch Mortar (Britain, Canada)
-Technically not a new addition, but a rework of the M2 Mortar. This is now the only mortar that can be picked up and transported by infantry.
+* 82-BM-36 Mortar (Soviet Union, Poland)
+* Granatwerfer 34 (Germany)
+* M1 Mortar (United States of America)
+* Ordnance ML 3-inch Mortar (Britain, Canada)
 
 ### Gameplay Changes
 * Mortar Operator roles have been removed.
@@ -231,16 +246,11 @@ The construction loadouts system has been overhauled to allow for easier and mor
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive ordeal that was prone to human error and oversight.
 
-Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
+Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
 
 In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
 
 [[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
-
-# Vehicles
-* Vehicle cannons can now be fired while the commander is looking through the periscope.
-
-> This is implemented on new vehicles only. This functionality will be added to pre-existing vehicles in a future update.
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
