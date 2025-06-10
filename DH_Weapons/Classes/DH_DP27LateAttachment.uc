@@ -9,14 +9,14 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.DP27_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dp27_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdDP'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true
 
-    ClientProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    ClientProjectileClass=Class'DH_DP27Bullet'
     bUsesTracers=true
     TracerFrequency=5
-    ClientTracerClass=class'DH_Weapons.DH_DP27TracerBullet'
+    ClientTracerClass=Class'DH_DP27TracerBullet'
 
     WA_Idle="idle_DP28"
     WA_IdleEmpty="idle_DP28"

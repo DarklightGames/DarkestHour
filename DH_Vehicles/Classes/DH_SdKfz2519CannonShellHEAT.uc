@@ -18,8 +18,8 @@ defaultproperties
     DamageRadius=700.0
 
     // Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 

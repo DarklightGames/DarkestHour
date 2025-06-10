@@ -20,11 +20,11 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    ProjectileClass=Class'DH_MG34Bullet'
     InitialPrimaryAmmo=150
     NumMGMags=5
     FireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

@@ -8,7 +8,7 @@ class DH_ShermanCannonPawn extends DHAmericanCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_ShermanCannon'
+    GunClass=Class'DH_ShermanCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=21.0,Y=19.0,Z=4.0),ViewFOV=25.0,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

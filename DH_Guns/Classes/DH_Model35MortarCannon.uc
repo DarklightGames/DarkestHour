@@ -50,9 +50,9 @@ defaultproperties
     nProjectileDescriptions(1)="Bomba Fumogena"
     nProjectileDescriptions(2)="Bomba gr. c. da 81"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'
+    PrimaryProjectileClass=Class'DH_Model35MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_Model35MortarProjectileSmoke'
+    TertiaryProjectileClass=Class'DH_Model35MortarProjectileHEBig'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=2
@@ -95,7 +95,7 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
 
-    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    EffectEmitterClass=Class'DHMortarFireEffect'
     // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
 

@@ -7,7 +7,7 @@ class DH_ItalianPawn extends DHPawn;
 
 defaultproperties
 {
-    Species=class'DH_ItalyPlayers.DH_Italian'
+    Species=Class'DH_Italian'
 
     Mesh=SkeletalMesh'DHCharactersITA_anm.ita_livorno_rifleman'
     Skins(0)=Texture'DHItalianCharactersTex.Uniforms.ita_livorno_corporal'
@@ -26,9 +26,9 @@ defaultproperties
     FaceSkins(10)=Texture'DHItalianCharactersTex.Faces.ita_face11'
 
     // TODO: replace all this
-    ShovelClass=class'DH_Equipment.DHShovelItem_Italian'
-    BinocsClass=class'DH_Equipment.DHBinocularsItemItalian'
-    SmokeGrenadeClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon'
+    ShovelClass=Class'DHShovelItem_Italian'
+    BinocsClass=Class'DHBinocularsItemItalian'
+    SmokeGrenadeClass=Class'DH_SRCMMod35SmokeGrenadeWeapon'
 
-    HealthFigureClass=class'DH_ItalyPlayers.DHHealthFigure_Italy'
+    HealthFigureClass=Class'DHHealthFigure_Italy'
 }

@@ -8,7 +8,7 @@ class DH_GeratPDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GeratPWeapon'
+    WeaponClass=Class'DH_GeratPWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

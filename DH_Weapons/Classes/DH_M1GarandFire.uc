@@ -96,8 +96,8 @@ function PlayFiring()
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
-    AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
+    ProjectileClass=Class'DH_M1GarandBullet'
+    AmmoClass=Class'DH_M1GarandAmmo'
     FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760
@@ -115,7 +115,7 @@ defaultproperties
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     ShellHipOffset=(X=0,Y=-3,Z=0)
     FireLastAnim="shoot_last"

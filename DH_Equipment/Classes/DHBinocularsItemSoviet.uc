@@ -10,8 +10,8 @@ class DHBinocularsItemSoviet extends DHBinocularsItem;
 defaultproperties
 {
     ItemName="BPP Optik 6x30"
-    PickupClass=class'DH_Equipment.DHBinocularsPickupSoviet'
-    AttachmentClass=class'DH_Equipment.DHBinocularsAttachmentSoviet'
+    PickupClass=Class'DHBinocularsPickupSoviet'
+    AttachmentClass=Class'DHBinocularsAttachmentSoviet'
 
     Skins(2)=Texture'DH_Equipment_tex.Binocs.BinoccanvasAllied'
     HighDetailOverlay=Shader'DH_Equipment_tex.Binocs.AlliedBinoc_s'

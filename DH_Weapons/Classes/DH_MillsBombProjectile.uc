@@ -7,7 +7,7 @@ class DH_MillsBombProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
-    MyDamageType=class'DH_Weapons.DH_MillsBombDamType'
+    MyDamageType=Class'DH_MillsBombDamType'
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.MillsBomb'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'

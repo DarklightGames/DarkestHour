@@ -8,6 +8,6 @@ class DH_OrangeSmokeProjectile extends DHGrenadeProjectile_Smoke;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Ger_OrangeSmokeGrenade_throw'
-    SmokeAttachmentClass=class'DH_Effects.DHSmokeEffectAttachment_Orange'
-    MyDamageType=class'DH_Equipment.DH_OrangeSmokeDamType'
+    SmokeAttachmentClass=Class'DHSmokeEffectAttachment_Orange'
+    MyDamageType=Class'DH_OrangeSmokeDamType'
 }

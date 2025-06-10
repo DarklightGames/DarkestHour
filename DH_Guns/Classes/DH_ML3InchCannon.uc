@@ -49,8 +49,8 @@ defaultproperties
     nProjectileDescriptions(0)="HE"
     nProjectileDescriptions(1)="Phosphorus"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_ML3InchMortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_ML3InchMortarProjectileSmoke'
+    PrimaryProjectileClass=Class'DH_ML3InchMortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_ML3InchMortarProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     MaxPrimaryAmmo=28
@@ -91,6 +91,6 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
 
-    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    EffectEmitterClass=Class'DHMortarFireEffect'
     CannonDustEmitterClass=None
 }

@@ -10,15 +10,15 @@ defaultproperties
 {
     MyName="Tank Hunter"
     AltName="Tank Hunter"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_StenMkIIWeapon')
+    PrimaryWeapons(1)=(Item=Class'DH_EnfieldNo4Weapon')
+    PrimaryWeapons(2)=(Item=Class'DH_StenMkIIIWeapon')
+    Grenades(0)=(Item=Class'DH_MillsBombWeapon')
+    Grenades(1)=(Item=Class'DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_PIATWeapon"
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
+    Headgear(0)=Class'DH_BritishTurtleHelmet'
+    Headgear(1)=Class'DH_BritishTurtleHelmetNet'
+    Headgear(2)=Class'DH_BritishTommyHelmet'
     HeadgearProbabilities(0)=0.1
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.8

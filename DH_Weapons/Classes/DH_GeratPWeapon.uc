@@ -8,10 +8,10 @@ class DH_GeratPWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="Gerat Potsdam"
-    FireModeClass(0)=class'DH_Weapons.DH_GeratPFire'
-    FireModeClass(1)=class'DH_Weapons.DH_GeratPMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_GeratPAttachment'
-    PickupClass=class'DH_Weapons.DH_GeratPPickup'
+    FireModeClass(0)=Class'DH_GeratPFire'
+    FireModeClass(1)=Class'DH_GeratPMeleeFire'
+    AttachmentClass=Class'DH_GeratPAttachment'
+    PickupClass=Class'DH_GeratPPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.GeratP_mesh'
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
@@ -32,7 +32,7 @@ defaultproperties
     InitialNumPrimaryMags=6
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

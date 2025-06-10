@@ -8,13 +8,13 @@ class DHCWSniperRoles extends DHAlliedSniperRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_EnfieldNo4ScopedWeapon')
+    SecondaryWeapons(0)=(Item=Class'DH_EnfieldNo2Weapon')
+    Grenades(0)=(Item=Class'DH_MillsBombWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
+    Headgear(0)=Class'DH_BritishTurtleHelmet'
+    Headgear(1)=Class'DH_BritishTurtleHelmetNet'
+    Headgear(2)=Class'DH_BritishTommyHelmet'
     HeadgearProbabilities(0)=0.1
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.8

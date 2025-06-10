@@ -7,6 +7,6 @@ class DH_Flak38Factory_Snow extends DH_Flak38Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_Flak38Gun_Snow'
+    VehicleClass=Class'DH_Flak38Gun_Snow'
     Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun_snow'
 }

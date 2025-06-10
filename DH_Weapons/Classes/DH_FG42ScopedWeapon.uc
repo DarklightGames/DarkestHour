@@ -11,10 +11,10 @@ defaultproperties
 {
     ItemName="FG 42 (ZFG42)"
     NativeItemName="Fallschirmjägergewehr 42 (ZFG42)"
-    FireModeClass(0)=class'DH_Weapons.DH_FG42ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_FG42ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_FG42ScopedPickup'
+    FireModeClass(0)=Class'DH_FG42ScopedFire'
+    FireModeClass(1)=Class'DH_FG42MeleeFire'
+    AttachmentClass=Class'DH_FG42ScopedAttachment'
+    PickupClass=Class'DH_FG42ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42_scoped'
 

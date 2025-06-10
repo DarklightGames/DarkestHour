@@ -21,8 +21,8 @@ defaultproperties
     Skins(4)=Texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
     // Driver

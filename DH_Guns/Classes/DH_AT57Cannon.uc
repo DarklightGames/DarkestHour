@@ -26,8 +26,8 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
+    PrimaryProjectileClass=Class'DH_AT57CannonShell'
+    SecondaryProjectileClass=Class'DH_AT57CannonShellHE'
 
     nProjectileDescriptions(0)="M86 APC"
     nProjectileDescriptions(1)="M303 HE-T"

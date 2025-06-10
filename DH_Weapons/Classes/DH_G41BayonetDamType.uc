@@ -8,5 +8,5 @@ class DH_G41BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_G41Weapon'
+    WeaponClass=Class'DH_G41Weapon'
 }

@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BARNoBipod_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_NoBipod_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Tip"
     ShellEjectionBoneName="ejector"
 

@@ -8,9 +8,9 @@ class DHGEAntiTankRoles extends DHAxisAntiTankRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
+    Grenades(0)=(Item=Class'DH_NebelGranate39Weapon')
     GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8

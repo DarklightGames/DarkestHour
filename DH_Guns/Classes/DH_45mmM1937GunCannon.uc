@@ -22,9 +22,9 @@ defaultproperties
     CustomPitchDownLimit=64200
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellHE'
-    //TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'
+    PrimaryProjectileClass=Class'DH_45mmM1937GunCannonShell'
+    SecondaryProjectileClass=Class'DH_45mmM1937GunCannonShellHE'
+    //TertiaryProjectileClass=Class'DH_45mmM1937GunCannonShellAPCR'
 
     ProjectileDescriptions(0)="APBC"
 
@@ -41,7 +41,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=-11.4
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
+    EffectEmitterClass=Class'TankCannonFireEffectTypeC' // smaller muzzle flash effect
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire01'

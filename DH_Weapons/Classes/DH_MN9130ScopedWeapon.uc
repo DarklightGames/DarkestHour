@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Mosin M91/30 (PU)"
     SwayModifyFactor=0.66 // +0.06
-    FireModeClass(0)=class'DH_Weapons.DH_MN9130ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MN9130ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
+    FireModeClass(0)=Class'DH_MN9130ScopedFire'
+    FireModeClass(1)=Class'DH_MN9130ScopedMeleeFire'
+    AttachmentClass=Class'DH_MN9130ScopedAttachment'
+    PickupClass=Class'DH_MN9130ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Nagantscope_1st.mosinscoped_mesh'
     bUseHighDetailOverlayIndex=true

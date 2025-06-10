@@ -26,7 +26,7 @@ simulated event PostBeginPlay()
 
     InitalRotation = Rotation;
 
-    ControlRadius = class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
+    ControlRadius = Class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
 }
 
 event PostNetBeginPlay()

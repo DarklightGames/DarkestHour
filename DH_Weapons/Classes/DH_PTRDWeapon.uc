@@ -82,9 +82,9 @@ defaultproperties
 {
     ItemName="PTRD-41 Anti-Tank Rifle"
     NativeItemName="PTRD-41"
-    FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
-    AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
-    PickupClass=class'DH_Weapons.DH_PTRDPickup'
+    FireModeClass(0)=Class'DH_PTRDFire'
+    AttachmentClass=Class'DH_PTRDAttachment'
+    PickupClass=Class'DH_PTRDPickup'
 
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'

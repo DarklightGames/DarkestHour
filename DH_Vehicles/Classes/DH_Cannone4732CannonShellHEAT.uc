@@ -22,8 +22,8 @@ defaultproperties
     DamageRadius=415.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'  // TODO: white corna/shell trail
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'  // TODO: white corna/shell trail
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     DHPenetrationTable(0)=5.5
     DHPenetrationTable(1)=5.5

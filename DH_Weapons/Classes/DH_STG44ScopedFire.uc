@@ -7,8 +7,8 @@ class DH_STG44ScopedFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_STG44ScopedBullet'
-    AmmoClass=class'ROAmmo.STG44Ammo'
+    ProjectileClass=Class'DH_STG44ScopedBullet'
+    AmmoClass=Class'STG44Ammo'
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.135 // ~491rpm  (value had to be found experimentally due to an engine bug)
 
@@ -37,7 +37,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    ShellEjectClass=Class'ShellEject1st556mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)
     bReverseShellSpawnDirection=true

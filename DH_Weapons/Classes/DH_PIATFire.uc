@@ -7,8 +7,8 @@ class DH_PIATFire extends DHRocketFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PIATRocket'
-    AmmoClass=class'DH_Weapons.DH_PIATAmmo'
+    ProjectileClass=Class'DH_PIATRocket'
+    AmmoClass=Class'DH_PIATAmmo'
     Spread=500.0
     MaxVerticalRecoilAngle=2500
     MaxHorizontalRecoilAngle=1000
@@ -22,8 +22,8 @@ defaultproperties
     AimError=1200.0
 
     //** Effects **//
-    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stPIAT'
-    SmokeEmitterClass = class'ROEffects.ROMuzzleSmoke'
+    FlashEmitterClass=Class'DHMuzzleFlash1stPIAT'
+    SmokeEmitterClass = Class'ROMuzzleSmoke'
 
     //Sounds
     FireSounds(0)=SoundGroup'DH_WeaponSounds.PIAT.PIAT_Fire01'

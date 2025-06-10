@@ -26,8 +26,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1CannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1MGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_KV1CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_KV1MGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")

@@ -8,7 +8,7 @@ class DH_G43ScopedDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_G43ScopedWeapon'
+    WeaponClass=Class'DH_G43ScopedWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
     KDamageImpulse=2500.0
 }

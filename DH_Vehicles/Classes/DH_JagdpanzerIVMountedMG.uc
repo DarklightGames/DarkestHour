@@ -21,10 +21,10 @@ defaultproperties
     CustomPitchDownLimit=64000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    ProjectileClass=Class'DH_MG42Bullet'
     NumMGMags=8
     FireInterval=0.05
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
 
     // Weapon fire
     WeaponFireOffset=2.5

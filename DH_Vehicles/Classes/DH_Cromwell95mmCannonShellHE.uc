@@ -22,12 +22,12 @@ defaultproperties
 
     //Effects
     DrawScale=1.2
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter' // as 105mm howitzers
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter' // as 105mm howitzers
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
 
     //Sounds
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01' // as 105mm howitzers

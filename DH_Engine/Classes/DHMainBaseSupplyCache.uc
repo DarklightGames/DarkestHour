@@ -79,7 +79,7 @@ function DestroySupplyAttachment()
 
 defaultproperties
 {
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static_Main'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Static_Main'
     InitialSupplyCount=8000
     SupplyCountMax=8000
     BonusSupplyGenerationRate=500

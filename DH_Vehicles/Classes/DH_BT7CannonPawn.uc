@@ -8,7 +8,7 @@ class DH_BT7CannonPawn extends DHSovietCannonPawn;
 defaultproperties
 {
     // Gun Class
-    GunClass=class'DH_Vehicles.DH_BT7Cannon'
+    GunClass=Class'DH_BT7Cannon'
 
     // Driver's positions and anims
     DriverPositions(0)=(ViewLocation=(X=8,Y=-8,Z=5),ViewFOV=30,PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)

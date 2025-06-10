@@ -7,7 +7,7 @@ class DH_SdKfz2519DCannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_SdKfz2519DCannon'
+    GunClass=Class'DH_SdKfz2519DCannon'
 
     bMustBeTankCrew=true
     bHasAltFire=false

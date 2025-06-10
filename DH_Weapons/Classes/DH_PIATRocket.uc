@@ -14,8 +14,8 @@ defaultproperties
     //Damage
 	Damage=800
 	DamageRadius=600  //1.1 KG
-    ShellImpactDamage=class'DH_Weapons.DH_PIATImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_PIATDamType'
+    ShellImpactDamage=Class'DH_PIATImpactDamType'
+    MyDamageType=Class'DH_PIATDamType'
 
     //Effects
     bHasTracer=false

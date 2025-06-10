@@ -28,7 +28,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.SU76.SU76_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SU76CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_SU76CannonPawn',WeaponBone="Turret_Placement")
     //PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-120.0,Y=-50.0,Z=82.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
     //PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-140.0,Y=0.0,Z=82.0),DriveAnim="crouch_idle_binoc")
     //to do: may be place 2 passengers on the frontal armor, left and right of the gun barrel
@@ -49,7 +49,7 @@ defaultproperties
 
     DriveAnim=VSU76_driver_idle_close
     BeginningIdleAnim=driver_hatch_idle_close
-    HUDOverlayClass=class'ROVehicles.SU76DriverOverlay'
+    HUDOverlayClass=Class'SU76DriverOverlay'
     HUDOverlayOffset=(X=0,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -117,8 +117,8 @@ defaultproperties
     WheelRotationScale=29250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-130,Y=75,Z=25),ExhaustRotation=(pitch=34000,yaw=-3000,roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-130,Y=85,Z=25),ExhaustRotation=(pitch=34000,yaw=-3000,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 

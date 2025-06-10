@@ -9,7 +9,7 @@ class DHGermanCannonShell extends DHCannonShell
 defaultproperties
 {
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_OrangeLarge'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
     TracerHue=40
 }

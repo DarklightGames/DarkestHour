@@ -36,7 +36,7 @@ defaultproperties
     bUsesCodedDestroyedSkins=false
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz251MGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="passenger_l_3",DriveAnim="VHalftrack_Rider3_idle")
@@ -51,7 +51,7 @@ defaultproperties
     DriverAttachmentBone="driver_player"
     DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
-    HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
+    HUDOverlayClass=Class'Sdkfz251DriverOverlay'
     HUDOverlayOffset=(X=0.0,Y=0.0,Z=0.8)
     HUDOverlayFOV=100.0
 
@@ -93,10 +93,10 @@ defaultproperties
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="body"
     FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
     EngineToHullFireChance=0.05 //Unlikely for a fire to spread

@@ -28,9 +28,9 @@ simulated function bool AllowFire()
     }
 
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
+    TraceEnd = TraceStart + (Class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
 
-    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
+    foreach Weapon.TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
         if (HitActor != none &&
             HitActor.bStatic &&

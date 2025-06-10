@@ -7,10 +7,10 @@ class DH_WHFireteamLeader extends DHGECorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_GermanHeerPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
+    Headgear(0)=Class'DH_HeerHelmetThree'
+    Headgear(1)=Class'DH_HeerHelmetTwo'
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
 }

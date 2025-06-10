@@ -33,8 +33,8 @@ defaultproperties
     CustomPitchDownLimit=64353
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
+    PrimaryProjectileClass=Class'DH_TigerCannonShell'
+    SecondaryProjectileClass=Class'DH_TigerCannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Schw.Sprgr.Patr."
@@ -46,11 +46,11 @@ defaultproperties
     SecondarySpread=0.00125
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=8
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

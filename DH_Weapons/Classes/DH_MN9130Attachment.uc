@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Nagant9130'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
 

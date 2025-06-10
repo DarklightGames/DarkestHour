@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_3rd'
     MenuImage=Texture'DH_EnfieldNo4_tex.weapon_icons.EnfieldNo4_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
     bAnimNotifiedShellEjects=true

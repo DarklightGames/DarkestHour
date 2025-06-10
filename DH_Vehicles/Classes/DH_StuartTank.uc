@@ -21,8 +21,8 @@ defaultproperties
     Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_StuartCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")

@@ -309,7 +309,7 @@ defaultproperties
     RampDownIdleAnim="Ramp_idle_dropped"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_HigginsBoatMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_L1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_L2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider2_idle")
     PassengerPawns(2)=(AttachBone="passenger_L3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider3_idle")
@@ -377,8 +377,8 @@ defaultproperties
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     SteerBoneName="Master3z00"
     SteeringScaleFactor=2.0
 

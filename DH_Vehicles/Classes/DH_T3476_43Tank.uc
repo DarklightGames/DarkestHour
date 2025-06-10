@@ -9,7 +9,7 @@ simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
 
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
     DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
@@ -37,8 +37,8 @@ defaultproperties
     //HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.t3476_int_s'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476_43CannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476MountedMGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_T3476_43CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_T3476MountedMGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-59.0,Y=-50.0,Z=53.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=-25.0,Z=105.5),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drum
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-135.0,Y=35.0,Z=51.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -50,7 +50,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_hull_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_hull_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true)
     DriveAnim="VT3476_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
+    HUDOverlayClass=Class'T3476DriverOverlay'
     HUDOverlayFOV=85.0
 
     // Hull armor
@@ -116,8 +116,8 @@ defaultproperties
     // Visual effects
     TreadVelocityScale=110.0
     WheelRotationScale=29250.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-175,Y=30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-175,Y=-30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
 

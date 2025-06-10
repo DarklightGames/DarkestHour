@@ -12,10 +12,10 @@ event InitializeController()
 {
     super.InitializeController();
 
-    RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
-    RegisterStyle(class'ROInterface.ROSTY2SelectButton');
-    RegisterStyle(class'ROInterface.ROSTY2SelectTab');
-    RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
+    RegisterStyle(Class'ROSTY2_ImageButton');
+    RegisterStyle(Class'ROSTY2SelectButton');
+    RegisterStyle(Class'ROSTY2SelectTab');
+    RegisterStyle(Class'ROSTY_CaptionLabel');
 
     LastGameType = "DH_Engine.DarkestHourGame";
 }

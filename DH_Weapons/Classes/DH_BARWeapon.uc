@@ -65,13 +65,13 @@ defaultproperties
 
     ItemName="Browning Automatic Rifle M1918A2"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BARFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BARAttachment'
-    PickupClass=class'DH_Weapons.DH_BARPickup'
+    FireModeClass(0)=Class'DH_BARFire'
+    FireModeClass(1)=Class'DH_BARMeleeFire'
+    AttachmentClass=Class'DH_BARAttachment'
+    PickupClass=Class'DH_BARPickup'
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_BARBarrel'
+    BarrelClass=Class'DH_BARBarrel'
     BarrelSteamBone="MuzzleNew"
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'

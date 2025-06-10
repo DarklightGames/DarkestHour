@@ -8,7 +8,7 @@ class DH_MAB42DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MAB42Weapon'
+    WeaponClass=Class'DH_MAB42Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

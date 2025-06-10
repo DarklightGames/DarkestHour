@@ -20,7 +20,7 @@ defaultproperties
 {
     MenuName="Mortar Pit"
     StaticMesh=StaticMesh'DH_Construction_stc.mortar_pit'
-    GroupClass=class'DHConstructionGroup_Defenses'
-    MortarClass=class'DH_Weapons.DH_Kz8cmGrW42Vehicle'  // TODO: static function to determine this
+    GroupClass=Class'DHConstructionGroup_Defenses'
+    MortarClass=Class'DH_Kz8cmGrW42Vehicle'  // TODO: static function to determine this
 }
 

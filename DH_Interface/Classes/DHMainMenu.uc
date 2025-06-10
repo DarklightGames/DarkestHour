@@ -64,7 +64,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
 
-    l_Version.Caption = class'DHBuildManifest'.default.Version.ToString();
+    l_Version.Caption = Class'DHBuildManifest'.default.Version.ToString();
 
     // If they have not changed their name from the default, change their
     // name to their Steam name!
@@ -320,9 +320,9 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("CANCEL");
     }
 
-    if (SavedVersion != class'DHBuildManifest'.default.Version.ToString())
+    if (SavedVersion != Class'DHBuildManifest'.default.Version.ToString())
     {
-        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
+        SavedVersionObject = Class'UVersion'.static.FromString(SavedVersion);
 
         // To make a long story short, we can't force the client to delete
         // their configuration file at will, so we need to forcibly create
@@ -338,26 +338,26 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.0.9")) < 0)
         {
             Log("Configuration file is older than v8.0.9, attempting to assign new controls created in version v8.0.9");
             SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
             SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.2.6")) < 0)
         {
             Log("Configuration file is older than v8.2.6, attempting to assign new controls created in version v8.2.6");
             SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.0")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.4.0")) < 0)
         {
             Log("Configuration file is older than v8.4.0, attempting to assign new controls created in version v8.4.0");
             SetKeyBindIfAvailable("J", "PlaceRallyPoint");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.3")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.4.3")) < 0)
         {
             Log("Configuration file is older than v8.4.3, attempting to assign a min netspeed value");
 
@@ -371,7 +371,7 @@ event Opened(GUIComponent Sender)
             }
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v9.7.6")) < 0)
         {
             Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
 
@@ -382,14 +382,14 @@ event Opened(GUIComponent Sender)
             }
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v10.0.0")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v10.0.0")) < 0)
         {
             Log("Configuration file is older than v10.0.0, assigning the artillery target toggle keybind");
 
             SetKeyBindIfAvailable("Comma", "ToggleSelectedArtilleryTarget");
         }
 
-        SavedVersion = class'DHBuildManifest'.default.Version.ToString();
+        SavedVersion = Class'DHBuildManifest'.default.Version.ToString();
         SaveConfig();
     }
 
@@ -449,7 +449,7 @@ function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string H
     local JSONParser Parser;
     local JSONObject Announcement;
 
-    Parser = new class'JSONParser';
+    Parser = new Class'JSONParser';
 
     if (Status == 200)
     {
@@ -500,7 +500,7 @@ function GetMOTD()
         return;
     }
 
-    MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
+    MOTDRequest = PlayerOwner().Spawn(Class'HTTPRequest');
     MOTDRequest.Host = "api.darklightgames.com";
     MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;

@@ -31,9 +31,9 @@ defaultproperties
     CustomPitchDownLimit=63716
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
-    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+    PrimaryProjectileClass=Class'DH_GreyhoundCannonShell'
+    SecondaryProjectileClass=Class'DH_GreyhoundCannonShellHE'
+    TertiaryProjectileClass=Class'DHCannonShellCanister'
 
 
     ProjectileDescriptions(2)="Canister"
@@ -52,17 +52,17 @@ defaultproperties
     TertiarySpread=0.04
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    AltFireProjectileClass=Class'DH_30CalBullet'
     InitialAltAmmo=250
     NumMGMags=5
     AltFireInterval=0.12
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
     WeaponFireOffset=10.0
     AddedPitch=26
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
+    EffectEmitterClass=Class'TankCannonFireEffectTypeC' // smaller muzzle flash effect
     AltFireOffset=(X=-82.0,Y=11.0,Z=0.0)
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)

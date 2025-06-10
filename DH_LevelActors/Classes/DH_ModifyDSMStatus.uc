@@ -29,7 +29,7 @@ function PostBeginPlay()
 
     if (DSMToModify != '')
     {
-        foreach DynamicActors(class'DHDestroyableSM', DSMReference, DSMToModify)
+        foreach DynamicActors(Class'DHDestroyableSM', DSMReference, DSMToModify)
         {
             break;
         }

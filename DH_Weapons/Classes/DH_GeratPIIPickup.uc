@@ -7,6 +7,6 @@ class DH_GeratPIIPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_GeratPIIWeapon'
+    InventoryType=Class'DH_GeratPIIWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GeratPII'
 }

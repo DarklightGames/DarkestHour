@@ -8,6 +8,6 @@ class DH_Fiat1435DamageType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    //WeaponClass=class'DH_Weapons.DH_MG34Weapon'
+    //WeaponClass=Class'DH_MG34Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

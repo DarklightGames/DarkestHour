@@ -8,10 +8,10 @@ class DH_ViSWeapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="ViS wz.35"
-    FireModeClass(0)=class'DH_Weapons.DH_ViSFire'
-    FireModeClass(1)=class'DH_Weapons.DH_ViSMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ViSAttachment'
-    PickupClass=class'DH_Weapons.DH_ViSPickup'
+    FireModeClass(0)=Class'DH_ViSFire'
+    FireModeClass(1)=Class'DH_ViSMeleeFire'
+    AttachmentClass=Class'DH_ViSAttachment'
+    PickupClass=Class'DH_ViSPickup'
 
     Mesh=SkeletalMesh'DH_ViS_1st.ViS_Mesh'
 

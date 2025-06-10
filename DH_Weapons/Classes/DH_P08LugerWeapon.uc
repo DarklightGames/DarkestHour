@@ -8,10 +8,10 @@ class DH_P08LugerWeapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Luger P08"
-    FireModeClass(0)=class'DH_Weapons.DH_P08LugerFire'
-    FireModeClass(1)=class'DH_Weapons.DH_P08LugerMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_P08LugerAttachment'
-    PickupClass=class'DH_Weapons.DH_P08LugerPickup'
+    FireModeClass(0)=Class'DH_P08LugerFire'
+    FireModeClass(1)=Class'DH_P08LugerMeleeFire'
+    AttachmentClass=Class'DH_P08LugerAttachment'
+    PickupClass=Class'DH_P08LugerPickup'
 
     Mesh=SkeletalMesh'DH_Luger_1st.P08Luger'
     HighDetailOverlay=Shader'Weapons1st_tex.Pistols.luger_s'

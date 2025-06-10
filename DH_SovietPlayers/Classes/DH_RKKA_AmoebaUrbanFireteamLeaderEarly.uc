@@ -7,7 +7,7 @@ class DH_RKKA_AmoebaUrbanFireteamLeaderEarly extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaUrbanSLPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
+    RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaUrbanSLPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietSidecap'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaUrbanSleeves'
 }

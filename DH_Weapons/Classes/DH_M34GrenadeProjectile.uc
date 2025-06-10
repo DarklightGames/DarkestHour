@@ -22,7 +22,7 @@ defaultproperties
     Damage=160.0  //100 gramms tnt
     DamageRadius=450
     MomentumTransfer=8000.0
-    MyDamageType=class'DH_Weapons.DH_m34GrenadeDamType'
+    MyDamageType=Class'DH_m34GrenadeDamType'
 
     // Sounds
     ExplosionSoundVolume=3.0

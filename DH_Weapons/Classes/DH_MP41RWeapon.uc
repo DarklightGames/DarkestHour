@@ -40,10 +40,10 @@ defaultproperties
     ItemName="MP 41(r)"
     NativeItemName="Maschinenpistole 41(r)"
 
-    FireModeClass(0)=class'DH_Weapons.DH_MP41RFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP41RMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MP41RAttachment'
-    PickupClass=class'DH_Weapons.DH_MP41RPickup'
+    FireModeClass(0)=Class'DH_MP41RFire'
+    FireModeClass(1)=Class'DH_MP41RMeleeFire'
+    AttachmentClass=Class'DH_MP41RAttachment'
+    PickupClass=Class'DH_MP41RPickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.MP41R'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'

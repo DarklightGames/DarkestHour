@@ -68,12 +68,12 @@ event Destroyed()
 
 defaultproperties
 {
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyAttachmentClass=Class'DHResupplyAttachment'
     ResupplyType=RT_All
     ResupplyAttachmentCollisionRadius=300
     ResupplyAttachmentCollisionHeight=100
 
-    BrokenEmitterClass=class'DHShellShatterEffect'
+    BrokenEmitterClass=Class'DHShellShatterEffect'
     bCanDieOfStagnation=false
     BrokenLifespan=0.1
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
@@ -90,7 +90,7 @@ defaultproperties
     StartRotationMax=(Yaw=-16384)
     bShouldRefundSuppliesOnTearDown=false
     bCanBeTornDownByFriendlies=false
-    GroupClass=class'DHConstructionGroup_Ammunition'
+    GroupClass=Class'DHConstructionGroup_Ammunition'
 
     CompletionPointValue=500
 }

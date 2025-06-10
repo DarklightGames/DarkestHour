@@ -8,9 +8,9 @@ class DHGERadioOperatorRoles extends DHAxisRadioOperatorRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_Kar98NoCoverWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_Kar98NoCoverWeapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
+    Grenades(0)=(Item=Class'DH_StielGranateWeapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5

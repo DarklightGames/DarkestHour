@@ -8,7 +8,7 @@ class DH_T60CannonPawn extends DHSovietCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_T60Cannon'
+    GunClass=Class'DH_T60Cannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=15,Y=-2,Z=-1),ViewFOV=30,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim=none,ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)

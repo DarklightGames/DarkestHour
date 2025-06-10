@@ -7,7 +7,7 @@ class DH_CromwellMountedMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_CromwellMountedMG'
+    GunClass=Class'DH_CromwellMountedMG'
     GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
     GunsightSize=0.469 // 21 degrees visible FOV at 1.9x magnification (No.50 x1.9 Mk IS sight)
     WeaponFOV=44.74

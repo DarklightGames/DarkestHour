@@ -23,7 +23,7 @@ defaultproperties
 {
     VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"
     VehicleTeam=0
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_LeIG18CannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
     Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
     Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'

@@ -61,7 +61,7 @@ simulated state Constructed
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
             // "You must have another teammate nearby to deconstruct an enemy Command Post!"
-            P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
+            P.ReceiveLocalizedMessage(Class'DHGameMessage', 22);
         }
 
         return false;
@@ -84,7 +84,7 @@ simulated function OnConstructed()
         if (SpawnPoint != none)
         {
             // "A Command Post has been constructed and will be established in N seconds."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 4,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, self);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -96,7 +96,7 @@ simulated function OnConstructed()
                 Destroy();
             }
 
-            HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
+            HitLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
 
             SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
             SpawnPoint.SetLocation(HitLocation);
@@ -159,7 +159,7 @@ simulated state Broken
         if (SpawnPoint != none)
         {
             // "A Command Post has been destroyed."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 3,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, self);
         }
 
         DestroyAttachments();
@@ -191,7 +191,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     GRI = DHGameReplicationInfo(P.GetContext().PlayerController.GameReplicationInfo);
 
     // Do we have a friendly duplicate within PermittedFriendlyControlledDistanceMeters distance?
-    foreach P.RadiusActors(default.Class, A, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+    foreach P.RadiusActors(default.Class, A, Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
     {
         C = DHConstruction(A);
 
@@ -205,7 +205,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     // If we have not found a friendly HQ, then lets check if we are near main spawn
     if (!bFoundFriendlyDuplicate)
     {
-        foreach P.RadiusActors(class'DHSpawnPoint', SP, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+        foreach P.RadiusActors(Class'DHSpawnPoint', SP, Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
         {
             if (SP != none && SP.bMainSpawn && (SP.GetTeamIndex() == NEUTRAL_TEAM_INDEX || SP.GetTeamIndex() == TeamIndex))
             {
@@ -218,8 +218,8 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     // If we have not found a friendly duplicate, then check if we are trying to place too close to an inactive enemy objective
     if (!bFoundFriendlyDuplicate)
     {
-        ControlledObjDistanceMin = class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
-        DistanceMin = class'DHUnits'.static.MetersToUnreal(default.EnemySecuredObjectiveDistanceMinMeters);
+        ControlledObjDistanceMin = Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
+        DistanceMin = Class'DHUnits'.static.MetersToUnreal(default.EnemySecuredObjectiveDistanceMinMeters);
         ObjectiveIndex = -1;
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
@@ -313,28 +313,28 @@ defaultproperties
     TatteredHealthThreshold=250
     
     // Damage
-    DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
-    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
-    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
-    DamageTypeScales(3)=(DamageType=class'DHShellHEImpactDamageType',Scale=1.5)             // HE Impact
-    DamageTypeScales(4)=(DamageType=class'ROTankShellExplosionDamage',Scale=1.33)           // HE Splash
+    DamageTypeScales(0)=(DamageType=Class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
+    DamageTypeScales(1)=(DamageType=Class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
+    DamageTypeScales(2)=(DamageType=Class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
+    DamageTypeScales(3)=(DamageType=Class'DHShellHEImpactDamageType',Scale=1.5)             // HE Impact
+    DamageTypeScales(4)=(DamageType=Class'ROTankShellExplosionDamage',Scale=1.33)           // HE Splash
 
     FlagSkinIndex=1
-    SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
+    SpawnPointClass=Class'DHSpawnPoint_PlatoonHQ'
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
     ObjectiveDistanceMinMeters=100
     EnemyObjectiveDistanceMinMeters=150.0
     EnemySecuredObjectiveDistanceMinMeters=800.0
     PermittedFriendlyControlledDistanceMeters=300.0 // This should be higher than both ObjectiveDistanceMinMeters and DuplicateFriendlyDistanceInMeters
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=Class'DHConstructionGroup_Logistics'
 
     CompletionPointValue=1000
 
     BrokenLifespan=30.0
 
     // Radio attachment
-    RadioClass=class'DHRadioHQAttachment'
+    RadioClass=Class'DHRadioHQAttachment'
     RadioLocationOffset=(X=65,Y=-115,Z=2)
     RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
 

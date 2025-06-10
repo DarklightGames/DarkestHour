@@ -40,7 +40,7 @@ static function JSONString Create(coerce string Value)
 {
     local JSONString S;
 
-    S = new class'JSONString';
+    S = new Class'JSONString';
     S.String = Value;
 
     return S;

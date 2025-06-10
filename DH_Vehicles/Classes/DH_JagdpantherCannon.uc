@@ -32,8 +32,8 @@ defaultproperties
     CustomPitchDownLimit=64079
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+    PrimaryProjectileClass=Class'DH_JagdpantherCannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpantherCannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39/43"
     nProjectileDescriptions(1)="Sprgr.Patr."
@@ -45,7 +45,7 @@ defaultproperties
     SecondarySpread=0.00135
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherClass=Class'DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-64.0,Y=-39.0,Z=35.0)
 
     // Weapon fire

@@ -162,8 +162,8 @@ function bool CanDeadThrow()
 defaultproperties
 {
     ItemName="Binoculars"
-    AttachmentClass=class'DH_Equipment.DHBinocularsAttachment'
-    PickupClass=class'DH_Equipment.DHBinocularsPickup'
+    AttachmentClass=Class'DHBinocularsAttachment'
+    PickupClass=Class'DHBinocularsPickup'
     InventoryGroup=6
     GroupOffset=1
     Priority=1

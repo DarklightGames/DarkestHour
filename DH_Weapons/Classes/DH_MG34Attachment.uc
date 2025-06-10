@@ -9,14 +9,14 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg34'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdMG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAltFireFlash=true
 
-    ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    ClientProjectileClass=Class'DH_MG34Bullet'
     bUsesTracers=true
     TracerFrequency=7
-    ClientTracerClass=class'DH_MG34TracerBullet'
+    ClientTracerClass=Class'DH_MG34TracerBullet'
 
     WA_Idle="idle_mg34"
     WA_IdleEmpty="idle_mg34"

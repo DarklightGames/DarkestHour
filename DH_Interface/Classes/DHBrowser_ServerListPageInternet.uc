@@ -10,7 +10,7 @@ var array<string>   ServerWhitelist;    // Show only servers in this list if the
 
 function InitServerList()
 {
-    li_Server = new(none) class'DH_Interface.DHBrowser_ServersList';
+    li_Server = new(none) Class'DHBrowser_ServersList';
 
     lb_Server.InitBaseList(li_Server);
 

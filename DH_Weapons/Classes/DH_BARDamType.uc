@@ -8,6 +8,6 @@ class DH_BARDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BARWeapon'
+    WeaponClass=Class'DH_BARWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

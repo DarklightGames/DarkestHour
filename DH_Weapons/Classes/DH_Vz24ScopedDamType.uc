@@ -8,6 +8,6 @@ class DH_Vz24ScopedDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Vz24ScopedWeapon'
+    WeaponClass=Class'DH_Vz24ScopedWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

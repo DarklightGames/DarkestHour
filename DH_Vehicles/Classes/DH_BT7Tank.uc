@@ -28,7 +28,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BT7CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BT7CannonPawn',WeaponBone="Turret_Placement")
 
     PassengerPawns(0)=(AttachBone=passenger_01,DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone=passenger_02,DriveAnim="VHalftrack_Rider1_idle")
@@ -47,7 +47,7 @@ defaultproperties
     DrivePos=(X=35,Y=0,Z=-5)
 
     //Driver's hatch overlay
-    HUDOverlayClass=none //class'ROVehicles.KV1DriverOverlay'
+    HUDOverlayClass=none //Class'KV1DriverOverlay'
     //HUDOverlayOffset=(X=2.0)
     //HUDOverlayFOV=90.0
 
@@ -123,8 +123,8 @@ defaultproperties
     WheelRotationScale=100000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-185,Y=23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-185,Y=-23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     // HUD
     VehicleHudImage=Texture 'DH_InterfaceArt_tex.Tank_Hud.BT7_body'

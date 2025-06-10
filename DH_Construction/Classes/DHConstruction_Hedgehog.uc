@@ -7,7 +7,7 @@ class DHConstruction_Hedgehog extends DHConstruction;
 
 defaultproperties
 {
-    BrokenEmitterClass=class'DHConstruction_Hedgehog_BrokenEmitter'
+    BrokenEmitterClass=Class'DHConstruction_Hedgehog_BrokenEmitter'
     Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01_unassembled',Progress=0)
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     MenuName="Hedgehog"
@@ -22,7 +22,7 @@ defaultproperties
     bIsNeutral=true
     bAcceptsProjectors=false
     ProgressMax=3
-    GroupClass=class'DHConstructionGroup_Obstacles'
+    GroupClass=Class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
     MinDamagetoHurt=180.0
 }

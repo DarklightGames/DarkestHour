@@ -11,7 +11,7 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.HUD.ppsh_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 
-    //PickupClass=class'SMG71Rd762x25AmmoPickup'
+    //PickupClass=Class'SMG71Rd762x25AmmoPickup'
     MaxAmmo=71
     InitialAmount=71
 }

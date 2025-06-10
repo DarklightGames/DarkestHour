@@ -15,8 +15,8 @@ defaultproperties
     ImpactDamage=455  //couldnt find info on filler, so i assume something about 1 KG
     Damage=600
     DamageRadius=600
-    ShellImpactDamage=class'DH_Weapons.DH_PanzerschreckImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_PanzerschreckDamType'
+    ShellImpactDamage=Class'DH_PanzerschreckImpactDamType'
+    MyDamageType=Class'DH_PanzerschreckDamType'
     EngineFireChance=0.85  //more powerful HEAT round than most
 
     bDebugInImperial=false
@@ -25,7 +25,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Panzerschreck_shell'
     bHasTracer=true // represents glow of burnt out rocket motor
     bHasShellTrail=true
-    ShellTrailClass=class'DH_Effects.DHPanzerschreckTrail'
+    ShellTrailClass=Class'DHPanzerschreckTrail'
 
     //Penetration
     DHPenetrationTable(0)=17.6

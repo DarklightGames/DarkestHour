@@ -9,7 +9,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer IV Ausf.J"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PanzerIVJCannonPawn')
     bHasAddedSideArmor=true
 
     // Hull mesh

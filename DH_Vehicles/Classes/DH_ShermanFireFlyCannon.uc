@@ -34,9 +34,9 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellHE'
+    PrimaryProjectileClass=Class'DH_ShermanFireFlyCannonShell'
+    SecondaryProjectileClass=Class'DH_ShermanFireFlyCannonShellAPDS'
+    TertiaryProjectileClass=Class'DH_ShermanFireFlyCannonShellHE'
 
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
@@ -55,11 +55,11 @@ defaultproperties
     TertiarySpread=0.00156
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    AltFireProjectileClass=Class'DH_30CalBullet'
     InitialAltAmmo=250
     NumMGMags=8
     AltFireInterval=0.12
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
@@ -68,7 +68,7 @@ defaultproperties
     AltFireSpawnOffsetX=48.0
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherClass=Class'DH_TwoInchBombThrower'
     SmokeLauncherFireOffset(0)=(X=24.0,Y=-42.0,Z=41.0)
 
     // Sounds

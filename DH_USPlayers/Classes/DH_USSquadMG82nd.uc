@@ -7,8 +7,8 @@ class DH_USSquadMG82nd extends DHUSAutoRifleRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB82ndPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_USAB82ndPawn',Weight=1.0)
     SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet82ndEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet82ndEMb'
+    Headgear(0)=Class'DH_AmericanHelmet82ndEMa'
+    Headgear(1)=Class'DH_AmericanHelmet82ndEMb'
 }

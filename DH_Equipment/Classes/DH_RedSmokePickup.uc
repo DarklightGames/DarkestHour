@@ -8,6 +8,6 @@ class DH_RedSmokePickup extends DHOneShotWeaponPickup
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DH_RedSmokeWeapon'
+    InventoryType=Class'DH_RedSmokeWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USRedSmokeGrenade'
 }

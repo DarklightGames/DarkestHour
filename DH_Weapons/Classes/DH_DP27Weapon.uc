@@ -43,9 +43,9 @@ defaultproperties
 {
     ItemName="DP-27"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_DP27Fire'
-    AttachmentClass=class'DH_Weapons.DH_DP27Attachment'
-    PickupClass=class'DH_Weapons.DH_DP27Pickup'
+    FireModeClass(0)=Class'DH_DP27Fire'
+    AttachmentClass=Class'DH_DP27Attachment'
+    PickupClass=Class'DH_DP27Pickup'
 
     Mesh=SkeletalMesh'DH_DP27_1st.DP27_1st'
     // Note - can't specify specularity shader as HighDetailOverlay as it doesn't work with the HDO system
@@ -65,7 +65,7 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=false  //makes sense because carried ammo is primarily limited by "dead weight" of the pan magazines rather than ammo itself
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_DP27Barrel'
+    BarrelClass=Class'DH_DP27Barrel'
     BarrelSteamBone="bipod"
     
     bPlusOneLoading=false

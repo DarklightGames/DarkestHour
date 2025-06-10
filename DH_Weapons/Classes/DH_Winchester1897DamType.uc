@@ -8,7 +8,7 @@ class DH_Winchester1897DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Winchester1897Weapon'
+    WeaponClass=Class'DH_Winchester1897Weapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     KDamageImpulse=2500.0
 }

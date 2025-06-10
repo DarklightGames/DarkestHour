@@ -45,7 +45,7 @@ function Setup()
 
     // Establish context
     Context.TeamIndex = PC.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PC.Level);
     Context.PlayerController = PC;
 
     // For simplicity's sake, we'll map the static array to a dynamic array so
@@ -134,7 +134,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
     {
         ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
 
-        CW = DH_ConstructionWeapon(P.FindInventoryType(class'DH_ConstructionWeapon'.default.Class));
+        CW = DH_ConstructionWeapon(P.FindInventoryType(Class'DH_ConstructionWeapon'.default.Class));
 
         if (CW != none)
         {
@@ -151,9 +151,9 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 
             // This call prepares the construction weapon with the correct
             // construction class on the client upon instantiation.
-            class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
+            Class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
 
-            WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'Class'));
+            WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", Class'Class'));
 
             // Tell the server to give us the construction weapon.
             P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon", WeaponClass, true);
@@ -208,11 +208,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (E.Type != ERROR_None)
     {
-        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoColor = Class'UColor'.default.Red;
     }
     else
     {
-        ORI.InfoColor = class'UColor'.default.White;
+        ORI.InfoColor = Class'UColor'.default.White;
     }
 
     switch (E.Type)

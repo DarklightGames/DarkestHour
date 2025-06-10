@@ -9,10 +9,10 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PPSH_stick_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_stick_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_PPSH41_stickBullet'
+    ClientProjectileClass=Class'DH_PPSH41_stickBullet'
 
     WA_Idle="idle_pps43"
     WA_IdleEmpty="idle_pps43"

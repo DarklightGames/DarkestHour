@@ -28,7 +28,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.T60.T60_visor_Collision',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T60CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_T60CannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=40.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-110.0,Y=-10.0,Z=43.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=40.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -41,7 +41,7 @@ defaultproperties
     DriveAnim=VT60_driver_idle_close
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.T60DriverOverlay'
+    HUDOverlayClass=Class'T60DriverOverlay'
     HUDOverlayOffset=(X=2,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -108,8 +108,8 @@ defaultproperties
     TreadVelocityScale=215.0
     WheelRotationScale=45500.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-135,Y=70,Z=15),ExhaustRotation=(pitch=34000,yaw=-16384,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     //Steering
     LeftLeverBoneName="Lever_L"

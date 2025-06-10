@@ -8,8 +8,8 @@ class DH_ShermanTank_M4A3E8_ZombieSlayer extends DH_ShermanTank_M4A3E8_Fury;
 defaultproperties
 {
     VehicleNameString="Sherman M4A3E8 'Zombie Slayer'"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E8_ZombieSlayer')
-    VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_ZombieSlayer_stc.body.body_stowage',bHasCollision=false)
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn_M4A3E8_ZombieSlayer')
+    VehicleAttachments(0)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_ZombieSlayer_stc.body.body_stowage',bHasCollision=false)
 
     DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
 

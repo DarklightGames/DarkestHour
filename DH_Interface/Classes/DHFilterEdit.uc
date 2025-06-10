@@ -64,7 +64,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
 
     sb_Mutators.ManageComponent(lb_Mutators);
 
-    class'CacheManager'.static.GetMutatorList(MutRecords);
+    Class'CacheManager'.static.GetMutatorList(MutRecords);
 
     for (i = 0; i < MutRecords.Length; ++i)
     {

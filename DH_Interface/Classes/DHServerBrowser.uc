@@ -40,7 +40,7 @@ function InternalOnButtonClick(byte bButton)
     switch (bButton)
     {
         case QBTN_OK:
-            PlayerOwner().ConsoleCommand("START" @ class'DHMainMenu'.default.DiscordURL);
+            PlayerOwner().ConsoleCommand("START" @ Class'DHMainMenu'.default.DiscordURL);
             break;
     }
 }

@@ -8,7 +8,7 @@ class DH_BerettaM1934DamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BerettaM1934Weapon'
+    WeaponClass=Class'DH_BerettaM1934Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=750.0
     KDeathVel=100.0

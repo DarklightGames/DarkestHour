@@ -249,7 +249,7 @@ simulated function PostBeginPlay()
 
     if (bHasScope)
     {
-        ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
+        ScopeDetail = Class'DHWeapon'.default.ScopeDetail;
 
         if (bForceTextureScope)
         {
@@ -264,7 +264,7 @@ simulated function CreateBipodPhysicsSimulation()
 {
     if (bDoBipodPhysicsSimulation && BipodPhysicsSettings != none)
     {
-        BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
+        BipodPhysicsSimulation = new Class'DHBipodPhysicsSimulation';
         BipodPhysicsSimulation.Initialize(BipodPhysicsSettings);
     }
 }
@@ -285,7 +285,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     local DHWeaponBarrel Barrel;
     local int            i;
 
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }
@@ -408,7 +408,7 @@ exec simulated function LogAmmo()
 {
     local int i, TotalAmmoCount;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+    if ((Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
     {
         Log("Weapon has" @ AmmoAmount(0) @ "rounds loaded and a total of" @ PrimaryAmmoArray.Length @ "mags");
 
@@ -681,7 +681,7 @@ simulated event StopFire(int Mode)
 
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Debug execs to enable sight debugging and calibration, to make sure textured sight overlay is exactly centred
@@ -2107,7 +2107,7 @@ simulated function bool AllowReload()
     {
         if (Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
         {
-            class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 1);
+            Class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 1);
         }
 
         return false;
@@ -2571,15 +2571,15 @@ function PerformReload(optional int Count)
     {
         if (AmmoStatus(0) > 0.5)
         {
-            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
+            Instigator.ReceiveLocalizedMessage(Class'ROAmmoWeightMessage', 0);
         }
         else if (AmmoStatus(0) > 0.2)
         {
-            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
+            Instigator.ReceiveLocalizedMessage(Class'ROAmmoWeightMessage', 1);
         }
         else
         {
-            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
+            Instigator.ReceiveLocalizedMessage(Class'ROAmmoWeightMessage', 2);
         }
     }
 
@@ -2944,7 +2944,7 @@ simulated function Fire(float F)
     if (InstigatorIsHumanControlled() && bMustFireWhileSighted && !IsSighted())
     {
         // "You must be deployed to fire your weapon!";
-        class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
+        Class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
     }
     else if (AmmoAmount(0) < 1 && !IsBusy() && FireMode[0].NoAmmoSound != none)
     {
@@ -3309,7 +3309,7 @@ exec function DebugSpread()
 {
     local DHProjectileFire FM;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         FM = DHProjectileFire(FireMode[0]);
 
@@ -3410,7 +3410,7 @@ simulated function UpdateScopeMode()
 
             if (ScopeScriptedTexture == none)
             {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(Class'ScriptedTexture'));
             }
 
             GetScopeScriptedTextureSize(Width, Height);
@@ -3422,7 +3422,7 @@ simulated function UpdateScopeMode()
             if (ScriptedScopeCombiner == none)
             {
                 // Construct the combiner
-                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
                 ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
@@ -3433,7 +3433,7 @@ simulated function UpdateScopeMode()
             if (ScopeScriptedShader == none)
             {
                 // Construct the scope shader
-                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(Class'Shader'));
                 ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
                 ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
                 ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
@@ -3821,7 +3821,7 @@ defaultproperties
     ZoomOutTime=0.2
     FillAmmoMagCount=1
     MuzzleBone="Muzzle"
-    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
+    BarrelSteamEmitterClass=Class'DHMGSteam'
 
     LightType=LT_Steady
     LightEffect=LE_NonIncidence

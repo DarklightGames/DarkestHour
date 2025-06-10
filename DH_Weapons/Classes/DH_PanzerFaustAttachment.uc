@@ -12,8 +12,8 @@ defaultproperties
     Skins(0)=Texture'Weapons3rd_tex.German.Panzerfaust_world'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
-    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPanzerfaust'
-    mExhFlashClass=class'DH_Effects.DH3rdPersonPFaustExhaustFX'
+    mMuzFlashClass=Class'DHMuzzleFlash3rdPanzerfaust'
+    mExhFlashClass=Class'DH3rdPersonPFaustExhaustFX'
     MuzzleBoneName="tip"
     ExhaustBoneName="tip"
 

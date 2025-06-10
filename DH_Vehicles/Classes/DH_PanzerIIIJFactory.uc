@@ -9,7 +9,7 @@ class DH_PanzerIIIJFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_PanzerIIIJTank'
+    VehicleClass=Class'DH_PanzerIIIJTank'
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3j_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'

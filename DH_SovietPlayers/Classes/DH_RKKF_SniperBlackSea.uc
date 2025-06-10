@@ -7,11 +7,11 @@ class DH_RKKF_SniperBlackSea extends DHSOVSniperRoles;  //this role wears a nava
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietMarineBushlatPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietNavalCap_BlackSea'
+    RolePawns(0)=(PawnClass=Class'DH_SovietMarineBushlatPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietNavalCap_BlackSea'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.NavalSleeves2'
 
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedWeapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40ScopedWeapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_MN9130ScopedWeapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_SVT40ScopedWeapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
 }

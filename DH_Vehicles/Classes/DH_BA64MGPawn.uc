@@ -30,7 +30,7 @@ simulated state LeavingViewTransition
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_BA64MG'
+    GunClass=Class'DH_BA64MG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //Driver's positions and anims
@@ -48,7 +48,7 @@ defaultproperties
     DriveAnim="VBA64_com_idle_close"
 
     //HUD
-    HUDOverlayClass=class'ROVehicles.ROVehDTOverlay'
+    HUDOverlayClass=Class'ROVehDTOverlay'
     HUDOverlayOffset=(X=-30.0,Y=0.0,Z=0.0)
     HUDOverlayFOV=45.0
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'

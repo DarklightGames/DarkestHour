@@ -21,8 +21,8 @@ defaultproperties
     nProjectileDescriptions(0)="57O832 HE"
     nProjectileDescriptions(1)="57D832 Smoke"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_BM36MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_BM36MortarProjectileSmoke'
+    PrimaryProjectileClass=Class'DH_BM36MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_BM36MortarProjectileSmoke'
 
     DriverAnimationChannelBone="RU_CAMERA_COM"
 

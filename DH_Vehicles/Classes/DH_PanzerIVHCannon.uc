@@ -15,7 +15,7 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
 
     // Cannon ammo
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+    TertiaryProjectileClass=Class'DH_PanzerIVCannonShellHEAT'
 
     nProjectileDescriptions(2)="Gr.38 Hl/C" //PzIVH variant began production in June 1943, a bit before Hl/C seems to have been introduced, but is generally only used on our 1944 maps.
 

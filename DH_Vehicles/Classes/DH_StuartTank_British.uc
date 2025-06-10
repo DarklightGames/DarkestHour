@@ -8,7 +8,7 @@ class DH_StuartTank_British extends DH_StuartTank;
 defaultproperties
 {
     VehicleNameString="Stuart Mk.VI"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn_British')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_StuartCannonPawn_British')
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_extB'
     Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_body_ext'
     Skins(4)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor'

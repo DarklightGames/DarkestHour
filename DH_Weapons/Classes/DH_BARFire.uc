@@ -7,8 +7,8 @@ class DH_BARFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_BARBullet'
-    AmmoClass=class'DH_Weapons.DH_BARAmmo'
+    ProjectileClass=Class'DH_BARBullet'
+    AmmoClass=Class'DH_BARAmmo'
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
@@ -26,7 +26,7 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
+    FlashEmitterClass=Class'MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
 
@@ -36,7 +36,7 @@ defaultproperties
     FireAnim=fire
     FireIronAnim=Iron_fire
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellEmitBone=ejector3
     ShellRotOffsetHip=(Pitch=-10240)
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)

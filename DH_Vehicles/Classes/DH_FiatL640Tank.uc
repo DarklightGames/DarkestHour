@@ -35,7 +35,7 @@ defaultproperties
 
     // Vehicle weapons & passengers
     BeginningIdleAnim="closed"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02",InitialViewRotationOffset=(Yaw=-16384))
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01",InitialViewRotationOffset=(Yaw=-16384))
 

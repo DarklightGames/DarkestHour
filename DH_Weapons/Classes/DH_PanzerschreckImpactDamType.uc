@@ -8,6 +8,6 @@ class DH_PanzerschreckImpactDamType extends DHRocketImpactDamage
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PanzerschreckWeapon'
+    WeaponClass=Class'DH_PanzerschreckWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.schreckkill'
 }

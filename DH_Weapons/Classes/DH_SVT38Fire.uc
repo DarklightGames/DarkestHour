@@ -7,8 +7,8 @@ class DH_SVT38Fire extends DHSemiAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_SVT38Bullet'
-    AmmoClass=class'DH_Weapons.DH_SVT38Ammo'
+    ProjectileClass=Class'DH_SVT38Bullet'
+    AmmoClass=Class'DH_SVT38Ammo'
     Spread=55.0
     MaxVerticalRecoilAngle=510
     MaxHorizontalRecoilAngle=190
@@ -23,7 +23,7 @@ defaultproperties
     FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
     FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
     FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)
 

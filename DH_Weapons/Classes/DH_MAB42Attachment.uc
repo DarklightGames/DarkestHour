@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_MAB_anm.MAB42_world'
     MenuImage=Texture'DH_MAB38_tex.mab42.mab42_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 
     WA_Idle="idle_MAB"
     WA_IdleEmpty="idle_MAB"

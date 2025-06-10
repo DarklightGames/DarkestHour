@@ -338,20 +338,20 @@ function UpdateRoundStatus()
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
         {
-            l_Reinforcements.TextColor = class'UColor'.default.Red;
-            i_Reinforcements.ImageColor = class'UColor'.default.Red;
+            l_Reinforcements.TextColor = Class'UColor'.default.Red;
+            i_Reinforcements.ImageColor = Class'UColor'.default.Red;
         }
         else
         {
-            l_Reinforcements.TextColor = class'UColor'.default.White;
-            i_Reinforcements.ImageColor = class'UColor'.default.White;
+            l_Reinforcements.TextColor = Class'UColor'.default.White;
+            i_Reinforcements.ImageColor = Class'UColor'.default.White;
         }
 
         if (GRI.bIsInSetupPhase)
         {
             l_Reinforcements.Caption = "???";
-            l_Reinforcements.TextColor = class'UColor'.default.White;
-            i_Reinforcements.ImageColor = class'UColor'.default.White;
+            l_Reinforcements.TextColor = Class'UColor'.default.White;
+            i_Reinforcements.ImageColor = Class'UColor'.default.White;
         }
         else if (GRI.SpawnsRemaining[CurrentTeam] == -1)
         {
@@ -376,11 +376,11 @@ function UpdateRoundStatus()
 
         if (GRI.DHRoundDuration == 0 && GRI.bMatchHasBegun)
         {
-            l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
+            l_RoundTime.Caption = Class'DHHud'.default.NoTimeLimitText;
         }
         else
         {
-            l_RoundTime.Caption = class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
+            l_RoundTime.Caption = Class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
         }
     }
 }
@@ -446,11 +446,11 @@ function UpdateStatus()
         if (!PC.bSurrendered && GRI.ElapsedTime < SurrenderButtonUnlockTime)
         {
             bSurrenderButtonEnabled = false;
-            b_MenuOptions[2].Caption @= "(" $ class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
+            b_MenuOptions[2].Caption @= "(" $ Class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
         }
 
         bSurrenderButtonEnabled = bSurrenderButtonEnabled &&
-                                  (class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
+                                  (Class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
                                   !GRI.IsSurrenderVoteInProgress(PC.GetTeamNum()) &&
                                   GRI.RoundWinnerTeamIndex > 1;
     }
@@ -479,7 +479,7 @@ function string GetStatusText()
 
     if (SpawnTime > 0)
     {
-        return Repl(default.DeployInTimeText, "{0}", class'DHLib'.static.GetDurationString(SpawnTime, "m:ss"));
+        return Repl(default.DeployInTimeText, "{0}", Class'DHLib'.static.GetDurationString(SpawnTime, "m:ss"));
     }
     else
     {
@@ -498,7 +498,7 @@ function PopulateVehicles()
         if (GRI.VehiclePoolVehicleClasses[i] != none &&
             GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam == CurrentTeam)
         {
-            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, class'UInteger'.static.Create(i));
+            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, Class'UInteger'.static.Create(i));
         }
     }
 
@@ -567,7 +567,7 @@ function UpdateVehicles(optional bool bShowAlert)
 
             if (RespawnTime > 0)
             {
-                S @= "(" $ class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
+                S @= "(" $ Class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
             }
 
             li_Vehicles.SetItemAtIndex(i, S);
@@ -594,11 +594,11 @@ function UpdateVehicles(optional bool bShowAlert)
 
     if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
     {
-        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+        l_MaxVehicles.TextColor = Class'UColor'.default.Red;
     }
     else
     {
-        l_MaxVehicles.TextColor = class'UColor'.default.White;
+        l_MaxVehicles.TextColor = Class'UColor'.default.White;
     }
 }
 
@@ -772,7 +772,7 @@ function bool OnClick(GUIComponent Sender)
                 // Player is prevented from changing team as he switched recently
                 if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
-                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", Class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
                     Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
                 }
                 // Player can change team, but give him a screen prompt & ask him to confirm the change
@@ -780,14 +780,14 @@ function bool OnClick(GUIComponent Sender)
                 {
                     // Player can switch freely in single player mode, or within the first ChangeTeamInterval seconds of the round
                     // So this is just a simple confirmation prompt, without any warning
-                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= class'DarkestHourGame'.default.ChangeTeamInterval)
+                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= Class'DarkestHourGame'.default.ChangeTeamInterval)
                     {
                         ConfirmMessage = FreeChangeTeamConfirmText;
                     }
                     // Otherwise warn the player that if he changes team, he'll have to wait a certain time before being allowed to switch again
                     else
                     {
-                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval);
+                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", Class'DarkestHourGame'.default.ChangeTeamInterval);
                     }
 
                     ConfirmWindow = Controller.ShowQuestionDialog(ConfirmMessage, QBTN_YesNo);
@@ -1172,7 +1172,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 break;
 
             default:
-                MessageText = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
+                MessageText = Class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
                 Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
                 break;
         }
@@ -1198,7 +1198,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 else
                 {
                     // The vote will be nominated
-                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
+                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(Class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
                 }
 
                 ConfirmWindow = Controller.ShowQuestionDialog(MessageText, QBTN_YesNo, QBTN_Yes);
@@ -1218,12 +1218,12 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     }
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
     {
-        MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        MessageText = Class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
     else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
     {
-        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
+        MessageText = Class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
 
@@ -1312,17 +1312,17 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(Class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
                     {
-                        cb_PrimaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
+                        cb_PrimaryWeapon.AddItem(Class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(Class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
                     {
-                        cb_SecondaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
+                        cb_SecondaryWeapon.AddItem(Class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
@@ -1334,12 +1334,12 @@ function InternalOnChange(GUIComponent Sender)
             {
                 if (PC.DHPrimaryWeapon >= 0)
                 {
-                    cb_PrimaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
+                    cb_PrimaryWeapon.SetIndex(Class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
                 }
 
                 if (PC.DHSecondaryWeapon >= 0)
                 {
-                    cb_SecondaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
+                    cb_SecondaryWeapon.SetIndex(Class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
                 }
             }
 
@@ -1366,7 +1366,7 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.GivenItems[i] != "")
                     {
-                        InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'class'));
+                        InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], Class'class'));
 
                         if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                         {

@@ -7,10 +7,10 @@ class DH_RKKA_TanTelogreikaRadioOperatorEarly_Winter extends DHSOVRadioOperatorR
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloStrapsEarlyPawn_Winter',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietTanTeloStrapsEarlyPawn_Winter',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    Headgear(0)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=1.0
     HandType=Hand_Gloved
-	Backpacks(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack',LocationOffset=(X=-0.1))
+	Backpacks(0)=(BackpackClass=Class'DH_SovRadioBackpack',LocationOffset=(X=-0.1))
 }

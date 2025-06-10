@@ -27,8 +27,8 @@ defaultproperties
     BeginningIdleAnim="periscope_idle_out"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIJCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PanzerIIIJCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-90.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-120.0,Y=-30.0,Z=50.0),DriveRot=(Pitch=3500,Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-125.0,Y=30.0,Z=50.0),DriveRot=(Pitch=3900,Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")

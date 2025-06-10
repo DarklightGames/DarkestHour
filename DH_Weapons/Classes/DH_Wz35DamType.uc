@@ -8,7 +8,7 @@ class DH_Wz35DamType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Wz35Weapon'
+    WeaponClass=Class'DH_Wz35Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     TankDamageModifier=0.2
@@ -16,7 +16,7 @@ defaultproperties
     VehicleDamageModifier=0.3
     TreadDamageModifier=0.3
 
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     bThrowRagdoll=true
     GibModifier=4.0
     GibPerterbation=0.15

@@ -20,7 +20,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, o
     {
         Start = HitLocation + vect(0.0, 0.0, 32.0);
 
-        foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
+        foreach VisibleCollidingActors(Class'ROPawn', Victims, DamageRadius, Start)
         {
             if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
             {
@@ -54,18 +54,18 @@ defaultproperties
     BlurEffectScalar=2.2
     PenetrationMag=300.0
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
-    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
-    ShellHitDirtEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
-    ShellHitSnowEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
-    ShellHitWoodEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
-    ShellHitRockEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
+    ShellHitVehicleEffectClass=Class'TankHEHitPenetrate'
+    ShellDeflectEffectClass=Class'TankHEHitDeflect'
+    ShellHitDirtEffectClass=Class'DHShellExplosion_MediumHE'
+    ShellHitSnowEffectClass=Class'DHShellExplosion_MediumHE'
+    ShellHitWoodEffectClass=Class'DHShellExplosion_MediumHE'
+    ShellHitRockEffectClass=Class'DHShellExplosion_MediumHE'
+    ShellHitWaterEffectClass=Class'DHShellExplosion_MediumHE'
     DamageRadius=300.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmDamageType'
-    ShellImpactDamage=class'DH_Engine.DHShellHEImpactDamageType'
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    MyDamageType=Class'DHShellHE75mmDamageType'
+    ShellImpactDamage=Class'DHShellHEImpactDamageType'
+    ExplosionDecal=Class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=Class'ArtilleryMarkSnow'
     LifeSpan=10.0
 //  SoundRadius=1000.0 // removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
     ExplosionSoundVolume=2.0

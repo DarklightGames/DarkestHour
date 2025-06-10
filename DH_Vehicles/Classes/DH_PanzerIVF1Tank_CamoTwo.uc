@@ -9,7 +9,7 @@ simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
 
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
     DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];

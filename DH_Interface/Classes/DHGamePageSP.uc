@@ -18,8 +18,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
-    RuleInfo = new(none) class'Engine.PlayInfo';
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    RuleInfo = new(none) Class'PlayInfo';
 
     i = 1;
     p_Main = UT2K4Tab_MainBase(c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i++]));

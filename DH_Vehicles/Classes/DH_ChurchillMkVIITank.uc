@@ -58,8 +58,8 @@ defaultproperties
     Skins(6)=Texture'DH_Churchill_tex.churchill.ChurchillMkVII_body_ext' // track guards separate so can easily be split later (random bits missing, similar to panther schurzen)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMkVIICannonPawn',WeaponBone="turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ChurchillMkVIICannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-85,Y=-101.0,Z=104.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-152.0,Y=-82.0,Z=109.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-152.0,Y=82.0,Z=109.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")

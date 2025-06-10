@@ -7,7 +7,7 @@ class DH_HellcatCannonPawn extends DHAmericanCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_HellcatCannon'
+    GunClass=Class'DH_HellcatCannon'
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=-16.0,Z=5.0),ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)

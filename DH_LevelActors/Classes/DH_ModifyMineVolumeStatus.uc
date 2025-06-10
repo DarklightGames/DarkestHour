@@ -23,7 +23,7 @@ function PostBeginPlay()
     }
 
     // Volume are static so use the all actor list
-    foreach AllActors(class'ROMineVolume', MineVolume, MineVolumeToModify)
+    foreach AllActors(Class'ROMineVolume', MineVolume, MineVolumeToModify)
     {
         MineVolumes[MineVolumes.Length] = MineVolume;
     }

@@ -7,8 +7,8 @@ class DH_PTRDFire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PTRDBullet'
-    AmmoClass=class'ROAmmo.PTRDAmmo'
+    ProjectileClass=Class'DH_PTRDBullet'
+    AmmoClass=Class'PTRDAmmo'
     bUsePreLaunchTrace=false
     Spread=75.0
     MaxVerticalRecoilAngle=750
@@ -16,8 +16,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
     FireSounds(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPTRD'
-    ShellEjectClass=class'ROAmmo.ShellEject1st14mm'
+    FlashEmitterClass=Class'MuzzleFlash1stPTRD'
+    ShellEjectClass=Class'ShellEject1st14mm'
     ShellIronSightOffset=(X=10.0,Y=3.0,Z=0.0)
     ShellRotOffsetIron=(Pitch=-10000)
     bAnimNotifiedShellEjects=false

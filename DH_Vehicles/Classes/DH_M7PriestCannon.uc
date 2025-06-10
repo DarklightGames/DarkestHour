@@ -28,9 +28,9 @@ defaultproperties
     CustomPitchDownLimit=64625 // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellSmoke'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_M7PriestCannonShellHE'
+    SecondaryProjectileClass=Class'DH_M7PriestCannonShellSmoke'
+    TertiaryProjectileClass=Class'DH_ShermanM4A3105CannonShellHEAT'
 
     ProjectileDescriptions(0)="HE-T"
     ProjectileDescriptions(1)="WP"

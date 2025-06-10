@@ -7,7 +7,7 @@ class DH_Fiat626TruckTransportFactory_DesertCamo extends DH_Fiat626TruckTranspor
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_Fiat626TruckTransport_DesertCamo'
+    VehicleClass=Class'DH_Fiat626TruckTransport_DesertCamo'
     Skins(0)=Texture'DH_Fiat626_tex.fiat626.fiat626_exterior_camo2'
     Skins(1)=Texture'DH_Fiat626_tex.fiat626.fiat626_interior_tan'
 }

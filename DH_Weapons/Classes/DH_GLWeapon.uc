@@ -8,9 +8,9 @@ class DH_GLWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="StG 24 x7 Geballte Ladung"
-    FireModeClass(0)=class'DH_Weapons.DH_GLFire'
-    AttachmentClass=class'DH_Weapons.DH_GLAttachment'
-    PickupClass=class'DH_Weapons.DH_GLPickup'
+    FireModeClass(0)=Class'DH_GLFire'
+    AttachmentClass=Class'DH_GLAttachment'
+    PickupClass=Class'DH_GLPickup'
     FuzeLengthRange=(Min=6.0,Max=6.0)
 
     InventoryGroup=7

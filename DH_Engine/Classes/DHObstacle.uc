@@ -32,7 +32,7 @@ simulated function PostBeginPlay()
 {
     local int i;
 
-    foreach AllActors(class'DHObstacleInfo', Info)
+    foreach AllActors(Class'DHObstacleInfo', Info)
     {
         break;
     }
@@ -77,7 +77,7 @@ simulated function PostBeginPlay()
     Index = Info.Obstacles.Length;
 
     // Create instance
-    Instance = Spawn(class'DHObstacleInstance', self,, Location, Rotation);
+    Instance = Spawn(Class'DHObstacleInstance', self,, Location, Rotation);
     Instance.SetStaticMesh(StaticMesh);
     Instance.SetDrawScale(DrawScale);
     Instance.SetDrawScale3D(DrawScale3D);

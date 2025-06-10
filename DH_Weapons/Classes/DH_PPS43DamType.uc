@@ -8,7 +8,7 @@ class DH_PPS43DamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PPS43Weapon'
+    WeaponClass=Class'DH_PPS43Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

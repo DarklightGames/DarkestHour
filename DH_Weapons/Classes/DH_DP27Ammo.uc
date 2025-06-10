@@ -11,7 +11,7 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.HUD.dp27_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 
-    //PickupClass=class'DP28AmmoPickup'
+    //PickupClass=Class'DP28AmmoPickup'
     MaxAmmo=47
     InitialAmount=47
 }

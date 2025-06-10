@@ -27,7 +27,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BA64MGPawn',WeaponBone=turret_placement)
 
     // Collision
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BA64.BA64_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
@@ -42,7 +42,7 @@ defaultproperties
     BeginningIdleAnim=driver_hatch_idle_close
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.BA64DriverOverlay'
+    HUDOverlayClass=Class'BA64DriverOverlay'
     HUDOverlayOffset=(X=2,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -143,8 +143,8 @@ defaultproperties
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-20,Y=30,Z=-35),ExhaustRotation=(pitch=34000,yaw=-5000,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.BA64_body'

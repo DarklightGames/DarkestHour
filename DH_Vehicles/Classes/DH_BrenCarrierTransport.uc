@@ -9,7 +9,7 @@ simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
 
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
     DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
@@ -48,7 +48,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BrenCarrierMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VUC_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_1",DriveAnim="VUC_rider1_idle")
@@ -60,7 +60,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverAttachmentBone="driver_player"
     DriveAnim="VUC_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
+    HUDOverlayClass=Class'UniCarrierDriverOverlay'
     HUDOverlayOffset=(X=0.0,Y=-0.8,Z=1.99)
     HUDOverlayFOV=81.0
 
@@ -94,10 +94,10 @@ defaultproperties
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="passenger_l_2"
     FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment

@@ -300,9 +300,9 @@ defaultproperties
     bHasShellTrail=true
     DrawScale=1.5
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
-    CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Red'
-    ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
+    CoronaClass=Class'DHShellTracer_RedLarge'
+    ShellTrailClass=Class'DHShellTrail_Red'
+    ShellImpactDamage=Class'DHShellImpactDamageType'
     ImpactDamage=400
 
     Speed=22000.0
@@ -318,18 +318,18 @@ defaultproperties
     RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
-    ShellDeflectEffectClass=class'DH_Effects.DHTankAPHitDeflect'
-    ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrate'
+    ShellDeflectEffectClass=Class'DHTankAPHitDeflect'
+    ShellHitDirtEffectClass=Class'TankAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'TankAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'TankAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'TankAPHitRockEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
     MomentumTransfer=10000.0
-    MyDamageType=class'DH_Engine.DHShellAPExplosionDamageType'
-    ExplosionDecal=class'ROEffects.TankAPMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
+    MyDamageType=Class'DHShellAPExplosionDamageType'
+    ExplosionDecal=Class'TankAPMarkDirt'
+    ExplosionDecalSnow=Class'TankAPMarkSnow'
     DrawType=DT_StaticMesh
 
     bNetTemporary=true // false

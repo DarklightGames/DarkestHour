@@ -23,8 +23,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldScoped_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     bAnimNotifiedShellEjects=true
     bRapidFire=false

@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.svt40'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false
 
     WA_Idle="idle_svt40"

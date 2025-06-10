@@ -45,9 +45,9 @@ defaultproperties
     CustomPitchDownLimit=61895  // -20 degrees
 
     // Ammo
-    ProjectileClass=class'DH_30CalBullet'
+    ProjectileClass=Class'DH_30CalBullet'
     FireInterval=0.135
-    TracerProjectileClass=class'DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
@@ -64,7 +64,7 @@ defaultproperties
     FiringBone="FIRING_ROOT"
 
     ShellEjectBone="EJECTOR"
-    ShellEjectClass=class'RO3rdShellEject762x54mm'
+    ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
 
     ProjectileRotationMode=PRM_MuzzleBone

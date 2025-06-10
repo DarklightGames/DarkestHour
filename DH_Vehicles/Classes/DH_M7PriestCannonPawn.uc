@@ -22,7 +22,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M7PriestCannon'
+    GunClass=Class'DH_M7PriestCannon'
     // gunsight
     DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     // spotting scope
@@ -50,6 +50,6 @@ defaultproperties
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
-    ArtillerySpottingScopeClass=class'DH_Vehicles.DHArtillerySpottingScope_M7Priest'
+    ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M7Priest'
 }
 

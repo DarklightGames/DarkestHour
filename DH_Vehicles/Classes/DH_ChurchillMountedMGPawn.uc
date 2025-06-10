@@ -194,7 +194,7 @@ simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ChurchillMountedMG'
+    GunClass=Class'DH_ChurchillMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=44.74,ViewLocation=(X=10.0,Y=-7.0,Z=0.0),TransitionUpAnim="MG_periscope_in",ViewPitchDownLimit=65535,bDrawOverlays=true)

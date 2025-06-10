@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="StG 24 Grenade"
     NativeItemName="Stielhandgranate 24"
-    FireModeClass(0)=class'DH_Weapons.DH_StielGranateFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StielGranateTossFire'
-    AttachmentClass=class'DH_Weapons.DH_StielGranateAttachment'
-    PickupClass=class'DH_Weapons.DH_StielGranatePickup'
+    FireModeClass(0)=Class'DH_StielGranateFire'
+    FireModeClass(1)=Class'DH_StielGranateTossFire'
+    AttachmentClass=Class'DH_StielGranateAttachment'
+    PickupClass=Class'DH_StielGranatePickup'
 
     DisplayFOV=80.0
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'

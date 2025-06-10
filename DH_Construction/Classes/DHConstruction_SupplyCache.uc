@@ -154,18 +154,18 @@ defaultproperties
     bCanBeTornDownByFriendlies=false
     bCanBeTornDownWhenConstructed=true
     bCanBePlacedInDangerZone=false
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Static'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"
     ExplosionDamageTraceOffset=(Z=40.0)
 
     // Essentially we are just making this a satchel explosion
-    BrokenEmitterClass=class'ROEffects.ROSatchelExplosion'
+    BrokenEmitterClass=Class'ROSatchelExplosion'
     BrokenSoundRadius=4000.0
     BrokenSoundVolume=5.0
     BrokenSounds(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     BrokenSounds(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
     BrokenSounds(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
 
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=Class'DHConstructionGroup_Logistics'
 }

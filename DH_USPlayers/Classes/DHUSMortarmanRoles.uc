@@ -8,7 +8,7 @@ class DHUSMortarmanRoles extends DHAlliedMortarmanRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_M1CarbineWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
     GivenItems(0)="DH_Weapons.DH_M2MortarWeapon"
     GivenItems(1)="DH_Equipment.DHBinocularsItemAllied"
     HeadgearProbabilities(0)=0.2

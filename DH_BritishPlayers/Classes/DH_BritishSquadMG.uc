@@ -7,5 +7,5 @@ class DH_BritishSquadMG extends DHCWAutoRifleRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_BritishPawn',Weight=1.0)
 }

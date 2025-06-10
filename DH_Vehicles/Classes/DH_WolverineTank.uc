@@ -23,7 +23,7 @@ defaultproperties
     Skins(5)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_WolverineCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-65.0,Z=12.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -98,8 +98,8 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     TreadVelocityScale=228.0
     WheelRotationScale=71500.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-168.0,Y=0.0,Z=57.0),ExhaustRotation=(Pitch=63500,Yaw=32768))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"

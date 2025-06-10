@@ -7,6 +7,6 @@ class DH_ShermanCannonPawn_M4A3E8_Fury extends DH_ShermanCannonPawn_M4A3E8;
 
 defaultproperties
 {
-    GunClass=class'DH_ShermanCannon_M4A3E8_Fury'
+    GunClass=Class'DH_ShermanCannon_M4A3E8_Fury'
 }
 

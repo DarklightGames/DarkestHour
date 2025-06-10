@@ -8,8 +8,8 @@ class DH_M9531BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M9531Weapon'
+    WeaponClass=Class'DH_M9531Weapon'
     GibModifier=0.0
     KDamageImpulse=400
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROBloodPuff'
 }

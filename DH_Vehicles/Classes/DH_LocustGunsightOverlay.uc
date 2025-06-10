@@ -21,7 +21,7 @@ simulated function PostBeginPlay()
         SetDrawScale(CannonPawn.GunsightSize);
 
         // Make a scripted texture, which will display a zoomed 'portal' view for the telescope mounted within the Locust's persicopic gunsight
-        TelescopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+        TelescopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(Class'ScriptedTexture'));
         TelescopeScriptedTexture.SetSize(CannonPawn.GunsightOverlay.MaterialUSize(), CannonPawn.GunsightOverlay.MaterialVSize());
         TelescopeScriptedTexture.Client = self; // means this actor receives RenderTexture() events from the scripted texture
 

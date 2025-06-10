@@ -32,9 +32,9 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_CromwellCannonShell'
+    SecondaryProjectileClass=Class'DH_CromwellCannonShellHE'
+    TertiaryProjectileClass=Class'DH_CromwellCannonShellSmoke'
 
     ProjectileDescriptions(2)="WP"
 
@@ -53,15 +53,15 @@ defaultproperties
     TertiarySpread=0.0036
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
+    AltFireProjectileClass=Class'DH_BesaVehicleBullet'
     InitialAltAmmo=225
     NumMGMags=10
     AltFireInterval=0.092
-    TracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
+    TracerProjectileClass=Class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherClass=Class'DH_TwoInchBombThrower'
     SmokeLauncherFireOffset(0)=(X=37.0,Y=40.0,Z=42.0)
 
     // Weapon fire

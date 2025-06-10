@@ -32,7 +32,7 @@ function PostBeginPlay()
 
     if (VolumeTag != '')
     {
-        foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
+        foreach AllActors(Class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
 

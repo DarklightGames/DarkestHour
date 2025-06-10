@@ -182,13 +182,13 @@ simulated function class<DHNation> GetTeamNationClass(int TeamIndex)
         case AXIS_TEAM_INDEX:
             if (AxisNationClass == none)
             {
-                AxisNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(AXIS_TEAM_INDEX), class'Class'));
+                AxisNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(AXIS_TEAM_INDEX), Class'Class'));
             }
             return AxisNationClass;
         case ALLIES_TEAM_INDEX:
             if (AlliedNationClass == none)
             {
-                AlliedNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(ALLIES_TEAM_INDEX), class'Class'));
+                AlliedNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(ALLIES_TEAM_INDEX), Class'Class'));
             }
             return AlliedNationClass;
     }
@@ -394,7 +394,7 @@ simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 
     if (LI == none)
     {
-        foreach Level.AllActors(class'DH_LevelInfo', LI)
+        foreach Level.AllActors(Class'DH_LevelInfo', LI)
         {
             break;
         }
@@ -413,12 +413,12 @@ defaultproperties
     AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
-    GameTypeClass=class'DHGameType_Push'
+    GameTypeClass=Class'DHGameType_Push'
     InfantrySpawnVehicleDuration=60
 
     // TODO: delay, limit and request interval need to be gotten from elsewhere?
-    ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
-    ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+    ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=Class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+    ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=Class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
 
     BaseMunitionPercentages(0)=60.0
     BaseMunitionPercentages(1)=60.0

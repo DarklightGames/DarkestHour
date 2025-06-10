@@ -23,9 +23,9 @@ defaultproperties
     nProjectileDescriptions(1)="M56 WP"
     nProjectileDescriptions(2)="M56 HE"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_M1MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_M1MortarProjectileWP'
-    TertiaryProjectileClass=class'DH_Guns.DH_M1MortarProjectileHE_L'
+    PrimaryProjectileClass=Class'DH_M1MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_M1MortarProjectileWP'
+    TertiaryProjectileClass=Class'DH_M1MortarProjectileHE_L'
 
     DriverAnimationChannelBone="US_CAMERA_COM"
     

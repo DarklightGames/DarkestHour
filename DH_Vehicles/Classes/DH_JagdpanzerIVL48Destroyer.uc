@@ -24,8 +24,8 @@ defaultproperties
     FireEffectOffset=(X=55.0,Y=0.0,Z=-25.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_JagdpanzerIVL48CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-100.0,Y=0.0,Z=110.0),DriveAnim="prone_idle_nade")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=40.0,Z=110.0),DriveRot=(Yaw=2048),DriveAnim="prone_idle_satchel")
 

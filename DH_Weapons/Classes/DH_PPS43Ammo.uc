@@ -11,7 +11,7 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.HUD.pps43_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 
-    //PickupClass=class'PPS43AmmoPickup'
+    //PickupClass=Class'PPS43AmmoPickup'
     MaxAmmo=35
     InitialAmount=35
 }

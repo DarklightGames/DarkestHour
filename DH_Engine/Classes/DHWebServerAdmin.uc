@@ -11,7 +11,7 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
     local int i;
     local string menu, GroupPage, Dis, CurPageTitle;
 
-    Response.Subst("ServerName", class'GameReplicationInfo'.default.ServerName);
+    Response.Subst("ServerName", Class'GameReplicationInfo'.default.ServerName);
     Response.Subst("AdminName", CurAdmin.UserName);
     Response.Subst("HeaderColSpan", "2");
 

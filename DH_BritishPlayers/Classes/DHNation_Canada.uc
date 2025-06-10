@@ -8,8 +8,8 @@ class DHNation_Canada extends DHNation;
 defaultproperties
 {
     NationName="Canada"
-    VoicePackClass=class'DH_BritishPlayers.DHCanadianVoice'
-    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Britain'
+    VoicePackClass=Class'DHCanadianVoice'
+    DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_Britain'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_canada'
@@ -23,5 +23,5 @@ defaultproperties
     DefaultSquadNames(6)="George"
     DefaultSquadNames(7)="How"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Commonwealth_Start'
-    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
+    SupplyTruckClass=Class'DH_GMCTruckSupport'
 }

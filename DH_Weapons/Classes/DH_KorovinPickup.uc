@@ -7,6 +7,6 @@ class DH_KorovinPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_KorovinWeapon'
+    InventoryType=Class'DH_KorovinWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Korovin'
 }

@@ -43,7 +43,7 @@ defaultproperties
     bCanTakeImpactDamage=true
     bIsNeutral=true
     bAcceptsProjectors=false
-    GroupClass=class'DHConstructionGroup_Obstacles'
+    GroupClass=Class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
     TakeDownProgressInterval=0.1666 // 24 hits (ProgressMax / Desired Hits)
     MinDamagetoHurt=180.0

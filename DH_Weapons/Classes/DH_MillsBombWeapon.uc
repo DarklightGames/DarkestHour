@@ -8,10 +8,10 @@ class DH_MillsBombWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="Mills Bomb"
-    FireModeClass(0)=class'DH_Weapons.DH_MillsBombFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MillsBombTossFire'
-    AttachmentClass=class'DH_Weapons.DH_MillsBombAttachment'
-    PickupClass=class'DH_Weapons.DH_MillsBombPickup'
+    FireModeClass(0)=Class'DH_MillsBombFire'
+    FireModeClass(1)=Class'DH_MillsBombTossFire'
+    AttachmentClass=Class'DH_MillsBombAttachment'
+    PickupClass=Class'DH_MillsBombPickup'
     Mesh=SkeletalMesh'DH_MillsBomb.MillsBomb'
     DisplayFOV=80.0
     FuzeLengthRange=(Min=4.0,Max=4.0)

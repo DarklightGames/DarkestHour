@@ -32,7 +32,7 @@ simulated function PostNetBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Create the material instance for the icon.
-        MyIconMaterial = TexRotator(Level.ObjectPool.AllocateObject(class'TexRotator'));
+        MyIconMaterial = TexRotator(Level.ObjectPool.AllocateObject(Class'TexRotator'));
     }
 }
 
@@ -73,7 +73,7 @@ simulated function Color GetIconColor(DHPlayer PC)
     // and green if the player is in the same squad.
     if (PC.PlayerReplicationInfo == DriverPRI)
     {
-        return class'DHColor'.default.SelfColor;
+        return Class'DHColor'.default.SelfColor;
     }
 
     if (PC.GetTeamNum() == GetTeamIndex())
@@ -82,7 +82,7 @@ simulated function Color GetIconColor(DHPlayer PC)
         {
             if (PC.GetSquadIndex() == DriverPRI.SquadIndex && DriverPRI.SquadIndex != -1)
             {
-                return class'DHColor'.default.SquadColor;
+                return Class'DHColor'.default.SquadColor;
             }
         }
         else

@@ -20,12 +20,12 @@ defaultproperties
     bIsLeader=true
     bRequiresSL=true
 
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieLeaderPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_ZombieLeaderPawn',Weight=1.0)
 
     BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
     SleeveTexture=Texture'DHEventCharactersTex.Arms.h_sleeves_zombie'
 
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    SecondaryWeapons(0)=(Item=Class'DH_P08LugerWeapon')
 
-    PrimaryWeapons(0)=(Item=class'DH_Equipment.DHTrenchMaceItem_Grenade',AssociatedAttachment=none)
+    PrimaryWeapons(0)=(Item=Class'DHTrenchMaceItem_Grenade',AssociatedAttachment=none)
 }

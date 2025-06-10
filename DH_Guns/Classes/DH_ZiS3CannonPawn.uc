@@ -7,7 +7,7 @@ class DH_ZiS3CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_ZiS3Cannon'
+    GunClass=Class'DH_ZiS3Cannon'
     DriverPositions(0)=(ViewLocation=(X=5.0,Y=-19.5,Z=36.5),ViewFOV=22.97,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idle_binoc",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
     DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_ptrd",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)

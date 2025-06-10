@@ -11,7 +11,7 @@ simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
-        SpawnPoint = Spawn(class'DHSpawnPoint_Parachute', self);
+        SpawnPoint = Spawn(Class'DHSpawnPoint_Parachute', self);
 
         if (SpawnPoint == none)
         {

@@ -13,7 +13,7 @@ defaultproperties
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3HalftrackMGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M3HalftrackMGPawn',WeaponBone="turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-10.0,Y=-30.0,Z=85.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-45.0,Y=-30.0,Z=85.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=-30.0,Z=85.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")

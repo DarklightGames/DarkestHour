@@ -34,7 +34,7 @@ simulated static function ClientReceive(
         return;
     }
 
-    class'UInteger'.static.ToShorts(Switch, Type, Team);
+    Class'UInteger'.static.ToShorts(Switch, Type, Team);
 
     if (P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex == Team)
     {
@@ -59,7 +59,7 @@ static function string GetString(optional int Type, optional PlayerReplicationIn
     local int Team;
     local string Message;
 
-    class'UInteger'.static.ToShorts(Type, Type, Team);
+    Class'UInteger'.static.ToShorts(Type, Type, Team);
 
     Obj = DHObjective(OptionalObject);
 
@@ -85,7 +85,7 @@ static function int getIconID(
 {
     local int Type, Team;
 
-    class'UInteger'.static.ToShorts(Switch, Type, Team);
+    Class'UInteger'.static.ToShorts(Switch, Type, Team);
 
     switch (Team)
     {

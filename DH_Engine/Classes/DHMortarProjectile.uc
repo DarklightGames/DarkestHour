@@ -261,7 +261,7 @@ simulated function Explode(Vector HitLocation, Vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        Log(class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
+        Log(Class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ Class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
     }
 
     HandleDestruction(); // allows subclasses to handle destruction differently rather than always Destroy()
@@ -347,7 +347,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -543,7 +543,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -668,16 +668,16 @@ simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float V
     const VOLUME_MIN = 0.0;
     const VOLUME_MAX = 1.0;
 
-    Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
+    Distance = Class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
     
-    Pitch = class'UInterp'.static.MapRangeClamped(
+    Pitch = Class'UInterp'.static.MapRangeClamped(
         Distance,
         PITCH_DISTANCE_METERS_MIN,
         PITCH_DISTANCE_METERS_MAX,
         PITCH_MAX,
         PITCH_MIN
     );
-    Volume = class'UInterp'.static.MapRangeClamped(
+    Volume = Class'UInterp'.static.MapRangeClamped(
         Distance,
         VOLUME_DISTANCE_METERS_MIN,
         VOLUME_DISTANCE_METERS_MAX,
@@ -709,14 +709,14 @@ defaultproperties
     LifeSpan=60.0
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
-    FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    FireEmitterClass=Class'DHMortarFireEffect'
     DescendingSound=SoundGroup'DH_MortarSounds.81mm_mortar_whistle'
 
-    HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
-    HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
-    HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
-    HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
-    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
+    HitDirtEmitterClass=Class'TankAPHitDirtEffect'
+    HitRockEmitterClass=Class'TankAPHitRockEffect'
+    HitWoodEmitterClass=Class'TankAPHitWoodEffect'
+    HitSnowEmitterClass=Class'TankAPHitSnowEffect'
+    HitWaterEmitterClass=Class'DHShellSplashEffect'
     HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
     HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'

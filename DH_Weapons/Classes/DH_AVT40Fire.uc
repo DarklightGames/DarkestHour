@@ -7,8 +7,8 @@ class DH_AVT40Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
-    AmmoClass=class'ROAmmo.SVT40Ammo'
+    ProjectileClass=Class'DH_AVT40Bullet'
+    AmmoClass=Class'SVT40Ammo'
     FireRate=0.095 // ~700rpm (value had to be found experimentally due to an engine bug)
     bHasSemiAutoFireRate=true
     SemiAutoFireRate=0.215
@@ -25,7 +25,7 @@ defaultproperties
     FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
     FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
     FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)
 

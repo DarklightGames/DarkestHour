@@ -29,9 +29,9 @@ function bool InternalOnClick(GUIComponent Sender)
 function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
 {
     if (CurrentPanel == none ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageInternet' ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageLAN' ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageFavorites')
+        CurrentPanel != Class'DHBrowser_ServerListPageInternet' ||
+        CurrentPanel != Class'DHBrowser_ServerListPageLAN' ||
+        CurrentPanel != Class'DHBrowser_ServerListPageFavorites')
     {
         return;
     }

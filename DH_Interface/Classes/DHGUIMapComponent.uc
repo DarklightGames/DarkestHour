@@ -89,7 +89,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function SetViewport(Vector Origin, int ZoomLevel)
 {
     SetZoomLevel(ZoomLevel);
-    Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
+    Viewport = ConstrainViewport(Class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
 function Vector GetViewportOrigin()
@@ -207,7 +207,7 @@ function bool InternalOnDraw(Canvas C)
 
         ViewportInterpAlpha = (TimeSeconds - ViewportInterpStartTime) / (ViewportInterpEndTime - ViewportInterpStartTime);
         ViewportInterpAlpha = FClamp(ViewportInterpAlpha, 0.0, 1.0);
-        Viewport =  class'UBox'.static.Interp(class'UInterp'.static.Deceleration(ViewportInterpAlpha, 0.0, 1.0), ViewportInterpStart, ViewportInterpEnd);
+        Viewport =  Class'UBox'.static.Interp(Class'UInterp'.static.Deceleration(ViewportInterpAlpha, 0.0, 1.0), ViewportInterpStart, ViewportInterpEnd);
     }
 
     UpdateSpawnPointPositions();
@@ -232,11 +232,11 @@ function Box ConstrainViewport(Box Viewport, Vector Min, Vector Max)
 {
     local Vector Translation;
 
-    Translation = -class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
-    Viewport = class'UBox'.static.Translate(Viewport, Translation);
+    Translation = -Class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
+    Viewport = Class'UBox'.static.Translate(Viewport, Translation);
 
-    Translation = -(class'UVector'.static.MaxComponent(Viewport.Max, vect(1, 1, 0)) - vect(1, 1, 0));
-    Viewport = class'UBox'.static.Translate(Viewport, Translation);
+    Translation = -(Class'UVector'.static.MaxComponent(Viewport.Max, vect(1, 1, 0)) - vect(1, 1, 0));
+    Viewport = Class'UBox'.static.Translate(Viewport, Translation);
 
     return Viewport;
 }
@@ -444,7 +444,7 @@ function bool IsMarkerUnderCursor(float LocationX, float LocationY, float Cursor
     Y = LocationY - CursorMapLocationY;
     D = Sqrt(X * X + Y * Y);
 
-    return D <= class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5;
+    return D <= Class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5;
 }
 
 function bool InternalOnOpen(GUIContextMenu Sender)
@@ -521,7 +521,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                     TargetSquadIndex = -1;
                     MapMarkerMenuItems[MapMarkerMenuItems.Length] = PublicMapMarkers[i].MapMarkerClass;
                     Sender.AddItem(ActiveTargetDeselectText);
-                    PC.ReceiveLocalizedMessage(class'DHArtilleryMessage', 10);
+                    PC.ReceiveLocalizedMessage(Class'DHArtilleryMessage', 10);
                 }
                 else
                 {
@@ -547,11 +547,11 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     if (!bDeselectArtilleryTarget && !bSelectArtilleryTarget)
     {
-        for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
+        for (i = 0; i < Class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
         {
-            if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
+            if (Class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
             {
-                MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+                MapMarkerClasses[MapMarkerClasses.Length] = Class'DHPlayer'.default.PersonalMapMarkerClasses[i];
             }
         }
     }
@@ -685,7 +685,7 @@ function float GetZoomScale(int ZoomLevel)
 
     ZoomLevelRange = ZoomLevelMax - ZoomLevelMin;
     T = float(ZoomLevel) * (1.0 / ZoomLevelRange);
-    return class'UInterp'.static.Deceleration(T, ZoomScaleRange.Max, ZoomScaleRange.Min);
+    return Class'UInterp'.static.Deceleration(T, ZoomScaleRange.Max, ZoomScaleRange.Min);
 }
 
 function SetZoomLevel(int NewZoomLevel)
@@ -750,7 +750,7 @@ function ZoomIn()
 
     // Get the new viewport by scaling the current viewport with the mouse
     // location as the scaling origin.
-    NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
+    NewViewport = Class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
 
     InterpolateToViewport(NewViewport);
 }
@@ -783,7 +783,7 @@ function ZoomOut()
 
     // Get the new viewport by scaling the current viewport with the mouse
     // location as the scaling origin.
-    NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
+    NewViewport = Class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
 
     InterpolateToViewport(NewViewport);
 }
@@ -838,7 +838,7 @@ function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
         OriginDelta.X -= (DeltaX / W) * GetZoomScale(ZoomLevel);
         OriginDelta.Y += (DeltaY / H) * GetZoomScale(ZoomLevel);
 
-        Viewport = class'UBox'.static.Translate(Viewport, OriginDelta);
+        Viewport = Class'UBox'.static.Translate(Viewport, OriginDelta);
         Viewport = ConstrainViewport(Viewport, vect(0, 0, 0), vect(1, 1, 0));
 
         return true;

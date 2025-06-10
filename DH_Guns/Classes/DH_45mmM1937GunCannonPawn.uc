@@ -41,7 +41,7 @@ simulated function DrawGunsightOverlay(Canvas C)
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_45mmM1937GunCannon'
+    GunClass=Class'DH_45mmM1937GunCannon'
     DriverPositions(0)=(ViewLocation=(X=-2.0,Y=-18.0,Z=19.5),ViewFOV=34.0,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idle_binoc",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
     DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)

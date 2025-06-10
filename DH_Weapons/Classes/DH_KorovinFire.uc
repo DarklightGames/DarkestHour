@@ -7,8 +7,8 @@ class DH_KorovinFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_KorovinBullet'
-    AmmoClass=class'DH_Weapons.DH_PPS43Ammo'
+    ProjectileClass=Class'DH_KorovinBullet'
+    AmmoClass=Class'DH_PPS43Ammo'
     FireRate=0.14 // ~474 rpm (value had to be found experimentally due to an engine bug)
     Spread=140.0
 
@@ -23,8 +23,8 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire2'
     FireSounds(2)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire3'
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    FlashEmitterClass=Class'MuzzleFlash1stPPSH'
+    ShellEjectClass=Class'ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)
 
     FireIronLastAnim="iron_idle_empty"

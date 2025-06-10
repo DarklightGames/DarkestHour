@@ -37,9 +37,9 @@ defaultproperties
     CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_Cannone4732CannonShell'
+    SecondaryProjectileClass=Class'DH_Cannone4732CannonShellHE'
+    TertiaryProjectileClass=Class'DH_Cannone4732CannonShellHEAT'
 
     ProjectileDescriptions(0)="AP"
     ProjectileDescriptions(1)="HE"

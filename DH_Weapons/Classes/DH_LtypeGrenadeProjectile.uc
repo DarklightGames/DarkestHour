@@ -14,7 +14,7 @@ defaultproperties
     MaxSpeed=780.0
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
-    PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
+    PickupClass=Class'DH_LTypeGrenadePickup'
     bIsStickGrenade=true
 
     // Impact fuze
@@ -43,21 +43,21 @@ defaultproperties
     DamageRadius=910 //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
                      //calculated that the lethal effective radius is around 15 meters give or take
     EngineFireChance=0.9
-    ShellImpactDamage=class'DH_Weapons.DH_LTypeGrenadeImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'
+    ShellImpactDamage=Class'DH_LTypeGrenadeImpactDamType'
+    MyDamageType=Class'DH_LTypeGrenadeDamType'
 
     // Effects
     StaticMesh=StaticMesh'DH_LType_stc.Projectile.ltype_throw'
-    ShellHitDirtEffectClass=class'ROSatchelExplosion'
-    ShellHitWoodEffectClass=class'ROSatchelExplosion'
-    ShellHitRockEffectClass=class'ROSatchelExplosion'
-    ShellHitSnowEffectClass=class'ROSatchelExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellDeflectEffectClass=class'GrenadeExplosion'
+    ShellHitDirtEffectClass=Class'ROSatchelExplosion'
+    ShellHitWoodEffectClass=Class'ROSatchelExplosion'
+    ShellHitRockEffectClass=Class'ROSatchelExplosion'
+    ShellHitSnowEffectClass=Class'ROSatchelExplosion'
+    ShellHitWaterEffectClass=Class'ROBulletHitWaterEffect'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellDeflectEffectClass=Class'GrenadeExplosion'
 
-    ExplosionDecal=class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+    ExplosionDecal=Class'GrenadeMark'
+    ExplosionDecalSnow=Class'GrenadeMarkSnow'
 
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell

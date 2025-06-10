@@ -7,7 +7,7 @@ class DH_M7PriestMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M7PriestMG'
+    GunClass=Class'DH_M7PriestMG'
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
@@ -19,7 +19,7 @@ defaultproperties
     DrivePos=(X=-1.0,Y=0.0,Z=0.0)
     DriveAnim="stand_idleiron_mg42"
     CameraBone="com_camera"
-    HUDOverlayClass=class'DH_Vehicles.DH_50Cal_VehHUDOverlay'
+    HUDOverlayClass=Class'DH_50Cal_VehHUDOverlay'
     HUDOverlayFOV=40.0
     // TODO: add position (between current 0 & 1) with head raised above sights, then uncomment these properties that are only relevant with that
     // Note such a raised position works best using the "Vhalftrack_com_" player anims (originally for the MG34 in halftrack), which include raising/lowering transition anims

@@ -9,8 +9,8 @@ defaultproperties
 {
     NationName="Polish People's Army"
     NativeNationName="Ludowe Wojsko Polskie"
-    VoicePackClass=class'DH_SovietPlayers.DHPolishVoice'
-    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_USSR'
+    VoicePackClass=Class'DHPolishVoice'
+    DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_poland'
@@ -24,5 +24,5 @@ defaultproperties
     DefaultSquadNames(6)="Genowefa"
     DefaultSquadNames(7)="Henryk"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
-    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
+    SupplyTruckClass=Class'DH_GMCTruckSupport'
 }

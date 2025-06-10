@@ -32,8 +32,8 @@ defaultproperties
     CustomPitchDownLimit=64620
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellHE'
+    PrimaryProjectileClass=Class'DH_SU76CannonShell'
+    SecondaryProjectileClass=Class'DH_SU76CannonShellHE'
     ProjectileDescriptions(0)="APBC"
 
     nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
@@ -45,7 +45,7 @@ defaultproperties
     MaxSecondaryAmmo=27
     SecondarySpread=0.002
 
-    TertiaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_SU76CannonShellAPCR'
     InitialTertiaryAmmo=2
     MaxTertiaryAmmo=6
     nProjectileDescriptions(2)="BR-350P"

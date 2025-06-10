@@ -21,18 +21,18 @@ defaultproperties
     CustomPitchDownLimit=60000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    ProjectileClass=Class'DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
     FireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0 // originally zero but flash was too far out in front of the muzzle
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter' // originally used 'VehicleMGEmitterUC' but the ejected shell cases spill through the front of the vehicle
+    AmbientEffectEmitterClass=Class'DH_VehicleBrenMGEmitter' // originally used 'VehicleMGEmitterUC' but the ejected shell cases spill through the front of the vehicle
     FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

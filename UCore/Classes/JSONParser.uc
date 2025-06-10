@@ -11,7 +11,7 @@ var private StringBuffer InputBuffer;
 
 function JSONValue Parse(string S)
 {
-    InputBuffer = new class'StringBuffer';
+    InputBuffer = new Class'StringBuffer';
     InputBuffer.Write(S);
 
     return ReadValue();
@@ -82,7 +82,7 @@ function JSONLiteral ReadNull()
 {
     if (InputBuffer.Read(4) == "null")
     {
-        return class'JSONLiteral'.static.Create("null");
+        return Class'JSONLiteral'.static.Create("null");
     }
     else
     {
@@ -96,7 +96,7 @@ function JSONLiteral ReadFalse()
 {
     if (InputBuffer.Read(5) == "false")
     {
-        return class'JSONLiteral'.static.Create("false");
+        return Class'JSONLiteral'.static.Create("false");
     }
     else
     {
@@ -110,7 +110,7 @@ function JSONLiteral ReadTrue()
 {
     if (InputBuffer.Read(4) == "true")
     {
-        return class'JSONLiteral'.static.Create("true");
+        return Class'JSONLiteral'.static.Create("true");
     }
     else
     {
@@ -135,8 +135,8 @@ function JSONArray ReadArray()
         return none;
     }
 
-    A = new class'JSONArray';
-    A.Values = new class'ArrayList_JSONValue';
+    A = new Class'JSONArray';
+    A.Values = new Class'ArrayList_JSONValue';
 
     while (true)
     {
@@ -197,7 +197,7 @@ function JSONObject ReadObject()
         return none;
     }
 
-    O = new class'JSONObject';
+    O = new Class'JSONObject';
 
     if (InputBuffer.Peek(1) == "}")
     {
@@ -269,7 +269,7 @@ function JSONString ReadString()
         return none;
     }
 
-    return class'JSONString'.static.Create(S);
+    return Class'JSONString'.static.Create(S);
 }
 
 function string ReadEscape()
@@ -295,7 +295,7 @@ function string ReadEscape()
         case "t":   // Tab
             return Chr(0x09);
         case "u":   // Unicode character (eg. \u0820)
-            return Chr(class'UInteger'.static.FromHex(InputBuffer.Read(4)));
+            return Chr(Class'UInteger'.static.FromHex(InputBuffer.Read(4)));
     }
 }
 
@@ -340,7 +340,7 @@ private function SkipWhiteSpace()
 {
     while (true)
     {
-        if (class'UString'.static.IsWhitespace(InputBuffer.Peek(1)))
+        if (Class'UString'.static.IsWhitespace(InputBuffer.Peek(1)))
         {
             InputBuffer.Seekg(SEEK_Current, 1);
         }
@@ -394,7 +394,7 @@ private function JSONNumber ReadNumber()
             break;
     }
 
-    return class'JSONNumber'.static.Create(S);
+    return Class'JSONNumber'.static.Create(S);
 }
 
 private function string ReadDigits()

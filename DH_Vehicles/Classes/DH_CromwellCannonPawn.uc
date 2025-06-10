@@ -7,7 +7,7 @@ class DH_CromwellCannonPawn extends DHBritishCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_CromwellCannon'
+    GunClass=Class'DH_CromwellCannon'
     DriverPositions(0)=(ViewLocation=(X=23.0,Y=-20.0,Z=0.0),ViewFOV=28.33,ViewPitchUpLimit=3641,ViewPitchDownLimit=64500,bDrawOverlays=true)
     DriverPositions(1)=(TransitionUpAnim="com_open",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
     DriverPositions(2)=(TransitionDownAnim="com_close",DriverTransitionAnim="VT3485_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)

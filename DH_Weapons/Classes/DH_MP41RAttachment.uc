@@ -9,10 +9,10 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.MP41R_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp41r_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_MP41RBullet'
+    ClientProjectileClass=Class'DH_MP41RBullet'
 
     WA_Idle="idle_pps43"
     WA_IdleEmpty="idle_pps43"

@@ -27,9 +27,9 @@ defaultproperties
 {
     ItemName="DT-29"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_DT29Fire'
-    AttachmentClass=class'DH_Weapons.DH_DT29Attachment'
-    PickupClass=class'DH_Weapons.DH_DT29Pickup'
+    FireModeClass(0)=Class'DH_DT29Fire'
+    AttachmentClass=Class'DH_DT29Attachment'
+    PickupClass=Class'DH_DT29Pickup'
 
     Mesh=SkeletalMesh'DH_DP27_1st.DT29_1st'
     // Note - can't specify specularity shader as HighDetailOverlay as it doesn't work with the HDO system
@@ -48,7 +48,7 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=false  //makes sense because carried ammo is primarily limited by "dead weight" of the pan magazines rather than ammo itself
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_DT29Barrel'
+    BarrelClass=Class'DH_DT29Barrel'
     BarrelSteamBone="bipod"
     
     bPlusOneLoading=false

@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="MP 41"
     NativeItemName="Maschinenpistole 41"
-    FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
-    PickupClass=class'DH_Weapons.DH_MP41Pickup'
-    AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
+    FireModeClass(0)=Class'DH_MP41Fire'
+    FireModeClass(1)=Class'DH_MP41MeleeFire'
+    PickupClass=Class'DH_MP41Pickup'
+    AttachmentClass=Class'DH_MP41Attachment'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP41_S'
@@ -55,6 +55,6 @@ defaultproperties
     PutDownEmptyAnim="put_away_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 }

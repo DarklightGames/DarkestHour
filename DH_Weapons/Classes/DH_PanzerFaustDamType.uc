@@ -9,5 +9,5 @@ class DH_PanzerFaustDamType extends DHAntiTankProjectileDamageType
 defaultproperties
 {
     HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'
-    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
+    WeaponClass=Class'DH_PanzerFaustWeapon'
 }

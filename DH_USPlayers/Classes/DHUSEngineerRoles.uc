@@ -8,11 +8,11 @@ class DHUSEngineerRoles extends DHAlliedEngineerRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SpringfieldA1Weapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_M1CarbineWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_SpringfieldA1Weapon',AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
+    PrimaryWeapons(2)=(Item=Class'DH_M1GarandWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
+    Grenades(0)=(Item=Class'DH_M1GrenadeWeapon')
+    Grenades(1)=(Item=Class'DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     GivenItems(2)="DH_Equipment.DHShovelItem_US"

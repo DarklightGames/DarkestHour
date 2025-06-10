@@ -21,8 +21,8 @@ defaultproperties
     Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_JagdtigerCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_JagdtigerMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-140.0,Y=-82.5,Z=30.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-200.0,Y=-82.5,Z=30.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-200.0,Y=82.5,Z=30.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")

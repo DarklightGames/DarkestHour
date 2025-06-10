@@ -7,7 +7,7 @@ class DH_Flak88CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Flak88Cannon'
+    GunClass=Class'DH_Flak88Cannon'
     DriverPositions(0)=(ViewLocation=(X=70.0,Y=20.0,Z=5.0),ViewFOV=21.25,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',ViewPitchUpLimit=15474,ViewPitchDownLimit=64990,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)

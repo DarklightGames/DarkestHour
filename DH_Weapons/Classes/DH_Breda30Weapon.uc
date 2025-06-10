@@ -124,7 +124,7 @@ defaultproperties
     SpillBulletBones(0)="MAGAZINE_BULLET_SPILL_01"
     SpillBulletBones(1)="MAGAZINE_BULLET_SPILL_02"
 
-    BeltBulletClass=class'DH_Weapons.DH_Breda30FPAmmoRound'
+    BeltBulletClass=Class'DH_Breda30FPAmmoRound'
     MGBeltBones(0)="MAGAZINE_BULLET_01"
     MGBeltBones(1)="MAGAZINE_BULLET_02"
     MGBeltBones(2)="MAGAZINE_BULLET_03"
@@ -148,9 +148,9 @@ defaultproperties
 
     ItemName="Breda mod. 30"
     TeamIndex=0 // TODO: weapons "belonging" to teams is a flawed concept with the introduction of the Italians.
-    FireModeClass(0)=class'DH_Weapons.DH_Breda30Fire'
-    AttachmentClass=class'DH_Weapons.DH_Breda30Attachment'
-    PickupClass=class'DH_Weapons.DH_Breda30Pickup'
+    FireModeClass(0)=Class'DH_Breda30Fire'
+    AttachmentClass=Class'DH_Breda30Attachment'
+    PickupClass=Class'DH_Breda30Pickup'
 
     Mesh=SkeletalMesh'DH_Breda30_anm.Breda30_1st'
     bUseHighDetailOverlayIndex=false
@@ -164,7 +164,7 @@ defaultproperties
 
     bHasSpareBarrel=true
     InitialBarrels=3    // The backpack has slots on the side for two spare barrels.
-    BarrelClass=class'DH_Weapons.DH_Breda30Barrel'
+    BarrelClass=Class'DH_Breda30Barrel'
     BarrelSteamBone="muzzle"
     BarrelChangeAnim="barrel_change"
 

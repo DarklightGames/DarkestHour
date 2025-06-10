@@ -36,8 +36,8 @@ defaultproperties
     CustomPitchDownLimit=64079
 
     // Cannon ammo=
-    PrimaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShellHE'
+    PrimaryProjectileClass=Class'DH_BT7CannonShell'
+    SecondaryProjectileClass=Class'DH_BT7CannonShellHE'
 
     ProjectileDescriptions(0)="APHE-T"
     ProjectileDescriptions(1)="HE"
@@ -55,7 +55,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=8.0
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
+    EffectEmitterClass=Class'TankCannonFireEffectTypeC' // smaller muzzle flash effect
     AltFireOffset=(X=-78.0,Y=7.75,Z=0.0)
 
     // Cannon range settings
@@ -67,11 +67,11 @@ defaultproperties
     RangeSettings(5)=2500
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    AltFireProjectileClass=Class'DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

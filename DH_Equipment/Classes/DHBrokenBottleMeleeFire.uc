@@ -32,7 +32,7 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 
 defaultproperties
 {
-    DamageType=class'DH_Equipment.DHTrenchMaceBashDamageType'
+    DamageType=Class'DHTrenchMaceBashDamageType'
     DamageMin=150
     DamageMax=300
     TraceRange=120.0

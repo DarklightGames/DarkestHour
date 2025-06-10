@@ -8,6 +8,6 @@ class DH_RedSmokeDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Equipment.DH_RedSmokeWeapon'
+    WeaponClass=Class'DH_RedSmokeWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
 }

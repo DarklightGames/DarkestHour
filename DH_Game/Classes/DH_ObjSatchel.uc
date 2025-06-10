@@ -116,7 +116,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 
-    BroadcastLocalizedMessage(class'ROObjectiveMsg', Team + 2, none, none, self);
+    BroadcastLocalizedMessage(Class'ROObjectiveMsg', Team + 2, none, none, self);
 }
 
 defaultproperties

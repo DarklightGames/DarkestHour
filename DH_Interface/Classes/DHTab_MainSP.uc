@@ -21,7 +21,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     if (lb_Maps != none)
     {
@@ -63,7 +63,7 @@ function InitGameType() // TODO: this is being called twice in single player (cu
     local array<CacheManager.GameRecord> Games;
     local bool bReloadMaps;
 
-    class'CacheManager'.static.GetGameTypeList(Games);
+    Class'CacheManager'.static.GetGameTypeList(Games);
 
     for (i = 0; i < Games.Length; ++i)
     {
@@ -122,7 +122,7 @@ function MapListChange(GUIComponent Sender)
             EnableComponent(p_Anchor.b_Secondary);
         }
 
-        class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
+        Class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
 
         LastSelectedMap = Item.FullURL;
         SaveConfig();
@@ -156,7 +156,7 @@ function InitDifficulty()
     local array<string> splits;
     local int           i, count;
 
-    props = class'DH_Engine.DarkestHourGame'.static.GetPropsExtra(0);
+    props = Class'DarkestHourGame'.static.GetPropsExtra(0);
     count = Split(props, ";", splits);
 
     if (count <= 0 || count % 2 != 0)
@@ -178,7 +178,7 @@ function UpdateCurrentGameDifficulty()
     local float currentDifficulty;
     local int   i;
 
-    currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
+    currentDifficulty = Class'DarkestHourGame'.default.GameDifficulty;
 
     for (i = 0; i < Difficulties.Length; ++i)
     {
@@ -197,8 +197,8 @@ function OnNewDifficultySelect(GUIComponent Sender)
 {
     if (Sender == co_Difficulty)
     {
-        class'DH_Engine.DarkestHourGame'.default.GameDifficulty = Difficulties[co_Difficulty.GetIndex()];
-        class'DH_Engine.DarkestHourGame'.static.StaticSaveConfig();
+        Class'DarkestHourGame'.default.GameDifficulty = Difficulties[co_Difficulty.GetIndex()];
+        Class'DarkestHourGame'.static.StaticSaveConfig();
         OnChangeDifficulty(co_Difficulty.GetIndex());
     }
 }
@@ -259,7 +259,7 @@ function ReadMapInfo(string MapName)
 
 	lb_MapDesc.SetContent( mDesc );
 
-    if (CacheMaps[Index].Author != "" && !class'CacheManager'.static.IsDefaultContent(CacheMaps[Index].MapName))
+    if (CacheMaps[Index].Author != "" && !Class'CacheManager'.static.IsDefaultContent(CacheMaps[Index].MapName))
     {
         l_MapAuthor.Caption = Repl(MapAuthorText, "{author}", CacheMaps[Index].Author);
     }

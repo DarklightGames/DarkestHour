@@ -8,7 +8,7 @@ class DH_RPG43GrenadeDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_RPG43GrenadeWeapon'
+    WeaponClass=Class'DH_RPG43GrenadeWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
 
     VehicleDamageModifier=1.0

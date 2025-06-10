@@ -33,7 +33,7 @@ function bool InternalOnPostDraw(Canvas C)
 
     const GRID_COUNT = 9;
 
-    C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+    C.Font = Class'DHHud'.static.GetSmallerMenuFont(C);
     C.SetDrawColor(255, 255, 255, 255);
 
     // Draw horizontal grid lines

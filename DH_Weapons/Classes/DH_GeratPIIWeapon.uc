@@ -8,10 +8,10 @@ class DH_GeratPIIWeapon extends DHAutoWeapon;  //a meme weapon
 defaultproperties
 {
     ItemName="Gerat Potsdam II"
-    FireModeClass(0)=class'DH_Weapons.DH_GeratPIIFire'
-    FireModeClass(1)=class'DH_Weapons.DH_GeratPIIMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_GeratPIIAttachment'
-    PickupClass=class'DH_Weapons.DH_GeratPIIPickup'
+    FireModeClass(0)=Class'DH_GeratPIIFire'
+    FireModeClass(1)=Class'DH_GeratPIIMeleeFire'
+    AttachmentClass=Class'DH_GeratPIIAttachment'
+    PickupClass=Class'DH_GeratPIIPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.GeratPII_mesh'
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
@@ -33,7 +33,7 @@ defaultproperties
     InitialNumPrimaryMags=6
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GeratPIIBarrel'
+    BarrelClass=Class'DH_GeratPIIBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

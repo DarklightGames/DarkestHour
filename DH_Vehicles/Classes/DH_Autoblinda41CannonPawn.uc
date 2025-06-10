@@ -7,7 +7,7 @@ class DH_Autoblinda41CannonPawn extends DHVehicleCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Autoblinda41Cannon'
+    GunClass=Class'DH_Autoblinda41Cannon'
     
     // Gunsight
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=24.0,TransitionUpAnim="gunsight_out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

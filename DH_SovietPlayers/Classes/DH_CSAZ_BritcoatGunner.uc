@@ -7,10 +7,10 @@ class DH_CSAZ_BritcoatGunner extends DHCSMachineGunnerRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_CSAZbritcoatBritpackPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_CSAZSidecap'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
+    RolePawns(0)=(PawnClass=Class'DH_CSAZbritcoatBritpackPawn',Weight=1.0)
+    Headgear(0)=Class'DH_CSAZSidecap'
+    Headgear(1)=Class'DH_BritishTommyHelmet'
+    Headgear(2)=Class'DH_SovietHelmet'
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
     HandType=Hand_Gloved
     
@@ -18,5 +18,5 @@ defaultproperties
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.1
     
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_DP27LateWeapon')
 }

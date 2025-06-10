@@ -7,7 +7,7 @@ class DH_RKKF_TeloGunner extends DHSOVMachineGunnerRoles; //wears helmet and no 
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietMarinePaddedPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    RolePawns(0)=(PawnClass=Class'DH_SovietMarinePaddedPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietHelmet'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
 }

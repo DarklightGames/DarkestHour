@@ -125,7 +125,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     if (MembersListContextMenuWrapper == none)
     {
-        MembersListContextMenuWrapper = new class'DHContextMenu_SquadMembers';
+        MembersListContextMenuWrapper = new Class'DHContextMenu_SquadMembers';
     }
 
     if (MembersListContextMenuWrapper == none)

@@ -9,13 +9,13 @@ defaultproperties
 {
     bWaitForRelease=true // set to semi-auto by default
 
-    ProjectileClass=class'DH_Weapons.DH_M1T17CarbineBullet'
-    AmmoClass=class'DH_Weapons.DH_M1T17CarbineAmmo'
+    ProjectileClass=Class'DH_M1T17CarbineBullet'
+    AmmoClass=Class'DH_M1T17CarbineAmmo'
     Spread=75.0
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    ShellEjectClass=Class'ShellEject1st556mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 
     MuzzleBone="MuzzleNew2"

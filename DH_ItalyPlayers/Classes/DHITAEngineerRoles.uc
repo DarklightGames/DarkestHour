@@ -10,10 +10,10 @@ defaultproperties
 {
     AltName="Guastatori"
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_CarcanoM91Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM91Weapon')
 
-    Grenades(0)=(Item=class'DH_Weapons.DH_LTypeGrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon')
+    Grenades(0)=(Item=Class'DH_LTypeGrenadeWeapon')
+    Grenades(1)=(Item=Class'DH_SRCMMod35SmokeGrenadeWeapon')
 
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
@@ -24,16 +24,16 @@ defaultproperties
     SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
     GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace
 
-    Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'
-    Headgear(1)=class'DH_ItalyPlayers.DH_ItalianHelmet_Livorno'
-    Headgear(2)=class'DH_ItalyPlayers.DH_ItalianHelmet_Adrian'
-    Headgear(3)=class'DH_ItalyPlayers.DH_ItalianHelmet_AdrianTwo'
+    Headgear(0)=Class'DH_ItalianHelmet'
+    Headgear(1)=Class'DH_ItalianHelmet_Livorno'
+    Headgear(2)=Class'DH_ItalianHelmet_Adrian'
+    Headgear(3)=Class'DH_ItalianHelmet_AdrianTwo'
 
     HeadgearProbabilities(0)=0.4
     HeadgearProbabilities(1)=0.5
     HeadgearProbabilities(2)=0.05
     HeadgearProbabilities(3)=0.05
 
-    DetachedArmClass=class'DH_ItalyPlayers.DHSeveredArm_ItalianLivorno'
-    DetachedLegClass=class'DH_ItalyPlayers.DHSeveredLeg_ItalianLivorno'
+    DetachedArmClass=Class'DHSeveredArm_ItalianLivorno'
+    DetachedLegClass=Class'DHSeveredLeg_ItalianLivorno'
 }

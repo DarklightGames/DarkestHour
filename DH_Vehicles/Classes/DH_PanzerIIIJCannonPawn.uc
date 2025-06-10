@@ -8,7 +8,7 @@ class DH_PanzerIIIJCannonPawn extends DHGermanCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_PanzerIIIJCannon'
+    GunClass=Class'DH_PanzerIIIJCannon'
 
     //Driver's positions and anims
     DriverPositions(0)=(ViewLocation=(X=10.0,Y=-22.0,Z=1.5),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

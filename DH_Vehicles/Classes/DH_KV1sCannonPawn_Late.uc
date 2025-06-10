@@ -7,7 +7,7 @@ class DH_KV1sCannonPawn_Late extends DHSovietCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_KV1sCannon_Late'
+    GunClass=Class'DH_KV1sCannon_Late'
     DriverPositions(0)=(ViewLocation=(X=24.0,Y=-13.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=49.0,Y=-4.0,Z=5.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_ext',ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //

@@ -7,6 +7,6 @@ class DH_CanadianBrunswicksPawn extends DH_BritishPawn;
 
 defaultproperties
 {
-    Species=class'DH_BritishPlayers.DH_Canadian'
+    Species=Class'DH_Canadian'
     Skins(0)=Texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks'
 }

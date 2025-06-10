@@ -8,6 +8,6 @@ class DH_MillsBombDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MillsBombWeapon'
+    WeaponClass=Class'DH_MillsBombWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
 }

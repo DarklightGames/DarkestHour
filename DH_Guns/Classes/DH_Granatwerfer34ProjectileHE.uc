@@ -15,7 +15,7 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=4.0
 
-    ImpactEffect=class'DH_Effects.DHMortarHitEffect81mm'
+    ImpactEffect=Class'DHMortarHitEffect81mm'
 
     StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.DE_HE_WGR38'
     Skins(0)=Texture'DH_Model35Mortar_tex.8cm_shell_he'

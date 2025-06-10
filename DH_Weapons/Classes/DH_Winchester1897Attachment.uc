@@ -27,9 +27,9 @@ defaultproperties
     Skins(0)=Texture'DH_Winchester1897_tex.Winchester.Winchester1897_3rdP'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
     MuzzleBoneName="muzzle"
-    ROShellCaseClass=class'DH_Weapons.DH_3rdShellEjectShotgun'
+    ROShellCaseClass=Class'DH_3rdShellEjectShotgun'
     ShellEjectionBoneName="ejector"
     bAnimNotifiedShellEjects=true // 'Pump_action' animation includes an anim notify to spawn an ejected shell that other players see
     bRapidFire=false

@@ -14,9 +14,9 @@ defaultproperties
     ManualRotationsPerSecond=0.025
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"

@@ -8,10 +8,10 @@ class DH_USSmokeGrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="M8 Smoke Grenade"
-    FireModeClass(0)=class'DH_Equipment.DH_USSmokeGrenadeFire'
-    FireModeClass(1)=class'DH_Equipment.DH_USSmokeGrenadeTossFire'
-    PickupClass=class'DH_Equipment.DH_USSmokeGrenadePickup'
-    AttachmentClass=class'DH_Equipment.DH_USSmokeGrenadeAttachment'
+    FireModeClass(0)=Class'DH_USSmokeGrenadeFire'
+    FireModeClass(1)=Class'DH_USSmokeGrenadeTossFire'
+    PickupClass=Class'DH_USSmokeGrenadePickup'
+    AttachmentClass=Class'DH_USSmokeGrenadeAttachment'
     Mesh=SkeletalMesh'DH_M8Grenade_1st.M8'
 
     HandNum=0

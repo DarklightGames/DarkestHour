@@ -8,7 +8,7 @@ class DH_T3476_42CannonPawn extends DHSovietCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_T3476_42Cannon'
+    GunClass=Class'DH_T3476_42Cannon'
 
     //Driver's positions and anims
     DriverPositions(0)=(ViewLocation=(X=20.0,Y=-11.5,Z=8.5),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext',DriverTransitionAnim="stand_idlehip_binoc",bDrawOverlays=true)

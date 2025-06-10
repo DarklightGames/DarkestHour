@@ -7,7 +7,7 @@ class DH_PlaceableF1GrenadePickup extends DHPlaceableWeaponPickup;
 
 defaultproperties
 {
-    WeaponType=class'DH_Weapons.DH_F1GrenadeWeapon'
-    InventoryType=class'DH_Weapons.DH_F1GrenadeWeapon'
+    WeaponType=Class'DH_F1GrenadeWeapon'
+    InventoryType=Class'DH_F1GrenadeWeapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
 }

@@ -8,7 +8,7 @@ class DH_MP41RDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MP41RWeapon'
+    WeaponClass=Class'DH_MP41RWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

@@ -94,6 +94,6 @@ defaultproperties
 
     StaticMesh=StaticMesh'DH_Construction_stc.Artillery.GER_Artillery_Radio'
 
-    RadioClass=Class'DH_Engine.DHRadio'
+    RadioClass=Class'DHRadio'
     RadioOffset=(Y=-10,Z=64)
 }

@@ -9,8 +9,8 @@ function InitComponent(GUIController InController, GUIComponent InOwner)
 {
     super.InitComponent(InController, InOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
-    RuleInfo = new(none) class'Engine.PlayInfo';
+    Class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
+    RuleInfo = new(none) Class'PlayInfo';
     c_Tabs.RemoveTab(PanelCaption[0]);
     c_Tabs.RemoveTab(PanelCaption[4]);
     mcRules = DHIAMultiColumnRulesPanel(c_Tabs.ReplaceTab(c_Tabs.TabStack[1], PanelCaption[2], "DH_Interface.DHIAMultiColumnRulesPanel",, PanelHint[2]));

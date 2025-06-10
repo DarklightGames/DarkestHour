@@ -245,7 +245,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
             ST = EST_Default;
         }
 
-        Spawn(class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), Rotator(HitNormal));
+        Spawn(Class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), Rotator(HitNormal));
 
         if (ST == EST_Snow || ST == EST_Ice)
         {
@@ -278,7 +278,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
     // Move karma ragdolls around when this explodes
     Start = Location + vect(0.0, 0.0, 32.0);
 
-    foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
+    foreach VisibleCollidingActors(Class'ROPawn', Victims, DamageRadius, Start)
     {
         if (Victims != self && Victims.Physics == PHYS_KarmaRagDoll)
         {
@@ -319,7 +319,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -513,7 +513,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -615,7 +615,7 @@ defaultproperties
 
     Damage=500
     DamageRadius=1000.0
-    MyDamageType=class'DHArtillery105DamageType'
+    MyDamageType=Class'DHArtillery105DamageType'
     MomentumTransfer=75000.0
 
     DrawType=DT_None // was DT_StaticMesh in RO, but was then set to DT_None in PostBeginPlay - now we simply start with None & switch to SM when we drop the projectile
@@ -637,12 +637,12 @@ defaultproperties
     ExplosionSound(3)=Sound'Artillery.explosions.explo04'
     TransientSoundVolume=1.0
 
-    ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
-    ShellHitDirtEffectLowClass=class'ROArtilleryDirtEmitter_simple'
-    ShellHitSnowEffectLowClass=class'ROArtillerySnowEmitter_simple'
-    ExplosionDecal=class'ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ArtilleryMarkSnow'
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitDirtEffectLowClass=Class'ROArtilleryDirtEmitter_simple'
+    ShellHitSnowEffectLowClass=Class'ROArtillerySnowEmitter_simple'
+    ExplosionDecal=Class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=Class'ArtilleryMarkSnow'
 
     ShakeRotMag=(X=0.0,Y=0.0,Z=200.0)
     ShakeRotRate=(X=0.0,Y=0.0,Z=2500.0)

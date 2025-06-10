@@ -7,9 +7,9 @@ class DH_MG42Fire extends DHMGAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
-    AmmoClass=class'DH_Weapons.DH_MG42Ammo'
+    ProjectileClass=Class'DH_MG42Bullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
+    AmmoClass=Class'DH_MG42Ammo'
     FireRate=0.055 // ~1250 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=7
     Spread=90.0
@@ -25,7 +25,7 @@ defaultproperties
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-6.0)
     ShellRotOffsetIron=(Pitch=-1500)
 

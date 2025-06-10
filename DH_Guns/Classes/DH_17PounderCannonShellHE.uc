@@ -14,11 +14,11 @@ defaultproperties
 
     //Damage
     ImpactDamage=500
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     PenetrationMag=800.0
     Damage=300.0   //580 gramms TNT
     DamageRadius=880.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    MyDamageType=Class'DHShellHE75mmATDamageType'
     HullFireChance=0.8
     EngineFireChance=0.8
 

@@ -19,7 +19,7 @@ defaultproperties
 
     //Effects
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    CoronaClass=Class'DHShellTracer_Orange'
 
     //Penetration
     DHPenetrationTable(0)=8.7

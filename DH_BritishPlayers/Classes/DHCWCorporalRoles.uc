@@ -10,19 +10,19 @@ defaultproperties
 {
     MyName="Lance Corporal"
     AltName="Lance Corporal"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_EnfieldNo4Weapon')
+    PrimaryWeapons(1)=(Item=Class'DH_StenMkIIWeapon')
+    PrimaryWeapons(2)=(Item=Class'DH_StenMkIIIWeapon')
 
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
+    Grenades(0)=(Item=Class'DH_MillsBombWeapon')
+    Grenades(1)=(Item=Class'DH_USSmokeGrenadeWeapon')
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
     HeadgearProbabilities(0)=0.1
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.8
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
+    Headgear(0)=Class'DH_BritishTurtleHelmet'
+    Headgear(1)=Class'DH_BritishTurtleHelmetNet'
+    Headgear(2)=Class'DH_BritishTommyHelmet'
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
 }

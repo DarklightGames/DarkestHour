@@ -8,10 +8,10 @@ class DH_WitchEnder666DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_WitchEnder666Weapon'
+    WeaponClass=Class'DH_WitchEnder666Weapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     KDamageImpulse=2500.0
     GibModifier=4.0
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     
 }

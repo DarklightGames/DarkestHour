@@ -8,7 +8,7 @@ class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_Flak38Cannon'
+    GunClass=Class'DH_Flak38Cannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=0.0,Z=0.0),ViewFOV=25.0,PositionMesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret',TransitionUpAnim="optic_out",bDrawOverlays=true,bExposed=true)

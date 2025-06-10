@@ -40,8 +40,8 @@ defaultproperties
     CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Semovente9053CannonShell'
+    SecondaryProjectileClass=Class'DH_Semovente9053CannonShellHE'
     TertiaryProjectileClass=none
 
     nProjectileDescriptions(0)="Granata Perforante da 90"
@@ -115,7 +115,7 @@ defaultproperties
     ShakeRotTime=7.0
 
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_Italy.rf1ca_radio',RelativeLocation=(X=-42.1971,Y=-54.814,Z=37.2554),RelativeRotation=(Yaw=-16384))
-    VehicleAttachments(1)=(AttachClass=class'DH_Engine.DHRadio',AttachBone="RADIO_ATTACHMENT",RadioCollisionRadius=16.0,RadioCollisionHeight=10.0,bServerOnly=true)
+    VehicleAttachments(1)=(AttachClass=Class'DHRadio',AttachBone="RADIO_ATTACHMENT",RadioCollisionRadius=16.0,RadioCollisionHeight=10.0,bServerOnly=true)
 
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_turret_collision')
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_gun_collision',AttachBone="GUN_PITCH")

@@ -7,10 +7,10 @@ class DH_WSSGreatcoatMarksman extends DHGEMarksmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatSSPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_GermanGreatCoatSSPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
-    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
-    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
+    DetachedArmClass=Class'SeveredArmGerGreat'
+    DetachedLegClass=Class'SeveredLegGerGreat'
+    Headgear(0)=Class'DH_SSHelmetOne'
+    Headgear(1)=Class'DH_SSHelmetTwo'
 }

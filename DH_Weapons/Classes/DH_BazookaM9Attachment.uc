@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Bazooka_3rd.M9A1Bazooka_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.bazooka_m9a1_icon'
-    mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
-    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
+    mExhFlashClass=Class'DH3rdPersonBazookaExhaustFX'
+    mMuzFlashClass=Class'DHMuzzleFlash3rdBazooka'
     ExhaustBoneName="exhaust"
     MuzzleBoneName="Muzzle"
     WarheadBoneName="Warhead"

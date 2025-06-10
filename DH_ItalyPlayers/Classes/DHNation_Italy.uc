@@ -9,9 +9,9 @@ defaultproperties
 {
     NationName="Kingdom of Italy"
     NativeNationName="Regno d'Italia"
-    VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
+    VoicePackClass=Class'DHItalyVoice'
     
-    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Italy'
+    DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_Italy'
 
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.ITA_backpack_established'
@@ -31,5 +31,5 @@ defaultproperties
     DefaultSquadNames(7)="Acca"
 
     RoundStartSound=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
-    SupplyTruckClass=class'DH_Vehicles.DH_Fiat626TruckSupport'
+    SupplyTruckClass=Class'DH_Fiat626TruckSupport'
 }

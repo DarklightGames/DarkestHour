@@ -11,8 +11,8 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.ZB30'
     //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
     
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="tip"
     ShellEjectionBoneName="weapon_eject"
 

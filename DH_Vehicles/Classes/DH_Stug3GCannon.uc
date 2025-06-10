@@ -29,9 +29,9 @@ defaultproperties
     CustomPitchDownLimit=64444
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_Stug3GCannonShell'
+    SecondaryProjectileClass=Class'DH_Stug3GCannonShellHE'
+    TertiaryProjectileClass=Class'DH_Stug3GCannonShellSmoke'
 
     ProjectileDescriptions(2)="Smoke"
 
@@ -49,11 +49,11 @@ defaultproperties
     TertiarySpread=0.00357
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=4
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

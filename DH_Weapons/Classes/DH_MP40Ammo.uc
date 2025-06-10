@@ -11,7 +11,7 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.HUD.mg40_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 
-    //PickupClass=class'MP32Rd9x19AmmoPickup'
+    //PickupClass=Class'MP32Rd9x19AmmoPickup'
     MaxAmmo=32
     InitialAmount=32
 }

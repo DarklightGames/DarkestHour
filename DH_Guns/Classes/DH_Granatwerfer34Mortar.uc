@@ -15,7 +15,7 @@ defaultproperties
     Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
     CannonSkins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
 
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Granatwerfer34CannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Granatwerfer34CannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0
     // Reversed because the gunner uses index 1.

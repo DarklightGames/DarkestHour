@@ -438,7 +438,7 @@ simulated function float GetViewFOV(int PositionIndex)
         return PlayerController(Controller).DefaultFOV;
     }
 
-    return class'DHPlayer'.default.DefaultFOV;
+    return Class'DHPlayer'.default.DefaultFOV;
 }
 
 // Modified so when player possesses a weapon pawn, he never starts in behind view (used in PC's Possess/Restart functions)
@@ -658,7 +658,7 @@ function bool TryToDrive(Pawn P)
     if (bMustBeTankCrew)
     {
         // Deny entry to a tank crew position if player isn't a tank crew role
-        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
+        if (!Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
             return false;
@@ -790,7 +790,7 @@ function KDriverEnter(Pawn P)
 
     if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length) // record whether player has binoculars
     {
-        BinocularsItem = DHProjectileWeapon(P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))));
+        BinocularsItem = DHProjectileWeapon(P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", Class'class'))));
 
         if (BinocularsItem != none)
         {
@@ -846,7 +846,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
         //
         // HACK: CurrentAim is used because it's known and readily available, but it slightly differs (within 8 units) from LocalWeaponAim.
         // This makes LocalWeaponAim drift every time it's reset, so we only reset it when it's not current.
-        if (Gun != none && !class'URotator'.static.IsClose(LocalWeaponAim, Gun.CurrentAim, 8))
+        if (Gun != none && !Class'URotator'.static.IsClose(LocalWeaponAim, Gun.CurrentAim, 8))
         {
             LocalWeaponAim = Normalize(Gun.CurrentAim);
         }
@@ -1348,7 +1348,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         NewVehiclePosition = VehicleBase;
         bMustBeTankerToSwitch = VehicleBase.bMustBeTankCommander;
 
-        if (DHVehicle(VehicleBase).default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(Self.Controller)) && IsHumanControlled())
+        if (DHVehicle(VehicleBase).default.bRequiresDriverLicense && !Class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(Self.Controller)) && IsHumanControlled())
         {
             DisplayVehicleMessage(0); // not qualified to operate vehicle
             return false;
@@ -1382,7 +1382,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     if (bMustBeTankerToSwitch)
     {
         // Can't switch if player has selected a tank crew position but isn't a tank crew role
-        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
+        if (!Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
         {
             DisplayVehicleMessage(0); // not qualified to operate vehicle
             return false;
@@ -1846,7 +1846,7 @@ function Died(Controller Killer, class<DamageType> damageType, Vector HitLocatio
                 }
 
                 Driver.SetTearOffMomemtum(Velocity * 0.25);
-                Driver.Died(Controller, class'RODiedInTankDamType', Driver.Location);
+                Driver.Died(Controller, Class'RODiedInTankDamType', Driver.Location);
             }
             else
             {
@@ -2328,11 +2328,11 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 
     if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
     {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
+        P.ReceiveLocalizedMessage(Class'DHVehicleMessage', MessageNumber,,, Controller);
     }
     else
     {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
+        P.ReceiveLocalizedMessage(Class'DHVehicleMessage', MessageNumber);
     }
 }
 
@@ -2346,7 +2346,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
         {
             if (BinocsAttachment == none)
             {
-                BinocsAttachment = Spawn(class'DHDecoAttachment');
+                BinocsAttachment = Spawn(Class'DHDecoAttachment');
                 BinocsAttachment.SetDrawType(DT_Mesh);
                 BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger'); // TODO: questionable hardcoding of the asset!
             }
@@ -2409,7 +2409,7 @@ exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "acces
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Gets the mesh to use for the base vehicle. Used for when we want to display the high-poly interior

@@ -10,8 +10,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'
     MenuImage=Texture'DH_Bren_tex.interface.bren_icon'
     
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="tip"
     ShellEjectionBoneName="weapon_eject"
 

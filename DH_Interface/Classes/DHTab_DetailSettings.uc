@@ -114,13 +114,13 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     switch (Sender)
     {
         case co_GlobalDetails:
-            iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
+            iGlobalDetails = Class'ROPlayer'.default.GlobalDetailLevel;
             iGlobalDetailsD = iGlobalDetails;
             co_GlobalDetails.SilentSetIndex(iGlobalDetails);
             break;
 
         case co_ScopeDetail:
-            switch (class'DHWeapon'.default.ScopeDetail)
+            switch (Class'DHWeapon'.default.ScopeDetail)
             {
                 case RO_ModelScope:
                     iScopeDetail = 0;
@@ -212,7 +212,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case sl_CorpseStayTime:
-            CorpseStayNum = class'DHPlayer'.default.CorpseStayTime;
+            CorpseStayNum = Class'DHPlayer'.default.CorpseStayTime;
             sl_CorpseStayTime.SetComponentValue(CorpseStayNum, true);
             break;
 
@@ -234,7 +234,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     switch (Sender)
     {
         case co_Decal:
-            switch (class'LevelInfo'.default.DecalStayScale)
+            switch (Class'LevelInfo'.default.DecalStayScale)
             {
                 case 0.0:
                     iDecal = 0;
@@ -692,7 +692,7 @@ function SaveSettings()
 
     if (bMotionBlur != bMotionBlurD)
     {
-        class'ROEngine.ROPlayer'.default.bUseBlurEffect = bMotionBlur;
+        Class'ROPlayer'.default.bUseBlurEffect = bMotionBlur;
         bSavePlayerConfig = true;
 
         if (ROPlayer(PC) != none)
@@ -717,19 +717,19 @@ function SaveSettings()
 
     if (iGlobalDetails != iGlobalDetailsD)
     {
-        class'ROEngine.ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
+        Class'ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
         bSavePlayerConfig = true;
         iGlobalDetailsD = iGlobalDetails;
     }
 
     if (iScopeDetail != iScopeDetailD)
     {
-        class'DH_Engine.DHWeapon'.default.ScopeDetail = ScopeDetailSettings(iScopeDetail);
-        class'DH_Engine.DHWeapon'.static.StaticSaveConfig();
+        Class'DHWeapon'.default.ScopeDetail = ScopeDetailSettings(iScopeDetail);
+        Class'DHWeapon'.static.StaticSaveConfig();
 
         if (PC.Pawn != none && PC.Pawn.Weapon != none && DHWeapon(PC.Pawn.Weapon) != none)
         {
-            DHWeapon(PC.Pawn.Weapon).ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
+            DHWeapon(PC.Pawn.Weapon).ScopeDetail = Class'DHWeapon'.default.ScopeDetail;
             DHWeapon(PC.Pawn.Weapon).AdjustIngameScope();
         }
 
@@ -744,8 +744,8 @@ function SaveSettings()
             ROPawn(PC.Pawn).bPlayerShadows = iShadow > 0;
         }
 
-        class'ROPawn'.default.bBlobShadow = iShadow == 1;
-        class'ROPawn'.default.bPlayerShadows = iShadow > 0;
+        Class'ROPawn'.default.bBlobShadow = iShadow == 1;
+        Class'ROPawn'.default.bPlayerShadows = iShadow > 0;
         iShadowD = iShadow;
 
         if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
@@ -754,16 +754,16 @@ function SaveSettings()
         }
         else
         {
-            class'ROPawn'.static.StaticSaveConfig();
+            Class'ROPawn'.static.StaticSaveConfig();
         }
 
         UpdateShadows(iShadow == 1, iShadow > 0);
     }
 
-    if (class'Vehicle'.default.bVehicleShadows != iShadow > 0)
+    if (Class'Vehicle'.default.bVehicleShadows != iShadow > 0)
     {
-        class'Vehicle'.default.bVehicleShadows = iShadow > 0;
-        class'Vehicle'.static.StaticSaveConfig();
+        Class'Vehicle'.default.bVehicleShadows = iShadow > 0;
+        Class'Vehicle'.static.StaticSaveConfig();
         UpdateVehicleShadows(iShadow > 0);
     }
 
@@ -805,7 +805,7 @@ function SaveSettings()
 
     if (bSavePlayerConfig)
     {
-       class'ROEngine.ROPlayer'.static.StaticSaveConfig();
+       Class'ROPlayer'.static.StaticSaveConfig();
     }
 }
 

@@ -8,7 +8,7 @@ class DH_PPSH41_stickDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PPSH41_stickWeapon'
+    WeaponClass=Class'DH_PPSH41_stickWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

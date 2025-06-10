@@ -21,8 +21,8 @@ defaultproperties
     Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_body_int'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-109.0,Y=-79.5,Z=41.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-168.0,Y=-79.5,Z=41.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-168.0,Y=77.0,Z=41.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")

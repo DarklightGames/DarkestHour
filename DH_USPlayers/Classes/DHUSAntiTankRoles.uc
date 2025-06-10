@@ -8,9 +8,9 @@ class DHUSAntiTankRoles extends DHAlliedAntiTankRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_M1CarbineWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_M1GarandWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
+    Grenades(0)=(Item=Class'DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_BazookaWeapon"
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"

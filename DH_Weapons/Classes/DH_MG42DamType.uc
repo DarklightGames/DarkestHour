@@ -8,6 +8,6 @@ class DH_MG42DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MG42Weapon'
+    WeaponClass=Class'DH_MG42Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

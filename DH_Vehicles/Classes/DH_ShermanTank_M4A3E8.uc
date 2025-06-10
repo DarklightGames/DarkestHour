@@ -44,23 +44,23 @@ simulated function CreateAttachments()
     if (Role == ROLE_Authority)
     {
         // Left logs
-        LogsLeft = Spawn(class'DHDestroyableStaticMesh', self);
+        LogsLeft = Spawn(Class'DHDestroyableStaticMesh', self);
 
         if (LogsLeft != none)
         {
-            LogsLeft.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsLeftEmitter';
+            LogsLeft.DestroyedEmitterClass = Class'DHFuryLogsLeftEmitter';
             LogsLeft.SetStaticMesh(LogsLeftStaticMesh);
             AttachToBone(LogsLeft, 'body');
             Attachments[Attachments.Length] = LogsLeft;
         }
 
         // Right logs
-        LogsRight = Spawn(class'DHDestroyableStaticMesh', self);
+        LogsRight = Spawn(Class'DHDestroyableStaticMesh', self);
 
         if (LogsRight != none)
         {
             LogsRight.SetStaticMesh(LogsRightStaticMesh);
-            LogsRight.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsRightEmitter';
+            LogsRight.DestroyedEmitterClass = Class'DHFuryLogsRightEmitter';
             AttachToBone(LogsRight, 'body');
             Attachments[Attachments.Length] = LogsRight;
         }
@@ -104,8 +104,8 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_rot'
     SpawnOverlay(0)=Texture'DH_ShermanM4A3E8_tex.Menu.sherman_m4a3e8'
 
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E8')
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A3E8')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn_M4A3E8')
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_ShermanMountedMGPawn_M4A3E8')
 
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-5500)

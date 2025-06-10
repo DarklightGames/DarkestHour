@@ -40,7 +40,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ISU152Cannon'
+    GunClass=Class'DH_ISU152Cannon'
     DriverPositions(0)=(ViewFOV=42.5,ViewLocation=(X=30.0,Y=-10.5,Z=8.0),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=85.0,ViewLocation=(X=7.0,Y=0.0,Z=11.5),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',ViewPitchDownLimit=65536,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(ViewFOV=17.0,ViewLocation=(X=7.0,Y=0.0,Z=11.5),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',TransitionUpAnim="com_open",ViewPitchDownLimit=65536,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)

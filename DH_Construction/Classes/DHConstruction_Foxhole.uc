@@ -43,7 +43,7 @@ simulated function OnConstructed()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        DirtProjector = Spawn(class'DynamicProjector', self);
+        DirtProjector = Spawn(Class'DynamicProjector', self);
 
         if (DirtProjector != none)
         {
@@ -83,7 +83,7 @@ static function float GetTerrainScale(TerrainInfo TI)
 {
     if (TI != none)
     {
-        return class'UVector'.static.MaxElement(TI.TerrainScale);
+        return Class'UVector'.static.MaxElement(TI.TerrainScale);
     }
 
     return 0.0;
@@ -180,6 +180,6 @@ defaultproperties
     ConstructionVerb="dig"
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
-    GroupClass=class'DHConstructionGroup_Defenses'
+    GroupClass=Class'DHConstructionGroup_Defenses'
     DirtProjectorMaterial=Material'DH_Construction_tex.Foxholes.foxhole_01_projector'
 }

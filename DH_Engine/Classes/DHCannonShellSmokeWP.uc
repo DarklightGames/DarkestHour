@@ -21,7 +21,7 @@ simulated function HandleDestruction()
     if (Role == ROLE_Authority)
     {
         // Spawn a hurt radius actor.
-        HurtRadius = Spawn(class'DHHurtRadius',,, Location);
+        HurtRadius = Spawn(Class'DHHurtRadius',,, Location);
         HurtRadius.DamageAmount = GasDamage;
         HurtRadius.DamageRadius = GasRadius;
         HurtRadius.LifeSpan = GasEffectDuration;
@@ -37,17 +37,17 @@ defaultproperties
     bExplodesOnHittingBody=true
 
     //The smoke screen effect
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_ShellWP'
+    SmokeEmitterClass=Class'DHSmokeEffect_ShellWP'
 
     //In all cases we want an impact to result in the WP explosion effect
-    ShellHitVehicleEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
-    ShellDeflectEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
+    ShellHitVehicleEffectClass=Class'DHShellExplosion_MediumWP'
+    ShellDeflectEffectClass=Class'DHShellExplosion_MediumWP'
 
-    ShellHitDirtEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
-    ShellHitSnowEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
-    ShellHitWoodEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
-    ShellHitRockEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
+    ShellHitDirtEffectClass=Class'DHShellExplosion_MediumWP'
+    ShellHitSnowEffectClass=Class'DHShellExplosion_MediumWP'
+    ShellHitWoodEffectClass=Class'DHShellExplosion_MediumWP'
+    ShellHitRockEffectClass=Class'DHShellExplosion_MediumWP'
+    ShellHitWaterEffectClass=Class'DHShellExplosion_MediumWP'
 
     //Sounds adopted from HE shell since this shell ruptures on impact too
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
@@ -70,8 +70,8 @@ defaultproperties
 
     Damage=100.0
     DamageRadius=480.0
-    MyDamageType=class'DH_Engine.DHShellSmokeWPDamageType' // new dam type that sets nearby players on fire upon "explosion"
-    GasDamageClass=class'DH_Engine.DHShellSmokeWPGasDamageType'
+    MyDamageType=Class'DHShellSmokeWPDamageType' // new dam type that sets nearby players on fire upon "explosion"
+    GasDamageClass=Class'DHShellSmokeWPGasDamageType'
     GasDamage=10.0
     GasRadius=800.0
 }

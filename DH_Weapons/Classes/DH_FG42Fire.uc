@@ -31,8 +31,8 @@ function PlayFiring()
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_FG42Bullet'
-    AmmoClass=class'DH_Weapons.DH_FG42Ammo'
+    ProjectileClass=Class'DH_FG42Bullet'
+    AmmoClass=Class'DH_FG42Ammo'
     FireRate=0.075 // 888 rpm (value had to be found experimentally due to an engine bug)
     bHasSemiAutoFireRate=true
     bWaitForRelease=true    // semi-automatic by default
@@ -63,7 +63,7 @@ defaultproperties
     BipodDeployFireAnim="deploy_shoot"
     BipodDeployFireLoopAnim="deploy_shoot"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

@@ -38,9 +38,9 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVF1CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVF1CannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
+    PrimaryProjectileClass=Class'DH_PanzerIVF1CannonShell'
+    SecondaryProjectileClass=Class'DH_PanzerIVF1CannonShellHEAT'
+    TertiaryProjectileClass=Class'DH_PanzerIIINCannonShellHE'
 
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HEAT"
@@ -61,11 +61,11 @@ defaultproperties
     TertiarySpread=0.00135
 
    // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=8
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

@@ -52,7 +52,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    foreach AllActors(class'DHObstacleInfo', Info)
+    foreach AllActors(Class'DHObstacleInfo', Info)
     {
         break;
     }

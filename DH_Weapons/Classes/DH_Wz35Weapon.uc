@@ -64,9 +64,9 @@ simulated function int GetStripperClipSize()
 defaultproperties
 {
     ItemName="Fucile Controcarro 35(P)"
-    FireModeClass(0)=class'DH_Weapons.DH_Wz35Fire'
-    AttachmentClass=class'DH_Weapons.DH_Wz35Attachment'
-    PickupClass=class'DH_Weapons.DH_Wz35Pickup'
+    FireModeClass(0)=Class'DH_Wz35Fire'
+    AttachmentClass=Class'DH_Wz35Attachment'
+    PickupClass=Class'DH_Wz35Pickup'
 
     Mesh=SkeletalMesh'DH_Wz35_anm.wz35_1st'
     bUseHighDetailOverlayIndex=true

@@ -7,5 +7,5 @@ class DH_IS2Tank_Late_Snow extends DH_IS2Tank_Snow; // late war tank with APBC r
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn_Late')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_IS2CannonPawn_Late')
 }

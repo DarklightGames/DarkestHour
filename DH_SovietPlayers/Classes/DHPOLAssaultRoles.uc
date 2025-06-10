@@ -9,8 +9,8 @@ class DHPOLAssaultRoles extends DHAlliedAssaultRoles
 defaultproperties
 {
     AltName="Szturmowiec"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_PPSH41Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
+    Grenades(0)=(Item=Class'DH_F1GrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
     GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'

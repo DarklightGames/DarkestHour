@@ -160,8 +160,8 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 
     Target = TargetMarker.WorldLocation - WeaponLocation;
 
-    Deflection = -class'UVector'.static.SignedAngle(Target, Vector(WeaponRotation), vect(0, 0, 1));
-    Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
+    Deflection = -Class'UVector'.static.SignedAngle(Target, Vector(WeaponRotation), vect(0, 0, 1));
+    Deflection = Class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
     if (Abs(Deflection) > 500)
     {
@@ -247,8 +247,8 @@ simulated function DrawHUD(Canvas C)
 
         if (AmmoCount > 0)
         {
-            AmmoIcon.Tints[0] = class'UColor'.default.White;
-            AmmoAmount.Tints[0] = class'UColor'.default.White;
+            AmmoIcon.Tints[0] = Class'UColor'.default.White;
+            AmmoAmount.Tints[0] = Class'UColor'.default.White;
         }
         else
         {
@@ -875,7 +875,7 @@ simulated function int GetGunPitch()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.Elevation);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.Elevation);
     }
 
     return 0;
@@ -889,7 +889,7 @@ simulated function int GetGunPitchMin()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMinimum);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMinimum);
     }
 
     return 0;
@@ -903,7 +903,7 @@ simulated function int GetGunPitchMax()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMaximum);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMaximum);
     }
 
     return 0;
@@ -1138,7 +1138,7 @@ defaultproperties
     OverlaySleeveTexNum=1
 
     // Fire adjustment info
-    TargetMarkerClass=class'DHMapMarker_Ruler'
+    TargetMarkerClass=Class'DHMapMarker_Ruler'
     PeriscopeIndex=1
     OverlayCorrectionY=-60.0
 

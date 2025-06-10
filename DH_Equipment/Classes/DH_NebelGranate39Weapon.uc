@@ -7,10 +7,10 @@ class DH_NebelGranate39Weapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DH_NebelGranate39Fire'
-    FireModeClass(1)=class'DH_Equipment.DH_NebelGranate39TossFire'
-    PickupClass=class'DH_Equipment.DH_NebelGranate39Pickup'
-    AttachmentClass=class'DH_Equipment.DH_NebelGranate39Attachment'
+    FireModeClass(0)=Class'DH_NebelGranate39Fire'
+    FireModeClass(1)=Class'DH_NebelGranate39TossFire'
+    PickupClass=Class'DH_NebelGranate39Pickup'
+    AttachmentClass=Class'DH_NebelGranate39Attachment'
     ItemName="NB 39 Smoke Grenade"
     NativeItemName="Nebelhandgranate 39"
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'

@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.stg44'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.stg44'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'DH_3rdShellEject556mm'
 
     WA_Idle="idle_stg44"
     WA_IdleEmpty="idle_stg44"

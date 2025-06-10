@@ -8,7 +8,7 @@ class DH_EnfieldNo2DamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_EnfieldNo2Weapon'
+    WeaponClass=Class'DH_EnfieldNo2Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=750.0
     KDeathVel=100.0

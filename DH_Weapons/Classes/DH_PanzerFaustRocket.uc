@@ -19,7 +19,7 @@ defaultproperties
     bHasTracer=false
 
 
-    ShellImpactDamage=class'DH_Weapons.DH_PanzerFaustImpactDamType'
+    ShellImpactDamage=Class'DH_PanzerFaustImpactDamType'
     ImpactDamage=490   //1.5 KG
     Damage=1000
     DamageRadius=700 //less than other projectiles with similar amount of explosives, but thats because this one has no fragmentation what so ever and usually explodes on armored vehicle, thus not hitting debree on the ground
@@ -28,7 +28,7 @@ defaultproperties
     BallisticCoefficient=0.075
     Speed=2716.0
     MaxSpeed=2716.0
-    MyDamageType=class'DH_Weapons.DH_PanzerFaustDamType'
+    MyDamageType=Class'DH_PanzerFaustDamType'
     StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
 
     VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'

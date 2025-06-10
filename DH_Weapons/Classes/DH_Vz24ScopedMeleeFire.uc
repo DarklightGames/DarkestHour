@@ -7,7 +7,7 @@ class DH_Vz24ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_Vz24ScopedBashDamType'
-    //BayonetDamageType=class'DH_Weapons.DH_Vz24BayonetDamType'
+    DamageType=Class'DH_Vz24ScopedBashDamType'
+    //BayonetDamageType=Class'DH_Vz24BayonetDamType'
 
 }

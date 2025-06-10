@@ -12,8 +12,8 @@ defaultproperties
 
     bStaticReload=true
     
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="MUZZLE"
     ShellEjectionBoneName="EJECTOR"
 

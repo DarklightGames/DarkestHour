@@ -8,6 +8,6 @@ class DH_BrenDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BrenWeapon'
+    WeaponClass=Class'DH_BrenWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

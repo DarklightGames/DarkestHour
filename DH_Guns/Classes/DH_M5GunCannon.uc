@@ -22,8 +22,8 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_M5CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_M5CannonShellHE'
+    PrimaryProjectileClass=Class'DH_M5CannonShell'
+    SecondaryProjectileClass=Class'DH_M5CannonShellHE'
 
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42A1 HE-T"

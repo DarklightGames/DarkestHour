@@ -33,8 +33,8 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Sdkfz2342CannonShell'
+    SecondaryProjectileClass=Class'DH_Sdkfz2342CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.38"
@@ -48,15 +48,15 @@ defaultproperties
     SecondarySpread=0.0013
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    AltFireProjectileClass=Class'DH_MG42Bullet'
     InitialAltAmmo=150
     NumMGMags=10
     AltFireInterval=0.05
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
     TracerFrequency=7
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_ExternalSmokeCandleDischarger'
+    SmokeLauncherClass=Class'DH_ExternalSmokeCandleDischarger'
     SmokeLauncherFireOffset(0)=(X=38.0,Y=-39.0,Z=35.0)
     SmokeLauncherFireOffset(1)=(X=38.0,Y=37.0,Z=35.0)
     SmokeLauncherFireOffset(2)=(X=37.0,Y=-45.0,Z=29.0)

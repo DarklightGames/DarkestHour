@@ -72,7 +72,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (IsOptionDisabled(OptionIndex))
             {
                 ORI.InfoText[0] = default.AutoJoinSquadDisabledText;
-                ORI.InfoColor = class'UColor'.default.Red;
+                ORI.InfoColor = Class'UColor'.default.Red;
             }
             break;
         default:

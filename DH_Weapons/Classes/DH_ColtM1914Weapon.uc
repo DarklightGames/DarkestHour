@@ -8,10 +8,10 @@ class DH_ColtM1914Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Kongsberg Colten M/1914"
-    FireModeClass(0)=class'DH_Weapons.DH_ColtM1914Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_ColtM1914MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ColtM1914Attachment'
-    PickupClass=class'DH_Weapons.DH_ColtM1914Pickup'
+    FireModeClass(0)=Class'DH_ColtM1914Fire'
+    FireModeClass(1)=Class'DH_ColtM1914MeleeFire'
+    AttachmentClass=Class'DH_ColtM1914Attachment'
+    PickupClass=Class'DH_ColtM1914Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt1914'
     bUseHighDetailOverlayIndex=false

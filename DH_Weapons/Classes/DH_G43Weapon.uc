@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="G 43"
     NativeItemName="Gewehr 43"
-    FireModeClass(0)=class'DH_Weapons.DH_G43Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
-    PickupClass=class'DH_Weapons.DH_G43Pickup'
-    AttachmentClass=class'DH_Weapons.DH_G43Attachment'
+    FireModeClass(0)=Class'DH_G43Fire'
+    FireModeClass(1)=Class'DH_G43MeleeFire'
+    PickupClass=Class'DH_G43Pickup'
+    AttachmentClass=Class'DH_G43Attachment'
 
     Mesh=SkeletalMesh'DH_G43_1st.G-43-Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.G43_S'

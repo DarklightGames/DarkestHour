@@ -7,6 +7,6 @@ class DH_DUKWTransportFactory extends DH_USVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_DUKWTransport'
+    VehicleClass=Class'DH_DUKWTransport'
     Mesh=SkeletalMesh'DH_DUKW_anm.dukw_ext'
 }

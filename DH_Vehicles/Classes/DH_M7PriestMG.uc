@@ -24,17 +24,17 @@ defaultproperties
     CustomPitchDownLimit=63400
 
     // Ammo
-    ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
+    ProjectileClass=Class'DH_50CalVehicleBullet'
     InitialPrimaryAmmo=105
     NumMGMags=3
     FireInterval=0.133333 // 450 RPM
-    TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
+    TracerProjectileClass=Class'DH_50CalVehicleTracerBullet'
     TracerFrequency=5
 //  HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.50cal_ammo' // TODO: get this ammo icon made for a 50 cal ammo tin (with matching '50cal_ammo_reload' VehicleMGReloadTexture in MG pawn)
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'
+    AmbientEffectEmitterClass=Class'DH_Vehicle50CalMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0

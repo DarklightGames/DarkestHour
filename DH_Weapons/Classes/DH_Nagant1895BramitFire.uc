@@ -7,8 +7,8 @@ class DH_Nagant1895BramitFire extends DHPistolFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_Nagant1895BramitBullet'
-    AmmoClass=class'DH_Weapons.DH_Nagant1895BramitAmmo'
+    ProjectileClass=Class'DH_Nagant1895BramitBullet'
+    AmmoClass=Class'DH_Nagant1895BramitAmmo'
     FireRate=0.3
 
     Spread=220

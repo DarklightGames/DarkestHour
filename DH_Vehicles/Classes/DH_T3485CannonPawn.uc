@@ -7,7 +7,7 @@ class DH_T3485CannonPawn extends DHSovietCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3485Cannon'
+    GunClass=Class'DH_T3485Cannon'
     DriverPositions(0)=(ViewLocation=(X=23.0,Y=-15.0,Z=0.0),ViewFOV=21.25,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=0,Y=0,Z=15.0),ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',DriverTransitionAnim="VT3485_com_close",TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //

@@ -14,9 +14,9 @@ defaultproperties
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
 
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellSmoke'
 
     ProjectileDescriptions(2)="Smoke"
 

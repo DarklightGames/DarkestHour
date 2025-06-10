@@ -301,7 +301,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
         if (!bHasDeflected && WhizzedPlayer.ShouldBeWhizzed())
         {
             TraceWhizType = default.WhizType; // start with default WhizType for our projectile (1 is supersonic 'snap', 2 is subsonic whiz)
-            class'DHBullet'.static.GetWhizType(TraceWhizType, WhizzedPlayer, Instigator, OrigLoc);
+            Class'DHBullet'.static.GetWhizType(TraceWhizType, WhizzedPlayer, Instigator, OrigLoc);
         }
 
         // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
@@ -347,7 +347,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
         if (HitPlayer != none)
         {
             // Trace along path from where we hit player's whip attachment to where we traced a hit on player, checking if any blocking actor is in the way
-            foreach InstigatorPlayer.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
+            foreach InstigatorPlayer.TraceActors(Class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
                 // We hit a blocking actor, so now check if it's a valid 'stopper' (something that would trigger HitWall or ProcessTouch)
                 if (A.bWorldGeometry || A.Physics == PHYS_Karma || (A.bBlockActors && A.bBlockHitPointTraces))
@@ -610,7 +610,7 @@ simulated static function GetWhizType(out int TraceWhizType, DHPawn WhizzedPlaye
             LaunchLocation = Instigator.Location;
         }
 
-        BulletDistance = class'DHUnits'.static.UnrealToMeters(VSize(WhizzedPlayer.Location - LaunchLocation)); // in metres
+        BulletDistance = Class'DHUnits'.static.UnrealToMeters(VSize(WhizzedPlayer.Location - LaunchLocation)); // in metres
 
         // If it's friendly fire at close range, we won't suppress, so send a different TraceWhizType in the HitPointTrace
         if (bFriendlyFire && BulletDistance < 10.0)
@@ -782,13 +782,13 @@ simulated function Destroyed()
 defaultproperties
 {
     WhizType=1
-    WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
-    ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    WhizSoundEffect=Class'DHBulletWhiz'
+    ImpactEffect=Class'DHBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffect'
+    VehiclePenetrateEffectClass=Class'DHBulletHitMetalArmorEffect'
     VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
-    VehicleDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffect'
+    VehicleDeflectEffectClass=Class'DHBulletHitMetalEffect'
     VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
@@ -809,5 +809,5 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'DH_Effects.DHBulletHitWaterEffect'
+    SplashEffect=Class'DHBulletHitWaterEffect'
 }

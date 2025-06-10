@@ -32,7 +32,7 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 
 defaultproperties
 {
-    DamageType=class'DH_Equipment.DHShovelBashDamageType'
+    DamageType=Class'DHShovelBashDamageType'
     DamageMin=50
     DamageMax=90
     TraceRange=95.0

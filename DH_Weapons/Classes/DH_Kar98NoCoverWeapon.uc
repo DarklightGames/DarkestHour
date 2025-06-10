@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Kar 98k (no sight hood)"
     NativeItemName="Karabiner 98k (no sight hood)"
-    FireModeClass(0)=class'DH_Weapons.DH_Kar98NoCoverFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Kar98NoCoverMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Kar98NoCoverAttachment'
-    PickupClass=class'DH_Weapons.DH_Kar98NoCoverPickup'
+    FireModeClass(0)=Class'DH_Kar98NoCoverFire'
+    FireModeClass(1)=Class'DH_Kar98NoCoverMeleeFire'
+    AttachmentClass=Class'DH_Kar98NoCoverAttachment'
+    PickupClass=Class'DH_Kar98NoCoverPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_mesh_nocover'
     Skins(5)=Texture'Weapons1st_tex.Rifles.k98'

@@ -25,7 +25,7 @@ function Setup()
 
     PC = GetPlayerController();
     Radio = DHRadio(MenuObject);
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
 
     if (PC == none || Radio == none || LevelInfo == none)
     {
@@ -64,17 +64,17 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (Error == ERROR_None)
     {
-        ORI.InfoColor = class'UColor'.default.White;
+        ORI.InfoColor = Class'UColor'.default.White;
         ORI.InfoText[0] = default.AvailableText @ "(" $ Interaction.GRI.ArtilleryTypeInfos[Index].Limit - Interaction.GRI.ArtilleryTypeInfos[Index].UsedCount $ ")";
     }
     else if (Error == ERROR_Cancellable)
     {
-        ORI.InfoColor = class'UColor'.default.Yellow;
+        ORI.InfoColor = Class'UColor'.default.Yellow;
         ORI.InfoText[0] = default.CancelText;
     }
     else
     {
-        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoColor = Class'UColor'.default.Red;
 
         switch (Error)
         {
@@ -107,7 +107,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_Cooldown:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
                 CooldownTimeSeconds = Interaction.GRI.ArtilleryTypeInfos[Index].NextConfirmElapsedTime - Interaction.GRI.ElapsedTime;
-                ORI.InfoText[0] = class'TimeSpan'.static.ToString(CooldownTimeSeconds);
+                ORI.InfoText[0] = Class'TimeSpan'.static.ToString(CooldownTimeSeconds);
                 break;
             case ERROR_Ongoing:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';

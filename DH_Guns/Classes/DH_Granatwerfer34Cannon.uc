@@ -46,8 +46,8 @@ defaultproperties
     nProjectileDescriptions(0)="Wgr. 38"
     nProjectileDescriptions(1)="Wgr. 38 Nb."
 
-    PrimaryProjectileClass=class'DH_Granatwerfer34ProjectileHE'
-    SecondaryProjectileClass=class'DH_Granatwerfer34ProjectileSmoke'
+    PrimaryProjectileClass=Class'DH_Granatwerfer34ProjectileHE'
+    SecondaryProjectileClass=Class'DH_Granatwerfer34ProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     MaxPrimaryAmmo=28
@@ -88,6 +88,6 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
 
-    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    EffectEmitterClass=Class'DHMortarFireEffect'
     CannonDustEmitterClass=None
 }

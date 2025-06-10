@@ -8,7 +8,7 @@ class DH_PantherturmGun extends DHATGun;
 defaultproperties
 {
     VehicleNameString="Pantherturm"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_PantherturmCannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PantherturmCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_body_camo2'
 	Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
@@ -104,8 +104,8 @@ defaultproperties
     EngineHealth=0
    VehHitpoints(0)=(PointRadius=30.0,PointBone="Turret",DamageMultiplier=50.0,HitPointType=HP_AmmoStore)
     DamagedEffectClass=none
-    DestructionEffectClass=class'DH_Effects.DHVehicleDestroyedEmitter'
-    DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'
+    DestructionEffectClass=Class'DHVehicleDestroyedEmitter'
+    DisintegrationEffectClass=Class'DHVehicleObliteratedEmitter'
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
     bCanCrash=false

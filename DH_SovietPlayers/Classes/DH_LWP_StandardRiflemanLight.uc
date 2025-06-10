@@ -7,18 +7,18 @@ class DH_LWP_StandardRiflemanLight extends DHPOLRiflemanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicBackpackLightPawn',Weight=4.0)
-    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicLightPawn',Weight=2.0)
-    RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicMixLightPawn',Weight=2.0)
+    RolePawns(0)=(PawnClass=Class'DH_LWPTunicBackpackLightPawn',Weight=4.0)
+    RolePawns(1)=(PawnClass=Class'DH_LWPTunicLightPawn',Weight=2.0)
+    RolePawns(2)=(PawnClass=Class'DH_LWPTunicMixLightPawn',Weight=2.0)
 
-    Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
-    Headgear(1)=class'DH_SovietPlayers.DH_LWPHelmet'
+    Headgear(0)=Class'DH_LWPcap'
+    Headgear(1)=Class'DH_LWPHelmet'
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
 
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.LWP_light_sleeves'
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_m44Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_kar98Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_MN9130Weapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_m44Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
+    PrimaryWeapons(2)=(Item=Class'DH_kar98Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
 }

@@ -10,6 +10,6 @@ defaultproperties
 {
     Texture=Texture'DHEngine_Tex.Allies_RoleInfo'
     Side=SIDE_Allies
-    DetachedArmClass=class'ROEffects.SeveredArmSovTunic'
-    DetachedLegClass=class'ROEffects.SeveredLegSovTunic'
+    DetachedArmClass=Class'SeveredArmSovTunic'
+    DetachedLegClass=Class'SeveredLegSovTunic'
 }

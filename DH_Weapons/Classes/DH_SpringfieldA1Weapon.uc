@@ -8,10 +8,10 @@ class DH_SpringfieldA1Weapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Springfield M1903A1"
-    FireModeClass(0)=class'DH_Weapons.DH_SpringfieldA1Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_SpringfieldA1MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_SpringfieldA1Attachment'
-    PickupClass=class'DH_Weapons.DH_SpringfieldA1Pickup'
+    FireModeClass(0)=Class'DH_SpringfieldA1Fire'
+    FireModeClass(1)=Class'DH_SpringfieldA1MeleeFire'
+    AttachmentClass=Class'DH_SpringfieldA1Attachment'
+    PickupClass=Class'DH_SpringfieldA1Pickup'
 
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_A1'
     Skins(0)=Texture'DH_Springfield_tex.Rifle.Springfield_tex'

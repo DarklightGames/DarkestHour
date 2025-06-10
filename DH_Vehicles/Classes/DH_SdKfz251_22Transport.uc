@@ -17,7 +17,7 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", class'Class'));
+    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", Class'Class'));
 }
 
 defaultproperties

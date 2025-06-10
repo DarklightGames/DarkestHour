@@ -32,7 +32,7 @@ defaultproperties
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
     PassengerPawns(0)=(AttachBone="PASSENGER_L",DrivePos=(Z=58),DriveAnim="autoblinda_passenger_l")
     PassengerPawns(1)=(AttachBone="PASSENGER_R",DrivePos=(Z=58),DriveAnim="autoblinda_passenger_r")
 

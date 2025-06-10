@@ -8,6 +8,6 @@ class DH_PIATImpactDamType extends DHRocketImpactDamage
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PIATWeapon'
+    WeaponClass=Class'DH_PIATWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.piatkill'
 }

@@ -128,7 +128,7 @@ defaultproperties
     RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=3,OptionIndex=-1)),Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_roof'))))
     RandomAttachmentGroups(5)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights_protected'))))
 
-    RadioAttachmentClass=class'DH_Engine.DHRadio'
+    RadioAttachmentClass=Class'DHRadio'
     RadioAttachmentHeight=16.0
     RadioAttachmentRadius=16.0
     RadioAttachmentSoundRadius=20.0

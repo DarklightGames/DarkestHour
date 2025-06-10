@@ -59,7 +59,7 @@ function HandleObjSatchels(Vector HitLocation)
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
 
-    foreach TouchingActors(class'Volume', V)
+    foreach TouchingActors(Class'Volume', V)
     {
         if (DH_ObjSatchel(V.AssociatedActor) != none)
         {
@@ -99,7 +99,7 @@ function HandleVehicles(Vector HitLocation)
     }
 
     // Handle vehicle component damage
-    foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
+    foreach RadiusActors(Class'DHVehicle', Veh, DamageRadius)
     {
         // If this is the vehicle we exploded on or under
         if (Veh == A)
@@ -113,7 +113,7 @@ function HandleVehicles(Vector HitLocation)
                 // The closer the satchel is to the engine, the higher the chance of setting it on fire.
                 // The chance is 100% at the engine, and 0% at the edge of the EngineDamageRadius, using
                 // a smoothstep function.
-                DistanceFactor = class'UInterp'.static.SmoothStep(Distance / EngineDamageRadius, 1, 0);
+                DistanceFactor = Class'UInterp'.static.SmoothStep(Distance / EngineDamageRadius, 1, 0);
 
                 if (FRand() < DistanceFactor)
                 {
@@ -157,7 +157,7 @@ function HandleObstacles(Vector HitLocation)
     local DHObstacleInstance O;
     local float              Distance;
 
-    foreach RadiusActors(class'DHObstacleInstance', O, ObstacleDamageRadius)
+    foreach RadiusActors(Class'DHObstacleInstance', O, ObstacleDamageRadius)
     {
         // If we cannot trace the obstacle (because of world geometry), then apply special radius damage
         if (O != none && !FastTrace(O.Location, Location))
@@ -174,7 +174,7 @@ function HandleConstructions(Vector HitLocation)
     local DHConstruction    C;
     local float             Distance;
 
-    foreach RadiusActors(class'DHConstruction', C, ConstructionDamageRadius)
+    foreach RadiusActors(Class'DHConstruction', C, ConstructionDamageRadius)
     {
         // If we cannot trace the construction (because trace hit world geometry), then apply special radius damage
         if (C != none && !FastTrace(C.Location, Location))
@@ -212,15 +212,15 @@ defaultproperties
     TreadDamageRadius=100.0
     TreadDamageMax=200.0
 
-    MyDamageType=class'DH_Weapons.DH_SatchelDamType'
+    MyDamageType=Class'DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
     ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
     ExplosionSound(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
-    ExplodeDirtEffectClass=class'ROEffects.ROSatchelExplosion'
-    ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
-    ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
+    ExplodeDirtEffectClass=Class'ROSatchelExplosion'
+    ExplodeSnowEffectClass=Class'ROSatchelExplosion'
+    ExplodeMidAirEffectClass=Class'ROSatchelExplosion'
 
     ImpactSound=Sound'DH_WeaponSounds.satchel.satcheldrops'
     ImpactSoundDirt=Sound'DH_WeaponSounds.satchel.satcheldrops'

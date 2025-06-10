@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Kar 98k (ZF39)"
     NativeItemName="Karabiner 98k (ZF39)"
-    FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
+    FireModeClass(0)=Class'DH_Kar98ScopedFire'
+    FireModeClass(1)=Class'DH_Kar98ScopedMeleeFire'
+    AttachmentClass=Class'DH_Kar98ScopedAttachment'
+    PickupClass=Class'DH_Kar98ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.DH_kar98k_scoped_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'

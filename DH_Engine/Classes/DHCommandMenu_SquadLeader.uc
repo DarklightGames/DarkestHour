@@ -54,7 +54,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
 
-            PC.ServerSignal(class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
+            PC.ServerSignal(Class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2:
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");
@@ -67,7 +67,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
                 // Player Menu
                 OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+                if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
                 {
                     Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
                 }
@@ -83,7 +83,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSignal(class'DHSignal_Move', Location);
+            PC.ServerSignal(Class'DHSignal_Move', Location);
             break;
         default:
             break;
@@ -120,11 +120,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
                 if (PC.SquadReplicationInfo.bAllowRallyPointsBehindEnemyLines)
                 {
-                    ORI.InfoColor = class'UColor'.default.Yellow;
+                    ORI.InfoColor = Class'UColor'.default.Yellow;
                 }
                 else
                 {
-                    ORI.InfoColor = class'UColor'.default.Red;
+                    ORI.InfoColor = Class'UColor'.default.Red;
                 }
             }
             break;

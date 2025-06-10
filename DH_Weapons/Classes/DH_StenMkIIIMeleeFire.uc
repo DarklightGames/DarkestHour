@@ -7,7 +7,7 @@ class DH_StenMkIIIMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_StenMkIIIBashDamType'
+    DamageType=Class'DH_StenMkIIIBashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 
     BashBackEmptyAnim="bash_pullback_empty"

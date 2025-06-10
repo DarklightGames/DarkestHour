@@ -40,7 +40,7 @@ simulated state LeavingViewTransition
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_StuH42MountedMG'
+    GunClass=Class'DH_StuH42MountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=47.22,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

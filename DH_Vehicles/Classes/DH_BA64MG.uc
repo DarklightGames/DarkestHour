@@ -38,18 +38,18 @@ defaultproperties
     WeaponAttachOffset=(X=0.0,Y=0.0,Z=-1.0) //need to lower the turret a bit due to gap
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    ProjectileClass=Class'DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
     FireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=10.0
-    AmbientEffectEmitterClass=class'VehicleMGEmitterBA'
+    AmbientEffectEmitterClass=Class'VehicleMGEmitterBA'
     FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

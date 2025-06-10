@@ -7,7 +7,7 @@ class DH_ChurchillMkVIICannonPawn extends DHBritishCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ChurchillMkVIICannon'
+    GunClass=Class'DH_ChurchillMkVIICannon'
     DriverPositions(0)=(ViewLocation=(X=12.0,Y=-9.5,Z=-0.75),ViewFOV=28.33,bDrawOverlays=true)
     // TODO: make new animations so no need for these camera offsets:
     DriverPositions(1)=(ViewLocation=(X=44.0,Y=-8.5,Z=3.0),TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bDrawOverlays=true)

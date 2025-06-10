@@ -16,6 +16,6 @@ defaultproperties
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent_destroyed'
     Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent_unpacked')
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent_light_destro'
-    RadioClass=class'DHRadioHQAttachment_Italy'
+    RadioClass=Class'DHRadioHQAttachment_Italy'
     RadioRotationOffset=(Pitch=0,Yaw=0,Roll=0)
 }

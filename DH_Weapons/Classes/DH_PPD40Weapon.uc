@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="PPD-40"
 
-    FireModeClass(0)=class'DH_Weapons.DH_PPD40Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_PPD40MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PPD40Attachment'
-    PickupClass=class'DH_Weapons.DH_PPD40Pickup'
+    FireModeClass(0)=Class'DH_PPD40Fire'
+    FireModeClass(1)=Class'DH_PPD40MeleeFire'
+    AttachmentClass=Class'DH_PPD40Attachment'
+    PickupClass=Class'DH_PPD40Pickup'
 
     Mesh=SkeletalMesh'DH_Ppd40_1st.PPD-40-1st'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPD40_1_S'

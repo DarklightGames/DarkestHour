@@ -20,7 +20,7 @@ simulated function bool CanReload()
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_CV33MG'
+    GunClass=Class'DH_CV33MG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true

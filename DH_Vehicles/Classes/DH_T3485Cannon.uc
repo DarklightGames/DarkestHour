@@ -38,9 +38,9 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
+    PrimaryProjectileClass=Class'DH_T3485CannonShell_Early'
+    SecondaryProjectileClass=Class'DH_T3485CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_T3485CannonShellHE'
 
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(1)="APCR"
@@ -60,11 +60,11 @@ defaultproperties
     TertiarySpread=0.002
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    AltFireProjectileClass=Class'DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

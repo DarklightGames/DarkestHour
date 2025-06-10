@@ -96,7 +96,7 @@ function SetBackground()
     local DH_LevelInfo LI;
 
     // Find nationinfo
-    foreach PlayerOwner().AllActors(class'DH_LevelInfo', LI)
+    foreach PlayerOwner().AllActors(Class'DH_LevelInfo', LI)
     {
         break;
     }
@@ -184,7 +184,7 @@ function SelectTeam(int Team)
         PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         // Trying to change teams, but recently did (give an error)
-        Controller.ShowQuestionDialog(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
+        Controller.ShowQuestionDialog(Repl(Class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
 
         return;
     }
@@ -236,7 +236,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 return;
 
             default: // Couldn't change teams: get error msg
-                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForId(result);
+                ErrorMessage = Class'ROGUIRoleSelection'.static.GetErrorMessageForId(result);
         }
 
         SetButtonsState(false);

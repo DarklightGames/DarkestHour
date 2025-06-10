@@ -25,8 +25,8 @@ defaultproperties
     CustomPitchDownLimit=64444
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
+    PrimaryProjectileClass=Class'DH_17PounderCannonShell'
+    SecondaryProjectileClass=Class'DH_17PounderCannonShellHE'
 
     nProjectileDescriptions(0)="Mk.IV APC"
     nProjectileDescriptions(1)="Mk.I HE-T"

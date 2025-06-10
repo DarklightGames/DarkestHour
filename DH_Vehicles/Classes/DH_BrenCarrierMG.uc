@@ -23,18 +23,18 @@ defaultproperties
     CustomPitchDownLimit=63000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_BrenBullet'
+    ProjectileClass=Class'DH_BrenBullet'
     InitialPrimaryAmmo=30
     NumMGMags=20
     FireInterval=0.13
-    TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
+    TracerProjectileClass=Class'DH_BrenTracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
+    AmbientEffectEmitterClass=Class'DH_VehicleBrenMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoop'
     FireEndSound=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoopEnd'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

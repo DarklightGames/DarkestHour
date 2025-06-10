@@ -15,7 +15,7 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    Species=class'DH_USPlayers.DH_American'
+    Species=Class'DH_American'
 
     Mesh=SkeletalMesh'DHCharactersUS_anm.USWinter_GI'
     Skins(0)=Texture'DHUSCharactersTex.us_heads.WinterFace2'

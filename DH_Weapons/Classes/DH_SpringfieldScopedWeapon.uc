@@ -8,10 +8,10 @@ class DH_SpringfieldScopedWeapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="M1903A4 Springfield (M73 Weaver)"
-    FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_SpringfieldScopedPickup'
+    FireModeClass(0)=Class'DH_SpringfieldScopedFire'
+    FireModeClass(1)=Class'DH_SpringfieldScopedMeleeFire'
+    AttachmentClass=Class'DH_SpringfieldScopedAttachment'
+    PickupClass=Class'DH_SpringfieldScopedPickup'
 
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_Scoped'
     Skins(0)=Texture'DH_Springfield_tex.Rifle.Springfield_tex'

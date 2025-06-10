@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Kar 98k"
     NativeItemName="Karabiner 98k"
-    FireModeClass(0)=class'DH_Weapons.DH_Kar98Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_Kar98MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'
-    PickupClass=class'DH_Weapons.DH_Kar98Pickup'
+    FireModeClass(0)=Class'DH_Kar98Fire'
+    FireModeClass(1)=Class'DH_Kar98MeleeFire'
+    AttachmentClass=Class'DH_Kar98Attachment'
+    PickupClass=Class'DH_Kar98Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.DH_kar98k_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'

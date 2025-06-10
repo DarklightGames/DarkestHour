@@ -12,6 +12,6 @@ defaultproperties
     Skins(2)=Texture'allies_vehicles_tex2.Treads.UCSnow_Tread'
     Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_SnowInt'
     HighDetailOverlay=Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_SnowInt_S'
-    HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlaySnow'
+    HUDOverlayClass=Class'UniCarrierDriverOverlaySnow'
     bUsesCodedDestroyedSkins=true
 }

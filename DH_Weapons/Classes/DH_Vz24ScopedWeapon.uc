@@ -17,10 +17,10 @@ defaultproperties
 {
     ItemName="Vz.24 Rifle (IOR)"
     NativeItemName="ZB vz.24 Puska (IOR)"
-    FireModeClass(0)=class'DH_Weapons.DH_Vz24ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Vz24ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Vz24ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Vz24ScopedPickup'
+    FireModeClass(0)=Class'DH_Vz24ScopedFire'
+    FireModeClass(1)=Class'DH_Vz24ScopedMeleeFire'
+    AttachmentClass=Class'DH_Vz24ScopedAttachment'
+    PickupClass=Class'DH_Vz24ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.Vz24scoped_mesh'
 

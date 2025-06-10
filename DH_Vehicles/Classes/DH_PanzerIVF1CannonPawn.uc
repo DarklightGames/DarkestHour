@@ -9,7 +9,7 @@ defaultproperties
 {
     VehiclePositionString="in a Panzer IV F1 cannon"
     VehicleNameString="Panzer IV F1 Cannon"
-    GunClass=class'DH_Vehicles.DH_PanzerIVF1Cannon'
+    GunClass=Class'DH_PanzerIVF1Cannon'
 
     DriverPositions(0)=(ViewLocation=(X=12.0,Y=-27.0,Z=3.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_Panzer4F1_anm.Panzer4F1_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=64080,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer4F1_anm.Panzer4F1_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer4_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)

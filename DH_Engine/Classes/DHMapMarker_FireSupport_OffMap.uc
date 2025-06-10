@@ -52,7 +52,7 @@ defaultproperties
     OverwritingRule=UNIQUE
     GroupIndex=3
     Cooldown=3
-    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=class'DHFireSupportMessage',MessageIndex=2)
-    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=Class'DHFireSupportMessage',MessageIndex=2)
+    OnPlacedMessage=Class'DHFireSupportMessage'
     OnPlacedMessageIndex=0
 }

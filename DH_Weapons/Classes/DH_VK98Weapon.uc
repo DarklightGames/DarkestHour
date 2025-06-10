@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="VK 98"
     NativeItemName="Volkssturmkarabiner 98"
-    FireModeClass(0)=class'DH_Weapons.DH_VK98Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_VK98MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_VK98Attachment'
-    PickupClass=class'DH_Weapons.DH_VK98Pickup'
+    FireModeClass(0)=Class'DH_VK98Fire'
+    FireModeClass(1)=Class'DH_VK98MeleeFire'
+    AttachmentClass=Class'DH_VK98Attachment'
+    PickupClass=Class'DH_VK98Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.VK98_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'

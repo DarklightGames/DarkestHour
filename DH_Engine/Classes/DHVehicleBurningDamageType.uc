@@ -16,7 +16,7 @@ defaultproperties
     bDetonatesGoop=true
     bDelayedDamage=true
     GibModifier=10.0
-    PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'
+    PawnDamageEmitter=Class'ROBloodPuffLarge'
     KDamageImpulse=3000.0
     KDeathVel=200.0
     KDeathUpKick=300.0

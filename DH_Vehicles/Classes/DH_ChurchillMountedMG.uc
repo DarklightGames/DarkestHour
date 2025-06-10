@@ -27,11 +27,11 @@ defaultproperties
     CustomPitchDownLimit=64000
 
     // Ammo
-    ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
+    ProjectileClass=Class'DH_BesaVehicleBullet'
     InitialPrimaryAmmo=225
     NumMGMags=11
     FireInterval=0.092
-    TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
+    TracerProjectileClass=Class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
     // Weapon fire

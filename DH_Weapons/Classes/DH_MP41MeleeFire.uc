@@ -7,6 +7,6 @@ class DH_MP41MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_MP41BashDamType'
+    DamageType=Class'DH_MP41BashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 }

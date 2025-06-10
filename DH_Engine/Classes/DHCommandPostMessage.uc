@@ -33,7 +33,7 @@ static function string GetString(
             S = default.DestroyedMessage;
             break;
         case 4:
-            S = Repl(default.ConstructedMessage, "{seconds}", class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
+            S = Repl(default.ConstructedMessage, "{seconds}", Class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
             break;
     }
 

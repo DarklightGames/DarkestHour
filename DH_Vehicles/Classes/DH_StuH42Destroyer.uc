@@ -9,8 +9,8 @@ defaultproperties
 {
     VehicleNameString="StuH42 Ausf.G"
     bHasAddedSideArmor=true
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42CannonPawn')
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_StuH42CannonPawn')
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_StuH42MountedMGPawn')
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.stug3g_armor_camo1'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.StuH.Stuh_dest'

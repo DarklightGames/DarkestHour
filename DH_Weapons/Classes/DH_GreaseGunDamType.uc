@@ -8,7 +8,7 @@ class DH_GreaseGunDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GreaseGunWeapon'
+    WeaponClass=Class'DH_GreaseGunWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

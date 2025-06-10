@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.m1a1carbine_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_para_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'DH_3rdShellEject556mm'
 
     bRapidFire=false
 

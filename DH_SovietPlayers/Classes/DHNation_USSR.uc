@@ -8,8 +8,8 @@ class DHNation_USSR extends DHNation;
 defaultproperties
 {
     NationName="Union of Soviet Socialist Republics"
-    VoicePackClass=class'DH_SovietPlayers.DHSovietVoice'
-    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_USSR'
+    VoicePackClass=Class'DHSovietVoice'
+    DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_ussr'
@@ -23,5 +23,5 @@ defaultproperties
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
     RoundStartSound=Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
-    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
+    SupplyTruckClass=Class'DH_GMCTruckSupport'
 }

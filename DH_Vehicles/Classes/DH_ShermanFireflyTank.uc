@@ -23,7 +23,7 @@ defaultproperties
     Skins(5)=Texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-144.0,Y=-68.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-186.0,Y=-29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-186.0,Y=29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")

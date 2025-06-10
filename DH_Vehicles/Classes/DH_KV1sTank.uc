@@ -24,8 +24,8 @@ defaultproperties
     HighDetailOverlayIndex=3
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1sCannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1sMGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_KV1sCannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_KV1sMGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -40,7 +40,7 @@ defaultproperties
     DriveAnim="VKV1_driver_idle_close"
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
+    HUDOverlayClass=Class'KV1DriverOverlay'
     HUDOverlayOffset=(X=0,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -108,8 +108,8 @@ defaultproperties
     // Visual effects
     TreadVelocityScale=115.0
     WheelRotationScale=50000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=47.0,Z=50.0),ExhaustRotation=(Yaw=12000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-100.0,Y=-47.0,Z=50.0),ExhaustRotation=(Yaw=-12000))
 

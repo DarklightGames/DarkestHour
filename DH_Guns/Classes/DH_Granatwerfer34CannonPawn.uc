@@ -7,7 +7,7 @@ class DH_Granatwerfer34CannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Granatwerfer34Cannon'
+    GunClass=Class'DH_Granatwerfer34Cannon'
 
     // Spotting Scope
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
@@ -43,7 +43,7 @@ defaultproperties
     AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.DE_HE_WGR38_ICON_RELOAD'
     AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.DE_SMOKE_WGR38_ICON_RELOAD'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
+    ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 
     GunPitchOffset=8192 // +45 degrees
 

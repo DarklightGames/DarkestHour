@@ -93,7 +93,7 @@ simulated function InitEffects()
 // Assumes PrimaryProjectileClass is the mixed mag & the AP & HE rounds are the SecondaryProjectileClass & TertiaryProjectileClass
 function Fire(Controller C)
 {
-    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    if (ProjectileClass == Class'DHCannonShell_MixedMag')
     {
         if ((InitialPrimaryAmmo - MainAmmoChargeExtra[0]) % 2.0 == 0.0 && SecondaryProjectileClass != none)
         {
@@ -230,7 +230,7 @@ defaultproperties
 {
     bUsesMags=true
     Spread=0.003
-    FlashEmitterClass=class'DH_Effects.DH20mmCannonFireEffect'
+    FlashEmitterClass=Class'DH20mmCannonFireEffect'
     EffectEmitterClass=none
     CannonDustEmitterClass=none
     AIInfo(0)=(RefireRate=0.99)

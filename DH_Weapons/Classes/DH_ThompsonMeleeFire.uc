@@ -7,6 +7,6 @@ class DH_ThompsonMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_ThompsonBashDamType'
+    DamageType=Class'DH_ThompsonBashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 }

@@ -7,7 +7,7 @@ class DH_RKKA_AmoebaAutumnRiflemanEarly extends DHSOVRiflemanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaAutumnPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaAutumnPawn',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaSleeves'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
+    Headgear(0)=Class'DH_SovietSidecap'
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="75mm Pack Howitzer M1"   // Redesignated to M116 in 1962
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M116CannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M116CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M116_anm.m116_body'
     Skins(0)=Texture'DH_M116_tex.M116.M116_body'
     DestroyedVehicleMesh=StaticMesh'DH_M116_stc.destroyed.m116_destroyed'

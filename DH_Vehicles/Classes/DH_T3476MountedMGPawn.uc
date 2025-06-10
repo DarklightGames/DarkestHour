@@ -7,13 +7,13 @@ class DH_T3476MountedMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3476MountedMG'
+    GunClass=Class'DH_T3476MountedMG'
 
     WeaponFOV=72.0 //zoom level outside tank through peep
     GunsightOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
     GunsightSize=0.35 //size of peephole
 
-    HUDOverlayClass=class'DH_DTmg_VehHUDOverlay'
+    HUDOverlayClass=Class'DH_DTmg_VehHUDOverlay'
     HUDOverlayOffset=(X=-40,Y=0,Z=0) //distance from your face
     HUDOverlayFOV=45 //size of DT mesh in your face
 

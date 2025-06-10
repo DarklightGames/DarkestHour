@@ -7,7 +7,7 @@ class DH_Semovente4732CannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Semovente4732Cannon'
+    GunClass=Class'DH_Semovente4732Cannon'
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_turret_ext',ViewFOV=28.33,TransitionUpAnim="sight_out",bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_turret_ext',TransitionUpAnim="open",TransitionDownAnim="sight_in",DriverTransitionAnim="semo4732_gunner_close",ViewPitchUpLimit=16384,ViewPitchDownLimit=57344,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_turret_ext',TransitionDownAnim="close",DriverTransitionAnim="semo4732_gunner_open",ViewPitchUpLimit=16384,ViewPitchDownLimit=57344,bDrawOverlays=true,bExposed=true)
@@ -25,7 +25,7 @@ defaultproperties
     CameraBone="GUNSIGHT_CAMERA"
     PlayerCameraBone="CAMERA_COM"
 
-    GunOpticsClass=class'DH_Vehicles.DH_Cannone4732Optics'
+    GunOpticsClass=Class'DH_Cannone4732Optics'
     
     // TODO: probably need a whole other sequence of anims here for the gunner?
     //DriveAnim=""    // HACK: This needs to be empty to prevent DHPawn from looping an animation from StartDriving.

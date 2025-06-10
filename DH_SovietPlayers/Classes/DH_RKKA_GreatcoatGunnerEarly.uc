@@ -7,7 +7,7 @@ class DH_RKKA_GreatcoatGunnerEarly extends DHSOVMachineGunnerRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatBrownBagEarlyPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietGreatcoatBrownBagEarlyPawn',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    Headgear(0)=Class'DH_SovietHelmet'
 }

@@ -11,7 +11,7 @@ defaultproperties
     VehicleTeam=0
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0
     // Reversed because the gunner uses index 1.

@@ -97,11 +97,11 @@ simulated function OnTick(float DeltaTime)
 
             if (CP.ProxyError.Type != ERROR_None)
             {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
+                Instigator.ReceiveLocalizedMessage(Class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
             }
             else
             {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
+                Instigator.ReceiveLocalizedMessage(Class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
             }
         }
     }
@@ -111,7 +111,7 @@ simulated function DHActorProxy CreateProxyCursor()
 {
     local DHConstructionProxy Cursor;
 
-    Cursor = Spawn(class'DHConstructionProxy', Instigator);
+    Cursor = Spawn(Class'DHConstructionProxy', Instigator);
     Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
 
     return Cursor;
@@ -182,10 +182,10 @@ simulated function TraceFromPlayer(
 
     // Trace out into the world and try and hit something static.
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
+    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
 
     // Trace for location hints.
-    foreach TraceActors(class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
+    foreach TraceActors(Class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
     {
         if (Socket == none)
         {
@@ -207,7 +207,7 @@ simulated function TraceFromPlayer(
     }
 
     // Trace static actors and (world geometry etc.)
-    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
         {
@@ -221,9 +221,9 @@ simulated function TraceFromPlayer(
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
+        TraceEnd = TraceStart + vect(0, 0, -1) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
 
-        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
         {
             if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
             {
@@ -255,7 +255,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     Context.TeamIndex = Instigator.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = DHPlayer(Instigator.Controller);
     Context.VariantIndex = VariantIndex;
     Context.SkinIndex = SkinIndex;
@@ -266,7 +266,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     // Create a proxy to test placement logic on the server-side.
-    TestProxy = Spawn(class'DHConstructionProxy', Instigator);
+    TestProxy = Spawn(Class'DHConstructionProxy', Instigator);
 
     if (TestProxy == none)
     {

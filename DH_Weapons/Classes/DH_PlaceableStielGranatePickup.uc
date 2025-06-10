@@ -7,7 +7,7 @@ class DH_PlaceableStielGranatePickup extends DHPlaceableWeaponPickup;
 
 defaultproperties
 {
-    WeaponType=class'DH_Weapons.DH_StielGranateWeapon'
-    InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
+    WeaponType=Class'DH_StielGranateWeapon'
+    InventoryType=Class'DH_StielGranateWeapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
 }

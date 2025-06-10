@@ -7,8 +7,8 @@ class DH_PPS43Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PPS43Bullet'
-    AmmoClass=class'ROAmmo.PPS43Ammo'
+    ProjectileClass=Class'DH_PPS43Bullet'
+    AmmoClass=Class'PPS43Ammo'
     FireRate=0.095 // ~702 rpm (value had to be found experimentally due to an engine bug)
     Spread=135.0
 
@@ -22,8 +22,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single3'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    FlashEmitterClass=Class'MuzzleFlash1stPPSH'
+    ShellEjectClass=Class'ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)
 
     FireIronLastAnim="iron_idle_empty"

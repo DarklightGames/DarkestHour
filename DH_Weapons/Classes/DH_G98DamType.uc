@@ -8,6 +8,6 @@ class DH_G98DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_G98Weapon'
+    WeaponClass=Class'DH_G98Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

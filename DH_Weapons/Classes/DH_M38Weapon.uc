@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Mosin M38"
     SwayModifyFactor=0.52  // -0.08
-    FireModeClass(0)=class'DH_Weapons.DH_M38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M38Attachment'
-    PickupClass=class'DH_Weapons.DH_M38Pickup'
+    FireModeClass(0)=Class'DH_M38Fire'
+    FireModeClass(1)=Class'DH_M38MeleeFire'
+    AttachmentClass=Class'DH_M38Attachment'
+    PickupClass=Class'DH_M38Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_Carbine_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'

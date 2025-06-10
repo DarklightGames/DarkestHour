@@ -90,7 +90,7 @@ simulated function FindTargetActors()
 
     super.PostBeginPlay();
 
-    foreach AllActors(class'Actor', TargetActor, TargetTag)
+    foreach AllActors(Class'Actor', TargetActor, TargetTag)
     {
         TargetActors[TargetActors.Length] = TargetActor;
     }

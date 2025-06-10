@@ -22,8 +22,8 @@ defaultproperties
     FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_01",DrivePos=(X=8.0,Y=0.0,Z=3.0),DriveRot=(Yaw=49152),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="passenger_02",DrivePos=(X=-11.0,Y=0.0,Z=78.0),DriveRot=(Pitch=34600),DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_03",DrivePos=(X=10.0,Y=0.0,Z=84.0),DriveRot=(Pitch=32768,Yaw=26500),DriveAnim="VHalftrack_Rider3_idle")

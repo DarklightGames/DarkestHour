@@ -21,7 +21,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     //Teleporter is bStatic so use AllActors list
-    foreach AllActors(class'Teleporter', TeleReference, TeleporterToModify)
+    foreach AllActors(Class'Teleporter', TeleReference, TeleporterToModify)
     {
         break;
     }

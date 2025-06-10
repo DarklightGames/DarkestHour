@@ -15,7 +15,7 @@ defaultproperties
     bCanBeRotated=true
     CollisionRadius=36.0
     CollisionHeight=36.0
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M1919A4MGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4MGPawn',WeaponBone="turret_placement")
     RotationsPerSecond=0.25
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
     VehicleHudImage=Texture'DH_Fiat1435_tex.interface.fiat1435_tripod_icon'

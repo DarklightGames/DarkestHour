@@ -37,9 +37,9 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
+    PrimaryProjectileClass=Class'DH_PantherCannonShell'
+    SecondaryProjectileClass=Class'DH_PantherCannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_PantherCannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -58,11 +58,11 @@ defaultproperties
     TertiarySpread=0.0012
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=9
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

@@ -109,17 +109,17 @@ defaultproperties
 {
     ItemName="Panzerfaust 60"
     NativeItemName="Panzerfaust 60"
-    FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PanzerFaustMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
-    PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
+    FireModeClass(0)=Class'DH_PanzerFaustFire'
+    FireModeClass(1)=Class'DH_PanzerFaustMeleeFire'
+    AttachmentClass=Class'DH_PanzerFaustAttachment'
+    PickupClass=Class'DH_PanzerFaustPickup'
 
     Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
+    RocketAttachmentClass=Class'ROFPAmmoRound'
     MuzzleBone="Warhead"
     RocketBone="Warhead"
     MaxNumPrimaryMags=1

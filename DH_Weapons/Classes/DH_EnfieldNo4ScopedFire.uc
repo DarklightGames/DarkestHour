@@ -7,8 +7,8 @@ class DH_EnfieldNo4ScopedFire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_EnfieldNo4ScopedBullet'
-    AmmoClass=class'DH_Weapons.DH_EnfieldNo4ScopedAmmo'
+    ProjectileClass=Class'DH_EnfieldNo4ScopedBullet'
+    AmmoClass=Class'DH_EnfieldNo4ScopedAmmo'
     Spread=20.0
     AddedPitch=10
     AddedYaw=9
@@ -16,8 +16,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    FlashEmitterClass=Class'MuzzleFlash1stKar'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     FireAnim="shoot_last"
     FireIronAnim="Scope_shoot"
     ShellIronSightOffset=(X=12.0,Y=2.0,Z=-3.0)

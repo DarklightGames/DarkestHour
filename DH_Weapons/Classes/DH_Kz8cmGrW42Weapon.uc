@@ -7,8 +7,8 @@ class DH_Kz8cmGrW42Weapon extends DHMortarWeapon;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Weapons.DH_Kz8cmGrW42Vehicle'
-    AttachmentClass=class'DH_Weapons.DH_Kz8cmGrW42Attachment'
+    VehicleClass=Class'DH_Kz8cmGrW42Vehicle'
+    AttachmentClass=Class'DH_Kz8cmGrW42Attachment'
     Description="Kurz 8cm Granatwerfer 42"
     ItemName="Kz 8cm GrW 42 Mortar"
     NativeItemName="Kurz 8cm Granatwerfer 42"

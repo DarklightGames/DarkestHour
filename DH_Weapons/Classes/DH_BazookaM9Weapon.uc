@@ -10,9 +10,9 @@ defaultproperties
     ItemName="M9A1 Bazooka"
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m9'
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BazookaM9Fire'
-    AttachmentClass=class'DH_Weapons.DH_BazookaM9Attachment'
-    PickupClass=class'DH_Weapons.DH_BazookaM9Pickup'
+    FireModeClass(0)=Class'DH_BazookaM9Fire'
+    AttachmentClass=Class'DH_BazookaM9Attachment'
+    PickupClass=Class'DH_BazookaM9Pickup'
 
     bHasScope=true
     bForceModelScope=true

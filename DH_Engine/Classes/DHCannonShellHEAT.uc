@@ -297,7 +297,7 @@ defaultproperties
     bExplodesOnArmor=true
     bExplodesOnHittingWater=true
     bAlwaysDoShakeEffect=true
-    ShellImpactDamage=class'DH_Engine.DHShellHEATImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEATImpactDamageType'
 
     HullFireChance=0.3
     EngineFireChance=0.8
@@ -321,12 +321,12 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=2.1
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellDeflectEffectClass=Class'TankHEHitDeflect'
     DamageRadius=300.0
-    MyDamageType=class'DH_Engine.DHShellHEATDamageType'
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    MyDamageType=Class'DHShellHEATDamageType'
+    ExplosionDecal=Class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=Class'ArtilleryMarkSnow'
     LifeSpan=10.0
 //  SoundRadius=1000.0 // removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
     ExplosionSoundVolume=1.5

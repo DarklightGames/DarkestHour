@@ -9,7 +9,7 @@ defaultproperties
 {
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack_winter'
     Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M45QuadmountMGPawn_Snow',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M45QuadmountMGPawn_Snow',WeaponBone="turret_placement")
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'))),(Probability=0.5,Attachment=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter')))))
     DestroyedMeshSkins(0)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
     DestroyedMeshSkins(1)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'

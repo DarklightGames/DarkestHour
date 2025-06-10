@@ -35,16 +35,16 @@ defaultproperties
 {
     ItemName="PIAT"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
-    AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
-    PickupClass=class'DH_Weapons.DH_PIATPickup'
+    FireModeClass(0)=Class'DH_PIATFire'
+    AttachmentClass=Class'DH_PIATAttachment'
+    PickupClass=Class'DH_PIATPickup'
 
     Mesh=SkeletalMesh'DH_PIAT_1st.PIAT_1st' // TODO: there is no specularity mask for this weapon
 
     DisplayFOV=90
     IronSightDisplayFOV=55.0 //25.0
 
-    RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
+    RocketAttachmentClass=Class'DH_PIATAmmoRound'
     RocketBone="bomb"
 
     MuzzleBone="muzzle"

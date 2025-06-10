@@ -32,8 +32,8 @@ defaultproperties
     nProjectileDescriptions(0)="Igr.38 Sprgr"
     nProjectileDescriptions(1)="Igr.38 HL/A"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_LeIG18CannonShellHE'
+    SecondaryProjectileClass=Class'DH_LeIG18CannonShellHEAT'
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=5
     MaxPrimaryAmmo=30

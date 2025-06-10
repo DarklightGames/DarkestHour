@@ -8,8 +8,8 @@ class DH_Stug3GDestroyer_Late extends DH_Stug3GDestroyer; // late war version wi
 defaultproperties
 {
     bHasAddedSideArmor=true
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_Late')
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Stug3GCannonPawn_Late')
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_StuH42MountedMGPawn')
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_camo2'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3G_armor_camo2'

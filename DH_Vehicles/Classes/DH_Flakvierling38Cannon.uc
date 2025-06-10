@@ -23,7 +23,7 @@ function Fire(Controller C)
     local class<Projectile> ProjClass;
 
     // Spawn a projectile from the 1st barrel in the firing pair
-    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    if (ProjectileClass == Class'DHCannonShell_MixedMag')
     {
         ProjClass = SecondaryProjectileClass;
     }
@@ -36,7 +36,7 @@ function Fire(Controller C)
     IncrementNextFiringBarrelIndex();
 
     // Spawn a projectile from the 2nd paired barrel, but this time skipping firing effects so we don't repeat them
-    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    if (ProjectileClass == Class'DHCannonShell_MixedMag')
     {
         ProjClass = TertiaryProjectileClass;
     }

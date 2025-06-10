@@ -23,7 +23,7 @@ defaultproperties
 {
     VehicleNameString="76 mm regimental gun M1927"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M1927CannonPawn',WeaponBone="body")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1927CannonPawn',WeaponBone="body")
     Mesh=SkeletalMesh'DH_M1927_anm.m1927_body'
     Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
     DestroyedVehicleMesh=StaticMesh'DH_M1927_stc.Destroyed.m1927_destroyed'

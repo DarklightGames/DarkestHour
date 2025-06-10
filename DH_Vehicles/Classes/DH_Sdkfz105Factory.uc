@@ -7,7 +7,7 @@ class DH_Sdkfz105Factory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_Sdkfz105Transport'
+    VehicleClass=Class'DH_Sdkfz105Transport'
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'

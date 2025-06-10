@@ -27,7 +27,7 @@ defaultproperties
     BeginningIdleAnim="driver_closed_idle"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_CV33MGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_CV33MGPawn',WeaponBone="turret_placement")
 
     // Driver
     InitialPositionIndex=1
@@ -69,10 +69,10 @@ defaultproperties
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
     DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.destroyed.cv33_destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_attachment"
     FireEffectOffset=(X=0,Y=0,Z=50.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.5  // There is no firewall between the engine and the crew compartment, so the engine fire can spread to the crew compartment quite easily.

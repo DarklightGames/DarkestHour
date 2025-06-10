@@ -13,7 +13,7 @@ defaultproperties
     VehicleTeam=1
     Mesh=SkeletalMesh'DH_ML3InchMortar_anm.ml3inch_body_ext'
     //Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ML3InchCannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ML3InchCannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0
     // Reversed because the gunner uses index 1.

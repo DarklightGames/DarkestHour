@@ -10,7 +10,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", class'Class'));
+    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", Class'Class'));
 }
 
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
@@ -45,7 +45,7 @@ defaultproperties
     BeginningIdleAnim="Driver_idle_out"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz105PassengerPawn',WeaponBone="Body")
     PassengerWeapons(1)=(WeaponBone="Turret_placement") // cannon pawn class has to be set in PostBeginPlay() due to build order
     FirstRiderPositionIndex=0 // non-standard as passenger position comes before vehicle weapon position
 

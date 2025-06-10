@@ -8,5 +8,5 @@ class DH_PPSH41_stickBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PPSH41_stickWeapon'
+    WeaponClass=Class'DH_PPSH41_stickWeapon'
 }

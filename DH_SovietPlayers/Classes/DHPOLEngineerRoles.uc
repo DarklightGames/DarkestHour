@@ -9,9 +9,9 @@ class DHPOLEngineerRoles extends DHAlliedEngineerRoles
 defaultproperties
 {
     AltName="Saper"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_M38Weapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')
+    Grenades(0)=(Item=Class'DH_F1GrenadeWeapon')
+    Grenades(1)=(Item=Class'DH_RDG1SmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"  //to do: RPG-40
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     GivenItems(2)="DH_Equipment.DHShovelItem_Russian"

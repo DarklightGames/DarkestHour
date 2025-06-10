@@ -48,7 +48,7 @@ defaultproperties
     DestroyedMeshSkins(2)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_BaseVehicle_Green_D'
     
     // Logistics
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="BODY"
     SupplyAttachmentOffset=(X=-91.7437,Y=0.0,Z=61.4152)
     SupplyAttachmentStaticMesh=None

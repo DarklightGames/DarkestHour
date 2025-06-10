@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mp3008_3rd'
     MenuImage=Texture'DH_Sten_tex.interface.mp3008'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMP'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdMP'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 
     MuzzleBoneName="tipnew"
 

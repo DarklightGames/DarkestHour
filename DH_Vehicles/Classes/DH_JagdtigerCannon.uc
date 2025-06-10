@@ -29,8 +29,8 @@ defaultproperties
     CustomPitchDownLimit=64171
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShellHE'
+    PrimaryProjectileClass=Class'DH_JagdtigerCannonShell'
+    SecondaryProjectileClass=Class'DH_JagdtigerCannonShellHE'
 
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HE"
@@ -46,7 +46,7 @@ defaultproperties
     SecondarySpread=0.00129
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherClass=Class'DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-106.0,Y=-37.0,Z=45.0)
 
     // Weapon fire

@@ -7,7 +7,7 @@ class DH_BM36MortarCannonPawn extends DH_Model35MortarCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_BM36MortarCannon'
+    GunClass=Class'DH_BM36MortarCannon'
 
     AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.RU_HE_57O832_ICON'
     AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.RU_SMOKE_57D832_ICON'
@@ -18,5 +18,5 @@ defaultproperties
     PlayerCameraBone="RU_CAMERA_COM"
     CameraBone="RU_GUNSIGHT_CAMERA"
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
+    ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 }

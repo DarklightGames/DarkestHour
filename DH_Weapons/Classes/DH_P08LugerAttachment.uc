@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.luger'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     bRapidFire=false
 
     WA_Idle="idle_luger"

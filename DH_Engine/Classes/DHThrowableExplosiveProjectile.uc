@@ -110,7 +110,7 @@ simulated function PostBeginPlay()
         // Calculate the momentum threshold for impact fuze grenades.
         if (FuzeType == FT_Impact)
         {
-            ImpactFuzeMomentumThreshold = class'UInterp'.static.Lerp(
+            ImpactFuzeMomentumThreshold = Class'UInterp'.static.Lerp(
                 FRand(),
                 ImpactFuzeMomentumThresholdRange.Min,
                 ImpactFuzeMomentumThresholdRange.Max
@@ -184,7 +184,7 @@ simulated function Destroyed()
     // Move karma ragdolls around when this explodes
     if (Level.NetMode != NM_DedicatedServer)
     {
-        foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
+        foreach VisibleCollidingActors(Class'ROPawn', Victims, DamageRadius, Start)
         {
             if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
             {
@@ -240,7 +240,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -441,7 +441,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -481,7 +481,7 @@ simulated function Landed(Vector HitNormal)
     if (Bounces <= 0)
     {
         SetPhysics(PHYS_None);
-        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(Rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(Rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
 
         if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud && !bHasExploded)
         {
@@ -586,7 +586,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
         // On a server (single player), we'll simply cause enough damage to break the mesh
         if (Role == ROLE_Authority)
         {
-            DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DHWeaponBashDamageType');
+            DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), Class'DHWeaponBashDamageType');
 
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
             if (DestroMesh.Health < 0)
@@ -601,7 +601,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
             for (i = 0; i < DestroMesh.TypesCanDamage.Length; ++i)
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
-                if (DestroMesh.TypesCanDamage[i] == class'DHWeaponBashDamageType' || ClassIsChildOf(class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
+                if (DestroMesh.TypesCanDamage[i] == Class'DHWeaponBashDamageType' || ClassIsChildOf(Class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
                 {
                     return;
                 }
@@ -641,7 +641,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
 
         if (Level.NetMode != NM_DedicatedServer && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            ImpactSoundVolume = class'UInterp'.static.MapRangeClamped(
+            ImpactSoundVolume = Class'UInterp'.static.MapRangeClamped(
                 Speed,
                 ImpactSoundSpeedFactorRange.Min, ImpactSoundSpeedFactorRange.Max,
                 ImpactSoundVolumeRange.Min, ImpactSoundVolumeRange.Max
@@ -1018,9 +1018,9 @@ defaultproperties
     ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
-    ExplosionDecal=class'DH_Effects.DHGrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
-    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    ExplosionDecal=Class'DHGrenadeMark'
+    ExplosionDecalSnow=Class'GrenadeMarkSnow'
+    SplashEffect=Class'ROBulletHitWaterEffect'
     WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence

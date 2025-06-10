@@ -7,6 +7,6 @@ class DH_VG15Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_VG15Weapon'
+    InventoryType=Class'DH_VG15Weapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.vg15'
 }

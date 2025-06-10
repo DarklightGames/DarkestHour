@@ -35,10 +35,10 @@ defaultproperties
     ItemName="MG 34"
     NativeItemName="Maschinengewehr 34"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire' // this secondary fire mode is not a switch, it is done with another button
-    AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
-    PickupClass=class'DH_Weapons.DH_MG34Pickup'
+    FireModeClass(0)=Class'DH_MG34AutoFire'
+    FireModeClass(1)=Class'DH_MG34SemiAutoFire' // this secondary fire mode is not a switch, it is done with another button
+    AttachmentClass=Class'DH_MG34Attachment'
+    PickupClass=Class'DH_MG34Pickup'
 
     Mesh=SkeletalMesh'DH_Mg34_1st.MG34_Mesh'
     // Note - can't specify specularity shader as HighDetailOverlay as it doesn't work with the HDO system
@@ -59,7 +59,7 @@ defaultproperties
     NumMagsToResupply=1
 
     InitialBarrels=2
-    BarrelClass=class'DH_Weapons.DH_MG34Barrel'
+    BarrelClass=Class'DH_MG34Barrel'
     BarrelSteamBone="Barrel"
     BarrelChangeAnim="Bipod_Barrel_Change"
     

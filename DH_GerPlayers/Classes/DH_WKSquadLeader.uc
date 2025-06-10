@@ -9,10 +9,10 @@ defaultproperties
 {
     AltName="Scharführer"
 
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanKriegsmarinePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_GermanKriegsmarinePawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-    Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineCap'
+    Headgear(0)=Class'DH_KriegsmarineCap'
     HeadgearProbabilities(0)=1.0
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
 }

@@ -8,10 +8,10 @@ class DH_Nagant1895BramitWeapon extends DHRevolverWeapon;
 defaultproperties
 {
     ItemName="Nagant M1895 (BraMit)"
-    FireModeClass(0)=class'DH_Weapons.DH_Nagant1895BramitFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Nagant1895BramitMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Nagant1895BramitAttachment'
-    PickupClass=class'DH_Weapons.DH_Nagant1895BramitPickup'
+    FireModeClass(0)=Class'DH_Nagant1895BramitFire'
+    FireModeClass(1)=Class'DH_Nagant1895BramitMeleeFire'
+    AttachmentClass=Class'DH_Nagant1895BramitAttachment'
+    PickupClass=Class'DH_Nagant1895BramitPickup'
 
     Mesh=SkeletalMesh'DH_Nagant1895_1st.Nagant1895Bramit'
 

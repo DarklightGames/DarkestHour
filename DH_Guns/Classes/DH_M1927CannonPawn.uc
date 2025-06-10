@@ -7,7 +7,7 @@ class DH_M1927CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_M1927Cannon'
+    GunClass=Class'DH_M1927Cannon'
     // spotting scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M1927_anm.m1927_turret',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewFOV=80.0,ViewLocation=(X=0.0,Y=-10.0,Z=40.0),ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // kneeling
@@ -41,5 +41,5 @@ defaultproperties
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_M1927'
+    ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M1927'
 }

@@ -12,6 +12,6 @@ defaultproperties
     GunMantletArmorFactor=8.0
     GunMantletSlope=45.0
     WeaponFireOffset=10.5
-    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherClass=Class'DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-18.0,Y=23.0,Z=30.0)
 }

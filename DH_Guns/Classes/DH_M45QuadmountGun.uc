@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="M45 Quadmount"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M45_anm.m45_base_trailer'
     Skins(0)=Texture'DH_Artillery_tex.m45.m45_trailer'
     Skins(1)=Shader'DH_Artillery_Tex.m45.m45_sight_s'

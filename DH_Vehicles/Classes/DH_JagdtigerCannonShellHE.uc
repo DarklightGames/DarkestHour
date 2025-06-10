@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=2400  //3.6 KG TNT, destroys anything that gets penetrated  by it
     Damage=1600.0
     DamageRadius=2100.0
-    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
+    MyDamageType=Class'DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     PenetrationMag=1250.0
     HullFireChance=1.0
     EngineFireChance=1.0
@@ -28,12 +28,12 @@ defaultproperties
     bHasShellTrail=false
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
 
     //Penetration
     DHPenetrationTable(0)=10.5

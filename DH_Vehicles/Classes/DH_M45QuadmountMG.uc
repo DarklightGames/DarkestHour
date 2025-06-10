@@ -98,28 +98,28 @@ defaultproperties
     CustomPitchDownLimit=63716 // 10 degrees depression
 
     // Ammo
-    ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
+    ProjectileClass=Class'DH_50CalVehicleBullet'
     InitialPrimaryAmmo=200 // 200 rounds in each ammo chest, so 800 rounds loaded in total - each trigger pull fires 4 rounds, 1 from each ammo cheat
     NumMGMags=2 // means we can reload 4 times & each reload is 4 ammo chests, so really the weapon starts with 20 ammo chests, including the 4 that are loaded
     FireInterval=0.133333 // 450 RPM
     TracerFrequency=5
-    TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
+    TracerProjectileClass=Class'DH_50CalVehicleTracerBullet'
     HudAltAmmoIcon=Texture'DH_Artillery_tex.ATGun_Hud.m45_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel_TL" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
 
     bHasMultipleBarrels=true
-    Barrels(0)=(MuzzleBone="Barrel_TL",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
-    Barrels(1)=(MuzzleBone="Barrel_TR",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
-    Barrels(2)=(MuzzleBone="Barrel_BL",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
-    Barrels(3)=(MuzzleBone="Barrel_BR",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
+    Barrels(0)=(MuzzleBone="Barrel_TL",EffectEmitterClass=Class'DH_Vehicle50CalMGEmitter')
+    Barrels(1)=(MuzzleBone="Barrel_TR",EffectEmitterClass=Class'DH_Vehicle50CalMGEmitter')
+    Barrels(2)=(MuzzleBone="Barrel_BL",EffectEmitterClass=Class'DH_Vehicle50CalMGEmitter')
+    Barrels(3)=(MuzzleBone="Barrel_BR",EffectEmitterClass=Class'DH_Vehicle50CalMGEmitter')
 
     WeaponFireOffset=0.0
     bDoOffsetTrace=false
 
     // Firing effects
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleMGMultiBarrelEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
+    AmbientEffectEmitterClass=Class'DH_VehicleMGMultiBarrelEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
     FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0

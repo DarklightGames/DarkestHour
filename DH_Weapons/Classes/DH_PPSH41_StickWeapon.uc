@@ -39,10 +39,10 @@ defaultproperties
     SwayModifyFactor=0.64 // -0.6
     ItemName="PPSh-41 (35rd)"
 
-    FireModeClass(0)=class'DH_Weapons.DH_PPSH41_stickFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PPSH41_stickMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PPSH41_stickAttachment'
-    PickupClass=class'DH_Weapons.DH_PPSH41_stickPickup'
+    FireModeClass(0)=Class'DH_PPSH41_stickFire'
+    FireModeClass(1)=Class'DH_PPSH41_stickMeleeFire'
+    AttachmentClass=Class'DH_PPSH41_stickAttachment'
+    PickupClass=Class'DH_PPSH41_stickPickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-stick'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
@@ -78,7 +78,7 @@ defaultproperties
     SprintEndEmptyAnim="sprint_end_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     CrawlForwardEmptyAnim="crawlF_empty"

@@ -8,7 +8,7 @@ class DH_ShermanTank_M4A276W_Soviet extends DH_ShermanTank_M4A375W;
 defaultproperties
 {
     VehicleNameString="M4A2(76)W"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawnA_76mm')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawnA_76mm')
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_762dest'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman76_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman76_turret_look'
@@ -26,8 +26,8 @@ defaultproperties
     RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
 
 
     // Hull mesh

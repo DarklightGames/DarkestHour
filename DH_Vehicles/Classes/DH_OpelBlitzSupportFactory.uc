@@ -7,7 +7,7 @@ class DH_OpelBlitzSupportFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_OpelBlitzSupport'
+    VehicleClass=Class'DH_OpelBlitzSupport'
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'

@@ -40,8 +40,8 @@ defaultproperties
     nProjectileDescriptions(0)="HE M48"
     nProjectileDescriptions(1)="HEAT M66"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_M116CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_M116CannonShellHE'
+    SecondaryProjectileClass=Class'DH_LeIG18CannonShellHEAT'
     InitialPrimaryAmmo=30  // TODO: REPLACE
     InitialSecondaryAmmo=5  // TODO: REPLACE
     MaxPrimaryAmmo=30

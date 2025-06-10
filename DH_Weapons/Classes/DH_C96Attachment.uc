@@ -9,12 +9,12 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.C96'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     MuzzleBoneName="tip"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     ShellEjectionBoneName="weapon_eject"
 
-    ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
+    ClientProjectileClass=Class'DH_C96Bullet'
 
     WA_Idle="idle_c96"
     WA_IdleEmpty="idle_c96"

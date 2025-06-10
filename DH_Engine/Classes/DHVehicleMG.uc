@@ -280,7 +280,7 @@ defaultproperties
     AIInfo(0)=(bFireOnRelease=true,AimError=750.0,RefireRate=0.99)
 
     // Firing effects
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    AmbientEffectEmitterClass=Class'TankMGEmitter'
     bAmbientFireSound=true
     AmbientSoundScaling=2.75
     FireForce="minifireb"

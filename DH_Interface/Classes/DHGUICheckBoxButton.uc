@@ -54,7 +54,7 @@ function InternalOnRendered(Canvas C)
 
     if (CenterText != "")
     {
-        C.Font = class'ROHud'.static.LoadSmallFontStatic(7);
+        C.Font = Class'ROHud'.static.LoadSmallFontStatic(7);
         C.SetDrawColor(0, 0, 0);
         C.TextSize(CenterText, XL, YL);
         C.SetPos(ActualLeft() + (ActualWidth() / 2) - (XL / 2), ActualTop() + (ActualHeight() / 2) - (YL / 2));

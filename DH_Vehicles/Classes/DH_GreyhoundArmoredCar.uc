@@ -23,7 +23,7 @@ defaultproperties
     Skins(2)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-70.0,Z=105.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")

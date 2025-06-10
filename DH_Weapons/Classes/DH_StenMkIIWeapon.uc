@@ -8,10 +8,10 @@ class DH_StenMkIIWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="STEN Mk.II"
-    FireModeClass(0)=class'DH_Weapons.DH_StenMkIIFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StenMkIIMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_StenMkIIAttachment'
-    PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
+    FireModeClass(0)=Class'DH_StenMkIIFire'
+    FireModeClass(1)=Class'DH_StenMkIIMeleeFire'
+    AttachmentClass=Class'DH_StenMkIIAttachment'
+    PickupClass=Class'DH_StenMkIIPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.StenMk2_mesh'
     //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
@@ -32,7 +32,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

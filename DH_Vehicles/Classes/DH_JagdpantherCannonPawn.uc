@@ -7,7 +7,7 @@ class DH_JagdpantherCannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_JagdpantherCannon'
+    GunClass=Class'DH_JagdpantherCannon'
     DriverPositions(0)=(ViewLocation=(X=60.0,Y=-21.0,Z=10.0),ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',ViewPitchUpLimit=2548,ViewPitchDownLimit=64079,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=10.67,PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=500,ViewPitchDownLimit=62940,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)

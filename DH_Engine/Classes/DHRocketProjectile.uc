@@ -31,7 +31,7 @@ simulated function PostBeginPlay()
 
     SetTimer(StraightFlightTime, false); // added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
 
-    if (ExplosionSound[3] == class'DHCannonShellHEAT'.default.ExplosionSound[3]) // remove unwanted 4th sound inherited from DHCannonShellHEAT (unless overridden)
+    if (ExplosionSound[3] == Class'DHCannonShellHEAT'.default.ExplosionSound[3]) // remove unwanted 4th sound inherited from DHCannonShellHEAT (unless overridden)
     {
         ExplosionSound.Length = 3;
     }
@@ -134,25 +134,25 @@ defaultproperties
     ImpactDamage=675
     Damage=300.0
     DamageRadius=180.0
-    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
-    MyDamageType=class'DamageType'
+    ShellImpactDamage=Class'RORocketImpactDamage'
+    MyDamageType=Class'DamageType'
 
     //Effects
     bHasTracer=true
     bHasSmokeTrail=false
     bHasShellTrail=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
-    ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
-    ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
-    ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
-    ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
-    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'//temp
+    CoronaClass=Class'DHShellTracer_Orange'
+    RocketSmokeTrailClass=Class'PanzerfaustTrail'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellHitDirtEffectClass=Class'PanzerfaustHitDirt'
+    ShellHitSnowEffectClass=Class'PanzerfaustHitSnow'
+    ShellHitWoodEffectClass=Class'PanzerfaustHitWood'
+    ShellHitRockEffectClass=Class'PanzerfaustHitConcrete'
+    ShellHitWaterEffectClass=Class'PanzerfaustHitWater'
+    ShellDeflectEffectClass=Class'TankHEHitDeflect'//temp
 
-    ExplosionDecal=class'ROEffects.RocketMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
+    ExplosionDecal=Class'RocketMarkDirt'
+    ExplosionDecalSnow=Class'RocketMarkSnow'
 
     //Lighting
     LightType=LT_Steady

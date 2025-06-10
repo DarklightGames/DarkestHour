@@ -45,9 +45,9 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHBrokenBottleMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
-    FireModeClass(1)=class'DH_Equipment.DHBrokenBottleMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
-    PickupClass=class'DH_Equipment.DHBrokenBottlePickup'
+    FireModeClass(0)=Class'DHBrokenBottleMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
+    FireModeClass(1)=Class'DHBrokenBottleMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
+    PickupClass=Class'DHBrokenBottlePickup'
     ItemName="Vino Rosso 'Bass-net' 2009 Vintage"
     InventoryGroup=1
     GroupOffset=0
@@ -79,7 +79,7 @@ defaultproperties
     bUsesFreeAim=true
     FreeAimRotationSpeed=2.0
 
-    AttachmentClass=class'DHBrokenBottleAttachment'
+    AttachmentClass=Class'DHBrokenBottleAttachment'
     // TODO: These assets got lost in a merge & need to be added back.
     // Mesh=SkeletalMesh'DH_Halloween_anm.BrokenBottle'
     //Skins(0)=Texture'DH_Halloween_tex.Maces.BrokenBottleTexture'

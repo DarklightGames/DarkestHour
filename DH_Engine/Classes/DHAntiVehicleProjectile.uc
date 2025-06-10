@@ -235,11 +235,11 @@ simulated function TickDebugSpeedSampling()
 
     // Get the distance to the plane created from the launch location & direction.
     DistanceToPlane = (Location - LaunchLocation) dot LaunchDirection;
-    DistanceToPlane = class'DHUnits'.static.UnrealToMeters(DistanceToPlane);
+    DistanceToPlane = Class'DHUnits'.static.UnrealToMeters(DistanceToPlane);
 
     if (DistanceToPlane >= Distances[DebugSpeedSamplingIndex])
     {
-        Log("Speed at " @ Distances[DebugSpeedSamplingIndex] @ "m: " @ class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
+        Log("Speed at " @ Distances[DebugSpeedSamplingIndex] @ "m: " @ Class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
         DebugSpeedSamplingIndex += 1;
     }
 }
@@ -262,7 +262,7 @@ simulated function float GetMaxPenetration(Vector LaunchLocation, Vector HitLoca
 {
     local float DistanceMeters, MaxPenetration;
 
-    DistanceMeters = class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
+    DistanceMeters = Class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
 
     if      (DistanceMeters < 100.0)   MaxPenetration = DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0;
     else if (DistanceMeters < 250.0)   MaxPenetration = DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0;
@@ -637,7 +637,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -831,7 +831,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -1173,8 +1173,8 @@ function DebugShotDistanceAndSpeed()
     }
     else
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location))
-            $ "m, impact speed:" @ class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
+        Level.Game.Broadcast(self, "Shot distance:" @ Class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location))
+            $ "m, impact speed:" @ Class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
     }
 }
 
@@ -1187,8 +1187,8 @@ simulated function HandleShellDebug(Vector RealHitLocation)
     if (NumDeflections < 1) // don't debug if it's just a deflected shell
     {
         ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
-        Log("Shell drop =" @ class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
-            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z @ "Distance=" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - RealHitLocation)) $ "m");
+        Log("Shell drop =" @ Class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
+            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z @ "Distance=" @ Class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - RealHitLocation)) $ "m");
     }
 }
 
@@ -1201,7 +1201,7 @@ defaultproperties
     SpeedFudgeScale=0.5
     InitialAccelerationTime=0.2
 
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
+    ShellShatterEffectClass=Class'DHShellShatterEffect'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'

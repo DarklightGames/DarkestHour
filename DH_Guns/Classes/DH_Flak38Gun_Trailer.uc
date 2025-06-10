@@ -7,7 +7,7 @@ class DH_Flak38Gun_Trailer extends DH_Flak38Gun;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn_Trailer')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Flak38CannonPawn_Trailer')
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_trailer'
     Skins(1)=Texture'DH_Artillery_tex.Flak38.Flak38_trailer'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_trailer_dest'

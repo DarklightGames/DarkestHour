@@ -7,7 +7,7 @@ class DH_RKKF_RiflemanPacific extends DHSOVRiflemanRoles; //this role wears a na
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietMarineBushlatPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietNavalCap_Pacific'
+    RolePawns(0)=(PawnClass=Class'DH_SovietMarineBushlatPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietNavalCap_Pacific'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.NavalSleeves2'
 }

@@ -8,7 +8,7 @@ class DH_MP3008DamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MP3008Weapon'
+    WeaponClass=Class'DH_MP3008Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

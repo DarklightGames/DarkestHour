@@ -7,7 +7,7 @@ class DH_ColtM1914MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_ColtM1914BashDamType'
+    DamageType=Class'DH_ColtM1914BashDamType'
     PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
     BashBackEmptyAnim="bash_pullback_empty"

@@ -7,12 +7,12 @@ class DH_PzLehrSquadLeader extends DHGESergeantRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_PanzerLehrPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_PanzerLehrPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.pzlehr_sleeve'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
-    Headgear(1)=class'ROInventory.ROGermanHat'
+    Headgear(0)=Class'DH_HeerHelmetOne'
+    Headgear(1)=Class'ROGermanHat'
     HeadgearProbabilities(0)=0.7
     HeadgearProbabilities(1)=0.3
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
 }

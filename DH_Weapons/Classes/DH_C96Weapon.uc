@@ -8,10 +8,10 @@ class DH_C96Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Mauser C96"
-    FireModeClass(0)=class'DH_Weapons.DH_C96Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_C96MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_C96Attachment'
-    PickupClass=class'DH_Weapons.DH_C96Pickup'
+    FireModeClass(0)=Class'DH_C96Fire'
+    FireModeClass(1)=Class'DH_C96MeleeFire'
+    AttachmentClass=Class'DH_C96Attachment'
+    PickupClass=Class'DH_C96Pickup'
 
     Mesh=SkeletalMesh'DH_C96_1st.c96_mesh'
 

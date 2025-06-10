@@ -8,7 +8,7 @@ class DH_AchillesCannonPawn extends DHBritishCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_AchillesCannon'
+    GunClass=Class'DH_AchillesCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=-25.2,Z=8.0),ViewFOV=25.0,PositionMesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=64653,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)

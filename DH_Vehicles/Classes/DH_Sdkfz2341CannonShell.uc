@@ -16,7 +16,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=155
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
+    ShellImpactDamage=Class'DH_Sdkfz2341CannonShellDamageAP'
     HullFireChance=0.15
     EngineFireChance=0.3
 
@@ -25,19 +25,19 @@ defaultproperties
 
     //Effects
     DrawScale=0.75
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DH20mmShellTrail_YellowOrange'
 
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    ShellDeflectEffectClass=Class'TankAPHitDeflect'
+    ShellHitVehicleEffectClass=Class'DH20mmAPHitPenetrate'
+    ShellHitDirtEffectClass=Class'DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmAPHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
-    ExplosionDecal=class'ROEffects.BulletHoleConcrete'
-    ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
+    ExplosionDecal=Class'BulletHoleConcrete'
+    ExplosionDecalSnow=Class'BulletHoleSnow'
 
     //Sounds
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'

@@ -237,8 +237,8 @@ simulated function bool WeaponAllowSprint()
 defaultproperties
 {
     ItemName="Staticline"
-    AttachmentClass=class'DH_Equipment.DH_ParachuteAttachment'
-    FireModeClass(0)=class'ROInventory.ROEmptyFireclass' // prevents "accessed none" log errors
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    AttachmentClass=Class'DH_ParachuteAttachment'
+    FireModeClass(0)=Class'ROEmptyFireclass' // prevents "accessed none" log errors
+    FireModeClass(1)=Class'ROEmptyFireclass'
     InventoryGroup=11
 }

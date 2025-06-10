@@ -47,8 +47,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
+    PrimaryProjectileClass=Class'DH_Bofors40mmCannonShellHE'
+    SecondaryProjectileClass=Class'DH_Bofors40mmCannonShell'
 
     ProjectileDescriptions(0)="HE-T"
     ProjectileDescriptions(1)="AP"

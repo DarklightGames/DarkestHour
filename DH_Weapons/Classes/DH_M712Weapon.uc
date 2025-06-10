@@ -37,10 +37,10 @@ simulated function bool StartFire(int Mode)
 defaultproperties
 {
     ItemName="Mauser M712 'Schnellfeuer'"
-    FireModeClass(0)=class'DH_Weapons.DH_M712Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M712MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M712Attachment'
-    PickupClass=class'DH_Weapons.DH_M712Pickup'
+    FireModeClass(0)=Class'DH_M712Fire'
+    FireModeClass(1)=Class'DH_M712MeleeFire'
+    AttachmentClass=Class'DH_M712Attachment'
+    PickupClass=Class'DH_M712Pickup'
 
     Mesh=SkeletalMesh'DH_C96_1st.M712_mesh'
 

@@ -42,11 +42,11 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
+    SmokeEmitterClass=Class'DHSmokeEffect_Grenade'
     SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_Smoke'
 }

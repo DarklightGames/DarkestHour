@@ -9,5 +9,5 @@ class DH_BazookaM9DamType extends DHAntiTankProjectileDamageType
 defaultproperties
 {
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'
-    WeaponClass=class'DH_Weapons.DH_BazookaM9Weapon'
+    WeaponClass=Class'DH_BazookaM9Weapon'
 }

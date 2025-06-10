@@ -73,7 +73,7 @@ function SetupATGunGroup()
     local int            i;
 
     // Find & build array of all AT Gun factories in this group, & determine how many factories we should randomly select to be activated
-    foreach DynamicActors(class'DHATGunFactory', GunFactory)
+    foreach DynamicActors(Class'DHATGunFactory', GunFactory)
     {
         if (GunFactory.GroupTag == GroupTag)
         {

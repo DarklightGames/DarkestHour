@@ -8,7 +8,7 @@ class DH_HetzerCannonPawn extends DHAssaultGunCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=Class'DH_Vehicles.DH_HetzerCannon'
+    GunClass=Class'DH_HetzerCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=37.000000,Y=-35.000000,Z=12.000000),ViewFOV=15.0,bDrawOverlays=true)

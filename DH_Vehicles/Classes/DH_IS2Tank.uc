@@ -23,7 +23,7 @@ defaultproperties
     HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_IS2CannonPawn',WeaponBone="Turret_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-110.0,Y=-66.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-70.0,Y=-30.0,Z=95.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-70.0,Y=30.0,Z=95.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
@@ -36,7 +36,7 @@ defaultproperties
     UnbuttonedPositionIndex=3 // can't unbutton, no proper exit hatch for driver (small opening hatch is just for vision)
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.IS2DriverOverlay'
+    HUDOverlayClass=Class'IS2DriverOverlay'
     HUDOverlayFOV=85.0
 
     // Hull armor
@@ -103,8 +103,8 @@ defaultproperties
     // Visual effects
     TreadVelocityScale=125.0
     WheelRotationScale=65000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=60.0,Z=40.0),ExhaustRotation=(Pitch=34000,Yaw=0,Roll=-10000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=-60.0,Z=40.0),ExhaustRotation=(Pitch=34000,Yaw=0,Roll=10000))
     LeftLeverBoneName="Lever_L"

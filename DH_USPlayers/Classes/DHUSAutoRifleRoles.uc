@@ -7,8 +7,8 @@ class DHUSAutoRifleRoles extends DHAlliedAutoRifleRoles;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_BARWeapon',AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    SecondaryWeapons(0)=(Item=Class'DH_ColtM1911Weapon')
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
     SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'

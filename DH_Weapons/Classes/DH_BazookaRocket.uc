@@ -12,9 +12,9 @@ defaultproperties
     BallisticCoefficient=0.0475 //guestimate
     Damage=350.0
     DamageRadius=740.0  //700 gramms
-    ShellImpactDamage=class'DH_Weapons.DH_BazookaImpactDamType'
+    ShellImpactDamage=Class'DH_BazookaImpactDamType'
 
-    MyDamageType=class'DH_Weapons.DH_BazookaDamType'
+    MyDamageType=Class'DH_BazookaDamType'
 
     StraightFlightTime=0.5
 

@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="Panzer V 'Panther' Ausf.G"
     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherGCannonPawn')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PantherGCannonPawn')
     FrontArmor(0)=(Thickness=6.2)
     FrontArmor(1)=(Thickness=8.2)
     RightArmor(0)=(Thickness=5.0)

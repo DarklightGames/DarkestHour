@@ -7,7 +7,7 @@ class DH_MillsBombSpawner extends DHInventorySpawner;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MillsBombWeapon'
+    WeaponClass=Class'DH_MillsBombWeapon'
     Mesh=Mesh'DH_Construction_anm.BRIT_grenade_box'
     Skins(0)=Material'DH_Construction_tex.Ammo.BRIT_grenade_box'
     PickupBoneNames(0)="grenade.000"

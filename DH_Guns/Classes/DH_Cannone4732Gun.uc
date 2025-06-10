@@ -17,7 +17,7 @@ defaultproperties
 {
     VehicleNameString="Cannone da 47/32"
     VehicleTeam=0
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body'
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
     DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.Destroyed.cannone4732_destroyed'

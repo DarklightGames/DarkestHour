@@ -7,7 +7,7 @@ class DH_F1GrenadeSpawner extends DHInventorySpawner;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_F1GrenadeWeapon'
+    WeaponClass=Class'DH_F1GrenadeWeapon'
     Mesh=Mesh'DH_Construction_anm.RUS_grenade_box'
     Skins(0)=Material'DH_Construction_tex.Ammo.RUS_grenade_box'
     PickupBoneNames(0)="grenade.000"

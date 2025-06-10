@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Mkb 42(H)"
     NativeItemName="Maschinenkarabiner 42(H)"
-    FireModeClass(0)=class'DH_Weapons.DH_MKB42HFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MKB42HMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MKB42HAttachment'
-    PickupClass=class'DH_Weapons.DH_MKB42HPickup'
+    FireModeClass(0)=Class'DH_MKB42HFire'
+    FireModeClass(1)=Class'DH_MKB42HMeleeFire'
+    AttachmentClass=Class'DH_MKB42HAttachment'
+    PickupClass=Class'DH_MKB42HPickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.MKB42H-Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
@@ -29,7 +29,7 @@ defaultproperties
     InitialNumPrimaryMags=7
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

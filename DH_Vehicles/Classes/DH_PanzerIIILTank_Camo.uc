@@ -10,7 +10,7 @@ defaultproperties
     VehicleNameString="Panzer III Ausf.M"
 
     bHasAddedSideArmor=true
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn_Camo')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PanzerIIILCannonPawn_Camo')
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
     CannonSkins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'

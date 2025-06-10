@@ -29,6 +29,6 @@ defaultproperties
     FaceSkins(13)=Combiner'DHSovietCharactersTex.sov_faces.sov_face14gloves'
     FaceSkins(14)=Combiner'DHSovietCharactersTex.sov_faces.sov_face15gloves'
 
-    ShovelClass=class'DH_Equipment.DHShovelItem_Russian'
-    BinocsClass=class'DH_Equipment.DHBinocularsItemSoviet'
+    ShovelClass=Class'DHShovelItem_Russian'
+    BinocsClass=Class'DHBinocularsItemSoviet'
 }

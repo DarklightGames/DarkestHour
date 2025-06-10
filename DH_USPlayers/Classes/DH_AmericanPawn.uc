@@ -7,7 +7,7 @@ class DH_AmericanPawn extends DHPawn;
 
 defaultproperties
 {
-    Species=class'DH_USPlayers.DH_American'
+    Species=Class'DH_American'
 
     Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI'
     Skins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
@@ -25,12 +25,12 @@ defaultproperties
     FaceSkins(4)=Texture'DHUSCharactersTex.us_heads.US_AB_Face5'
 
 
-    ShovelClass=class'DH_Equipment.DHShovelItem_US'
+    ShovelClass=Class'DHShovelItem_US'
     bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack
-    BinocsClass=class'DH_Equipment.DHBinocularsItemAllied'
+    BinocsClass=Class'DHBinocularsItemAllied'
 
-    SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
-    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
+    SmokeGrenadeClass=Class'DH_USSmokeGrenadeWeapon'
+    ColoredSmokeGrenadeClass=Class'DH_RedSmokeWeapon'
 
-    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
+    HealthFigureClass=Class'DHHealthFigure_USA'
 }

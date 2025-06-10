@@ -7,7 +7,7 @@ class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_BrenCarrierMG'
+    GunClass=Class'DH_BrenCarrierMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -20,7 +20,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"
     CameraBone="Camera_com"
-    HUDOverlayClass=class'DH_Vehicles.DH_Bren_VehHUDOverlay'
+    HUDOverlayClass=Class'DH_Bren_VehHUDOverlay'
     HUDOverlayFOV=65.0
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=1.5

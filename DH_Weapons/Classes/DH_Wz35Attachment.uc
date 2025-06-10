@@ -11,9 +11,9 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Wz35_anm.wz35_3rd'
     MenuImage=Texture'DH_Wz35_tex.Interface.wz35_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
+    mMuzFlashClass=Class'MuzzleFlash3rdPTRD'
     MuzzleBoneName="MUZZLE"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
+    ROShellCaseClass=Class'RO3rdShellEject14mm'
     bRapidFire=false
 
     ShellEjectionBoneName=""        // No shell ejection bone?

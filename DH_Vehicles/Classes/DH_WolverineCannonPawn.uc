@@ -8,7 +8,7 @@ class DH_WolverineCannonPawn extends DHAmericanCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_WolverineCannon'
+    GunClass=Class'DH_WolverineCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=-25.2,Z=8.0),ViewFOV=25,PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext',ViewPitchUpLimit=3641,ViewPitchDownLimit=63351,bDrawOverlays=true,bExposed=true)

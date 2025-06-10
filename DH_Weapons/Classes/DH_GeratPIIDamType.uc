@@ -8,7 +8,7 @@ class DH_GeratPIIDamType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GeratPIIWeapon'
+    WeaponClass=Class'DH_GeratPIIWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     TankDamageModifier=0.2
@@ -16,7 +16,7 @@ defaultproperties
     VehicleDamageModifier=0.3
     TreadDamageModifier=0.3
 
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     bThrowRagdoll=true
     GibModifier=4.0
     GibPerterbation=0.15

@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="MAB mod. 38-A/42"
     NativeItemName="Moschetto Automatico Beretta M1938A/42"
-    FireModeClass(0)=class'DH_Weapons.DH_MAB42Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MAB42MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MAB42Attachment'
-    PickupClass=class'DH_Weapons.DH_MAB42Pickup'
+    FireModeClass(0)=Class'DH_MAB42Fire'
+    FireModeClass(1)=Class'DH_MAB42MeleeFire'
+    AttachmentClass=Class'DH_MAB42Attachment'
+    PickupClass=Class'DH_MAB42Pickup'
 
     Mesh=SkeletalMesh'DH_MAB_anm.MAB42-Mesh'
 
@@ -33,7 +33,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

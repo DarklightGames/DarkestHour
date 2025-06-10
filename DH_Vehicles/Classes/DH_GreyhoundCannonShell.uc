@@ -14,15 +14,15 @@ defaultproperties
 
     //Damage
     ImpactDamage=215  //solid shell
-    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_StuartCannonShellDamageAP'
     HullFireChance=0.17
     EngineFireChance=0.3
 
     //Effects
     bShatterProne=true
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    CoronaClass=Class'DHShellTracer_Red'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Sound
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'

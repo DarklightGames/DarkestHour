@@ -88,7 +88,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DriverHatch_col',AttachBone="driver_hatch") // collision attachment for driver's hatch
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_LocustCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_LocustCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-40.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-116.0,Y=0.0,Z=45.0),DriveRot=(Pitch=2000,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=46.0,Z=43.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")

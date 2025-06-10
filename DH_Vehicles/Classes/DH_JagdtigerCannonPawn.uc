@@ -7,7 +7,7 @@ class DH_JagdtigerCannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_JagdtigerCannon'
+    GunClass=Class'DH_JagdtigerCannon'
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=-25.0,Z=5.0),ViewFOV=8.5,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=55.0,Y=7.0,Z=12.0),ViewFOV=10.67,TransitionUpAnim="com_open",ViewPitchUpLimit=500,ViewPitchDownLimit=62940,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
     DriverPositions(2)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)

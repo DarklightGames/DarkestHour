@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="PPS-43"
     SwayModifyFactor=0.55 // -0.15 because its a light SMG
-    FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
-    PickupClass=class'DH_Weapons.DH_PPS43Pickup'
+    FireModeClass(0)=Class'DH_PPS43Fire'
+    FireModeClass(1)=Class'DH_PPS43MeleeFire'
+    AttachmentClass=Class'DH_PPS43Attachment'
+    PickupClass=Class'DH_PPS43Pickup'
 
     Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-1st'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPS43_S'
@@ -26,7 +26,7 @@ defaultproperties
     InitialNumPrimaryMags=10
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     //alternative reload (this is the "normal")

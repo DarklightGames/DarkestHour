@@ -7,6 +7,6 @@ class DH_BritishRiflemanHampshires extends DHCWRiflemanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishHampshiresPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_BritishVestHampshiresPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_BritishHampshiresPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=Class'DH_BritishVestHampshiresPawn',Weight=1.0)
 }

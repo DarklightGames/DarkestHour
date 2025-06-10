@@ -7,7 +7,7 @@ class DH_MP3008MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_MP3008BashDamType'
+    DamageType=Class'DH_MP3008BashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 
     BashBackEmptyAnim="bash_pullback_empty"

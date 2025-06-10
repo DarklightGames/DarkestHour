@@ -15,7 +15,7 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        StowageAttachment = Spawn(class'DHDecoAttachment', self);
+        StowageAttachment = Spawn(Class'DHDecoAttachment', self);
 
         if (StowageAttachment != none)
         {

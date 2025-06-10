@@ -7,7 +7,7 @@ class DH_GermanPawn extends DHPawn;
 
 defaultproperties
 {
-    Species=class'DH_Engine.DHSPECIES_Human'
+    Species=Class'DHSPECIES_Human'
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat'
     Skins(0)=Texture'Characters_tex.ger_heads.ger_face01'
@@ -31,10 +31,10 @@ defaultproperties
     FaceSkins(13)=Texture'Characters_tex.ger_heads.ger_face14'
     FaceSkins(14)=Texture'Characters_tex.ger_heads.ger_face15'
 
-    ShovelClass=class'DH_Equipment.DHShovelItem_German'
-    BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
-    SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
-    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
+    ShovelClass=Class'DHShovelItem_German'
+    BinocsClass=Class'DHBinocularsItemGerman'
+    SmokeGrenadeClass=Class'DH_NebelGranate39Weapon'
+    ColoredSmokeGrenadeClass=Class'DH_OrangeSmokeWeapon'
 
-    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
+    HealthFigureClass=Class'DHHealthFigure_Germany'
 }

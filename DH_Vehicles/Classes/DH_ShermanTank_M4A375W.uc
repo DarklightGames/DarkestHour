@@ -23,8 +23,8 @@ defaultproperties
     Skins(5)=Texture'DH_VehiclesUS_tex.Treads.Sherman_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A3W',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_ShermanMountedMGPawn_M4A3W',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="Passenger_1",DrivePos=(X=0.0,Y=-10.0,Z=5.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="passenger_2",DrivePos=(X=-10.0,Y=0.0,Z=5.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="passenger_3",DrivePos=(X=0.0,Y=0.0,Z=5.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")

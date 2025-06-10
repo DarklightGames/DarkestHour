@@ -219,14 +219,14 @@ function SetPawnClass(string inClass, string inCharacter)
 {
     local class<DHPawn> pClass;
 
-    pClass = class<DHPawn>(DynamicLoadObject(inClass, class'class'));
+    pClass = class<DHPawn>(DynamicLoadObject(inClass, Class'class'));
 
     if (pClass != none)
     {
         PawnClass = pClass;
     }
 
-    PawnSetupRecord = class'xUtil'.static.FindPlayerRecord(inCharacter);
+    PawnSetupRecord = Class'xUtil'.static.FindPlayerRecord(inCharacter);
     PlayerReplicationInfo.SetCharacterName(PawnSetupRecord.DefaultName);
 }
 
@@ -496,6 +496,6 @@ function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
 
 defaultproperties
 {
-    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-    PawnClass=class'DH_Engine.DHPawn'
+    PlayerReplicationInfoClass=Class'DHPlayerReplicationInfo'
+    PawnClass=Class'DHPawn'
 }

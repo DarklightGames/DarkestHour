@@ -8,7 +8,7 @@ class DH_ZombiePawn extends DHPawn;
 
 defaultproperties
 {
-    Species=class'DH_Engine.DHSPECIES_Human'
+    Species=Class'DHSPECIES_Human'
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat'
 
@@ -31,10 +31,10 @@ defaultproperties
     FaceSkins(12)=Texture'DHEventCharactersTex.GetHeads.ger_face14_zombie01'
     FaceSkins(13)=Texture'DHEventCharactersTex.GetHeads.ger_face15_zombie01'
 
-    ShovelClass=class'DH_Equipment.DHShovelItem_German'
-    BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
+    ShovelClass=Class'DHShovelItem_German'
+    BinocsClass=Class'DHBinocularsItemGerman'
 
     bAlwaysSeverBodyparts=true
 
-    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
+    HealthFigureClass=Class'DHHealthFigure_Germany'
 }

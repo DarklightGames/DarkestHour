@@ -8,10 +8,10 @@ class DH_M1GrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="Mk II Grenade"
-    FireModeClass(0)=class'DH_Weapons.DH_M1GrenadeFire'
-    FireModeClass(1)=class'DH_Weapons.DH_M1GrenadeTossFire'
-    AttachmentClass=class'DH_Weapons.DH_M1GrenadeAttachment'
-    PickupClass=class'DH_Weapons.DH_M1GrenadePickup'
+    FireModeClass(0)=Class'DH_M1GrenadeFire'
+    FireModeClass(1)=Class'DH_M1GrenadeTossFire'
+    AttachmentClass=Class'DH_M1GrenadeAttachment'
+    PickupClass=Class'DH_M1GrenadePickup'
     DisplayFOV=80.0
 
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'

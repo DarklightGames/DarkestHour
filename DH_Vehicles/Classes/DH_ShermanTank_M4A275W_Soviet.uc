@@ -23,8 +23,8 @@ defaultproperties
     RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
 
     // Movement
 	//different diesel engine

@@ -24,11 +24,11 @@ defaultproperties
     CustomPitchDownLimit=63352  // 12 degrees
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    ProjectileClass=Class'DH_Breda38Bullet'
     InitialPrimaryAmmo=150
     NumMGMags=5
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
+    TracerProjectileClass=Class'DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
@@ -40,9 +40,9 @@ defaultproperties
     WeaponFireOffset=0
 
     bHasMultipleBarrels=true
-    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
-    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleMGMultiBarrelEmitterController'
+    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=Class'DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
+    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=Class'DH_VehicleFiat1435MGEmitter')
+    AmbientEffectEmitterClass=Class'DH_VehicleMGMultiBarrelEmitterController'
 
     // Collision
     // NOTE: Normally on vehicle MGs, these values are not set, but the CV33 has a collision mesh

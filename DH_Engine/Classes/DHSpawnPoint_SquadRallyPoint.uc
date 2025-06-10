@@ -331,7 +331,7 @@ function OnPawnSpawned(Pawn P)
         InstigatorController.GetTeamNum() == GetTeamIndex() &&
         InstigatorController.GetSquadIndex() == SquadIndex)
     {
-        InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
+        InstigatorController.ReceiveScoreEvent(Class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
     }
 
     if (MetricsObject != none)
@@ -481,7 +481,7 @@ function AwardScoreOnEstablishment()
 
     EstablisherCount = 1;
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
     {
         if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none && P.GetTeamNum() == GetTeamIndex())
         {
@@ -494,7 +494,7 @@ function AwardScoreOnEstablishment()
                 // Don't award the SL himself, he gets his own award.
                 if (PRI != none && !PRI.IsSquadLeader() && PC.GetSquadIndex() == SquadIndex)
                 {
-                    PC.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
+                    PC.ReceiveScoreEvent(Class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
 
                     ++EstablisherCount;
                 }
@@ -514,7 +514,7 @@ function Destroyed()
 
     if (MetricsObject != none)
     {
-        MetricsObject.DestroyedAt = class'DateTime'.static.Now(self);
+        MetricsObject.DestroyedAt = Class'DateTime'.static.Now(self);
     }
 
     if (ResupplyAttachment != none)
@@ -552,7 +552,7 @@ defaultproperties
     SquadIndex=-1
     RallyPointIndex=-1
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50
@@ -592,7 +592,7 @@ defaultproperties
     bBlockKarma=false
 
     // Attachments
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyAttachmentClass=Class'DHResupplyAttachment'
     ResupplyType=RT_Mortars
     ResupplyAttachmentCollisionRadius=300
     ResupplyAttachmentCollisionHeight=100

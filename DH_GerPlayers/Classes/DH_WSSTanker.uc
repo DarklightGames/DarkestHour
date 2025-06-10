@@ -7,12 +7,12 @@ class DH_WSSTanker extends DHGETankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanTankCrewSSPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_GermanTankCrewSSPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
-    Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
+    Headgear(0)=Class'DH_WSSHatPanzerA'
+    Headgear(1)=Class'DH_WSSHatPanzerB'
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M712Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_M712Weapon')
 
     SecondaryWeapons(0)=(Item=none)
     SecondaryWeapons(1)=(Item=none) //pistols are removed so that he wouldnt get 2 pistols, m712 counting as one

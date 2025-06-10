@@ -7,7 +7,7 @@ class DH_KV1ECannonPawn extends DHSovietCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_KV1ECannon'
+    GunClass=Class'DH_KV1ECannon'
     
     DriverPositions(0)=(ViewLocation=(X=24.0,Y=-9.5,Z=10.0),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=57.0,Y=-25.0,Z=20.0),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)

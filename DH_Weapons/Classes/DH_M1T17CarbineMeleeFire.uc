@@ -7,5 +7,5 @@ class DH_M1T17CarbineMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_M1T17CarbineBashDamType'
+    DamageType=Class'DH_M1T17CarbineBashDamType'
 }

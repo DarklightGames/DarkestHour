@@ -11,8 +11,8 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.g98_icon'
     MuzzleBoneName="tipnew"
     MuzzleFlashOffset=(X=-4.000000)
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdKar'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
 

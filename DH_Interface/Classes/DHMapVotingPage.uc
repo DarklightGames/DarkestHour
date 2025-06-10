@@ -83,7 +83,7 @@ function SendVote(GUIComponent Sender)
 
             if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
             {
-                class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+                Class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
                 // Do a check if the current player count is in bounds of recommended range or if level has failed QA
                 if (!GRI.IsPlayerCountInRange(Min, Max))

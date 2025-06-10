@@ -9,5 +9,5 @@ class DH_PanzerschreckDamType extends DHAntiTankProjectileDamageType
 defaultproperties
 {
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.schreckkill'
-    WeaponClass=class'DH_Weapons.DH_PanzerschreckWeapon'
+    WeaponClass=Class'DH_PanzerschreckWeapon'
 }

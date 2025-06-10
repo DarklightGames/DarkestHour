@@ -18,7 +18,7 @@ var CacheManager.MapRecord LoadingMapRecord;
 
 simulated event Init()
 {
-    LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MapName);
+    LoadingMapRecord = Class'CacheManager'.static.GetMapRecord(MapName);
 
     // Calls the base background and text functions (should be after we get the mapRecord)
     super.Init();
@@ -110,7 +110,7 @@ simulated function SetImage()
 
     DrawOpImage(Operations[0]).Image = M;
 
-    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
+    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", Class'Material'));
 
     if (M == none)
     {

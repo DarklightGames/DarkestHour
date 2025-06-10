@@ -31,9 +31,9 @@ defaultproperties
     CustomPitchDownLimit=64625 // 5 degrees - probably should be 10, but any more & barrel clips hull (a howitzer, so depression isn't really an issue anyway)
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_ShermanM4A3105CannonShellHE'
+    SecondaryProjectileClass=Class'DH_ShermanM4A3105CannonShellSmoke'
+    TertiaryProjectileClass=Class'DH_ShermanM4A3105CannonShellHEAT'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="WP"
@@ -54,15 +54,15 @@ defaultproperties
     TertiarySpread=0.00225
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    AltFireProjectileClass=Class'DH_30CalBullet'
     InitialAltAmmo=250
     NumMGMags=5
     AltFireInterval=0.12
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherClass=Class'DH_TwoInchBombThrower'
     SmokeLauncherFireOffset(0)=(X=22.0,Y=-39.0,Z=38.0)
 
     // Weapon fire

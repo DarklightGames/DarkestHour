@@ -26,7 +26,7 @@ simulated function Explode(Vector HitLocation, Vector HitNormal)
 
     if (Role == ROLE_Authority && !bDud)
     {
-        VT = Spawn(class'DHVolumeTest',,, HitLocation);
+        VT = Spawn(Class'DHVolumeTest',,, HitLocation);
 
         if (VT != none)
         {
@@ -110,12 +110,12 @@ simulated function DoShakeEffect()
 
 defaultproperties
 {
-    MyDamageType=class'DH_Engine.DHMortarDamageType'
+    MyDamageType=Class'DHMortarDamageType'
     MomentumTransfer=75000.0
     
-    ImpactEffect=class'DH_Effects.DHMortarHitEffect' //default for 60mm HE projectile
+    ImpactEffect=Class'DHMortarHitEffect' //default for 60mm HE projectile
 
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_HE'
 
     ShakeRotMag=(Z=100.0)
     ShakeRotRate=(Z=2500.0)

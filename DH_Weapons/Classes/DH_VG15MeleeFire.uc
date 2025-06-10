@@ -7,7 +7,7 @@ class DH_VG15MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_G43BashDamType'
+    DamageType=Class'DH_G43BashDamType'
 
     BashBackAnim="bash_pullback_vg"
     BashAnim="bash_attack_vg"

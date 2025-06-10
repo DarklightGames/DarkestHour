@@ -7,7 +7,7 @@ class DH_ViSMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_ViSBashDamType'
+    DamageType=Class'DH_ViSBashDamType'
     PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
     BashBackEmptyAnim="bash_pullback_empty"

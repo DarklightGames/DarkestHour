@@ -8,7 +8,7 @@ class DH_PTRDDamType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PTRDWeapon'
+    WeaponClass=Class'DH_PTRDWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     TankDamageModifier=0.09
@@ -16,7 +16,7 @@ defaultproperties
     VehicleDamageModifier=0.13
     TreadDamageModifier=0.08
 
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     bThrowRagdoll=true
     GibModifier=4.0
     GibPerterbation=0.15

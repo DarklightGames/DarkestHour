@@ -7,7 +7,7 @@ class DH_JagdtigerFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_JagdtigerTank'
+    VehicleClass=Class'DH_JagdtigerTank'
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'

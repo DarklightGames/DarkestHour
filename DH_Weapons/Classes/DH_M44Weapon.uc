@@ -13,10 +13,10 @@ exec simulated function Deploy()
 defaultproperties
 {
     ItemName="Mosin M44"
-    FireModeClass(0)=class'DH_Weapons.DH_M44Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M44MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M44Attachment'
-    PickupClass=class'DH_Weapons.DH_M44Pickup'
+    FireModeClass(0)=Class'DH_M44Fire'
+    FireModeClass(1)=Class'DH_M44MeleeFire'
+    AttachmentClass=Class'DH_M44Attachment'
+    PickupClass=Class'DH_M44Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_M44'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'

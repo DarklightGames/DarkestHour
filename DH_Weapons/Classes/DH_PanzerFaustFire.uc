@@ -7,9 +7,9 @@ class DH_PanzerFaustFire extends DHRocketFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PanzerFaustRocket'
-    AmmoClass=class'DH_Weapons.DH_PanzerFaustAmmo'
-    ExhaustDamageType=class'DH_Weapons.DH_PanzerfaustExhaustDamType'
+    ProjectileClass=Class'DH_PanzerFaustRocket'
+    AmmoClass=Class'DH_PanzerFaustAmmo'
+    ExhaustDamageType=Class'DH_PanzerfaustExhaustDamType'
     ExhaustLength=320.0
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=600

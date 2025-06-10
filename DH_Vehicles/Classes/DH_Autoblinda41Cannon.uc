@@ -45,8 +45,8 @@ defaultproperties
     CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo  // TODO: add correct L6/40 ammo types
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Breda2065CannonShell'
+    SecondaryProjectileClass=Class'DH_Breda2065CannonShellHE'
 
     nProjectileDescriptions(0)="Granata Perforante da 20"   // AP
     nProjectileDescriptions(1)="Granata da 20"              // HE
@@ -66,11 +66,11 @@ defaultproperties
     FireInterval=0.25   // 240 rounds per minute
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    AltFireProjectileClass=Class'DH_Breda38Bullet'
     InitialAltAmmo=24
     NumMGMags=10
     AltFireInterval=0.109  // 550 rounds per minute
-    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
+    TracerProjectileClass=Class'DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire

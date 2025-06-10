@@ -8,7 +8,7 @@ class DH_PanzerIVHTank extends DH_PanzerIVGLateTank;
 defaultproperties
 {
     VehicleNameString="Panzer IV Ausf.H"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVHCannonPawn')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PanzerIVHCannonPawn')
 
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_camo1'

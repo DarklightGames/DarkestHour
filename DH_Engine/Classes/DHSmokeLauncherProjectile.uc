@@ -99,16 +99,16 @@ defaultproperties
     //Effects
     bHasSmokeTrail=true
     SmokeTrailDuration=4.0
-    MortarSmokeTrailClass=class'DH_Effects.DHMortarSmokeTrail'
+    MortarSmokeTrailClass=Class'DHMortarSmokeTrail'
 
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'IndustrySM.Barrels.Barrel_Green' //PLACEHOLDER: Emulates the 90mm Nb.K.S 39 smoke grenade
     DrawScale=0.15
 
-    HitDirtEmitterClass=class'DH_Effects.DHSmokeMortarHitDirtEffect'
-    HitRockEmitterClass=class'DH_Effects.DHSmokeMortarHitRockEffect'
-    HitWoodEmitterClass=class'DH_Effects.DHSmokeMortarHitWoodEffect'
-    HitSnowEmitterClass=class'DH_Effects.DHSmokeMortarHitSnowEffect'
+    HitDirtEmitterClass=Class'DHSmokeMortarHitDirtEffect'
+    HitRockEmitterClass=Class'DHSmokeMortarHitRockEffect'
+    HitWoodEmitterClass=Class'DHSmokeMortarHitWoodEffect'
+    HitSnowEmitterClass=Class'DHSmokeMortarHitSnowEffect'
 
     bFixedRotationDir=true
     RotationRate=(Pitch=15000)

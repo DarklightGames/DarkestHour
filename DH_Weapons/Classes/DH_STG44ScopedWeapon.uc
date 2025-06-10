@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="StG 44 (ZF4)"
     NativeItemName="Sturmgewehr 44 (ZF4)"
-    FireModeClass(0)=class'DH_Weapons.DH_STG44ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_STG44ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_STG44ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_STG44ScopedPickup'
+    FireModeClass(0)=Class'DH_STG44ScopedFire'
+    FireModeClass(1)=Class'DH_STG44ScopedMeleeFire'
+    AttachmentClass=Class'DH_STG44ScopedAttachment'
+    PickupClass=Class'DH_STG44ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.STG44-Scoped'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
@@ -41,7 +41,7 @@ defaultproperties
     InitialNumPrimaryMags=7
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

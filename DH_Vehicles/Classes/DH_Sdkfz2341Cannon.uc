@@ -39,9 +39,9 @@ defaultproperties
     CustomPitchDownLimit=64443
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellAPCR'
+    PrimaryProjectileClass=Class'DH_Sdkfz2341CannonShell'
+    SecondaryProjectileClass=Class'DH_Sdkfz2341CannonShellHE'
+    TertiaryProjectileClass=Class'DH_Sdkfz2341CannonShellAPCR'
 
     ProjectileDescriptions(0)="AP-T"
     ProjectileDescriptions(1)="HE-T"
@@ -60,10 +60,10 @@ defaultproperties
     InitialTertiaryAmmo=10
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    AltFireProjectileClass=Class'DH_MG42Bullet'
     InitialAltAmmo=150
     NumMGMags=12
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

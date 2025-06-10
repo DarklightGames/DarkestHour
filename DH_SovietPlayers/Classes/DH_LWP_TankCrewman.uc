@@ -7,5 +7,5 @@ class DH_LWP_TankCrewman extends DHPOLTankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTankCrewPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_LWPTankCrewPawn',Weight=1.0)
 }

@@ -9,5 +9,5 @@ defaultproperties
 {
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
     SpinType=ST_Tumble
-    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
+    MyDamageType=Class'DH_RDG1SmokeGrenadeDamType'
 }

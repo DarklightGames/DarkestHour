@@ -8,7 +8,7 @@ class DH_StenMkIICDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_StenMkIICWeapon'
+    WeaponClass=Class'DH_StenMkIICWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

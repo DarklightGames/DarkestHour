@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mkb42h_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mkb42h_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'DH_3rdShellEject556mm'
 
     WA_Idle="idle_mkb"
     WA_IdleEmpty="idle_mkb"

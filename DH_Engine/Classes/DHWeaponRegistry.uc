@@ -48,7 +48,7 @@ static function DumpToLog(PlayerController PC)
 
     for (i = 0; i < default.Records.Length; ++i)
     {
-        PC.Log(class'UString'.static.Join(",", default.Records[i].WeaponNames) @ " - " @ default.Records[i].ClassName);
+        PC.Log(Class'UString'.static.Join(",", default.Records[i].WeaponNames) @ " - " @ default.Records[i].ClassName);
     }
 }
 

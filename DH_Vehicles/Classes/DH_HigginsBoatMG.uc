@@ -26,16 +26,16 @@ defaultproperties
     CustomPitchDownLimit=63000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    ProjectileClass=Class'DH_30CalBullet'
     InitialPrimaryAmmo=250
     NumMGMags=30
     FireInterval=0.12
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
+    AmbientEffectEmitterClass=Class'DH_Vehicle30CalMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

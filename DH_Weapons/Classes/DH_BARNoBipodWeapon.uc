@@ -48,13 +48,13 @@ defaultproperties
 
     ItemName="Browning Automatic Rifle M1918A2 (No Bipod)"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BARNoBipodFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BARNoBipodMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BARNoBipodAttachment'
-    PickupClass=class'DH_Weapons.DH_BARNoBipodPickup'
+    FireModeClass(0)=Class'DH_BARNoBipodFire'
+    FireModeClass(1)=Class'DH_BARNoBipodMeleeFire'
+    AttachmentClass=Class'DH_BARNoBipodAttachment'
+    PickupClass=Class'DH_BARNoBipodPickup'
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_BARBarrel'
+    BarrelClass=Class'DH_BARBarrel'
     BarrelSteamBone="MuzzleNew"
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'

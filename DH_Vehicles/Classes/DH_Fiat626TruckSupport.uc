@@ -20,7 +20,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.825
 
     // Logistics
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
     SupplyAttachmentOffset=(X=-38.7437,Y=0.0,Z=62.7177)
     SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.ITA_Supply_cache_full'

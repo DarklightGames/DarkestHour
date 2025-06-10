@@ -7,7 +7,7 @@ class DH_GeratPMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_GeratPBashDamType'
+    DamageType=Class'DH_GeratPBashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 
     BashBackEmptyAnim="bash_pullback_empty"

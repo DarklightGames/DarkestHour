@@ -9,11 +9,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
 }
 
 defaultproperties
