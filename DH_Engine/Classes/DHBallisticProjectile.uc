@@ -15,6 +15,7 @@ function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon Vehic
     DebugCalibrationInfo.StartLocation = StartLocation;
     DebugCalibrationInfo.DebugAngleValue = DebugAngleValue;
     DebugCalibrationInfo.DebugAngleUnit = DebugAngleUnit;
+    return DebugCalibrationInfo;
 }
 
 function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)

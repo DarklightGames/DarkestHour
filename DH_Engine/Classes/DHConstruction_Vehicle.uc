@@ -247,7 +247,7 @@ function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadi
 // Used to provide a more season-specific variant if one is available.
 static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, int VariantIndex)
 {
-    local int i, j, k, DefaultIndex;
+    local int i, j;
     local array<int> Indices;
 
     Indices = GetAvailableIndicesForVariant(Context, VariantIndex);
@@ -337,7 +337,6 @@ static function array<int> GetAvailableIndicesForVariant(DHActorProxy.Context Co
 static function class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     local array<int> Indices;
-    local int i;
 
     // Count the number of variants.
     Indices = GetAvailableVariantIndices(Context);

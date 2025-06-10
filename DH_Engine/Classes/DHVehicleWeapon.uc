@@ -1530,7 +1530,7 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i, CurrentPitch, Frame;
+    local int i, CurrentPitch;
     local float Theta;
 
     for (i = 0;  i < AnimationDrivers.Length; ++i)

@@ -7,8 +7,6 @@ class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
 
 function InternalOnClick(GUIContextMenu Sender, int Index)
 {
-	local string MapName;
-
     if (Sender == none || NotifyContextSelect(Sender, Index))
     {
         return;
