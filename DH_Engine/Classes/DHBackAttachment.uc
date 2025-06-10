@@ -9,13 +9,12 @@ class DHBackAttachment extends BackAttachment;
 function InitFor(Inventory I)
 {
     local int j;
-
     local class<DHWeaponAttachment> WA;
 
     super.InitFor(I);
 
-	if (I != none)
-	{
+    if (I != none)
+    {
         WA = class<DHWeaponAttachment>(I.AttachmentClass);
 
         if (WA != none)
