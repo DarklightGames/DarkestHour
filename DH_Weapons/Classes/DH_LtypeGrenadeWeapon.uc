@@ -15,4 +15,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Ltype_anm.Ltype_1st'
     GroupOffset=4
     DisplayFOV=80.0
+    bHasReleaseLever=true   // HACK: stops the grenade from automatically throwing after a certain amount of time.
 }
