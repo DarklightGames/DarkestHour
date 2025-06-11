@@ -233,7 +233,7 @@ function OnMainGunReloadFinished()
 // Higher ranked weapon (cannon then coax then launcher) reload takes precedence over other weapon reload & puts that on hold
 simulated function Timer()
 {
-    local sound ReloadSound;
+    local Sound ReloadSound;
 
     // CANNON RELOAD
     if (ReloadState < RL_ReadyToFire && !bReloadPaused)

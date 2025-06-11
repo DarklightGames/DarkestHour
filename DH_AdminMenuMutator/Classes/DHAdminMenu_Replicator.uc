@@ -20,7 +20,7 @@ var     float           SavedNewElapsedTime;
 
 // Copies of same-named variables from the mutator itself, replicated to clients so they know the server's settings
 var     bool            bBypassAdminLogin, bParaDropPlayerAllowed, bShowRealismMenu, bRealismMutPresent, bMinesDisabled, bHideCapProgress, bHidePlayerIcon;
-var     sound           WarningSound;
+var     Sound           WarningSound;
 
 replication
 {

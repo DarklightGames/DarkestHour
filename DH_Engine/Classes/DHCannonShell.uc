@@ -170,7 +170,7 @@ simulated function BlowUp(Vector HitLocation)
 // New function just to consolidate long code that's repeated in more than one function
 simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local sound          HitSound;
+    local Sound          HitSound;
     local class<Emitter> HitEmitterClass;
     local Vector         TraceHitLocation, TraceHitNormal;
     local Material       HitMaterial;

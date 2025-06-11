@@ -12,7 +12,7 @@ var localized string DefendText;
 var localized string MoveText;
 var localized string AttentionText;
 
-var sound OrderSound;
+var Sound OrderSound;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

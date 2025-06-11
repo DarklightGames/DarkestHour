@@ -12,9 +12,9 @@ var     bool                bAlreadyDroppedProjectile;  // renamed from bDropped
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
 
 // Sounds & explosion effects
-var     sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
-var     sound               CloseSound[3];              // sound of the artillery whooshing in close (array size reduced from 4 as there are only 3 sounds)
-var     sound               ExplosionSound[4];          // sound of the artillery exploding
+var     Sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
+var     Sound               CloseSound[3];              // sound of the artillery whooshing in close (array size reduced from 4 as there are only 3 sounds)
+var     Sound               ExplosionSound[4];          // sound of the artillery exploding
 var     class<Emitter>      ShellHitDirtEffectClass;    // artillery hitting dirt emitter
 var     class<Emitter>      ShellHitSnowEffectClass;    // artillery hitting snow emitter
 var     class<Emitter>      ShellHitDirtEffectLowClass; // artillery hitting dirt emitter low settings

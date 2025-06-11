@@ -18,7 +18,7 @@ var     byte                InitialAmmo;                  // the initial & maxim
 var     byte                ProjectilesPerFire;           // no. of projectiles launched each time fire button is pressed (external launchers are often paired)
 var     array<Rotator>      FireRotation;                 // the firing rotation to launch the projectile(s), relative to vehicle - may be multiple for external launchers
 var     float               Spread;                       // random spread of launched projectiles
-var     sound               FireSound;                    // firing sound
+var     Sound               FireSound;                    // firing sound
 var     bool                bCanBeReloaded;               // whether smoke launcher can be reloaded after firing (not for external launch tubes)
 var     array<DHVehicleWeapon.ReloadStage>  ReloadStages; // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
 var     Material            HUDAmmoIcon;                  // ammo icon for the HUD display

@@ -50,7 +50,7 @@ var     float           DudChance;          // percentage of duds (expressed bet
 var     bool            bDud;
 var     float           DudLifeSpan;        // How long a dud lasts before it disappears.
 var     float           TripMineLifeSpan;   // How long a trip mine lasts before it disappears.
-var     sound           ExplosionSound[3];
+var     Sound           ExplosionSound[3];
 var     byte            Bounces;
 var     float           DampenFactor;
 var     float           DampenFactorParallel;

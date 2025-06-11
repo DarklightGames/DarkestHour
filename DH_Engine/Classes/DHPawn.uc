@@ -99,7 +99,7 @@ var     Vector  RootLocation;
 var     Vector  RootDelta;
 var     Vector  NewAcceleration;     // acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
-var     sound   MantleSound;
+var     Sound   MantleSound;
 
 // Digging
 var     bool    bCanDig;

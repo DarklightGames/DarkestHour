@@ -7,8 +7,8 @@ class DHMortarProjectileSmoke extends DHMortarProjectile
     abstract;
 
 var     class<Emitter>  SmokeEmitterClass;  // class to spawn for smoke emitter
-var     sound           SmokeIgniteSound;   // initial sound when smoke begins emitting
-var     sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
+var     Sound           SmokeIgniteSound;   // initial sound when smoke begins emitting
+var     Sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
 var     float           SmokeSoundDuration; // duration until smoke sound stops playing as smoke clears, used to make projectile persist to keep playing SmokeLoopSound
 
 // Modified to delay destroying projectile until the end of the SmokeSoundDuration (unless shell was a dud)

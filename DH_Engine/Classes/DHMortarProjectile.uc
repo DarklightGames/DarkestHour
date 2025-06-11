@@ -15,7 +15,7 @@ var     float   DudChance;
 
 // Effects for firing mortar & for shell descending just before it lands
 var     class<Emitter>  FireEmitterClass;
-var     sound   DescendingSound;
+var     Sound   DescendingSound;
 
 // Impact effects & sounds for a dud round
 var     class<Emitter>  HitDirtEmitterClass;
@@ -24,10 +24,10 @@ var     class<Emitter>  HitWoodEmitterClass;
 var     class<Emitter>  HitRockEmitterClass;
 var     class<Emitter>  HitWaterEmitterClass;
 
-var     sound   HitDirtSound;
-var     sound   HitRockSound;
-var     sound   HitWaterSound;
-var     sound   HitWoodSound;
+var     Sound   HitDirtSound;
+var     Sound   HitRockSound;
+var     Sound   HitWaterSound;
+var     Sound   HitWoodSound;
 
 // Debug
 var     Vector  DebugForward;
@@ -279,7 +279,7 @@ simulated function SpawnImpactEffects(Vector HitLocation, Vector HitNormal)
 {
     local ESurfaceTypes  HitSurfaceType;
     local class<Emitter> HitEmitterClass;
-    local sound          HitSound;
+    local Sound          HitSound;
 
     if (Level.NetMode != NM_DedicatedServer)
     {

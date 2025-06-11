@@ -12,7 +12,7 @@ var localized string    ChangedText;
 var localized string    RoundTimeModifiedText;
 
 //The sound to play when this actor is triggered.
-var sound               Sound;
+var Sound               Sound;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

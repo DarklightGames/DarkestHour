@@ -25,7 +25,7 @@ var DHRotatingActor   RotatingActor;
 var Actor             OldBase;
 
 var ROSoundAttachment RotateSoundAttachment;
-var sound             RotateSound;
+var Sound             RotateSound;
 var float             RotateSoundVolume;
 
 var bool              bIsBeingRotated;

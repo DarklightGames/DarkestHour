@@ -14,9 +14,9 @@ var     float                   LoopFireAnimRate;       // The rate to play the 
 var     float                   IronLoopFireAnimRate;   // The rate to play the looped fire animation when deployed or in iron sights
 
 // sound
-var     sound                   FireEndSound;           // The sound to play at the end of the ambient fire sound
+var     Sound                   FireEndSound;           // The sound to play at the end of the ambient fire sound
 var     float                   AmbientFireSoundRadius; // The sound radius for the ambient fire sound
-var     sound                   AmbientFireSound;       // How loud to play the looping ambient fire sound
+var     Sound                   AmbientFireSound;       // How loud to play the looping ambient fire sound
 var     byte                    AmbientFireVolume;      // The ambient fire sound
 
 // High ROF system

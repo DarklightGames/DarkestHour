@@ -25,7 +25,7 @@ function PlayFiring()
 {
     local DH_M1GarandWeapon Garand;
     local name              Anim;
-    local sound             FiringSound;
+    local Sound             FiringSound;
     local bool              bLastRound;
 
     Garand = DH_M1GarandWeapon(Weapon);

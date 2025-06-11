@@ -3999,7 +3999,7 @@ exec function DebugHints()
 // New debug exec to play a sound (playing sounds in RO editor often doesn't work, so this is just a way of trying out sounds)
 exec function SoundPlay(string SoundName, optional float Volume)
 {
-    local sound SoundToPlay;
+    local Sound SoundToPlay;
 
     if (IsDebugModeAllowed() && SoundName != "")
     {

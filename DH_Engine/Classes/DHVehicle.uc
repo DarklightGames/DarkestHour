@@ -116,10 +116,10 @@ var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle ca
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var     float       DirectHEImpactDamageMult;    // damage multiplier for direct HE impact (direct hits with HE rounds) defaults: 1.0
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
-var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
-var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
-var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
-var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
+var     Sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
+var     Sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
+var     Sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
+var     Sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
@@ -137,11 +137,11 @@ var     float       EngineRestartFailChance;     // chance of engine failing to 
 // Driving effects
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       MaxPitchSpeed;               // used to set movement sounds volume, based on vehicle's speed
-var     sound       RumbleSound;                 // interior rumble sound
+var     Sound       RumbleSound;                 // interior rumble sound
 var     name        RumbleSoundBone;             // attachment bone for rumble sound attachment
 var     Actor       RumbleSoundAttach;           // reference to rumble sound attachment actor
 var     float       RumbleSoundVolumeModifier;   // allows adjustment of interior rumble sound volume
-var     sound       EngineSound;                 // engine sound - rarely used as sound is already played using IdleSound, with its pitch related to speed by native code,
+var     Sound       EngineSound;                 // engine sound - rarely used as sound is already played using IdleSound, with its pitch related to speed by native code,
 var     name        EngineSoundBone;             // but EngineSound is overlaid on IdleSound, so can give greater depth of sound & serves some purpose, although not much
 var     Actor       EngineSoundAttach;
 var     float       LastImpactSound;             // last time an impact damage sound was played (used to limit constant sounds as vehicle 'bottoms out' on ground)
@@ -152,7 +152,7 @@ var     int                 LeftTreadIndex, RightTreadIndex;   // index position
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner; // texture panners used to make it look like the treads are moving
 var     float               TreadVelocityScale;                // allows adjustment of treads rotation speed for each vehicle
 var     Rotator             LeftTreadPanDirection, RightTreadPanDirection; // make sure the treads move the correct way!
-var     sound               LeftTreadSound, RightTreadSound;               // tread movement sound
+var     Sound               LeftTreadSound, RightTreadSound;               // tread movement sound
 var     name                LeftTrackSoundBone, RightTrackSoundBone;       // attachment bone names for tread sound attachments
 var     Actor               LeftTreadSoundAttach, RightTreadSoundAttach;   // references to sound attachments used to make tread sounds
 var     array<name>         LeftWheelBones, RightWheelBones;               // bone names for track wheels on each side, used to animate wheels (visual only)
@@ -164,7 +164,7 @@ var     float               TreadHitMaxHeight;     // height (in UU) of top of t
 var     float               TreadDamageThreshold;  // minimum TreadDamageModifier in DamageType to possibly break treads
 var     bool                bLeftTrackDamaged;     // the left track has been damaged
 var     bool                bRightTrackDamaged;    // the left track has been damaged
-var     sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
+var     Sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
 var     Material            DamagedTreadPanner;    // replacement skin used for a damaged tread
 var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // static meshes to use for damaged left & right tracks
 var     Actor               DamagedTrackLeft, DamagedTrackRight; // static mesh attachment to show damaged track, e.g. broken track links (clientside only)

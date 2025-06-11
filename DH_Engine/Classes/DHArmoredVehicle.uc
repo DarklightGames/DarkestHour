@@ -104,7 +104,7 @@ var     Controller  WhoSetOnFire;
 var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
-var     sound       SmokingEngineSound;
+var     Sound       SmokingEngineSound;
 var     bool        bEnableHatchFires;     // allow hatch fires for this vehicle
 
 // Debugging

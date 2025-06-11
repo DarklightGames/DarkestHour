@@ -7,8 +7,8 @@ class DHCannonShellSmoke extends DHCannonShellHE
     abstract;
 
 var  class<Emitter> SmokeEmitterClass;
-var  sound          SmokeIgniteSound;
-var  sound          SmokeLoopSound;
+var  Sound          SmokeIgniteSound;
+var  Sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
 // Modified to add smoke effects

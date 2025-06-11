@@ -113,7 +113,7 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        local sound RampSound;
+        local Sound RampSound;
 
         super.HandleTransition();
 

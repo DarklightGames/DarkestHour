@@ -10,7 +10,7 @@ class DHBullet extends DHBallisticProjectile
 // General
 var     int             WhizType;               // sent in HitPointTrace to indicate whiz or snap sound to play (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
 var     Actor           SavedTouchActor;        // added (same as shell) to prevent recurring ProcessTouch on same actor (e.g. was screwing up tracer ricochets from turrets)
-var     sound           WaterHitSound;          // sound of this bullet hitting water
+var     Sound           WaterHitSound;          // sound of this bullet hitting water
 var     bool            bHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Tracers
@@ -28,10 +28,10 @@ var     float           DampenFactorParallel;
 
 // Vehicle hit effects
 var     class<Emitter>  VehiclePenetrateEffectClass;
-var     sound           VehiclePenetrateSound;
+var     Sound           VehiclePenetrateSound;
 var     float           VehiclePenetrateSoundVolume;
 var     class<Emitter>  VehicleDeflectEffectClass;
-var     sound           VehicleDeflectSound;
+var     Sound           VehicleDeflectSound;
 var     float           VehicleDeflectSoundVolume;
 
 // Debugging

@@ -13,7 +13,7 @@ var int SpawnsRemaining;                        // The amount of spawns remainin
 
 // Creation
 var float CreatedTimeSeconds;                   // The time (relative to Level.TimeSeconds) that this rally point was created
-var sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
+var Sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
 
 // Establishment
 var int   EstablishmentRadiusInMeters;          // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
