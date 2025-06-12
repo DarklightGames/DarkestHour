@@ -9,7 +9,7 @@ class DHITAMachineGunnerRoles extends DHAxisMachineGunnerRoles
 defaultproperties
 {
     AltName="Mitragliere"
-    AddedRoleRespawnTime=10 //Lower respawn timer than BAR and Bren roles since the Breda is arguably the least effective MG in the game.
+    AddedRoleRespawnTime=10
 
     PrimaryWeapons(0)=(Item=Class'DH_Breda30Weapon',AssociatedAttachment=Class'DH_Weapons.DH_Breda30AmmoPouch')
     SecondaryWeapons(0)=(Item=Class'DH_BerettaM1934Weapon',AssociatedAttachment=Class'DH_BerettaM1934AmmoPouch')

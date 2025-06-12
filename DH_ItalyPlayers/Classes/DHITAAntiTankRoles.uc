@@ -15,7 +15,6 @@ defaultproperties
 
     Grenades(0)=(Item=Class'DH_LTypeGrenadeWeapon')
     Grenades(1)=(Item=Class'DH_SRCMMod35SmokeGrenadeWeapon')
-
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
     BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
@@ -34,4 +33,6 @@ defaultproperties
 
     DetachedArmClass=Class'DHSeveredArm_ItalianLivorno'
     DetachedLegClass=Class'DHSeveredLeg_ItalianLivorno'
+
+    AddedRoleRespawnTime=10 // Reduced from the default because of this role's relative ineffectiveness.
 }
