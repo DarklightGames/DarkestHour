@@ -8,6 +8,6 @@ class DH_WillysJeepFactory_Italy extends DH_WillysJeepFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_WillysJeep_Italy'
-    Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_Italy'
+    Skins(0)=Texture'DH_Jeep_tex.Willys_Body_Italy'
 }
 

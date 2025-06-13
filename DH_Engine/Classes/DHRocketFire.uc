@@ -153,9 +153,9 @@ defaultproperties
     ExhaustDamage=200.0
     ExhaustMomentumTransfer=100.0
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.BazookaFire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.BazookaFire01'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.BazookaFire01'
     FireForce="RocketLauncherFire"
     FireAnim=""
 

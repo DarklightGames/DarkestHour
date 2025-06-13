@@ -8,5 +8,5 @@ class DH_BazookaM9Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_BazookaM9Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BazookaM9'
+    StaticMesh=StaticMesh'DH_WeaponPickups.BazookaM9'
 }

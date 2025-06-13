@@ -14,7 +14,7 @@ defaultproperties
     MaxVerticalRecoilAngle=650
     MaxHorizontalRecoilAngle=100
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo2.EnfieldNo2_Fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo2_Fire01'
     FireLastAnim="shoot"
     FireIronLastAnim="iron_shoot"
 }

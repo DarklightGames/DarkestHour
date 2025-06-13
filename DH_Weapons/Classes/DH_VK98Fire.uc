@@ -10,8 +10,8 @@ defaultproperties
     FireRate=2.8
 
     Spread=60.0
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.kar98.VK98_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.kar98.VK98_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.kar98.VK98_fire02'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.VK98_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.VK98_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.VK98_fire02'
 
 }

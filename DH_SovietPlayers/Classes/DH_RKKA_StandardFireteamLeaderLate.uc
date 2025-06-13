@@ -12,7 +12,7 @@ defaultproperties
     RolePawns(2)=(PawnClass=Class'DH_SovietTunicM43SergeantGreenPawnB',Weight=1.0)
     RolePawns(3)=(PawnClass=Class'DH_SovietTunicM43SergeantDarkPawnB',Weight=1.0)
     Headgear(0)=Class'DH_SovietSidecap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
 
     PrimaryWeapons(2)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=Class'DH_PPS43Weapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')

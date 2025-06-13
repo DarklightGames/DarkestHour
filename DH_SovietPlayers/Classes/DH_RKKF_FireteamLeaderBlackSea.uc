@@ -9,5 +9,5 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietMarineBushlatPawn',Weight=1.0)
     Headgear(0)=Class'DH_SovietNavalCap_BlackSea'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.NavalSleeves2'
+    SleeveTexture=Texture'DHSovietCharactersTex.NavalSleeves2'
 }

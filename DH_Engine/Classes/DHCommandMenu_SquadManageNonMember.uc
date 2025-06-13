@@ -134,7 +134,7 @@ defaultproperties
 {
     AlreadyInASquadText="Already in a squad"
     SquadIsFullText="Squad is full"
-    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_invite')
+    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.squad_invite')
     SlotCountOverride=4
 }
 

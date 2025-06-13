@@ -20,6 +20,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
 }

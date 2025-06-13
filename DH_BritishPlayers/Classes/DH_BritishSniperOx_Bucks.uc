@@ -11,5 +11,5 @@ defaultproperties
     Headgear(0)=Class'DH_BritishParaHelmetOne'
     Headgear(1)=Class'DH_BritishParaHelmetTwo'
     Headgear(2)=Class'DH_BritishParaHelmetOne'
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Para_sleeves'
 }

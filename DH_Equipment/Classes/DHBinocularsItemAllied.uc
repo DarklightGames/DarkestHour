@@ -11,10 +11,10 @@ defaultproperties
     PickupClass=Class'DHBinocularsPickupAllied'
     AttachmentClass=Class'DHBinocularsAttachmentAllied'
 
-    Skins(2)=Texture'DH_Equipment_tex.Binocs.BinoccanvasAllied'
-    HighDetailOverlay=Shader'DH_Equipment_tex.Binocs.AlliedBinoc_s'
+    Skins(2)=Texture'DH_Equipment_tex.BinoccanvasAllied'
+    HighDetailOverlay=Shader'DH_Equipment_tex.AlliedBinoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     
-    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Allied'
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.BINOC_overlay_6x30Allied'
 }

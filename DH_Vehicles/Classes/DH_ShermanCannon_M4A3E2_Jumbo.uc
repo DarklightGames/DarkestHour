@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_turret'
-    Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.shermancupolat'
+    Skins(0)=Texture'DH_VehiclesUS_tex3.ShermanM4A3E2_turret'
+    Skins(1)=Texture'DH_VehiclesUS_tex3.shermancupolat'
     WeaponAttachOffset=(X=6.0,Y=0.0,Z=0.0)
     BeginningIdleAnim="Periscope_idle"
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M4A3E2_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -75,10 +75,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 }

@@ -7,5 +7,5 @@ class DH_ItalianBlackshirtCorporalPawn extends DH_ItalianPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHItalianCharactersTex.Uniforms.ita_livorno_blackshirt'
+    Skins(0)=Texture'DHItalianCharactersTex.ita_livorno_blackshirt'
 }

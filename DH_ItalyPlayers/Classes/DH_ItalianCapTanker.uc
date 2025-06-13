@@ -8,5 +8,5 @@ class DH_ItalianCapTanker extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ita_cap_tanker'
-    Skins(0)=Texture'DHItalianCharactersTex.Gear.ita_cap_tanker_helmet'
+    Skins(0)=Texture'DHItalianCharactersTex.ita_cap_tanker_helmet'
 }

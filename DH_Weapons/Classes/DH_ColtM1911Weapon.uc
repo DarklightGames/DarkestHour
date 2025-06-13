@@ -14,13 +14,13 @@ defaultproperties
     PickupClass=Class'DH_ColtM1911Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
-    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     HandNum=0
     SleeveNum=1
 
-    Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+    Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911_S'
 
     DisplayFOV=85.0
     IronSightDisplayFOV=75.0

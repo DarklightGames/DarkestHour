@@ -9,12 +9,12 @@ defaultproperties
 {
     VehicleNameString="Sherman M4A3E8 'Zombie Slayer'"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn_M4A3E8_ZombieSlayer')
-    VehicleAttachments(0)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_ZombieSlayer_stc.body.body_stowage',bHasCollision=false)
+    VehicleAttachments(0)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_ZombieSlayer_stc.body_stowage',bHasCollision=false)
 
-    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.m4a3e8_destroyed'
 
-    Skins(0)=Texture'DHEventVehiclesTex.ZombieSlayer.body_ext_ZombieSlayer'
-    Skins(1)=Texture'DHEventVehiclesTex.ZombieSlayer.wheels_ext'
-    Skins(2)=Texture'DHEventVehiclesTex.ZombieSlayer.tread_ZombieSlayer'
-    Skins(3)=Texture'DHEventVehiclesTex.ZombieSlayer.tread_ZombieSlayer'
+    Skins(0)=Texture'DHEventVehiclesTex.body_ext_ZombieSlayer'
+    Skins(1)=Texture'DHEventVehiclesTex.wheels_ext'
+    Skins(2)=Texture'DHEventVehiclesTex.tread_ZombieSlayer'
+    Skins(3)=Texture'DHEventVehiclesTex.tread_ZombieSlayer'
 }

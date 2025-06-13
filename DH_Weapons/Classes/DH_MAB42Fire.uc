@@ -22,10 +22,10 @@ defaultproperties
     RecoilFallOffFactor=13.0
 
     FlashEmitterClass=Class'MuzzleFlash1stMP'
-    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.MAB38.Mabsingle01'
-    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.MAB38.Mabsingle02'
-    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.MAB38.Mabsingle03'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Mabsingle01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Mabsingle02'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Mabsingle03'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     ShellEjectClass=Class'ShellEject1st9x19mm'
 
     ShellRotOffsetIron=(Pitch=25000)

@@ -13,8 +13,8 @@ defaultproperties
     HeadgearProbabilities(0)=1
     Headgear(0)=Class'DH_MadTopHat'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.Sleeves.NavalSleeves2'
-    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    SleeveTexture=Texture'DHSovietCharactersTex.NavalSleeves2'
+    GlovedHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
    

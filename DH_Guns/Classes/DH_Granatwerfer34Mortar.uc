@@ -23,11 +23,11 @@ defaultproperties
     ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
 
     bUsesCodedDestroyedSkins=true
-    DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.Destroyed.GRW34_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.GRW34_destroyed'
 
-    VehicleHudImage=Texture'DH_Granatwerfer34_tex.interface.granatwerfer34_body_icon'
-    VehicleHudTurret=TexRotator'DH_Granatwerfer34_tex.interface.granatwerfer34_tube_icon_rot'
-    VehicleHudTurretLook=TexRotator'DH_Granatwerfer34_tex.interface.granatwerfer34_tube_icon_look'
+    VehicleHudImage=Texture'DH_Granatwerfer34_tex.granatwerfer34_body_icon'
+    VehicleHudTurret=TexRotator'DH_Granatwerfer34_tex.granatwerfer34_tube_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Granatwerfer34_tex.granatwerfer34_tube_icon_look'
 
     DestructionEffectOffset=(Z=-60)
 }

@@ -546,12 +546,12 @@ defaultproperties
 {
     SpawnPointStyle="DHRallyPointButtonStyle"
 
-    StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
+    StaticMesh=StaticMesh'DH_Construction_stc.USA_backpack'
     DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1
     RallyPointIndex=-1
-    CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
+    CreationSound=Sound'Inf_Player.Gibimpact'
     MapIconAttachmentClass=Class'DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
 
     bCanBeEncroachedUpon=true

@@ -20,10 +20,10 @@ defaultproperties
     RecoilFallOffFactor=10.0
 
     FlashEmitterClass=Class'MuzzleFlash1stPistol'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire03'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.greasegun_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.greasegun_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.greasegun_fire03'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     ShellEjectClass=Class'ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=1000)
 }

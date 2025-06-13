@@ -8,7 +8,7 @@ class DH_TT33Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.tt33'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.tt33_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     ROShellCaseClass=Class'RO3rdShellEject762x25mm'
     bRapidFire=false

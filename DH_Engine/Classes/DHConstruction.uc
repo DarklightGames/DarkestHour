@@ -1441,7 +1441,7 @@ defaultproperties
     TeamIndex=2     // NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_DumbProxy
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
+    StaticMesh=StaticMesh'DH_Construction_stc.hedgehog_01'
     HealthMax=100
     Health=1
     ProxyTraceDepthMeters=5.0
@@ -1500,7 +1500,7 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact'
+    PlacementSound=Sound'Inf_Player.Gibimpact'
     PlacementEmitterClass=Class'DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0

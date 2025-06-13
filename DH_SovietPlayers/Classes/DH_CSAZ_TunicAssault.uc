@@ -13,7 +13,7 @@ defaultproperties
     Headgear(0)=Class'DH_CSAZSidecap'
     Headgear(1)=Class'DH_BritishTommyHelmet'
     Headgear(2)=Class'DH_SovietHelmet'
-    SleeveTexture=Texture'Weapons1st_tex.Arms.russian_sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
     HeadgearProbabilities(0)=0.8
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.1

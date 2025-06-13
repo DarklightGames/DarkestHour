@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
+    Skins(0)=Texture'DH_VehiclesUK_tex.FireFly_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.FireFly_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.Sherman_turret_int'
     WeaponAttachOffset=(X=0.0,Y=1.78,Z=4.77)
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Firefly_turret_Col')
 
     // Turret armor
     FrontArmorFactor=7.6
@@ -72,15 +72,15 @@ defaultproperties
     SmokeLauncherFireOffset(0)=(X=24.0,Y=-42.0,Z=41.0)
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=200

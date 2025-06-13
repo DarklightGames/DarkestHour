@@ -76,8 +76,8 @@ defaultproperties
     BrokenEmitterClass=Class'DHShellShatterEffect'
     bCanDieOfStagnation=false
     BrokenLifespan=0.1
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
+    StaticMesh=StaticMesh'DH_Construction_stc.DH_USA_ammo_box'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.resupply_box'
     ProxyTraceDepthMeters=3.0
     CollisionRadius=50.0
     CollisionHeight=30.0

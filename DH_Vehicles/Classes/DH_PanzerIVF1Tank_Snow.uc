@@ -11,7 +11,7 @@ simulated event DestroyAppearance()
 
     DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
     DestroyedSkin.CombineOperation = CO_Multiply;
     DestroyedMeshSkins[0] = DestroyedSkin;
@@ -22,7 +22,7 @@ simulated event DestroyAppearance()
 defaultproperties
 {
     Skins(0)=Texture'GUP_vehicles_tex.WELT_Panzer4F1_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer4F2_treadsnow'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer4F2_treadsnow'
+    Skins(1)=Texture'axis_vehicles_tex.Panzer4F2_treadsnow'
+    Skins(2)=Texture'axis_vehicles_tex.Panzer4F2_treadsnow'
     CannonSkins(0)=Texture'GUP_vehicles_tex.WELT_Panzer4F1_ext'
 }

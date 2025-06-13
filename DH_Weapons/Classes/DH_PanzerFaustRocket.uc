@@ -29,16 +29,16 @@ defaultproperties
     Speed=2716.0
     MaxSpeed=2716.0
     MyDamageType=Class'DH_PanzerFaustDamType'
-    StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
+    StaticMesh=StaticMesh'DH_Military_Axis.Panzerfaust_warhead'
 
-    VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    DirtHitSound=Sound'DH_WeaponSounds.faust.faust_explode031'
-    RockHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
+    VehicleHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    DirtHitSound=Sound'DH_WeaponSounds.faust_explode031'
+    RockHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    WoodHitSound=Sound'DH_WeaponSounds.faust_explode021'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
+    VehicleDeflectSound=Sound'Vehicle_Weapons.HE_deflect01'
 
-    ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
-    ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
-    ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
+    ExplosionSound(0)=Sound'DH_WeaponSounds.faust_explode011'
+    ExplosionSound(1)=Sound'DH_WeaponSounds.faust_explode021'
+    ExplosionSound(2)=Sound'DH_WeaponSounds.faust_explode031'
 }

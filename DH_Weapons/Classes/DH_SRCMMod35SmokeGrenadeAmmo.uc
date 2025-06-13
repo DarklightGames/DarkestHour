@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Material'DH_SRCMMod35_tex.interface.srcm_smoke_ammo'
+    IconMaterial=Material'DH_SRCMMod35_tex.srcm_smoke_ammo'
 }

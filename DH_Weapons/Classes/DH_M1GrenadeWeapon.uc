@@ -15,14 +15,14 @@ defaultproperties
     DisplayFOV=80.0
 
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon
+    Skins(2)=Texture'DH_Weapon_tex.M1Grenade' // TODO: there is no specularity mask for this weapon
 
     SleeveNum=0
     HandNum=1
 
     FuzeLengthRange=(Min=4.0,Max=4.0)
     bHasReleaseLever=true
-    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
 

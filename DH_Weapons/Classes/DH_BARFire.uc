@@ -27,8 +27,8 @@ defaultproperties
     RecoilFallOffFactor=40.0
 
     FlashEmitterClass=Class'MuzzleFlash1stPistol'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR_Fire02'
 
     BipodDeployFireAnim="iron_fire"
     //BipodDeployFireLoopAnim="SightUp_iron_shoot_loop"

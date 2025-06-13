@@ -8,7 +8,7 @@ class DH_DT29Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.DT29_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dt_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.dt_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdDP'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true

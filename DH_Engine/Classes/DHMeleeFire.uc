@@ -487,10 +487,10 @@ defaultproperties
     BayonetDamageMax=85
     VulnerableDamageFactor=3.0
 
-    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
-    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
-    GroundStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit'
+    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit_ground'
+    GroundStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit_ground'
 
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"

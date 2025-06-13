@@ -551,7 +551,7 @@ defaultproperties
     i_Announcement=AnnouncementImage
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
+        Image=Texture'DHEngine_Tex.Trans_50'
         TopPadding=0.25
         LeftPadding=0.1
         BottomPadding=0.25
@@ -676,7 +676,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.facebook'
+        Graphic=Texture'DH_GUI_Tex.facebook'
         bTabStop=true
         Position=ICP_Center
         Hint="Follow us on Facebook!"
@@ -691,7 +691,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.github'
+        Graphic=Texture'DH_GUI_Tex.github'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us on GitHub!"
@@ -706,7 +706,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.steam'
+        Graphic=Texture'DH_GUI_Tex.steam'
         bTabStop=true
         Position=ICP_Center
         Hint="Join the Steam Community!"
@@ -721,7 +721,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
+        Graphic=Texture'DH_GUI_Tex.patreon'
         bTabStop=true
         Position=ICP_Center
         Hint="Support us on Patreon!"
@@ -736,7 +736,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.discord'
+        Graphic=Texture'DH_GUI_Tex.discord'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us in Discord!"
@@ -766,7 +766,7 @@ defaultproperties
     l_Version=VersionNum
 
     Begin Object class=GUIImage Name=LogoImage
-        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.DHTextLogo'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -779,7 +779,7 @@ defaultproperties
     i_DHTextLogo=LogoImage
 
     Begin Object class=GUIImage Name=MOTDLoadingImage
-        Image=TexRotator'DH_GUI_Tex.MainMenu.LoadingRotator'
+        Image=TexRotator'DH_GUI_Tex.LoadingRotator'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -809,7 +809,7 @@ defaultproperties
     tb_MOTDContent=MyMOTDText
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
-        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
+        Image=Texture'DHEngine_Tex.Trans_50'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4

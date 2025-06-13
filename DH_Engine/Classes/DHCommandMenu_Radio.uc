@@ -79,15 +79,15 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         switch (Error)
         {
             case ERROR_Exhausted:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.ExhaustedText;
                 break;
             case ERROR_Unqualified:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnqualifiedText;
                 break;
             case ERROR_NotEnoughSquadMembers:
-                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
 
                 if (LevelInfo != none && PC != none && PC.SquadReplicationInfo != none)
                 {
@@ -105,16 +105,16 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText[0] = "?/?";
                 break;
             case ERROR_Cooldown:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
+                ORI.InfoIcon = Texture'DH_GUI_tex.StopWatch';
                 CooldownTimeSeconds = Interaction.GRI.ArtilleryTypeInfos[Index].NextConfirmElapsedTime - Interaction.GRI.ElapsedTime;
                 ORI.InfoText[0] = Class'TimeSpan'.static.ToString(CooldownTimeSeconds);
                 break;
             case ERROR_Ongoing:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
+                ORI.InfoIcon = Texture'DH_GUI_tex.StopWatch';
                 ORI.InfoText[0] = default.OngoingText;
                 break;
             default:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnavailableText;
                 break;
         }
@@ -179,7 +179,7 @@ function bool ShouldHideMenu()
 defaultproperties
 {
     SlotCountOverride=4
-    OnActiveSound=Sound'DH_SundrySounds.Radio.RadioClick'
+    OnActiveSound=Sound'DH_SundrySounds.RadioClick'
 
     UnavailableText="Unavailable"
     ExhaustedText="Exhausted"

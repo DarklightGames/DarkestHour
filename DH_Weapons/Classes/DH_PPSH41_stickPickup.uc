@@ -8,5 +8,5 @@ class DH_PPSh41_stickPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_PPSH41_stickWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.ppsh_stick'
+    StaticMesh=StaticMesh'DH_WeaponPickups.ppsh_stick'
 }

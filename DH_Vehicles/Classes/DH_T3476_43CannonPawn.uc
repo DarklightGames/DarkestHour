@@ -21,24 +21,24 @@ defaultproperties
     DriveRot=(Pitch=0)
 
     //commented out because this should have mkIV periscope like on t34-85 (its visible in the cupola)
-    //PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight' //emulating the PT4-7 periscope 2.5x 26' FOV
+    //PeriscopeOverlay=Texture'DH_VehicleOptics_tex.MG_sight' //emulating the PT4-7 periscope 2.5x 26' FOV
     //PeriscopeSize=0.76
 
     DriveAnim="VIS2_com_idle_close" //"VT3485_com_idle_close"
     bLockCameraDuringTransition=false
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.T3476_sight_background' // edited RO sight to make edges solid black to avoid graphical smears on sides of sight
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.T3476_sight_background' // edited RO sight to make edges solid black to avoid graphical smears on sides of sight
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.5 // 15 degrees visible FOV at 2.5x magnification (TMFD-7 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
 
     //Sounds
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredRotateSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'
 }

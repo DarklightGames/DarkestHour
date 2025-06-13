@@ -39,7 +39,7 @@ simulated function PlayIdle()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.FG42_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.FG42_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdSTG'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

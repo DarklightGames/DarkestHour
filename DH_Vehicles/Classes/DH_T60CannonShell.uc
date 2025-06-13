@@ -40,12 +40,12 @@ defaultproperties
     ExplosionDecalSnow=Class'BulletHoleSnow'
 
     //Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Impact_Wood'
 
     //Penetration
     DHPenetrationTable(0)=2.99 //100m; increased so that it can penetrate 35mm point blank (which it should be able to according to info that i found)

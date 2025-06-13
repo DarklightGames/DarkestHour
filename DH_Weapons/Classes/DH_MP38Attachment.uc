@@ -8,7 +8,7 @@ class DH_MP38Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mp38_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp38_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.mp38_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdMP'
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 

@@ -10,13 +10,13 @@ defaultproperties
     VehicleNameString="Pantherturm"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PantherturmCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_body_camo2'
-	Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherG_Destroyed2'
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
+    Skins(0)=Texture'DH_VehiclesGE_tex.PantherG_body_camo2'
+	Skins(1)=Texture'axis_vehicles_tex.PantherG_treads'
+    Skins(2)=Texture'axis_vehicles_tex.PantherG_treads'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.PantherG_Destroyed2'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.panther_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.panther_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.panther_turret_look'
     ExitPositions(0)=(X=-91.0,Y=20.0,Z=110.0)
     VehicleMass=14.0
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.panzerturm_topdown'
@@ -39,7 +39,7 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_PantherturmGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 
 	Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
@@ -50,7 +50,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -59,7 +59,7 @@ defaultproperties
         BoneOffset=(X=32.0,Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -69,7 +69,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -78,7 +78,7 @@ defaultproperties
         BoneOffset=(X=-14.0,Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -87,7 +87,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -96,7 +96,7 @@ defaultproperties
         BoneOffset=(Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
 	// Damage
     HealthMax=1600.0

@@ -8,5 +8,5 @@ class DH_M1928_20rndPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_M1928_20rndWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1928_20rnd'
+    StaticMesh=StaticMesh'DH_WeaponPickups.M1928_20rnd'
 }

@@ -8,7 +8,7 @@ class DH_FJ45FireteamLeader extends DHGECorporalRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanArdennesFJPawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.FJ_Sleeve'
     Headgear(0)=Class'DH_FJHelmetOne'
     Headgear(1)=Class'DH_FJHelmetTwo'
     Headgear(2)=Class'DH_FJHelmetNetOne'

@@ -19,5 +19,5 @@ defaultproperties
     Grenades(2)=(Item=Class'DH_RedSmokeWeapon')
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.brit_sleeves'
 }

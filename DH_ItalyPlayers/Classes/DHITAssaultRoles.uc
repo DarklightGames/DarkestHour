@@ -18,10 +18,10 @@ defaultproperties
     HeadgearProbabilities(0)=1.0
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
-    BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
-    SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
+    BareHandTexture=Texture'DHItalianCharactersTex.Italian_hands'
+    SleeveTexture=Texture'DHItalianCharactersTex.Livorno_sleeves'
     DetachedArmClass=Class'DHSeveredArm_ItalianLivorno'
     DetachedLegClass=Class'DHSeveredLeg_ItalianLivorno'
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
     GivenItems(0)="DH_Equipment.DHShovelItem_Italian"
 }

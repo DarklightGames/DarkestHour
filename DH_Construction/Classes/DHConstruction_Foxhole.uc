@@ -144,7 +144,7 @@ simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 
 defaultproperties
 {
-    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpacked')
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.foxhole_01_unpacked')
     ProgressMax=8
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
@@ -154,8 +154,8 @@ defaultproperties
     bCanBeDamaged=false
     ProxyTraceDepthMeters=10
     CollisionRadius=192.0
-    StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
-    LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
+    StaticMesh=StaticMesh'DH_Construction_stc.foxhole_01'
+    LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.foxhole_02'
     PokeTerrainDepth=128
     PokeTerrainRadius=128
     PokeTerrainDepthLarge=82
@@ -163,7 +163,7 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.foxhole'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.foxhole'
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=10.0
     bLimitTerrainSurfaceTypes=true
@@ -181,5 +181,5 @@ defaultproperties
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
     GroupClass=Class'DHConstructionGroup_Defenses'
-    DirtProjectorMaterial=Material'DH_Construction_tex.Foxholes.foxhole_01_projector'
+    DirtProjectorMaterial=Material'DH_Construction_tex.foxhole_01_projector'
 }

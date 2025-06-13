@@ -12,9 +12,9 @@ defaultproperties
     Spread=55.0
     MaxVerticalRecoilAngle=1550
     MaxHorizontalRecoilAngle=200
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.newMN.newM38_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.newMN.newM38_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.newMN.newM38_fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.newM38_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.newM38_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.newM38_fire03'
 
     FlashEmitterClass=Class'MuzzleFlash1stKar'
     ShellRotOffsetHip=(Pitch=5000)

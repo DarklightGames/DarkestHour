@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=Class'DH_MP40Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

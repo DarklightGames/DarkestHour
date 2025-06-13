@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="M3A1 Halftrack"
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body'
-    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_destro'
+    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m3_destro'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
 
     // Vehicle weapons & passengers
@@ -26,7 +26,7 @@ defaultproperties
     PassengerPawns(9)=(AttachBone="body",DrivePos=(X=-155.0,Y=30.0,Z=85.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
 
     // HUD
-    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.m3a1_body'
     VehicleHudOccupantsX(1)=0.54 // 50 cal gunner
     VehicleHudOccupantsY(1)=0.45
     VehicleHudOccupantsX(2)=0.45 // rear left passengers
@@ -49,5 +49,5 @@ defaultproperties
     VehicleHudOccupantsY(10)=0.7375
     VehicleHudOccupantsX(11)=0.55
     VehicleHudOccupantsY(11)=0.8
-    SpawnOverlay(0)=Material'DH_M3Halftrack_tex.hud.m3a1_menu'
+    SpawnOverlay(0)=Material'DH_M3Halftrack_tex.m3a1_menu'
 }

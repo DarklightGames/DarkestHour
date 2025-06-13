@@ -7667,18 +7667,18 @@ defaultproperties
     QuietFootStepVolume=0.66
     FootstepSoundsClass=Class'DHPawnFootstepSounds'
     SoundGroupClass=Class'DHPawnSoundGroup'
-    MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
-    HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
-    PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
+    MantleSound=SoundGroup'DH_Inf_Player.Mantle'
+    HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Helmet_Hit'
+    PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Impact_Player'
 
     // Burning player
     FireDamage=10
     FireDamageClass=Class'DHBurningDamageType'
     FlameEffect=Class'DHBurningPlayerFlame'
-    BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
-    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
-    CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
-    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
+    BurningOverlayMaterial=Combiner'DH_FX_Tex.PlayerBurningOverlay_ALT'
+    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.PlayerBurningOverlay'
+    CharredOverlayMaterial=Combiner'DH_FX_Tex.PlayerCharredOverlay'
+    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.HeadgearBurnedOverlay'
 
     // Third person player animations
     bShovelHangsOnLeftHip=true

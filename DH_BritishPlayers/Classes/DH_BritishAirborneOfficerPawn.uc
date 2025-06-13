@@ -7,9 +7,9 @@ class DH_BritishAirborneOfficerPawn extends DH_BritishAirbornePawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritParaOf1'
+    Skins(0)=Texture'DHBritishCharactersTex.BritParaOf1'
 
-    BodySkins(0)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritParaOf1'
-    BodySkins(1)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritParaOf2'
-    BodySkins(2)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritParaOf3'
+    BodySkins(0)=Texture'DHBritishCharactersTex.BritParaOf1'
+    BodySkins(1)=Texture'DHBritishCharactersTex.BritParaOf2'
+    BodySkins(2)=Texture'DHBritishCharactersTex.BritParaOf3'
 }

@@ -20,7 +20,7 @@ defaultproperties
     MaxVerticalRecoilAngle=250
     MaxHorizontalRecoilAngle=110
 
-    FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
+    FireSounds(0)=SoundGroup'Inf_Weapons.mg34_fire_single'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Y=0.0,Z=-10.0)
     ShellRotOffsetIron=(Pitch=3000)

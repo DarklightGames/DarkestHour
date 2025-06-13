@@ -8,7 +8,7 @@ class DH_50CalDamType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     TankDamageModifier=0.05 // These values are unusually low to compensate for the now significantly increased bullet damage of the .50 cal.
     APCDamageModifier=0.08
     VehicleDamageModifier=0.12

@@ -123,8 +123,8 @@ simulated function SetImage()
     else
     {
         // If using the map's background, then the borders should be default
-        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
-        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
+        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.DHSectionTopper';
+        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.DHSectionTopper';
     }
     
     DrawOpImage(Operations[0]).Image = M;
@@ -139,7 +139,7 @@ defaultproperties
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
+        Image=Texture'DH_GUI_Tex.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.0
         Lft=0.0
@@ -150,7 +150,7 @@ defaultproperties
     Operations(1)=OpTopBorder
 
     Begin Object class=DrawOpImage Name=OpBottomBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
+        Image=Texture'DH_GUI_Tex.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.91
         Lft=0.0
@@ -161,7 +161,7 @@ defaultproperties
     Operations(2)=OpBottomBorder
 
     Begin Object class=DrawOpImage Name=OpDHTextLogoImg
-        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.DHTextLogo'
         ImageStyle=0
         Top=0.1
         Lft=0.0

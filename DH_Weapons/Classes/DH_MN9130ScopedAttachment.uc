@@ -22,7 +22,7 @@ simulated function AnimEnd(int Channel)
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Nagant9130_scoped_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.nagant9130scoped_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdNagant'
     ROShellCaseClass=Class'RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true

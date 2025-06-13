@@ -13,9 +13,9 @@ defaultproperties
     ExhaustLength=320.0
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=600
-    FireSounds(0)=Sound'DH_WeaponSounds.faust.panzerfaust60_fire011'
-    FireSounds(1)=Sound'DH_WeaponSounds.faust.panzerfaust60_fire021'
-    FireSounds(2)=Sound'DH_WeaponSounds.faust.panzerfaust60_fire031'
+    FireSounds(0)=Sound'DH_WeaponSounds.panzerfaust60_fire011'
+    FireSounds(1)=Sound'DH_WeaponSounds.panzerfaust60_fire021'
+    FireSounds(2)=Sound'DH_WeaponSounds.panzerfaust60_fire031'
     FireAnim="shoothip"
     MuzzleBone="Warhead"
     AimError=1200.0

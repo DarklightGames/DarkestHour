@@ -19,7 +19,7 @@ defaultproperties
     PickupClass=Class'DH_M44Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_M44'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

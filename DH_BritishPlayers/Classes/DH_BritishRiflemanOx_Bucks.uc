@@ -8,7 +8,7 @@ class DH_BritishRiflemanOx_Bucks extends DHCWRiflemanRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_BritishAirbornePawn',Weight=1.0)
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Para_sleeves'
     Headgear(0)=Class'DH_BritishParaHelmetOne'
     Headgear(1)=Class'DH_BritishParaHelmetTwo'
     Headgear(2)=Class'DH_BritishParaHelmetOne'

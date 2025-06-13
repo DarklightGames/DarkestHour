@@ -12,8 +12,8 @@ defaultproperties
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_TankCrew'
 
-    Skins(0)=Texture'DHEventCharactersTex.GetTunics.h_zombie'
-    Skins(1)=Texture'DHEventCharactersTex.GerHeads.h_face_zombie'
+    Skins(0)=Texture'DHEventCharactersTex.h_zombie'
+    Skins(1)=Texture'DHEventCharactersTex.h_face_zombie'
 
     bReversedSkinsSlots=false
 

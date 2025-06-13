@@ -10,7 +10,7 @@ defaultproperties
     RolePawns(0)=(PawnClass=Class'DH_LWPGreatcoatBrownSLPawn_Winter',Weight=1.0)
     RolePawns(1)=(PawnClass=Class'DH_LWPGreatcoatGreySLPawn_Winter',Weight=1.0)
     RolePawns(2)=(PawnClass=Class'DH_LWPGreatcoatGreyBagPawn_Winter',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_LWPCoatSleeves'
     Headgear(0)=Class'DH_LWPcap'
     Headgear(1)=Class'DH_LWPHelmet'
     HeadgearProbabilities(0)=0.5

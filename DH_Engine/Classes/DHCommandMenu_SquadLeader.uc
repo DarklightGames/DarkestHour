@@ -169,10 +169,10 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     InEnemyTerritory="In enemy territory"
-    Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
-    Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
-    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.Icons.infantry')
-    Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
-    Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.Icons.move')
+    Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.rally_point')
+    Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.fire')
+    Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.construction')
+    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.infantry')
+    Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.binoculars')
+    Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.move')
 }

@@ -23,7 +23,7 @@ defaultproperties
         StartSizeRange=(X=(Min=4.000000,Max=6.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -53,7 +53,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.500000,Max=5.000000))
         InitialParticlesPerSecond=60.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal'
+        Texture=Texture'Effects_Tex.snowfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.400000,Max=0.400000)
@@ -92,7 +92,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=1.500000)
@@ -120,7 +120,7 @@ defaultproperties
         StartSizeRange=(X=(Min=4.000000,Max=6.000000))
         InitialParticlesPerSecond=300.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.icechunks'
+        Texture=Texture'Effects_Tex.icechunks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.750000,Max=0.750000)
@@ -148,7 +148,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=35.000000,Max=75.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.200000,Max=0.250000)
         StartVelocityRange=(X=(Min=300.000000,Max=500.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=-10.000000,Max=10.000000))
     End Object
@@ -170,7 +170,7 @@ defaultproperties
         StartSizeRange=(X=(Min=8.000000,Max=14.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.icechunks'
+        Texture=Texture'Effects_Tex.icechunks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=1.000000)

@@ -8,6 +8,6 @@ class DH_RKKA_AmoebaUrbanRiflemanEarly extends DHSOVRiflemanRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaUrbanPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaUrbanSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaUrbanSleeves'
     Headgear(0)=Class'DH_SovietSidecap'
 }

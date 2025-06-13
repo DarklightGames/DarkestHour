@@ -15,8 +15,8 @@ defaultproperties
     DriveAnim="crouch_idlehold_bayo"
     CameraBone="com_camera"
     PlayerCameraBone="com_camera"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Wolverine_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Wolverine_sight_background'
     GunsightSize=0.369 // 10 degrees 27 minutes visible FOV at 3x magnification (M79C telescope)
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.WolverineShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.WolverineShell_reload'
 }

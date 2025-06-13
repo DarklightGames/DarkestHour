@@ -8,6 +8,6 @@ class DH_P38Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_P38Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.p38'
+    StaticMesh=StaticMesh'WeaponPickupSM.p38'
     CollisionRadius=15.0 // as is a pistol, which is small
 }

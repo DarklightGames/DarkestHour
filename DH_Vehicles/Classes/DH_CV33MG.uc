@@ -55,8 +55,8 @@ defaultproperties
     bBlockZeroExtentTraces=true
 
     // Collision Attachments
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_hatch_collision',AttachBone="hatch")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_pitch_collision',AttachBone="mg_pitch")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.cv33_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.cv33_turret_pitch_collision',AttachBone="mg_pitch")
 
     GunnerAttachmentBone="GUN"
 }

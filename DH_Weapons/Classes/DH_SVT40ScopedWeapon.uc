@@ -14,15 +14,15 @@ defaultproperties
     PickupClass=Class'DH_SVT40ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt40_scoped_1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.svt40_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     ScopeOverlaySize=0.266
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.USSR_PU_Scope_Overlay'
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
     IronSightDisplayFOV=48.2
     IronSightDisplayFOVHigh=48.2

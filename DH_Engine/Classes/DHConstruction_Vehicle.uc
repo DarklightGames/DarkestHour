@@ -445,7 +445,7 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
+    StaticMesh=StaticMesh'DH_Construction_stc.barricade_wire_02'
     bDestroyOnConstruction=false
     BrokenLifespan=0.0
     ConstructionVerb="emplace"

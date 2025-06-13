@@ -20,10 +20,10 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body'
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
-    DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.Destroyed.cannone4732_destroyed'
-    VehicleHudImage=Texture'DH_Cannone4732_tex.Interface.cannone4732_body_icon'
-    VehicleHudTurret=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_rot'
-    //VehicleHudTurretLook=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_look'
+    DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.cannone4732_destroyed'
+    VehicleHudImage=Texture'DH_Cannone4732_tex.cannone4732_body_icon'
+    VehicleHudTurret=TexRotator'DH_Cannone4732_tex.cannone4732_turret_rot'
+    //VehicleHudTurretLook=TexRotator'DH_Cannone4732_tex.cannone4732_turret_look'
     ExitPositions(0)=(X=-100,Y=+35.00,Z=50)
     ExitPositions(1)=(X=-100,Y=-35.00,Z=50)
     ExitPositions(2)=(X=-200,Y=0,Z=50)
@@ -49,5 +49,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Cannone4732Gun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

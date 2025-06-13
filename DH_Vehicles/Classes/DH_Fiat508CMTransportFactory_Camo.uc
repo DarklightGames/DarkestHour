@@ -8,5 +8,5 @@ class DH_Fiat508CMTransportFactory_Camo extends DH_Fiat508CMTransportFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_Fiat508CMTransport_Camo'
-    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_camo_01'
+    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508cm_camo_01'
 }

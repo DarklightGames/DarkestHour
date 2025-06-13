@@ -8,6 +8,6 @@ class DH_StenMkIIIPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_StenMkIIIWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.StenMkIII'
+    StaticMesh=StaticMesh'DH_WeaponPickups.StenMkIII'
     DrawScale=0.66
 }

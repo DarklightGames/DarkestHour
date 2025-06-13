@@ -11,12 +11,12 @@ defaultproperties
 
     // Turret mesh
     Mesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext'
-    Skins(0)=Texture'DH_T34_3_tex.Vehicles.T3476_M42_green'
-    //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
+    Skins(0)=Texture'DH_T34_3_tex.T3476_M42_green'
+    //Skins(1)=Texture'allies_vehicles_tex.T3476_int'
     bUseHighDetailOverlayIndex=false
 
-    //HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34.T34m42_Turret_Coll')
+    //HighDetailOverlay=Shader'allies_vehicles_tex.t3476_int_s'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34m42_Turret_Coll')
 
     // Turret armor (model 1942)
     FrontArmorFactor=5.3
@@ -59,7 +59,7 @@ defaultproperties
     AltFireInterval=0.105
     TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireOffset=0.0
@@ -67,19 +67,19 @@ defaultproperties
     AltFireOffset=(X=-125.0,Y=14.75,Z=-3.25)
 
     // Sounds
-    CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
-    CannonFireSound(1)=Sound'Vehicle_Weapons.T34_76.76mm_fire02'
-    CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.76mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.76mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.76mm_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.0)
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
+    AltFireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_04')
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty01_000',Duration=1.0)
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

@@ -49,15 +49,15 @@ defaultproperties
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
 
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
-    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex8.Destroyed.stummel_ext_dest'
-    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex.Destroyed.halftrack_camo2_dest'
+    Skins(0)=Texture'DH_VehiclesGE_tex.Halftrack_body_camo2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.SdKfz251_9D_Destro'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex8.stummel_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex.halftrack_camo2_dest'
 
-    SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.sdkfz_251_9d'
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_turret_look'
+    SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.sdkfz_251_9d'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.sdkfz2519d_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.sdkfz2519d_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.sdkfz2519d_turret_look'
 
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4

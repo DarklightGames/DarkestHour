@@ -23,7 +23,7 @@ defaultproperties
     //Effects
     bHasSmokeTrail=false // bazooka has no smoke trail irl
     bHasTracer=true // represents glow of burnt out rocket motor
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
+    StaticMesh=StaticMesh'DH_WeaponPickups.m6a3_world'
 
     // Penetration
     // Many sources say this could penetrate 101.6mm (4") of armor at 30 degrees AOI.
@@ -40,14 +40,14 @@ defaultproperties
     DHPenetrationTable(6)=11.7
 
     //Sounds
-    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    DirtHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    RockHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    WoodHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
+    DirtHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
+    RockHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
+    WoodHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
+    VehicleDeflectSound=Sound'Vehicle_Weapons.HE_deflect01'
 
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp02'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp03'
 }

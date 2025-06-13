@@ -14,5 +14,5 @@ defaultproperties
     HeadgearProbabilities(0)=0.33
     HeadgearProbabilities(1)=0.33
     HeadgearProbabilities(2)=0.33
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.FJ_Sleeve'
 }

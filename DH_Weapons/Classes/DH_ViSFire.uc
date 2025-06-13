@@ -14,8 +14,8 @@ defaultproperties
     MaxVerticalRecoilAngle=450
     MaxHorizontalRecoilAngle=205
 
-    FireSounds(0)=SoundGroup'DH_old_inf_Weapons.waltherp38.vis_fire01'
-    FireSounds(1)=SoundGroup'DH_old_inf_Weapons.waltherp38.vis_fire02'
+    FireSounds(0)=SoundGroup'DH_old_inf_Weapons.vis_fire01'
+    FireSounds(1)=SoundGroup'DH_old_inf_Weapons.vis_fire02'
 
     ShellEjectClass=Class'ShellEject1st9x19mm'
 }

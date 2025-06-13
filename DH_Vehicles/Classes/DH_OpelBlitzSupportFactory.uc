@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleClass=Class'DH_OpelBlitzSupport'
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_ext'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_int'
 }

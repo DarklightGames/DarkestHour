@@ -8,7 +8,7 @@ class DHConstruction_Hedgehog_BrokenEmitter extends Emitter;
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01_destro_element'
+        StaticMesh=StaticMesh'DH_Construction_stc.hedgehog_01_destro_element'
         UseCollision=false
         RespawnDeadParticles=false
         SpinParticles=true

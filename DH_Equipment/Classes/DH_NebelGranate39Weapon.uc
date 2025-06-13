@@ -14,7 +14,7 @@ defaultproperties
     ItemName="NB 39 Smoke Grenade"
     NativeItemName="Nebelhandgranate 39"
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
-    Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
+    Skins(2)=Texture'Weapons1st_tex.StielGranate_smokenade'
 
     InventoryGroup=4
     GroupOffset=0

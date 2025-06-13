@@ -41,7 +41,7 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageLAN.InternalOnLoadINI
     End Object
-    sp_Main=GUISplitter'DH_Interface.DHBrowser_ServerListPageLAN.HorzSplitter'
+    sp_Main=GUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"

@@ -8,7 +8,7 @@ class DH_SVT38Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.svt38_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt38_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.svt38_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdSVT'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false

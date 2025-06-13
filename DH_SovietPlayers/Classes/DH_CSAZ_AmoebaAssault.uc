@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaLatePawn',Weight=1.0)
     Headgear(0)=Class'DH_CSAZSidecap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaGreenSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaGreenSleeves'
 
     PrimaryWeapons(0)=(Item=Class'DH_PPSH41_stickWeapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')
     PrimaryWeapons(1)=(Item=Class'DH_PPS43Weapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')

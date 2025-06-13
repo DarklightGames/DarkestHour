@@ -20,10 +20,10 @@ defaultproperties
     RecoilFallOffFactor=12.0
 
     FlashEmitterClass=Class'MuzzleFlash1stPistol'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG3'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson_FireG1'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson_FireG2'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson_FireG3'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     PreFireAnim="Shoot1_start"
     ShellEjectClass=Class'ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)

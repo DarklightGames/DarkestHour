@@ -15,13 +15,13 @@ defaultproperties
     PeriscopePositionIndex=1
     DrivePos=(X=3.0,Y=2.0,Z=-17.0)
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman76mm_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Sherman76mm_sight_background'
     GunsightSize=0.765 // 13 degrees visible FOV at 5x magnification (M71D sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
-    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Wolverine_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.WolverineShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.WolverineShell_reload'
+    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
     FireImpulse=(X=-95000.0)
 }

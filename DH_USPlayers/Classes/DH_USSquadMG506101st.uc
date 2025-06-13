@@ -8,7 +8,7 @@ class DH_USSquadMG506101st extends DHUSAutoRifleRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_USAB101stPawn',Weight=1.0)
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
+    SleeveTexture=Texture'DHUSCharactersTex.USAB_sleeves'
     Headgear(0)=Class'DH_AmericanHelmet506101stEMa'
     Headgear(1)=Class'DH_AmericanHelmet506101stEMb'
 

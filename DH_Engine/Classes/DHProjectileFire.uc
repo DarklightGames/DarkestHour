@@ -813,7 +813,7 @@ defaultproperties
     HipSpreadModifier=3.5
     LeanSpreadModifier=1.15
 
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_rifle'
     FireForce="AssaultRifleFire"
 
     FireAnim="Shoot"

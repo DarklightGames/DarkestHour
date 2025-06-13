@@ -17,7 +17,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_ZB_1st.BrenMk2_1st'
     bUseHighDetailOverlayIndex=false
-    Skins(0)=Texture'DH_Bren_tex.one.Bren_D'
+    Skins(0)=Texture'DH_Bren_tex.Bren_D'
     HandNum=1
     SleeveNum=2
 

@@ -21,7 +21,7 @@ defaultproperties
     UndeployingDuration=2.7
     HUDHighExplosiveTexture=Texture'DH_Mortars_tex.60mmMortarM2.M49A2-HE'
     HUDSmokeTexture=Texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
-    HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcA'
+    HUDArcTexture=Texture'DH_Mortars_tex.ArcA'
     ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_AlliedMortar'
 
     bSwapShellBonesBasedOnSelectedAmmo=true

@@ -50,17 +50,17 @@ defaultproperties
     ShellHitWaterEffectClass=Class'DHShellExplosion_MediumWP'
 
     //Sounds adopted from HE shell since this shell ruptures on impact too
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-    ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-    ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-    ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.HE_deflect'
+    ExplosionSound(0)=SoundGroup'ProjectileSounds.OUT_HE_explode01'
+    ExplosionSound(1)=SoundGroup'ProjectileSounds.OUT_HE_explode02'
+    ExplosionSound(2)=SoundGroup'ProjectileSounds.OUT_HE_explode03'
+    ExplosionSound(3)=SoundGroup'ProjectileSounds.OUT_HE_explode04'
 
-    VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-    DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-    RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    VehicleHitSound=SoundGroup'ProjectileSounds.OUT_HE_explode03'
+    DirtHitSound=SoundGroup'ProjectileSounds.OUT_HE_explode01'
+    RockHitSound=SoundGroup'ProjectileSounds.OUT_HE_explode02'
+    WaterHitSound=SoundGroup'ProjectileSounds.AP_Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.OUT_HE_explode04'
 
     //Damage Chances - Upon penetration
     HullFireChance=0.65 // defaults here - customize per shell class

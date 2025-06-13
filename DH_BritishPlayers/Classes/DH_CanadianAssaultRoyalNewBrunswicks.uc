@@ -11,7 +11,7 @@ defaultproperties
     RolePawns(1)=(PawnClass=Class'DH_CanadianVestBrunswicksPawn',Weight=1.0)
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
+    SleeveTexture=Texture'DHCanadianCharactersTex.CanadianSleeves'
 
     PrimaryWeapons(0)=(Item=Class'DH_StenMkIICWeapon')
     PrimaryWeapons(1)=(Item=Class'DH_StenMkIICWeapon')

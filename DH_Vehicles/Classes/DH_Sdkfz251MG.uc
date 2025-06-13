@@ -9,9 +9,9 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
-    Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(1)=Texture'Weapons3rd_tex.mg34_world'
     bMatchSkinToVehicle=true
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack_MG_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
@@ -43,8 +43,8 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=40.0
     AmbientEffectEmitterClass=Class'VehicleMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

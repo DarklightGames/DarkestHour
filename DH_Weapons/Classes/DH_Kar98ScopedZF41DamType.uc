@@ -9,6 +9,6 @@ class DH_Kar98ScopedZF41DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_Kar98ScopedZF41Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=2500.0
 }

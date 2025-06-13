@@ -8,7 +8,7 @@ class DH_Nagant1895MeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=Class'DH_Nagant1895BashDamType'
-    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
+    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 
 }

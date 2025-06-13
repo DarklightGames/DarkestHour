@@ -19,7 +19,7 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    Skins(0)=Texture'DH_ColtM1911_tex.ColtM1911.1914_Colt'
+    Skins(0)=Texture'DH_ColtM1911_tex.1914_Colt'
 
 	DisplayFOV=85.0
     IronSightDisplayFOV=75.0

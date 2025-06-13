@@ -188,7 +188,7 @@ function HandleConstructions(Vector HitLocation)
 defaultproperties
 {
     bAlwaysRelevant=true
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Satchel_throw'
+    StaticMesh=StaticMesh'WeaponPickupSM.Satchel_throw'
     CollisionRadius=4.0
     CollisionHeight=4.0
 
@@ -215,20 +215,20 @@ defaultproperties
     MyDamageType=Class'DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
-    ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
-    ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
-    ExplosionSound(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
+    ExplosionSound(0)=Sound'Inf_Weapons.satchel_explode01'
+    ExplosionSound(1)=Sound'Inf_Weapons.satchel_explode02'
+    ExplosionSound(2)=Sound'Inf_Weapons.satchel_explode03'
     ExplodeDirtEffectClass=Class'ROSatchelExplosion'
     ExplodeSnowEffectClass=Class'ROSatchelExplosion'
     ExplodeMidAirEffectClass=Class'ROSatchelExplosion'
 
-    ImpactSound=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundDirt=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundWood=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundMetal=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundMud=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundGrass=Sound'DH_WeaponSounds.satchel.satcheldrops'
-    ImpactSoundConcrete=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSound=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundDirt=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundWood=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundMetal=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundMud=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundGrass=Sound'DH_WeaponSounds.satcheldrops'
+    ImpactSoundConcrete=Sound'DH_WeaponSounds.satcheldrops'
 
     BlurTime=6.0
     BlurEffectScalar=2.1

@@ -3424,7 +3424,7 @@ simulated function UpdateScopeMode()
                 // Construct the combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
                 ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
-                ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
+                ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
                 ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
@@ -3436,7 +3436,7 @@ simulated function UpdateScopeMode()
                 ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(Class'Shader'));
                 ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
                 ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-                ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
+                ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.LensShader';
             }
 
             bInitializedScope = true;
@@ -3836,9 +3836,9 @@ defaultproperties
     IronBringUp="iron_in"
     IronPutDown="iron_out"
 
-    ScriptedTextureFallback=Material'Weapons1st_tex.Zoomscope.LensShader'
+    ScriptedTextureFallback=Material'Weapons1st_tex.LensShader'
     LensMaterialID=-1
-    ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
+    ScriptedScopeTexture=Texture'ScopeShaders.Xhair'
     ScopeOverlaySize=0.7
     ScopeScriptedTextureSize=1024
 

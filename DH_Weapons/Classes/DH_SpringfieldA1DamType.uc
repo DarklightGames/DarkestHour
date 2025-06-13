@@ -9,5 +9,5 @@ class DH_SpringfieldA1DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_SpringfieldA1Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

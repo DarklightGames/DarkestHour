@@ -9,7 +9,7 @@ class DH_PTRDDamType extends DHLargeCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_PTRDWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 
     TankDamageModifier=0.09
     APCDamageModifier=0.13

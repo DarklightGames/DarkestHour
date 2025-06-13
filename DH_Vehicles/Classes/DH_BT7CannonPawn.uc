@@ -25,21 +25,21 @@ defaultproperties
     UnbuttonedPositionIndex=2
     BinocPositionIndex=3
 
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight' // emulating the PT-1 periscope 2.5x 26' FOV
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.MG_sight' // emulating the PT-1 periscope 2.5x 26' FOV
     PeriscopeSize=0.76
 
     bManualTraverseOnly=true
 
     // Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background'
-    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.45mmATGun_sight_background'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.5// 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
     ScopeCenterPositionX=0.035
     ScopeCenterScaleX=2.2
     ScopeCenterScaleY=2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     // HUD
-    AmmoShellTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count
-    AmmoShellReloadTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_ahz_tex.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count
+    AmmoShellReloadTexture=Texture'InterfaceArt_ahz_tex.45mmShell_reload'
 }

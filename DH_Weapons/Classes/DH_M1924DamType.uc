@@ -9,5 +9,5 @@ class DH_M1924DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_M1924Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

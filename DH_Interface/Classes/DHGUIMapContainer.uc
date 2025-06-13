@@ -115,7 +115,7 @@ defaultproperties
         WinTop=0.0
         bNeverFocus=true
         ImageStyle=ISTY_Scaled
-        Image=Material'DH_GUI_tex.DeployMenu.map_border'
+        Image=Material'DH_GUI_tex.map_border'
     End Object
     i_Border=BorderImageObject
 

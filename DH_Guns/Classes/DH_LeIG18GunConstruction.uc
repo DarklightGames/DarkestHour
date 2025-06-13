@@ -7,7 +7,7 @@ class DH_LeIG18GunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.artillery'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.artillery'
     VehicleClasses(0)=(VehicleClass=Class'DH_LeIG18Gun')
     VehicleClasses(1)=(VehicleClass=Class'DH_LeIG18Gun_Camo')
     SupplyCost=1500

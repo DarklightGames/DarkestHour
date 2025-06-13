@@ -15,12 +15,12 @@ defaultproperties
     DrivePos=(X=9.0,Y=1.0,Z=-6.0)
     DriveAnim="stand_idlehip_binoc"
     bManualTraverseOnly=true
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.tiger_sight_graticule'
     GunsightSize=0.5 // 17 degrees visible FOV at 2.5x magnification (TZF3a sight)
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.20mmFlak_sight_center'
     RangeRingRotationFactor=2048
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.2341Mag'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.2341Mag_reload'
     FireImpulse=(X=-15000.0)
 }

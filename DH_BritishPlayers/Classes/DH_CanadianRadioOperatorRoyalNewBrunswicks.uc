@@ -10,5 +10,5 @@ defaultproperties
     RolePawns(0)=(PawnClass=Class'DH_CanadianRadioBrunswicksPawn',Weight=1.0)
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
+    SleeveTexture=Texture'DHCanadianCharactersTex.CanadianSleeves'
 }

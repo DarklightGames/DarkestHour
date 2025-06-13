@@ -8,6 +8,6 @@ class DHBinocularsPickupGerman extends DHBinocularsPickup;
 defaultproperties
 {
     InventoryType=Class'DHBinocularsItemGerman'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
-    Skins(0)=Texture'Weapons3rd_tex.German.Binoc_world_ger'
+    StaticMesh=StaticMesh'DetailSM.Binocs'
+    Skins(0)=Texture'Weapons3rd_tex.Binoc_world_ger'
 }

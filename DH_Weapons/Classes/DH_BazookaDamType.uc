@@ -8,6 +8,6 @@ class DH_BazookaDamType extends DHAntiTankProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.zookakill'
     WeaponClass=Class'DH_BazookaWeapon'
 }

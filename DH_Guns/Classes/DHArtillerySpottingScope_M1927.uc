@@ -7,7 +7,7 @@ class DHArtillerySpottingScope_M1927 extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
 
     YawScaleStep=5.0
     PitchScaleStep=5.0

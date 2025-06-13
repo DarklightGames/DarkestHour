@@ -96,13 +96,13 @@ defaultproperties
     VehicleNameString="Sherman M4A3E8"
     ReinforcementCost=8
 
-    LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
-    LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
+    LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.logs_L'
+    LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.logs_R'
 
-    VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.Menu.body'
-    VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_look'
-    VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_rot'
-    SpawnOverlay(0)=Texture'DH_ShermanM4A3E8_tex.Menu.sherman_m4a3e8'
+    VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.body'
+    VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.turret_look'
+    VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.turret_rot'
+    SpawnOverlay(0)=Texture'DH_ShermanM4A3E8_tex.sherman_m4a3e8'
 
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn_M4A3E8')
     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_ShermanMountedMGPawn_M4A3E8')
@@ -119,8 +119,8 @@ defaultproperties
     DrivePos=(X=0,Y=0,Z=0)
 
     DamagedTrackAttachBone="body"
-    DamagedTrackStaticMeshLeft=StaticMesh'DH_ShermanM4A3E8_stc.body.tracks_L'
-    DamagedTrackStaticMeshRight=StaticMesh'DH_ShermanM4A3E8_stc.body.tracks_R'
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_ShermanM4A3E8_stc.tracks_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_ShermanM4A3E8_stc.tracks_R'
 
     LeftTreadIndex=2
     RightTreadIndex=3
@@ -140,7 +140,7 @@ defaultproperties
     LeftLeverBoneName="lever.L"
     RightLeverBoneName="lever.R"
 
-    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.m4a3e8_destroyed'
 
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
@@ -195,7 +195,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanTank_M4A3E8.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
@@ -206,7 +206,7 @@ defaultproperties
         WheelRadius=31.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -214,7 +214,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=31.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -223,7 +223,7 @@ defaultproperties
         WheelRadius=31.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -231,7 +231,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=31.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive.L"
@@ -239,12 +239,12 @@ defaultproperties
         WheelRadius=31.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive.R"
         BoneRollAxis=AXIS_Y
         WheelRadius=31.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

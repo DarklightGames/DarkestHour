@@ -8,5 +8,5 @@ class DH_M9530Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_M9530Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.m9530'
+    StaticMesh=StaticMesh'DH_WeaponPickups.m9530'
 }

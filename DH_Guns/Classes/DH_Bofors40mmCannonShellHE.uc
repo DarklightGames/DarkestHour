@@ -34,8 +34,8 @@ defaultproperties
     ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Sound
-    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
+    //VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration slightly better than US 37mm HE

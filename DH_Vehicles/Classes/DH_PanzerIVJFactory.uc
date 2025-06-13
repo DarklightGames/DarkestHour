@@ -9,6 +9,6 @@ defaultproperties
 {
     VehicleClass=Class'DH_PanzerIVJTank'
     Mesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.panzer4J_body_ext'
-    Skins(7)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.panzer4J_body_ext'
+    Skins(7)=Texture'DH_VehiclesGE_tex3.Panzer4J_armor_ext'
 }

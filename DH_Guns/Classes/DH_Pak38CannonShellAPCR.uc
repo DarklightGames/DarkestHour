@@ -37,7 +37,7 @@ defaultproperties
     //Effects
     CoronaClass=Class'DHShellTracer_Orange'
     ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    StaticMesh=StaticMesh'DH_Tracers.German_shell'
 
     bDebugInImperial=false
 

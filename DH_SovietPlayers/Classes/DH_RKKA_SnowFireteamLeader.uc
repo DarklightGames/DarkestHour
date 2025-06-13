@@ -12,8 +12,8 @@ defaultproperties
     DetachedLegClass=Class'SeveredLegSovSnow'
     Headgear(0)=Class'DH_SovietHelmetSnow'
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
-    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_whitegloves'
+    SleeveTexture=Texture'Weapons1st_tex.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=Class'DH_PPSH41Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=Class'DH_SVT40Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
 

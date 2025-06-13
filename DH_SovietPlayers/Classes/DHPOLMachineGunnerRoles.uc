@@ -14,5 +14,5 @@ defaultproperties
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
     Headgear(0)=Class'DH_SovietHelmet'
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
 }

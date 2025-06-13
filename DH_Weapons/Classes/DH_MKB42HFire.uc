@@ -24,9 +24,9 @@ defaultproperties
     FireIronLastAnim="iron_shoot_last"
     FireLastAnim="shoot_last"
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44_fire03'
     ShellEjectClass=Class'ShellEject1st556mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)

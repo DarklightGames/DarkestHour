@@ -26,9 +26,9 @@ defaultproperties
 
     FlashEmitterClass=Class'MuzzleFlash1stMG'
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren_Fire03'
 
     BipodDeployFireAnim="deploy_shoot"
     FireIronAnim="iron_shoot"

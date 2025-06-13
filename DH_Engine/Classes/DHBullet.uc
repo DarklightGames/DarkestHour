@@ -784,12 +784,12 @@ defaultproperties
     WhizType=1
     WhizSoundEffect=Class'DHBulletWhiz'
     ImpactEffect=Class'DHBulletHitEffect'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
     VehiclePenetrateEffectClass=Class'DHBulletHitMetalArmorEffect'
-    VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehiclePenetrateSound=Sound'ProjectileSounds.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
     VehicleDeflectEffectClass=Class'DHBulletHitMetalEffect'
-    VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleDeflectSound=Sound'ProjectileSounds.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
     // Tracer properties (won't affect ordinary bullet):

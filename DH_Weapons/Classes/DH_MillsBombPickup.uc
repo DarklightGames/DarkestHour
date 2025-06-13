@@ -8,5 +8,5 @@ class DH_MillsBombPickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_MillsBombWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.MillsBomb'
+    StaticMesh=StaticMesh'DH_WeaponPickups.MillsBomb'
 }

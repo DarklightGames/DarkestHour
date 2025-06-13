@@ -24,11 +24,11 @@ defaultproperties
     CameraBone="Camera_com"
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_3x8_Flak2cm'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_3x8_Flak2cm'
     GunsightSize=0.32 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Flak sight)
     OverlayCorrectionX=-6
 
     //HUD
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.2341Mag'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.2341Mag_reload'
 }

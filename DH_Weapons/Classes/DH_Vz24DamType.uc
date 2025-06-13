@@ -9,5 +9,5 @@ class DH_Vz24DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_Vz24Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

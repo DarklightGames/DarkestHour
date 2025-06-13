@@ -208,7 +208,7 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
     CameraBone="camera_MG"
     GunsightCameraBone="MG_pivot"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.BesaMG_sight'
     GunsightSize=0.469 // 21 degrees visible FOV at 1.9x magnification (No.50 x1.9 Mk IS sight)
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 }

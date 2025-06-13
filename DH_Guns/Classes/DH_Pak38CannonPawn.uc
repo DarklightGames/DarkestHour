@@ -20,10 +20,10 @@ defaultproperties
     DriveAnim="crouch_idle_binoc"
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.32 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer3shell_reload'
 }

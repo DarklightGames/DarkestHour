@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll')
+    Skins(0)=Texture'DH_VehiclesUK_tex.Cromwell_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.Cromwell_body_int2'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell_turret_Coll')
     FireAttachBone="Turret"
     FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
 
@@ -72,12 +72,12 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa_FireLoop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa_FireEnd'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=200

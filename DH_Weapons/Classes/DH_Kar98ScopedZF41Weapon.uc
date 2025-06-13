@@ -14,15 +14,15 @@ defaultproperties
     PickupClass=Class'DH_Kar98ScopedZF41Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_zf41_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
     bIsSniper=true
     bForceModelScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'
+	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
 
     IronSightDisplayFOV=40.0
     IronSightDisplayFOVHigh=40.0 //

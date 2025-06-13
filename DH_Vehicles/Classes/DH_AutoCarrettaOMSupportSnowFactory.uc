@@ -8,6 +8,6 @@ class DH_AutoCarrettaOMSupportSnowFactory extends DH_AutoCarrettaOMSupportFactor
 defaultproperties
 {
     VehicleClass=Class'DH_AutoCarrettaOMSupportSnow'
-    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM.OM_BaseVehicle_Snow'
-    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM.OM_Flatbed_Snow'
+    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM_BaseVehicle_Snow'
+    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM_Flatbed_Snow'
 }

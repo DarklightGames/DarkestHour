@@ -263,7 +263,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
             b_VehicleButton.DisableMe();
-            i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
+            i_VehiclesButton.Image = Material'DH_GUI_Tex.vehicles';
             UpdateVehicleImage();
             break;
     }
@@ -991,22 +991,22 @@ function UpdateButtons()
 
     if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
     {
-        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
+        i_VehiclesButton.Image = Material'DH_GUI_Tex.vehicles_asterisk';
     }
     else
     {
-        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
+        i_VehiclesButton.Image = Material'DH_GUI_Tex.vehicles';
     }
 
     if (bContinueEnabled)
     {
         b_MenuOptions[6].EnableMe();
-        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_blurry';
+        i_Arrows.Image = Material'DH_GUI_Tex.arrow_blurry';
     }
     else
     {
         b_MenuOptions[6].DisableMe();
-        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
+        i_Arrows.Image = Material'DH_GUI_Tex.arrow_disabled';
     }
 }
 
@@ -1939,7 +1939,7 @@ defaultproperties
     MapMode=MODE_Map
     bButtonsEnabled=true
     SpawnPointIndex=-1
-    VehicleNoneMaterial=Material'DH_GUI_tex.DeployMenu.vehicle_none'
+    VehicleNoneMaterial=Material'DH_GUI_tex.vehicle_none'
 
     OnMessage=InternalOnMessage
     OnPreDraw=InternalOnPreDraw
@@ -1950,7 +1950,7 @@ defaultproperties
     WinHeight=1.0
 
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=Texture'DH_GUI_Tex.DeployMenu.Background'
+        Image=Texture'DH_GUI_Tex.Background'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -1992,7 +1992,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.025
-        Image=Material'DH_GUI_tex.DeployMenu.flag_germany'
+        Image=Material'DH_GUI_tex.flag_germany'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2025,7 +2025,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.00
         WinLeft=0.425
-        Image=Material'DH_GUI_tex.DeployMenu.flag_usa'
+        Image=Material'DH_GUI_tex.flag_usa'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2058,7 +2058,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.85
-        Image=Material'DH_GUI_tex.DeployMenu.spectate'
+        Image=Material'DH_GUI_tex.spectate'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2071,7 +2071,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.reinforcements'
+        Image=Texture'DH_GUI_Tex.reinforcements'
     End Object
     i_Reinforcements=ReinforcementsImageObject
 
@@ -2094,7 +2094,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.ForceScale'
+        Image=Texture'DH_GUI_Tex.ForceScale'
     End Object
     i_SizeAdvantage=SizeAdvantageImageObject
 
@@ -2117,7 +2117,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.StopWatch'
+        Image=Texture'DH_GUI_Tex.StopWatch'
     End Object
     i_RoundTime=RoundTimeImageObject
 
@@ -2210,7 +2210,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.equipment'
+        Image=Texture'DH_GUI_Tex.equipment'
     End Object
     i_EquipmentButton=EquipmentButtonImageObject
 
@@ -2232,7 +2232,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.vehicles'
+        Image=Texture'DH_GUI_Tex.vehicles'
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
 
@@ -2254,7 +2254,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.compass'
+        Image=Texture'DH_GUI_Tex.compass'
     End Object
     i_MapButton=MapButtonImageObject
 
@@ -2276,7 +2276,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.squads'
+        Image=Texture'DH_GUI_Tex.squads'
     End Object
     i_SquadsButton=SquadsButtonImageObject
 
@@ -2381,7 +2381,7 @@ defaultproperties
     b_MenuOptions(6)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
-        Image=Material'DH_GUI_tex.DeployMenu.arrow_blurry'
+        Image=Material'DH_GUI_tex.arrow_blurry'
         WinHeight=1.0
         WinLeft=0.875
         WinWidth=0.125
@@ -2516,7 +2516,7 @@ defaultproperties
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        Graphic=Material'DH_GUI_Tex.DeployEnabled'
         Hint="Spawn Vehicle"
         bVisible=false
         StyleName="TextLabel"
@@ -2529,7 +2529,7 @@ defaultproperties
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_GUI_Tex.DeployMenu.artillery'
+        Graphic=Material'DH_GUI_Tex.artillery'
         bVisible=false
         Hint="Artillery Vehicle"
         StyleName="TextLabel"
@@ -2542,7 +2542,7 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_InterfaceArt2_tex.Icons.tank'
+        Graphic=Material'DH_InterfaceArt2_tex.tank'
         bVisible=false
         Hint="Tanks Available"
         StyleName="TextLabel"
@@ -2566,7 +2566,7 @@ defaultproperties
         WinLeft=0.5
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'
+        Graphic=Material'DH_InterfaceArt2_tex.supply_cache'
         bVisible=false
         Hint="Construction Supply Vehicle"
         StyleName="TextLabel"
@@ -2603,6 +2603,6 @@ defaultproperties
     End Object
     p_Squads=SquadsComponentObject
 
-    LockIcon=Texture'DH_InterfaceArt2_tex.Icons.lock'
-    UnlockIcon=Texture'DH_InterfaceArt2_tex.Icons.unlock'
+    LockIcon=Texture'DH_InterfaceArt2_tex.lock'
+    UnlockIcon=Texture'DH_InterfaceArt2_tex.unlock'
 }

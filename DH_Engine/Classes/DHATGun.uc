@@ -737,7 +737,7 @@ defaultproperties
     bFixedRotationDir=false
     RotateCooldown=5
     RotateControlRadiusInMeters=5
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     RotateSoundVolume=200
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
@@ -746,7 +746,7 @@ defaultproperties
     bReplicateMovement=true
     bSkipActorPropertyReplication=false
     OldBase=none
-    RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
+    RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -767,7 +767,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false

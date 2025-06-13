@@ -21,11 +21,11 @@ defaultproperties
     FPCamPos=(X=40.0,Y=20,Z=0)
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
 }
 

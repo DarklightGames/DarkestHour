@@ -27,11 +27,11 @@ defaultproperties
     FireImpulse=(X=-75000.0)
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Wolverine_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Wolverine_sight_background'
     GunsightSize=0.492 // 12.3 degrees visible FOV at 3x magnification (M70G sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Wolverine_sight_destroyed'
 
     //HUD
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.WolverineShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.WolverineShell_reload'
 }

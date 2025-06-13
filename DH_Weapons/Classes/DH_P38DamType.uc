@@ -9,7 +9,7 @@ class DH_P38DamType extends DHSmallCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_P38Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
+    HUDIcon=Texture'InterfaceArt_tex.b9mm'
     KDamageImpulse=750.0
     KDeathVel=100.0
     KDeathUpKick=0.0

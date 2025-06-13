@@ -10,12 +10,12 @@ defaultproperties
     VehicleNameString="8.8 cm Pak43/41 AT gun"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak43CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    Skins(1)=Texture'DH_Artillery_Tex.Pak43.Pak43_wheel'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    Skins(0)=Texture'DH_Artillery_Tex.pak43_nocamo_ext'
+    Skins(1)=Texture'DH_Artillery_Tex.Pak43_wheel'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43_dest'
+    VehicleHudImage=Texture'DH_Artillery_Tex.pak43_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak43_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak43_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
@@ -43,5 +43,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak43ATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

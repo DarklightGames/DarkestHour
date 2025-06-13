@@ -60,7 +60,7 @@ defaultproperties
 {
     IconColor=(R=255,G=0,B=0,A=100)
     ActivatedIconColor=(R=255,G=0,B=0,A=255)
-    IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
+    IconMaterial=Texture'InterfaceArt_tex.overheadmap_Icons'
     IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
     LifetimeSeconds=300

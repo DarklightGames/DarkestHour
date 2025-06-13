@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=Class'DH_P38Pickup'
 
     Mesh=SkeletalMesh'DH_P38_1st.P-38-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.p38_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.p38_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

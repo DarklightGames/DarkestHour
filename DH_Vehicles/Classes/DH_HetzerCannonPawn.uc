@@ -23,10 +23,10 @@ defaultproperties
 
     //Gunsight
     bIsPeriscopicGunsight=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.stug3_SflZF1a_sight'
     GunsightSize=0.533 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
 }

@@ -23,11 +23,11 @@ defaultproperties
     UnbuttonedPositionIndex=0
 
     // Hull mesh
-    Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
-    Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'
-    Skins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
+    Skins(0)=Texture'DH_M3Halftrack_tex.Halftrack'
+    Skins(1)=Texture'DH_M3Halftrack_tex.Halftrack_2'
+    Skins(2)=Texture'DH_M3Halftrack_tex.Halfrack_tracks'
+    Skins(3)=Texture'DH_M3Halftrack_tex.Halfrack_tracks'
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
     bUsesCodedDestroyedSkins=false
 
@@ -118,14 +118,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     LeftTrackSoundBone="steer_wheel_L_F"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L02'
     RightTrackSoundBone="steer_wheel_R_F"
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=2
@@ -137,10 +137,10 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-90.0,Y=50.0,Z=20.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
-    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',bHasCollision=true))))
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_02',bHasCollision=true))))
 
     // HUD
-    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.m3a1_body'
     VehicleHudEngineY=0.25
     VehicleHudTreadsPosX(0)=0.39
     VehicleHudTreadsPosX(1)=0.61
@@ -175,7 +175,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         BoneOffset=(Y=22.0,Z=-5.0)
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
@@ -186,7 +186,7 @@ defaultproperties
         BoneOffset=(Y=-22.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
@@ -195,7 +195,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FLeft_Drive_Wheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
@@ -203,7 +203,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=15.0,Z=-5.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FRight_Drive_Wheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
@@ -212,7 +212,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RLeft_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
@@ -220,7 +220,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=-15.0,Z=-5.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RRight_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -240,5 +240,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3Halftrack.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

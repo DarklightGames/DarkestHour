@@ -10,7 +10,7 @@ class DH_G41Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g41_3rd'
-    MenuImage=Texture'InterfaceArt2_tex.Menu_weapons.g41'
+    MenuImage=Texture'InterfaceArt2_tex.g41'
     mMuzFlashClass=Class'MuzzleFlash3rdSVT'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false

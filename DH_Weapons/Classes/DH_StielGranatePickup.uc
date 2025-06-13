@@ -8,5 +8,5 @@ class DH_StielGranatePickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_StielGranateWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
+    StaticMesh=StaticMesh'WeaponPickupSM.Stielhandgranate'
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_BritishAirbornSergeantPawn')
     Headgear(0)=Class'DH_BritishAirborneBeretOx_Bucks'
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Para_sleeves'
 
     PrimaryWeapons(1)=(Item=Class'DH_StenMkVWeapon')
     PrimaryWeapons(2)=(Item=none)

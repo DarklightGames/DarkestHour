@@ -9,6 +9,6 @@ class DH_SpringfieldScopedDamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_SpringfieldScopedWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=2500.0
 }

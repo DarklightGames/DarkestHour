@@ -9,5 +9,5 @@ class DH_MN9130DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_MN9130Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

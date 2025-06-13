@@ -20,5 +20,5 @@ defaultproperties
     HeadgearProbabilities(2)=0.8
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.brit_sleeves'
 }

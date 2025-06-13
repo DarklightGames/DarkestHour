@@ -419,7 +419,7 @@ defaultproperties
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
     ResponseDelaySeconds=15.0   // TODO: also make italian request sounds shorter
-    AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
+    AmbientSound=Sound'DH_SundrySounds.RadioStatic'
 
     ResponseSoundRadius=100.0
     ResponseSoundVolume=3.0

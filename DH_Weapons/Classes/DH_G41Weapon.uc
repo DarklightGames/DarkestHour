@@ -16,11 +16,11 @@ defaultproperties
     PickupClass=Class'DH_G41Pickup'
 
     Mesh=SkeletalMesh'DH_G41_1st.G41_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex2.Rifles.G41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex2.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
+    Skins(4)=Shader'Weapons1st_tex.KarBayonet_S'
 
     IronSightDisplayFOV=53.0
     DisplayFOV=82.0

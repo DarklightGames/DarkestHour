@@ -11,9 +11,9 @@ defaultproperties
     AmmoClass=Class'DH_SpringfieldAmmo'
     Spread=20.0
     AddedPitch=15
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Springfield_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Springfield_Fire03'
     FlashEmitterClass=Class'MuzzleFlash1stNagant'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     FireAnim="shoot_last"

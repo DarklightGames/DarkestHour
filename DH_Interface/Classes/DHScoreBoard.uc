@@ -1084,8 +1084,8 @@ defaultproperties
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=5.0)
     ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
-    ScoreboardColumns(3)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_combat')
-    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_support')
+    ScoreboardColumns(3)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_combat')
+    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_support')
     ScoreboardColumns(5)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
     ScoreboardColumns(6)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
     ScoreboardColumns(7)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
@@ -1109,9 +1109,9 @@ defaultproperties
     TickHealthText="Tick: "
     NetHealthText="Loss: "
     MunitionPercentageText="Munitions"
-    PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Lead'
-    PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Bronze'
-    PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Silver'
-    PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Gold'
-    DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
+    PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Lead'
+    PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Bronze'
+    PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Silver'
+    PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Gold'
+    DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.developer'
 }

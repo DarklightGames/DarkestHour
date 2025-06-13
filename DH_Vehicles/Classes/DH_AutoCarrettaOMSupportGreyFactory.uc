@@ -8,6 +8,6 @@ class DH_AutoCarrettaOMSupportGreyFactory extends DH_AutoCarrettaOMSupportFactor
 defaultproperties
 {
     VehicleClass=Class'DH_AutoCarrettaOMSupportGrey'
-    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM.OM_BaseVehicle_Grey'
-    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM.OM_Flatbed_Grey'
+    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM_BaseVehicle_Grey'
+    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM_Flatbed_Grey'
 }

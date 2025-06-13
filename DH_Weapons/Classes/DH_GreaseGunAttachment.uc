@@ -8,7 +8,7 @@ class DH_GreaseGunAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.GreaseGun_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.GreaseGun_icon'
 
     mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'

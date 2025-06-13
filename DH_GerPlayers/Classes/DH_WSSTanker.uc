@@ -8,7 +8,7 @@ class DH_WSSTanker extends DHGETankCrewmanRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanTankCrewSSPawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.Dot44Sleeve'
     Headgear(0)=Class'DH_WSSHatPanzerA'
     Headgear(1)=Class'DH_WSSHatPanzerB'
 

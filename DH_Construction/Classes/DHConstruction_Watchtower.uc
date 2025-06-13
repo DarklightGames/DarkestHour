@@ -7,9 +7,9 @@ class DHConstruction_Watchtower extends DHConstruction;
 
 defaultproperties
 {
-    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_undeployed')
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.GER_watchtower_undeployed')
     ProgressMax=12
-    StaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower'
+    StaticMesh=StaticMesh'DH_Construction_stc.GER_watchtower'
     bShouldAlignToGround=false
     bCanBeTornDownByFriendlies=false
     bCanOnlyPlaceOnTerrain=true
@@ -30,14 +30,14 @@ defaultproperties
     ProxyTraceHeightMeters=5.0
     HealthMax=250
     TatteredHealthThreshold=125
-    TatteredStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_damaged'
+    TatteredStaticMesh=StaticMesh'DH_Construction_stc.GER_watchtower_damaged'
     BrokenLifespan=30.0
-    BrokenStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_destroyed'
+    BrokenStaticMesh=StaticMesh'DH_Construction_stc.GER_watchtower_destroyed'
     BrokenEmitterClass=Class'DHConstruction_Watchtower_BrokenEmitter'
-    BrokenSounds(0)=Sound'DH_SundrySounds.foley.CrashWood'
+    BrokenSounds(0)=Sound'DH_SundrySounds.CrashWood'
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.WatchTower'
     GroupClass=Class'DHConstructionGroup_Defenses'
     SupplyCost=900
     bCanTakeImpactDamage=true

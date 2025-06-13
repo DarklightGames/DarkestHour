@@ -8,7 +8,7 @@ class DH_WHMarksman_Greatcoat extends DHGEMarksmanRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanGreatCoatPawn',Weight=1.0)
-    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    SleeveTexture=Texture'Weapons1st_tex.GermanCoatSleeves'
     DetachedArmClass=Class'SeveredArmGerGreat'
     DetachedLegClass=Class'SeveredLegGerGreat'
     Headgear(0)=Class'ROGermanHat'

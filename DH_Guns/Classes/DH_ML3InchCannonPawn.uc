@@ -37,11 +37,11 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    AmmoShellTextures(0)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_HE_ICON'
-    AmmoShellTextures(1)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_SMOKE_ICON'
+    AmmoShellTextures(0)=Texture'DH_ML3InchMortar_tex.ML3INCH_HE_ICON'
+    AmmoShellTextures(1)=Texture'DH_ML3InchMortar_tex.ML3INCH_SMOKE_ICON'
 
-    AmmoShellReloadTextures(0)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_HE_ICON_RELOAD'
-    AmmoShellReloadTextures(1)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_SMOKE_ICON_RELOAD'
+    AmmoShellReloadTextures(0)=Texture'DH_ML3InchMortar_tex.ML3INCH_HE_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_ML3InchMortar_tex.ML3INCH_SMOKE_ICON_RELOAD'
 
     ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 

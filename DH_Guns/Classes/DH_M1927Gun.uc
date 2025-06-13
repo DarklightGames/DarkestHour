@@ -25,12 +25,12 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1927CannonPawn',WeaponBone="body")
     Mesh=SkeletalMesh'DH_M1927_anm.m1927_body'
-    Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
-    DestroyedVehicleMesh=StaticMesh'DH_M1927_stc.Destroyed.m1927_destroyed'
-    DestroyedMeshSkins(0)=Material'DH_M1927_tex.Destroyed.m1927_body_destroyed'
-    VehicleHudImage=Texture'DH_M1927_tex.interface.m1927_body_hud'
-    VehicleHudTurret=TexRotator'DH_M1927_tex.interface.m1927_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M1927_tex.interface.m1927_turret_look'
+    Skins(0)=Texture'DH_M1927_tex.m1927_body'
+    DestroyedVehicleMesh=StaticMesh'DH_M1927_stc.m1927_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_M1927_tex.m1927_body_destroyed'
+    VehicleHudImage=Texture'DH_M1927_tex.m1927_body_hud'
+    VehicleHudTurret=TexRotator'DH_M1927_tex.m1927_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M1927_tex.m1927_turret_look'
     ExitPositions(1)=(X=-75.00,Y=-35.00,Z=50.00)
     ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
@@ -58,5 +58,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_M1927Gun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

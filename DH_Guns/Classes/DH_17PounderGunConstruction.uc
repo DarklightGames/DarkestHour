@@ -7,7 +7,7 @@ class DH_17PounderGunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.at_large'
     VehicleClasses(0)=(VehicleClass=Class'DH_17PounderGun')
     SupplyCost=1600
     ProgressMax=14

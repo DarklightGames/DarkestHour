@@ -52,7 +52,7 @@ defaultproperties
         WinWidth=0.854492
         WinHeight=0.05
     End Object
-    l_name=GUILabel'DH_Interface.DHEditFavoritePage.ServerName'
+    l_name=GUILabel'DH_Interface.ServerName'
     UnknownText="Unknown Server"
     Begin Object Class=DHmoEditBox Name=IpEntryBox
         ComponentJustification=TXTA_Left
@@ -64,9 +64,9 @@ defaultproperties
         WinWidth=0.4082
         TabOrder=0
     End Object
-    ed_Data=DHmoEditBox'DH_Interface.DHEditFavoritePage.IpEntryBox'
+    ed_Data=DHmoEditBox'DH_Interface.IpEntryBox'
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=Texture'DH_GUI_Tex.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"
@@ -74,5 +74,5 @@ defaultproperties
         WinWidth=0.51
         WinHeight=0.8
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHEditFavoritePage.MessageWindowFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.MessageWindowFrameBackground'
 }

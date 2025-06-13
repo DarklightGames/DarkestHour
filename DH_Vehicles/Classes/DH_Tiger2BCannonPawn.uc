@@ -18,16 +18,16 @@ defaultproperties
     BinocPositionIndex=4
     DrivePos=(X=1.0,Y=6.0,Z=6.0)
     DriveAnim="VPanther_com_idle_close"
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.tiger_sight_graticule'
     GunsightSize=0.933 // ZF9d gunsight with dual magnification (5x or 2.5x) with 28/14 degrees visible FOV
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.tiger2B_sight_center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.tiger2B_sight_center'
     RangeRingScale=0.72
     RangeRingRotationFactor=502
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'
-    PoweredRotateSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_travelevate'
-    PoweredRotateAndPitchSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.tiger_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.KingTigerShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.KingTigerShell_reload'
+    PoweredRotateSound=Sound'DH_GerVehicleSounds2.tiger2B_turret_traverse_loop'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_travelevate'
+    PoweredRotateAndPitchSound=Sound'DH_GerVehicleSounds2.tiger2B_turret_traverse_loop'
     FireImpulse=(X=-110000.0)
 }

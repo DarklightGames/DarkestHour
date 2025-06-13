@@ -8,6 +8,6 @@ class DH_P08LugerPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_P08LugerWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.luger'
+    StaticMesh=StaticMesh'WeaponPickupSM.luger'
     CollisionRadius=15.0 // as is a pistol, which is small
 }

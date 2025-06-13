@@ -9,5 +9,5 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.LW_HG'
+    Skins(0)=Texture'DHGermanCharactersTex.LW_HG'
 }

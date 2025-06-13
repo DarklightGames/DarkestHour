@@ -28,9 +28,9 @@ defaultproperties
 
     FlashEmitterClass=Class'MuzzleFlash1stMG'
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren_Fire03'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)

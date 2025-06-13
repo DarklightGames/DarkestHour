@@ -192,7 +192,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     if (!bIsArtilleryTargetValid)
     {
         ORI.InfoColor = Class'UColor'.default.Red;
-        ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+        ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
         ORI.InfoText[0] = default.InvalidTargetText;
         return;
     }
@@ -269,7 +269,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case FSE_NotEnoughSquadmates:
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
             ORI.InfoColor = Class'UColor'.default.Red;
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
             ORI.InfoText[0] = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case FSE_InsufficientPrivileges:
@@ -277,7 +277,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case FSE_Fatal:
         default:
             ORI.InfoColor = Class'UColor'.default.Red;
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
             ORI.InfoText[0] = default.UnavailableText;
             break;
     }
@@ -310,9 +310,9 @@ defaultproperties
     // HACK: Because engine doesn't handle arrays of empty structs properly, we have to force the array to have at least one element, otherwise
     //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
     //  pass on the translation files.
-    Options(0)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
-    Options(1)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
-    Options(2)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
+    Options(0)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Artillery')
+    Options(1)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.FireSupportSmoke')
+    Options(2)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.FireSupportHE')
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"

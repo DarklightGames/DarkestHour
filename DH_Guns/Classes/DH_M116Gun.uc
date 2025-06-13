@@ -11,12 +11,12 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M116CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M116_anm.m116_body'
-    Skins(0)=Texture'DH_M116_tex.M116.M116_body'
-    DestroyedVehicleMesh=StaticMesh'DH_M116_stc.destroyed.m116_destroyed'
-    DestroyedMeshSkins(0)=Material'DH_M116_tex.destroyed.M116_body_destroyed_fb'
-    VehicleHudImage=Texture'DH_M116_tex.Interface.M116_body_hud'
-    VehicleHudTurret=TexRotator'DH_M116_tex.Interface.M116_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M116_tex.Interface.M116_turret_look'
+    Skins(0)=Texture'DH_M116_tex.M116_body'
+    DestroyedVehicleMesh=StaticMesh'DH_M116_stc.m116_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_M116_tex.M116_body_destroyed_fb'
+    VehicleHudImage=Texture'DH_M116_tex.M116_body_hud'
+    VehicleHudTurret=TexRotator'DH_M116_tex.M116_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M116_tex.M116_turret_look'
     ExitPositions(1)=(X=-78.00,Y=-50.00,Z=48.00)
     ExitPositions(2)=(X=-78.00,Y=50.00,Z=48.00)
     VehicleMass=11.0
@@ -45,6 +45,6 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_M116Gun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }
 

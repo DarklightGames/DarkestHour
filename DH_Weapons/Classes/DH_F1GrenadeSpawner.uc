@@ -9,7 +9,7 @@ defaultproperties
 {
     WeaponClass=Class'DH_F1GrenadeWeapon'
     Mesh=Mesh'DH_Construction_anm.RUS_grenade_box'
-    Skins(0)=Material'DH_Construction_tex.Ammo.RUS_grenade_box'
+    Skins(0)=Material'DH_Construction_tex.RUS_grenade_box'
     PickupBoneNames(0)="grenade.000"
     PickupBoneNames(1)="grenade.001"
     PickupBoneNames(2)="grenade.002"

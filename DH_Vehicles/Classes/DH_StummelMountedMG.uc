@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
-    Skins(0)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=Texture'Weapons3rd_tex.mg34_world'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="loader_close_idle"
     GunnerAttachmentBone="loader_player"
@@ -36,8 +36,8 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="tip"
     AmbientEffectEmitterClass=Class'VehicleMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

@@ -9,5 +9,5 @@ class DH_VG15DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_VG15Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

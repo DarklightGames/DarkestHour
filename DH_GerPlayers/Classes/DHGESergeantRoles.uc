@@ -16,5 +16,5 @@ defaultproperties
     Grenades(2)=(Item=Class'DH_OrangeSmokeWeapon')
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
 }

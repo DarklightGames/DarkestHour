@@ -9,8 +9,8 @@ defaultproperties
 {
     AttachmentClass=Class'DHShovelAttachment_Russian'
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_sov'
-    Skins(0)=Texture'DH_Equipment_tex.Shovels.Sov_shovel_diff'
-    HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.Sov_shovel_shader'
+    Skins(0)=Texture'DH_Equipment_tex.Sov_shovel_diff'
+    HighDetailOverlay=Shader'DH_Equipment_tex.Sov_shovel_shader'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
     HandNum=1

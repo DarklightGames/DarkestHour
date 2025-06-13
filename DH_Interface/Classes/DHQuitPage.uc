@@ -36,7 +36,7 @@ defaultproperties
         bNeverFocus=true
         OnKeyEvent=QuitBackground.InternalOnKeyEvent
     End Object
-    Controls(0)=GUIButton'DH_Interface.DHQuitPage.QuitBackground'
+    Controls(0)=GUIButton'DH_Interface.QuitBackground'
     Begin Object Class=GUIButton Name=YesButton
         Caption="YES"
         StyleName="DHMenuTextButtonStyle"
@@ -48,7 +48,7 @@ defaultproperties
         OnClick=DHQuitPage.InternalOnClick
         OnKeyEvent=YesButton.InternalOnKeyEvent
     End Object
-    Controls(1)=GUIButton'DH_Interface.DHQuitPage.YesButton'
+    Controls(1)=GUIButton'DH_Interface.YesButton'
     Begin Object Class=GUIButton Name=NoButton
         Caption="NO"
         StyleName="DHMenuTextButtonStyle"
@@ -60,7 +60,7 @@ defaultproperties
         OnClick=DHQuitPage.InternalOnClick
         OnKeyEvent=NoButton.InternalOnKeyEvent
     End Object
-    Controls(2)=GUIButton'DH_Interface.DHQuitPage.NoButton'
+    Controls(2)=GUIButton'DH_Interface.NoButton'
     Begin Object Class=GUILabel Name=QuitDesc
         Caption="Are you sure you wish to quit?"
         TextAlign=TXTA_Center
@@ -70,7 +70,7 @@ defaultproperties
         WinTop=0.42
         WinHeight=32.0
     End Object
-    Controls(3)=GUILabel'DH_Interface.DHQuitPage.QuitDesc'
+    Controls(3)=GUILabel'DH_Interface.QuitDesc'
     WinTop=0.375
     WinHeight=0.25
 }

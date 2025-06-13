@@ -1001,7 +1001,7 @@ simulated function DoShakeEffect()
             if (Distance < PenetrationMag * 3.0)
             {
 
-                PC.PlaySound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
+                PC.PlaySound(Sound'DH_SundrySounds.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
 
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
                 Scale *= BlurEffectScalar;
@@ -1202,11 +1202,11 @@ defaultproperties
     InitialAccelerationTime=0.2
 
     ShellShatterEffectClass=Class'DHShellShatterEffect'
-    ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-    ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-    ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-    ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    ShatterVehicleHitSound=SoundGroup'ProjectileSounds.HE_deflect'
+    ShatterSound(0)=SoundGroup'ProjectileSounds.OUT_HE_explode01'
+    ShatterSound(1)=SoundGroup'ProjectileSounds.OUT_HE_explode02'
+    ShatterSound(2)=SoundGroup'ProjectileSounds.OUT_HE_explode03'
+    ShatterSound(3)=SoundGroup'ProjectileSounds.OUT_HE_explode04'
 
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
@@ -1222,7 +1222,7 @@ defaultproperties
     TracerSaturation=128
 
     // From deprecated ROAntiVehicleProjectile class:
-    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    VehicleDeflectSound=Sound'ProjectileSounds.AP_deflect'
     DampenFactor=1.5 //0.5
     DampenFactorParallel=0.5 //0.2
     DestroyTime=0.2

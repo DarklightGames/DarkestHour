@@ -22,7 +22,7 @@ defaultproperties
     bDebugInImperial=false
 
     //Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Panzerschreck_shell'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Panzerschreck_shell'
     bHasTracer=true // represents glow of burnt out rocket motor
     bHasShellTrail=true
     ShellTrailClass=Class'DHPanzerschreckTrail'
@@ -36,14 +36,14 @@ defaultproperties
     DHPenetrationTable(5)=17.6
     DHPenetrationTable(6)=17.6
 
-    VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    DirtHitSound=Sound'DH_WeaponSounds.faust.faust_explode031'
-    RockHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
+    VehicleHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    DirtHitSound=Sound'DH_WeaponSounds.faust_explode031'
+    RockHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    WoodHitSound=Sound'DH_WeaponSounds.faust_explode021'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
+    VehicleDeflectSound=Sound'Vehicle_Weapons.HE_deflect01'
 
-    ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
-    ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
-    ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
+    ExplosionSound(0)=Sound'DH_WeaponSounds.faust_explode011'
+    ExplosionSound(1)=Sound'DH_WeaponSounds.faust_explode021'
+    ExplosionSound(2)=Sound'DH_WeaponSounds.faust_explode031'
 }

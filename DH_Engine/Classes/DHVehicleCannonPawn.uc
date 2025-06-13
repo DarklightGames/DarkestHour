@@ -1377,7 +1377,7 @@ defaultproperties
     // Camera & HUD
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
-    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 
     // Gunsight overlay
     GunsightSize=0.5
@@ -1397,9 +1397,9 @@ defaultproperties
 
     // Movement sounds
     bSpecialRotateSounds=true
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_turret_traverse2'
+    ManualPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_turret_traverse'
     SoundVolume=130
 
     // Weapon fire

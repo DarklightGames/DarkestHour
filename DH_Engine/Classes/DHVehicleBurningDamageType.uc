@@ -8,7 +8,7 @@ class DHVehicleBurningDamageType extends ROWeaponDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.VehicleFireKill'
     TankDamageModifier=1.0
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0

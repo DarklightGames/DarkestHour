@@ -17,7 +17,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
 
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_LWPCoatSleeves'
 
     PrimaryWeapons(2)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=Class'DH_PPS43Weapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')

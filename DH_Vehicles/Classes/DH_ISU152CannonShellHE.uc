@@ -23,7 +23,7 @@ defaultproperties
 
     //Effects
     DrawScale=1.5
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_Shell'
     CoronaClass=Class'DHShellTracer_GreenLarge'
     ShellTrailClass=Class'DHShellTrail_Green'
     ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
@@ -40,10 +40,10 @@ defaultproperties
 
     //Sound
     TransientSoundRadius=3000.0
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=SoundGroup'Artillery.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explo04'
 
     bDebugInImperial=false
 

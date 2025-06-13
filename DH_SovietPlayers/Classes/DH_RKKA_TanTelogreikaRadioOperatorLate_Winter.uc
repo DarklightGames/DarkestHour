@@ -14,5 +14,5 @@ defaultproperties
     Headgear(0)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=1.0
 	Backpacks(0)=(BackpackClass=Class'DH_SovRadioBackpack',LocationOffset=(X=-0.1))
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_tan'
 }

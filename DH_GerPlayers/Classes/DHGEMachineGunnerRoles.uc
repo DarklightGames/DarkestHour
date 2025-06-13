@@ -14,6 +14,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=Class'DH_P08LugerWeapon')
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
     HandType=Hand_Gloved
 }

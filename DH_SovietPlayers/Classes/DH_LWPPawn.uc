@@ -9,8 +9,8 @@ defaultproperties
 {
 
     Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic'
-    Skins(1)=Texture'Characters_tex.rus_heads.rus_face04'
+    Skins(0)=Texture'DHSovietCharactersTex.DH_LWP_wz43_tunic'
+    Skins(1)=Texture'Characters_tex.rus_face04'
 
     ShovelClass=Class'DHShovelItem_Russian'
     BinocsClass=Class'DHBinocularsItemSoviet'

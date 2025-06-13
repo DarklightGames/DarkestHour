@@ -14,12 +14,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.panzer4J_body_ext'
-    Skins(3)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo2'
-    Skins(4)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo2'
-    Skins(5)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
-    Skins(6)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    Skins(7)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.panzer4J_body_ext'
+    Skins(3)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_armor_camo2'
+    Skins(4)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_body_camo2'
+    Skins(5)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_wheels_camo1'
+    Skins(6)=Texture'axis_vehicles_tex.Panzer4F2_int'
+    Skins(7)=Texture'DH_VehiclesGE_tex3.Panzer4J_armor_ext'
     HighDetailOverlayIndex=6
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int')
@@ -36,7 +36,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=20.0,PointOffset=(X=30.0,Y=-27.0,Z=0.0)) // ammo stores x 3
     VehHitpoints(2)=(PointRadius=20.0,PointOffset=(X=-20.0,Y=-27.0,Z=0.0))
     VehHitpoints(3)=(PointRadius=20.0,PointOffset=(X=-30.0,Y=27.0,Z=0.0))
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.PanzerIVJ.PanzerIVJ_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.PanzerIVJ_dest'
 
     // Hull armor
     FrontArmor(0)=(Thickness=2.4,Slope=-64.0,MaxRelativeHeight=-20.0,LocationName="lower nose")
@@ -51,8 +51,8 @@ defaultproperties
     RightWheelBones(13)=""
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4j_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4j_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4j_turret_look'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_j'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.panzer4j_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.panzer4j_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.panzer4j_turret_look'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.panzer4_j'
 }

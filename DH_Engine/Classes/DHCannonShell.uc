@@ -188,7 +188,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, o
         //VehicleShellShockEffect();
         HitSound = VehicleHitSound;
         HitEmitterClass = ShellHitVehicleEffectClass;
-        PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true);
+        PlayOwnedSound(Sound'DH_SundrySounds.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true);
     }
     // Hit something else - get material type & set effects
     else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
@@ -299,7 +299,7 @@ defaultproperties
     bHasTracer=true
     bHasShellTrail=true
     DrawScale=1.5
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.76mm_Shell'
     CoronaClass=Class'DHShellTracer_RedLarge'
     ShellTrailClass=Class'DHShellTrail_Red'
     ShellImpactDamage=Class'DHShellImpactDamageType'
@@ -313,11 +313,11 @@ defaultproperties
     HullFireChance=0.25 // defaults here - customize per shell class
     EngineFireChance=0.50 // defaults here - customize per shell class
 
-    VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-    RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
+    VehicleHitSound=SoundGroup'ProjectileSounds.AP_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.AP_Impact_Dirt'
+    RockHitSound=SoundGroup'ProjectileSounds.AP_Impact_Rock'
+    WaterHitSound=SoundGroup'ProjectileSounds.AP_Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.AP_Impact_Wood'
     ShellHitVehicleEffectClass=Class'TankAPHitPenetrate'
     ShellDeflectEffectClass=Class'DHTankAPHitDeflect'
     ShellHitDirtEffectClass=Class'TankAPHitDirtEffect'
@@ -340,7 +340,7 @@ defaultproperties
     FluidSurfaceShootStrengthMod=10.0
 
     //Sound
-    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01' //TODO: replace this
+    AmbientSound=Sound'Vehicle_Weapons.projectile_whistle01' //TODO: replace this
     AmbientVolumeScale=5.0 //5.0
     SoundVolume=255 // full volume
     SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km

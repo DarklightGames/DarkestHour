@@ -8,7 +8,7 @@ class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg42'
+    MenuImage=Texture'InterfaceArt_tex.mg42'
     mMuzFlashClass=Class'MuzzleFlash3rdMG'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
 

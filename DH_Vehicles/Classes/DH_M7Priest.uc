@@ -35,12 +35,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_body'
-    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-    Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(3)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(4)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
+    Skins(0)=Texture'DH_M7Priest_tex.M7Priest'
+    Skins(1)=Texture'DH_M7Priest_tex.M7Priest2'
+    Skins(2)=Texture'DH_M7Priest_tex.M7Priest_tracks'
+    Skins(3)=Texture'DH_M7Priest_tex.M7Priest_tracks'
+    Skins(4)=Texture'DH_M7Priest_tex.M7Priest_tracks'
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M7PriestCannonPawn',WeaponBone="turret_placement")
@@ -98,7 +98,7 @@ defaultproperties
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_destro'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest_destro'
 
     // Exit
     ExitPositions(0)=(X=50.0,Y=-140.0,Z=-10.0)
@@ -111,13 +111,13 @@ defaultproperties
     ExitPositions(7)=(X=-120.0,Y=140.0,Z=-10.0)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.ShermanEngineLoop'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="Camera_driver"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -134,9 +134,9 @@ defaultproperties
     RightLeverAxis=AXIS_X
 
     // HUD
-    VehicleHudImage=Texture'DH_M7Priest_tex.interface.priest_body'
-    VehicleHudTurret=TexRotator'DH_M7Priest_tex.interface.priest_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.interface.priest_turret_look'
+    VehicleHudImage=Texture'DH_M7Priest_tex.priest_body'
+    VehicleHudTurret=TexRotator'DH_M7Priest_tex.priest_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.priest_turret_look'
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
     VehicleHudOccupantsY(0)=0.37
@@ -153,7 +153,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.8
     VehicleHudOccupantsX(7)=0.63
     VehicleHudOccupantsY(7)=0.74
-    SpawnOverlay(0)=Material'DH_M7Priest_tex.interface.priest'
+    SpawnOverlay(0)=Material'DH_M7Priest_tex.priest'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -189,7 +189,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -198,7 +198,7 @@ defaultproperties
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -208,7 +208,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -217,7 +217,7 @@ defaultproperties
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -226,7 +226,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M7Priest.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -234,7 +234,7 @@ defaultproperties
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M7Priest.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -255,5 +255,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_M7Priest.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

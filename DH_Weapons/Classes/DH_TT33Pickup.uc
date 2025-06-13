@@ -8,6 +8,6 @@ class DH_TT33Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_TT33Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.tt33'
+    StaticMesh=StaticMesh'WeaponPickupSM.tt33'
     CollisionRadius=15.0 // as is a pistol, which is small
 }

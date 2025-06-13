@@ -51,7 +51,7 @@ defaultproperties
     HUDOverlayClass=Class'ROVehDTOverlay'
     HUDOverlayOffset=(X=-30.0,Y=0.0,Z=0.0)
     HUDOverlayFOV=45.0
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.DT_ammo_reload'
 
     bMultiPosition=true
     bMustBeTankCrew=false

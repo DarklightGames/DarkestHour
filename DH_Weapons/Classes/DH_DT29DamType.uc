@@ -9,5 +9,5 @@ class DH_DT29DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_DT29Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

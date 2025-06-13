@@ -13,7 +13,7 @@ simulated function PostNetBeginPlay()
     if (PlatformIsMacOS())
     {
         Log("DP27 detected Mac OS & so switching weapon skin from specularity shader to standard diffuse texture"); // TEMPDEBUG
-        Skins[2] = Texture'Weapons1st_tex.MG.DP28base';
+        Skins[2] = Texture'Weapons1st_tex.DP28base';
     }
 }
 
@@ -52,8 +52,8 @@ defaultproperties
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
     // When overlaid on top of the standard texture, it appears the combination of an alpha texture used as an opacity mask creates this unwanted transparency
-    Skins(2)=Shader'Weapons1st_tex.MG.dp28_s'
-    Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.DP_extra'
+    Skins(2)=Shader'Weapons1st_tex.dp28_s'
+    Skins(3)=Texture'DH_Weapon_tex.DP_extra'
 
     DisplayFOV=80.0
     IronSightDisplayFOV=65.0

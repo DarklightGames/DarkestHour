@@ -9,8 +9,8 @@ defaultproperties
 {
     ProjectileClass=Class'DH_C96Bullet'
     AmmoClass=Class'DH_C96Ammo'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.c96.C96_FireSingle01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.c96.C96_FireSingle02'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.C96_FireSingle01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.C96_FireSingle02'
 
     Spread=200.0
     MaxVerticalRecoilAngle=870

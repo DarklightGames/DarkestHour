@@ -21,11 +21,11 @@ defaultproperties
     ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
 
     bUsesCodedDestroyedSkins=true
-    DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.Destroyed.ML3INCH_DESTROYED'
+    DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.ML3INCH_DESTROYED'
 
-    VehicleHudImage=Texture'DH_ML3InchMortar_tex.interface.ml3inch_body_icon'
-    VehicleHudTurret=TexRotator'DH_ML3InchMortar_tex.interface.ml3inch_tube_icon_rot'
-    VehicleHudTurretLook=TexRotator'DH_ML3InchMortar_tex.interface.ml3inch_tube_icon_look'
+    VehicleHudImage=Texture'DH_ML3InchMortar_tex.ml3inch_body_icon'
+    VehicleHudTurret=TexRotator'DH_ML3InchMortar_tex.ml3inch_tube_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_ML3InchMortar_tex.ml3inch_tube_icon_look'
 
     DestructionEffectOffset=(Z=-60)
 }

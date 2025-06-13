@@ -33,8 +33,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
     //HighDetailOverlayIndex=2
 
-    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand_extra'
+    Skins(1)=Texture'DH_Weapon_tex.M1Garand'
+    Skins(2)=Texture'DH_Weapon_tex.M1Garand_extra'
     HandNum=0
     SleeveNum=3
 

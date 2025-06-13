@@ -14,9 +14,9 @@ defaultproperties
     PickupClass=Class'DH_SpringfieldA1Pickup'
 
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_A1'
-    Skins(0)=Texture'DH_Springfield_tex.Rifle.Springfield_tex'
-    Skins(4)=Texture'DH_Weapon_tex.AlliedSmallArms.BARAmmo'
-    HighDetailOverlay=Shader'DH_Springfield_tex.Rifle.Springfield_S'
+    Skins(0)=Texture'DH_Springfield_tex.Springfield_tex'
+    Skins(4)=Texture'DH_Weapon_tex.BARAmmo'
+    HighDetailOverlay=Shader'DH_Springfield_tex.Springfield_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
     sleevenum=1

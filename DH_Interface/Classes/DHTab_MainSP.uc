@@ -286,7 +286,7 @@ defaultproperties
         WinHeight=0.325816
         OnPreDraw=OptionsContainer.InternalPreDraw
     End Object
-    sb_options2=DHGUISectionBackground'DH_Interface.DHTab_MainSP.OptionsContainer'
+    sb_options2=DHGUISectionBackground'DH_Interface.OptionsContainer'
 
     Begin Object Class=DHmoComboBox Name=DifficultyCombo
         bReadOnly=true
@@ -299,7 +299,7 @@ defaultproperties
         TabOrder=0
         OnChange=DHTab_MainSP.OnNewDifficultySelect
     End Object
-    co_Difficulty=DHmoComboBox'DH_Interface.DHTab_MainSP.DifficultyCombo'
+    co_Difficulty=DHmoComboBox'DH_Interface.DifficultyCombo'
 
     Begin Object Class=DHGUISectionBackground Name=SelectionGroup
         bFillClient=true
@@ -310,7 +310,7 @@ defaultproperties
         WinHeight=0.942417
         OnPreDraw=SelectionGroup.InternalPreDraw
     End Object
-    sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
+    sb_Selection=DHGUISectionBackground'DH_Interface.SelectionGroup'
 
     Begin Object Class=DHGUISectionBackground Name=PreviewGroup
         bFillClient=true
@@ -321,7 +321,7 @@ defaultproperties
         WinHeight=0.942417
         OnPreDraw=PreviewGroup.InternalPreDraw
     End Object
-    sb_Preview=DHGUISectionBackground'DH_Interface.DHTab_MainSP.PreviewGroup'
+    sb_Preview=DHGUISectionBackground'DH_Interface.PreviewGroup'
     sb_Options=none
 
     Begin Object Class=DHGUINoBackground Name=ScrollSection
@@ -333,7 +333,7 @@ defaultproperties
         WinHeight=0.412304
         OnPreDraw=ScrollSection.InternalPreDraw
     End Object
-    asb_Scroll=DHGUINoBackground'DH_Interface.DHTab_MainSP.ScrollSection'
+    asb_Scroll=DHGUINoBackground'DH_Interface.ScrollSection'
 
     Begin Object Class=DHGUIScrollTextBox Name=MapDescription
         bNoTeletype=true
@@ -349,7 +349,7 @@ defaultproperties
         bTabStop=false
         bNeverFocus=true
     End Object
-    lb_MapDesc=DHGUIScrollTextBox'DH_Interface.DHTab_MainSP.MapDescription'
+    lb_MapDesc=DHGUIScrollTextBox'DH_Interface.MapDescription'
 
     Begin Object Class=DHGUITreeListBox Name=AvailableMaps
         bVisibleWhenEmpty=true
@@ -361,7 +361,7 @@ defaultproperties
         TabOrder=0
         OnChange=DHTab_MainSP.MapListChange
     End Object
-    lb_Maps=DHGUITreeListBox'DH_Interface.DHTab_MainSP.AvailableMaps'
+    lb_Maps=DHGUITreeListBox'DH_Interface.AvailableMaps'
 
     Begin Object Class=DHmoButton Name=MaplistButton
         ButtonCaption="Maplist Configuration"
@@ -373,7 +373,7 @@ defaultproperties
         TabOrder=2
         OnChange=DHTab_MainSP.MaplistConfigClick
     End Object
-    b_Maplist=DHmoButton'DH_Interface.DHTab_MainSP.MaplistButton'
+    b_Maplist=DHmoButton'DH_Interface.MaplistButton'
     b_Tutorial=none
 
     Begin Object Class=GUILabel Name=MapAuthorLabel
@@ -386,7 +386,7 @@ defaultproperties
         WinHeight=0.032552
         RenderWeight=0.3
     End Object
-    l_MapAuthor=GUILabel'DH_Interface.DHTab_MainSP.MapAuthorLabel'
+    l_MapAuthor=GUILabel'DH_Interface.MapAuthorLabel'
 
     Begin Object Class=GUILabel Name=RecommendedPlayers
         Caption="Best for 4 to 8 players"
@@ -398,7 +398,7 @@ defaultproperties
         WinHeight=0.032552
         RenderWeight=0.3
     End Object
-    l_MapPlayers=GUILabel'DH_Interface.DHTab_MainSP.RecommendedPlayers'
+    l_MapPlayers=GUILabel'DH_Interface.RecommendedPlayers'
 
     Begin Object Class=GUILabel Name=NoPreview
         Caption="No Preview Available"
@@ -413,7 +413,7 @@ defaultproperties
         WinWidth=0.372002
         WinHeight=0.35748
     End Object
-    l_NoPreview=GUILabel'DH_Interface.DHTab_MainSP.NoPreview'
+    l_NoPreview=GUILabel'DH_Interface.NoPreview'
 
     LastSelectedMap="DH-Brecourt"
     ch_OfficialMapsOnly=none

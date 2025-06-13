@@ -12,7 +12,7 @@ defaultproperties
 
     Headgear(0)=Class'DH_LWPHelmet'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
 
     PrimaryWeapons(2)=(Item=Class'DH_M44Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=Class'DH_RPG43GrenadeWeapon')

@@ -13,9 +13,9 @@ defaultproperties
     AddedPitch=10
     AddedYaw=9
     PctRestDeployRecoil=0.25
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire03'
     FlashEmitterClass=Class'MuzzleFlash1stKar'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     FireAnim="shoot_last"

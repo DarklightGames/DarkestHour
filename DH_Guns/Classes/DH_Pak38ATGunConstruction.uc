@@ -7,7 +7,7 @@ class DH_Pak38ATGunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.at_small'
     VehicleClasses(0)=(VehicleClass=Class'DH_Pak38ATGun')
     SupplyCost=900
     ProgressMax=8

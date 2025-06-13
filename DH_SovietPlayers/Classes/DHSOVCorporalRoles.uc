@@ -15,5 +15,5 @@ defaultproperties
     Grenades(1)=(Item=Class'DH_RDG1SmokeGrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
 }

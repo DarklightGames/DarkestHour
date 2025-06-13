@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_BA64_anm.BA64_turret_ext'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_BA64_stc.BA64.BA64_Turret_Coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_BA64_stc.BA64_Turret_Coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bMatchSkinToVehicle=true
     GunnerAttachmentBone=com_attachment
@@ -44,14 +44,14 @@ defaultproperties
     FireInterval=0.105
     TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=10.0
     AmbientEffectEmitterClass=Class'VehicleMGEmitterBA'
     FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    FireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

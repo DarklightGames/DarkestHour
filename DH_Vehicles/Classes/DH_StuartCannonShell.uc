@@ -27,8 +27,8 @@ defaultproperties
     ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=7.1

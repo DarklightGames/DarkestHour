@@ -9,5 +9,5 @@ defaultproperties
 {
     WeaponType=Class'DH_PanzerFaustWeapon'
     InventoryType=Class'DH_PanzerFaustWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
+    StaticMesh=StaticMesh'WeaponPickupSM.PanzerFaust'
 }

@@ -284,9 +284,9 @@ function bool ShouldHideMenu()
 
 defaultproperties
 {
-    SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
-    SquadIcon=Texture'DH_InterfaceArt2_tex.Icons.squad'
-    DisabledIcon=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
+    SuppliesIcon=Texture'DH_InterfaceArt2_tex.supply_cache'
+    SquadIcon=Texture'DH_InterfaceArt2_tex.squad'
+    DisabledIcon=Texture'DH_GUI_tex.spawn_point_disabled'
     MoreIcon=Texture'DH_InterfaceArt2_tex.ellipses'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"

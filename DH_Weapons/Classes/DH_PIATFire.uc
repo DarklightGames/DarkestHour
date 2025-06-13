@@ -26,7 +26,7 @@ defaultproperties
     SmokeEmitterClass = Class'ROMuzzleSmoke'
 
     //Sounds
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.PIAT.PIAT_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.PIAT.PIAT_Fire01'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.PIAT.PIAT_Fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.PIAT_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.PIAT_Fire01'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.PIAT_Fire01'
 }

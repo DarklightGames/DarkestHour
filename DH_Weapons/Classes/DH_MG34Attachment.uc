@@ -8,7 +8,7 @@ class DH_MG34Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg34'
+    MenuImage=Texture'InterfaceArt_tex.mg34'
     mMuzFlashClass=Class'MuzzleFlash3rdMG'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAltFireFlash=true

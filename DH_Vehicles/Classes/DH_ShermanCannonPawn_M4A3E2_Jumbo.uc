@@ -18,12 +18,12 @@ defaultproperties
     BinocPositionIndex=4
     DrivePos=(X=6.0,Y=3.0,Z=0.0)
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Sherman_sight_background'
     GunsightSize=0.765 // 13 degrees visible FOV at 5x magnification (M71G sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
-    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ShermanShell_reload'
+    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
 }

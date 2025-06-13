@@ -54,6 +54,6 @@ defaultproperties
     DriveAnim="VPanzer3_com_idle_close"
     CameraBone="loader_cam"
     GunsightCameraBone="Gun"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.KZF2_MGSight'
     GunsightSize=0.381 // 18 degrees visible FOV at 1.8x magnification (KFZ2 sight)
 }

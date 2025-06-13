@@ -9,7 +9,7 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_turret' // TODO: think cupola & hatches are incorrect - believe should have all round vision cupola
-    Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
+    Skins(0)=Texture'DH_Churchill_tex.ChurchillMkVIIl_turret'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col')
     FireAttachBone="Turret"
     FireEffectOffset=(X=12.0,Y=-25.0,Z=60.0)
@@ -75,12 +75,12 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa_FireLoop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa_FireEnd'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=200

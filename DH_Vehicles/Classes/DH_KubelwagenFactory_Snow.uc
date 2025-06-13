@@ -8,5 +8,5 @@ class DH_KubelwagenFactory_Snow extends DH_KubelwagenFactory_WH;
 defaultproperties
 {
     VehicleClass=Class'DH_KubelwagenCar_Snow'
-    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
+    Skins(1)=Texture'DH_VehiclesGE_tex3.kubelwagen_body_snow'
 }

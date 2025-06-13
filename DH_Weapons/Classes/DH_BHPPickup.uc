@@ -8,6 +8,6 @@ class DH_BHPPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_BHPWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BHP'
+    StaticMesh=StaticMesh'DH_WeaponPickups.BHP'
     CollisionRadius=15.0 // as is a pistol, which is small
 }

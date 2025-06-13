@@ -8,7 +8,7 @@ class DH_M38Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Nagant9138_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9138_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.nagant9138_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdNagant'
     ROShellCaseClass=Class'RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true

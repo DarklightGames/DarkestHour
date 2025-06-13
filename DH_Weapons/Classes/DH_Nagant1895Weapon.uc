@@ -16,7 +16,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Nagant1895_1st.Nagant1895'
 
     bUseHighDetailOverlayIndex=false
-    Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
+    Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895'
     HandNum=1
     SleeveNum=2
 

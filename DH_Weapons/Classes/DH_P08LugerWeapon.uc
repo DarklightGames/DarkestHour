@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=Class'DH_P08LugerPickup'
 
     Mesh=SkeletalMesh'DH_Luger_1st.P08Luger'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.luger_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.luger_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

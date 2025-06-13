@@ -2399,7 +2399,7 @@ defaultproperties
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
     BeginningIdleAnim="driver_hatch_idle_close"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 
     //Periscope overlay
     PeriscopeSize=0.955 //default for most peri's
@@ -2413,7 +2413,7 @@ defaultproperties
     TreadDamageThreshold=0.75
     bCanCrash=false
     ImpactDamageThreshold=5000.0
-    DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.General.Destroyed'
+    DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Destroyed'
     bUsesCodedDestroyedSkins=true
 
     // Component damage probabilities
@@ -2474,7 +2474,7 @@ defaultproperties
     // Sounds
     SoundRadius=650.0
     TransientSoundRadius=700.0
-    SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
+    SmokingEngineSound=Sound'Amb_Constructions.Krasnyi_Steam_Deep'
     TrackDamagedSound=Sound'Vehicle_Engines.track_broken'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
@@ -2540,7 +2540,7 @@ defaultproperties
         KImpactThreshold=700.0
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
+    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
     bDebuggingText=false

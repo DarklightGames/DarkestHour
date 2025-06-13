@@ -61,16 +61,16 @@ simulated event Destroyed()
 defaultproperties
 {
     MenuName="Vehicle Pool"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.motorpool'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.motorpool'
     MenuDescription="Provides a team-wide vehicle spawn point."
-    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
+    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.GER_Light_Vehicle_Pool_undeployed')
     ProgressMax=12
     SupplyCost=1500
     MinDamagetoHurt=5
     ExplosionDamageTraceOffset=(Z=40.0)
 
     // Temp
-    StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'
+    StaticMesh=StaticMesh'DH_Construction_stc.GER_Light_Vehicle_Pool'
 
     // Placement
     bCanPlaceIndoors=false

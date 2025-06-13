@@ -19,5 +19,5 @@ defaultproperties
     Headgear(2)=Class'DH_BritishTommyHelmet'
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.brit_sleeves'
 }

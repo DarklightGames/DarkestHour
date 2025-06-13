@@ -8,5 +8,5 @@ class DH_EnfieldNo4ScopedPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_EnfieldNo4ScopedWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.EnfieldNo4_Scoped'
+    StaticMesh=StaticMesh'DH_WeaponPickups.EnfieldNo4_Scoped'
 }

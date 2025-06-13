@@ -19,11 +19,11 @@ defaultproperties
     bShouldSwitchToLastWeaponOnPlacement=false
 
     // Construction and Display
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth'
-    TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
-    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_unassembled',Sound=none,Emitter=none)
+    StaticMesh=StaticMesh'DH_Construction_stc.dragon_tooth'
+    TatteredStaticMesh=StaticMesh'DH_Construction_stc.dragon_tooth_damaged'
+    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.dragon_tooth_unassembled',Sound=none,Emitter=none)
     ProgressMax=7
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.dragon_teeth'
     bAcceptsProjectors=false
 
     // Health

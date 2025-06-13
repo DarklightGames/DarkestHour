@@ -9,6 +9,6 @@ class DH_MN9130ScopedDamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_MN9130ScopedWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
     KDamageImpulse=2500.0
 }

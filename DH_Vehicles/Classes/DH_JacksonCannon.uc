@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
-    Skins(2)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
-    Skins(3)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext' // shows the muzzle brake
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col')
+    Skins(0)=Texture'DH_VehiclesUS_tex3.M36_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex3.M36_turret_int'
+    Skins(2)=Texture'DH_VehiclesUS_tex3.M36_turret_int2'
+    Skins(3)=Texture'DH_VehiclesUS_tex3.M36_turret_ext' // shows the muzzle brake
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson_turret_col')
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=-12.0,Y=0.0,Z=41.0)
@@ -63,11 +63,11 @@ defaultproperties
     AddedPitch=190
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.122mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.122mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.122mm_fire02'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04')
 }

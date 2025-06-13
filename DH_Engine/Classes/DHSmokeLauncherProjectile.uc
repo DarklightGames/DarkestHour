@@ -102,7 +102,7 @@ defaultproperties
     MortarSmokeTrailClass=Class'DHMortarSmokeTrail'
 
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'IndustrySM.Barrels.Barrel_Green' //PLACEHOLDER: Emulates the 90mm Nb.K.S 39 smoke grenade
+    StaticMesh=StaticMesh'IndustrySM.Barrel_Green' //PLACEHOLDER: Emulates the 90mm Nb.K.S 39 smoke grenade
     DrawScale=0.15
 
     HitDirtEmitterClass=Class'DHSmokeMortarHitDirtEffect'

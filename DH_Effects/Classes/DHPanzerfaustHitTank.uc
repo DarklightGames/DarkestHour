@@ -40,7 +40,7 @@ defaultproperties
         StartSizeRange=(X=(Min=150.000000,Max=150.000000),Y=(Min=150.000000,Max=150.000000),Z=(Min=150.000000,Max=150.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.500000,Max=0.700000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter7'
@@ -71,7 +71,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.000000,Max=80.000000),Y=(Min=50.000000,Max=80.000000),Z=(Min=50.000000,Max=80.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke3'
+        Texture=Texture'Effects_Tex.LSmoke3'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Min=2.500000,Max=3.000000)
         StartVelocityRange=(X=(Min=-500.000000,Max=500.000000),Y=(Min=-500.000000,Max=500.000000),Z=(Min=-100.000000,Max=400.000000))
@@ -102,7 +102,7 @@ defaultproperties
         StartSizeRange=(X=(Min=40.000000,Max=80.000000),Y=(Min=40.000000,Max=80.000000),Z=(Min=40.000000,Max=80.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.200000,Max=0.200000)
@@ -127,7 +127,7 @@ defaultproperties
         SphereRadiusRange=(Max=10.000000)
         UseRotationFrom=PTRS_Actor
         InitialParticlesPerSecond=1000.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=1.000000,Max=2.000000)
         StartVelocityRange=(X=(Min=-50.000000,Max=300.000000),Y=(Min=-400.000000,Max=400.000000),Z=(Min=-300.000000,Max=450.000000))
     End Object
@@ -156,7 +156,7 @@ defaultproperties
         StartSizeRange=(X=(Min=75.000000,Max=75.000000),Y=(Min=75.000000,Max=75.000000),Z=(Min=75.000000,Max=75.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'SpecialEffects.Coronas.Corona2'
+        Texture=Texture'SpecialEffects.Corona2'
         LifetimeRange=(Min=0.200000,Max=0.200000)
         StartVelocityRange=(Z=(Min=10.000000,Max=10.000000))
     End Object
@@ -178,7 +178,7 @@ defaultproperties
         SphereRadiusRange=(Max=10.000000)
         UseRotationFrom=PTRS_Actor
         InitialParticlesPerSecond=1000.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=1.000000,Max=2.000000)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=400.000000,Max=800.000000))
     End Object

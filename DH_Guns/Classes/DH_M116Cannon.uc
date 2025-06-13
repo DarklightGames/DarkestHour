@@ -9,13 +9,13 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M116_anm.m116_turret'
-    Skins(0)=Texture'DH_M116_tex.M116.m116_body'
-    Skins(1)=Texture'DH_M116_tex.M116.m116_spring'
+    Skins(0)=Texture'DH_M116_tex.m116_body'
+    Skins(1)=Texture'DH_M116_tex.m116_spring'
     GunnerAttachmentBone="com_player"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_gun_coll',AttachBone="Gun")
-    //CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_turret_coll',AttachBone="Turret")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.m116_gun_coll',AttachBone="Gun")
+    //CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.m116_turret_coll',AttachBone="Turret")
 
     // Animation
     ShootIntermediateAnim="shoot_close"
@@ -55,13 +55,13 @@ defaultproperties
     AddedPitch=-15  // TODO: REPLACE
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=2.0)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=2.0)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1.0)
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.57mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.57mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.57mm_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01',Duration=2.0)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02',Duration=2.0)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0

@@ -15,8 +15,8 @@ defaultproperties
     Grenades(1)=(Item=Class'DH_USSmokeGrenadeWeapon')
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    SleeveTexture=Texture'DHUSCharactersTex.US_sleeves'
+    GlovedHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
 }

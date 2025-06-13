@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision')
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
@@ -44,13 +44,13 @@ defaultproperties
     SecondarySpread=0.002
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01') // 3.75 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.76mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.76mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.76mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01') // 3.75 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(1)=200

@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34-76_turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
+    Skins(0)=Texture'allies_vehicles_tex.T3476_ext'
+    Skins(1)=Texture'allies_vehicles_tex.T3476_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.t3476_int_s'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-76_turret_col')
 
     // Turret armor (model 1941)
@@ -57,7 +57,7 @@ defaultproperties
     AltFireInterval=0.105
     TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireOffset=71.9
@@ -65,19 +65,19 @@ defaultproperties
     AltFireOffset=(X=-81.0,Y=12.5,Z=1.5)
 
     // Sounds
-    CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
-    CannonFireSound(1)=Sound'Vehicle_Weapons.T34_76.76mm_fire02'
-    CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.76mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.76mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.76mm_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.5) //Enfield: the t34/76s erganomics were renowned as being awfull, and with the crew overload it was discussed that the MG reload should be just a bit longer
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=1.0,HUDProportion=0.35)
+    AltFireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_04')
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty01_000',Duration=1.5) //Enfield: the t34/76s erganomics were renowned as being awfull, and with the crew overload it was discussed that the MG reload should be just a bit longer
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty04_158',Duration=1.0,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

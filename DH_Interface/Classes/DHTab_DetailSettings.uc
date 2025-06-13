@@ -870,7 +870,7 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
-    sb_Section1=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection1'
+    sb_Section1=DHGUISectionBackground'DH_Interface.sbSection1'
 
     // Background for right side "Game Details"
     Begin Object Class=DHGUISectionBackground Name=sbSection2
@@ -882,7 +882,7 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
-    sb_Section2=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection2'
+    sb_Section2=DHGUISectionBackground'DH_Interface.sbSection2'
 
     // Background for left side 2 "Gamma Test"
     Begin Object Class=DHGUISectionBackground Name=sbSection3
@@ -896,16 +896,16 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
-    sb_Section3=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection3'
+    sb_Section3=DHGUISectionBackground'DH_Interface.sbSection3'
 
     // Gamma Test Image
     Begin Object Class=GUIImage Name=GammaBar
-        Image=Texture'DH_GUI_Tex.Menu.DHGammaSet'
+        Image=Texture'DH_GUI_Tex.DHGammaSet'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Normal
         OnChange=DHTab_DetailSettings.InternalOnChange
     End Object
-    i_GammaBar=GUIImage'DH_Interface.DHTab_DetailSettings.GammaBar'
+    i_GammaBar=GUIImage'DH_Interface.GammaBar'
 
 
 // ======================================================
@@ -923,7 +923,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_RenderDevice=DHmoComboBox'DH_Interface.DHTab_DetailSettings.RenderDeviceCombo'
+    co_RenderDevice=DHmoComboBox'DH_Interface.RenderDeviceCombo'
 
     Begin Object Class=DHmoComboBox Name=VideoResolution
         bReadOnly=true
@@ -936,7 +936,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Resolution=DHmoComboBox'DH_Interface.DHTab_DetailSettings.VideoResolution'
+    co_Resolution=DHmoComboBox'DH_Interface.VideoResolution'
 
     Begin Object Class=DHmoComboBox Name=VideoColorDepth
         CaptionWidth=0.55
@@ -948,7 +948,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_ColorDepth=DHmoComboBox'DH_Interface.DHTab_DetailSettings.VideoColorDepth'
+    co_ColorDepth=DHmoComboBox'DH_Interface.VideoColorDepth'
 
     Begin Object Class=DHmoComboBox Name=GlobalDetails
         ComponentJustification=TXTA_Left
@@ -961,7 +961,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_GlobalDetails=DHmoComboBox'DH_Interface.DHTab_DetailSettings.GlobalDetails'
+    co_GlobalDetails=DHmoComboBox'DH_Interface.GlobalDetails'
 
     Begin Object Class=DHmoCheckBox Name=VideoFullScreen
         ComponentJustification=TXTA_Left
@@ -974,7 +974,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_FullScreen=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.VideoFullScreen'
+    ch_FullScreen=DHmoCheckBox'DH_Interface.VideoFullScreen'
 
     Begin Object Class=moSlider Name=BrightnessSlider
         MaxValue=1.0
@@ -989,7 +989,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Brightness=moSlider'DH_Interface.DHTab_DetailSettings.BrightnessSlider'
+    sl_Brightness=moSlider'DH_Interface.BrightnessSlider'
 
     Begin Object Class=moSlider Name=GammaSlider
         MaxValue=2.5
@@ -1005,7 +1005,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Gamma=moSlider'DH_Interface.DHTab_DetailSettings.GammaSlider'
+    sl_Gamma=moSlider'DH_Interface.GammaSlider'
 
     Begin Object Class=moSlider Name=ContrastSlider
         MaxValue=1.0
@@ -1020,7 +1020,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Contrast=moSlider'DH_Interface.DHTab_DetailSettings.ContrastSlider'
+    sl_Contrast=moSlider'DH_Interface.ContrastSlider'
 
     Begin Object Class=DHmoCheckBox Name=UseVSyncCheckBox
         ComponentJustification=TXTA_Left
@@ -1051,7 +1051,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Texture=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailTextureDetail'
+    co_Texture=DHmoComboBox'DH_Interface.DetailTextureDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailCharacterDetail
         ComponentJustification=TXTA_Left
@@ -1064,7 +1064,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Char=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailCharacterDetail'
+    co_Char=DHmoComboBox'DH_Interface.DetailCharacterDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailWorldDetail
         ComponentJustification=TXTA_Left
@@ -1077,7 +1077,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_World=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailWorldDetail'
+    co_World=DHmoComboBox'DH_Interface.DetailWorldDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailPhysics
         ComponentJustification=TXTA_Left
@@ -1090,7 +1090,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Physics=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailPhysics'
+    co_Physics=DHmoComboBox'DH_Interface.DetailPhysics'
 
     Begin Object Class=DHmoComboBox Name=MeshLOD
         ComponentJustification=TXTA_Left
@@ -1102,7 +1102,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_MeshLOD=DHmoComboBox'DH_Interface.DHTab_DetailSettings.MeshLOD'
+    co_MeshLOD=DHmoComboBox'DH_Interface.MeshLOD'
 
     Begin Object Class=DHmoComboBox Name=DetailDecalStay
         ComponentJustification=TXTA_Left
@@ -1115,7 +1115,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Decal=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailDecalStay'
+    co_Decal=DHmoComboBox'DH_Interface.DetailDecalStay'
 
     Begin Object Class=DHmoComboBox Name=DetailAntialiasing
         ComponentJustification=TXTA_Left
@@ -1127,7 +1127,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_MultiSamples=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailAntialiasing'
+    co_MultiSamples=DHmoComboBox'DH_Interface.DetailAntialiasing'
 
     Begin Object Class=DHmoComboBox Name=DetailAnisotropy
         ComponentJustification=TXTA_Left
@@ -1139,7 +1139,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Anisotropy=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailAnisotropy'
+    co_Anisotropy=DHmoComboBox'DH_Interface.DetailAnisotropy'
 
     Begin Object Class=DHmoComboBox Name=DetailCharacterShadows
         ComponentJustification=TXTA_Left
@@ -1151,7 +1151,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Shadows=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailCharacterShadows'
+    co_Shadows=DHmoComboBox'DH_Interface.DetailCharacterShadows'
 
     Begin Object Class=DHmoComboBox Name=ScopeDetail
         ComponentJustification=TXTA_Left
@@ -1164,7 +1164,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_ScopeDetail=DHmoComboBox'DH_Interface.DHTab_DetailSettings.ScopeDetail'
+    co_ScopeDetail=DHmoComboBox'DH_Interface.ScopeDetail'
 
     Begin Object Class=DHmoCheckBox Name=DetailForceFSAASS
         ComponentJustification=TXTA_Left
@@ -1177,7 +1177,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_ForceFSAAScreenshotSupport=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailForceFSAASS'
+    ch_ForceFSAAScreenshotSupport=DHmoCheckBox'DH_Interface.DetailForceFSAASS'
 
     Begin Object Class=DHmoCheckBox Name=MotionBlur
         ComponentJustification=TXTA_Left
@@ -1190,7 +1190,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_MotionBlur=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.MotionBlur'
+    ch_MotionBlur=DHmoCheckBox'DH_Interface.MotionBlur'
 
     Begin Object Class=DHmoCheckBox Name=HDRCheckbox
         ComponentJustification=TXTA_Left
@@ -1203,7 +1203,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_HDR=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.HDRCheckbox'
+    ch_HDR=DHmoCheckBox'DH_Interface.HDRCheckbox'
 
     Begin Object Class=DHmoCheckBox Name=DetailDecals
         ComponentJustification=TXTA_Left
@@ -1216,7 +1216,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Decals=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDecals'
+    ch_Decals=DHmoCheckBox'DH_Interface.DetailDecals'
 
     Begin Object Class=DHmoCheckBox Name=DetailDynamicLighting
         ComponentJustification=TXTA_Left
@@ -1229,7 +1229,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_DynLight=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDynamicLighting'
+    ch_DynLight=DHmoCheckBox'DH_Interface.DetailDynamicLighting'
 
     Begin Object Class=DHmoCheckBox Name=DetailDetailTextures
         ComponentJustification=TXTA_Left
@@ -1242,7 +1242,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Textures=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDetailTextures'
+    ch_Textures=DHmoCheckBox'DH_Interface.DetailDetailTextures'
 
     Begin Object Class=DHmoCheckBox Name=DetailCoronas
         ComponentJustification=TXTA_Left
@@ -1255,7 +1255,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Coronas=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailCoronas'
+    ch_Coronas=DHmoCheckBox'DH_Interface.DetailCoronas'
 
     Begin Object Class=DHmoCheckBox Name=DetailTrilinear
         ComponentJustification=TXTA_Left
@@ -1268,7 +1268,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Trilinear=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailTrilinear'
+    ch_Trilinear=DHmoCheckBox'DH_Interface.DetailTrilinear'
 
     Begin Object Class=DHmoCheckBox Name=DetailProjectors
         ComponentJustification=TXTA_Left
@@ -1281,7 +1281,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Projectors=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailProjectors'
+    ch_Projectors=DHmoCheckBox'DH_Interface.DetailProjectors'
 
     Begin Object Class=DHmoCheckBox Name=WeatherEffects
         ComponentJustification=TXTA_Left
@@ -1294,7 +1294,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Weather=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.WeatherEffects'
+    ch_Weather=DHmoCheckBox'DH_Interface.WeatherEffects'
 
     Begin Object Class=DHmoCheckBox Name=DetailDecoLayers
         ComponentJustification=TXTA_Left
@@ -1307,7 +1307,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_DecoLayers=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDecoLayers'
+    ch_DecoLayers=DHmoCheckBox'DH_Interface.DetailDecoLayers'
 
     Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
         ComponentJustification=TXTA_Left
@@ -1353,7 +1353,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
+    sl_DistanceLOD=moSlider'DH_Interface.DistanceLODSlider'
 
     Begin Object Class=moSlider Name=CorpseStayTime
         Value=15.0

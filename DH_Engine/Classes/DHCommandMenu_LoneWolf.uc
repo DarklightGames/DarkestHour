@@ -83,7 +83,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 defaultproperties
 {
     AutoJoinSquadDisabledText="No eligible squads"
-    Options(0)=(ActionText="Auto-Join Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad')
-    Options(1)=(ActionText="Create Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad_leader')
+    Options(0)=(ActionText="Auto-Join Squad",Material=Texture'DH_InterfaceArt2_tex.squad')
+    Options(1)=(ActionText="Create Squad",Material=Texture'DH_InterfaceArt2_tex.squad_leader')
 }
 

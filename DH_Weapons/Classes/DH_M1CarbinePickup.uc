@@ -8,6 +8,6 @@ class DH_M1CarbinePickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_M1CarbineWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Carbine'
+    StaticMesh=StaticMesh'DH_WeaponPickups.M1_Carbine'
     //DrawScale=0.9
 }

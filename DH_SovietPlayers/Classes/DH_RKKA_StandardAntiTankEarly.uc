@@ -11,5 +11,5 @@ defaultproperties
     RolePawns(1)=(PawnClass=Class'DH_SovietTunicEarlyDarkPawn',Weight=1.0)
     Headgear(0)=Class'DH_SovietHelmet'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
 }

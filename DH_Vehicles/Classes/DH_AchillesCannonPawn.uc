@@ -27,13 +27,13 @@ defaultproperties
     FireImpulse=(X=-100000.0)
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_background'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.17pdr_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.17pdr_sight_mover'
     GunsightSize=0.52 // 13 degrees visible FOV at 3x magnification (No.51 sight)
     RangePositionX=0.16
 
     //HUD
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.17pdr_sight_destroyed'
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.17pdr_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'
 }

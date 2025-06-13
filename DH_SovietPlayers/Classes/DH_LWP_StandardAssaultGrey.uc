@@ -12,7 +12,7 @@ defaultproperties
     RolePawns(2)=(PawnClass=Class'DH_LWPTunicGreyPawn',Weight=2.0)
     Headgear(0)=Class'DH_LWPHelmet'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.LWP_grey_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.LWP_grey_sleeves'
 
     PrimaryWeapons(2)=(Item=Class'DH_PPSh41Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
 }

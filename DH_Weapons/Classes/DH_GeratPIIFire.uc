@@ -20,10 +20,10 @@ defaultproperties
     RecoilFallOffFactor=9.0
 
     FlashEmitterClass=Class'MuzzleFlash1stMP'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.GeratPII_fire_g1'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.GeratPII_fire_g2'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Sten.GeratPII_fire_g3'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.GeratPII_fire_g1'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.GeratPII_fire_g2'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.GeratPII_fire_g3'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     //PreFireAnim="Shoot1_start"
     ShellEjectClass=Class'ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)

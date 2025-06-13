@@ -37,11 +37,11 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.DE_HE_WGR38_ICON'
-    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.DE_SMOKE_WGR38_ICON'
+    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.DE_HE_WGR38_ICON'
+    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.DE_SMOKE_WGR38_ICON'
 
-    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.DE_HE_WGR38_ICON_RELOAD'
-    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.DE_SMOKE_WGR38_ICON_RELOAD'
+    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.DE_HE_WGR38_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.DE_SMOKE_WGR38_ICON_RELOAD'
 
     ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 

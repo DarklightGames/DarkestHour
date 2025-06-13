@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_VSGreatCoatPawnB',Weight=1.0)
     RolePawns(1)=(PawnClass=Class'DH_VSGreatCoatPawn',Weight=1.0)
-    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    SleeveTexture=Texture'Weapons1st_tex.GermanCoatSleeves'
     Headgear(0)=Class'DH_HeerHelmetThree'
     Headgear(1)=Class'ROGermanHat'
 

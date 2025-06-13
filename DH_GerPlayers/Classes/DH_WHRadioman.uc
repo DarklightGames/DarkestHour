@@ -8,7 +8,7 @@ class DH_WHRadioman extends DHGERadioOperatorRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanRadioHeerPawn')
-    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.german_sleeves'
     Headgear(0)=Class'ROGermanHat'
     Headgear(1)=Class'DH_HeerCamoCap'
 }

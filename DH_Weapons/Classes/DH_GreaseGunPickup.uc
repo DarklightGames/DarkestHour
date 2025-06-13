@@ -8,5 +8,5 @@ class DH_GreaseGunPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_GreaseGunWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M3_GreaseGun'
+    StaticMesh=StaticMesh'DH_WeaponPickups.M3_GreaseGun'
 }

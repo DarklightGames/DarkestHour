@@ -20,9 +20,9 @@ defaultproperties
 
     MaxVerticalRecoilAngle=700
     MaxHorizontalRecoilAngle=310  //heavy, but very unbalanced with awkward gas automatic system
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.g41.g41_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.g41.g41_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.g41.g41_fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.g41_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.g41_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.g41_fire03'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 

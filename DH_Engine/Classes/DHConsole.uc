@@ -653,14 +653,14 @@ state SpeechMenuVisible
 		YMax -= C.ClipY * SMOriginY;
 		C.SetDrawColor(139, 28, 28, 255);
 		C.SetPos(C.ClipX * SMOriginX, C.ClipY * SMOriginY);
-		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), YMax + (SMMargin * C.ClipY));
+		C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), YMax + (SMMargin * C.ClipY));
 
 		// Draw highlight
 		if (bSpeechMenuUseMouseWheel)
 		{
 			C.SetDrawColor(255, 202, 180, 128);
 			C.SetPos(C.ClipX * SMOriginX, C.ClipY * (SMOriginY + SMMargin) + ((HighlightRow - 0.1) * SMLineSpace));
-			C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), 1.1 * SMLineSpace);
+			C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), 1.1 * SMLineSpace);
 		}
 
 		// Then actually draw the stuff
@@ -670,7 +670,7 @@ state SpeechMenuVisible
 		// Finally, draw a nice title bar.
 		C.SetDrawColor(139, 28, 28, 255);
 		C.SetPos(C.ClipX * SMOriginX, (C.ClipY * SMOriginY) - (1.5 * SMLineSpace));
-		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), (1.5 * SMLineSpace));
+		C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), (1.5 * SMLineSpace));
 
 		C.SetDrawColor(255, 255, 128, 255);
 		C.SetPos(C.ClipX * (SMOriginX + SMMargin), (C.ClipY * SMOriginY) - (1.2 * SMLineSpace));
@@ -1054,12 +1054,12 @@ state ConsoleVisible
 		Canvas.SetDrawColor(255, 255, 255, 200);
 		Canvas.Style = 4;
         
-        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.HUD.console_background',Canvas.ClipX,yClip);
+        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.console_background',Canvas.ClipX,yClip);
 		Canvas.Style = 1;
 
 		Canvas.SetPos(0, YClip - 1);
 		Canvas.SetDrawColor(255, 255, 255, 255);
-        Canvas.DrawTile(Texture'InterfaceArt_tex.Menu.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
+        Canvas.DrawTile(Texture'InterfaceArt_tex.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
 		Canvas.SetDrawColor(255, 255, 255, 255);
 		Canvas.SetPos(0, YClip - 5 - FH);
 		Canvas.DrawTextClipped("(>" @ Left(TypedStr, TypedStrPos) $ Chr(4) $ Eval(TypedStrPos < Len(TypedStr), Mid(TypedStr, TypedStrPos), "_"), true);

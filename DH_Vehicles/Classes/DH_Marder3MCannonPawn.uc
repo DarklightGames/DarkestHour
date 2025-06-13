@@ -18,8 +18,8 @@ defaultproperties
     DrivePos=(X=-10.0,Y=4.7,Z=21.5) // (X=-14.5,Y=-0.5,Z=21.5) is an ideal position, but left boot pokes through side of vehicle, so had to shift commander to the right
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
 }

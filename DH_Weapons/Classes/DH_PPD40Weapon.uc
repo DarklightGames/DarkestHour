@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=Class'DH_PPD40Pickup'
 
     Mesh=SkeletalMesh'DH_Ppd40_1st.PPD-40-1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPD40_1_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.PPD40_1_S'
 
     IronSightDisplayFOV=60.0
     DisplayFOV=85.0

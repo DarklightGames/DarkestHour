@@ -15,7 +15,7 @@ defaultproperties
     AttachmentClass=Class'DH_G43Attachment'
 
     Mesh=SkeletalMesh'DH_G43_1st.G-43-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.G43_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.G43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

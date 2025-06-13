@@ -7,7 +7,7 @@ class DH_Granatwerfer34MortarConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.mortar'
     VehicleClasses(0)=(VehicleClass=Class'DH_Granatwerfer34MortarGray')
     VehicleClasses(1)=(VehicleClass=Class'DH_Granatwerfer34Mortar')
     VehicleClasses(2)=(VehicleClass=Class'DH_Granatwerfer34MortarCamo')

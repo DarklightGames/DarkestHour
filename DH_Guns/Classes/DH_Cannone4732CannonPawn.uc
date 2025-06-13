@@ -18,8 +18,8 @@ defaultproperties
     BinocPositionIndex=3
 
     DriveAnim="cannone4732_gunner_closed"
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer3shell_reload'
     CameraBone="camera_gun"
 
     GunOpticsClass=Class'DH_Cannone4732Optics'

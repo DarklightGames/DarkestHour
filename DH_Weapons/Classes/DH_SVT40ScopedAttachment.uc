@@ -8,7 +8,7 @@ class DH_SVT40ScopedAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.svt40Scope' // placeholder until we get SVT world mesh
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40scoped_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.svt40scoped_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdSVT'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false

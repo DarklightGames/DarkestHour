@@ -8,5 +8,5 @@ class DH_SovietFurHatUnfolded extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ushanka_unfolded'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
+    Skins(0)=Texture'DHSovietCharactersTex.DH_rus_headgear'
 }

@@ -26,10 +26,10 @@ defaultproperties
     PickupClass=Class'DH_MG42Pickup'
 
     Mesh=SkeletalMesh'DH_Mg42_1st.MG42_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.MG.MG42_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MG42_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandTex=Texture'Weapons1st_tex.hands_gergloves'
 
     DisplayFOV=85.0
     IronSightDisplayFOV=60.0

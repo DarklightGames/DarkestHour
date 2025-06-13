@@ -245,7 +245,7 @@ defaultproperties
     PackingThresholdTime=0.1
     MaxVerticalRecoilAngle=300
     MaxHorizontalRecoilAngle=90
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     AmbientFireVolume=255
     AmbientFireSoundRadius=750.0
     PreFireAnim="Shoot1_start"

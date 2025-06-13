@@ -17,7 +17,7 @@ defaultproperties
     PickupClass=Class'DH_SRCMMod35SmokeGrenadePickup'
     Mesh=SkeletalMesh'DH_SRCMMod35_anm.srcm_1st'
     DisplayFOV=80.0
-    Skins(2)=Shader'DH_SRCMMod35_tex.SRCMMod35.SRCM35_Phosphorous_S'
+    Skins(2)=Shader'DH_SRCMMod35_tex.SRCM35_Phosphorous_S'
     InventoryGroup=4
     GroupOffset=5
     Priority=2

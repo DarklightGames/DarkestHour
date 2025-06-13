@@ -8,5 +8,5 @@ class DH_PanzerIVF1Factory_CamoOne extends DH_PanzerIVF1Factory;
 defaultproperties
 {
     VehicleClass=Class'DH_PanzerIVF1Tank_CamoOne'
-    Skins(0)=Texture'axis_vehicles_tex2.ext_vehicles.panzer4_stripe_ext'
+    Skins(0)=Texture'axis_vehicles_tex2.panzer4_stripe_ext'
 }

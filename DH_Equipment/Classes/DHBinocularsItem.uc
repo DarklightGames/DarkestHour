@@ -170,7 +170,7 @@ defaultproperties
     bCanAttachOnBack=false
 
     Mesh=SkeletalMesh'Common_Binoc_1st.binoculars'
-    HighDetailOverlay=Shader'Weapons1st_tex.SniperScopes.Binoc_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -178,7 +178,7 @@ defaultproperties
     IronSightDisplayFOVHigh=70.0
     bPlayerFOVZooms=true
     PlayerFOVZoom=12.0 //Magnification for 6x Binocs
-    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30General'
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.BINOC_overlay_6x30General'
     ScopeOverlaySize=0.667 //FOV for 6x30 binocs
     bCanSway=false
     bHasScope=true

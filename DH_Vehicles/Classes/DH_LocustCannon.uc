@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_turret'
     Skins(0)=Texture'DH_Locust_tex.Locust_turret_ext'
     Skins(1)=Texture'DH_Locust_tex.Locust_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_collision')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust_turret_collision')
     FireAttachBone="turret"
     FireEffectOffset=(X=-21.0,Y=16.0,Z=35.0)
 
@@ -71,13 +71,13 @@ defaultproperties
     ShakeOffsetTime=6.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD_fire01'
+    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD_fire02'
+    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 }

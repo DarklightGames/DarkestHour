@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=Class'DH_MKB42HPickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.MKB42H-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.STG44_S'
 
     SwayModifyFactor=0.8 //+0.1
 

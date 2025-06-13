@@ -8,5 +8,5 @@ class DH_WitchEnder666Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_WitchEnder666Weapon'
-    StaticMesh=StaticMesh'DH_Winchester1897_stc.Pickup.WitchEnder666'
+    StaticMesh=StaticMesh'DH_Winchester1897_stc.WitchEnder666'
 }

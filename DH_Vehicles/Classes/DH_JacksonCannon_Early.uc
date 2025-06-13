@@ -8,7 +8,7 @@ class DH_JacksonCannon_Early extends DH_JacksonCannon;
 defaultproperties
 {
     // Turret mesh
-    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
+    Skins(3)=Texture'DH_VehiclesGE_tex2.Alpha' // hides the muzzle brake
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_JacksonCannonShell_Early'

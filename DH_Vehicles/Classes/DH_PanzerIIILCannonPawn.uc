@@ -15,12 +15,12 @@ defaultproperties
     bManualTraverseOnly=true
     DrivePos=(X=2.0,Y=0.0,Z=0.0)
     DriveAnim="VPanzer3_com_idle_close"
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.PZ3_sight_graticule'
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ3_Sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ3_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer3shell_reload'
     FireImpulse=(X=-80000.0)
 }

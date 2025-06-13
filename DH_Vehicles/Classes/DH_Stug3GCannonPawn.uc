@@ -19,8 +19,8 @@ defaultproperties
     DrivePos=(X=0.0,Y=0.0,Z=-7.0)
     DriveAnim="stand_idlehip_binoc"
     CameraBone="Turret"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.stug3_SflZF1a_sight'
     GunsightSize=0.471 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
 }

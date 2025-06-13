@@ -609,16 +609,16 @@ defaultproperties
     bVisible=true
     bRequiresTick=true
 
-    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_1'
-    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_2'
-    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_3'
-    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_4'
-    OptionTextures(4)=Texture'DH_InterfaceArt_tex.Communication.menu_option_5'
-    OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
-    OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
-    OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+    OptionTextures(0)=Texture'DH_InterfaceArt_tex.menu_option_1'
+    OptionTextures(1)=Texture'DH_InterfaceArt_tex.menu_option_2'
+    OptionTextures(2)=Texture'DH_InterfaceArt_tex.menu_option_3'
+    OptionTextures(3)=Texture'DH_InterfaceArt_tex.menu_option_4'
+    OptionTextures(4)=Texture'DH_InterfaceArt_tex.menu_option_5'
+    OptionTextures(5)=Texture'DH_InterfaceArt_tex.menu_option_6'
+    OptionTextures(6)=Texture'DH_InterfaceArt_tex.menu_option_7'
+    OptionTextures(7)=Texture'DH_InterfaceArt_tex.menu_option_8'
 
-    RingTexture=Texture'DH_InterfaceArt_tex.Communication.ring'
+    RingTexture=Texture'DH_InterfaceArt_tex.ring'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)
@@ -628,5 +628,5 @@ defaultproperties
     HoverSound=Sound'ROMenuSounds.msfxDown'
     CancelSound=Sound'ROMenuSounds.CharFade'
 
-    CrosshairMaterial=Material'DH_InterfaceArt_tex.Communication.menu_crosshair'
+    CrosshairMaterial=Material'DH_InterfaceArt_tex.menu_crosshair'
 }

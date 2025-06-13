@@ -9,10 +9,10 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.Higgins_MG_3rd'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.30calMain'
-    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.30calGrip'
-    Skins(2)=Texture'DH_Weapon_tex.AmmoPouches.30CalAmmoTin'
-    Skins(3)=Texture'DH_VehiclesUS_tex.ext_vehicles.Green'
+    Skins(0)=Texture'DH_Weapon_tex.30calMain'
+    Skins(1)=Texture'DH_Weapon_tex.30calGrip'
+    Skins(2)=Texture'DH_Weapon_tex.30CalAmmoTin'
+    Skins(3)=Texture'DH_VehiclesUS_tex.Green'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
@@ -36,8 +36,8 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="tip"
     AmbientEffectEmitterClass=Class'DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

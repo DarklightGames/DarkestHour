@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll')
+    Skins(0)=Texture'DH_VehiclesUS_tex4.Greyhound_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.Greyhound_body_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Greyhound_turret_coll')
     FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
 
@@ -69,13 +69,13 @@ defaultproperties
     ShakeOffsetTime=6.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
-    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
-    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
-    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
+    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD_fire01'
+    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD_fire02'
+    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload01')
+    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload02')
+    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload03')
+    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload04')
 }

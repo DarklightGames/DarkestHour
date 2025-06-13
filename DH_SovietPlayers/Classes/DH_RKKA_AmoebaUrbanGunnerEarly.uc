@@ -8,7 +8,7 @@ class DH_RKKA_AmoebaUrbanGunnerEarly extends DHSOVMachineGunnerRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaUrbanPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaUrbanSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaUrbanSleeves'
     Headgear(0)=Class'DH_SovietSidecap'
     Headgear(1)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=0.5

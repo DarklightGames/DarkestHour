@@ -8,7 +8,7 @@ class DH_M1928_30rndAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.M1928_30rnd_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1928_20rnd_icon'  // TODO: make a 30rder
+    MenuImage=Texture'DH_InterfaceArt_tex.m1928_20rnd_icon'  // TODO: make a 30rder
     mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"

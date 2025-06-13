@@ -279,7 +279,7 @@ function static UpdateProxy(DHActorProxy CP)
 defaultproperties
 {
     MenuName="Command Post"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.platoon_hq'
     MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
@@ -338,5 +338,5 @@ defaultproperties
     RadioLocationOffset=(X=65,Y=-115,Z=2)
     RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
 
-    FlagMaterial=Texture'DH_Construction_tex.Base.flags_01_blank'
+    FlagMaterial=Texture'DH_Construction_tex.flags_01_blank'
 }

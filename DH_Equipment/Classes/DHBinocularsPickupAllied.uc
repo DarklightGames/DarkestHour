@@ -8,6 +8,6 @@ class DHBinocularsPickupAllied extends DHBinocularsPickup;
 defaultproperties
 {
     InventoryType=Class'DHBinocularsItemAllied'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
-    Skins(0)=Texture'DH_Equipment_tex.Binocs.Binoc_world_usa'
+    StaticMesh=StaticMesh'DetailSM.Binocs'
+    Skins(0)=Texture'DH_Equipment_tex.Binoc_world_usa'
 }

@@ -25,7 +25,7 @@ defaultproperties
         StartSizeRange=(X=(Min=12.000000,Max=16.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -62,7 +62,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         LifetimeRange=(Min=1.000000,Max=1.500000)
         StartVelocityRange=(X=(Min=25.000000,Max=50.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-20.0,Max=20.000000))
     End Object
@@ -94,7 +94,7 @@ defaultproperties
         StartSizeRange=(X=(Min=5.000000,Max=12.000000))
         InitialParticlesPerSecond=600.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.chunksparselite'
+        Texture=Texture'DH_FX_Tex.chunksparselite'
         LifetimeRange=(Min=0.35,Max=0.75)
         StartVelocityRange=(X=(Min=100.000000,Max=400.000000),Y=(Min=-100.000000,Max=75.000000),Z=(Min=-80.000000,Max=125.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -122,7 +122,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=45.000000),Y=(Min=30.000000,Max=45.000000),Z=(Min=85.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.200000,Max=0.250000)
         StartVelocityRange=(X=(Min=300.000000,Max=500.000000),Y=(Min=-50.000000,Max=75.000000),Z=(Min=-75.000000,Max=50.000000))
     End Object
@@ -153,7 +153,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.000000,Max=2.00000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonechunksfinal'
+        Texture=Texture'Effects_Tex.stonechunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.50000,Max=2.000000)
@@ -188,7 +188,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000),Y=(Min=35.000000,Max=45.000000),Z=(Min=85.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.900000,Max=1.500000)
         StartVelocityRange=(X=(Min=350.000000,Max=600.000000),Y=(Min=-100.000000,Max=150.000000),Z=(Min=-150.000000,Max=100.000000))
     End Object

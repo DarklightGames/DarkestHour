@@ -12,9 +12,9 @@ defaultproperties
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
     Spread=30.0
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.kar98_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.kar98_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.kar98_fire03'
     FlashEmitterClass=Class'MuzzleFlash1stKar'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellRotOffsetIron=(Pitch=14000)

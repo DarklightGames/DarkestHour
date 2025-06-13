@@ -20,9 +20,9 @@ defaultproperties
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
-    BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
-    SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'   // TODO: replace with tanker sleeves
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace with tanker gloves
+    BareHandTexture=Texture'DHItalianCharactersTex.Italian_hands'
+    SleeveTexture=Texture'DHItalianCharactersTex.Livorno_sleeves'   // TODO: replace with tanker sleeves
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves' // TODO: replace with tanker gloves
 
     Headgear(0)=Class'DH_ItalianCapTanker'
     Headgear(1)=Class'DH_ItalianCapTanker'  // TODO: goggles on helmet

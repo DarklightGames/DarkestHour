@@ -8,7 +8,7 @@ class DH_M1924Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.m24_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_icon' //change.
+    MenuImage=Texture'DH_InterfaceArt_tex.kar98k_icon' //change.
     mMuzFlashClass=Class'MuzzleFlash3rdKar'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true

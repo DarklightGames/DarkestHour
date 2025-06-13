@@ -34,8 +34,8 @@ defaultproperties
     ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=6.0  // 100m // TODO: try to get some accurate penetration data (this uses reported penetration at 100, 500, 1k & 2k ranges, with the gaps then estimated)

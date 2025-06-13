@@ -122,7 +122,7 @@ defaultproperties
     bWorldGeometry=false
     bStatic=true
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
+    StaticMesh=StaticMesh'DH_Obstacles_stc.fence_farm01'
     RemoteRole=ROLE_None
     TypeIndex=-1
     bDebug=false

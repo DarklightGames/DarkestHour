@@ -8,7 +8,7 @@ class DH_PPSh41Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.ppsh41'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.ppsh41_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
     ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 

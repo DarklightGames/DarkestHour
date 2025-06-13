@@ -17,5 +17,5 @@ defaultproperties
 
     ImpactEffect=Class'DHMortarHitEffect81mm'
 
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_HE_M110_3360'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.IT_HE_M110_3360'
 }

@@ -409,8 +409,8 @@ defaultproperties
 
     AlliesToAxisRatio=0.5
     Texture=Texture'DHEngine_Tex.LevelInfo'
-    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
-    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
+    AlliesWinsMusic=Sound'DH_win.DH_AlliesGroup'
+    AxisWinsMusic=Sound'DH_win.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
     GameTypeClass=Class'DHGameType_Push'

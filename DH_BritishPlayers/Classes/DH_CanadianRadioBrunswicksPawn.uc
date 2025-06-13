@@ -8,5 +8,5 @@ class DH_CanadianRadioBrunswicksPawn extends DH_BritishRadioPawn;
 defaultproperties
 {
     Species=Class'DH_Canadian'
-    Skins(1)=Texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks'
+    Skins(1)=Texture'DHCanadianCharactersTex.CanadianRoyalNewBrunswicks'
 }

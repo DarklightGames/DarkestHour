@@ -26,7 +26,7 @@ defaultproperties
     //Effects
     bHasTracer=false
     bHasShellTrail=false
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_Shell'
 
     ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
@@ -48,10 +48,10 @@ defaultproperties
     DHPenetrationTable(9)=6.2
     DHPenetrationTable(10)=5.9
 
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=SoundGroup'Artillery.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explo04'
     MechanicalRanges(1)=(Range=100,RangeValue=16.0)
     MechanicalRanges(2)=(Range=200,RangeValue=20.0)
     MechanicalRanges(3)=(Range=300,RangeValue=26.0)

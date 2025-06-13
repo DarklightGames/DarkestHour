@@ -15,7 +15,7 @@ defaultproperties
     MaxVerticalRecoilAngle=700
     MaxHorizontalRecoilAngle=200
 
-   FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
-   FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
-   FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
+   FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.m1895'
+   FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.m1895'
+   FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.m1895'
 }

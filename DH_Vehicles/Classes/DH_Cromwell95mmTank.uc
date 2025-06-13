@@ -9,10 +9,10 @@ defaultproperties
 {
     VehicleNameString="Cromwell Mk.VI"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Cromwell95mmCannonPawn')
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_95mm_wrecked'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_95mm_Rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_95mm_Look'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell_95mm'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Crommy_95mm_wrecked'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Cromwell_Turret_95mm_Rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Cromwell_Turret_95mm_Look'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.cromwell_95mm'
 
 	// Damage
 	// Cons: high-caliber ammunition is more likely to detonate

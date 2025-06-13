@@ -8,7 +8,7 @@ class DH_GMCTruckTransportFactory_LL extends DH_GMCTruckTransportFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_GMCTruckTransport_LL'
-    Skins(0)=Texture'DH_GMC_tex.GMC.GMC_Generic'
-    Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas'
+    Skins(0)=Texture'DH_GMC_tex.GMC_Generic'
+    Skins(1)=Texture'DH_GMC_tex.GMC_Canvas'
 }
 

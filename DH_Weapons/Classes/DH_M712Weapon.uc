@@ -46,8 +46,8 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(1)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
+    Skins(1)=Texture'Weapons1st_tex.Mauser_c96'
+    HighDetailOverlay=Shader'Weapons1st_tex.c96_S'
     handnum=0
     sleevenum=2
 

@@ -104,7 +104,7 @@ defaultproperties
     GunClass=Class'DH_ShermanMountedMG'
 
     WeaponFOV=72.0
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
     GunsightSize=0.75 //size of texture overlay
 
 //  This bow MG did not have a sight or even a peephole to aim through, & was instead aimed using co-driver's overhead periscope

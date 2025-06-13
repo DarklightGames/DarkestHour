@@ -9,5 +9,5 @@ class DH_RDG1SmokeGrenadeDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_RDG1SmokeGrenadeWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=Texture'InterfaceArt_tex.germgrenade'
 }

@@ -27,8 +27,8 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=30.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
     ShellEjectClass=Class'DH_30cal1stLinkEject'
     ShellIronSightOffset=(X=30,Z=-3)
     ShellRotOffsetIron=(Pitch=-1500)

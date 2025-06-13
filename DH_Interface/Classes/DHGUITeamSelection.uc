@@ -250,19 +250,19 @@ defaultproperties
     UnitsText=" players"
     SizeBonusText="army size"
 
-    GermanyBackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
-    GermanyBackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
-    GermanyBackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
-    GermanyBackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
-    GermanyBackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectP'
-    GermanyBackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectCS'
+    GermanyBackgroundTextures(0)=Texture'DH_GUI_Tex.Teamselect'
+    GermanyBackgroundTextures(1)=Texture'DH_GUI_Tex.TeamselectB'
+    GermanyBackgroundTextures(2)=Texture'DH_GUI_Tex.TeamselectC'
+    GermanyBackgroundTextures(3)=Texture'DH_GUI_Tex.TeamselectD'
+    GermanyBackgroundTextures(4)=Texture'DH_GUI_Tex.TeamselectP'
+    GermanyBackgroundTextures(5)=Texture'DH_GUI_Tex.TeamselectCS'
 
-    ItalyBackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
-    ItalyBackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
-    ItalyBackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
-    ItalyBackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
-    ItalyBackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
-    ItalyBackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(0)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(1)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(2)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(3)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(4)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(5)=Texture'DH_GUI_Tex.TeamselectIT'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
@@ -273,7 +273,7 @@ defaultproperties
         WinWidth=0.3
         WinHeight=0.04
     End Object
-    l_TeamCount(0)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount'
+    l_TeamCount(0)=GUILabel'DH_Interface.TeamsCount'
 
     Begin Object Class=GUILabel Name=TeamsCount2
         Caption="? players"
@@ -284,7 +284,7 @@ defaultproperties
         WinWidth=0.3
         WinHeight=0.04
     End Object
-    l_TeamCount(1)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount2'
+    l_TeamCount(1)=GUILabel'DH_Interface.TeamsCount2'
 
     Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing
         bNoTeletype=true
@@ -295,7 +295,7 @@ defaultproperties
         WinWidth=0.44625
         WinHeight=0.342498
     End Object
-    l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing'
+    l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.TeamsBriefing'
 
     Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing2
         bNoTeletype=true
@@ -306,7 +306,7 @@ defaultproperties
         WinWidth=0.44625
         WinHeight=0.342498
     End Object
-    l_TeamBriefing(1)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing2'
+    l_TeamBriefing(1)=DHGUIScrollTextBox'DH_Interface.TeamsBriefing2'
 
     Begin Object Class=DHGUIButton Name=JoinTeamButton
         StyleName="DHSmallTextButtonStyle"
@@ -318,7 +318,7 @@ defaultproperties
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
-    b_TeamSelect(0)=DHGUIButton'DH_Interface.DHGUITeamSelection.JoinTeamButton'
+    b_TeamSelect(0)=DHGUIButton'DH_Interface.JoinTeamButton'
 
     Begin Object class=DHGUIButton Name=JoinTeamButton2
         StyleName="DHSmallTextButtonStyle"
@@ -330,7 +330,7 @@ defaultproperties
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
-    b_TeamSelect(1)=DHGUIButton'DH_Interface.DHGUITeamSelection.JoinTeamButton2'
+    b_TeamSelect(1)=DHGUIButton'DH_Interface.JoinTeamButton2'
 
     // Disconnect
     Begin Object class=DHGUIButton Name=Disconnect
@@ -394,7 +394,7 @@ defaultproperties
 
     // Background
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.Teamselect'
+        Image=Texture'DH_GUI_Tex.Teamselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -402,7 +402,7 @@ defaultproperties
         X2=1023
         Y2=1023
     End Object
-    bg_Background=BackgroundImage'DH_Interface.DHGUITeamSelection.PageBackground'
+    bg_Background=BackgroundImage'DH_Interface.PageBackground'
 
     OnClose=DHGUITeamSelection.InternalOnClose
     OnMessage=DHGUITeamSelection.InternalOnMessage

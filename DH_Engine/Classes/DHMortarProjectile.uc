@@ -717,8 +717,8 @@ defaultproperties
     HitWoodEmitterClass=Class'TankAPHitWoodEffect'
     HitSnowEmitterClass=Class'TankAPHitSnowEffect'
     HitWaterEmitterClass=Class'DHShellSplashEffect'
-    HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-    HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-    HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-    HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    HitDirtSound=SoundGroup'ProjectileSounds.AP_Impact_Dirt'
+    HitRockSound=SoundGroup'ProjectileSounds.AP_Impact_Rock'
+    HitWoodSound=SoundGroup'ProjectileSounds.AP_Impact_Wood'
+    HitWaterSound=SoundGroup'ProjectileSounds.AP_Impact_Water'
 }

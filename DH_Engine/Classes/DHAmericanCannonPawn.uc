@@ -9,5 +9,5 @@ class DHAmericanCannonPawn extends DHVehicleCannonPawn
 defaultproperties
 {
     RangeUnit=DU_Yards
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 }

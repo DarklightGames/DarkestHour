@@ -32,13 +32,13 @@ defaultproperties
     DrivePos=(X=0,Y=0.0,Z=60.0)
     DriveAnim="crouch_idle_binoc"
 
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 
-    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
-    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
+    AmmoShellTexture=Texture'DH_LeIG18_tex.leig18_he'   // TODO: swap it out
+    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.leig18_he_reload'
     ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M116'
 }

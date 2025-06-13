@@ -19,10 +19,10 @@ defaultproperties
     DrivePos=(X=3.0,Y=2.5,Z=4.5)
     DriveAnim="stand_idlehip_binoc"
     bManualTraverseOnly=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.sherman105_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.sherman105_sight_background'
     GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M72D sight) // TODO: find M72 sight properties
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Sherman105Shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Sherman105Shell_reload'
     FireImpulse=(X=-110000.0)
 }

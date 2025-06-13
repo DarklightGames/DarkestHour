@@ -14,10 +14,10 @@ defaultproperties
     DrivePos=(X=-40.0,Y=-4.0,Z=-42.0)
     DriveAnim="crouch_idlehold_bayo"
     CameraBone="gun01"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_background'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.17Pdr_sight_mover'
     GunsightSize=0.459 // 13 degrees visible FOV at 3x magnification (No.51 sight)
     RangeUnit=DU_Yards
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'
 }

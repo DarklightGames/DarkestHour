@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
-    Skins(0)=Texture'Weapons3rd_tex.German.Mg42_world'
+    Skins(0)=Texture'Weapons3rd_tex.Mg42_world'
     FireAttachBone="Mg_placement1"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
 
@@ -28,6 +28,6 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=2.5
-    FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Mg42_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Mg42_FireEnd01'
 }

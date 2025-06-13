@@ -9,5 +9,5 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_CSAZTunicGSLPawn',Weight=1.0)
     Headgear(0)=Class'DH_CSAZSidecap'
-    SleeveTexture=Texture'Weapons1st_tex.Arms.russian_sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 }

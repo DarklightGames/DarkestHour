@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=Class'DH_M1A1CarbinePickup'
 
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1A1Carbine_mesh'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.M1A1Carbine'
+    Skins(0)=Texture'DH_Weapon_tex.M1A1Carbine'
 
     bUseHighDetailOverlayIndex=false
 

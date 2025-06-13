@@ -8,7 +8,7 @@ class DH_M1T17CarbineAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.m1carbine_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.carbine_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdSVT'
     ROShellCaseClass=Class'DH_3rdShellEject556mm'
     MuzzleBoneName="tipnew"

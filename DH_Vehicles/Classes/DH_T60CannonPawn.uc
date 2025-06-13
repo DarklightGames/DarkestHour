@@ -23,20 +23,20 @@ defaultproperties
     DriveAnim=VT60_com_idle_close
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background' // TODO: not sure this AHZ overlay is correct; it could be the telescopic sight used in tanks with the 45mm gun?
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.45mmATGun_sight_background' // TODO: not sure this AHZ overlay is correct; it could be the telescopic sight used in tanks with the 45mm gun?
     GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
-    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     ScopeCenterPositionX=0.001 //0.035
     ScopeCenterScaleX=2.4
     ScopeCenterScaleY=2.0 //2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     //Traverse & Fire
     bManualTraverseOnly=true
     FireImpulse=(X=-10000,Y=0.0,Z=0.0)
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.t60shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.t60_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.t60shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.t60_reload'
 }
 

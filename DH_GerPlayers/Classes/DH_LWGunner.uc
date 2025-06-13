@@ -8,7 +8,7 @@ class DH_LWGunner extends DHGEMachineGunnerRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanLuftwaffePawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.FJ_Sleeve'
     Headgear(0)=Class'DH_LWHelmet'
     Headgear(1)=Class'DH_LWHelmetTwo'
 }

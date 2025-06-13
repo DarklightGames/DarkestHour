@@ -8,6 +8,6 @@ class DH_AutoCarrettaOMTransportSnowFactory extends DH_AutoCarrettaOMTransportFa
 defaultproperties
 {
     VehicleClass=Class'DH_AutoCarrettaOMTransportSnow'
-    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM.OM_BaseVehicle_Snow'
-    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM.OM_Passenger_Snow'
+    Skins(0)=Texture'DH_AutocarrettaOM_tex.OM_BaseVehicle_Snow'
+    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM_Passenger_Snow'
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleClass=Class'DH_LeIG18Gun'
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
-    Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
-    Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
+    Skins(0)=Texture'DH_LeIG18_tex.IG18_1'
+    Skins(1)=Texture'DH_LeIG18_tex.IG18_2'
     TeamNum=AXIS
 }

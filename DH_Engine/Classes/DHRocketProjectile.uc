@@ -174,16 +174,16 @@ defaultproperties
     TransientSoundVolume=1.0 //0.3
     TransientSoundRadius=300.0
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    VehicleHitSound=SoundGroup'Inf_Weapons.faust_explode01'
+    DirtHitSound=SoundGroup'Inf_Weapons.faust_explode01'
+    RockHitSound=SoundGroup'Inf_Weapons.faust_explode02'
+    WoodHitSound=SoundGroup'Inf_Weapons.faust_explode03'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
     VehicleDeflectSound=Sound'ProjectileSounds.PTRD_deflect' //temp
 
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.faust_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.faust_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.faust_explode03'
 
     //Start DH defaults
     bExplodesOnHittingBody=true

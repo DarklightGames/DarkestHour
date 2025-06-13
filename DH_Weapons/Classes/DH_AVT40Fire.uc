@@ -22,9 +22,9 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 
-    FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
-    FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
-    FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
+    FireSounds(0)=Sound'DH_WeaponSounds.svtfire1'
+    FireSounds(1)=Sound'DH_WeaponSounds.svtfire2'
+    FireSounds(2)=Sound'DH_WeaponSounds.svtfire3'
     ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)

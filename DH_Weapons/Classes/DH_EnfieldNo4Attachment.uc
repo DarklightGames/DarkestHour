@@ -8,7 +8,7 @@ class DH_EnfieldNo4Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_3rd'
-    MenuImage=Texture'DH_EnfieldNo4_tex.weapon_icons.EnfieldNo4_icon'
+    MenuImage=Texture'DH_EnfieldNo4_tex.EnfieldNo4_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdSVT'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

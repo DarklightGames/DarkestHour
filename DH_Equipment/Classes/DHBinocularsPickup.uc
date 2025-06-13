@@ -8,5 +8,5 @@ class DHBinocularsPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DHBinocularsItem'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
+    StaticMesh=StaticMesh'DetailSM.Binocs'
 }

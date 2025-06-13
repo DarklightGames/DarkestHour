@@ -8,8 +8,8 @@ class DH_ZB30Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.ZB30'
-    MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.ZB30'
-    //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
+    MenuImage=Texture'DH_InterfaceArt_CC_tex.ZB30'
+    //MenuImage=Texture'CCInterfaceArt_tex.ZB30'
     
     mMuzFlashClass=Class'MuzzleFlash3rdSTG'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'

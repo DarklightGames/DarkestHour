@@ -1045,7 +1045,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German_sight_background'
     YawScaleStep=1.0
     PitchScaleStep=1.0
 
@@ -1091,8 +1091,8 @@ defaultproperties
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.5
 
-    GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
-    GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
+    GradientOverlayX=Texture'DH_InterfaceArt2_tex.dials_gradient_x'
+    GradientOverlayY=Texture'DH_InterfaceArt2_tex.dials_gradient_y'
 
     SelectedTargetText="Selected Target"
     MeasurementToolText="Measurement Tool"

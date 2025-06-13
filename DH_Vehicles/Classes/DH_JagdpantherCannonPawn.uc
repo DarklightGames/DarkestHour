@@ -17,9 +17,9 @@ defaultproperties
     DriveAnim="VStug3_com_idle_close"
     bHasAltFire=false
     bLockCameraDuringTransition=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (Sfl.ZF5 sight) // TODO: some sources say ZF1 or ZF1a with 5x mag (mid production?) & late JP had WZF1/4 sight with 10x mag & 7 degs FOV
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.KingTigerShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.KingTigerShell_reload'
     FireImpulse=(X=-110000.0)
 }

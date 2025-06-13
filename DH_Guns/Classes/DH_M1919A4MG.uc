@@ -51,8 +51,8 @@ defaultproperties
     TracerFrequency=5
 
     // Weapon fire
-    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
 

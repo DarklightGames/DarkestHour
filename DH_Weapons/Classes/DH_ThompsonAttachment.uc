@@ -8,7 +8,7 @@ class DH_ThompsonAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Thompson_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.Thompson_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"

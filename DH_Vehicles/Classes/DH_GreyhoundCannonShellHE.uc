@@ -29,8 +29,8 @@ defaultproperties
     ShellHitWaterEffectClass=Class'GrenadeExplosion'
 
     //Sound
-    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'  <why would an explosive shell produce sound of bullet deflection?
-    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'  <why would an explosive shell produce sound of bullet deflection?
+    //VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=1.2

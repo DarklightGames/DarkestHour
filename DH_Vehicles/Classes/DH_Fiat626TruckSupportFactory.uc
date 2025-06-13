@@ -9,6 +9,6 @@ defaultproperties
 {
     VehicleClass=Class'DH_Fiat626TruckSupport'
     Mesh=Mesh'DH_Fiat626_anm.fiat626_body_ext'
-    Skins(0)=Texture'DH_Fiat626_tex.fiat626.fiat626_exterior_green'
-    Skins(1)=Texture'DH_Fiat626_tex.fiat626.fiat626_interior_green'
+    Skins(0)=Texture'DH_Fiat626_tex.fiat626_exterior_green'
+    Skins(1)=Texture'DH_Fiat626_tex.fiat626_interior_green'
 }

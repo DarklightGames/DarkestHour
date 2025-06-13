@@ -17,10 +17,10 @@ defaultproperties
     DrivePos=(X=8.0,Y=3.0,Z=-4.5)
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Stuart_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Stuart_sight_background'
     GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M70D sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Stuart_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.StuartShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.StuartShell_reload'
     FireImpulse=(X=-30000.0)
 }

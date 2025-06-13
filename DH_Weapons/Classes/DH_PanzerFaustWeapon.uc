@@ -115,7 +115,7 @@ defaultproperties
     PickupClass=Class'DH_PanzerFaustPickup'
 
     Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

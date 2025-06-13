@@ -21,7 +21,7 @@ defaultproperties
     GunnerAttachmentBone="GUN_YAW"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.GRW34_GUN_COLLISION',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.GRW34_GUN_COLLISION',AttachBone="GUN_PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
@@ -62,12 +62,12 @@ defaultproperties
     AddedPitch=0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
-    CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
-    CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_03'
 
     // TODO: figure out what to do with this.
-    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0

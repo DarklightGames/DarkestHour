@@ -15,7 +15,7 @@ defaultproperties
     DriverPositions(2)=(ViewLocation=(X=0,Y=0,Z=0),PositionMesh=Mesh'DH_SU76_anm.SU76_turret_int',DriverTransitionAnim=VSU76_com_open,TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=false,bExposed=true)
     DriverPositions(3)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=12.5,PositionMesh=Mesh'DH_SU76_anm.SU76_turret_int',DriverTransitionAnim=none,ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
 
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
 
     UnbuttonedPositionIndex=0 // let's commander exit at any position
     RaisedPositionIndex=2
@@ -31,13 +31,13 @@ defaultproperties
 
     bHasAltFire=false
 
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
 
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_gun_traverse'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_gun_traverse'
 
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.PG1_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.PG1_sight_background'
     GunsightSize=0.497 // 10°5' degrees visible FOV at 3.7x magnification (PG1 sight)
 
 }

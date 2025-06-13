@@ -12,13 +12,13 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
-    Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_OD'
-    Skins(1)=Texture'DH_Jeep_tex.body.Willys_Wheels_OD'
-    Skins(2)=Texture'DH_Jeep_tex.body.Willys_Gear_OD'
+    Skins(0)=Texture'DH_Jeep_tex.Willys_Body_OD'
+    Skins(1)=Texture'DH_Jeep_tex.Willys_Wheels_OD'
+    Skins(2)=Texture'DH_Jeep_tex.Willys_Gear_OD'
     Skins(3)=Texture'DH_ShermanM4A3E8_tex.hull_stowage_01'
 
     BeginningIdleAnim="driver_hatch_idle_close"
@@ -82,10 +82,10 @@ defaultproperties
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=40.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.Destroyed.jeep_destroyed'
-    DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.body.Willys_Body_OD_Destroyed'
-    DestroyedMeshSkins(1)=Combiner'DH_Jeep_tex.body.Willys_Wheels_OD_Destroyed'
-    DestroyedMeshSkins(2)=Combiner'DH_Jeep_tex.body.Willys_Gear_OD_Destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.jeep_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.Willys_Body_OD_Destroyed'
+    DestroyedMeshSkins(1)=Combiner'DH_Jeep_tex.Willys_Wheels_OD_Destroyed'
+    DestroyedMeshSkins(2)=Combiner'DH_Jeep_tex.Willys_Gear_OD_Destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -103,10 +103,10 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.jeep_engine_loop03'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.jeep_engine_start'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.jeep_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-40.0,Y=50,Z=22.0),ExhaustRotation=(Pitch=-2048,Yaw=24000))
@@ -114,7 +114,7 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_Jeep_tex.HUD.jeep_body1'
+    VehicleHudImage=Texture'DH_Jeep_tex.jeep_body1'
     VehicleHudEngineY=0.28
     VehicleHudOccupantsX(0)=0.42
     VehicleHudOccupantsY(0)=0.57
@@ -124,10 +124,10 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.76
     VehicleHudOccupantsX(3)=0.55
     VehicleHudOccupantsY(3)=0.76
-    SpawnOverlay(0)=Material'DH_Jeep_tex.HUD.profile'
+    SpawnOverlay(0)=Material'DH_Jeep_tex.profile'
 
     // Attachments
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Jeep_stc.Roof.jeep_roof_down',AttachBone="Body")
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Jeep_stc.jeep_roof_down',AttachBone="Body")
 
     // Shadow
     ShadowZOffset=40
@@ -146,7 +146,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         bPoweredWheel=true
@@ -156,7 +156,7 @@ defaultproperties
         SupportBoneName="suspension.R.F"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -167,7 +167,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -177,7 +177,7 @@ defaultproperties
         SupportBoneName="suspension.R.B"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RRWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RRWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -197,6 +197,6 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }
 

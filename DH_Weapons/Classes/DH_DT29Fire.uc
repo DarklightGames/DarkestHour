@@ -24,8 +24,8 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DT29LMG_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.DT29LMG_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.DP28_fire_end'
     FlashEmitterClass=Class'MuzzleFlash1stDP'
     BipodDeployFireAnim="Deploy_shoot_loop"
     BipodDeployFireLoopAnim="Deploy_Shoot_Loop"

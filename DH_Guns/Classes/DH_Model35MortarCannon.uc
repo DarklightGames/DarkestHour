@@ -17,13 +17,13 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext'
-    Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
+    Skins(0)=Texture'DH_Model35Mortar_tex.Model35Mortar_ext'
 
     WeaponFireAttachmentBone="MUZZLE"
     GunnerAttachmentBone="YAW"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.model35mortar_tube_collision',AttachBone="PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
@@ -69,12 +69,12 @@ defaultproperties
     AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
-    CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
-    CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_03'
 
     // TODO: figure out what to do with this.
-    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0

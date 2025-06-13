@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=Class'DH_TT33Pickup'
 
     Mesh=SkeletalMesh'DH_Tt33_1st.TT-33-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.TT33_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.TT33_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

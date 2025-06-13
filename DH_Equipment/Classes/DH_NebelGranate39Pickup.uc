@@ -9,5 +9,5 @@ class DH_NebelGranate39Pickup extends DHOneShotWeaponPickup
 defaultproperties
 {
     InventoryType=Class'DH_NebelGranate39Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade'
+    StaticMesh=StaticMesh'WeaponPickupSM.gersmokenade'
 }

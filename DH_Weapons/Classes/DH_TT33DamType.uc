@@ -9,7 +9,7 @@ class DH_TT33DamType extends DHSmallCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_TT33Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
     KDamageImpulse=750.0
     KDeathVel=100.0
     KDeathUpKick=0.0

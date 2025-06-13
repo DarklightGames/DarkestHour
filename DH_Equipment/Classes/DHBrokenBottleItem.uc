@@ -82,6 +82,6 @@ defaultproperties
     AttachmentClass=Class'DHBrokenBottleAttachment'
     // TODO: These assets got lost in a merge & need to be added back.
     // Mesh=SkeletalMesh'DH_Halloween_anm.BrokenBottle'
-    //Skins(0)=Texture'DH_Halloween_tex.Maces.BrokenBottleTexture'
-    //Skins(1)=Texture'DH_Halloween_tex.Maces.BrokenBottleTexture'
+    //Skins(0)=Texture'DH_Halloween_tex.BrokenBottleTexture'
+    //Skins(1)=Texture'DH_Halloween_tex.BrokenBottleTexture'
 }

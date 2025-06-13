@@ -18,7 +18,7 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
+    Skins(0)=Texture'DH_MAB38_tex.MAB38'
 
     handnum=0
     sleevenum=1

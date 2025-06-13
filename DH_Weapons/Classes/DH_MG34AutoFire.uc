@@ -25,8 +25,8 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=34.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Y=0.0,Z=-10.0)
     ShellRotOffsetIron=(Pitch=3000)

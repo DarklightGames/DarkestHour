@@ -9,5 +9,5 @@ class DH_M34GrenadeDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_M34GrenadeWeapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.rpg43kill'
 }

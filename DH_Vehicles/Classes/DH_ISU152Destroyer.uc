@@ -20,10 +20,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_ext'
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
-    Skins(1)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(2)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(3)=Texture'DH_VehiclesSOV_tex.int_vehicles.isu152_body_int'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.isu152_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.isu152_treads'
+    Skins(2)=Texture'DH_VehiclesSOV_tex.isu152_treads'
+    Skins(3)=Texture'DH_VehiclesSOV_tex.isu152_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ISU152CannonPawn',WeaponBone="Turret_Placement")
@@ -82,7 +82,7 @@ defaultproperties
     DamagedEffectOffset=(X=-210.0,Y=0.0,Z=40.0) // adjusted from original
     FireAttachBone="Body"
     FireEffectOffset=(X=90.0,Y=-28.0,Z=15.0)
-    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ISU152.ISU152_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ISU152_dest'
 
     // Exit positions
     ExitPositions(0)=(X=165.0,Y=-25.0,Z=50.0)  // driver
@@ -93,14 +93,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=100.0
-    IdleSound=Sound'Vehicle_Engines.IS2.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
-    StartUpSound=Sound'Vehicle_Engines.IS2.IS2_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.IS2.IS2_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
+    StartUpSound=Sound'Vehicle_Engines.IS2_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.IS2_engine_stop'
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
 
     // Visual effects
     TreadVelocityScale=125.0
@@ -113,9 +113,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.isu152_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.isu152_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.isu152_turret_look'
     VehicleHudTreadsPosX(0)=0.38 // some positions adjusted from original
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsScale=0.7
@@ -129,7 +129,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.625
     VehicleHudOccupantsX(4)=0.6
     VehicleHudOccupantsY(4)=0.6
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.ISU152'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.ISU152'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -165,7 +165,7 @@ defaultproperties
         WheelRadius=27.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
 
     Begin Object Class=SVehicleWheel Name=RF_Steering
     bPoweredWheel=true
@@ -175,7 +175,7 @@ defaultproperties
         BoneOffset=(X=30.0,Y=10.0)
         WheelRadius=27.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
 
     Begin Object Class=SVehicleWheel Name=LR_Steering
     bPoweredWheel=true
@@ -186,7 +186,7 @@ defaultproperties
         WheelRadius=26.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
 
     Begin Object Class=SVehicleWheel Name=RR_Steering
     bPoweredWheel=true
@@ -196,7 +196,7 @@ defaultproperties
         BoneOffset=(X=-18.0,Y=10.0)
         WheelRadius=26.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
 
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
@@ -206,7 +206,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
 
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
@@ -215,7 +215,7 @@ defaultproperties
         BoneOffset=(Y=10.0)
         WheelRadius=28.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -236,5 +236,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_ISU152Destroyer.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

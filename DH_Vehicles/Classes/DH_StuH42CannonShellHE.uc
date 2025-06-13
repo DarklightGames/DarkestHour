@@ -33,10 +33,10 @@ defaultproperties
     ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
 
     //Sound
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=SoundGroup'Artillery.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explo04'
 
     bDebugInImperial=false
 

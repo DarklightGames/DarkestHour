@@ -8,7 +8,7 @@ class DH_DT29Ammo extends DHAmmunition;
 defaultproperties
 {
     ItemName="DT29 Magazine"
-    IconMaterial=Material'InterfaceArt_tex.HUD.dp27_ammo'
+    IconMaterial=Material'InterfaceArt_tex.dp27_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 
     //PickupClass=Class'DP28AmmoPickup'

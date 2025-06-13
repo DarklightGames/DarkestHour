@@ -18,7 +18,7 @@ defaultproperties
     Damage=100.0
     DamageRadius=120.0
     MyDamageType=Class'DHShellSmokeWPDamageType'
-    ExplosionSound(0)=SoundGroup'DH_WeaponSounds.WPGrenade.WPGrenade_Explosions'
-    ExplosionSound(1)=SoundGroup'DH_WeaponSounds.WPGrenade.WPGrenade_Explosions'
-    ExplosionSound(2)=SoundGroup'DH_WeaponSounds.WPGrenade.WPGrenade_Explosions'
+    ExplosionSound(0)=SoundGroup'DH_WeaponSounds.WPGrenade_Explosions'
+    ExplosionSound(1)=SoundGroup'DH_WeaponSounds.WPGrenade_Explosions'
+    ExplosionSound(2)=SoundGroup'DH_WeaponSounds.WPGrenade_Explosions'
 }

@@ -625,5 +625,5 @@ defaultproperties
     bDrawDriverInTP=false
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 }

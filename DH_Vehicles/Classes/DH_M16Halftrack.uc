@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="M16 Halftrack"
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m16_body'
-    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m16.m16_destro'
+    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m16_destro'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
@@ -24,9 +24,9 @@ defaultproperties
     VehHitpoints(6)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-160.0,Y=-52.0,Z=80.0),DamageMultiplier=1.5,HitPointType=HP_AmmoStore)
 
     // HUD
-    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m16_body'
-    VehicleHudTurret=TexRotator'DH_M3Halftrack_tex.hud.m16_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M3Halftrack_tex.hud.m16_turret_look'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.m16_body'
+    VehicleHudTurret=TexRotator'DH_M3Halftrack_tex.m16_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M3Halftrack_tex.m16_turret_look'
     VehicleHudOccupantsX(1)=0.50 // quadmount gunner
     VehicleHudOccupantsY(1)=0.72
     VehicleHudOccupantsX(2)=0.55 // front passenger
@@ -39,5 +39,5 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.55
     VehicleHudOccupantsX(6)=0.55
     VehicleHudOccupantsY(6)=0.6125
-    SpawnOverlay(0)=Material'DH_M3Halftrack_tex.hud.m16_menu'
+    SpawnOverlay(0)=Material'DH_M3Halftrack_tex.m16_menu'
 }

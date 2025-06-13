@@ -9,11 +9,11 @@ defaultproperties
 {
     GunClass=Class'DH_BM36MortarCannon'
 
-    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.RU_HE_57O832_ICON'
-    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.RU_SMOKE_57D832_ICON'
+    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.RU_HE_57O832_ICON'
+    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.RU_SMOKE_57D832_ICON'
 
-    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.RU_HE_57O832_ICON_RELOAD'
-    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.RU_SMOKE_57D832_ICON_RELOAD'
+    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.RU_HE_57O832_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.RU_SMOKE_57D832_ICON_RELOAD'
 
     PlayerCameraBone="RU_CAMERA_COM"
     CameraBone="RU_GUNSIGHT_CAMERA"

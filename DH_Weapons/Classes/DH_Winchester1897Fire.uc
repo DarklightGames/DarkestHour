@@ -25,7 +25,7 @@ defaultproperties
     MaxVerticalRecoilAngle=900
     MaxHorizontalRecoilAngle=120
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Winchester1897.Winchester1897_fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Winchester1897_fire01'
     ShellEjectClass=Class'DH_1stShellEjectShotgun'
     ShellHipOffset=(X=0,Y=0,Z=0)
     ShellIronSightOffset=(X=0,Y=0,Z=0)

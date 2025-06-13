@@ -12,7 +12,7 @@ defaultproperties
 
     Headgear(0)=Class'DH_LWPHelmet'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
 
     Grenades(0)=(Item=Class'DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"

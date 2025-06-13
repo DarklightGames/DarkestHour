@@ -7,7 +7,7 @@ class DH_M1927GunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.artillery'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.artillery'
     VehicleClasses(0)=(VehicleClass=Class'DH_M1927Gun')
     VehicleClasses(1)=(VehicleClass=Class'DH_M1927Gun_Winter',SeasonFilters=((Seasons=(SEASON_Winter))))
     SupplyCost=1500

@@ -8,5 +8,5 @@ class DH_BritishTommyHelmetSnow extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Brit_Tommy_Helmet'
-    Skins(0)=Texture'DHBritishCharactersTex.Headgear.BritTommyHelmetSnow'
+    Skins(0)=Texture'DHBritishCharactersTex.BritTommyHelmetSnow'
 }

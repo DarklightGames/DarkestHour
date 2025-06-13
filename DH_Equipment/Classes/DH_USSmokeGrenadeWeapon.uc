@@ -22,7 +22,7 @@ defaultproperties
     Priority=2
 
     bHasReleaseLever=true
-    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
     DisplayFOV=80.0

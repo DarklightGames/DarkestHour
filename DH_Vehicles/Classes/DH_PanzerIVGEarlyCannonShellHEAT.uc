@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=700.0
 
     //Effects
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    StaticMesh=StaticMesh'DH_Tracers.German_shell'
     CoronaClass=Class'DHShellTracer_Orange'
 
     //Penetration

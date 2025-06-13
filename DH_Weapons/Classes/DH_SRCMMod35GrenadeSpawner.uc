@@ -8,7 +8,7 @@ class DH_SRCMMod35GrenadeSpawner extends DHInventorySpawner;
 defaultproperties
 {
     Mesh=Mesh'DH_Construction_anm.ITA_grenade_box'
-    Skins(0)=Material'DH_Construction_tex.Ammo.ITA_grenade_box'
+    Skins(0)=Material'DH_Construction_tex.ITA_grenade_box'
     WeaponClass=Class'DH_SRCMMod35GrenadeWeapon'
     PickupBoneNames(0)="grenade.001"
     PickupBoneNames(1)="grenade.002"

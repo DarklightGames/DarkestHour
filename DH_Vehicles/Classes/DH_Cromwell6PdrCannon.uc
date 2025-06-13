@@ -8,7 +8,7 @@ class DH_Cromwell6PdrCannon extends DH_CromwellCannon;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell6pdr_turret_ext'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell6pdr_turret_Coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell6pdr_turret_Coll')
     PrimaryProjectileClass=Class'DH_Cromwell6PdrCannonShell'
     SecondaryProjectileClass=Class'DH_Cromwell6PdrCannonShellHE'
     TertiaryProjectileClass=none
@@ -28,9 +28,9 @@ defaultproperties
     MaxTertiaryAmmo=0
     WeaponFireOffset=-4.4
     AddedPitch=50
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.57mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.57mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.57mm_fire03'
 
     RangeSettings(1)=100
     RangeSettings(2)=200

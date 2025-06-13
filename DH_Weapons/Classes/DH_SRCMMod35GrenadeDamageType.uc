@@ -9,5 +9,5 @@ class DH_SRCMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_SRCMMod35GrenadeWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
+    HUDIcon=Texture'InterfaceArt_tex.rusgrenade'
 }

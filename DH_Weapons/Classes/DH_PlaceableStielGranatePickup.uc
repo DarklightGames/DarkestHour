@@ -9,5 +9,5 @@ defaultproperties
 {
     WeaponType=Class'DH_StielGranateWeapon'
     InventoryType=Class'DH_StielGranateWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
+    StaticMesh=StaticMesh'WeaponPickupSM.Stielhandgranate'
 }

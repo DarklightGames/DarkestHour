@@ -51,8 +51,8 @@ defaultproperties
     PctRestDeployRecoil=0.50
     PctBipodDeployRecoil=0.30
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42_Fire02'
 
     // TODO: this "loop" nonsense is a headache! only fast-fire weapons should have looping fire animations
     FireLoopAnim="shoot"

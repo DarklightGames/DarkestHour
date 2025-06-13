@@ -11,7 +11,7 @@ simulated event DestroyAppearance()
 
     DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
     DestroyedSkin.CombineOperation = CO_Multiply;
     DestroyedMeshSkins[0] = DestroyedSkin;
@@ -24,11 +24,11 @@ defaultproperties
     VehicleNameString="5.0 cm Pak38 AT gun"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
+    Skins(0)=Texture'DH_Artillery_Tex.Pak38'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.pak38_dest'
+    VehicleHudImage=Texture'DH_Artillery_Tex.Pak40_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
@@ -54,5 +54,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak38ATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

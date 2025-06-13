@@ -8,5 +8,5 @@ class DH_PTRDPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_PTRDWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PTRD'
+    StaticMesh=StaticMesh'WeaponPickupSM.PTRD'
 }

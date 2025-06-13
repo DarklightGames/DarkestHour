@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_VSGreatCoatPawnB_Winter',Weight=2.0)
     RolePawns(1)=(PawnClass=Class'DH_VSGreatCoatPawn_Winter',Weight=1.0)
-    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    SleeveTexture=Texture'Weapons1st_tex.GermanCoatSleeves'
     Headgear(0)=Class'DH_HeerHelmetThree'
     Headgear(1)=Class'ROGermanHat'
 
@@ -18,9 +18,9 @@ defaultproperties
     PrimaryWeapons(1)=(Item=Class'DH_MP3008weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
 
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.hands_gergloves'
     
     bCanBeSquadLeader=false
 }

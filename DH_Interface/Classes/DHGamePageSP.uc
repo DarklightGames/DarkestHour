@@ -150,14 +150,14 @@ defaultproperties
         OnActivate=PageTabs.InternalOnActivate
         OnChange=DHGamePageSP.InternalOnChange
     End Object
-    c_Tabs=DHGUITabControl'DH_Interface.DHGamePageSP.PageTabs'
+    c_Tabs=DHGUITabControl'DH_Interface.PageTabs'
 
     Begin Object Class=DHGUIHeader Name=GamePageHeader
         StyleName="DHTopper"
         WinHeight=32.0
         RenderWeight=0.3
     End Object
-    t_Header=DHGUIHeader'DH_Interface.DHGamePageSP.GamePageHeader'
+    t_Header=DHGUIHeader'DH_Interface.GamePageHeader'
 
     Begin Object Class=DHGameFooterSP Name=SPFooter
         PrimaryCaption="Start Practice Game"
@@ -171,10 +171,10 @@ defaultproperties
         TabOrder=8
         OnPreDraw=SPFooter.InternalOnPreDraw
     End Object
-    t_Footer=DHGameFooterSP'DH_Interface.DHGamePageSP.SPFooter'
+    t_Footer=DHGameFooterSP'DH_Interface.SPFooter'
 
     Begin Object Class=GUIImage Name=BkChar
-        Image=Texture'DH_GUI_Tex.Menu.menuBackground'
+        Image=Texture'DH_GUI_Tex.menuBackground'
         ImageStyle=ISTY_Scaled
         X1=0
         Y1=0
@@ -183,7 +183,7 @@ defaultproperties
         WinHeight=1.0
         RenderWeight=0.02
     End Object
-    i_bkChar=GUIImage'DH_Interface.DHGamePageSP.BkChar'
+    i_bkChar=GUIImage'DH_Interface.BkChar'
 
     PanelClass(0)="none"
     PanelClass(1)="DH_Interface.DHTab_MainSP"

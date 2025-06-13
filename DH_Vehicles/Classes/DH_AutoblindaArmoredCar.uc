@@ -111,7 +111,7 @@ defaultproperties
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_dest'   // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234_dest'   // TODO: replace
 
     // Exit
     ExitPositions(0)=(X=-34,Y=-104,Z=57)        // Driver
@@ -122,9 +122,9 @@ defaultproperties
     ExitPositions(5)=(X=-206,Y=0,Z=57)          // Fallback exit (rear)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.85,Y=50.59,Z=33.88),ExhaustRotation=(Roll=0,Pitch=4354,Yaw=23546))
@@ -136,7 +136,7 @@ defaultproperties
     //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Autoblinda_stc.autoblinda_vision_port_collision',AttachBone=VISION_PORT)
 
     // HUD
-    VehicleHudImage=Texture'DH_Autoblinda_tex.interface.ab41_body'
+    VehicleHudImage=Texture'DH_Autoblinda_tex.ab41_body'
     VehicleHudEngineX=0.50
     VehicleHudEngineY=0.75
     VehicleHudOccupantsX(0)=0.5

@@ -307,10 +307,10 @@ defaultproperties
     // This is why Hull fire chance is quite low, as a HEAT shell has to hit components directly in order to damage them even more so than APCR
     // but Engine fire chance is increased, because a concentrated powerful jet of molten metal is more likely to critically damage it even than the APCR
 
-    ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-    ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-    ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-    ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    ExplosionSound(0)=SoundGroup'ProjectileSounds.OUT_HE_explode01'
+    ExplosionSound(1)=SoundGroup'ProjectileSounds.OUT_HE_explode02'
+    ExplosionSound(2)=SoundGroup'ProjectileSounds.OUT_HE_explode03'
+    ExplosionSound(3)=SoundGroup'ProjectileSounds.OUT_HE_explode04'
     WScale=1.0
     EnergyFactor=1000.0
     PeneExploWallOut=75.0
@@ -320,7 +320,7 @@ defaultproperties
     ShakeRotRate=(Z=2500.0)
     BlurTime=6.0
     BlurEffectScalar=2.1
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.HE_deflect'
     ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
     ShellDeflectEffectClass=Class'TankHEHitDeflect'
     DamageRadius=300.0

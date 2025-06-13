@@ -605,7 +605,7 @@ simulated function AttemptFireSmokeLauncher()
         }
         else if (SmokeLauncherReloadState >= RL_ReadyToFire || bSmokeLauncherReloadPaused)
         {
-            PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true); // dry fire click for empty smoke launcher, unless it is reloading
+            PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true); // dry fire click for empty smoke launcher, unless it is reloading
         }
     }
 }
@@ -2185,7 +2185,7 @@ defaultproperties
     AltFireSpread=0.002
     bUsesTracers=true
     bAltFireTracersOnly=true
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.mg42_ammo'
 
     // Weapon fire
     bPrimaryIgnoreFireCountdown=true
@@ -2205,10 +2205,10 @@ defaultproperties
     ReloadStages(2)=(HUDProportion=0.5)
     ReloadStages(3)=(HUDProportion=0.25)
     AltReloadState=RL_ReadyToFire
-    AltReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // MG34 reload sound acts as generic belt-fed coax MG reload
-    AltReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
-    AltReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
-    AltReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
+    AltReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden01',Duration=1.105) // MG34 reload sound acts as generic belt-fed coax MG reload
+    AltReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
+    AltReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
+    AltReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
     SmokeLauncherReloadState=RL_ReadyToFire
 
     // Sounds

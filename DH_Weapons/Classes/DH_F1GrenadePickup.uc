@@ -8,5 +8,5 @@ class DH_F1GrenadePickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_F1GrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    StaticMesh=StaticMesh'WeaponPickupSM.F1Grenade'
 }

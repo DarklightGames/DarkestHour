@@ -8,7 +8,7 @@ class DH_RKKA_TanTelogreikaRadioOperatorEarly_Winter extends DHSOVRadioOperatorR
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietTanTeloStrapsEarlyPawn_Winter',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_tan'
     Headgear(0)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=1.0
     HandType=Hand_Gloved

@@ -9,21 +9,21 @@ defaultproperties
 {
     VehicleNameString="M4A2(76)W"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawnA_76mm')
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_762dest'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman76_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman76_turret_look'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a3_76w'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M4A3_762dest'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Sherman76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Sherman76_turret_look'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sherman_m4a3_76w'
 
-    CannonSkins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext_nosymbols'
+    CannonSkins(0)=Texture'DH_VehiclesUS_tex.Sherman76w_turret_ext_nosymbols'
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'  //different sounds because its a diesel engine
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'Vehicle_Engines.SU76_engine_loop'  //different sounds because its a diesel engine
+    StartUpSound=Sound'Vehicle_Engines.SU76_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.SU76_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="placeholder_int"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     ExhaustEffectClass=Class'ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
@@ -32,7 +32,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext_alt'
-    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A2_soviet'
+    Skins(0)=Texture'DH_VehiclesUS_tex3.ShermanM4A2_soviet'
 
     // Movement
 	//different diesel engine

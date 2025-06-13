@@ -18,7 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
-    Skins(2)=Texture'DH_Sten_tex.Sten.StenMk2_tex'
+    Skins(2)=Texture'DH_Sten_tex.StenMk2_tex'
     HandNum=0
     SleeveNum=1
 

@@ -9,5 +9,5 @@ class DH_StielGranateDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_StielGranateWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=Texture'InterfaceArt_tex.germgrenade'
 }

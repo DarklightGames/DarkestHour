@@ -46,7 +46,7 @@ defaultproperties
     PenetrationMag=110.0
 
     //Sound
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     bDebugInImperial=false
 

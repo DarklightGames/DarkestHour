@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanTankCrewAutumnSSPawn')
     RolePawns(1)=(PawnClass=Class'DH_GermanTankCrewAutumnSSPawnB')
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.Dot44Sleeve'
     Headgear(0)=Class'DH_WSSHatPanzerA'
     Headgear(1)=Class'DH_WSSHatPanzerB'
 

@@ -23,5 +23,5 @@ defaultproperties
     Headgear(0)=Class'DH_BritishTurtleHelmet'
     Headgear(1)=Class'DH_BritishTurtleHelmetNet'
     Headgear(2)=Class'DH_BritishTommyHelmet'
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.brit_sleeves'
 }

@@ -8,7 +8,7 @@ class DH_USSergeant82nd extends DHUSSergeantRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_USAB82ndNCOPawn')
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
+    SleeveTexture=Texture'DHUSCharactersTex.USAB_sleeves'
     Headgear(0)=Class'DH_AmericanHelmet82ndNCOa'
     Headgear(1)=Class'DH_AmericanHelmet82ndNCOb'
 }

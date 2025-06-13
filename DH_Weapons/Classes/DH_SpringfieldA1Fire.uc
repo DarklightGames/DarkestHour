@@ -12,9 +12,9 @@ defaultproperties
     Spread=30.0
     FlashEmitterClass=Class'MuzzleFlash1stNagant'
     ShellEjectClass=Class'ShellEject1st762x54mm'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Springfield_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Springfield_Fire03'
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
 

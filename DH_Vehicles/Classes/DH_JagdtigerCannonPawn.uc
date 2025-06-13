@@ -17,10 +17,10 @@ defaultproperties
     DrivePos=(X=2.0,Y=6.0,Z=-3.0)
     DriveAnim="stand_idlehip_binoc"
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.824 // 7 degrees visible FOV at 10x magnification (WZF2/7 sight) // TODO: for some reason shell tracers aren't visible if FOV < 10.67 (equivalent to approx 8x magnification),
     RangePositionX=0.02                                                             //       so need to either (1) fudge magnification or (2) use tracer static mesh for projectile SM (like German 20mm)
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.JagdTiger_shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.JagdTiger_shell_reload'
     FireImpulse=(X=-110000.0)
 }

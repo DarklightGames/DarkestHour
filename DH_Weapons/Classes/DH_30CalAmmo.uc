@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=201
     InitialAmount=200
-    IconMaterial=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    IconMaterial=Texture'InterfaceArt_tex.mg42_ammo'
 }

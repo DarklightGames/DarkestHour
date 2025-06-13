@@ -15,11 +15,11 @@ defaultproperties
     bManualTraverseOnly=true
     DrivePos=(X=3.0,Y=0.0,Z=-6.0)
     DriveAnim="VKV1_com_idle_close"
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.PZ3_sight_graticule'
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ4_sight_Center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ4_sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Panzer3shell_reload'
 }

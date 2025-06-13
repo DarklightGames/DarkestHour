@@ -9,13 +9,13 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' //hide the turret schurzen
-    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.Panzer4F2_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Alpha' //hide the turret schurzen
+    Skins(2)=Texture'axis_vehicles_tex.Panzer4F2_int'
+    HighDetailOverlay=Material'axis_vehicles_tex.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4_turret_coll')
 
     // Turret armor
     bHasAddedSideArmor=true
@@ -74,15 +74,15 @@ defaultproperties
     AltFireSpawnOffsetX=26.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
     AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

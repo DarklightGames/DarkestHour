@@ -7,7 +7,7 @@ class DH_Flak88GunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.at_large'
     VehicleClasses(0)=(VehicleClass=Class'DH_Flak88Gun')
     VehicleClasses(1)=(VehicleClass=Class'DH_Flak88Gun_Green')
     VehicleClasses(2)=(VehicleClass=Class'DH_Flak88Gun_Tan')

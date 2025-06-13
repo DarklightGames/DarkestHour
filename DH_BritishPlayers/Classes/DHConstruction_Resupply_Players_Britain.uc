@@ -7,5 +7,5 @@ class DHConstruction_Resupply_Players_Britain extends DHConstructionResupplyPlay
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box'
+    StaticMesh=StaticMesh'DH_Construction_stc.DH_Commonwealth_ammo_box'
 }

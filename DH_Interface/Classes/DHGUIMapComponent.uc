@@ -883,7 +883,7 @@ defaultproperties
     OnCapturedMouseMove=InternalOnCapturedMouseMove
     OnHover=InternalOnHover
 
-    SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
+    SpawnPointBlockedOverlay=Texture'DH_GUI_tex.spawn_point_disabled'
 
     OnDraw=InternalOnDraw
 
@@ -902,11 +902,11 @@ defaultproperties
         OnClick=OnClick
         OnDblClick=OnDblClick
         bVisible=false
-        CheckedOverlay(0)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(1)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(2)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(3)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(4)=Material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(0)=Material'DH_GUI_Tex.spawn_point_osc'
+        CheckedOverlay(1)=Material'DH_GUI_Tex.spawn_point_osc'
+        CheckedOverlay(2)=Material'DH_GUI_Tex.spawn_point_osc'
+        CheckedOverlay(3)=Material'DH_GUI_Tex.spawn_point_osc'
+        CheckedOverlay(4)=Material'DH_GUI_Tex.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
         bCanClickUncheck=false
         ContextMenu=SPContextMenu

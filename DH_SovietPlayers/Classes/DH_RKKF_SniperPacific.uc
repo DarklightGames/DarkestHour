@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietMarineBushlatPawn',Weight=1.0)
     Headgear(0)=Class'DH_SovietNavalCap_Pacific'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.NavalSleeves2'
+    SleeveTexture=Texture'DHSovietCharactersTex.NavalSleeves2'
 
 
     PrimaryWeapons(0)=(Item=Class'DH_MN9130ScopedWeapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')

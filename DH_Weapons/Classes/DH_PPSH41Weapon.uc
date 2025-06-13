@@ -53,7 +53,7 @@ defaultproperties
     PickupClass=Class'DH_PPSH41Pickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

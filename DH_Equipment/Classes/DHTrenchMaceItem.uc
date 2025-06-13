@@ -77,8 +77,8 @@ defaultproperties
 
     AttachmentClass=Class'DHTrenchMaceAttachment'
     Mesh=SkeletalMesh'DH_Halloween_anm.trenchmace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture'
-    //HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.US_shovel_s'
+    Skins(2)=Texture'DH_Halloween_tex.TrenchClubTexture'
+    //HighDetailOverlay=Shader'DH_Equipment_tex.US_shovel_s'
     //bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=2
 }

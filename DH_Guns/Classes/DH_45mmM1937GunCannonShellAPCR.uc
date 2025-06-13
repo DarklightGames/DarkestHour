@@ -29,8 +29,8 @@ defaultproperties
     ShellTrailClass=Class'DHShellTrail_Green'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
     ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Penetration

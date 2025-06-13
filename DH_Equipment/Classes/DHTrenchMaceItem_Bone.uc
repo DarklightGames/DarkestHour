@@ -10,5 +10,5 @@ defaultproperties
     ItemName="Bone Club"
     AttachmentClass=Class'DHTrenchMaceAttachment_bone'
     Mesh=SkeletalMesh'DH_Halloween_anm.bonemace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.BoneClubTexture'
+    Skins(2)=Texture'DH_Halloween_tex.BoneClubTexture'
 }

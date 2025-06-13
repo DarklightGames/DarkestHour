@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Texture'InterfaceArt_tex.HUD.panzerfaust_ammo'
+    IconMaterial=Texture'InterfaceArt_tex.panzerfaust_ammo'
 }

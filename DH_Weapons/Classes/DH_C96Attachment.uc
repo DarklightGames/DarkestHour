@@ -8,7 +8,7 @@ class DH_C96Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.C96'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.C96_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     MuzzleBoneName="tip"
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'

@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=Class'DH_RPG43GrenadeAttachment'
     PickupClass=Class'DH_RPG43GrenadePickup'
     Mesh=SkeletalMesh'DH_RPG_1st.RPG43Grenade'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade' // TODO: there's no specular mask for this weapon
+    Skins(2)=Texture'DH_Weapon_tex.RPG43Grenade' // TODO: there's no specular mask for this weapon
 
     GroupOffset=4
     DisplayFOV=80.0

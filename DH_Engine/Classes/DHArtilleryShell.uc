@@ -619,7 +619,7 @@ defaultproperties
     MomentumTransfer=75000.0
 
     DrawType=DT_None // was DT_StaticMesh in RO, but was then set to DT_None in PostBeginPlay - now we simply start with None & switch to SM when we drop the projectile
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell' // was a panzerfaust warhead in RO, although never visible - now a large shell
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_shell' // was a panzerfaust warhead in RO, although never visible - now a large shell
     CullDistance=50000.0
     AmbientGlow=100
 
@@ -628,13 +628,13 @@ defaultproperties
     LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
 
     DistantSound=Sound'Artillery.fire_distant'
-    CloseSound(0)=Sound'Artillery.zoomin.zoom_in01'
-    CloseSound(1)=Sound'Artillery.zoomin.zoom_in02'
-    CloseSound(2)=Sound'Artillery.zoomin.zoom_in03'
-    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
-    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
-    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
-    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
+    CloseSound(0)=Sound'Artillery.zoom_in01'
+    CloseSound(1)=Sound'Artillery.zoom_in02'
+    CloseSound(2)=Sound'Artillery.zoom_in03'
+    ExplosionSound(0)=Sound'Artillery.explo01'
+    ExplosionSound(1)=Sound'Artillery.explo02'
+    ExplosionSound(2)=Sound'Artillery.explo03'
+    ExplosionSound(3)=Sound'Artillery.explo04'
     TransientSoundVolume=1.0
 
     ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'

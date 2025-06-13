@@ -12,9 +12,9 @@ defaultproperties
     DamageRadius=700.0 //Blast radius 12m according to page 60 of `Armi Della Fanteria Italiana Nella Seconda Guerra Mondiale`
     MyDamageType=Class'DH_SRCMMod35GrenadeDamageType'
     StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_frag_projectile'
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.f1_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.f1_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.f1_explode03'
     FuzeType=FT_Impact
     LifeSpan=600.0  // 5 minutes, since they can lay active on the ground if the impact doesn't detonate them.
     bProjTarget=true    // Projectiles can shoot this thing (needed so PLT will work!)

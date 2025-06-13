@@ -7,5 +7,5 @@ class DH_Flak38CannonShellDamageHE extends DHShellHEGunImpactDamageType;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon' // TODO: add one specifically for single barrelled Flak 38
+    HUDIcon=Texture'DH_Artillery_tex.flakv38_deathicon' // TODO: add one specifically for single barrelled Flak 38
 }

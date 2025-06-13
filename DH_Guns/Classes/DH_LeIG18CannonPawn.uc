@@ -35,7 +35,7 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 
-    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
-    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
+    AmmoShellTexture=Texture'DH_LeIG18_tex.leig18_he'
+    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.leig18_he_reload'
     ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_LeIG18'
 }

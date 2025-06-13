@@ -92,7 +92,7 @@ defaultproperties
     bPathColliding=true
     bWorldGeometry=true
 
-    StaticMesh=StaticMesh'DH_Construction_stc.Artillery.GER_Artillery_Radio'
+    StaticMesh=StaticMesh'DH_Construction_stc.GER_Artillery_Radio'
 
     RadioClass=Class'DHRadio'
     RadioOffset=(Y=-10,Z=64)

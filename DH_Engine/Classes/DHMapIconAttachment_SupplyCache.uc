@@ -75,7 +75,7 @@ simulated function Color GetIconColor(DHPlayer PC)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Supply_Cache'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Supply_Cache'
     IconScale=0.03
     bNetNotify=true
 }

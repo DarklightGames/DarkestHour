@@ -8,7 +8,7 @@ class DH_StielGranateSpawner extends DHInventorySpawner;
 defaultproperties
 {
     Mesh=Mesh'DH_Construction_anm.GER_grenade_box'
-    Skins(0)=Material'DH_Construction_tex.Ammo.GER_grenade_box'
+    Skins(0)=Material'DH_Construction_tex.GER_grenade_box'
     WeaponClass=Class'DH_StielGranateWeapon'
     PickupBoneNames(0)="grenade.001"
     PickupBoneNames(1)="grenade.002"

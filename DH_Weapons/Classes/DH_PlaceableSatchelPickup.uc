@@ -9,5 +9,5 @@ defaultproperties
 {
     WeaponType=Class'DH_SatchelCharge10lb10sWeapon'
     InventoryType=Class'DH_SatchelCharge10lb10sWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel'
+    StaticMesh=StaticMesh'WeaponPickupSM.satchel'
 }

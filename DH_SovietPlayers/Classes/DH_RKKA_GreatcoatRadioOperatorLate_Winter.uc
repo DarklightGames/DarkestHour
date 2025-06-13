@@ -14,5 +14,5 @@ defaultproperties
     HeadgearProbabilities(0)=0.75
     HeadgearProbabilities(1)=0.25
     HandType=Hand_Gloved
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_RussianCoatSleeves'
 }

@@ -9,5 +9,5 @@ class DH_EnfieldNo4DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_EnfieldNo4Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

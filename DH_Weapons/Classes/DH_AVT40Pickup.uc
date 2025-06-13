@@ -8,5 +8,5 @@ class DH_AVT40Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_AVT40Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.svt40'
+    StaticMesh=StaticMesh'WeaponPickupSM.svt40'
 }

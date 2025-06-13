@@ -72,7 +72,7 @@ defaultproperties
         WinHeight=0.7
         OnPreDraw=AudioBK1.InternalPreDraw
     End Object
-    i_BG1=DHGUISectionBackground'DH_Interface.DHTab_AudioSettings.AudioBK1'
+    i_BG1=DHGUISectionBackground'DH_Interface.AudioBK1'
 
     Begin Object Class=DHGUISectionBackground Name=AudioBK3
         Caption="Voice Chat"
@@ -82,7 +82,7 @@ defaultproperties
         WinHeight=0.633059
         OnPreDraw=AudioBK3.InternalPreDraw
     End Object
-    i_BG3=DHGUISectionBackground'DH_Interface.DHTab_AudioSettings.AudioBK3'
+    i_BG3=DHGUISectionBackground'DH_Interface.AudioBK3'
 
     Begin Object Class=moSlider Name=AudioMusicVolume
         MaxValue=1.0
@@ -98,7 +98,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    sl_MusicVol=moSlider'DH_Interface.DHTab_AudioSettings.AudioMusicVolume'
+    sl_MusicVol=moSlider'DH_Interface.AudioMusicVolume'
 
     Begin Object Class=moSlider Name=AudioEffectsVolumeSlider
         MaxValue=1.0
@@ -114,7 +114,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    sl_EffectsVol=moSlider'DH_Interface.DHTab_AudioSettings.AudioEffectsVolumeSlider'
+    sl_EffectsVol=moSlider'DH_Interface.AudioEffectsVolumeSlider'
 
     Begin Object Class=moSlider Name=VoiceVolume
         MaxValue=1.0
@@ -131,7 +131,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    sl_VOIP=moSlider'DH_Interface.DHTab_AudioSettings.VoiceVolume'
+    sl_VOIP=moSlider'DH_Interface.VoiceVolume'
 
     Begin Object Class=DHmoComboBox Name=AudioMode
         bReadOnly=true
@@ -146,7 +146,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    co_Mode=DHmoComboBox'DH_Interface.DHTab_AudioSettings.AudioMode'
+    co_Mode=DHmoComboBox'DH_Interface.AudioMode'
 
     Begin Object Class=DHmoComboBox Name=AudioPlayVoices
         bReadOnly=true
@@ -161,7 +161,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    co_Voices=DHmoComboBox'DH_Interface.DHTab_AudioSettings.AudioPlayVoices'
+    co_Voices=DHmoComboBox'DH_Interface.AudioPlayVoices'
 
     Begin Object Class=DHmoCheckBox Name=AudioReverseStereo
         ComponentJustification=TXTA_Left
@@ -177,7 +177,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_ReverseStereo=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AudioReverseStereo'
+    ch_ReverseStereo=DHmoCheckBox'DH_Interface.AudioReverseStereo'
 
     Begin Object Class=DHmoCheckBox Name=AudioMessageBeep
         ComponentJustification=TXTA_Left
@@ -193,7 +193,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_MessageBeep=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AudioMessageBeep'
+    ch_MessageBeep=DHmoCheckBox'DH_Interface.AudioMessageBeep'
 
     Begin Object Class=DHmoCheckBox Name=DisableGameMusic
         ComponentJustification=TXTA_Left
@@ -209,7 +209,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_DisableGameMusic=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.DisableGameMusic'
+    ch_DisableGameMusic=DHmoCheckBox'DH_Interface.DisableGameMusic'
 
     Begin Object Class=DHmoCheckBox Name=AudioLowDetail
         ComponentJustification=TXTA_Left
@@ -225,7 +225,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_LowDetail=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AudioLowDetail'
+    ch_LowDetail=DHmoCheckBox'DH_Interface.AudioLowDetail'
 
     Begin Object Class=DHmoCheckBox Name=AudioDefaultDriver
         ComponentJustification=TXTA_Left
@@ -241,7 +241,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_Default=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AudioDefaultDriver'
+    ch_Default=DHmoCheckBox'DH_Interface.AudioDefaultDriver'
 
     Begin Object Class=DHmoCheckBox Name=EnableVoiceChat
         CaptionWidth=-1.0
@@ -255,7 +255,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_VoiceChat=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.EnableVoiceChat'
+    ch_VoiceChat=DHmoCheckBox'DH_Interface.EnableVoiceChat'
 
     Begin Object Class=DHmoCheckBox Name=AutoJoinPublic
         CaptionWidth=0.94
@@ -269,7 +269,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_AJPublic=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AutoJoinPublic'
+    ch_AJPublic=DHmoCheckBox'DH_Interface.AutoJoinPublic'
 
     Begin Object Class=DHmoCheckBox Name=AutoSpeakCheckbox
         Caption="Auto-select Active Channel"
@@ -285,7 +285,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_AutoSpeak=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.AutoSpeakCheckbox'
+    ch_AutoSpeak=DHmoCheckBox'DH_Interface.AutoSpeakCheckbox'
 
     Begin Object Class=DHmoCheckBox Name=Dampen
         CaptionWidth=0.94
@@ -299,7 +299,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ch_Dampen=DHmoCheckBox'DH_Interface.DHTab_AudioSettings.Dampen'
+    ch_Dampen=DHmoCheckBox'DH_Interface.Dampen'
 
     Begin Object Class=DHmoEditBox Name=DefaultActiveChannelEditBox
         CaptionWidth=0.6
@@ -313,7 +313,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ed_Active=DHmoEditBox'DH_Interface.DHTab_AudioSettings.DefaultActiveChannelEditBox'
+    ed_Active=DHmoEditBox'DH_Interface.DefaultActiveChannelEditBox'
 
     Begin Object Class=DHmoEditBox Name=ChatPasswordEdit
         CaptionWidth=0.6
@@ -327,7 +327,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    ed_ChatPassword=DHmoEditBox'DH_Interface.DHTab_AudioSettings.ChatPasswordEdit'
+    ed_ChatPassword=DHmoEditBox'DH_Interface.ChatPasswordEdit'
 
     Begin Object Class=DHmoComboBox Name=VoiceQuality
         bReadOnly=true
@@ -342,7 +342,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    co_Quality=DHmoComboBox'DH_Interface.DHTab_AudioSettings.VoiceQuality'
+    co_Quality=DHmoComboBox'DH_Interface.VoiceQuality'
 
     Begin Object Class=DHmoComboBox Name=VoiceQualityLAN
         bReadOnly=true
@@ -357,7 +357,7 @@ defaultproperties
         OnChange=DHTab_AudioSettings.InternalOnChange
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
-    co_LANQuality=DHmoComboBox'DH_Interface.DHTab_AudioSettings.VoiceQualityLAN'
+    co_LANQuality=DHmoComboBox'DH_Interface.VoiceQualityLAN'
 
     Begin Object class=DHmoNumericEdit Name=AudioChannelsNum
         WinWidth=0.381250

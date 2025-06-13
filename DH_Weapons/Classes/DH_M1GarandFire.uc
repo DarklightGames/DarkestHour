@@ -109,12 +109,12 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire03'
-    FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
-    FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
-    FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.garand_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.garand_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.garand_fire03'
+    FirePingSounds(0)=SoundGroup'DH_WeaponSounds.garand_firePing01'
+    FirePingSounds(1)=SoundGroup'DH_WeaponSounds.garand_firePing02'
+    FirePingSounds(2)=SoundGroup'DH_WeaponSounds.garand_firePing03'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     ShellHipOffset=(X=0,Y=-3,Z=0)

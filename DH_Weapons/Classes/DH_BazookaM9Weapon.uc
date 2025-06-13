@@ -16,8 +16,8 @@ defaultproperties
 
     bHasScope=true
     bForceModelScope=true
-    ScopeOverlay=Texture'DH_Bazooka_tex.FPP.BazookaScopeOverlay'    // TODO: not used though??
-    ScriptedScopeTexture=Texture'DH_Bazooka_tex.FPP.BazookaScopeOverlay'
+    ScopeOverlay=Texture'DH_Bazooka_tex.BazookaScopeOverlay'    // TODO: not used though??
+    ScriptedScopeTexture=Texture'DH_Bazooka_tex.BazookaScopeOverlay'
     ScopePortalFOV=8.0
     ScopePortalFOVHigh=8.0
     LensMaterialID=4

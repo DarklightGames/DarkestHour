@@ -38,8 +38,8 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
 
     ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M1927'
 }

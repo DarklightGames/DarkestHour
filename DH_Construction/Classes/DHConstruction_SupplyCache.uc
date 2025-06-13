@@ -142,11 +142,11 @@ defaultproperties
     ProgressMax=5
     HealthMax=350
     MenuName="Supply Cache"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.supply_cache'
     MenuDescription="Stores and generates supplies over time."
     SupplyCost=500
     InitialSupplyCount=500
-    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
+    StaticMesh=StaticMesh'DH_Military_stc.cratepile1'
     DrawType=DT_StaticMesh
     DuplicateFriendlyDistanceInMeters=300
     CollisionRadius=100
@@ -163,9 +163,9 @@ defaultproperties
     BrokenEmitterClass=Class'ROSatchelExplosion'
     BrokenSoundRadius=4000.0
     BrokenSoundVolume=5.0
-    BrokenSounds(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
-    BrokenSounds(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
-    BrokenSounds(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
+    BrokenSounds(0)=Sound'Inf_Weapons.satchel_explode01'
+    BrokenSounds(1)=Sound'Inf_Weapons.satchel_explode02'
+    BrokenSounds(2)=Sound'Inf_Weapons.satchel_explode03'
 
     GroupClass=Class'DHConstructionGroup_Logistics'
 }

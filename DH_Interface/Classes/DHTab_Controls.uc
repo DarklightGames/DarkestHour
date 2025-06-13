@@ -336,7 +336,7 @@ defaultproperties
     Captions_Comm(12)="Mute Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
+        HeaderBase=Texture'DH_GUI_Tex.DHDisplay_withcaption'
         Caption="Bindings"
         LeftPadding=0.0
         RightPadding=0.0

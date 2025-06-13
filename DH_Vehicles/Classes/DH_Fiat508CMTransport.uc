@@ -12,13 +12,13 @@ defaultproperties
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body'
-    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_tan'
-    Skins(1)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_tan'
-    Skins(2)=FinalBlend'DH_Fiat508CM_tex.fiat508.fiat508_windows_fb'
+    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508cm_tan'
+    Skins(1)=Texture'DH_Fiat508CM_tex.fiat508cm_gear_tan'
+    Skins(2)=FinalBlend'DH_Fiat508CM_tex.fiat508_windows_fb'
 
     // Passengers
     PassengerPawns(0)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_01")
@@ -95,10 +95,10 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
-    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_loop01'
+    StartUpSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_start'
+    ShutDownSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-106.231,Y=6.64981,Z=16.5879),ExhaustRotation=(Yaw=32768))
@@ -106,7 +106,7 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_Fiat508CM_tex.interface.fiat508cm_icon'
+    VehicleHudImage=Texture'DH_Fiat508CM_tex.fiat508cm_icon'
     VehicleHudEngineY=0.28
     VehicleHudOccupantsX(0)=0.56125
     VehicleHudOccupantsY(0)=0.51250
@@ -119,14 +119,14 @@ defaultproperties
     SpawnOverlay(0)=Texture'DH_Fiat508CM_tex.fiat508cm_menu_icon'
 
     // Attachments
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.attachments.fiat508cm_radio',AttachBone="BODY")
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.fiat508cm_radio',AttachBone="BODY")
 
-    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_searchlight'))))
-    RandomAttachmentGroups(1)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_tools'))))
-    RandomAttachmentGroups(2)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_jerry_can'))))
-    RandomAttachmentGroups(3)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_windows'))))
-    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=3,OptionIndex=-1)),Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_roof'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights_protected'))))
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_searchlight'))))
+    RandomAttachmentGroups(1)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_tools'))))
+    RandomAttachmentGroups(2)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_jerry_can'))))
+    RandomAttachmentGroups(3)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_windows'))))
+    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=3,OptionIndex=-1)),Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_roof'))))
+    RandomAttachmentGroups(5)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_headlights')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_headlights_protected'))))
 
     RadioAttachmentClass=Class'DHRadio'
     RadioAttachmentHeight=16.0

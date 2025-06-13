@@ -16,7 +16,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_BHP_1st.BHP-Mesh'
     bUseHighDetailOverlayIndex=false
 
-    Skins(0)=Texture'DH_BHP_tex.BHP.BHP'
+    Skins(0)=Texture'DH_BHP_tex.BHP'
 
     HandNum=1
     SleeveNum=2

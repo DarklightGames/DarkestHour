@@ -120,7 +120,7 @@ simulated function Material GetIconMaterial(DHPlayer PC)
 defaultproperties
 {
     bTrackMovement=true
-    IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.truck_topdown_rot'
+    IconMaterial=TexRotator'DH_InterfaceArt2_tex.truck_topdown_rot'
     IconScale=0.035
     UnoccupiedColor=(R=192,G=192,B=192,A=255)
 }

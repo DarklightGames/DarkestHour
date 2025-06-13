@@ -24,6 +24,6 @@ defaultproperties
     PrimaryWeapons(1)=(Item=Class'DHTrenchMaceItem_Bone',AssociatedAttachment=none)
     PrimaryWeapons(2)=(Item=Class'DHTrenchMaceItem_Grenade',AssociatedAttachment=none)
 
-    BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
-    SleeveTexture=Texture'DHEventCharactersTex.Arms.german_sleeves_zombie'
+    BareHandTexture=Texture'DHEventCharactersTex.hands_zombie'
+    SleeveTexture=Texture'DHEventCharactersTex.german_sleeves_zombie'
 }

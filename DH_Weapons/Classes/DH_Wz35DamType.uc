@@ -9,7 +9,7 @@ class DH_Wz35DamType extends DHLargeCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_Wz35Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 
     TankDamageModifier=0.2
     APCDamageModifier=0.3

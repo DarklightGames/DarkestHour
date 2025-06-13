@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=Class'DH_SVT40Pickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt40_1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.SVT40_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SVT40_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

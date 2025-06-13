@@ -12,7 +12,7 @@ defaultproperties
     Headgear(1)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaGreenSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaGreenSleeves'
     Grenades(0)=(Item=Class'DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"
 }

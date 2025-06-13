@@ -20,18 +20,18 @@ defaultproperties
     DriveAnim=VPanzer4_com_idle_close
 
     //Gunsight
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.PZ3_sight_graticule'
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ4_sight_Center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ4_sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer4F1shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer4F1shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Panzer4F1shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer4F1shell_reload'
 
     //Turret rotation sounds
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
+    PoweredRotateSound=Sound'Vehicle_Weapons.electric_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.electric_turret_traverse'
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=Class'DH_ColtM1914Bullet'
     AmmoClass=Class'DH_ColtM1911Ammo' //shares with 1911
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Colt45.Colt45_Fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Colt45_Fire01'
 
     Spread=220.0
     MaxVerticalRecoilAngle=600

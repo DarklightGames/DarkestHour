@@ -901,7 +901,7 @@ simulated function Sound GetFireSound()
 simulated function DryFireEffects(optional bool bAltFire)
 {
     ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -17,8 +17,8 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 
-    Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
-    Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
+    Skins(1)=Texture'DH_ViS_tex.ViS_texture'
+    Skins(2)=Texture'Weapons1st_tex.p38'
     sleevenum=3
     handnum=0
 

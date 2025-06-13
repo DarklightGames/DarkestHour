@@ -58,14 +58,14 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true // stops player looking sideways & seeing through the vehicle
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
-    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.isu152_sight_background'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.424 // 18 degrees visible FOV at 2x magnification (ST-10 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.ISU152_shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ISU152_shell_reload'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_gun_traverse'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_gun_traverse'
     FireImpulse=(X=-200000.0)
 }

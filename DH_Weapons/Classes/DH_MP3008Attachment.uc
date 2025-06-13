@@ -8,7 +8,7 @@ class DH_MP3008Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mp3008_3rd'
-    MenuImage=Texture'DH_Sten_tex.interface.mp3008'
+    MenuImage=Texture'DH_Sten_tex.mp3008'
     mMuzFlashClass=Class'MuzzleFlash3rdMP'
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 

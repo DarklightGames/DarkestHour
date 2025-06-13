@@ -41,5 +41,5 @@ defaultproperties
     BashHoldAnim="bash_hold"
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
-    TearDownSound=SoundGroup'DH_WeaponSounds.Shovel.shovel_hit'
+    TearDownSound=SoundGroup'DH_WeaponSounds.shovel_hit'
 }

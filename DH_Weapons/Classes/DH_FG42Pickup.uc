@@ -8,6 +8,6 @@ class DH_FG42Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_FG42Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.FG42'
+    StaticMesh=StaticMesh'DH_WeaponPickups.FG42'
     DrawScale=1.1
 }

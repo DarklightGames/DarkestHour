@@ -15,5 +15,5 @@ defaultproperties
     HeadgearProbabilities(0)=0.3
     HeadgearProbabilities(1)=0.3
     HeadgearProbabilities(2)=0.4
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_RussianCoatSleeves'
 }

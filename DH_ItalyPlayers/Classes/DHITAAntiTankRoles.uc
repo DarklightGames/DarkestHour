@@ -17,9 +17,9 @@ defaultproperties
     Grenades(1)=(Item=Class'DH_SRCMMod35SmokeGrenadeWeapon')
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
-    BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
-    SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace
+    BareHandTexture=Texture'DHItalianCharactersTex.Italian_hands'
+    SleeveTexture=Texture'DHItalianCharactersTex.Livorno_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves' // TODO: replace
 
     Headgear(0)=Class'DH_ItalianHelmet'
     Headgear(1)=Class'DH_ItalianHelmet_Livorno'

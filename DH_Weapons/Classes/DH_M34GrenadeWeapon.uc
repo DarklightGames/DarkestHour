@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=Class'DH_M34GrenadeAttachment'
     PickupClass=Class'DH_M34GrenadePickup'
     Mesh=SkeletalMesh'DH_M34Grenade_1st.M34'
-    Skins(0)=Texture'DH_m34grenade_tex.m34.m34' // TODO: there is no specularity mask for this weapon
+    Skins(0)=Texture'DH_m34grenade_tex.m34' // TODO: there is no specularity mask for this weapon
     handnum=1
     sleevenum=2
     GroupOffset=4

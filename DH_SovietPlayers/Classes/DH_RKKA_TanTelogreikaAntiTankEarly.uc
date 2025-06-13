@@ -12,5 +12,5 @@ defaultproperties
     Headgear(1)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_tan'
 }

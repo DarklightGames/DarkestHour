@@ -8,7 +8,7 @@ class DH_RKKA_AmoebaAutumnSniperLate extends DHSOVSniperRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaAutumnLatePawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaSleeves'
     Headgear(0)=Class'DH_SovietSidecap'
     
     SecondaryWeapons(0)=(Item=Class'DH_TT33Weapon')

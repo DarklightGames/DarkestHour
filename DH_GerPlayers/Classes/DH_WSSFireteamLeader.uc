@@ -10,7 +10,7 @@ defaultproperties
     AltName="Rottenführer"
     RolePawns(0)=(PawnClass=Class'DH_GermanSSPawnC',Weight=1.0)
     RolePawns(1)=(PawnClass=Class'DH_GermanSpringSmockSSPawnC',Weight=2.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.DotGreenSleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.DotGreenSleeve'
     Headgear(0)=Class'DH_SSHelmetOne'
     Headgear(1)=Class'DH_SSHelmetTwo'
 

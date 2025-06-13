@@ -61,7 +61,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
     HandNum=0
     SleeveNum=2
-    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
+    Skins(1)=Texture'DH_Weapon_tex.BAR'
 
     DisplayFOV=86.0
     IronSightDisplayFOV=45.0

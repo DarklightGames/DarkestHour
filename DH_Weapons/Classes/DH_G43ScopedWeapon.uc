@@ -15,13 +15,13 @@ defaultproperties
     PickupClass=Class'DH_G43ScopedPickup'
 
     Mesh=SkeletalMesh'DH_G43_1st.g43_scoped_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.g43_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
 
     DisplayFOV=83.0
     IronSightDisplayFOV=45.5

@@ -10,6 +10,6 @@ defaultproperties
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
     SupplyCost=400
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.grenade'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.grenade'
     SpawnerClass=Class'DH_M1GrenadeSpawner'
 }

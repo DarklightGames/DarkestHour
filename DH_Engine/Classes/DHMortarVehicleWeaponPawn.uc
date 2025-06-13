@@ -1118,7 +1118,7 @@ defaultproperties
     bDrawMeshInFP=false
     CameraBone="Camera"
     HUDOverlayFOV=90.0
-    HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
+    HUDArrowTexture=TexRotator'DH_Mortars_tex.ArrowRotator'
     TPCamDistance=128.0
     TPCamDistRange=(Min=128.0,Max=128.0)
     TPCamLookat=(X=0.0,Y=0.0,Z=16.0)

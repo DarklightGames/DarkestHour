@@ -2555,7 +2555,7 @@ exec function ShowColMesh()
                 VehWep.CollisionMeshActors[i].ToggleVisible();
             }
             // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
-            else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+            else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.Alpha')
             {
                 VehWep.CollisionMeshActors[i].HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
             }

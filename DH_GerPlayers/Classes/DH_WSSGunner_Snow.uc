@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_GermanParkaSnowSSPawnB',Weight=2.0)
     RolePawns(1)=(PawnClass=Class'DH_GermanSmockToqueSSPawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve' //to do
+    SleeveTexture=Texture'DHGermanCharactersTex.Dot44Sleeve' //to do
     Headgear(0)=Class'DH_SSHelmetSnow'
     HeadgearProbabilities(0)=1.0
     

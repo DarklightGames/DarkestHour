@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietGreatcoatBrownSLLatePawn_Winter',Weight=1.0)
     RolePawns(1)=(PawnClass=Class'DH_SovietGreatcoatGreySLLatePawn_Winter',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_RussianCoatSleeves'
     Headgear(0)=Class'DH_SovietFurHat'
     Headgear(1)=Class'DH_SovietFurHatUnfolded'
     Headgear(2)=Class'DH_SovietHelmet'

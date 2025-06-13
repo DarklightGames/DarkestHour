@@ -8,7 +8,7 @@ class DH_STG44Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.stg44'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.stg44'
+    MenuImage=Texture'InterfaceArt_tex.stg44'
     mMuzFlashClass=Class'MuzzleFlash3rdSTG'
     ROShellCaseClass=Class'DH_3rdShellEject556mm'
 

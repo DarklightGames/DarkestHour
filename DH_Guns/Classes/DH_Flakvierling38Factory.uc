@@ -9,6 +9,6 @@ defaultproperties
 {
     VehicleClass=Class'DH_Flakvierling38Gun'
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_base'
-    Skins(0)=Texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    Skins(0)=Texture'DH_Artillery_tex.FlakVeirling38'
     TeamNum=AXIS
 }

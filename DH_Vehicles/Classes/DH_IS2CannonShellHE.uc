@@ -24,7 +24,7 @@ defaultproperties
     //Effects
     CoronaClass=Class'DHShellTracer_GreenLarge'
     ShellTrailClass=Class'DHShellTrail_Green'
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_Shell'
     ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'

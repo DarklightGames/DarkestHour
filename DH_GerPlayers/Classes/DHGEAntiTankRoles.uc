@@ -14,5 +14,5 @@ defaultproperties
     GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
 }

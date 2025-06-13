@@ -45,7 +45,7 @@ defaultproperties
 {
     bIgnoreEsc=true
     bRequire640x480=false
-    OpenSound=Sound'ROMenuSounds.Generic.msfxEdit'
+    OpenSound=Sound'ROMenuSounds.msfxEdit'
 
     Begin Object Class=GUIButton Name=NetStatBackground
         StyleName="SquareBar"
@@ -55,7 +55,7 @@ defaultproperties
         bNeverFocus=true
         OnKeyEvent=NetStatBackground.InternalOnKeyEvent
     End Object
-    Controls(0)=GUIButton'DH_Interface.DHNetworkStatusMessage.NetStatBackground'
+    Controls(0)=GUIButton'DH_Interface.NetStatBackground'
 
     Begin Object Class=GUIButton Name=NetStatOk
         Caption="OK"
@@ -67,7 +67,7 @@ defaultproperties
         OnClick=DHNetworkStatusMessage.InternalOnClick
         OnKeyEvent=NetStatOk.InternalOnKeyEvent
     End Object
-    Controls(1)=GUIButton'DH_Interface.DHNetworkStatusMessage.NetStatOk'
+    Controls(1)=GUIButton'DH_Interface.NetStatOk'
 
     Begin Object Class=GUILabel Name=NetStatLabel
         TextAlign=TXTA_Center
@@ -78,7 +78,7 @@ defaultproperties
         WinHeight=0.5
         bBoundToParent=true
     End Object
-    Controls(2)=GUILabel'DH_Interface.DHNetworkStatusMessage.NetStatLabel'
+    Controls(2)=GUILabel'DH_Interface.NetStatLabel'
 
     WinTop=0.375
     WinHeight=0.25

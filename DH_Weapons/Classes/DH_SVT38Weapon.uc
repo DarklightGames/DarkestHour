@@ -21,10 +21,10 @@ defaultproperties
     PickupClass=Class'DH_SVT38Pickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt38_1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.SVT40_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SVT40_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    Skins(4)=Shader'Weapons1st_tex.Bullets.mn_stripper_s'
+    Skins(4)=Shader'Weapons1st_tex.mn_stripper_s'
 
     IronSightDisplayFOV=48.0
     DisplayFOV=90.0

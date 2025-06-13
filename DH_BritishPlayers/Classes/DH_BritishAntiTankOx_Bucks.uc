@@ -11,7 +11,7 @@ defaultproperties
     Headgear(0)=Class'DH_BritishParaHelmetOne'
     Headgear(1)=Class'DH_BritishParaHelmetTwo'
     Headgear(2)=Class'DH_BritishAirborneBeretOx_Bucks'
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Para_sleeves'
 
     PrimaryWeapons(0)=(Item=Class'DH_StenMkVWeapon')
     PrimaryWeapons(2)=(Item=none)

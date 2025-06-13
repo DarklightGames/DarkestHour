@@ -29,7 +29,7 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageFavorites.InternalOnLoadINI
     End Object
-    sp_Main=DHGUISplitter'DH_Interface.DHBrowser_ServerListPageFavorites.HorzSplitter'
+    sp_Main=DHGUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
@@ -39,7 +39,7 @@ defaultproperties
         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
     End Object
-    ContextMenu=DHGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    ContextMenu=DHGUIContextMenu'DH_Interface.FavoritesContextMenu'
 
     bStandardized=true
     StandardHeight=0.8

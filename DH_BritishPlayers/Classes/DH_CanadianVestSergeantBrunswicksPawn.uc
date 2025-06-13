@@ -8,5 +8,5 @@ class DH_CanadianVestSergeantBrunswicksPawn extends DH_BritishVestPawn;
 defaultproperties
 {
     Species=Class'DH_Canadian'
-    Skins(1)=Texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Sarg_vest'
+    Skins(1)=Texture'DHCanadianCharactersTex.CanadianRoyalNewBrunswicks_Sarg_vest'
 }

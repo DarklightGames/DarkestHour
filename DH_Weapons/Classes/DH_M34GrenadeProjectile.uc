@@ -10,7 +10,7 @@ class DH_M34GrenadeProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m34_throw'
+    StaticMesh=StaticMesh'DH_WeaponPickups.m34_throw'
     Speed=1100.0
     MaxSpeed=2000.0
 
@@ -27,8 +27,8 @@ defaultproperties
     // Sounds
     ExplosionSoundVolume=3.0
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode03'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.stielhandgranate24_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.stielhandgranate24_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.stielhandgranate24_explode03'
 }

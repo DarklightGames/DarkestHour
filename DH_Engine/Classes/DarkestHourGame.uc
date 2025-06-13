@@ -4338,23 +4338,23 @@ static function PrecacheGameTextures(LevelInfo myLevel)
     super.PrecacheGameTextures(myLevel);
 
     // From ROWheeledVehicle:
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.fire_16frame');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.DustCloud');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.Dust_KickUp');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.vehiclesparkhead');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_16frame');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.DustCloud');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Dust_KickUp');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.vehiclesparkhead');
 
     // From ROTreadCraft:
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.aptankmark_dirt');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.aptankmark_snow');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.glowfinal');
 
     // From DHArmoredVehicle:
-    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.Alpha');
 
     // From ROTankCannon:
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_122mm');
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_76mm');
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_85mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_122mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_76mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_85mm');
     myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_quad');
     myLevel.AddPrecacheMaterial(Material'ROEffects.SmokeAlphab_t');
 }

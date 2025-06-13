@@ -367,8 +367,8 @@ defaultproperties
     HeadgearProbabilities(0)=1.0
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.hands'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
     HandType=Hand_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true

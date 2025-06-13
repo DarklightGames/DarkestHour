@@ -8,6 +8,6 @@ class DH_PIATDamType extends DHAntiTankProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.piatkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.piatkill'
     WeaponClass=Class'DH_PIATWeapon'
 }

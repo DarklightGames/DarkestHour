@@ -8,11 +8,11 @@ class DH_GLProjectile extends DH_SatchelCharge10lb10sProjectile;
 defaultproperties
 {
     MyDamageType=Class'DH_GLDamType'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GL_pickup'
+    StaticMesh=StaticMesh'DH_WeaponPickups.GL_pickup'
 
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.GeballteLadungExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.GeballteLadungExp01'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.GeballteLadungExp01'
 
     Damage=760.0 // 1260 gramms TNT
     DamageRadius=1100 // about 18 meters

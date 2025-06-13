@@ -183,7 +183,7 @@ simulated function HideOwner(bool bHide)
     {
         if (bHide)
         {
-            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.Alpha';
         }
         else if (bUseCannonSkinsArray && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
         {

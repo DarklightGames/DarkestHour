@@ -20,6 +20,6 @@ defaultproperties
     UndeployingDuration=1.4
     HUDHighExplosiveTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
     HUDSmokeTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
-    HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcG'
+    HUDArcTexture=Texture'DH_Mortars_tex.ArcG'
     ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_AxisMortar'
 }

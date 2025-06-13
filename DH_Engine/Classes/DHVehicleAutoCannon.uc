@@ -236,13 +236,13 @@ defaultproperties
     AIInfo(0)=(RefireRate=0.99)
 
     // Sounds (HUDProportion overrides to better suit magazine reload)
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_01')
-    ReloadStages(1)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
-    ReloadStages(2)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.DH20mmFire01G'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.DH20mmFire02G'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.DH20mmFire03G'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.T60_reload_01')
+    ReloadStages(1)=(Sound=Sound'DH_GerVehicleSounds2.234_reload_02',HUDProportion=0.6)
+    ReloadStages(2)=(Sound=Sound'DH_GerVehicleSounds2.234_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.T60_reload_04',HUDProportion=0.4)
 
     // Screen shake
     ShakeRotMag=(Z=5.0)

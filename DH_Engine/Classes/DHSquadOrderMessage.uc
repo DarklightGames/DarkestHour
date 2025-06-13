@@ -47,5 +47,5 @@ defaultproperties
     DefendText="Squad leader has issued a new Defend order"
     MoveText="Squad leader has issued a new Move order"
     AttentionText="Squad leader has issued a new Attention order"
-    OrderSound=Sound'DH_SundrySounds.Squad.squad_order'
+    OrderSound=Sound'DH_SundrySounds.squad_order'
 }

@@ -9,6 +9,6 @@ defaultproperties
 {
     VehicleClass=Class'DH_Pak38ATGun'
     Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
+    Skins(0)=Texture'DH_Artillery_Tex.Pak38'
     TeamNum=AXIS
 }

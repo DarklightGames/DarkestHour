@@ -8,5 +8,5 @@ class DH_MN9130ScopedPEPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_MN9130ScopedPEWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.MosinScopedPE' //CHANGE
+    StaticMesh=StaticMesh'DH_WeaponPickups.MosinScopedPE' //CHANGE
 }

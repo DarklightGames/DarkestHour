@@ -9,7 +9,7 @@ class DH_STG44ScopedDamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_STG44ScopedWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=1500.0
     KDeathVel=110.0
     KDeathUpKick=2.0

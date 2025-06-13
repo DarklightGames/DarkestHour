@@ -42,7 +42,7 @@ defaultproperties
     MyDamageType=Class'DH_RPG43GrenadeDamType'
 
     // Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'
+    StaticMesh=StaticMesh'DH_WeaponPickups.RPG43Grenade_throw'
     ShellHitDirtEffectClass=Class'GrenadeExplosion'
     ShellHitWoodEffectClass=Class'GrenadeExplosion'
     ShellHitRockEffectClass=Class'GrenadeExplosion'
@@ -56,14 +56,14 @@ defaultproperties
 
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
     VehicleDeflectSound=Sound'Inf_Weapons_Foley.grenadeland'
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     DirtHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     RockHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WoodHitSound=Sound'Inf_Weapons_Foley.grenadeland'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp02'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp03'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
 }

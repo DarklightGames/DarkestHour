@@ -13,8 +13,8 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Pak43_anm.pak43_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DrivePos=(X=-33.0,Y=2.0,Z=-87.0)
     DriveAnim="crouch_idlehold_bayo"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.KingTigerShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.KingTigerShell_reload'
 }

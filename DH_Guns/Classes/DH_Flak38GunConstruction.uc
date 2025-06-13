@@ -7,7 +7,7 @@ class DH_Flak38GunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.at_small'
     VehicleClasses(0)=(VariantIndex=0,VehicleClass=Class'DH_Flak38Gun')
     VehicleClasses(1)=(VariantIndex=0,VehicleClass=Class'DH_Flak38Gun_Camo')
     VehicleClasses(2)=(VariantIndex=0,VehicleClass=Class'DH_Flak38Gun_Snow',SeasonFilters=((Seasons=(SEASON_Winter))))

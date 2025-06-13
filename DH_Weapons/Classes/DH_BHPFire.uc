@@ -14,8 +14,8 @@ defaultproperties
     MaxVerticalRecoilAngle=380
     MaxHorizontalRecoilAngle=235
 
-    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire01'
-    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire02'
-    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire03'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghpfire01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghpfire02'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghpfire03'
     ShellEjectClass=Class'ShellEject1st9x19mm'
 }

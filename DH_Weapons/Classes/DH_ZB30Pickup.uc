@@ -8,6 +8,6 @@ class DH_ZB30Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_ZB30Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.ZB30'
+    StaticMesh=StaticMesh'DH_WeaponPickups.ZB30'
 }
 

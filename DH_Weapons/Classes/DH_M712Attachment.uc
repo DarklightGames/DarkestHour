@@ -8,7 +8,7 @@ class DH_M712Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.M712_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.C96_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
     ROShellCaseClass=Class'RO3rdShellEject9x19mm'

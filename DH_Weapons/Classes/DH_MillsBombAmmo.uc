@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=3
     InitialAmount=2
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.MillsBomb_icon'   // TODO: REPLACE
+    IconMaterial=Texture'DH_InterfaceArt_tex.MillsBomb_icon'   // TODO: REPLACE
 }

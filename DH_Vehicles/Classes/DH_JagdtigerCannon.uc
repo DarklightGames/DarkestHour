@@ -9,7 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.JagdTiger_body_ext'
 
     // Cannon armour (mantlet)
     GunMantletArmorFactor=20.0
@@ -53,13 +53,13 @@ defaultproperties
     WeaponFireOffset=10.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_04')
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.DH88mm_03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Tiger_reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Tiger_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Tiger_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Tiger_reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

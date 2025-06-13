@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietSnowLatePawn',Weight=1.0)
     Headgear(0)=Class'DH_CSAZFurHatUnfolded'
-    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.RussianSnow_Sleeves'
     HandType=Hand_Gloved
 
     PrimaryWeapons(0)=(Item=Class'DH_PPSH41_stickWeapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')

@@ -17,5 +17,5 @@ defaultproperties
     SecondaryWeapons(0)=(Item=Class'DH_Nagant1895Weapon')
     SecondaryWeapons(1)=(Item=Class'DH_TT33Weapon')
     Grenades(0)=(Item=Class'DH_F1GrenadeWeapon')
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
 }

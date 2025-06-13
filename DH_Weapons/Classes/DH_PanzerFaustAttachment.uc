@@ -9,9 +9,9 @@ defaultproperties
 {
     bPanzerfaustAttachment=true
     Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
-    Skins(0)=Texture'Weapons3rd_tex.German.Panzerfaust_world'
+    Skins(0)=Texture'Weapons3rd_tex.Panzerfaust_world'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
+    MenuImage=Texture'InterfaceArt_tex.PanzerFaust'
     mMuzFlashClass=Class'DHMuzzleFlash3rdPanzerfaust'
     mExhFlashClass=Class'DH3rdPersonPFaustExhaustFX'
     MuzzleBoneName="tip"

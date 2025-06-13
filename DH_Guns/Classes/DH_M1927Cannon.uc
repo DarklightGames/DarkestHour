@@ -9,7 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M1927_anm.m1927_turret'
-    Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
+    Skins(0)=Texture'DH_M1927_tex.m1927_body'
     GunnerAttachmentBone="com_player"
 
     WeaponFireAttachmentBone="Muzzle"
@@ -18,8 +18,8 @@ defaultproperties
     ShootIntermediateAnim="shoot_close"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.Collision.m1927_gun_collision',AttachBone="Gun")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.Collision.m1927_turret_collision',AttachBone="Turret")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.m1927_gun_collision',AttachBone="Gun")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.m1927_turret_collision',AttachBone="Turret")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-256.0,RotationAxis=AXIS_Y)
@@ -58,13 +58,13 @@ defaultproperties
     AddedPitch=0
 
     // Sounds
-    CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
-    CannonFireSound(1)=Sound'Vehicle_Weapons.T34_76.76mm_fire02'
-    CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=2)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=2)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1)
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1)
+    CannonFireSound(0)=Sound'Vehicle_Weapons.76mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.76mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.76mm_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01',Duration=2)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02',Duration=2)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1)
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04',Duration=1)
 
     bIsArtillery=true
     ResupplyInterval=12.0

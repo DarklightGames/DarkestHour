@@ -7,7 +7,7 @@ class DH_HetzerMountedMG extends DH_StuH42MountedMG;
 
 defaultproperties
 {
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_MG_collision')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Hetzer_MG_collision')
     FireAttachBone="Gun_placement"
     FireEffectOffset=(X=-30.000000,Y=5.000000,Z=0.000000)
     AmbientEffectEmitterClass=Class'DH_HetzerVehicleMGEmitter'

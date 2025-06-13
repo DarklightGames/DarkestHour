@@ -14,7 +14,7 @@ defaultproperties
     Headgear(0)=Class'DH_AmericanHelmet'
     Headgear(1)=Class'DH_AmericanHelmetWinter'
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
-    BareHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
-    CustomHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    GlovedHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
+    BareHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
+    CustomHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
 }

@@ -7,8 +7,8 @@ class DH_USVest3rdPawnNCO extends DH_USVestPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHUSCharactersTex.3rdID.US_3rdID_SargAssaultVest'
+    Skins(1)=Texture'DHUSCharactersTex.US_3rdID_SargAssaultVest'
 
-    BodySkins(0)=Texture'DHUSCharactersTex.3rdID.US_3rdID_SargAssaultVest'
-    BodySkins(1)=Texture'DHUSCharactersTex.3rdID.US_3rdID_SargAssaultVest'
+    BodySkins(0)=Texture'DHUSCharactersTex.US_3rdID_SargAssaultVest'
+    BodySkins(1)=Texture'DHUSCharactersTex.US_3rdID_SargAssaultVest'
 }

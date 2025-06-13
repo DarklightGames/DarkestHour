@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_US1stIDSicilyBeachPawn')
     
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
+    SleeveTexture=Texture'DHUSCharactersTex.US_HBT_Light_sleeves'
 
     Headgear(0)=Class'DH_AmericanHelmet'
     Headgear(1)=Class'DH_AmericanHelmet1stEMa'

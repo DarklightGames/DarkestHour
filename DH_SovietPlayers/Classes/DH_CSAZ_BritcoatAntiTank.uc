@@ -15,7 +15,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.8
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.1
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Coat_Sleeves'
     Grenades(0)=(Item=Class'DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"
 }

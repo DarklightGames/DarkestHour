@@ -11,11 +11,11 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
-    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17pounder.17Pounder_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    Skins(0)=Texture'DH_Artillery_Tex.17Pounder'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17Pounder_dest'
+    VehicleHudImage=Texture'DH_Artillery_Tex.pak43_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak43_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak43_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
@@ -42,5 +42,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_17PounderGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

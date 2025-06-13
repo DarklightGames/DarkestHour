@@ -14,5 +14,5 @@ defaultproperties
     Headgear(0)=Class'DH_USTankerHat'
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
+    SleeveTexture=Texture'DHUSCharactersTex.US_sleeves'
 }

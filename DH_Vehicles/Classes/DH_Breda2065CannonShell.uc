@@ -46,12 +46,12 @@ defaultproperties
     ExplosionDecalSnow=Class'BulletHoleSnow'
 
     // Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Impact_Wood'
 
     // Penetration
     // Pen table just scaled by 1.35x from the Flak 38 20mm AP since the 500m penetration is 27mm vs 20mm for the Flak 38.

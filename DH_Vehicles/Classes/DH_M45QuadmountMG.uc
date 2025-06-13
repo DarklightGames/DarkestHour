@@ -69,9 +69,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_M45_anm.m45_turret'
-    Skins(0)=Texture'DH_Artillery_tex.m45.m45_gun'
-    Skins(1)=Material'DH_Artillery_tex.m45.m45_sight_s'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.m45.m45_turret_coll')
+    Skins(0)=Texture'DH_Artillery_tex.m45_gun'
+    Skins(1)=Material'DH_Artillery_tex.m45_sight_s'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.m45_turret_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="idle_sights_in"
     GunnerAttachmentBone="Gun"
@@ -104,7 +104,7 @@ defaultproperties
     FireInterval=0.133333 // 450 RPM
     TracerFrequency=5
     TracerProjectileClass=Class'DH_50CalVehicleTracerBullet'
-    HudAltAmmoIcon=Texture'DH_Artillery_tex.ATGun_Hud.m45_ammo'
+    HudAltAmmoIcon=Texture'DH_Artillery_tex.m45_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel_TL" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
@@ -120,8 +120,8 @@ defaultproperties
 
     // Firing effects
     AmbientEffectEmitterClass=Class'DH_VehicleMGMultiBarrelEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
-    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Quad50Cal_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.50Cal_fire_end'
     AmbientSoundScaling=5.0
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
@@ -129,8 +129,8 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
 
     // Reload
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.M45_reload',Duration=14)
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.M45_reload',Duration=14)
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.M45_reload',Duration=14)
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.M45_reload',Duration=14)
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.M45_reload',Duration=14)
 }

@@ -8,5 +8,5 @@ class DH_Kar98ScopedPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=Class'DH_Kar98ScopedWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98scoped'
+    StaticMesh=StaticMesh'WeaponPickupSM.k98scoped'
 }

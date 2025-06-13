@@ -9,5 +9,5 @@ class DH_LTypeGrenadeImpactDamType extends DHRocketImpactDamage
 defaultproperties
 {
     WeaponClass=Class'DH_LTypeGrenadeWeapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.rpg43kill'
 }

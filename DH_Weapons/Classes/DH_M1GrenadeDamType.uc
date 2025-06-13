@@ -9,5 +9,5 @@ class DH_M1GrenadeDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_M1GrenadeWeapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
+    HUDIcon=Texture'DH_InterfaceArt_tex.usgrenade'
 }

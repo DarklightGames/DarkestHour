@@ -12,9 +12,9 @@ defaultproperties
     FireRate=2.6
     Spread=30.0
     FAProjSpawnOffset=(X=-30.0)
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldRifle_Fire03'
     FlashEmitterClass=Class'MuzzleFlash1stKar'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=12.0,Y=2.0,Z=-3.0)

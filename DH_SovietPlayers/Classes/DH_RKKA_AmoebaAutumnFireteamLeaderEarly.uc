@@ -9,5 +9,5 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaAutumnSLPawn',Weight=1.0)
     Headgear(0)=Class'DH_SovietSidecap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.AmoebaSleeves'
 }

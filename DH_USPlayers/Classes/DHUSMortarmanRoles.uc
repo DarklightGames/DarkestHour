@@ -13,8 +13,8 @@ defaultproperties
     GivenItems(1)="DH_Equipment.DHBinocularsItemAllied"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    SleeveTexture=Texture'DHUSCharactersTex.US_sleeves'
+    GlovedHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
 }

@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_turret'
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
-    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak88.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
+    Skins(0)=Texture'MilitaryAxisSMT.flak_88'
+    Skins(1)=Texture'Weapons1st_tex.Bullet_Shell_Rifle'
+//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
 
     // Turret movement
     bHasTurret=true // not really a turret, but this is an easy way of making the player's view turn with the rotating gun
@@ -37,13 +37,13 @@ defaultproperties
     ShootLoweredAnim="shoot_open" // as this model doesn't have the usual 'shoot_close' animation, but using 'shoot_close' has the same effect
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.88mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.88mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.88mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

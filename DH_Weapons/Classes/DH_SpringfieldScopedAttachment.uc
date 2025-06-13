@@ -22,7 +22,7 @@ simulated function AnimEnd(int Channel)
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldScoped_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.SpringfieldScoped_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdNagant'
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

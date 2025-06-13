@@ -15,5 +15,5 @@ defaultproperties
     HeadgearProbabilities(1)=0.5
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
+    SleeveTexture=Texture'DHCanadianCharactersTex.CanadianSleeves'
 }

@@ -90,14 +90,14 @@ defaultproperties
         OnActivate=PageTabs.InternalOnActivate
         OnChange=DHGamePageMP.InternalOnChange
     End Object
-    c_Tabs=DHGUITabControl'DH_Interface.DHGamePageMP.PageTabs'
+    c_Tabs=DHGUITabControl'DH_Interface.PageTabs'
 
     Begin Object Class=DHGUIHeader Name=GamePageHeader
         StyleName="DHTopper"
         WinHeight=32.0
         RenderWeight=0.3
     End Object
-    t_Header=DHGUIHeader'DH_Interface.DHGamePageMP.GamePageHeader'
+    t_Header=DHGUIHeader'DH_Interface.GamePageHeader'
 
     Begin Object Class=DHGameFooterMP Name=MPFooter
         PrimaryCaption="Listen"
@@ -112,10 +112,10 @@ defaultproperties
         TabOrder=8
         OnPreDraw=MPFooter.InternalOnPreDraw
     End Object
-    t_Footer=DHGameFooterMP'DH_Interface.DHGamePageMP.MPFooter'
+    t_Footer=DHGameFooterMP'DH_Interface.MPFooter'
 
     Begin Object Class=GUIImage Name=BkChar
-        Image=Texture'DH_GUI_Tex.Menu.menuBackground'
+        Image=Texture'DH_GUI_Tex.menuBackground'
         ImageStyle=ISTY_Scaled
         X1=0
         Y1=0
@@ -124,7 +124,7 @@ defaultproperties
         WinHeight=1.0
         RenderWeight=0.02
     End Object
-    i_bkChar=GUIImage'DH_Interface.DHGamePageMP.BkChar'
+    i_bkChar=GUIImage'DH_Interface.BkChar'
 
     PanelClass(1)="DH_Interface.DHTab_MainMP"
     PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"

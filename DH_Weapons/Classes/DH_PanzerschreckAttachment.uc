@@ -8,7 +8,7 @@ class DH_PanzerschreckAttachment extends DHRocketWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Panzerschreck_3rd.Panzerschreck_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.Panzerschreck_icon'
     mExhFlashClass=Class'DH3rdPersonPSchreckExhaustFX'
     mMuzFlashClass=Class'DHMuzzleFlash3rdBazooka'
     ExhaustBoneName="exhaust"

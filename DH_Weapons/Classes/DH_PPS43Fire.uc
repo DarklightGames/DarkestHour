@@ -19,9 +19,9 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=6.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=13.0
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single1'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single2'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single3'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.PPS43_Single1'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.PPS43_Single2'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.PPS43_Single3'
     FlashEmitterClass=Class'MuzzleFlash1stPPSH'
     ShellEjectClass=Class'ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)

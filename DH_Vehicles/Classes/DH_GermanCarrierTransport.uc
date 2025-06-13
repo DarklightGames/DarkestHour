@@ -11,7 +11,7 @@ simulated event DestroyAppearance()
 
     DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
     DestroyedSkin.CombineOperation = CO_Multiply;
     DestroyedMeshSkins[0] = DestroyedSkin;
@@ -35,11 +35,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.german_carrier'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
-    HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    Skins(0)=Texture'DH_VehiclesGE_tex.german_carrier'
+    Skins(1)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(2)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(3)=Texture'allies_vehicles_tex2.Universal_Carrier_Int'
+    HighDetailOverlay=Shader'allies_vehicles_tex2.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="driver_hatch_idle_close"
@@ -90,7 +90,7 @@ defaultproperties
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier_destroyed'
     DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
 
@@ -116,14 +116,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=125.0
-    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC_engine_loop'
+    StartUpSound=Sound'Vehicle_EnginesTwo.UC_engine_start'
+    ShutDownSound=Sound'Vehicle_EnginesTwo.UC_engine_stop'
     LeftTrackSoundBone="Wheel_T_L_3"
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
     RightTrackSoundBone="Wheel_T_R_3"
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -137,7 +137,7 @@ defaultproperties
     SteerBoneName="Steering"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.unicarrier_body'
     VehicleHudEngineY=0.75
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.66
@@ -155,7 +155,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsY(4)=0.5
     VehicleHudOccupantsY(5)=0.65
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.BrenCarrier'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"
@@ -179,7 +179,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
 
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
@@ -189,7 +189,7 @@ defaultproperties
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
 
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
@@ -200,7 +200,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
 
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
@@ -210,7 +210,7 @@ defaultproperties
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -231,5 +231,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_GermanCarrierTransport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

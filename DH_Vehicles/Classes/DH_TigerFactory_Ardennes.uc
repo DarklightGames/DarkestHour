@@ -8,5 +8,5 @@ class DH_TigerFactory_Ardennes extends DH_TigerFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_TigerTank_Ardennes'
-    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.tiger_body_ardennes'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.tiger_body_ardennes'
 }

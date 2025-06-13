@@ -15,7 +15,7 @@ defaultproperties
     AttachmentClass=Class'DH_MP41Attachment'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp41_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MP41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -33,7 +33,7 @@ defaultproperties
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
 
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44_firemodeswitch01'
 
     bPlusOneLoading=false
 
