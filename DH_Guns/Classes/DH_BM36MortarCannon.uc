@@ -18,8 +18,8 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
 
-    nProjectileDescriptions(0)="57O832 HE"
-    nProjectileDescriptions(1)="57D832 Smoke"
+    nProjectileDescriptions(0)="O832 HE"
+    nProjectileDescriptions(1)="D832 Smoke"
 
     PrimaryProjectileClass=Class'DH_BM36MortarProjectileHE'
     SecondaryProjectileClass=Class'DH_BM36MortarProjectileSmoke'
