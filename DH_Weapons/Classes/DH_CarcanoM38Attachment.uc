@@ -8,7 +8,7 @@ class DH_CarcanoM38Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
-    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
+    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m38_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
