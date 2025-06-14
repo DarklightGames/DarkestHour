@@ -9,8 +9,8 @@ defaultproperties
 {
     BayonetTraceRange=153.0   // +13 (~1600mm total length)
     FireRate=0.29 // +0.04
-    DamageType=class'DH_Weapons.DH_CarcanoM38CavalryBashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_CarcanoM38CavalryBayonetDamType'
+    DamageType=Class'DH_Weapons.DH_CarcanoM38CavalryBashDamType'
+    BayonetDamageType=Class'DH_Weapons.DH_CarcanoM38CavalryBayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

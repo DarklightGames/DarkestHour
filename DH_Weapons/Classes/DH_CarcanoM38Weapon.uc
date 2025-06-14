@@ -10,10 +10,10 @@ defaultproperties
     ItemName="Carcano mod. 38 Short Rifle"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=class'DH_Weapons.DH_CarcanoM38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_CarcanoM38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_CarcanoM38Attachment'
-    PickupClass=class'DH_Weapons.DH_CarcanoM38Pickup'
+    FireModeClass(0)=Class'DH_Weapons.DH_CarcanoM38Fire'
+    FireModeClass(1)=Class'DH_Weapons.DH_CarcanoM38MeleeFire'
+    AttachmentClass=Class'DH_Weapons.DH_CarcanoM38Attachment'
+    PickupClass=Class'DH_Weapons.DH_CarcanoM38Pickup'
 
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 

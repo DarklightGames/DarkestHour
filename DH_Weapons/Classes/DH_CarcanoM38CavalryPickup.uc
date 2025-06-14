@@ -7,6 +7,6 @@ class DH_CarcanoM38CavalryPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
+    InventoryType=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
     StaticMesh=StaticMesh'DH_Carcano_stc.carcano_m91_pickup'
 }

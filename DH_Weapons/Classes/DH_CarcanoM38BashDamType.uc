@@ -8,6 +8,6 @@ class DH_CarcanoM38BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_CarcanoM38Weapon'
+    WeaponClass=Class'DH_Weapons.DH_CarcanoM38Weapon'
 }
 

@@ -8,6 +8,6 @@ class DH_CarcanoM38CavalryDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

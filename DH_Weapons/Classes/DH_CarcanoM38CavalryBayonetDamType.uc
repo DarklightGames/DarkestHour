@@ -8,8 +8,8 @@ class DH_CarcanoM38CavalryBayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
+    WeaponClass=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
     GibModifier=0.0
     KDamageImpulse=400
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROEffects.ROBloodPuff'
 }
