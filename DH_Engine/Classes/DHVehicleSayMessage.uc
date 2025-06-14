@@ -13,7 +13,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) $ MessageString;
+    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White) $ MessageString;
 }
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)

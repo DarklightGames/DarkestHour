@@ -8,7 +8,7 @@ class DHSmallFont extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    return class'DHFonts'.static.GetDHSmallFontByResolution(Controller.ResX, Controller.ResY);
+    return Class'DHFonts'.static.GetDHSmallFontByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

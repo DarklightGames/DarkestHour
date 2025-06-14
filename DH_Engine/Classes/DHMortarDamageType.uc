@@ -9,7 +9,7 @@ class DHMortarDamageType extends DHShellImpactDamageType
 defaultproperties
 {
     bIsArtilleryImpact=true
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=Texture'InterfaceArt_tex.artkill'
     TankDamageModifier=0.125
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
@@ -21,7 +21,7 @@ defaultproperties
     bExtraMomentumZ=true
     bFlaming=true
     GibModifier=4.0
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
+    DeathOverlayMaterial=Combiner'Effects_Tex.PlayerDeathOverlay'
     DeathOverlayTime=999.0
     GibPerterbation=0.15
     KDamageImpulse=4000.000000

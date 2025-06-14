@@ -7,5 +7,5 @@ class DH_JagdpantherMountedMGPawn extends DH_PantherMountedMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_JagdpantherMountedMG'
+    GunClass=Class'DH_JagdpantherMountedMG'
 }

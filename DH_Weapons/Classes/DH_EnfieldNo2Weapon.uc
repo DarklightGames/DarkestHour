@@ -8,13 +8,13 @@ class DH_EnfieldNo2Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Enfield No.2"
-    FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo2Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo2MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_EnfieldNo2Attachment'
-    PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
+    FireModeClass(0)=Class'DH_EnfieldNo2Fire'
+    FireModeClass(1)=Class'DH_EnfieldNo2MeleeFire'
+    AttachmentClass=Class'DH_EnfieldNo2Attachment'
+    PickupClass=Class'DH_EnfieldNo2Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
-    HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
+    HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

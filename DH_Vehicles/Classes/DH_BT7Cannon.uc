@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=Mesh'DH_BT7_anm.BT7_turret_ext'
-    skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
-    skins(3)=Texture'DH_VehiclesSOV_tex.int_vehicles.T26_turret'
-    skins(4)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
+    skins(0)=Texture'allies_ahz_vehicles_tex.BT7_ext'
+    skins(3)=Texture'DH_VehiclesSOV_tex.T26_turret'
+    skins(4)=Texture'allies_vehicles_tex.T60_int'
     bUseHighDetailOverlayIndex=false
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.BT7.BT7_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.BT7_turret_coll')
 
     // Turret armor
     FrontArmorFactor=1.5
@@ -36,8 +36,8 @@ defaultproperties
     CustomPitchDownLimit=64079
 
     // Cannon ammo=
-    PrimaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShellHE'
+    PrimaryProjectileClass=Class'DH_BT7CannonShell'
+    SecondaryProjectileClass=Class'DH_BT7CannonShellHE'
 
     ProjectileDescriptions(0)="APHE-T"
     ProjectileDescriptions(1)="HE"
@@ -55,7 +55,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=8.0
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
+    EffectEmitterClass=Class'TankCannonFireEffectTypeC' // smaller muzzle flash effect
     AltFireOffset=(X=-78.0,Y=7.75,Z=0.0)
 
     // Cannon range settings
@@ -67,27 +67,27 @@ defaultproperties
     RangeSettings(5)=2500
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    AltFireProjectileClass=Class'DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire01'
-    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire02'
-    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mmAT_fire01'
+    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.45mmAT_fire02'
+    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.45mmAT_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    AltFireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
 
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.0)
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty01_000',Duration=1.0)
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
 }

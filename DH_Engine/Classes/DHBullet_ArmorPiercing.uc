@@ -167,7 +167,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
         if (!HasDeflected() && WhizzedPlayer.ShouldBeWhizzed())
         {
             TraceWhizType = default.WhizType; // start with default WhizType for our projectile (1 is supersonic 'snap', 2 is subsonic whiz)
-            class'DHBullet'.static.GetWhizType(TraceWhizType, WhizzedPlayer, Instigator, OrigLoc);
+            Class'DHBullet'.static.GetWhizType(TraceWhizType, WhizzedPlayer, Instigator, OrigLoc);
         }
 
         // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
@@ -213,7 +213,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
         if (HitPlayer != none)
         {
             // Trace along path from where we hit player's whip attachment to where we traced a hit on player, checking if any blocking actor is in the way
-            foreach InstigatorPlayer.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
+            foreach InstigatorPlayer.TraceActors(Class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
                 // We hit a blocking actor, so now check if it's a valid 'stopper' (something that would trigger HitWall or ProcessTouch)
                 if (A.bWorldGeometry || A.Physics == PHYS_Karma || (A.bBlockActors && A.bBlockHitPointTraces))
@@ -495,14 +495,14 @@ defaultproperties
 {
     RoundType=RT_APBULLET
     WhizType=1
-    WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
-    ImpactEffect=class'DH_Effects.DHBulletHitEffectLarge'
+    WhizSoundEffect=Class'DHBulletWhiz'
+    ImpactEffect=Class'DHBulletHitEffectLarge'
 
-    ShellHitWaterEffectClass=class'DH_Effects.DHBulletHitWaterEffectLarge'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffectLarge' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
+    ShellHitWaterEffectClass=Class'DHBulletHitWaterEffectLarge'
+    ShellHitVehicleEffectClass=Class'DHBulletHitMetalArmorEffectLarge' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
     VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
-    ShellDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffectLarge'
+    ShellDeflectEffectClass=Class'DHBulletHitMetalEffectLarge'
     VehicleDeflectSound=Sound'ProjectileSounds.PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
 

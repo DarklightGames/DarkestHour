@@ -10,7 +10,7 @@ var int             Health;
 var StaticMesh      DestroyedStaticMesh;
 var class<Emitter>  DestroyedEmitterClass;
 var Vector          DestroyedEmitterOffset;
-var sound           DestroyedSound;
+var Sound           DestroyedSound;
 var float           DestroyedSoundVolume;
 var float           DestroyedSoundRadius;
 var float           DestroyedLifeSpan;

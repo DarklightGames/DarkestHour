@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=600
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
+    ShellImpactDamage=Class'DH_ShermanFireFlyCannonShellDamageAPDS'
     HullFireChance=0.45
     EngineFireChance=0.75
 

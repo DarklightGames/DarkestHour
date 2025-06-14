@@ -45,8 +45,8 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
-    FireModeClass(1)=class'DH_Equipment.DHTrenchMaceMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
+    FireModeClass(0)=Class'DHTrenchMaceMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
+    FireModeClass(1)=Class'DHTrenchMaceMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
     
     ItemName="Trench Club"
     InventoryGroup=7
@@ -75,10 +75,10 @@ defaultproperties
     bUsesFreeAim=true
     FreeAimRotationSpeed=2.0
 
-    AttachmentClass=class'DHTrenchMaceAttachment'
+    AttachmentClass=Class'DHTrenchMaceAttachment'
     Mesh=SkeletalMesh'DH_Halloween_anm.trenchmace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture'
-    //HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.US_shovel_s'
+    Skins(2)=Texture'DH_Halloween_tex.TrenchClubTexture'
+    //HighDetailOverlay=Shader'DH_Equipment_tex.US_shovel_s'
     //bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=2
 }

@@ -8,5 +8,5 @@ class DHVehicleTeamKillDamageType extends DHInstantObituaryDamageTypes
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.Andy'
+    HUDIcon=Texture'DH_InterfaceArt_tex.Andy'
 }

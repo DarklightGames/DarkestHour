@@ -8,5 +8,5 @@ class DH_PPD40BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PPD40Weapon'
+    WeaponClass=Class'DH_PPD40Weapon'
 }

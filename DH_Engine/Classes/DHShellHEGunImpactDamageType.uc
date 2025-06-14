@@ -7,5 +7,5 @@ class DHShellHEGunImpactDamageType extends DHShellHEImpactDamageType;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.ATGunKill'
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_turret_ext'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3N_turret_coll')
 
     // Turret armor
     FrontArmorSlope=15.0
@@ -22,9 +22,9 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+    PrimaryProjectileClass=Class'DH_PanzerIIINCannonShellHE'
+    SecondaryProjectileClass=Class'DH_PanzerIIINCannonShellHEAT'
+    TertiaryProjectileClass=Class'DHCannonShellCanister'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
@@ -51,13 +51,13 @@ defaultproperties
     AltFireSpawnOffsetX=0.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_S_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_S_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_S_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(21)=2200

@@ -21,7 +21,7 @@ defaultproperties
 
     //Effects
     DrawScale=1.5
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_Shell'
 
     //Penetration
     DHPenetrationTable(0)=14.3  // 100m

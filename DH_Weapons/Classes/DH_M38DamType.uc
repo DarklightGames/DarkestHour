@@ -8,6 +8,6 @@ class DH_M38DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M38Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_M38Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

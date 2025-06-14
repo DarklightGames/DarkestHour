@@ -7,5 +7,5 @@ class DHConstruction_Resupply_Players_Germany extends DHConstructionResupplyPlay
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'
+    StaticMesh=StaticMesh'DH_Construction_stc.DH_Ger_ammo_box'
 }

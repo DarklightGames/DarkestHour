@@ -28,7 +28,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.250000,Max=0.350000)
@@ -50,7 +50,7 @@ defaultproperties
         MaxParticles=100
         name="outward_sparks"
         InitialParticlesPerSecond=500.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=0.200000,Max=0.750000)
         StartVelocityRange=(X=(Min=-1550.000000,Max=1700.000000),Y=(Min=-1625.000000,Max=1750.000000),Z=(Min=-100.000000,Max=350.000000))
         VelocityLossRange=(Z=(Min=1.000000,Max=3.000000))
@@ -83,7 +83,7 @@ defaultproperties
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
         StartSizeRange=(X=(Min=1.500000,Max=3.000000))
         InitialParticlesPerSecond=1000.000000
-        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        Texture=Texture'Effects_Tex.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=2.000000,Max=3.000000)
@@ -109,7 +109,7 @@ defaultproperties
         name="upward_sparks"
         StartSizeRange=(X=(Min=80.000000),Y=(Min=80.000000),Z=(Min=80.000000))
         InitialParticlesPerSecond=500.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=0.200000,Max=0.750000)
         StartVelocityRange=(X=(Min=-500.000000,Max=550.000000),Y=(Min=-555.000000,Max=600.000000),Z=(Min=-500.000000,Max=1500.000000))
         VelocityLossRange=(Z=(Min=1.000000,Max=3.000000))
@@ -137,7 +137,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.500000)
         StartSizeRange=(X=(Min=90.000000,Max=180.000000))
         InitialParticlesPerSecond=100.000000
-        Texture=Texture'SpecialEffects.Flares.SoftFlare'
+        Texture=Texture'SpecialEffects.SoftFlare'
         LifetimeRange=(Min=0.250000,Max=0.350000)
         StartVelocityRange=(Z=(Min=100.000000,Max=350.000000))
     End Object
@@ -169,7 +169,7 @@ defaultproperties
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=5.000000,Max=15.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_tex.debris.shrapnel5'
+        Texture=Texture'DH_FX_tex.shrapnel5'
         LifetimeRange=(Max=5.000000)
         StartVelocityRange=(X=(Min=-250.000000,Max=250.000000),Y=(Min=-250.000000,Max=250.000000),Z=(Min=300.000000,Max=600.000000))
     End Object
@@ -204,7 +204,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=60.000000),Y=(Min=30.000000,Max=60.000000),Z=(Min=45.000000,Max=50.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Max=6.000000)
         InitialDelayRange=(Min=0.250000,Max=0.350000)
@@ -239,7 +239,7 @@ defaultproperties
         StartSizeRange=(X=(Max=150.000000),Y=(Max=150.000000),Z=(Max=150.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=2.000000,Max=2.000000)
@@ -267,7 +267,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.500000)
         StartSizeRange=(X=(Min=90.000000,Max=120.000000))
         InitialParticlesPerSecond=100.000000
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.350000,Max=0.500000)
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter32'
@@ -299,7 +299,7 @@ defaultproperties
     StartSizeRange=(X=(Min=25.000000,Max=75.000000),Y=(Min=25.000000,Max=75.000000),Z=(Min=45.000000,Max=50.000000))
     InitialParticlesPerSecond=5000.000000
     DrawStyle=PTDS_AlphaBlend
-    Texture=Texture'Effects_Tex.explosions.LSmoke1'
+    Texture=Texture'Effects_Tex.LSmoke1'
     SecondsBeforeInactive=0.000000
     LifetimeRange=(Min=7.000000,Max=8.000000)
     StartVelocityRange=(X=(Min=-100.000000,Max=100.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=250.000000,Max=800.000000))

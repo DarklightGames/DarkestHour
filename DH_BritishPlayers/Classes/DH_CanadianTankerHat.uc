@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.Brit_Tanker_Hat'
-    Skins(0)=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
-    Skins(1)=Texture'DHBritishCharactersTex.Headgear.Brit_tanker_beret'
-    Skins(2)=Texture'DHCanadianCharactersTex.Headgear.RoyalCanadianHussars_Badge'
+    Skins(0)=Texture'DH_GUI_Tex.DHSectionTopper'
+    Skins(1)=Texture'DHBritishCharactersTex.Brit_tanker_beret'
+    Skins(2)=Texture'DHCanadianCharactersTex.RoyalCanadianHussars_Badge'
 }

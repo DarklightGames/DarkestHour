@@ -7,6 +7,6 @@ class DH_BritishAssaultRMCommando extends DHCWAssaultRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRMCommandoPawn')
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
+    RolePawns(0)=(PawnClass=Class'DH_BritishRMCommandoPawn')
+    Headgear(2)=Class'DH_BritishRMCommandoBeret'
 }

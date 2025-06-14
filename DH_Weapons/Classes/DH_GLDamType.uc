@@ -7,7 +7,7 @@ class DH_GLDamType extends DH_SatchelDamType;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GLWeapon'
+    WeaponClass=Class'DH_GLWeapon'
 
     VehicleDamageModifier=1.0
     APCDamageModifier=0.75

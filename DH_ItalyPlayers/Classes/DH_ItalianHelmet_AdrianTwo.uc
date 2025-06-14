@@ -8,5 +8,5 @@ class DH_ItalianHelmet_AdrianTwo extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ita_helmet_adrian_2'
-    //Skins(0)=Texture'DHItalianCharactersTex.Gear.ita_gear'
+    //Skins(0)=Texture'DHItalianCharactersTex.ita_gear'
 }

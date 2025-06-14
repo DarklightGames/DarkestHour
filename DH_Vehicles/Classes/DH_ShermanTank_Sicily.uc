@@ -7,7 +7,7 @@ class DH_ShermanTank_Sicily extends DH_ShermanTank;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.Sherman_body_Sicily_ext'
-    CannonSkins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.Sherman_body_Sicily_ext'
-    //DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest2'
+    Skins(0)=Texture'DH_VehiclesUS_tex5.Sherman_body_Sicily_ext'
+    CannonSkins(0)=Texture'DH_VehiclesUS_tex5.Sherman_body_Sicily_ext'
+    //DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman_Dest2'
 }

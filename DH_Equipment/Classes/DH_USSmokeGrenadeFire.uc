@@ -7,8 +7,8 @@ class DH_USSmokeGrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
-    AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
+    ProjectileClass=Class'DH_USSmokeGrenadeProjectile'
+    AmmoClass=Class'DH_USSmokeGrenadeAmmo'
     bIsSmokeGrenade=true
     bPullAnimCompensation=true
     AddedFuseTime=0.38

@@ -19,7 +19,7 @@ final static function UVersion FromString(string S)
     local array<string> VersionParts;
     local string VersionString;
 
-    V = new class'UVersion';
+    V = new Class'UVersion';
 
     if (Mid(S, 0, 1) ~= "v")
     {

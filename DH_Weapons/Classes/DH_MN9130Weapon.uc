@@ -10,13 +10,13 @@ defaultproperties
     ItemName="Mosin M91/30"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=class'DH_Weapons.DH_MN9130Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MN9130MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MN9130Attachment'
-    PickupClass=class'DH_Weapons.DH_MN9130Pickup'
+    FireModeClass(0)=Class'DH_MN9130Fire'
+    FireModeClass(1)=Class'DH_MN9130MeleeFire'
+    AttachmentClass=Class'DH_MN9130Attachment'
+    PickupClass=Class'DH_MN9130Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin-Nagant-9130-mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9130_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MN9130_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

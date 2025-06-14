@@ -9,7 +9,7 @@ class DHSpawnPoint_Admin extends DHSpawnPointBase
 defaultproperties
 {
     SpawnPointStyle="DHSpawnAdminButtonStyle"
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_Admin'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SpawnPoint_Admin'
     SpawnLocationOffset=(Z=52)
     BaseSpawnTimePenalty=0
     SpawnKillPenalty=30

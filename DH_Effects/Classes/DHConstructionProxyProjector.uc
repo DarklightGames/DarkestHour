@@ -11,15 +11,15 @@ var Material RedTexture;
 
 defaultproperties
 {
-    GreenTexture=Material'DH_Construction_tex.ui.aura_green'
-    RedTexture=Material'DH_Construction_tex.ui.aura_red'
+    GreenTexture=Material'DH_Construction_tex.aura_green'
+    RedTexture=Material'DH_Construction_tex.aura_red'
     bNoProjectOnOwner=true
     bProjectActor=false
     bProjectOnAlpha=true
     bProjectParticles=false
     bProjectBSP=true
     MaterialBlendingOp=PB_AlphaBlend
-    ProjTexture=Texture'DH_Construction_tex.ui.construction_aura'
+    ProjTexture=Texture'DH_Construction_tex.construction_aura'
     FrameBufferBlendingOp=PB_AlphaBlend
     FOV=1
 }

@@ -15,17 +15,17 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_anm.KV1S_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
-    Skins(3)=Texture'allies_vehicles_tex.int_vehicles.kv1_int'
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.kv1_int_s'
+    Skins(0)=Texture'allies_vehicles_tex.KV1_ext'
+    Skins(1)=Texture'allies_vehicles_tex.kv1_treads'
+    Skins(2)=Texture'allies_vehicles_tex.kv1_treads'
+    Skins(3)=Texture'allies_vehicles_tex.kv1_int'
+    HighDetailOverlay=Shader'allies_vehicles_tex.kv1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1sCannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1sMGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_KV1sCannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_KV1sMGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -40,7 +40,7 @@ defaultproperties
     DriveAnim="VKV1_driver_idle_close"
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
+    HUDOverlayClass=Class'KV1DriverOverlay'
     HUDOverlayOffset=(X=0,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -84,8 +84,8 @@ defaultproperties
     TreadHitMaxHeight=26.0
     DamagedEffectOffset=(X=-90.0,Y=0.0,Z=40.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Kv1_Destroyed'
-    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.KV1S_ext_dest'
-    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.KV1S_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.KV1S_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.KV1S_treads_dest'
 
     // Exit
     ExitPositions(0)=(X=235.0,Y=0.0,Z=50.0)     // driver
@@ -98,9 +98,9 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=450.0
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.KV1s_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.KV1s_engine_stop'
     LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L04'
     RightTreadSound=Sound'Vehicle_Engines.track_squeak_R04'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02'
@@ -108,15 +108,15 @@ defaultproperties
     // Visual effects
     TreadVelocityScale=115.0
     WheelRotationScale=50000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=47.0,Z=50.0),ExhaustRotation=(Yaw=12000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-100.0,Y=-47.0,Z=50.0),ExhaustRotation=(Yaw=-12000))
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.KV-1S_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_look'
+    VehicleHudTurret=TexRotator'InterfaceArt_tex.kv1s_turret_rot'
+    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.kv1s_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsScale=0.73
@@ -133,7 +133,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.84
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1s'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.KV1s'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -169,7 +169,7 @@ defaultproperties
          WheelRadius=41.0
          bLeftTrack=true
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.LF_Steering'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=true
          SteerType=VST_Steered
@@ -178,7 +178,7 @@ defaultproperties
          BoneOffset=(X=10.0,Y=10.0,Z=13.0)
          WheelRadius=41.0
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.RF_Steering'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=true
          SteerType=VST_Inverted
@@ -188,7 +188,7 @@ defaultproperties
          WheelRadius=41.0
          bLeftTrack=true
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.LR_Steering'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=true
          SteerType=VST_Inverted
@@ -197,7 +197,7 @@ defaultproperties
          BoneOffset=(X=-12.0,Y=10.0,Z=13.0)
          WheelRadius=41.0
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.RR_Steering'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
          bPoweredWheel=true
          BoneName="Drive_Wheel_L"
@@ -206,7 +206,7 @@ defaultproperties
          WheelRadius=41.0
          bLeftTrack=true
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.Left_Drive_Wheel'
+     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=true
          BoneName="Drive_Wheel_R"
@@ -214,7 +214,7 @@ defaultproperties
          BoneOffset=(X=0.0,Y=10.0,Z=13.0)
          WheelRadius=41.0
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_KV1sTank.Right_Drive_Wheel'
+     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -235,5 +235,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_KV1sTank.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

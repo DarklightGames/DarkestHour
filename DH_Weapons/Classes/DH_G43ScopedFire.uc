@@ -10,7 +10,7 @@ defaultproperties
     Spread=40.0
     AddedPitch=5
 
-    ProjectileClass=class'DH_Weapons.DH_G43ScopedBullet'
+    ProjectileClass=Class'DH_G43ScopedBullet'
     FireIronAnim="Scope_Shoot"
     FireLastAnim="shoot_last"
     FireIronLastAnim="Scope_Shoot_Last"

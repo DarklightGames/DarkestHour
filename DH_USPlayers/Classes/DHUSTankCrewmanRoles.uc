@@ -8,11 +8,11 @@ class DHUSTankCrewmanRoles extends DHAlliedTankCrewmanRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_GreaseGunWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_GreaseGunWeapon')
+    SecondaryWeapons(0)=(Item=Class'DH_ColtM1911Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
-    Headgear(0)=class'DH_USPlayers.DH_USTankerHat'
+    Headgear(0)=Class'DH_USTankerHat'
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
+    SleeveTexture=Texture'DHUSCharactersTex.US_sleeves'
 }

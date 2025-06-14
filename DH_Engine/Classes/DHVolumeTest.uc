@@ -11,7 +11,7 @@ function bool DHIsInNoArtyVolume(DHGameReplicationInfo GRI)
 {
     local Volume V;
 
-    foreach TouchingActors(class'Volume', V)
+    foreach TouchingActors(Class'Volume', V)
     {
         // Prevent arty if we're in a no arty volume, unless it's linked to a spawn point/area that isn't active/current
         if (V.IsA('RONoArtyVolume'))

@@ -13,7 +13,7 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.German20mmShellCase'
+        StaticMesh=StaticMesh'DH_WeaponPickups.German20mmShellCase'
         UseCollision=true
         RespawnDeadParticles=false
         SpawnOnlyInDirectionOfNormal=true

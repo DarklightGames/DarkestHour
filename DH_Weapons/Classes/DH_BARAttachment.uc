@@ -8,9 +8,9 @@ class DH_BARAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BAR_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.BAR_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Tip"
     ShellEjectionBoneName="ejector"
 

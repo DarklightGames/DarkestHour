@@ -8,5 +8,5 @@ class DH_AmericanHelmet3rdNCOb extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_GI_Helmet'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.US_NCO_headgear2'
+    Skins(0)=Texture'DHUSCharactersTex.US_NCO_headgear2'
 }

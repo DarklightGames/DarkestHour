@@ -8,5 +8,5 @@ class DH_BARBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BARWeapon'
+    WeaponClass=Class'DH_BARWeapon'
 }

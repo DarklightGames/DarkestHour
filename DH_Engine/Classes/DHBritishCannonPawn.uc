@@ -10,5 +10,5 @@ defaultproperties
 {
     RangeUnit=DU_Yards
     RangePositionX=0.1
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 }

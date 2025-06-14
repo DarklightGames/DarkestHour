@@ -8,7 +8,7 @@ class DHShellSmokeWPDamageType extends DHShellExplosionDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.PlayerFireKill'
     bLocationalHit=false
     GibModifier=0.0
 

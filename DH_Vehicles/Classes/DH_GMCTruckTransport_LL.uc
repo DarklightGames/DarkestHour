@@ -7,8 +7,8 @@ class DH_GMCTruckTransport_LL extends DH_GMCTruckTransport;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_GMC_tex.GMC.GMC_Generic'
-    Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas'
-    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_Generic_Destroyed'
-    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC.GMC_Canvas_Destroyed'
+    Skins(0)=Texture'DH_GMC_tex.GMC_Generic'
+    Skins(1)=Texture'DH_GMC_tex.GMC_Canvas'
+    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC_Generic_Destroyed'
+    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC_Canvas_Destroyed'
 }

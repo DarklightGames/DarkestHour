@@ -32,6 +32,6 @@ function InitDroppedPickupFor(Inventory Inv)
 
 defaultproperties
 {
-    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupSound=Sound'Inf_Weapons_Foley.ammopickup'
     CollisionRadius=15.0
 }

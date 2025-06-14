@@ -23,10 +23,10 @@ defaultproperties
     bWaitForRelease=true
     FireRate=0.20
     FAProjSpawnOffset=(X=-15.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
-    SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stPistol'
+    SmokeEmitterClass=Class'ROPistolMuzzleSmoke'
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=0.0)
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_pistol'
 
     Spread=350.0
     MaxVerticalRecoilAngle=600

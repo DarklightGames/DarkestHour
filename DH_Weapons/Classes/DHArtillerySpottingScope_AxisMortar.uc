@@ -7,7 +7,7 @@ class DHArtillerySpottingScope_AxisMortar extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'   // TODO: REPLACE
 
     RangeTable(0)=(Range=50,Pitch=86.5)
     RangeTable(1)=(Range=75,Pitch=85.0)

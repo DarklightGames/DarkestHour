@@ -7,7 +7,7 @@ class DH_DeprecatedPickups extends DHPlaceableWeaponPickup abstract;
 
 defaultproperties
 {
-    WeaponType=class'DH_Weapons.DH_PanzerFaustWeapon'
-    InventoryType=class'DH_Weapons.DH_PanzerFaustWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
+    WeaponType=Class'DH_PanzerFaustWeapon'
+    InventoryType=Class'DH_PanzerFaustWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.PanzerFaust'
 }

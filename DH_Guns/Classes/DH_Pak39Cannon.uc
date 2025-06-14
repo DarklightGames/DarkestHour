@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_turret'
-    Skins(0)=Texture'DH_Pak39_tex.body.pak39_body'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak39_stc.Collision.pak39_turret_collision')
+    Skins(0)=Texture'DH_Pak39_tex.pak39_body'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak39_stc.pak39_turret_collision')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -19,9 +19,9 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Pak38CannonShell'
+    SecondaryProjectileClass=Class'DH_Pak38CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_Pak38CannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -45,13 +45,13 @@ defaultproperties
     WeaponFireOffset=1.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
     ReloadStages(0)=(Sound=none) //~2.8 seconds reload for a lower caliber AT gun
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="TravWheel",Scale=-64.0,RotationAxis=AXIS_Z)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="ElevGear",Scale=-32.0,RotationAxis=AXIS_Y)

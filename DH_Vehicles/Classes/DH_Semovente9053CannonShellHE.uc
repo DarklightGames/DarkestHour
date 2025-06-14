@@ -20,11 +20,11 @@ defaultproperties
     
     Damage=473.0   // 1000 gramms TNT, citation needed, references show exactly 1000 but that seems off
     DamageRadius=1530.0
-    MyDamageType=class'DHShellHE88mmDamageType' // with 2mm off there really isnt much of a difference
+    MyDamageType=Class'DHShellHE88mmDamageType' // with 2mm off there really isnt much of a difference
     HullFireChance=0.8
     EngineFireChance=0.8
 
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
 
     //Effects
     bHasTracer=false

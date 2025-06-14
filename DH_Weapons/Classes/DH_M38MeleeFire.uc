@@ -7,5 +7,5 @@ class DH_M38MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_M38BashDamType'
+    DamageType=Class'DH_M38BashDamType'
 }

@@ -8,5 +8,5 @@ class DH_SVT40BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SVT40Weapon'
+    WeaponClass=Class'DH_SVT40Weapon'
 }

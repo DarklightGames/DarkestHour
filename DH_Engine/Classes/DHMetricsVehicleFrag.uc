@@ -25,24 +25,24 @@ function JSONValue ToJSON()
 
     if (KillerPawn != none)
     {
-        KillerPawnObject = class'JSONString'.static.Create(KillerPawn.Name);
+        KillerPawnObject = Class'JSONString'.static.Create(KillerPawn.Name);
     }
 
     if (KillerVehicle != none)
     {
-        KillerVehicleObject = class'JSONString'.static.Create(KillerVehicle.Name);
+        KillerVehicleObject = Class'JSONString'.static.Create(KillerVehicle.Name);
     }
 
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("damage_type", DamageType.Name)
         .PutInteger("time", RoundTime)
-        .Put("killer", (new class'JSONObject')
+        .Put("killer", (new Class'JSONObject')
             .PutString("id", KillerID)
             .PutInteger("team", KillerTeam)
             .Put("pawn", KillerPawnObject)
             .PutIVector("location", KillerLocation)
             .Put("vehicle", KillerVehicleObject))
-        .Put("destroyed_vehicle", (new class'JSONObject')
+        .Put("destroyed_vehicle", (new Class'JSONObject')
             .PutString("vehicle", Vehicle.Name)
             .PutInteger("team", VehicleTeam)
             .PutIVector("location", VehicleLocation));

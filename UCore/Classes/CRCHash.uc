@@ -12,7 +12,7 @@ var private int Table[256];
 
 final static function int FromString(string S)
 {
-    return FromBytes(class'UString'.static.ToBytes(S));
+    return FromBytes(Class'UString'.static.ToBytes(S));
 }
 
 final static function int FromBytes(array<int> Bytes)

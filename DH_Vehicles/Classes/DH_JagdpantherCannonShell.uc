@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=1150  //109 gramms TNT filler same as king tiger now
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.5
     EngineFireChance=0.98
 

@@ -7,6 +7,6 @@ class DH_MN9130Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_MN9130Weapon'
+    InventoryType=Class'DH_MN9130Weapon'
     StaticMesh=StaticMesh'WeaponPickupSM.nagant9130'
 }

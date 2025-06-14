@@ -8,8 +8,8 @@ class DH_EnfieldNo2Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    MenuImage=Texture'DH_InterfaceArt_tex.EnfieldNo2_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
 

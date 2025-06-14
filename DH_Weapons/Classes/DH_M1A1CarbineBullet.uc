@@ -10,5 +10,5 @@ defaultproperties
     Speed=36634.0
     BallisticCoefficient=0.168
     Damage=76.0
-    MyDamageType=class'DH_Weapons.DH_M1CarbineDamType'
+    MyDamageType=Class'DH_M1CarbineDamType'
 }

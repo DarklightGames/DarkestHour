@@ -10,5 +10,5 @@ defaultproperties
     Speed=50696.0
     BallisticCoefficient=0.511
     Damage=117.0
-    MyDamageType=class'DH_Weapons.DH_SVT40ScopedDamType'
+    MyDamageType=Class'DH_SVT40ScopedDamType'
 }

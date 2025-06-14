@@ -8,7 +8,7 @@ class DH_T3476CannonShellEarly extends DH_T3476CannonShell; //BR-350A
 defaultproperties
 {
     ImpactDamage=720  //155 gramms TNT filler
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanCannonShellDamageAP'
     HullFireChance=0.65
     EngineFireChance=0.96
 

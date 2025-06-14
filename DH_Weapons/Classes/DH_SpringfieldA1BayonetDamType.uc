@@ -8,5 +8,5 @@ class DH_SpringfieldA1BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SpringfieldA1Weapon'
+    WeaponClass=Class'DH_SpringfieldA1Weapon'
 }

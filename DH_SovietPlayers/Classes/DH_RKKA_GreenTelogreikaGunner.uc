@@ -7,6 +7,6 @@ class DH_RKKA_GreenTelogreikaGunner extends DHSOVMachineGunnerRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_green'
+    RolePawns(0)=(PawnClass=Class'DH_SovietGreenTeloPawn',Weight=1.0)
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_green'
 }

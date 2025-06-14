@@ -14,7 +14,7 @@ static function Hashtable_string_Object Create(int Capacity)
 {
     local Hashtable_string_Object HT;
 
-    HT = new class'Hashtable_string_Object';
+    HT = new Class'Hashtable_string_Object';
     HT.Keys.Length = Capacity;
     HT.Values.Length = Capacity;
 
@@ -55,7 +55,7 @@ function Clear()
 
 private function int Hash(string Key)
 {
-    return (class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
+    return (Class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
 }
 
 private function Resize(int Capacity)
@@ -63,7 +63,7 @@ private function Resize(int Capacity)
     local int i;
     local Hashtable_string_Object T;
 
-    T = class'Hashtable_string_Object'.static.Create(Capacity);
+    T = Class'Hashtable_string_Object'.static.Create(Capacity);
 
     for (i = 0; i < Keys.Length; ++i)
     {
@@ -221,7 +221,7 @@ function HashtableIterator_string_Object CreateIterator()
 {
     local HashtableIterator_string_Object I;
 
-    I = new class'HashtableIterator_string_Object';
+    I = new Class'HashtableIterator_string_Object';
     I.Hashtable = self;
 
     return I;

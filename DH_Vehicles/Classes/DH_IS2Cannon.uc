@@ -9,12 +9,12 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.IS2_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.IS2_int'
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
+    Skins(0)=Texture'allies_vehicles_tex.IS2_ext'
+    Skins(1)=Texture'allies_vehicles_tex.IS2_int'
+    HighDetailOverlay=Shader'allies_vehicles_tex.IS2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2.IS2_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2_turret_coll')
 
     // Turret armor - JS-2 Model 1943
     FrontArmorFactor=10.0
@@ -39,8 +39,8 @@ defaultproperties
     CustomPitchDownLimit=65172
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShellHE'
+    PrimaryProjectileClass=Class'DH_IS2CannonShell'
+    SecondaryProjectileClass=Class'DH_IS2CannonShellHE'
 
     ProjectileDescriptions(0)="AP"
 
@@ -54,34 +54,34 @@ defaultproperties
     SecondarySpread=0.002
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    AltFireProjectileClass=Class'DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireOffset=232.9
     AltFireOffset=(X=-36.0,Y=13.5,Z=14.5)
 
     // Sounds
-    CannonFireSound(0)=Sound'Vehicle_Weapons.IS2.122mm_fire01'
-    CannonFireSound(1)=Sound'Vehicle_Weapons.IS2.122mm_fire02'
-    CannonFireSound(2)=Sound'Vehicle_Weapons.IS2.122mm_fire02'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.122mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.122mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.122mm_fire02'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    AltFireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
 
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_01') //Early model 2-3 rounds per minute
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.IS2_reload_01') //Early model 2-3 rounds per minute
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.IS2_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.IS2_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.IS2_reload_04')
 
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.0)
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty01_000',Duration=1.0)
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

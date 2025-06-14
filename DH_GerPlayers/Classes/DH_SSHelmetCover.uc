@@ -8,5 +8,5 @@ class DH_SSHelmetCover extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_HelmetCover'
-    Skins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1'
+    Skins(0)=Texture'DHGermanCharactersTex.WSSParkaCam1'
 }

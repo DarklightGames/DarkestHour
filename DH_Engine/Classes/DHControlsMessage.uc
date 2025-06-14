@@ -80,12 +80,12 @@ static function RenderComplexMessage(Canvas Canvas,
 
         for (j = 0; j < default.Controls[i].Keys.Length; ++j)
         {
-            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(default.KeyColor) $
-                                "[" $ class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
-                                class'GameInfo'.static.MakeColorCode(class'UColor'.default.White);
+            Keys[Keys.Length] = Class'GameInfo'.static.MakeColorCode(default.KeyColor) $
+                                "[" $ Class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
+                                Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White);
         }
 
-        S = class'UString'.static.Join(" / ", Keys) @ default.Controls[i].Text;
+        S = Class'UString'.static.Join(" / ", Keys) @ default.Controls[i].Text;
 
         Canvas.TextSize(S, XL, YL);
         Canvas.SetDrawColor(255, 255, 255);

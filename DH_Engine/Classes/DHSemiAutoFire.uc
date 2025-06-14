@@ -11,8 +11,8 @@ defaultproperties
     bWaitForRelease=true
     FireRate=0.2
     FAProjSpawnOffset=(X=-30.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stSVT'
+    SmokeEmitterClass=Class'ROMuzzleSmoke'
     FireForce="RocketLauncherFire"
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=0.0)
 

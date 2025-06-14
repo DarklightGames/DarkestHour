@@ -29,7 +29,7 @@ simulated function PostBeginPlay()
     if (Role < ROLE_Authority)
     {
         // Find all non-replicated actors existing independently on client & call Reset() on them
-        foreach AllActors(class'Actor', A)
+        foreach AllActors(Class'Actor', A)
         {
             if (A.Role == ROLE_Authority)
             {

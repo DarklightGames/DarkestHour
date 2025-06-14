@@ -18,7 +18,7 @@ defaultproperties
         OnClick=DHSettings_Footer.InternalOnClick
         OnKeyEvent=BackB.InternalOnKeyEvent
     End Object
-    b_Back=GUIButton'DH_Interface.DHSettings_Footer.BackB'
+    b_Back=GUIButton'DH_Interface.BackB'
 
     Begin Object Class=GUIButton Name=DefaultB
         Caption="Defaults"
@@ -33,5 +33,5 @@ defaultproperties
         OnClick=DHSettings_Footer.InternalOnClick
         OnKeyEvent=DefaultB.InternalOnKeyEvent
     End Object
-    b_Defaults=GUIButton'DH_Interface.DHSettings_Footer.DefaultB'
+    b_Defaults=GUIButton'DH_Interface.DefaultB'
 }

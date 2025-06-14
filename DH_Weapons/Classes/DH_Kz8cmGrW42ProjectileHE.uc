@@ -15,6 +15,6 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=4.0
 
-    ImpactEffect=class'DH_Effects.DHMortarHitEffect81mm'
+    ImpactEffect=Class'DHMortarHitEffect81mm'
 
 }

@@ -7,5 +7,5 @@ class DH_STG44ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_STG44ScopedBashDamType'
+    DamageType=Class'DH_STG44ScopedBashDamType'
 }

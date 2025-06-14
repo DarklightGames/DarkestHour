@@ -20,7 +20,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 
     if (PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
     {
-        return class'TimeSpan'.static.ToString(Marker.ExpiryTime - PC.GameReplicationInfo.ElapsedTime);
+        return Class'TimeSpan'.static.ToString(Marker.ExpiryTime - PC.GameReplicationInfo.ElapsedTime);
     }
     else
     {
@@ -60,7 +60,7 @@ defaultproperties
 {
     IconColor=(R=255,G=0,B=0,A=100)
     ActivatedIconColor=(R=255,G=0,B=0,A=255)
-    IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
+    IconMaterial=Texture'InterfaceArt_tex.overheadmap_Icons'
     IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
     LifetimeSeconds=300
@@ -73,7 +73,7 @@ defaultproperties
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
     Permissions_CanPlace(0)=ERS_ARTILLERY_SPOTTER
-    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_ARTILLERY_OPERATOR,Message=class'DHFireSupportMessage',MessageIndex=3)
-    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_ARTILLERY_OPERATOR,Message=Class'DHFireSupportMessage',MessageIndex=3)
+    OnPlacedMessage=Class'DHFireSupportMessage'
     OnPlacedMessageIndex=0
 }

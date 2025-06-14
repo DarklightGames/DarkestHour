@@ -21,7 +21,7 @@ defaultproperties
     Physics=PHYS_Falling
     DrawType=DT_StaticMesh
     bFixedRotationDir=true
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.M1GrenadeSpoon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.M1GrenadeSpoon'
     RemoteRole=ROLE_None
     LifeSpan=10.0
     bBlockProjectiles=false

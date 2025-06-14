@@ -89,7 +89,7 @@ function VehicleSpawned(Vehicle V)
     local DH_LevelInfo LI;
 
     DHV = DHVehicle(V);
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (DHV != none && bIsSpawnVehicle)
     {
@@ -133,7 +133,7 @@ function SpawnVehicle()
     // Otherwise check if vehicle spawn is blocked by another pawn
     else
     {
-        foreach CollidingActors(class'Pawn', P, VehicleClass.default.CollisionRadius * 1.25)
+        foreach CollidingActors(Class'Pawn', P, VehicleClass.default.CollisionRadius * 1.25)
         {
             bBlocked = true;
             break;

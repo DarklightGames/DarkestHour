@@ -10,5 +10,5 @@ defaultproperties
     Speed=47075.0
     BallisticCoefficient=0.515
     Damage=120.0
-    MyDamageType=class'DH_Weapons.DH_G41DamType'
+    MyDamageType=Class'DH_G41DamType'
 }

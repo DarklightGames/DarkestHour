@@ -20,7 +20,7 @@ var     float           SavedNewElapsedTime;
 
 // Copies of same-named variables from the mutator itself, replicated to clients so they know the server's settings
 var     bool            bBypassAdminLogin, bParaDropPlayerAllowed, bShowRealismMenu, bRealismMutPresent, bMinesDisabled, bHideCapProgress, bHidePlayerIcon;
-var     sound           WarningSound;
+var     Sound           WarningSound;
 
 replication
 {
@@ -74,11 +74,11 @@ simulated function PostBeginPlay()
 // Used to adjust default LifeTime in message classes to take account of the GameSpeed, so messages stay on screen for the same time even if GameSpeed is changed
 static function SetMessageClassLifeTimes(float GameSpeed)
 {
-    class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages'.default.LifeTime = int(Round(8.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_AdminMessages'.default.LifeTime  = int(Round(5.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.default.LifeTime  = int(Round(3.0 * GameSpeed));
+    Class'DHAdminMenu_NotifyMessages'.default.LifeTime = int(Round(8.0 * GameSpeed));
+    Class'DHAdminMenu_WarningMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
+    Class'DHAdminMenu_PrivateMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
+    Class'DHAdminMenu_AdminMessages'.default.LifeTime  = int(Round(5.0 * GameSpeed));
+    Class'DHAdminMenu_ErrorMessages'.default.LifeTime  = int(Round(3.0 * GameSpeed));
 }
 
 // On clients this waits until the local PlayerController has been replicated & then creates the local menu interactions
@@ -209,10 +209,10 @@ simulated function ClientPrivateMessage(PlayerController Receiver, PlayerReplica
         if (bIsAdminWarning)
         {
             // Displays the warning in the middle of the player's screen
-            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage', 1, AdminPRI,, self);
+            Receiver.ReceiveLocalizedMessage(Class'DHAdminMenu_WarningMessage', 1, AdminPRI,, self);
 
             // As a backup, display the message as white chat text at the bottom of the player's screen
-            Receiver.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage'.default.WarningChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);
+            Receiver.ClientMessage(Class'DHAdminMenu_WarningMessage'.default.WarningChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);
 
             // Play a warning sound to highlight the message
             if (WarningSound != none)
@@ -223,10 +223,10 @@ simulated function ClientPrivateMessage(PlayerController Receiver, PlayerReplica
         else
         {
             // Displays the private message toward the top of the player's screen
-            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage', 0, AdminPRI,, self);
+            Receiver.ReceiveLocalizedMessage(Class'DHAdminMenu_PrivateMessage', 0, AdminPRI,, self);
 
             // As a backup, display the message as white chat text at the bottom of the player's screen
-            Receiver.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage'.default.MessageChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);
+            Receiver.ClientMessage(Class'DHAdminMenu_PrivateMessage'.default.MessageChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);
         }
 
         PrivateMessage = ""; // re-set

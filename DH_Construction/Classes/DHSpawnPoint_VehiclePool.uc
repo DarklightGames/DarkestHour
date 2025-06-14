@@ -19,14 +19,14 @@ function Timer()
     {
         HQSpawnPoint = none;
 
-        foreach RadiusActors(class'DHSpawnPoint_PlatoonHQ', SP, class'DHUnits'.static.MetersToUnreal(100.0))
+        foreach RadiusActors(Class'DHSpawnPoint_PlatoonHQ', SP, Class'DHUnits'.static.MetersToUnreal(100.0))
         {
             if (SP.GetTeamIndex() == GetTeamIndex() && SP.IsActive() && !SP.IsBlocked())
             {
                 HQSpawnPoint = SP;
 
                 // "A Vehicle Pool has been activated."
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHVehiclePoolMessage', 0);
+                Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHVehiclePoolMessage', 0);
                 break;
             }
         }

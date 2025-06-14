@@ -7,9 +7,9 @@ class DH_RKKA_AmoebaAutumnEngineerLate extends DH_RKKA_AmoebaAutumnEngineerEarly
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaAutumnLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietAmoebaAutumnLatePawn',Weight=1.0)
 
-    Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    Grenades(0)=(Item=Class'DH_RPG43GrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_M38Weapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_M38Weapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')
 }

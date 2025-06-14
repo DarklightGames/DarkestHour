@@ -12,10 +12,10 @@ var array<DHMetricsPlayerSession>   Sessions;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("id", ID)
-        .Put("names", class'JSONArray'.static.FromStrings(Names))
-        .Put("client_guids", class'JSONArray'.static.FromStrings(ClientGUIDs))
-        .Put("sessions", class'JSONArray'.static.FromSerializables(Sessions));
+        .Put("names", Class'JSONArray'.static.FromStrings(Names))
+        .Put("client_guids", Class'JSONArray'.static.FromStrings(ClientGUIDs))
+        .Put("sessions", Class'JSONArray'.static.FromSerializables(Sessions));
 }
 

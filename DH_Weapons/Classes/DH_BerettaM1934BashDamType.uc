@@ -8,6 +8,6 @@ class DH_BerettaM1934BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BerettaM1934Weapon'
+    WeaponClass=Class'DH_BerettaM1934Weapon'
 }
 

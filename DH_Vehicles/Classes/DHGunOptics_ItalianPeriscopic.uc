@@ -8,5 +8,5 @@ class DHGunOptics_ItalianPeriscopic extends DHGunOptics;
 defaultproperties
 {
     GunsightSize=0.4
-    GunsightOverlay=Texture'DH_Cannone4732_tex.Interface.cannone4732_sight'
+    GunsightOverlay=Texture'DH_Cannone4732_tex.cannone4732_sight'
 }

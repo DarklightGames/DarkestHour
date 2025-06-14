@@ -24,17 +24,17 @@ simulated function bool WasLastRound()
 defaultproperties
 {
     ItemName="M1 Garand"
-    FireModeClass(0)=class'DH_Weapons.DH_M1GarandFire'
-    FireModeClass(1)=class'DH_Weapons.DH_M1GarandMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M1GarandAttachment'
-    PickupClass=class'DH_Weapons.DH_M1GarandPickup'
+    FireModeClass(0)=Class'DH_M1GarandFire'
+    FireModeClass(1)=Class'DH_M1GarandMeleeFire'
+    AttachmentClass=Class'DH_M1GarandAttachment'
+    PickupClass=Class'DH_M1GarandPickup'
 
     Mesh=SkeletalMesh'DH_Garand_1st.Garand_1st'
     bUseHighDetailOverlayIndex=false
     //HighDetailOverlayIndex=2
 
-    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand_extra'
+    Skins(1)=Texture'DH_Weapon_tex.M1Garand'
+    Skins(2)=Texture'DH_Weapon_tex.M1Garand_extra'
     HandNum=0
     SleeveNum=3
 

@@ -123,7 +123,7 @@ defaultproperties
     MenuName="Long-Range Artillery"
     bAlwaysRelevant=true
 
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Artillery'
 
     bCanBeCancelled=true
     RequiredSquadMemberCount=3

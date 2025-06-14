@@ -8,12 +8,12 @@ class DH_50CalDamType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     TankDamageModifier=0.05 // These values are unusually low to compensate for the now significantly increased bullet damage of the .50 cal.
     APCDamageModifier=0.08
     VehicleDamageModifier=0.12
     TreadDamageModifier=0.07  // 0.5 in 234/1, 1.0 in PTRD
-    WeaponClass=class'DH_Weapons.DH_30calWeapon' // 50 cal is vehicle only & doesn't have a WeaponClass in DH_Weapons - never mind, just use dummy class & 50 cal specific death strings
+    WeaponClass=Class'DH_30calWeapon' // 50 cal is vehicle only & doesn't have a WeaponClass in DH_Weapons - never mind, just use dummy class & 50 cal specific death strings
     GibModifier=2.0            // 0 in 30cal, 4 in PTRD
     GibPerterbation=0.09       // weapon default is 0.06, 0.15 in PTRD (but that value is used by explosives, so is too high)
     VehicleMomentumScaling=0.2 // 0.3 in 234/1, 0.6 in PTRD, 1.3 is default for tank cannon

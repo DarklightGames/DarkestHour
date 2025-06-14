@@ -9,14 +9,14 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision',AttachBone="Gun")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Hetzer_mantlet_collision',AttachBone="Gun")
 
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
 
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellSmoke'
 
     ProjectileDescriptions(2)="Smoke"
 
@@ -26,9 +26,9 @@ defaultproperties
 
     SecondarySpread=0.001270
     TertiarySpread=0.003570
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
     ManualRotationsPerSecond=0.025000
     RangeSettings(1)=100
     RangeSettings(2)=200
@@ -57,10 +57,10 @@ defaultproperties
     RangeSettings(25)=3000
     bHasTurret=False
 
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
     FireEffectOffset=(X=5.000000)
     YawStartConstraint=-2000.000000
     YawEndConstraint=3000.000000

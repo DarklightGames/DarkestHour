@@ -9,6 +9,6 @@ defaultproperties
 {
     Skins(0)=Texture'DH_M1927_tex.m1927_body_winter'
     CannonSkins(0)=Texture'DH_M1927_tex.m1927_body_winter'
-    DestroyedMeshSkins(0)=Material'DH_M1927_tex.Destroyed.m1927_body_winter_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_M1927_tex.m1927_body_winter_destroyed'
 }
 

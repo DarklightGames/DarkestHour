@@ -55,7 +55,7 @@ simulated function Timer()
 {
     if (MaterialName != "" && MaterialToTrigger == none)
     {
-        MaterialToTrigger = Material(DynamicLoadObject(MaterialName, class'Material'));
+        MaterialToTrigger = Material(DynamicLoadObject(MaterialName, Class'Material'));
 
         if (MaterialToTrigger != none)
         {

@@ -22,7 +22,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
            SquadMemberID $
            RelatedPRI_1.PlayerName @
            ":" @
-           class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) $
+           Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White) $
            MessageString;
 }
 

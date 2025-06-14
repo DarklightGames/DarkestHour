@@ -8,19 +8,19 @@ class DH_ColtM1911Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Colt M1911A1"
-    FireModeClass(0)=class'DH_Weapons.DH_ColtM1911Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_ColtM1911MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'
-    PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
+    FireModeClass(0)=Class'DH_ColtM1911Fire'
+    FireModeClass(1)=Class'DH_ColtM1911MeleeFire'
+    AttachmentClass=Class'DH_ColtM1911Attachment'
+    PickupClass=Class'DH_ColtM1911Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
-    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     HandNum=0
     SleeveNum=1
 
-    Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+    Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911_S'
 
     DisplayFOV=85.0
     IronSightDisplayFOV=75.0

@@ -12,9 +12,9 @@ var     bool                bAlreadyDroppedProjectile;  // renamed from bDropped
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
 
 // Sounds & explosion effects
-var     sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
-var     sound               CloseSound[3];              // sound of the artillery whooshing in close (array size reduced from 4 as there are only 3 sounds)
-var     sound               ExplosionSound[4];          // sound of the artillery exploding
+var     Sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
+var     Sound               CloseSound[3];              // sound of the artillery whooshing in close (array size reduced from 4 as there are only 3 sounds)
+var     Sound               ExplosionSound[4];          // sound of the artillery exploding
 var     class<Emitter>      ShellHitDirtEffectClass;    // artillery hitting dirt emitter
 var     class<Emitter>      ShellHitSnowEffectClass;    // artillery hitting snow emitter
 var     class<Emitter>      ShellHitDirtEffectLowClass; // artillery hitting dirt emitter low settings
@@ -245,7 +245,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
             ST = EST_Default;
         }
 
-        Spawn(class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), Rotator(HitNormal));
+        Spawn(Class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), Rotator(HitNormal));
 
         if (ST == EST_Snow || ST == EST_Ice)
         {
@@ -278,7 +278,7 @@ simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
     // Move karma ragdolls around when this explodes
     Start = Location + vect(0.0, 0.0, 32.0);
 
-    foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
+    foreach VisibleCollidingActors(Class'ROPawn', Victims, DamageRadius, Start)
     {
         if (Victims != self && Victims.Physics == PHYS_KarmaRagDoll)
         {
@@ -319,7 +319,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -513,7 +513,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -615,11 +615,11 @@ defaultproperties
 
     Damage=500
     DamageRadius=1000.0
-    MyDamageType=class'DHArtillery105DamageType'
+    MyDamageType=Class'DHArtillery105DamageType'
     MomentumTransfer=75000.0
 
     DrawType=DT_None // was DT_StaticMesh in RO, but was then set to DT_None in PostBeginPlay - now we simply start with None & switch to SM when we drop the projectile
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell' // was a panzerfaust warhead in RO, although never visible - now a large shell
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_shell' // was a panzerfaust warhead in RO, although never visible - now a large shell
     CullDistance=50000.0
     AmbientGlow=100
 
@@ -628,21 +628,21 @@ defaultproperties
     LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
 
     DistantSound=Sound'Artillery.fire_distant'
-    CloseSound(0)=Sound'Artillery.zoomin.zoom_in01'
-    CloseSound(1)=Sound'Artillery.zoomin.zoom_in02'
-    CloseSound(2)=Sound'Artillery.zoomin.zoom_in03'
-    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
-    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
-    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
-    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
+    CloseSound(0)=Sound'Artillery.zoom_in01'
+    CloseSound(1)=Sound'Artillery.zoom_in02'
+    CloseSound(2)=Sound'Artillery.zoom_in03'
+    ExplosionSound(0)=Sound'Artillery.explo01'
+    ExplosionSound(1)=Sound'Artillery.explo02'
+    ExplosionSound(2)=Sound'Artillery.explo03'
+    ExplosionSound(3)=Sound'Artillery.explo04'
     TransientSoundVolume=1.0
 
-    ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
-    ShellHitDirtEffectLowClass=class'ROArtilleryDirtEmitter_simple'
-    ShellHitSnowEffectLowClass=class'ROArtillerySnowEmitter_simple'
-    ExplosionDecal=class'ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ArtilleryMarkSnow'
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitDirtEffectLowClass=Class'ROArtilleryDirtEmitter_simple'
+    ShellHitSnowEffectLowClass=Class'ROArtillerySnowEmitter_simple'
+    ExplosionDecal=Class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=Class'ArtilleryMarkSnow'
 
     ShakeRotMag=(X=0.0,Y=0.0,Z=200.0)
     ShakeRotRate=(X=0.0,Y=0.0,Z=2500.0)

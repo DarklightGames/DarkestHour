@@ -10,9 +10,9 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext'
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_collision',AttachBone="gun_yaw")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_hatch_collision',AttachBone="hatch")
-    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.fiatl640_turret_collision',AttachBone="gun_yaw")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.fiatl640_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
 
     // TODO: fix the skin ordering on interior/exterior to match (ext first, then int)
     //Skins(0)=Texture'DH_Autoblinda_tex.ab41_turret_ext'
@@ -45,8 +45,8 @@ defaultproperties
     CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo  // TODO: add correct L6/40 ammo types
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Breda2065CannonShell'
+    SecondaryProjectileClass=Class'DH_Breda2065CannonShellHE'
 
     nProjectileDescriptions(0)="Granata Perforante da 20"   // AP
     nProjectileDescriptions(1)="Granata da 20"              // HE
@@ -66,11 +66,11 @@ defaultproperties
     FireInterval=0.25   // 240 rounds per minute
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    AltFireProjectileClass=Class'DH_Breda38Bullet'
     InitialAltAmmo=24
     NumMGMags=10
     AltFireInterval=0.109  // 550 rounds per minute
-    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
+    TracerProjectileClass=Class'DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
@@ -80,9 +80,9 @@ defaultproperties
     AltFireOffset=(X=-8,Y=0,Z=0)
 
     // TODO: get new sounds for all these!
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
     AltFireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
     AltFireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
 

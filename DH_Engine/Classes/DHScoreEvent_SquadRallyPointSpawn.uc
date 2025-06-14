@@ -7,13 +7,13 @@ class DHScoreEvent_SquadRallyPointSpawn extends DHScoreEvent;
 
 static function DHScoreEvent_SquadRallyPointSpawn Create()
 {
-    return new class'DHScoreEvent_SquadRallyPointSpawn';
+    return new Class'DHScoreEvent_SquadRallyPointSpawn';
 }
 
 defaultproperties
 {
     HumanReadableName="Squad Rally Point Spawn"
-    CategoryClass=class'DHScoreCategory_Support'
+    CategoryClass=Class'DHScoreCategory_Support'
     Value=25
     LimitPerDuration=10
 }

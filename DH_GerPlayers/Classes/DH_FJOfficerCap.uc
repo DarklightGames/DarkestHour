@@ -10,5 +10,5 @@ class DH_FJOfficercap extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_Fallsch_Helmet'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1'
+    Skins(0)=Texture'DHGermanCharactersTex.FJ_Helmet1'
 }

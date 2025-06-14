@@ -9,7 +9,7 @@ class DHSovietCannonShell extends DHCannonShellAP // a solid shot armor-piercing
 defaultproperties
 {
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    CoronaClass=Class'DHShellTracer_GreenLarge'
+    ShellTrailClass=Class'DHShellTrail_Green'
     TracerHue=64
 }

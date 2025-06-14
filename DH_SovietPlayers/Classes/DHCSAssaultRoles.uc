@@ -9,9 +9,9 @@ class DHCSAssaultRoles extends DHAlliedAssaultRoles
 defaultproperties
 {
     AltName="Samopalnik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_PPSH41Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
+    Grenades(0)=(Item=Class'DH_F1GrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHCzechVoice"
     AltVoiceType="DH_SovietPlayers.DHCzechVoice"
-    GlovedHandTexture=Texture'DHBritishCharactersTex.Winter.hands_BRITgloves'
+    GlovedHandTexture=Texture'DHBritishCharactersTex.hands_BRITgloves'
 }

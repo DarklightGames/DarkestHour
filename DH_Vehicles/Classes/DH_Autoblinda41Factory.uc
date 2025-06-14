@@ -8,5 +8,5 @@ class DH_Autoblinda41Factory extends DH_ItalianVehicles;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext'
-    VehicleClass=class'DH_Autoblinda41ArmoredCar'
+    VehicleClass=Class'DH_Autoblinda41ArmoredCar'
 }

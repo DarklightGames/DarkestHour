@@ -17,7 +17,7 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", class'Class'));
+    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", Class'Class'));
 }
 
 defaultproperties
@@ -36,17 +36,17 @@ defaultproperties
     ReinforcementCost=2
     PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
+    Skins(0)=Texture'DH_VehiclesGE_tex.Halftrack_body_camo2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.SdKfz251_22_Destroyed'
 
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sdkfz_251_22'
 
     //Add AMMO HIT BOX for 7.5 cm shell storage
     VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
