@@ -180,4 +180,6 @@ defaultproperties
     Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
     Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
     Records(122)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
+    Records(123)=(ClassName="DH_Weapons.DH_CarcanoM38Weapon",WeaponNames=("m38","m38short"))
+    Records(124)=(ClassName="DH_Weapons.DH_CarcanoM38CavalryWeapon",WeaponNames=("m38cav","m38cavalry"))
 }
