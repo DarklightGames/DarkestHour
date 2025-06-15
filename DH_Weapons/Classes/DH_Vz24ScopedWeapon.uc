@@ -17,10 +17,10 @@ defaultproperties
 {
     ItemName="Vz.24 Rifle (IOR)"
     NativeItemName="ZB vz.24 Puska (IOR)"
-    FireModeClass(0)=class'DH_Weapons.DH_Vz24ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Vz24ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Vz24ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Vz24ScopedPickup'
+    FireModeClass(0)=class'DH_Vz24ScopedFire'
+    FireModeClass(1)=class'DH_Vz24ScopedMeleeFire'
+    AttachmentClass=class'DH_Vz24ScopedAttachment'
+    PickupClass=class'DH_Vz24ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.Vz24scoped_mesh'
 
@@ -32,8 +32,8 @@ defaultproperties
     IronSightDisplayFOV=38.0
     IronSightDisplayFOVHigh=38.0
     PlayerFOVZoom=14.11
-    ScopePortalFOV=7.1     
-    ScopePortalFOVHigh=7.1 // "4,25x28" which appears to be 6.6 degrees? 
+    ScopePortalFOV=7.1
+    ScopePortalFOVHigh=7.1 // "4,25x28" which appears to be 6.6 degrees?
     LensMaterialID=5
 
     PlayerIronsightFOV=60.0
