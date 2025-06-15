@@ -68,7 +68,7 @@ defaultproperties
     Records(8)=(ClassName="DH_Weapons.DH_DP27Weapon",WeaponNames=("dp27"))
     Records(9)=(ClassName="DH_Weapons.DH_EnfieldNo2Weapon",WeaponNames=("enfield2", "webley"))
     Records(10)=(ClassName="DH_Weapons.DH_EnfieldNo4Weapon",WeaponNames=("enfield", "enfield4"))
-    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfieldscoped", "enfield4scoped"))
+    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfieldscoped", "enfield4scoped", "no4scoped", "no4T"))
     Records(12)=(ClassName="DH_Weapons.DH_F1GrenadeWeapon",WeaponNames=("f1"))
     Records(13)=(ClassName="DH_Weapons.DH_FG42Weapon",WeaponNames=("fg42"))
     Records(14)=(ClassName="DH_Weapons.DH_G41Weapon",WeaponNames=("g41"))
@@ -78,7 +78,7 @@ defaultproperties
     Records(18)=(ClassName="DH_Weapons.DH_GreaseGunWeapon",WeaponNames=("greasegun"))
     Records(19)=(ClassName="DH_Weapons.DH_Kar98Weapon",WeaponNames=("k98", "kar98"))
     Records(20)=(ClassName="DH_Weapons.DH_Kar98NoCoverWeapon",WeaponNames=("k98nohood"))
-    Records(21)=(ClassName="DH_Weapons.DH_Kar98ScopedWeapon",WeaponNames=("k98scoped", "kar98scoped"))
+    Records(21)=(ClassName="DH_Weapons.DH_Kar98ScopedWeapon",WeaponNames=("k98scoped", "kar98scoped","scopedk98"))
     Records(22)=(ClassName="DH_Weapons.DH_KorovinWeapon",WeaponNames=("korovin"))
     Records(23)=(ClassName="DH_Weapons.DH_Kz8cmGrW42Weapon",bShouldExcludeFromGiveAll=true,WeaponNames=("grw42"))
     Records(24)=(ClassName="DH_Weapons.DH_M1928_20rndWeapon",WeaponNames=("m1928-20"))
@@ -180,4 +180,5 @@ defaultproperties
     Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
     Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
     Records(122)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
+    Records(123)=(ClassName="DH_Weapons.DH_MN9130ScopedWeapon",WeaponNames=("mosinscoped","scopedmosinpu","scopedmosinlate"))
 }
