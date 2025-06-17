@@ -10,10 +10,10 @@ defaultproperties
     ItemName="Carcano mod. 38 Cavalry Carbine"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=Class'DH_Weapons.DH_CarcanoM38CavalryFire'
-    FireModeClass(1)=Class'DH_Weapons.DH_CarcanoM38CavalryMeleeFire'
-    AttachmentClass=Class'DH_Weapons.DH_CarcanoM38CavalryAttachment'
-    PickupClass=Class'DH_Weapons.DH_CarcanoM38CavalryPickup'
+    FireModeClass(0)=Class'DH_CarcanoM38CavalryFire'
+    FireModeClass(1)=Class'DH_CarcanoM38CavalryMeleeFire'
+    AttachmentClass=Class'DH_CarcanoM38CavalryAttachment'
+    PickupClass=Class'DH_CarcanoM38CavalryPickup'
 
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 
