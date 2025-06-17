@@ -161,7 +161,6 @@ function SpawnVehicle()
             }
 
             LastSpawnedTime = Level.TimeSeconds;
-            Log("Setting teamnum from DHVehicleFactory");
             LastSpawnedVehicle.SetTeamNum(TeamNum);
             LastSpawnedVehicle.ParentFactory = self;
             LastSpawnedVehicle.SetOwner(none); // reset (vehicle will have completed its own initialization by now)
@@ -176,7 +175,7 @@ function SpawnVehicle()
         }
         else
         {
-            Log("Spawned vehicle failed for" @ self);
+            Warn("Spawned vehicle failed for" @ self);
         }
     }
 }

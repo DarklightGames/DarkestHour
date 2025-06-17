@@ -3,16 +3,21 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-// Original models, skins & animation by William "Teufelhund" Miller of the AHZ Red Orchestra mod team
-
-class DH_45mmM1942Gun extends DH_45mmM1937Gun;
+class DH_45mmM1942Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="45mm M-42 AT gun"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_45mmM1942GunCannonPawn')
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.45mmGun.45mmGunM1942_destroyed'
-    // Haven't made 'turret' HUD icons for M1942 gun as there's no room on existing icon texture to extend the barrel
-    // So making a new, re-scaled 'turret' icon would also mean making a new, re-scaled base icon
-    // On balance, it's not worth it & using the M1937 HUD icons is reasonable in game, for what it is
+    VehicleNameString="45mm M-42 AT Gun"
+    VehicleTeam=1
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_45mmM1942GunCannonPawn',WeaponBone="turret_placement")
+    Mesh=SkeletalMesh'DH_Pak36_anm.45mm_body_ext'
+    Skins(0)=Texture'DH_Pak36_tex.45mm_ext'
+    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.45mmGun.45mmGunM1937_destroyed'
+    VehicleHudImage=Texture'DH_Pak36_tex.45mm_body_icon'
+    VehicleHudTurret=TexRotator'DH_Pak36_tex.m42_turret_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak36_tex.m42_turret_icon_look'
+    ExitPositions(1)=(X=-88.0,Y=-8.0,Z=25.0)
+    VehicleMass=8.0
+    bCanBeRotated=true
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 }
