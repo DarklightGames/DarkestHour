@@ -15,7 +15,7 @@ defaultproperties
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
     BinocPositionIndex=3
-    DrivePos=(X=-33.0,Y=2.0,Z=-87.0)    // TODO: should be zero once we get the anims in
+    DrivePos=(Z=58)
     DriveAnim="pak43_gunner_idle"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)

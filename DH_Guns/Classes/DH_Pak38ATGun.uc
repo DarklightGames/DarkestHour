@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Third-person player animations
-//==============================================================================
 
 class DH_Pak38ATGun extends DHATGun;
 

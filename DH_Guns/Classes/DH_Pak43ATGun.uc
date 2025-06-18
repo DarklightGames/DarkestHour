@@ -2,9 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Third person anims
-// [ ] Maybe to to do a karma impulse on the whole thing when it fires
-//==============================================================================
 
 class DH_Pak43ATGun extends DHATGun;
 
