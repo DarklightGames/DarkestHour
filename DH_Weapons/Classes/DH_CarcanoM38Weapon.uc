@@ -7,7 +7,7 @@ class DH_CarcanoM38Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano mod. 38 Short Rifle"
+    ItemName="Carcano mod. 91/38 Short Rifle"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM38Fire'

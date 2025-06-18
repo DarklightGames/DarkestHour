@@ -7,7 +7,7 @@ class DH_CarcanoM38CavalryWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano mod. 38 Cavalry Carbine"
+    ItemName="Carcano mod. 91/38 Cavalry Carbine"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM38CavalryFire'
