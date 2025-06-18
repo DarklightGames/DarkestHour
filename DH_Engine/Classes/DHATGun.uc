@@ -43,6 +43,8 @@ var bool              bOldIsRotating;
 var Material          RotationProjectionTexture;
 var DynamicProjector    RotationProjector;
 
+var float               CrushMomentumThreshold;
+
 
 replication
 {
@@ -641,6 +643,31 @@ function PrependFactoryExitPositions()
     }
 }
 
+// Overridden to allow vehicles to destroy AT guns by running them over.
+event KImpact(Actor Other, Vector Pos, Vector ImpactVel, Vector ImpactNorm)
+{
+    local Vehicle V;
+    local float Momentum;
+
+    V = Vehicle(Other);
+
+    super.KImpact(Other, Pos, ImpactVel, ImpactNorm);
+
+    if (V == none || V.GetTeamNum() == GetTeamNum())
+    {
+        // Don't destroy the gun if it's a friendly vehicle that has hit us.
+        return;
+    }
+
+    Momentum = VSize(ImpactVel) * V.KGetMass();
+
+    if (Momentum >= CrushMomentumThreshold)
+    {
+        LastHitByDamageType = RanOverDamageType;
+        KilledBy(V.Driver);
+    }
+}
+
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
 function Fire(optional float F);
 function ServerStartEngine();
@@ -767,7 +794,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
+    KParams=KParams0
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
