@@ -7,7 +7,7 @@ class DH_CarcanoM38CavalryFire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=Class'DH_CarcanoM91Bullet'
+    ProjectileClass=Class'DH_CarcanoM38CavalryBullet'
     AmmoClass=Class'DH_CarcanoM91Ammo'
     Spread=48.0
     AddedPitch=15
