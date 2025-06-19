@@ -10,6 +10,7 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     VehicleClasses(0)=(VehicleClass=class'DH_Guns.DH_45mmM1942Gun')
     VehicleClasses(1)=(VehicleClass=class'DH_Guns.DH_45mmM1942Gun_Snow',SeasonFilters=((Seasons=(SEASON_Winter))))
+    VehicleClasses(2)=(VehicleClass=class'DH_Guns.DH_45mmM1942Gun_Camo')
     SupplyCost=800
     ProgressMax=8
 }

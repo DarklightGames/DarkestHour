@@ -2,11 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Destroyed mesh
-// [ ] Finalized textures
-// [ ] Downscale pak36 & m45 textures
-// [ ] Variants (factories etc.)
-//==============================================================================
 
 class DH_45mmM1937Gun extends DHATGun;
 
@@ -17,7 +12,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_45mmM1937GunCannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak36_anm.45mm_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.45mmGun.45mmGunM1937_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.45MM_53K_DESTROYED'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak36_tex.45mm_ext_destroyed'
     VehicleHudImage=Texture'DH_Pak36_tex.45mm_body_icon'
     VehicleHudTurret=TexRotator'DH_Pak36_tex.53k_turret_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak36_tex.53k_turret_icon_look'

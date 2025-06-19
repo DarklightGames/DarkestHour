@@ -12,7 +12,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_45mmM1942GunCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Pak36_anm.45mm_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.45mmGun.45mmGunM1937_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.45mm_m42_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak36_tex.45mm_ext_destroyed'
     VehicleHudImage=Texture'DH_Pak36_tex.45mm_body_icon'
     VehicleHudTurret=TexRotator'DH_Pak36_tex.m42_turret_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak36_tex.m42_turret_icon_look'

@@ -9,5 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext_winter'
     CannonSkins(0)=Texture'DH_Pak36_tex.45mm_ext_winter'
-    //DestroyedMeshSkins(0)=Combiner'DH_Artillery_tex.45mmATGun.45mmATGun_winter_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak36_tex.45mm_ext_winter_destroyed'
 }
