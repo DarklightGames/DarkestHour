@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHArtillerySpottingScope_M116 extends DHArtillerySpottingScope;
+class DH_M116ArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {

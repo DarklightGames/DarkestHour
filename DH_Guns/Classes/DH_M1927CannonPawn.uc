@@ -41,5 +41,5 @@ defaultproperties
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_M1927'
+    ArtillerySpottingScopeClass=class'DH_Guns.DH_M1927ArtillerySpottingScope'
 }
