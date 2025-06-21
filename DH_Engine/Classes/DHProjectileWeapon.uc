@@ -51,6 +51,8 @@ var         name        BayoAttachEmptyAnim;        // anim for attaching the ba
 var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
+var         StaticMesh          BayonetStaticMesh;  // custom bayonet mesh reference
+var         DHDecoAttachment    BayonetAttachment;  // attachment for custom bayonet mesh
 
 var         name        MuzzleBone;                 // muzzle bone, used to get coordinates
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
@@ -355,6 +357,12 @@ simulated function Destroyed()
         Level.ObjectPool.FreeObject(ScopeScriptedShader);
         ScopeScriptedShader = none;
     }
+
+    if (BayonetAttachment != none)
+    {
+        BayonetAttachment.Destroy();
+    }
+
 }
 
 // New state containing common function overrides from states that extend state Busy, so instead they extend WeaponBusy to reduce code repetition
@@ -770,6 +778,31 @@ simulated function InitializeClientWeaponSystems()
     SpawnAmmoBelt();
 }
 
+
+//Custom function to change Bayonet mesh, allows for both early and late war bayonets to attach to a single weapon
+//Usefull for countries fielding different patterns of bayonet during the war
+simulated function InitializeBayonet() 
+{  
+    if (bHasBayonet && BayonetStaticMesh != none)
+    {
+        BayonetAttachment = Spawn(class'DH_Engine.DHDecoAttachment', self);
+            
+        if (BayonetAttachment != none)
+        {
+            BayonetAttachment.SetStaticMesh(BayonetStaticMesh);
+            BayonetAttachment.SetDrawScale(5.0);
+            AttachToBone(BayonetAttachment, BayonetBoneName);
+            // NOTE: 0.001 is needed here instead of 0.0 since the engine queries the resulting
+            // transform matrix to determine the rotation. Scaling the bone to 0.0 zeroes out the
+            // rotation component of the matrix, which causes the bone to be rotated incorrectly.
+            SetBoneScale(0, 0.001, BayonetBoneName);
+        }
+        else
+        {
+            Log("Failed to spawn bayonet attachment");
+        }
+    }
+}
 // Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -789,6 +822,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
         InitializeClientWeaponSystems();
         InitializeBayonetAnimationChannels();
+        InitializeBayonet();
 
         UpdateBayonet();
         UpdateWeaponComponentAnimations();
@@ -1216,13 +1250,27 @@ simulated function PlayEndCrawl()
 // Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function HideBayonet()
 {
-    SetBoneScale(0, 0.001, BayonetBoneName); // scale down bayonet bone
+    if (BayonetAttachment != none)
+    {
+        BayonetAttachment.bHidden = true;
+    }
+    else
+    {
+        SetBoneScale(0, 0.001, BayonetBoneName); // scale down bayonet bone
+    }
 }
 
 // Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function ShowBayonet()
 {
-    SetBoneScale(0, 1.0, BayonetBoneName);
+    if (BayonetAttachment != none)
+    {
+        BayonetAttachment.bHidden = false;
+    }
+    else
+    {
+        SetBoneScale(0, 1.0, BayonetBoneName);
+    }
 }
 
 // Triggered by deploy keybind & attempts to deploy the bipod or attach/detach any bayonet
