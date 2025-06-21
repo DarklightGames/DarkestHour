@@ -3,9 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHConstruction_Resupply_Vehicles_Italy extends DHConstruction_Resupply_Vehicles;
+class DHConstruction_Resupply_Vehicles_Italy extends DHConstructionResupplyVehicles;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.ITA_AT_Ammo_Box';
+    StaticMesh=StaticMesh'DH_Construction_stc.ITA_AT_Ammo_Box';
 }

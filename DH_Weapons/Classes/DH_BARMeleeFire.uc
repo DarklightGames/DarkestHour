@@ -7,5 +7,5 @@ class DH_BARMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_BARBashDamType'
+    DamageType=Class'DH_BARBashDamType'
 }

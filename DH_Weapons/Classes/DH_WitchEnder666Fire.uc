@@ -7,12 +7,12 @@ class DH_WitchEnder666Fire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_WitchEnder666Bullet'
-    AmmoClass=class'DH_Weapons.DH_WitchEnder666Ammo'
+    ProjectileClass=Class'DH_WitchEnder666Bullet'
+    AmmoClass=Class'DH_WitchEnder666Ammo'
     ProjPerFire=15
     bUsePreLaunchTrace=false // due to multiple buckshot projectiles fired with each shot
     BotRefireRate=0.95
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
+    FlashEmitterClass=Class'MuzzleFlash1stKar'
 
     Spread=250.0
     CrouchSpreadModifier=1.0 // spread modifiers all neutral as it's a very high spread, multi-projectile weapon
@@ -26,8 +26,8 @@ defaultproperties
     MaxHorizontalRecoilAngle=120
     
 
-    FireSounds(0)=Sound'DH_WeaponSounds.Winchester1897.WitchEnderFire'
-    ShellEjectClass=class'DH_Weapons.DH_1stShellEjectShotgun'
+    FireSounds(0)=Sound'DH_WeaponSounds.WitchEnderFire'
+    ShellEjectClass=Class'DH_1stShellEjectShotgun'
     ShellHipOffset=(X=0,Y=0,Z=0)
     ShellIronSightOffset=(X=0,Y=0,Z=0)
     FireForce="AssaultRifleFire"

@@ -53,7 +53,7 @@ event Initialized()
 {
     super.Initialized();
 
-    Menus = new class'Stack_Object';
+    Menus = new Class'Stack_Object';
 
     GRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
     InstigatorPawn = ViewportOwner.Actor.Pawn;
@@ -91,7 +91,7 @@ function CreateOptionTexRotators(DHCommandMenu Menu)
 
     for (i = 0; i < Menu.Options.Length; ++i)
     {
-        TR = new class'Engine.TexRotator';
+        TR = new Class'TexRotator';
         TR.Rotation.Yaw = -(i * (65536 / Menu.SlotCount)) + ((0.5 / Menu.SlotCount) * 65536);
         TR.Material = OptionTextures[Menu.SlotCount - 1];
         TR.TexRotationType = TR_FixedRotation;
@@ -109,7 +109,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     local DHCommandMenu Menu, OldMenu;
     local class<DHCommandMenu> MenuClass;
 
-    MenuClass = class<DHCommandMenu>(DynamicLoadObject(ClassName, class'class'));
+    MenuClass = class<DHCommandMenu>(DynamicLoadObject(ClassName, Class'class'));
 
     Menu = new MenuClass;
 
@@ -122,6 +122,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
 
     Menu.Interaction = self;
     Menu.MenuObject = OptionalObject;
+    Menu.MenuInteger = OptionalInteger;
     Menu.Setup();
 
     OldMenu = DHCommandMenu(Menus.Peek());
@@ -251,7 +252,7 @@ function Tick(float DeltaTime)
     }
 
     // Clamp cursor
-    Cursor = class'UCore'.static.VClampSize(Cursor, 0.0, OUTER_RADIUS);
+    Cursor = Class'UCore'.static.VClampSize(Cursor, 0.0, OUTER_RADIUS);
 
     OldSelectedIndex = SelectedIndex;
 
@@ -260,7 +261,7 @@ function Tick(float DeltaTime)
         // Calculated the selected index
         ArcLength = TAU / Menu.SlotCount;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
-        Theta += class'UUnits'.static.DegreesToRadians(90);
+        Theta += Class'UUnits'.static.DegreesToRadians(90);
 
         if (Theta < 0)
         {
@@ -332,7 +333,7 @@ function PostRender(Canvas C)
     CenterX = C.ClipX / 2;
     CenterY = C.ClipY / 2;
 
-    C.DrawColor = class'UColor'.default.White;
+    C.DrawColor = Class'UColor'.default.White;
     C.DrawColor.A = byte(255 * MenuAlpha);
 
     // Draw menu crosshair
@@ -341,11 +342,11 @@ function PostRender(Canvas C)
     // Draw outer "beauty" ring
     DrawCenteredTile(C, RingTexture, CenterX, CenterY, GUIScale);
 
-    C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+    C.Font = Class'DHHud'.static.GetSmallerMenuFont(C);
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    Theta -= class'UUnits'.static.DegreesToRadians(90);
+    Theta -= Class'UUnits'.static.DegreesToRadians(90);
 
     if (Menu == none)
     {
@@ -388,7 +389,7 @@ function PostRender(Canvas C)
             }
             else
             {
-                C.DrawColor = class'UColor'.default.White;
+                C.DrawColor = Class'UColor'.default.White;
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
         }
@@ -401,13 +402,13 @@ function PostRender(Canvas C)
         {
             if (bIsOptionDisabled)
             {
-                C.DrawColor = class'UColor'.default.DarkGray;
+                C.DrawColor = Class'UColor'.default.DarkGray;
             }
             else
             {
-                if (class'UColor'.static.IsZero(Menu.Options[OptionIndex].IconColor))
+                if (Class'UColor'.static.IsZero(Menu.Options[OptionIndex].IconColor))
                 {
-                    C.DrawColor = class'UColor'.default.White;
+                    C.DrawColor = Class'UColor'.default.White;
                 }
                 else
                 {
@@ -467,14 +468,14 @@ function PostRender(Canvas C)
 
         // Draw action text
         C.TextSize(ORI.OptionName, XL, YL);
-        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor = Class'UColor'.default.White;
         C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY + (GUIScale * 32.0));
         C.DrawText(ORI.OptionName);
 
         // Draw description text
         C.TextSize(ORI.DescriptionText, XL, YL);
-        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor = Class'UColor'.default.White;
         C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 192) - YL);
         C.DrawText(ORI.DescriptionText);
@@ -484,7 +485,7 @@ function PostRender(Canvas C)
     {
         // Draw the cursor position for debugging purposes.
         C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
-        C.DrawColor = class'UColor'.default.Red;
+        C.DrawColor = Class'UColor'.default.Red;
         C.DrawBox(C, 4, 4);
     }
 }
@@ -608,16 +609,16 @@ defaultproperties
     bVisible=true
     bRequiresTick=true
 
-    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_1'
-    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_2'
-    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_3'
-    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_4'
-    OptionTextures(4)=Texture'DH_InterfaceArt_tex.Communication.menu_option_5'
-    OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
-    OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
-    OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+    OptionTextures(0)=Texture'DH_InterfaceArt_tex.menu_option_1'
+    OptionTextures(1)=Texture'DH_InterfaceArt_tex.menu_option_2'
+    OptionTextures(2)=Texture'DH_InterfaceArt_tex.menu_option_3'
+    OptionTextures(3)=Texture'DH_InterfaceArt_tex.menu_option_4'
+    OptionTextures(4)=Texture'DH_InterfaceArt_tex.menu_option_5'
+    OptionTextures(5)=Texture'DH_InterfaceArt_tex.menu_option_6'
+    OptionTextures(6)=Texture'DH_InterfaceArt_tex.menu_option_7'
+    OptionTextures(7)=Texture'DH_InterfaceArt_tex.menu_option_8'
 
-    RingTexture=Texture'DH_InterfaceArt_tex.Communication.ring'
+    RingTexture=Texture'DH_InterfaceArt_tex.ring'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)
@@ -627,5 +628,5 @@ defaultproperties
     HoverSound=Sound'ROMenuSounds.msfxDown'
     CancelSound=Sound'ROMenuSounds.CharFade'
 
-    CrosshairMaterial=Material'DH_InterfaceArt_tex.Communication.menu_crosshair'
+    CrosshairMaterial=Material'DH_InterfaceArt_tex.menu_crosshair'
 }

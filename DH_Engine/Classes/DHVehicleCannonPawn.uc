@@ -369,16 +369,16 @@ function DrawGunsightRangeSetting(Canvas C)
         return;
     }
 
-    RangeUnitName = class'DHUnits'.static.GetDistanceUnitName(RangeUnit);
+    RangeUnitName = Class'DHUnits'.static.GetDistanceUnitName(RangeUnit);
 
     C.Style = ERenderStyle.STY_Normal;
     SavedColor = C.DrawColor;
-    WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+    WhiteColor = Class'Canvas'.static.MakeColor(255, 255, 255, 175);
     C.DrawColor = WhiteColor;
     MapX = RangePositionX * C.ClipX;
     MapY = RangePositionY * C.ClipY;
     C.SetPos(MapX, MapY);
-    C.Font = class'DHHud'.static.GetSmallMenuFont(C);
+    C.Font = Class'DHHud'.static.GetSmallMenuFont(C);
     C.StrLen(Cannon.GetRange() @ RangeUnitName, XL, YL);
     C.DrawTextJustified(Cannon.GetRange() @ RangeUnitName, 2, MapX, MapY, MapX + XL, MapY + YL);
     C.DrawColor = SavedColor;
@@ -1233,7 +1233,7 @@ exec function SetSLFireOffset(string NewX, string NewY, string NewZ)
 {
     if (IsDebugModeAllowed() && Cannon != none)
     {
-        class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ);
+        Class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ);
     }
 }
 
@@ -1252,15 +1252,15 @@ exec function ShellImpulse(string NewX, string NewY, string NewZ)
 {
     if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
     {
-        Log("DHAnimNotify_SpawnKActor: DebugImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugImpulse $ ")");
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.X = float(NewX);
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Y = float(NewY);
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Z = float(NewZ);
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+        Log("DHAnimNotify_SpawnKActor: DebugImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse $ ")");
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.X = float(NewX);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Y = float(NewY);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Z = float(NewZ);
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
     }
     else
     {
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
     }
 }
 
@@ -1268,15 +1268,15 @@ exec function ShellAngImpulse(string NewX, string NewY, string NewZ)
 {
     if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
     {
-        Log("DHAnimNotify_SpawnKActor: DebugAngularImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse $ ")");
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.X = float(NewX);
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Y = float(NewY);
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Z = float(NewZ);
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+        Log("DHAnimNotify_SpawnKActor: DebugAngularImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse $ ")");
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.X = float(NewX);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Y = float(NewY);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Z = float(NewZ);
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
     }
     else
     {
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
     }
 }
 
@@ -1311,7 +1311,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     {
         for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
         {
-            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Pitch = Class'UUnits'.static.MilsToUnreal(Mils);
             VehWep.CurrentAim.Yaw = 0;
 
             VehWep.CalcWeaponFire(false);
@@ -1327,7 +1327,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
 exec function CorrectX(float NewValue)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         Log(Name @ "OverlayCorrectionX =" @ NewValue @ "(was" @ OverlayCorrectionX $ ")");
         OverlayCorrectionX = NewValue;
@@ -1336,7 +1336,7 @@ exec function CorrectX(float NewValue)
 
 exec function CorrectY(float NewValue)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
         OverlayCorrectionY = NewValue;
@@ -1377,7 +1377,7 @@ defaultproperties
     // Camera & HUD
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
-    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 
     // Gunsight overlay
     GunsightSize=0.5
@@ -1397,9 +1397,9 @@ defaultproperties
 
     // Movement sounds
     bSpecialRotateSounds=true
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_turret_traverse2'
+    ManualPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_turret_traverse'
     SoundVolume=130
 
     // Weapon fire

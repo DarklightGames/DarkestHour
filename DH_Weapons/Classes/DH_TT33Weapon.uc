@@ -8,13 +8,13 @@ class DH_TT33Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="TT-33"
-    FireModeClass(0)=class'DH_Weapons.DH_TT33Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_TT33MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_TT33Attachment'
-    PickupClass=class'DH_Weapons.DH_TT33Pickup'
+    FireModeClass(0)=Class'DH_TT33Fire'
+    FireModeClass(1)=Class'DH_TT33MeleeFire'
+    AttachmentClass=Class'DH_TT33Attachment'
+    PickupClass=Class'DH_TT33Pickup'
 
     Mesh=SkeletalMesh'DH_Tt33_1st.TT-33-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.TT33_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.TT33_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

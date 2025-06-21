@@ -89,9 +89,9 @@ defaultproperties
     CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Pak36CannonShell'
-    SecondaryProjectileClass=class'DH_Pak36CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Pak36CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_Pak36CannonShell'
+    SecondaryProjectileClass=Class'DH_Pak36CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_Pak36CannonShellHEAT'
 
     ProjectileDescriptions(0)="AP-HE-T"
     ProjectileDescriptions(1)="APCR-T"

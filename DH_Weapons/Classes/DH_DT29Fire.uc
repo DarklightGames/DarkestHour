@@ -7,9 +7,9 @@ class DH_DT29Fire extends DHFastAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_DT29Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_DT29TracerBullet'
-    AmmoClass=class'DH_Weapons.DH_DT29Ammo'
+    ProjectileClass=Class'DH_DT29Bullet'
+    TracerProjectileClass=Class'DH_DT29TracerBullet'
+    AmmoClass=Class'DH_DT29Ammo'
     FireRate=0.105 // 632 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.000000)
@@ -24,9 +24,9 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DT29LMG_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stDP'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.DT29LMG_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.DP28_fire_end'
+    FlashEmitterClass=Class'MuzzleFlash1stDP'
     BipodDeployFireAnim="Deploy_shoot_loop"
     BipodDeployFireLoopAnim="Deploy_Shoot_Loop"
     BipodDeployFireEndAnim="Deploy_Shoot_End"
@@ -37,7 +37,7 @@ defaultproperties
     //FireLastAnim="shoot_last"
     BipodDeployFireLastAnim="deploy_shoot_last"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=20.0,Z=-10.0)
     ShellHipOffset=(Y=-7.0)
     ShellRotOffsetIron=(Pitch=-13000)

@@ -194,7 +194,7 @@ simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ChurchillMountedMG'
+    GunClass=Class'DH_ChurchillMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=44.74,ViewLocation=(X=10.0,Y=-7.0,Z=0.0),TransitionUpAnim="MG_periscope_in",ViewPitchDownLimit=65535,bDrawOverlays=true)
@@ -208,7 +208,7 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
     CameraBone="camera_MG"
     GunsightCameraBone="MG_pivot"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.BesaMG_sight'
     GunsightSize=0.469 // 21 degrees visible FOV at 1.9x magnification (No.50 x1.9 Mk IS sight)
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 }

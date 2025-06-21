@@ -16,17 +16,17 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.8
     VehicleHudOccupantsX(3)=0.55
     VehicleHudOccupantsY(3)=0.8
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
     SupplyAttachmentRotation=(Yaw=-16384)
     SupplyAttachmentOffset=(X=0.0,Y=55.0,Z=-10.0)
-    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'
-    MapIconMaterial=Texture'DH_GUI_tex.GUI.supply_point'
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.GER_Supply_cache_full'
+    MapIconMaterial=Texture'DH_GUI_tex.supply_point'
     ResupplyAttachmentBone="supply"
     VehHitpoints(5)=(PointRadius=40.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DisintegrationEffectClass=Class'ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=Class'ROVehicleObliteratedEmitter_simple'
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
 }

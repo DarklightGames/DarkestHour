@@ -7,5 +7,5 @@ class DH_BritishRadioOperator extends DHCWRadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioPawn')
+    RolePawns(0)=(PawnClass=Class'DH_BritishRadioPawn')
 }

@@ -25,7 +25,7 @@ var DHRotatingActor   RotatingActor;
 var Actor             OldBase;
 
 var ROSoundAttachment RotateSoundAttachment;
-var sound             RotateSound;
+var Sound             RotateSound;
 var float             RotateSoundVolume;
 
 var bool              bIsBeingRotated;
@@ -161,11 +161,11 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 
     if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
     {
-        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber,,, Controller);
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber,,, Controller);
     }
     else
     {
-        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber);
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber);
     }
 }
 
@@ -179,9 +179,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     ServerExitRotation();
 
     // Suicide/self-destruction
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
+    if (DamageType == Class'Suicided' || DamageType == Class'ROSuicided')
     {
-        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, Class'ROSuicided');
 
         return;
     }
@@ -245,7 +245,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Busy;
     }
 
-    if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    if (VSize(Pawn.Location - Location) > Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
     {
         return ERROR_TooFarAway;
     }
@@ -315,7 +315,7 @@ simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
     local DHPlayerReplicationInfo OtherPRI;
     local int Count;
 
-    foreach RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    foreach RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
     {
         if (OtherPawn != none &&
             OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
@@ -397,22 +397,22 @@ simulated function ClientEnterRotation()
 
     bOldIsRotating = bIsBeingRotated;
 
-    FadeMaterial = new class'FadeColor';
-    FadeMaterial.Color1 = class'UColor'.default.White;
+    FadeMaterial = new Class'FadeColor';
+    FadeMaterial.Color1 = Class'UColor'.default.White;
     FadeMaterial.Color1.A = 50;
-    FadeMaterial.Color2 = class'UColor'.default.White;
+    FadeMaterial.Color2 = Class'UColor'.default.White;
     FadeMaterial.Color2.A = 95;
     FadeMaterial.FadePeriod = 0.33;
     FadeMaterial.ColorFadeType = FC_Sinusoidal;
 
-    CombinerMaterial = new class'Combiner';
+    CombinerMaterial = new Class'Combiner';
     CombinerMaterial.CombineOperation = CO_Multiply;
     CombinerMaterial.AlphaOperation = AO_Multiply;
     CombinerMaterial.Material1 = RotationProjectionTexture;
     CombinerMaterial.Material2 = FadeMaterial;
     CombinerMaterial.Modulate4X = true;
 
-    FinalMaterial = new class'FinalBlend';
+    FinalMaterial = new Class'FinalBlend';
     FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
     FinalMaterial.ZWrite = true;
     FinalMaterial.ZTest = true;
@@ -421,7 +421,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(class'DHConstructionProxyProjector', self, ,Location,Rotation);
+    RotationProjector = Spawn(Class'DHConstructionProxyProjector', self, ,Location,Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;
@@ -478,14 +478,14 @@ state Rotating
     {
         bIsBeingRotated = true;
 
-        RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor = Spawn(Class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
         RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
         RotatingActor.ControllerPawn = RotateControllerPawn;
 
         if (RotateSound != none)
         {
-            RotateSoundAttachment = Spawn(class'ROSoundAttachment');
+            RotateSoundAttachment = Spawn(Class'ROSoundAttachment');
             RotateSoundAttachment.AmbientSound = RotateSound;
             RotateSoundAttachment.SetBase(self);
         }
@@ -634,7 +634,7 @@ function PrependFactoryExitPositions()
 
     if (Factory != none && Factory.ExitPositionHintTag != '')
     {
-        foreach AllActors(class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
+        foreach AllActors(Class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
         {
             AbsoluteExitPositions.Insert(0, 1);
             AbsoluteExitPositions[0].Location = LocationHint.Location;
@@ -722,14 +722,14 @@ defaultproperties
     EngineHealth=0
     VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
     DamagedEffectClass=none
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DestructionEffectClass=Class'ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=Class'ATCannonDestroyedEmitter'
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
     bCanCrash=false
 
     // Miscellaneous
-    TouchMessageClass=class'DHATGunTouchMessage'
+    TouchMessageClass=Class'DHATGunTouchMessage'
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     MaxDesireability=1.9
     CollisionRadius=75.0
@@ -764,7 +764,7 @@ defaultproperties
     bFixedRotationDir=false
     RotateCooldown=5
     RotateControlRadiusInMeters=5
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     RotateSoundVolume=200
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
@@ -773,7 +773,7 @@ defaultproperties
     bReplicateMovement=true
     bSkipActorPropertyReplication=false
     OldBase=none
-    RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
+    RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

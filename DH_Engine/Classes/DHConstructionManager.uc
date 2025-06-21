@@ -26,7 +26,7 @@ simulated static function DHConstructionManager GetInstance(LevelInfo Level)
         {
             if (G.ConstructionManager == none)
             {
-                G.ConstructionManager = G.Spawn(class'DHConstructionManager', G);
+                G.ConstructionManager = G.Spawn(Class'DHConstructionManager', G);
             }
 
             return G.ConstructionManager;
@@ -40,7 +40,7 @@ simulated static function DHConstructionManager GetInstance(LevelInfo Level)
         {
             if (PC.ConstructionManager == none)
             {
-                PC.ConstructionManager = PC.Spawn(class'DHConstructionManager', PC);
+                PC.ConstructionManager = PC.Spawn(Class'DHConstructionManager', PC);
             }
 
             return PC.ConstructionManager;

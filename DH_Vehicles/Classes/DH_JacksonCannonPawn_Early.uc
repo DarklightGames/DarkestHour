@@ -7,5 +7,5 @@ class DH_JacksonCannonPawn_Early extends DH_JacksonCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_JacksonCannon_Early'
+    GunClass=Class'DH_JacksonCannon_Early'
 }

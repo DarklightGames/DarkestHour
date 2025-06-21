@@ -35,8 +35,8 @@ defaultproperties
     CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_45mmM1937GunCannonShell'
-    SecondaryProjectileClass=class'DH_45mmM1937GunCannonShellHE'
+    PrimaryProjectileClass=Class'DH_45mmM1937GunCannonShell'
+    SecondaryProjectileClass=Class'DH_45mmM1937GunCannonShellHE'
 
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(1)="HE"

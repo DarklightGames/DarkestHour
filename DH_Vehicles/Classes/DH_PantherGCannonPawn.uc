@@ -7,7 +7,7 @@ class DH_PantherGCannonPawn extends DH_PantherDCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_PantherGCannon'
+    GunClass=Class'DH_PantherGCannon'
     // All positions shift down 1 due to dual magnification optics (note need for overridden zero ViewFOV, which just makes it use player's default view FOV):
     DriverPositions(0)=(ViewLocation=(X=34.0,Y=-27.0,Z=7.0),ViewFOV=17.0,ViewPitchUpLimit=3276,ViewPitchDownLimit=64080,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=34.0,Y=-27.0,Z=7.0),ViewFOV=34.0,TransitionUpAnim="",DriverTransitionAnim="",ViewPitchUpLimit=3276,ViewPitchDownLimit=64080,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

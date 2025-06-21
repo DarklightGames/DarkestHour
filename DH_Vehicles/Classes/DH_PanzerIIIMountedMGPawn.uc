@@ -7,5 +7,5 @@ class DH_PanzerIIIMountedMGPawn extends DH_PanzerIVMountedMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_PanzerIIIMountedMG'
+    GunClass=Class'DH_PanzerIIIMountedMG'
 }

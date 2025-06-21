@@ -8,7 +8,7 @@ class DH_WirbelwindCannonPawn extends DH_Flakvierling38CannonPawn;
 defaultproperties
 {
     bMustBeTankCrew=true
-    GunClass=class'DH_Vehicles.DH_WirbelwindCannon'
+    GunClass=Class'DH_WirbelwindCannon'
     DrivePos=(X=-60.0,Y=5,Z=70.0)
     DriveAnim="crouch_idle_binoc"
     DriverPositions(0)=(ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_Flak38_anm.Wirbelwind_turret',ViewLocation=(X=25.0,Y=0.0,Z=0.0),TransitionUpAnim="optic_out",bDrawOverlays=true,bExposed=true,DriverTransitionAnim="crouch_idle_binoc")

@@ -7,5 +7,5 @@ class DH_LivornoCombatEngineer extends DHITAEngineerRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_ItalianPawn',Weight=1.0)
 }

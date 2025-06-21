@@ -7,7 +7,7 @@ class DH_Model35MortarCannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Model35MortarCannon'
+    GunClass=Class'DH_Model35MortarCannon'
 
     // Spotting Scope
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
@@ -37,15 +37,15 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON'
-    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON'
-    AmmoShellTextures(2)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
+    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.IT_HE_M110_3360_ICON'
+    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.IT_SMOKE_M110_3360_ICON'
+    AmmoShellTextures(2)=Texture'DH_Model35Mortar_tex.IT_SMOKE_M110_B_ICON'
 
-    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON_RELOAD'
-    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
-    AmmoShellReloadTextures(2)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
+    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.IT_HE_M110_3360_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.IT_SMOKE_M110_3360_ICON_RELOAD'
+    AmmoShellReloadTextures(2)=Texture'DH_Model35Mortar_tex.IT_SMOKE_M110_B_ICON'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
+    ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 
     GunPitchOffset=7280 // +40 degrees
 

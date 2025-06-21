@@ -70,8 +70,8 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
         // Get the server's performance string
         if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "AverageTick")
         {
-            HealthString = class'DHLib'.static.GetServerHealthString(byte(Servers[SortData[i].SortItem].ServerInfo[j].Value), HealthColor);
-            HealthString = class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString;
+            HealthString = Class'DHLib'.static.GetServerHealthString(byte(Servers[SortData[i].SortItem].ServerInfo[j].Value), HealthColor);
+            HealthString = Class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString;
         }
 
         // Get the server's location string
@@ -94,9 +94,9 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
     }
 
     // Choose style, we will grey out servers which don't match the current build.
-    if (GitCommit != class'DHBuildManifest'.default.GitCommit)
+    if (GitCommit != Class'DHBuildManifest'.default.GitCommit)
     {
-        VersionString = class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
+        VersionString = Class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
 
         if (bSelected)
         {

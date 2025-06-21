@@ -7,6 +7,6 @@ class DH_Pak40Factory_CamoTwo extends DH_Pak40Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_Pak40ATGun_CamoTwo'
+    VehicleClass=Class'DH_Guns.DH_Pak40ATGun_CamoTwo'
     Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_camo1'
 }

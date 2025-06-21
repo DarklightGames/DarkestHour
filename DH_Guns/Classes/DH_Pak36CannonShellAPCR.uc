@@ -21,13 +21,13 @@ defaultproperties
     bShatterProne=true
     ImpactDamage=310
     // TODO: custom damage type
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
+    ShellImpactDamage=Class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
     HullFireChance=0.4
     EngineFireChance=0.6
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    CoronaClass=Class'DH_Effects.DHShellTracer_Orange'
+    ShellShatterEffectClass=Class'DH_Effects.DHShellShatterEffect_Small'
 
     //Penetration (https://wwiitanks.co.uk/FORM-Gun_Data.php?I=94)
     DHPenetrationTable(0)=6.7  // 100

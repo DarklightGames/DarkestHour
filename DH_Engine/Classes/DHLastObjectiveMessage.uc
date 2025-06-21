@@ -41,5 +41,5 @@ defaultproperties
     AlliesAboutToWinMessage="Last objective -- the Allies have almost won the battle!"
     iconID=12
     altIconID=13
-    iconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    iconTexture=Texture'DH_GUI_Tex.criticalmessages_icons'
 }

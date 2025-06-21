@@ -60,6 +60,6 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
 //    NoPlayerInLineOfSight="No player in sights"
-    Options(0)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
-    Options(1)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
+    Options(0)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.construction')
+    Options(1)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.binoculars')
 }

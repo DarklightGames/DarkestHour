@@ -19,7 +19,7 @@ function Timer()
     local DHPawn    DHP;
     local int       NumPlayersInRadius;
 
-    foreach RadiusActors(class'DHPawn', DHP, ProximityRadius)
+    foreach RadiusActors(Class'DHPawn', DHP, ProximityRadius)
     {
         ++NumPlayersInRadius;
     }

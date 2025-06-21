@@ -9,13 +9,13 @@ defaultproperties
 {
     ItemName="StG 44"
     NativeItemName="Sturmgewehr 44"
-    FireModeClass(0)=class'DH_Weapons.DH_STG44Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_STG44MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_STG44Attachment'
-    PickupClass=class'DH_Weapons.DH_STG44Pickup'
+    FireModeClass(0)=Class'DH_STG44Fire'
+    FireModeClass(1)=Class'DH_STG44MeleeFire'
+    AttachmentClass=Class'DH_STG44Attachment'
+    PickupClass=Class'DH_STG44Pickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.STG44-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.STG44_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     
@@ -31,7 +31,7 @@ defaultproperties
     InitialNumPrimaryMags=7
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

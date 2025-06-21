@@ -7,6 +7,6 @@ class DH_Pak43FactoryWinter extends DH_Pak43Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Pak43ATGun_Winter'
+    VehicleClass=Class'DH_Pak43ATGun_Winter'
     Skins(0)=Texture'DH_Pak43_tex.pak43_ext_winter'
 }

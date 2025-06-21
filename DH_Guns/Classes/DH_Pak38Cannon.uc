@@ -36,9 +36,9 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Pak38CannonShell'
+    SecondaryProjectileClass=Class'DH_Pak38CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_Pak38CannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -67,13 +67,13 @@ defaultproperties
     ShootRaisedAnim="shoot"
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(1)=100

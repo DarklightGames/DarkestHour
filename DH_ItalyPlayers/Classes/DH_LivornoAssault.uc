@@ -10,5 +10,5 @@ class DH_LivornoAssault extends DHITAssaultRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianBlackshirtPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_ItalianBlackshirtPawn',Weight=1.0)
 }

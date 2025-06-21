@@ -38,8 +38,8 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak43CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Pak43CannonShell'
+    SecondaryProjectileClass=Class'DH_Pak43CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39/43"
     nProjectileDescriptions(1)="Sprgr.Patr."
@@ -54,13 +54,13 @@ defaultproperties
     WeaponFireOffset=-3.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.DH88mm_03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

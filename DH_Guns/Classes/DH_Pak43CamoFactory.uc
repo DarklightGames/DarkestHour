@@ -7,6 +7,6 @@ class DH_Pak43CamoFactory extends DH_Pak43Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Pak43ATGun_camo'
+    VehicleClass=Class'DH_Pak43ATGun_camo'
     Skins(0)=Texture'DH_Pak43_tex.pak43_ext_camo'
 }

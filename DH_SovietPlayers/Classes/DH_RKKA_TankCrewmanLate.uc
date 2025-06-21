@@ -7,7 +7,7 @@ class DH_RKKA_TankCrewmanLate extends DHSOVTankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTankCrewLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietTankCrewLatePawn',Weight=1.0)
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
+    PrimaryWeapons(0)=(Item=Class'DH_PPS43Weapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')
 }

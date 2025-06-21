@@ -8,6 +8,6 @@ class DHCanisterShotDamageType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.canisterkill'
     KDamageImpulse=2250.0
 }

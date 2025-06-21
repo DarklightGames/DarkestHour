@@ -8,5 +8,5 @@ class DH_LWHelmet extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.ger_helmet'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.LW_HG'
+    Skins(0)=Texture'DHGermanCharactersTex.LW_HG'
 }

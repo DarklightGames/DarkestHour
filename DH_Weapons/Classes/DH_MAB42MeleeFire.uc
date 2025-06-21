@@ -7,7 +7,7 @@ class DH_MAB42MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_MAB42BashDamType'
+    DamageType=Class'DH_MAB42BashDamType'
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"
     BashEmptyAnim="bash_attack_empty"

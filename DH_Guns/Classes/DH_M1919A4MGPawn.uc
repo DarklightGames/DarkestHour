@@ -10,7 +10,7 @@ class DH_M1919A4MGPawn extends DH_Fiat1435MGPawn
 defaultproperties
 {
     DriverPositions(0)=(bExposed=true)
-    GunClass=class'DH_M1919A4MG'
+    GunClass=Class'DH_M1919A4MG'
     CameraBone="GUNNER_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
 }

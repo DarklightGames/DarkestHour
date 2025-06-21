@@ -9,7 +9,7 @@ defaultproperties
 {
     VehicleNameString="45mm 53-K (1937) AT Gun"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_45mmM1937GunCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_45mmM1937GunCannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak36_anm.45mm_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext'
     DestroyedVehicleMesh=StaticMesh'DH_Pak36_stc.45MM_53K_DESTROYED'

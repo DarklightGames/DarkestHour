@@ -169,7 +169,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
         // On a server (single player), we'll simply cause enough damage to break the mesh
         if (Role == ROLE_Authority)
         {
-            DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DHWeaponBashDamageType');
+            DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), Class'DHWeaponBashDamageType');
 
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
             if (DestroMesh.Health < 0)
@@ -184,7 +184,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
             for (i = 0; i < DestroMesh.TypesCanDamage.Length; ++i)
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
-                if (DestroMesh.TypesCanDamage[i] == class'DHWeaponBashDamageType' || ClassIsChildOf(class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
+                if (DestroMesh.TypesCanDamage[i] == Class'DHWeaponBashDamageType' || ClassIsChildOf(Class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
                 {
                     return;
                 }
@@ -199,7 +199,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
     if (ROPawn(Wall) == none)
     {
         ImpactSpeed = VSize(Velocity);
-        ImpactAOI = Abs(class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
+        ImpactAOI = Abs(Class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
 
         // Grenade will explode if impact speed is high enough & it angle of incidence is low enough (that prevents glancing hits from detonating it)
         // TODO: maybe use CheckWall() to get hit surface Hardness & use that to calculate required ImpactSpeed?
@@ -225,7 +225,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
                 {
                     // Re-calc AOI, this time relative to a line 'straight up' from the vehicle (relative to its rotation)
                     Wall.GetAxes(Wall.Rotation, X, Y, VehicleRelativeVertical);
-                    ImpactAOI = class'UUnits'.static.RadiansToDegrees(Acos(-Normal(Velocity) dot VehicleRelativeVertical));
+                    ImpactAOI = Class'UUnits'.static.RadiansToDegrees(Acos(-Normal(Velocity) dot VehicleRelativeVertical));
 
                     if (ImpactAOI <= default.MaxVerticalAOIForTopArmor)
                     {

@@ -7,8 +7,6 @@ class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
 
 function InternalOnClick(GUIContextMenu Sender, int Index)
 {
-	local string MapName;
-
     if (Sender == none || NotifyContextSelect(Sender, Index))
     {
         return;
@@ -45,7 +43,7 @@ function LoadList(VotingReplicationInfo LoadVRI)
 
     for (i = 0; i < LoadVRI.GameConfig.Length; ++i)
     {
-        ListArray[i] = new class'DHMapVoteMultiColumnList';
+        ListArray[i] = new Class'DHMapVoteMultiColumnList';
         ListArray[i].LoadList(LoadVRI, i);
 
         DHMapVoteMultiColumnList(ListArray[i]).GameTypeIndex = i;

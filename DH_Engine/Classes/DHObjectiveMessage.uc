@@ -34,7 +34,7 @@ simulated static function ClientReceive(
         return;
     }
 
-    class'UInteger'.static.ToShorts(Switch, Type, Team);
+    Class'UInteger'.static.ToShorts(Switch, Type, Team);
 
     if (P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex == Team)
     {
@@ -59,7 +59,7 @@ static function string GetString(optional int Type, optional PlayerReplicationIn
     local int Team;
     local string Message;
 
-    class'UInteger'.static.ToShorts(Type, Type, Team);
+    Class'UInteger'.static.ToShorts(Type, Type, Team);
 
     Obj = DHObjective(OptionalObject);
 
@@ -85,7 +85,7 @@ static function int getIconID(
 {
     local int Type, Team;
 
-    class'UInteger'.static.ToShorts(Switch, Type, Team);
+    Class'UInteger'.static.ToShorts(Switch, Type, Team);
 
     switch (Team)
     {
@@ -104,7 +104,7 @@ static function int getIconID(
 
 defaultproperties
 {
-    IconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    IconTexture=Texture'DH_GUI_Tex.criticalmessages_icons'
 
     TeamStrings(0)="Axis"
     TeamStrings(1)="Allies"
@@ -115,11 +115,11 @@ defaultproperties
 
     NotificationMessage="The {0} have {1} {2}"
 
-    EnemyObjectiveSounds(0)=Sound'DH_SundrySounds.Objective.Enemy_Neutralized_Obj'
-    EnemyObjectiveSounds(1)=Sound'DH_SundrySounds.Objective.Enemy_Captured_Obj'
-    EnemyObjectiveSounds(2)=Sound'DH_SundrySounds.Objective.Enemy_Secured_Obj'
+    EnemyObjectiveSounds(0)=Sound'DH_SundrySounds.Enemy_Neutralized_Obj'
+    EnemyObjectiveSounds(1)=Sound'DH_SundrySounds.Enemy_Captured_Obj'
+    EnemyObjectiveSounds(2)=Sound'DH_SundrySounds.Enemy_Secured_Obj'
 
-    TeamObjectiveSounds(0)=Sound'DH_SundrySounds.Objective.Team_Neutralized_Obj'
-    TeamObjectiveSounds(1)=Sound'DH_SundrySounds.Objective.Team_Captured_Obj'
-    TeamObjectiveSounds(2)=Sound'DH_SundrySounds.Objective.Team_Secured_Obj'
+    TeamObjectiveSounds(0)=Sound'DH_SundrySounds.Team_Neutralized_Obj'
+    TeamObjectiveSounds(1)=Sound'DH_SundrySounds.Team_Captured_Obj'
+    TeamObjectiveSounds(2)=Sound'DH_SundrySounds.Team_Secured_Obj'
 }

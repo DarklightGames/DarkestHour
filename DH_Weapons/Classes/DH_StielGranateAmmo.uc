@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=3
     InitialAmount=2
-    IconMaterial=Texture'InterfaceArt_tex.HUD.sticknade_ammo'
+    IconMaterial=Texture'InterfaceArt_tex.sticknade_ammo'
 }

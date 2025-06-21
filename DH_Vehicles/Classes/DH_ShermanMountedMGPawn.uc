@@ -101,10 +101,10 @@ simulated function DrawGunsightOverlay(Canvas C)
 defaultproperties
 {
     //This class is for M4A1 Shermans; need to create custom views for each type of Sherman and Stuart -- one size does not fit all!
-    GunClass=class'DH_Vehicles.DH_ShermanMountedMG'
+    GunClass=Class'DH_ShermanMountedMG'
 
     WeaponFOV=72.0
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
     GunsightSize=0.75 //size of texture overlay
 
 //  This bow MG did not have a sight or even a peephole to aim through, & was instead aimed using co-driver's overhead periscope
@@ -117,7 +117,7 @@ defaultproperties
 //  So this camera adjustment is just an effective form of substitute feedback about where the gun is pointing
     FPCamPos=(X=-10.0,Y=0.0,Z=8.0)
     //CameraBone="T34_mg"
-    //HUDOverlayClass=class'DH_Vehicles.DH_30Cal_VehHUDOverlay'
+    //HUDOverlayClass=Class'DH_30Cal_VehHUDOverlay'
     //HUDOverlayOffset=(X=20,Y=0,Z=-20) //distance from your face
     //HUDOverlayFOV=45 //size of MG mesh in your face
 }

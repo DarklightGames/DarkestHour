@@ -99,7 +99,7 @@ var     Vector  RootLocation;
 var     Vector  RootDelta;
 var     Vector  NewAcceleration;     // acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
-var     sound   MantleSound;
+var     Sound   MantleSound;
 
 // Digging
 var     bool    bCanDig;
@@ -197,7 +197,7 @@ simulated function PostBeginPlay()
 
     UpdateShadow();
 
-    AuxCollisionCylinder = Spawn(class'DHBulletWhipAttachment', self);
+    AuxCollisionCylinder = Spawn(Class'DHBulletWhipAttachment', self);
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
@@ -685,7 +685,7 @@ simulated function HelmetShotOff(Rotator  RotDir)
         return;
     }
 
-    DroppedHelmet = Spawn(class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
+    DroppedHelmet = Spawn(Class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
 
     if (DroppedHelmet != none)
     {
@@ -764,11 +764,11 @@ event PawnWhizzed(Vector WhizLocation, int WhizType)
 
         if (WhizType == 1)
         {
-            Spawn(class'DHBulletSnap',,, WhizLocation); // supersonic round
+            Spawn(Class'DHBulletSnap',,, WhizLocation); // supersonic round
         }
         else
         {
-            Spawn(class'DHBulletWhiz',,, WhizLocation); // subsonic round
+            Spawn(Class'DHBulletWhiz',,, WhizLocation); // subsonic round
         }
 
         // WhizType 3 means a friendly bullet at very close range, so don't suppress
@@ -1055,11 +1055,11 @@ function SetCrewedLockedVehicle(DHArmoredVehicle NewLockedVehicleRef)
         {
             if (DrivenVehicle != none)
             {
-                DrivenVehicle.ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
+                DrivenVehicle.ReceiveLocalizedMessage(Class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
             }
             else
             {
-                ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
+                ReceiveLocalizedMessage(Class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
             }
         }
     }
@@ -1139,7 +1139,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, Rot
             }
 
             // Check whether a body part should be severed
-            if (!class'GameInfo'.static.UseLowGore())
+            if (!Class'GameInfo'.static.UseLowGore())
             {
                 if (DamageType.default.bAlwaysSevers || Damage == 1000 || bAlwaysSeverBodyparts)
                 {
@@ -1290,7 +1290,7 @@ simulated function ProcessHitFX()
         // NOTE: When we did our molotov playtest ages ago, there was a crashing issue that
         // we think had to do with players being gibbed while on fire. Therefore, we just
         // make sure we don't gib players while they're on fire.
-        if (!class'GameInfo'.static.UseLowGore() && !bOnFire)
+        if (!Class'GameInfo'.static.UseLowGore() && !bOnFire)
         {
             // A passed BoneName 'obliterate' causes player to be completely gibbed (& we go no further here)
             if (BoneName == 'obliterate')
@@ -1456,7 +1456,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, Vector hitlocati
             if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
                 DHPlayer(Controller).ThrowWeapon();
-                ReceiveLocalizedMessage(class'ROWeaponLostMessage');
+                ReceiveLocalizedMessage(Class'ROWeaponLostMessage');
             }
         }
         // If we've been shot in the head, our vision is jarred
@@ -1512,7 +1512,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
             Warn("No DamageType for damage by" @ Instigatedby @ "with weapon" @ InstigatedBy.Weapon);
         }
 
-        DamageType = class'DamageType';
+        DamageType = Class'DamageType';
     }
 
     if (Role < ROLE_Authority || Health <= 0)
@@ -1701,8 +1701,8 @@ function TossAmmo(Pawn Gunner)
 
     if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
     {
-        Gunner.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to supplier
+        Gunner.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
+        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to supplier
 
         if (GRI != none &&
             Gunner.Controller != none &&
@@ -1738,10 +1738,10 @@ function TossMortarAmmo(DHPawn P)
     if (Controller != none && P.Controller != none)
     {
         // notification message to gunner
-        P.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+        P.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
 
         // notification message to supplier
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
+        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
 
         if (GRI != none) // remove any resupply request
         {
@@ -1778,10 +1778,10 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
     if (Recipient != none)
     {
         // "You have resupplied {0}"
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
+        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
 
         // "You have been resupplied by {0}"
-        Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+        Recipient.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
 
         if (GRI != none)
         {
@@ -1792,7 +1792,7 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
     else
     {
         // "You have resupplied a friendly mortar"
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 2);
+        ReceiveLocalizedMessage(Class'DHResupplyMessage', 2);
     }
 
     if (G != none)
@@ -1832,8 +1832,8 @@ function LoadWeapon(Pawn Gunner)
     {
         if (Controller != none && Gunner.Controller != none)
         {
-            Gunner.ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient (been reloaded by [player])
-            ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to loader (you loaded [player])
+            Gunner.ReceiveLocalizedMessage(Class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient (been reloaded by [player])
+            ReceiveLocalizedMessage(Class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to loader (you loaded [player])
 
             if (G != none)
             {
@@ -1846,7 +1846,7 @@ function LoadWeapon(Pawn Gunner)
     // Notify loader of failed attempt
     else
     {
-        ReceiveLocalizedMessage(class'DHATLoadFailMessage', 0, Gunner.Controller.PlayerReplicationInfo);
+        ReceiveLocalizedMessage(Class'DHATLoadFailMessage', 0, Gunner.Controller.PlayerReplicationInfo);
     }
 }
 
@@ -2632,7 +2632,7 @@ function PlayHit(float Damage, Pawn InstigatedBy, Vector HitLocation, class<Dama
 
     if (DamageType.default.bCausesBlood && (!bRecentHit || (bRecentHit && (FRand() > 0.8))))
     {
-        if (!class'GameInfo'.static.NoBlood())
+        if (!Class'GameInfo'.static.NoBlood())
         {
             if (Momentum != vect(0.0, 0.0, 0.0))
             {
@@ -2820,9 +2820,9 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     DamageBeyondZero = Health;
     Health = Min(0, Health);
 
-    if (DamageType == class'Suicided')
+    if (DamageType == Class'Suicided')
     {
-        DamageType = class'ROSuicided'; // fix for suicide death messages
+        DamageType = Class'ROSuicided'; // fix for suicide death messages
     }
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
@@ -2881,12 +2881,12 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     {
         PhysicsVolume.PlayerPawnDiedInVolume(self);
 
-        foreach TouchingActors(class'Trigger', T)
+        foreach TouchingActors(Class'Trigger', T)
         {
             T.PlayerToucherDied(self); // un-trigger any triggers requiring player touch
         }
 
-        foreach TouchingActors(class'NavigationPoint', N)
+        foreach TouchingActors(Class'NavigationPoint', N)
         {
             if (N.bReceivePlayerToucherDiedNotify)
             {
@@ -2913,20 +2913,20 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     }
 
     // Damage/dying effects
-    if (DamageType != none && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
+    if (DamageType != none && DamageType.default.bAlwaysGibs && !Class'GameInfo'.static.UseLowGore())
     {
         if (Level.NetMode == NM_DedicatedServer)
         {
-           DoDamageFX('obliterate', 1010, class'RODiedInTankDamType', Rotation);
+           DoDamageFX('obliterate', 1010, Class'RODiedInTankDamType', Rotation);
         }
 
         ChunkUp(Rotation, DamageType.default.GibPerterbation);
     }
-    else if (DamageType != none && (Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold && !class'GameInfo'.static.UseLowGore())
+    else if (DamageType != none && (Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold && !Class'GameInfo'.static.UseLowGore())
     {
         if (Level.NetMode == NM_DedicatedServer)
         {
-           DoDamageFX('obliterate', 1010, class'RODiedInTankDamType', Rotation);
+           DoDamageFX('obliterate', 1010, Class'RODiedInTankDamType', Rotation);
         }
 
         ChunkUp(Rotator(GetTearOffMomemtum()), DamageType.default.GibPerterbation);
@@ -2962,7 +2962,7 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 
     if (DamageType != none && !bOnFire)
     {
-        if (DamageType.default.DeathOverlayMaterial != none && !class'GameInfo'.static.UseLowGore())
+        if (DamageType.default.DeathOverlayMaterial != none && !Class'GameInfo'.static.UseLowGore())
         {
             SetOverlayMaterial(DamageType.default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
         }
@@ -2983,7 +2983,7 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 
         if (PC != none)
         {
-            LifeSpan = Clamp(PC.CorpseStayTime, class'DHPlayer'.default.CorpseStayTimeMin, class'DHPlayer'.default.CorpseStayTimeMax);
+            LifeSpan = Clamp(PC.CorpseStayTime, Class'DHPlayer'.default.CorpseStayTimeMin, Class'DHPlayer'.default.CorpseStayTimeMax);
         }
         else
         {
@@ -3030,7 +3030,7 @@ simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
     {
         if (Skins[i] != none && Skins[i].IsA('Combiner'))
         {
-            FB = new class'FinalBlend';
+            FB = new Class'FinalBlend';
             FB.Material = Skins[i];
             Skins[i] = FB;
         }
@@ -3052,7 +3052,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, Vector Momen
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (class'GameInfo'.static.UseLowGore())
+        if (Class'GameInfo'.static.UseLowGore())
         {
             return;
         }
@@ -3487,7 +3487,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
+                    AttachedBackItem = Spawn(Class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
@@ -3695,7 +3695,7 @@ state PutWeaponAway
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
+                    AttachedBackItem = Spawn(Class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
@@ -3906,7 +3906,7 @@ function TakeFallingDamage()
 
                 if (EffectiveSpeed < -1 * MaxFallSpeed)
                 {
-                    TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed) / MaxFallSpeed, none, Location, vect(0.0, 0.0, 0.0), class'Fell');
+                    TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed) / MaxFallSpeed, none, Location, vect(0.0, 0.0, 0.0), Class'Fell');
                     // Damaged the legs
                     UpdateDamageList(254);
                 }
@@ -3938,7 +3938,7 @@ function TakeFallingDamage()
 
                     if (TotalSpeed > MinHurtSpeed)
                     {
-                        TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DHExitMovingVehicleDamageType');
+                        TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), Class'DHExitMovingVehicleDamageType');
                         UpdateDamageList(254); // damaged the legs
                     }
                 }
@@ -4565,7 +4565,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
-        //Spawn(class'RODebugTracer', self,, HitLoc, Rotator(HitNorm));
+        //Spawn(Class'RODebugTracer', self,, HitLoc, Rotator(HitNorm));
         //ClientMessage("Object is too high to mantle");
         return false;
     }
@@ -5648,7 +5648,7 @@ function bool ResupplyMortarAmmunition()
     {
         if (RI.GivenItems[i] != "")
         {
-            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
         }
 
         if (W == none)
@@ -5690,7 +5690,7 @@ function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
             continue;
         }
         
-        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.SecondaryWeapons[i].Item), class'Class'));
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.SecondaryWeapons[i].Item), Class'Class'));
 
         if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
         {
@@ -5714,7 +5714,7 @@ function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
             continue;
         }
 
-        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.Grenades[i].Item), class'Class'));
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.Grenades[i].Item), Class'Class'));
 
         if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
         {
@@ -5738,7 +5738,7 @@ function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
             continue;
         }
 
-        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
 
         if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
         {
@@ -5776,7 +5776,7 @@ function CheckIfMortarCanBeResupplied()
     {
         if (RI.GivenItems[i] != "")
         {
-            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
         }
 
         if (W == none)
@@ -6209,7 +6209,7 @@ simulated function FootStepping(int Side)
             if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
                 && !Touching[i].TraceThisActor(HitLocation, HitNormal, Location - (CollisionHeight * vect(0.0, 0.0, 1.1)), Location))
             {
-                Spawn(class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
+                Spawn(Class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
             }
 
             return;
@@ -6363,7 +6363,7 @@ simulated function SetUpPlayerModel()
         // Using new IsValidCharacterName() function instead of GetModel() as was randomly selecting one role from Models array, which is incorrect for a client validity check
         if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
         {
-            Rec = class'xUtil'.static.FindPlayerRecord(PRI.CharacterName);
+            Rec = Class'xUtil'.static.FindPlayerRecord(PRI.CharacterName);
             Setup(Rec);
             bInitializedPlayer = true;
 
@@ -6537,7 +6537,7 @@ simulated function UpdateShadow()
 
     if (Level.NetMode != NM_DedicatedServer && bPlayerShadows && bActorShadows)
     {
-        PlayerShadow = Spawn(class'DHShadowProjector', self, '', Location);
+        PlayerShadow = Spawn(Class'DHShadowProjector', self, '', Location);
 
         if (PlayerShadow != none)
         {
@@ -6607,7 +6607,7 @@ simulated function bool VerifyGivenItems()
         // Ignores any invalid entries that don't load as it's not a valid class & so the item is not going to spawn/exist
         for (i = 0; i < RI.GivenItems.Length; ++i)
         {
-            InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+            InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
 
             if (InventoryClass != none)
             {
@@ -6657,7 +6657,7 @@ simulated function bool VerifyGivenItems()
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Bogeyman mode to become invisible and invincible, useful for filming!
@@ -6674,7 +6674,7 @@ exec function BogeyMan()
         return;
     }
 
-    if (G.IsAdmin(PC) || class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
+    if (G.IsAdmin(PC) || Class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
     {
         PC.bGodMode = true;
         bHidden = true;
@@ -6706,7 +6706,7 @@ exec function SpawnBots(int Team, optional int Num, optional int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = Rotation.Yaw;
-            TargetLocation += Vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance);
+            TargetLocation += Vector(Direction) * Class'DHUnits'.static.MetersToUnreal(Distance);
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -6767,7 +6767,7 @@ exec function DebugPlayerModels(string ClassName, optional bool bShowAllFaceComb
     // If "kill" option was specified then just find & destroy any existing debug pawns that have been spawned, so we don't end up with lots of them
     if (ClassName ~= "kill")
     {
-        foreach DynamicActors(class'DHPawn', P, 'DebugPawn')
+        foreach DynamicActors(Class'DHPawn', P, 'DebugPawn')
         {
             P.Destroy();
         }
@@ -6794,11 +6794,11 @@ exec function DebugPlayerModels(string ClassName, optional bool bShowAllFaceComb
     }
     else
     {
-        RoleClass = class<DHRoleInfo>(DynamicLoadObject(ClassName, class'Class'));
+        RoleClass = class<DHRoleInfo>(DynamicLoadObject(ClassName, Class'Class'));
 
         if (RoleClass == none)
         {
-            PawnClass = class<DHPawn>(DynamicLoadObject(ClassName, class'Class'));
+            PawnClass = class<DHPawn>(DynamicLoadObject(ClassName, Class'Class'));
         }
 
         if (RoleClass == none && PawnClass == none)
@@ -6957,7 +6957,7 @@ exec function GimmeSupplies()
 {
     local DH_LevelInfo LI;
     
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI != none)
     {
@@ -6976,7 +6976,7 @@ exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantNa
     local float             Degrees;
     local string            VehicleClassName, S;
 
-    VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
+    VehicleClassName = Class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
 
     if (VehicleClassName == "")
     {
@@ -6986,15 +6986,15 @@ exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantNa
     // TODO: there really is no reason why a game admin should be able to spawn vehicles in the live game & the admin 'pass through' should be removed here - Matt
     if (VehicleClassName != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
     {
-        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleClassName, class'class'));
+        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleClassName, Class'class'));
 
         if (VehicleClass != none)
         {
             SpawnDirection.Yaw = Rotation.Yaw;
-            SpawnLocation = Location + (Vector(SpawnDirection) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
+            SpawnLocation = Location + (Vector(SpawnDirection) * Class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
 
             // Add the vehicle's desired rotation (90 will be perpendicular)
-            SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
+            SpawnDirection.Yaw += Class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
 
@@ -7029,11 +7029,11 @@ exec function DebugShootAP(optional string APProjectileClassName)
 
         if (FireMode != none)
         {
-            DebugProjectileClass = class'DH_Engine.DHDummyDebugAPShell'; // just avoids lots of literals
+            DebugProjectileClass = Class'DHDummyDebugAPShell'; // just avoids lots of literals
 
             if (APProjectileClassName != "") // get projectile class from any specified class name
             {
-                APProjectileClass = class<DHAntiVehicleProjectile>(DynamicLoadObject("DH_Vehicles." $ APProjectileClassName, class'Class'));
+                APProjectileClass = class<DHAntiVehicleProjectile>(DynamicLoadObject("DH_Vehicles." $ APProjectileClassName, Class'Class'));
             }
 
             // Switch current weapon to fire dummy (non-damaging) debug AP rounds
@@ -7371,9 +7371,9 @@ function bool UseSupplies(int SupplyCost, optional out array<DHConstructionSuppl
 
     // Sort the supply attachments by priority.
     Attachments = TouchingSupplyAttachments;
-    AttachmentComparator = new class'UComparator';
-    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-    class'USort'.static.Sort(Attachments, AttachmentComparator);
+    AttachmentComparator = new Class'UComparator';
+    AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
+    Class'USort'.static.Sort(Attachments, AttachmentComparator);
 
     // Use supplies from the sorted supply attachments, in order, until costs are met.
     for (i = 0; i < Attachments.Length; ++i)
@@ -7407,7 +7407,7 @@ function EnterATRotation(DHATGun Gun)
     local class<DHWeapon> WeaponClass;
 
     GunToRotate = Gun;
-    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
+    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", Class'Class'));
 
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
 }
@@ -7453,7 +7453,7 @@ exec function RotateAT()
     local DHATGun Gun;
     local class<DHWeapon> WeaponClass;
 
-    foreach RadiusActors(class'DHATGun', Gun, 256.0)
+    foreach RadiusActors(Class'DHATGun', Gun, 256.0)
     {
         if (Gun != none)
         {
@@ -7467,7 +7467,7 @@ exec function RotateAT()
     }
 
     GunToRotate = Gun;
-    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
+    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", Class'Class'));
 
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
 }
@@ -7569,20 +7569,20 @@ exec simulated function Give(string WeaponName)
 
     if (WeaponName ~= "ALL")
     {
-        for (i = 0; i < class'DHWeaponRegistry'.default.Records.Length; ++i)
+        for (i = 0; i < Class'DHWeaponRegistry'.default.Records.Length; ++i)
         {
-            if (class'DHWeaponRegistry'.default.Records[i].bShouldExcludeFromGiveAll)
+            if (Class'DHWeaponRegistry'.default.Records[i].bShouldExcludeFromGiveAll)
             {
                 continue;
             }
 
-            GiveWeapon(class'DHWeaponRegistry'.default.Records[i].ClassName);
+            GiveWeapon(Class'DHWeaponRegistry'.default.Records[i].ClassName);
         }
 
         return;
     }
 
-    ClassName = class'DHWeaponRegistry'.static.GetClassNameFromWeaponName(WeaponName);
+    ClassName = Class'DHWeaponRegistry'.static.GetClassNameFromWeaponName(WeaponName);
 
     if (ClassName == "")
     {
@@ -7616,7 +7616,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(DistanceMeters))
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
@@ -7633,14 +7633,14 @@ defaultproperties
 {
     // General class & interaction stuff
     Mesh=none // must be set by a specific pawn subclass
-    Species=class'DH_Engine.DHSPECIES_Human'
-    ControllerClass=class'DH_Engine.DHBot'
-    TouchMessageClass=class'DHPawnTouchMessage'
+    Species=Class'DHSPECIES_Human'
+    ControllerClass=Class'DHBot'
+    TouchMessageClass=Class'DHPawnTouchMessage'
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
-    HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
-    BackpackClass=class'DH_Engine.DHBackpack'
-    AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
+    HeadgearClass=Class'ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
+    BackpackClass=Class'DHBackpack'
+    AmmoPouchClasses(0)=Class'ROAmmoPouch'
     bCanPickupWeapons=true
 
     // Movement & impacts
@@ -7669,20 +7669,20 @@ defaultproperties
     FootStepSoundRadius=96
     FootstepVolume=0.75
     QuietFootStepVolume=0.66
-    FootstepSoundsClass=class'DHPawnFootstepSounds'
-    SoundGroupClass=class'DHPawnSoundGroup'
-    MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
-    HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
-    PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
+    FootstepSoundsClass=Class'DHPawnFootstepSounds'
+    SoundGroupClass=Class'DHPawnSoundGroup'
+    MantleSound=SoundGroup'DH_Inf_Player.Mantle'
+    HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Helmet_Hit'
+    PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Impact_Player'
 
     // Burning player
     FireDamage=10
-    FireDamageClass=class'DH_Engine.DHBurningDamageType'
-    FlameEffect=class'DH_Effects.DHBurningPlayerFlame'
-    BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
-    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
-    CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
-    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
+    FireDamageClass=Class'DHBurningDamageType'
+    FlameEffect=Class'DHBurningPlayerFlame'
+    BurningOverlayMaterial=Combiner'DH_FX_Tex.PlayerBurningOverlay_ALT'
+    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.PlayerBurningOverlay'
+    CharredOverlayMaterial=Combiner'DH_FX_Tex.PlayerCharredOverlay'
+    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.HeadgearBurnedOverlay'
 
     // Third person player animations
     bShovelHangsOnLeftHip=true
@@ -7711,7 +7711,7 @@ defaultproperties
 
     IdleSwimAnim="stand_idlehip_nade" // not specified in ROPawn, resulting in log spam when in water (goes with ROPawn's 'stand_jogX_nade' directional SwimAnims)
 
-    MantleAnimationsClass=class'DHMantleAnimations'
+    MantleAnimationsClass=Class'DHMantleAnimations'
 
     // Override binoculars WalkAnims from ROPawn that don't exist
     // Normally these are overridden by weapon-specific anims in the weapon attachment class (PA_WalkAnims), so the problem was masked in RO

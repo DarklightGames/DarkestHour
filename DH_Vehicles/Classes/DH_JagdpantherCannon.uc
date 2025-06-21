@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.Jagdpanther_body_goodwood'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Jagdpanther_walls_int'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Jagdpanther_turret_int'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Cannon armour (mantlet)
@@ -32,8 +32,8 @@ defaultproperties
     CustomPitchDownLimit=64079
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+    PrimaryProjectileClass=Class'DH_JagdpantherCannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpantherCannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39/43"
     nProjectileDescriptions(1)="Sprgr.Patr."
@@ -45,7 +45,7 @@ defaultproperties
     SecondarySpread=0.00135
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherClass=Class'DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-64.0,Y=-39.0,Z=35.0)
 
     // Weapon fire
@@ -53,13 +53,13 @@ defaultproperties
     AddedPitch=-56.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.DH88mm_03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

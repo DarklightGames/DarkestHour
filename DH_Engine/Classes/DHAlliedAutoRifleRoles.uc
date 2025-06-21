@@ -13,6 +13,6 @@ defaultproperties
     AltName="Light Machine-Gunner"
     Limit=2
     bCanCarryExtraAmmo=false
-    AddedRoleRespawnTime=14
+    AddedRoleRespawnTime=10
     bCanBeSquadLeader=false
 }

@@ -186,7 +186,7 @@ state Managed
         }
 
         // Player is in a squad and chilling next to his mates. What a tool!
-        foreach RadiusActors(class'Pawn', P, AWOLDistance, MyPawn.Location)
+        foreach RadiusActors(Class'Pawn', P, AWOLDistance, MyPawn.Location)
         {
             if (P == none)
             {
@@ -276,16 +276,16 @@ state Managed
             switch (Reason)
             {
                 case REASON_NotInSquad:
-                    PC.ReceiveLocalizedMessage(class'DHIQMessage', 3);
+                    PC.ReceiveLocalizedMessage(Class'DHIQMessage', 3);
                     break;
                 case REASON_AWOL:
                     if (PRI.IsSLorASL())
                     {
-                        PC.ReceiveLocalizedMessage(class'DHIQMessage', 1);
+                        PC.ReceiveLocalizedMessage(Class'DHIQMessage', 1);
                     }
                     else
                     {
-                        PC.ReceiveLocalizedMessage(class'DHIQMessage', 2);
+                        PC.ReceiveLocalizedMessage(Class'DHIQMessage', 2);
                     }
                     break;
             }

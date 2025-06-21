@@ -233,7 +233,7 @@ function OnMainGunReloadFinished()
 // Higher ranked weapon (cannon then coax then launcher) reload takes precedence over other weapon reload & puts that on hold
 simulated function Timer()
 {
-    local sound ReloadSound;
+    local Sound ReloadSound;
 
     // CANNON RELOAD
     if (ReloadState < RL_ReadyToFire && !bReloadPaused)
@@ -605,7 +605,7 @@ simulated function AttemptFireSmokeLauncher()
         }
         else if (SmokeLauncherReloadState >= RL_ReadyToFire || bSmokeLauncherReloadPaused)
         {
-            PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true); // dry fire click for empty smoke launcher, unless it is reloading
+            PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true); // dry fire click for empty smoke launcher, unless it is reloading
         }
     }
 }
@@ -709,7 +709,7 @@ simulated function IncrementRange()
     // If bDebugRangeManually is enabled & gun not loaded, the range control buttons change the firing pitch adjustment to tune the range setting
     if (bDebugRangeManually)
     {
-        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode()))
         {
             DebugModifyAddedPitch(1);
 
@@ -718,7 +718,7 @@ simulated function IncrementRange()
     }
     // If bDebugSights is enabled & gun not loaded, the range control buttons adjust the centring of gunsight by changing cannon pawn's OverlayCorrectionX or Y
     else if (DHVehicleCannonPawn(WeaponPawn) != none && DHVehicleCannonPawn(WeaponPawn).bDebugSights
-        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DebugModifyOverlayCorrection(0.5);
 
@@ -745,7 +745,7 @@ simulated function DecrementRange()
 {
     if (bDebugRangeManually)
     {
-        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode()))
         {
             DebugModifyAddedPitch(-1);
 
@@ -753,7 +753,7 @@ simulated function DecrementRange()
         }
     }
     else if (DHVehicleCannonPawn(WeaponPawn) != none && DHVehicleCannonPawn(WeaponPawn).bDebugSights
-        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DebugModifyOverlayCorrection(-0.5);
 
@@ -1494,7 +1494,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
         TurretNonRelativeRotation = Rotator(Vector(TurretRelativeRotation) >> Rotation);
         GetAxes(TurretNonRelativeRotation, X, Y, Z);
         HitLocationRelativeOffset = (HitLocation - Location) << TurretNonRelativeRotation;
-        HitLocationAngle = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
+        HitLocationAngle = Class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
         if (HitLocationAngle < 0.0)
         {
@@ -1535,7 +1535,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
     {
         Log("ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
 
-        if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+        if ((bDebugPenetration || Class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
         }
@@ -1556,17 +1556,17 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
     // Also modified to skip this check for deflected shots, which can ricochet onto another part of the vehicle at weird angles
     if (P.NumDeflections == 0 && bHasTurret)
     {
-        AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
+        AngleOfIncidence = Class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
 
         if (AngleOfIncidence > 120.0)
         {
-            if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+            if ((bDebugPenetration || Class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
                     @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
-            if (bLogDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode())
+            if (bLogDebugPenetration || Class'DH_LevelInfo'.static.DHDebugMode())
             {
                 Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
                     @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
@@ -1639,9 +1639,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
         // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
         if (bHasTurret)
         {
-            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
+            ArmourSlopeRotator.Pitch = Class'UUnits'.static.DegreesToUnreal(ArmorSlope);
             ArmorNormal = Normal(Vector(ArmourSlopeRotator) >> Rotator(HitSideAxis));
-            AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
+            AngleOfIncidence = Class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
         }
         else
         {
@@ -1671,7 +1671,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
-        SlopeMultiplier = class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidence, OverMatchFactor);
+        SlopeMultiplier = Class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidence, OverMatchFactor);
         EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
 
         // Get the penetration ratio (penetration capability vs effective thickness)
@@ -1679,7 +1679,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLoc
     }
 
     // Check & record whether or not we penetrated the vehicle (including check if shattered on the armor)
-    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && class'DHArmoredVehicle'.static.CheckIfShatters(P, PenetrationRatio, OverMatchFactor, ShatterChance);
+    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && Class'DHArmoredVehicle'.static.CheckIfShatters(P, PenetrationRatio, OverMatchFactor, ShatterChance);
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set variables on the vehicle itself that are used in its TakeDamage()
@@ -1860,7 +1860,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
             break;
         case PRM_MuzzleBone:
             MuzzleCoords = GetBoneCoords(WeaponFireAttachBone);
-            WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(-MuzzleCoords.YAxis, class'UUnits'.static.UnrealToRadians(MyAddedPitch)), MuzzleCoords.XAxis));
+            WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(-MuzzleCoords.YAxis, Class'UUnits'.static.UnrealToRadians(MyAddedPitch)), MuzzleCoords.XAxis));
             break;
     }
 
@@ -1917,7 +1917,7 @@ function DebugModifyAddedPitch(int PitchAdjustment)
 
                     Instigator.ClientMessage(
                         "New added pitch for range" @ RangeSettings[CurrentRangeIndex]
-                        @ class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit)
+                        @ Class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit)
                         @ "(MechanicalRanges[" $ i $ "]) =" @ ShellClass.default.MechanicalRanges[i].RangeValue);
 
                     break;
@@ -1961,11 +1961,11 @@ function BeginAutoDebugRange()
     // Calculate the target range in UU
     if (DHVehicleCannonPawn(WeaponPawn) != none)
     {
-        RangeUU = class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DHVehicleCannonPawn(WeaponPawn).RangeUnit, DU_Unreal);
+        RangeUU = Class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DHVehicleCannonPawn(WeaponPawn).RangeUnit, DU_Unreal);
     }
     else
     {
-        RangeUU = class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DU_Unreal, DU_Yards);
+        RangeUU = Class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DU_Unreal, DU_Yards);
     }
 
     // Calculate required position for target wall & spawn it
@@ -1975,12 +1975,12 @@ function BeginAutoDebugRange()
     WallLocation = ViewLocation + (RangeUU * Vector(AimRotation)) + (vect(0.0, -100000.0, 0.0) >> AimRotation);
     WallRotation = AimRotation;
     WallRotation.Yaw += 16384;
-    TargetWall = Spawn(class'DHDecoAttachment',, 'DebugTargetWall', WallLocation, WallRotation);
+    TargetWall = Spawn(Class'DHDecoAttachment',, 'DebugTargetWall', WallLocation, WallRotation);
 
     if (TargetWall != none)
     {
         // Set up appearance & collision properties for target wall
-        TargetWall.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh')));
+        TargetWall.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", Class'StaticMesh')));
         TargetWall.bOnlyDrawIfAttached = false;
         TargetWall.SetCollision(true, true);
         TargetWall.KSetBlockKarma(true);
@@ -2078,7 +2078,7 @@ function UpdateAutoDebugRange(Actor HitActor, Vector HitLocation)
                     bDebugRangeAutomatically = false;
 
                     MessageText = Tag @ ProjectileDescriptions[GetAmmoIndex()] $ ": Best pitch adjustment for RangeSettings["
-                        $ CurrentRangeIndex $ "] of" @ GetRange() @ class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit) @ "=" @ FinalPitchAdjustment;
+                        $ CurrentRangeIndex $ "] of" @ GetRange() @ Class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit) @ "=" @ FinalPitchAdjustment;
                 }
             }
             // Somehow we couldn't trace the target wall, so we'd better exit debugging
@@ -2121,7 +2121,7 @@ simulated function DestroyDebugTargetWall()
 {
     local DHDecoAttachment TargetWall;
 
-    foreach AllActors(class'DHDecoAttachment', TargetWall, 'DebugTargetWall')
+    foreach AllActors(Class'DHDecoAttachment', TargetWall, 'DebugTargetWall')
     {
         TargetWall.Destroy();
         break;
@@ -2185,15 +2185,15 @@ defaultproperties
     AltFireSpread=0.002
     bUsesTracers=true
     bAltFireTracersOnly=true
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.mg42_ammo'
 
     // Weapon fire
     bPrimaryIgnoreFireCountdown=true
     WeaponFireAttachmentBone="Barrel"
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    CannonDustEmitterClass=class'ROEffects.TankCannonDust'
+    EffectEmitterClass=Class'TankCannonFireEffect'
+    CannonDustEmitterClass=Class'TankCannonDust'
     FireForce="Explosion05"
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    AmbientEffectEmitterClass=Class'TankMGEmitter'
     bAmbientEmitterAltFireOnly=true // assumed for a cannon & hard coded into functionality
     AIInfo(0)=(AimError=0.0,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
@@ -2205,10 +2205,10 @@ defaultproperties
     ReloadStages(2)=(HUDProportion=0.5)
     ReloadStages(3)=(HUDProportion=0.25)
     AltReloadState=RL_ReadyToFire
-    AltReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // MG34 reload sound acts as generic belt-fed coax MG reload
-    AltReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
-    AltReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
-    AltReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
+    AltReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden01',Duration=1.105) // MG34 reload sound acts as generic belt-fed coax MG reload
+    AltReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
+    AltReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
+    AltReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
     SmokeLauncherReloadState=RL_ReadyToFire
 
     // Sounds

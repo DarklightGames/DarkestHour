@@ -8,9 +8,9 @@ class DH_G43Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.g43'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.g43'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'InterfaceArt_tex.g43'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false
 
     WA_Idle="Idle_g43"

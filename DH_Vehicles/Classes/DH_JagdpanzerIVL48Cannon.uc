@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    Skins(2)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_body_camo1'
+    Skins(1)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_body_int'
+    Skins(2)=Texture'DH_VehiclesGE_tex4.jagdpanzeriv_body_int'
     GunnerAttachmentBone="Commander_attachment"
     FireEffectOffset=(X=10.0,Y=0.0,Z=0.0)
 
@@ -32,9 +32,9 @@ defaultproperties
     CustomPitchDownLimit=64653
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
 
     nProjectileDescriptions(0)="PzGr.39"
@@ -52,7 +52,7 @@ defaultproperties
     TertiarySpread=0.00357
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherClass=Class'DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-157.0,Y=-6.0,Z=22.0)
 
     // Weapon fire
@@ -60,13 +60,13 @@ defaultproperties
     WeaponFireOffset=9.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

@@ -8,5 +8,5 @@ class DH_Kar98BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Kar98Weapon'
+    WeaponClass=Class'DH_Kar98Weapon'
 }

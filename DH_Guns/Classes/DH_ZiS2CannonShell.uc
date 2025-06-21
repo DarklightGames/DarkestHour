@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=460  //14 gramms TNT filler
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.35
     EngineFireChance=0.62
 

@@ -60,7 +60,7 @@ function PostBeginPlay()
     }
 
     // Build SpawnPoints array
-    foreach AllActors(class'DHSpawnPoint', SP)
+    foreach AllActors(Class'DHSpawnPoint', SP)
     {
         if (SpawnPoints.Length >= SPAWN_POINTS_MAX)
         {
@@ -77,7 +77,7 @@ function PostBeginPlay()
     {
         // VP doesn't have a specified vehicle class, so is invalid
         if (VehiclePools[i].VehicleClass == none ||
-            !ClassIsChildOf(VehiclePools[i].VehicleClass, class'ROVehicle'))
+            !ClassIsChildOf(VehiclePools[i].VehicleClass, Class'ROVehicle'))
         {
             // Remove VP if it is invalid (no specified class or it's a duplicate)
             Warn("VehiclePools[" $ i $ "] is invalid & has been removed! (VehicleClass =" @ VehiclePools[i].VehicleClass $ ")");
@@ -347,7 +347,7 @@ event VehicleDestroyed(Vehicle V)
     super.VehicleDestroyed(V);
 
     // Removes the destroyed vehicle from the managed Vehicles array
-    class'UArray'.static.Erase(Vehicles, V);
+    Class'UArray'.static.Erase(Vehicles, V);
 
     DHV = DHVehicle(V);
 
@@ -405,7 +405,7 @@ event VehicleDestroyed(Vehicle V)
                     SetVehiclePoolIsActiveByTag(VehiclePools[i].OnDepleteActivatePool, true);
                 }
 
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 200 + i,,, self); // vehicle reinforcements have been depleted
+                Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 200 + i,,, self); // vehicle reinforcements have been depleted
             }
 
             // Find this vehicle's slot & set its re-spawn time
@@ -559,7 +559,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value > 0)
         {
             // Send "vehicle reinforcements have arrived" message
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
         }
 
         GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] = Clamp(int(GRI.VehiclePoolMaxSpawns[VehiclePoolIndex]) + Value, 0, 254);
@@ -567,7 +567,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value < 0 && GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] == 0)
         {
             // Send "vehicle reinforcements have been cut off" message
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
         }
     }
 }
@@ -643,7 +643,7 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
 
             if (Value > 0)
             {
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
+                Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
             }
 
             NewMax = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndex]) + Value, 0, 254);
@@ -655,7 +655,7 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
 
             if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndex] == 0)
             {
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
+                Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
             }
         }
     }

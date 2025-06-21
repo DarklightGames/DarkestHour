@@ -7,5 +7,5 @@ class DH_45mmM1942GunCannonPawn extends DH_45mmM1937GunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_45mmM1942GunCannon'
+    GunClass=Class'DH_45mmM1942GunCannon'
 }

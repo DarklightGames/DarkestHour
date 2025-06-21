@@ -11,7 +11,7 @@ var DateTime EndedAt;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("ip", NetworkAddress)
         .PutString("started_at", StartedAt.IsoFormat())
         .PutString("ended_at", EndedAt.IsoFormat());

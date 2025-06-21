@@ -8,6 +8,6 @@ class DH_DP27LateDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_DP27LateWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_DP27LateWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

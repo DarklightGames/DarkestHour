@@ -7,8 +7,8 @@ class DH_GLFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_GLProjectile'
-    AmmoClass=class'DH_Weapons.DH_GLAmmo'
+    ProjectileClass=Class'DH_GLProjectile'
+    AmmoClass=Class'DH_GLAmmo'
     ProjSpawnOffset=(X=-5.0)
     AddedPitch=250
     MinimumThrowSpeed=400.0

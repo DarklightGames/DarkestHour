@@ -57,7 +57,7 @@ defaultproperties
     //Gunsight
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background' // TODO: not sure this AHZ overlay is correct; it could be the telescopic sight used in tanks with the 45mm gun?
     GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
-    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     ScopeCenterPositionX=0.035
     ScopeCenterScaleX=2.2
     ScopeCenterScaleY=2.0

@@ -12,5 +12,5 @@ class DHBlastMark extends ProjectedDecal;
 defaultproperties
 {
 	DrawScale=1.0
-	ProjTexture=Texture'DH_FX_Tex.decals.grenademark_generic'
+	ProjTexture=Texture'DH_FX_Tex.grenademark_generic'
 }

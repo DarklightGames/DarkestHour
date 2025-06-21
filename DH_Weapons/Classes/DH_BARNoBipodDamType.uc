@@ -8,6 +8,6 @@ class DH_BARNoBipodDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BARNoBipodWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_BARNoBipodWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

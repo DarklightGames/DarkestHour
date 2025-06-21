@@ -8,10 +8,10 @@ class DH_Pak43ATGunConstruction extends DHConstruction_Vehicle;
 defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
-    VehicleClasses(0)=(VehicleClass=class'DH_Pak43ATGun')
-    VehicleClasses(1)=(VehicleClass=class'DH_Pak43ATGun_Camo')
-    VehicleClasses(2)=(VehicleClass=class'DH_Pak43ATGun_Green')
-    VehicleClasses(3)=(VehicleClass=class'DH_Pak43ATGun_Winter',SeasonFilters=((Seasons=(SEASON_Winter))))
+    VehicleClasses(0)=(VehicleClass=Class'DH_Pak43ATGun')
+    VehicleClasses(1)=(VehicleClass=Class'DH_Pak43ATGun_Camo')
+    VehicleClasses(2)=(VehicleClass=Class'DH_Pak43ATGun_Green')
+    VehicleClasses(3)=(VehicleClass=Class'DH_Pak43ATGun_Winter',SeasonFilters=((Seasons=(SEASON_Winter))))
     SupplyCost=2000
     ProgressMax=14
 }

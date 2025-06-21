@@ -9,13 +9,13 @@ defaultproperties
 {
     VehicleNameString="3-inch Gun M5"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M5GunCannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M5GunCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M5Gun_anm.M5_base'
-    Skins(0)=Texture'DH_M5Gun_tex.m5.m5'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.M5.M5_destroyed'
-    VehicleHudImage=Texture'DH_M5Gun_tex.HUD.m5_body'
-    VehicleHudTurret=TexRotator'DH_M5Gun_tex.HUD.m5_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M5Gun_tex.HUD.m5_turret_look'
+    Skins(0)=Texture'DH_M5Gun_tex.m5'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.M5_destroyed'
+    VehicleHudImage=Texture'DH_M5Gun_tex.m5_body'
+    VehicleHudTurret=TexRotator'DH_M5Gun_tex.m5_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M5Gun_tex.m5_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ShadowZOffset=20.0

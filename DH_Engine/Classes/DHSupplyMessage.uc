@@ -44,7 +44,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     local DHConstructionSupplyAttachment CSA;
     local string S;
 
-    class'UInteger'.static.ToShorts(Switch, Switch1, SupplyCount);
+    Class'UInteger'.static.ToShorts(Switch, Switch1, SupplyCount);
     CSA = DHConstructionSupplyAttachment(OptionalObject);
 
     S = Repl(GetStringFromSwitch(Switch1), "{0}", SupplyCount);

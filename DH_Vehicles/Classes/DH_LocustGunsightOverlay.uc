@@ -21,7 +21,7 @@ simulated function PostBeginPlay()
         SetDrawScale(CannonPawn.GunsightSize);
 
         // Make a scripted texture, which will display a zoomed 'portal' view for the telescope mounted within the Locust's persicopic gunsight
-        TelescopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+        TelescopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(Class'ScriptedTexture'));
         TelescopeScriptedTexture.SetSize(CannonPawn.GunsightOverlay.MaterialUSize(), CannonPawn.GunsightOverlay.MaterialVSize());
         TelescopeScriptedTexture.Client = self; // means this actor receives RenderTexture() events from the scripted texture
 
@@ -82,7 +82,7 @@ simulated function DamageGunsightOverlay(Texture DestroyedGunsightOverlay)
 defaultproperties
 {
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_GunsightOverlay'
+    StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust_GunsightOverlay'
     Skins(1)=Texture'DH_Locust_tex.Locust_int'
     TelescopeFOV=9 // by experimentation & screen measurement, gives desired 1.8x magnification in telescope portal combined with visible screen size of overlay mesh
 }

@@ -11,5 +11,5 @@ defaultproperties
     BallisticCoefficient=0.195
     WhizType=2
     Damage=64.0
-    MyDamageType=class'DH_Weapons.DH_ColtM1914DamType'
+    MyDamageType=Class'DH_ColtM1914DamType'
 }

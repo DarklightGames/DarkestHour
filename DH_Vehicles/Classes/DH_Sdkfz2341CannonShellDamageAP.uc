@@ -21,5 +21,5 @@ defaultproperties
     KDeathVel=500.000000 //350.0
     KDeathUpKick=150 //50
     bAlwaysSevers=true
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
 }

@@ -7,7 +7,7 @@ class DH_45mmM1937GunFactory extends DHATGunFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_45mmM1937Gun'
+    VehicleClass=Class'DH_45mmM1937Gun'
     Mesh=SkeletalMesh'DH_Pak36_anm.45mm_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext'
     TeamNum=ALLIES

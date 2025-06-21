@@ -7,7 +7,7 @@ class DH_WitchEnder666MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_WitchEnder666BashDamType'
+    DamageType=Class'DH_WitchEnder666BashDamType'
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"
     BashEmptyAnim="bash_attack_empty"

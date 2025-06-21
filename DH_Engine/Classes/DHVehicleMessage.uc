@@ -120,7 +120,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     if (PlayerController(OptionalObject) != none)
     {
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PlayerController(OptionalObject));
+        S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PlayerController(OptionalObject));
     }
 
     return S;

@@ -7,7 +7,7 @@ class DH_USAntiTankSummer extends DHUSAntiTankRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_AmericanPawn',Weight=3.0)
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNet'
+    RolePawns(0)=(PawnClass=Class'DH_AmericanPawn',Weight=3.0)
+    Headgear(0)=Class'DH_AmericanHelmet'
+    Headgear(1)=Class'DH_AmericanHelmetNet'
 }

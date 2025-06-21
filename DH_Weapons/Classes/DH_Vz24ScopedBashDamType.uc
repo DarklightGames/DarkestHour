@@ -8,5 +8,5 @@ class DH_Vz24ScopedBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Vz24ScopedWeapon'
+    WeaponClass=Class'DH_Vz24ScopedWeapon'
 }

@@ -8,11 +8,11 @@ class DH_PPD40Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.ppd40'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppd40_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.ppd40_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_PPD40Bullet'
+    ClientProjectileClass=Class'DH_PPD40Bullet'
 
     WA_Idle="idle_ppd40"
     WA_IdleEmpty="idle_ppd40"

@@ -18,7 +18,7 @@ defaultproperties
         bBoundToParent=true
         OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
     End Object
-    b_Primary=GUIButton'DH_Interface.DHGameFooterMP.GamePrimaryButton'
+    b_Primary=GUIButton'DH_Interface.GamePrimaryButton'
     Begin Object Class=GUIButton Name=GameSecondaryButton
         MenuState=MSAT_Disabled
         StyleName="DHSmallTextButtonStyle"
@@ -30,7 +30,7 @@ defaultproperties
         bBoundToParent=true
         OnKeyEvent=GameSecondaryButton.InternalOnKeyEvent
     End Object
-    b_Secondary=GUIButton'DH_Interface.DHGameFooterMP.GameSecondaryButton'
+    b_Secondary=GUIButton'DH_Interface.GameSecondaryButton'
     Begin Object Class=GUIButton Name=GameBackButton
         Caption="Back"
         StyleName="DHSmallTextButtonStyle"
@@ -41,5 +41,5 @@ defaultproperties
         bBoundToParent=true
         OnKeyEvent=GameBackButton.InternalOnKeyEvent
     End Object
-    b_Back=GUIButton'DH_Interface.DHGameFooterMP.GameBackButton'
+    b_Back=GUIButton'DH_Interface.GameBackButton'
 }

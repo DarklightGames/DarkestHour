@@ -8,5 +8,5 @@ class DH_6PounderCannonShellDamageAPDS extends DH_Cromwell6PdrCannonShellDamageA
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.ATGunKill'
 }

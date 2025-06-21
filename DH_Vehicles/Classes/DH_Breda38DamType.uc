@@ -8,5 +8,5 @@ class DH_Breda38DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

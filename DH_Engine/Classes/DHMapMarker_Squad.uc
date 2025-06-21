@@ -14,7 +14,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 
     if (PC != none && PC.SquadReplicationInfo != none)
     {
-        PC.SquadReplicationInfo.BroadcastSquadLocalizedMessage(PC.GetTeamNum(), PC.GetSquadIndex(), class'DHSquadOrderMessage', default.BroadcastedMessageIndex);
+        PC.SquadReplicationInfo.BroadcastSquadLocalizedMessage(PC.GetTeamNum(), PC.GetSquadIndex(), Class'DHSquadOrderMessage', default.BroadcastedMessageIndex);
     }
 }
 

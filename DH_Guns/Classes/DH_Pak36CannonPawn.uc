@@ -8,7 +8,7 @@ class DH_Pak36CannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Guns.DH_Pak36Cannon'
+    GunClass=Class'DH_Guns.DH_Pak36Cannon'
 
     //Driver's position and animations
     DriverPositions(0)=(ViewFOV=25.0,TransitionUpAnim="overlay_out",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)

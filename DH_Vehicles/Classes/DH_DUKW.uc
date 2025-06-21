@@ -248,16 +248,16 @@ defaultproperties
 
     // Sounds
     EngineSoundBone="ENGINE"
-    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-    WaterEngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-    GroundEngineSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
-    WaterStartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-    WaterShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
-    GroundStartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    GroundShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    EngineSound=SoundGroup'DH_AlliedVehicleSounds.HigginsEngine_loop'
+    WaterEngineSound=SoundGroup'DH_AlliedVehicleSounds.HigginsEngine_loop'
+    GroundEngineSound=SoundGroup'DH_alliedvehiclesounds.gmctruck_engine_loop'
+    WaterStartUpSound=Sound'DH_AlliedVehicleSounds.HigginsStart01'
+    WaterShutDownSound=Sound'DH_AlliedVehicleSounds.HigginsStop01'
+    GroundStartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    GroundShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     // TODO: startup sounds for both types of engine, automatically play when the vehicle changes volumes
 
-    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
+    WashSound=Sound'DH_AlliedVehicleSounds.wash01'
     VehicleAttachments(0)=(AttachBone="WASH")
 
     // TODO: idle sound?
@@ -355,8 +355,8 @@ defaultproperties
     SoundPitch=32.0
     MaxPitchSpeed=10.0 //150.0
     IdleSound=none
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
     RumbleSoundBone="body"
 
@@ -364,7 +364,7 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_DUKW_tex.interface.DUKW_body_icon'
+    VehicleHudImage=Texture'DH_DUKW_tex.DUKW_body_icon'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
@@ -391,7 +391,7 @@ defaultproperties
     VehicleHudOccupantsX(9)=0.44
     VehicleHudOccupantsY(9)=0.775
 
-    SpawnOverlay(0)=Material'DH_DUKW_tex.interface.DUKW_icon'
+    SpawnOverlay(0)=Material'DH_DUKW_tex.DUKW_icon'
 
     // Splashguard
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")

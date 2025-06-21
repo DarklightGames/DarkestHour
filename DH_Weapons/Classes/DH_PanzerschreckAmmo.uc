@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.Panzerschreck_ammo'
 }

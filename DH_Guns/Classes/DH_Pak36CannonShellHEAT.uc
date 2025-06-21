@@ -21,8 +21,8 @@ defaultproperties
     Damage=600
     DamageRadius=600
 
-    ShellImpactDamage=class'DH_Weapons.DH_PanzerschreckImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_PanzerschreckDamType'
+    ShellImpactDamage=Class'DH_Weapons.DH_PanzerschreckImpactDamType'
+    MyDamageType=Class'DH_Weapons.DH_PanzerschreckDamType'
 
     EngineFireChance=0.85  //more powerful HEAT round than most
 

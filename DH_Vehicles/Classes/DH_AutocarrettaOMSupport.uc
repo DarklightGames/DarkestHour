@@ -13,12 +13,12 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_SUPPORT_EXT'
     
-    RandomAttachmentGroups(0)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_WINDSHIELD'))))
-    RandomAttachmentGroups(1)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_ROOF_CABIN'))))
-    RandomAttachmentGroups(2)=(Dependencies=((GroupIndex=0,OptionIndex=0)),Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SEARCHLIGHT'))))
-    RandomAttachmentGroups(3)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SPARE_WHEEL_1920S'))))
-    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=0,OptionIndex=-1),(GroupIndex=1,OptionIndex=0)),Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_TENT_STRAPS'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_LOGI',CullDistance=3000))))
+    RandomAttachmentGroups(0)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_WINDSHIELD'))))
+    RandomAttachmentGroups(1)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_ROOF_CABIN'))))
+    RandomAttachmentGroups(2)=(Dependencies=((GroupIndex=0,OptionIndex=0)),Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_SEARCHLIGHT'))))
+    RandomAttachmentGroups(3)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_SPARE_WHEEL_1920S'))))
+    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=0,OptionIndex=-1),(GroupIndex=1,OptionIndex=0)),Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_TENT_STRAPS'))))
+    RandomAttachmentGroups(5)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_LOGI',CullDistance=3000))))
 
     PassengerPawns(1)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_01",DrivePos=(X=-17.8056,Y=-22.1263,Z=107.282),DriveRot=(Yaw=32768))
     PassengerPawns(2)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_02",DrivePos=(X=-17.8056,Y=22.1263,Z=107.282),DriveRot=(Yaw=32768))
@@ -27,8 +27,8 @@ defaultproperties
     ExitPositions(2)=(X=-20,Y=-90.0,Z=58.0)     // Rear Passenger Left
     ExitPositions(3)=(X=-20,Y=90.0,Z=58.0)      // Rear Passenger Right
 
-    VehicleHudImage=Texture'DH_AutocarrettaOM_tex.Interface.om_support_clock'
-    SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.Interface.om_support_profile'
+    VehicleHudImage=Texture'DH_AutocarrettaOM_tex.om_support_clock'
+    SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.om_support_profile'
 
     // Driver
     VehicleHudOccupantsX(0)=0.575
@@ -43,12 +43,12 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.5
 
     DestroyedVehicleMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_DESTROYED_SUPPORT'
-    DestroyedMeshSkins(0)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_Flatbed_Green_D'
-    DestroyedMeshSkins(1)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_Wheels_Green_D'
-    DestroyedMeshSkins(2)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_BaseVehicle_Green_D'
+    DestroyedMeshSkins(0)=Combiner'DH_AutocarrettaOM_tex.OM_Flatbed_Green_D'
+    DestroyedMeshSkins(1)=Combiner'DH_AutocarrettaOM_tex.OM_Wheels_Green_D'
+    DestroyedMeshSkins(2)=Combiner'DH_AutocarrettaOM_tex.OM_BaseVehicle_Green_D'
     
     // Logistics
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="BODY"
     SupplyAttachmentOffset=(X=-91.7437,Y=0.0,Z=61.4152)
     SupplyAttachmentStaticMesh=None

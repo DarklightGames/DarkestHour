@@ -7,5 +7,5 @@ class DH_EnfieldNo4ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_EnfieldNo4ScopedBashDamType'
+    DamageType=Class'DH_EnfieldNo4ScopedBashDamType'
 }

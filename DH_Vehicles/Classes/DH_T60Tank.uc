@@ -15,20 +15,20 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T60_anm.T60_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T60_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
+    Skins(0)=Texture'allies_vehicles_tex.T60_ext'
+    Skins(1)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(2)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(3)=Texture'allies_vehicles_tex.T60_int'
 
-    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.T60_int_s'
+    HighDetailOverlay=Material'allies_vehicles_tex.T60_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
     // Collision
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.T60.T60_visor_Collision',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.T60_visor_Collision',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T60CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_T60CannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=40.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-110.0,Y=-10.0,Z=43.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=40.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -41,7 +41,7 @@ defaultproperties
     DriveAnim=VT60_driver_idle_close
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.T60DriverOverlay'
+    HUDOverlayClass=Class'T60DriverOverlay'
     HUDOverlayOffset=(X=2,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -93,11 +93,11 @@ defaultproperties
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="body"
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
@@ -108,8 +108,8 @@ defaultproperties
     TreadVelocityScale=215.0
     WheelRotationScale=45500.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-135,Y=70,Z=15),ExhaustRotation=(pitch=34000,yaw=-16384,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     //Steering
     LeftLeverBoneName="Lever_L"
@@ -119,9 +119,9 @@ defaultproperties
     SteeringScaleFactor=0.75
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.T60_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.T60_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.T60_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.T60_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.35
     VehicleHudTreadsPosX(1)=0.66
@@ -137,7 +137,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.8
     VehicleHudOccupantsX(4)=0.65
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.t60'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.t60'
 
     // Visible wheels
     // Wheel bones for animation
@@ -173,7 +173,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_T60Tank.LF_Steering'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=True
@@ -183,7 +183,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_T60Tank.RF_Steering'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=True
@@ -193,7 +193,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_T60Tank.LR_Steering'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=True
@@ -203,7 +203,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_T60Tank.RR_Steering'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
      // End Steering Wheels
 
      // Center Drive Wheels
@@ -214,7 +214,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_T60Tank.Left_Drive_Wheel'
+     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=True
@@ -223,5 +223,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_T60Tank.Right_Drive_Wheel'
+     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

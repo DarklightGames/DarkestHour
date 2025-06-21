@@ -7,6 +7,6 @@ class DH_45mmM1942GunFactory_Snow extends DH_45mmM1942GunFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_45mmM1942Gun_Snow'
+    VehicleClass=Class'DH_45mmM1942Gun_Snow'
     Skins(0)=Texture'DH_Pak36_tex.45mm_ext_winter'
 }

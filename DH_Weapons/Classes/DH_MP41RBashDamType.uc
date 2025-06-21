@@ -8,5 +8,5 @@ class DH_MP41RBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MP41RWeapon'
+    WeaponClass=Class'DH_MP41RWeapon'
 }

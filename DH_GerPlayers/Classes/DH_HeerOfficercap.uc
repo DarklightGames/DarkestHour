@@ -9,5 +9,5 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'DH_RMFHeadGear.ger_crashcap1'
-    Skins(0)=Texture'DHGermanCharactersTex.RMFGerHeadgear.ger_heer_crashcap'
+    Skins(0)=Texture'DHGermanCharactersTex.ger_heer_crashcap'
 }

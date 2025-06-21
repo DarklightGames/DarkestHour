@@ -12,7 +12,7 @@ function BackButtonClicked()
 
 defaultproperties
 {
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=Texture'DH_GUI_Tex.Setupmenu'
 
     PanelCaption(0)="Video Guides"
     PanelCaption(1)=""
