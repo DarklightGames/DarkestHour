@@ -257,36 +257,34 @@ with the help of others.
 * Removed non-standard gunner positions on the StuG and StuH that made operating the cannon awkward.
 
 ## Interface & Settings
-* The scoreboard is now be visible even when the HUD is hidden.
+* The scoreboard can now be visible even when the HUD is hidden.
 * Range indicators on vehicle cannons are now hidden when the HUD is hidden.
 * The "self" color has been changed from orange to gold. This better differentiates the local player from enemy markers.
 * Rocket weapons now display a small readout of the current range after toggling the range setting.
-* Increased the default FOV from 85 to 90.
+* Increased the default FOV from 85 to 90 degrees.
 * The option to spawn with a bayonet already attached is now on by default.
-* Vehicle occupant list is no longer displayed if thre player is the sole occupant.
+* Vehicle occupant list is no longer displayed if the player is the sole occupant.
 * Vehicle occupant numbers are now white instead of black, making them easier to read.
 * The rally point status icon is no longer displayed while in a vehicle.
 * Improved the appearance and extensibility of control prompt messages.
 
 ## Weapons
-* Some scopes have had the reticle updated to be less chunky and view-obsuring.
+* Some scopes have had the reticle updated to be less chunky and view-obscuring.
 * Scoped weapons have been zeroed consistently for 100m.
 * FG42 now has slightly less recoil and a flatter recoil curve, making it more controllable.
 
 ## Miscellaneous
-* Removed additional patron voting power (was disabled on all official servers already, but custom servers would have this on by default)
+* Removed additional patron voting power. This was disabled on all official servers already, but custom servers would have this on by default.
 * American flag texture now uses the historically accurate 48-star version.
 * A hint is now sent to the driver of Higgins boats on how to raise and lower the ramp.
-* Squad names are now reset to the default when a new squad leader is assigned. This is to ensure that squad leaders can't be blamed for bad squad names set by their precedessors.
+* Squad names are now reset to the default when a new squad leader is assigned. This is to ensure that squad leaders can't be blamed for bad squad names set by their predecessors.
 * The near-clip distance of the camera has been doubled from 2 units to 4 units. This should reduce the prevalence of z-fighting.
 
 ## Maps
-
 The following maps have been removed due to unpopularity or redundancy.
 
   * Armored Brenus Clash
   * Armored La Feuillie Advance
-  * Stoumont Push
 
 ### New Variant & Skin System
 Players can now select different variants and skins for guns placed in the world. 
@@ -312,29 +310,28 @@ In addition, there are now hard limits on the amount of total constructions that
 * Grenade scorch decal changed to be more realistic.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly attached to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
 * Tracer rounds for some weapons (Bren, ZB30 etc.) will no longer be misaligned with the barrel from the perspective of the gunner.
 * Fixed a bug where the pre-launch-trace would suppress tracer rounds from being spawned when firing at nearby targets.
-* Vehicle friendly fire beeping sound no longer plays when no damage is done (i.e., meleeing a freindly truck)
+* Vehicle friendly fire beeping sound no longer plays when no damage is done (i.e., meleeing a friendly truck)
 * Fixed a bug where the pitch of the mortar whistling sound would always be incorrect while spectating.
-* Fixed a bug where mortars that hit things on ascent (i.e., nearby trees) wouldn't explode immediately.
+* Fixed a bug where mortars that hit things on ascent (e.g., nearby trees) wouldn't explode immediately.
 * `ToggleSelectedArtilleryTarget` now has a default keybind set.
 * Fixed default settings being set incorrectly (they are set to "Highest" setting).
 * Fixed a bug where map marker cooldowns (e.g., mortar spotting marks) would be broken after the round was reset.
 * Fixed an issue on Freyneux & Lamormenil where tanks could drive through some buildings.
-* Fixed a bug where the gun rotation projector looked opaque on BSP.
-* Patron voice signals now correctly send a 3D icon signal and play an associated voice line.
+* Fixed a bug where the gun rotation projector looked opaque on BSP surfaces.
 * Fixed a bug where the "open the hatch to exit" message would be erroneously sent to players when there was no hatch to open.
-* Fixed a bug where spawn protection would not by applied to players that spawned on vehicles.
+* Fixed a bug where spawn protection would not be applied to players that spawned on vehicles.
 * Fixed issue where AP shell ground impacts could be heard from extreme distances.
 * Fixed an issue where player jumping and landing sounds would not work on sandbags, bricks and other custom surface types.
 * Fixed a bug where the "join a squad" nag message could be sent twice in rapid succession.
 * Fixed primary weapon selection drop-down box being too small.
 * Fixed bug where SL & ASL nameplates would not have their associated icons if they were in a vehicle.
-* Fixed a longstanding bug where players would take half-damage from their own explosives.
+* Fixed a long-standing bug where players would take half-damage from their own explosives.
 * Fixed missing sleeve textures for some Soviet rifleman roles.
 
 # SDK
