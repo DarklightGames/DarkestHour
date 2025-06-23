@@ -285,6 +285,7 @@ The following maps have been removed due to unpopularity or redundancy.
 
   * Armored Brenus Clash
   * Armored La Feuillie Advance
+  * Watrage Push
 
 ### New Variant & Skin System
 Players can now select different variants and skins for guns placed in the world. 
