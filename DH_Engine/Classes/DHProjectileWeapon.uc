@@ -739,7 +739,7 @@ function Coords GetMuzzleCoords()
         SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
     }
 
-    return GetBoneCoords(MuzzleBone);
+    return GetBoneCoords(GetMuzzleBone());
 }
 
 simulated function bool IsInstigatorBipodDeployed()
@@ -3804,6 +3804,11 @@ simulated function PostNetReceive()
     {
         bAmmoAmountNotReplicated = false;
     }
+}
+
+function name GetMuzzleBone()
+{
+    return MuzzleBone;
 }
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Winchester1897Attachment extends DHWeaponAttachment;
+class DH_SaintEtienneShotgunAttachment extends DHWeaponAttachment;
 
 // Modified so we don't play play the idle anim (which is all the Super does) if we just played reload or pre-reload animation
 // This is because the reload anims play in a sequence, ending with the post-reload anim (same as bolt action sniper rifles)

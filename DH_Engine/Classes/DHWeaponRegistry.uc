@@ -181,4 +181,5 @@ defaultproperties
     Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
     Records(122)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
     Records(123)=(ClassName="DH_Weapons.DH_MN9130ScopedWeapon",WeaponNames=("mosinscoped","scopedmosinpu","scopedmosinlate"))
+    Records(124)=(ClassName="DH_Weapons.DH_SaintEtienneShotgunWeapon",WeaponNames=("etienne","stetienne","saintetienne"))
 }
