@@ -177,7 +177,9 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 ### Niscemi Outkirts (24-64 players)
 
-Niscemi was a small town on the road from Gela to the Ponte Olivo airfield. The Allies will have to fight their way up steep terrain and overcome a nest of defensive positions to reach the town.
+Niscemi is a hilltop town that was used as a staging area for counterattacks against the invading Allies immediately following the invasion.
+
+The invading Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outkirts of the town.
 
 |||
 |-|-|
@@ -272,6 +274,7 @@ with the help of others.
 * Some scopes have had the reticle updated to be less chunky and view-obscuring.
 * Scoped weapons have been zeroed consistently for 100m.
 * FG42 now has slightly less recoil and a flatter recoil curve, making it more controllable.
+* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschrek, Bazooka)
 
 ## Miscellaneous
 * Removed additional patron voting power. This was disabled on all official servers already, but custom servers would have this on by default.
