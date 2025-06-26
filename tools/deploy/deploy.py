@@ -38,7 +38,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('dir', default='.', help='Root directory')
     argparser.add_argument('-mod', required=True, help='Mod name')
-    argparser.add_argument('-username', required=True, help='Steam username')
+    argparser.add_argument('--username', required=False, help='Steam username', default=None)
     argparser.add_argument('-dry', action='store_true', help='Dry run')
     args = argparser.parse_args()
 
@@ -143,9 +143,13 @@ if __name__ == '__main__':
 
     # Actually do the thing!
     if not args.dry:
+        if not args.username:
+            username = input('Enter Steam username: ')
+        else:
+            username = args.username
         steamcmd_args = [
             'steamcmd',
-            '+login', args.username,
+            '+login', username,
         ]
         for app_id in app_ids:
             app_build_path = os.path.join(scripts_path, f'app_build_{app_id}.vdf')
