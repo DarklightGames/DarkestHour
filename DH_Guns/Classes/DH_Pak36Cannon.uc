@@ -13,6 +13,13 @@ replication
         bIsHEATLoaded;
 }
 
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    SetAttachmentsHidden(!bIsHEATLoaded);
+}
+
 simulated function SetAttachmentsHidden(bool bNewHidden)
 {
     local int i;

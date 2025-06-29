@@ -3,8 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Finalize ammo loadout
-// [ ] Fix visual bug where shell is attached at the beginning by default (and
-//     check that it works in MP)
+// [ ] Damage types
 //==============================================================================
 
 class DH_Pak36ATGun extends DHATGun;

@@ -1,3 +1,4 @@
+
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
@@ -12,21 +13,11 @@ defaultproperties
 {
     Speed=6639  // [1] 110m/s
     MaxSpeed=6639
-
     DrawScale=1.0
-
-    // TODO: below damage is same as pfaust, probably needs to be boosted because of huge explosive amount
-    //Damage
     ImpactDamage=455  //couldnt find info on filler, so i assume something about 1 KG
     Damage=600
     DamageRadius=600
-
-    ShellImpactDamage=Class'DH_Weapons.DH_PanzerschreckImpactDamType'
-    MyDamageType=Class'DH_Weapons.DH_PanzerschreckDamType'
-
     EngineFireChance=0.85  //more powerful HEAT round than most
-
-    //Effects
     StaticMesh=StaticMesh'DH_Pak36_stc.STIELGRANATE_41'
 
     //Penetration
@@ -49,4 +40,7 @@ defaultproperties
     ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
     ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
     ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
+
+    bHasTracer=false
+    bHasShellTrail=false
 }

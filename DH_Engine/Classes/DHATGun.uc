@@ -36,7 +36,7 @@ var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
 
-var String            SentinelString;
+var string            SentinelString;
 var Rotator           OldRotator;
 var bool              bOldIsRotating;
 
