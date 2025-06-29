@@ -14,13 +14,14 @@ defaultproperties
     Speed=6639  // [1] 110m/s
     MaxSpeed=6639
     DrawScale=1.0
-    ImpactDamage=455  //couldnt find info on filler, so i assume something about 1 KG
+    ImpactDamage=455
+    
     Damage=600
     DamageRadius=600
     EngineFireChance=0.85  //more powerful HEAT round than most
     StaticMesh=StaticMesh'DH_Pak36_stc.STIELGRANATE_41'
 
-    //Penetration
+    // Penetration
     DHPenetrationTable(0)=18.0  // [1] 1.8 cm of penetration
     DHPenetrationTable(1)=18.0
     DHPenetrationTable(2)=18.0
@@ -30,16 +31,16 @@ defaultproperties
     DHPenetrationTable(6)=18.0
 
     // TODO: this sound is very WEAK, replace it
-    VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    DirtHitSound=Sound'DH_WeaponSounds.faust.faust_explode031'
-    RockHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
-    WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
+    VehicleHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    DirtHitSound=Sound'DH_WeaponSounds.faust_explode031'
+    RockHitSound=Sound'DH_WeaponSounds.faust_explode011'
+    WoodHitSound=Sound'DH_WeaponSounds.faust_explode021'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
+    VehicleDeflectSound=Sound'Vehicle_Weapons.HE_deflect01'
 
-    ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
-    ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
-    ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
+    ExplosionSound(0)=Sound'DH_WeaponSounds.faust_explode011'
+    ExplosionSound(1)=Sound'DH_WeaponSounds.faust_explode021'
+    ExplosionSound(2)=Sound'DH_WeaponSounds.faust_explode031'
 
     bHasTracer=false
     bHasShellTrail=false
