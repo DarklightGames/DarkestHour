@@ -107,7 +107,7 @@ defaultproperties
         Acceleration=(X=30.000000,Y=10.000000,Z=-350.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        name="PaperShards"
+        Name="PaperShards"
         MaxParticles=15
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
@@ -136,7 +136,7 @@ defaultproperties
         Acceleration=(Z=-100.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        name="FloatyBits"
+        Name="FloatyBits"
         FadeOutStartTime=0.25
         MaxParticles=30
         StartLocationShape=PTLS_Sphere
@@ -157,6 +157,6 @@ defaultproperties
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter6'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

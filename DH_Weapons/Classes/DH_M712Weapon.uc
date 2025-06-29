@@ -48,8 +48,8 @@ defaultproperties
     HighDetailOverlayIndex=0
     Skins(1)=Texture'Weapons1st_tex.Mauser_c96'
     HighDetailOverlay=Shader'Weapons1st_tex.c96_S'
-    handnum=0
-    sleevenum=2
+    HandNum=0
+    SleeveNum=2
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=75.0

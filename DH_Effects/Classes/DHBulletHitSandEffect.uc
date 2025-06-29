@@ -35,7 +35,7 @@ defaultproperties
         FadeOutStartTime=0.1
         Opacity=0.5
         MaxParticles=1
-        name="impact1"
+        Name="impact1"
         UseRotationFrom=PTRS_Actor
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=20.000000))
@@ -61,7 +61,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=189,G=215,R=223,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=189,G=215,R=223,A=255))
         MaxParticles=3
-        name="ground_chunks"
+        Name="ground_chunks"
         //StartLocationOffset=(X=5.000000)
         UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
@@ -100,7 +100,7 @@ defaultproperties
         FadeOutStartTime=0.2500000
         FadeInEndTime=0.1
         MaxParticles=4
-        name="dustcloud"
+        Name="dustcloud"
         StartLocationOffset=(Z=-25.000000)
         UseRotationFrom=PTRS_Actor
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
@@ -134,7 +134,7 @@ defaultproperties
         Opacity=0.8
         FadeOutStartTime=0.140000
         MaxParticles=4
-        name="light_dust"
+        Name="light_dust"
         StartLocationRange=(X=(Min=-10.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.600000,Max=0.800000))
@@ -169,7 +169,7 @@ defaultproperties
         Opacity=0.6
         FadeOutStartTime=0.140000
         MaxParticles=1
-        name="dark_dust"
+        Name="dark_dust"
         StartLocationOffset=(X=10.000000)
         SphereRadiusRange=(Min=15.000000,Max=20.000000)
         UseRotationFrom=PTRS_Actor
@@ -206,7 +206,7 @@ defaultproperties
         Opacity=0.5
         FadeOutStartTime=0.35
         MaxParticles=10 //15
-        name="fine_grains"
+        Name="fine_grains"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.250000))
@@ -243,7 +243,7 @@ defaultproperties
         FadeOutStartTime=0.10000
         Opacity=0.6
         MaxParticles=4
-        name="ground_splash"
+        Name="ground_splash"
         StartLocationRange=(X=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -260,6 +260,6 @@ defaultproperties
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter88'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

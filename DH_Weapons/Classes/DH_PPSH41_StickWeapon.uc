@@ -49,7 +49,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     Skins(0)=Texture'DH_Weapon_tex.PPShBox'
-    handnum=2
+    HandNum=2
 
     IronSightDisplayFOV=65
     DisplayFOV=82
