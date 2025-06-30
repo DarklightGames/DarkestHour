@@ -8,6 +8,6 @@ class DH_M9531DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M9531Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_M9531Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

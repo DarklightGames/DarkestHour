@@ -77,11 +77,11 @@ static function DumpToLog(PlayerController PC)
             VariantNames[VariantNames.Length] = default.Records[i].Variants[j].VariantName;
         }
 
-        LogLine = class'UString'.static.Join(", ", default.Records[i].VehicleNames);
+        LogLine = Class'UString'.static.Join(", ", default.Records[i].VehicleNames);
 
         if (VariantNames.Length > 0)
         {
-            LogLine @= "-" @ "(" $ class'UString'.static.Join(", ", VariantNames) $ ")";
+            LogLine @= "-" @ "(" $ Class'UString'.static.Join(", ", VariantNames) $ ")";
         }
 
         PC.Log(LogLine);

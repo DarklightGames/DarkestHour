@@ -9,13 +9,13 @@ defaultproperties
 {
     ItemName="MP 38"
     NativeItemName="Maschinenpistole 38"
-    FireModeClass(0)=class'DH_Weapons.DH_MP38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MP38Attachment'
-    PickupClass=class'DH_Weapons.DH_MP38Pickup'
+    FireModeClass(0)=Class'DH_MP38Fire'
+    FireModeClass(1)=Class'DH_MP38MeleeFire'
+    AttachmentClass=Class'DH_MP38Attachment'
+    PickupClass=Class'DH_MP38Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp38-mesh'
-    //HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
+    //HighDetailOverlay=Shader'Weapons1st_tex.MP40_s'
     bUseHighDetailOverlayIndex=false
 
     SwayModifyFactor=0.73 // +0.03, slightly heavier than mp40
@@ -47,6 +47,6 @@ defaultproperties
     PutDownEmptyAnim="put_away_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 }

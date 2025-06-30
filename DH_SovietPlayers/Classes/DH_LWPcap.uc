@@ -8,5 +8,5 @@ class DH_LWPcap extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHgear_anm.LWPcap'
-    Skins(0)=Texture'DHSovietCharactersTex.soviet_gear.Pol_gear'
+    Skins(0)=Texture'DHSovietCharactersTex.Pol_gear'
 }

@@ -10,8 +10,8 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.Churchill_MG'
     bMatchSkinToVehicle=true
-    Skins(1)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
-    Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
+    Skins(1)=Texture'DH_Churchill_tex.ChurchillMkVIIl_turret'
+    Skins(2)=Texture'DH_VehiclesUK_tex.Cromwell_body_int'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="MG_idle"
     GunnerAttachmentBone="gunner_attachment"
@@ -27,19 +27,19 @@ defaultproperties
     CustomPitchDownLimit=64000
 
     // Ammo
-    ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
+    ProjectileClass=Class'DH_BesaVehicleBullet'
     InitialPrimaryAmmo=225
     NumMGMags=11
     FireInterval=0.092
-    TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
+    TracerProjectileClass=Class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
     bDoOffsetTrace=false // otherwise it adjusts the bullet spawn location to outside the vehicle's collision box, which in this tank is quite a way forward
     WeaponFireAttachmentBone="MG_pivot"
     WeaponFireOffset=17.0
-    FireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Besa_FireLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Besa_FireEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 }

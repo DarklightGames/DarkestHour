@@ -27,7 +27,7 @@ function HTTPCookie SetCookie(string S)
 
     Divide(Crumbs[0], "=", CookieName, Value);
 
-    Value = class'UString'.static.Trim(Value);
+    Value = Class'UString'.static.Trim(Value);
 
     // Check for existing cookie.
     if (Cookies.Get(CookieName, O))
@@ -36,7 +36,7 @@ function HTTPCookie SetCookie(string S)
     }
     else
     {
-        Cookie = new class'HTTPCookie';
+        Cookie = new Class'HTTPCookie';
         Cookie.CookieName = CookieName;
     }
 
@@ -46,7 +46,7 @@ function HTTPCookie SetCookie(string S)
     {
         Divide(Crumbs[i], "=", AttributeName, Value);
 
-        Value = class'UString'.static.Trim(Value);
+        Value = Class'UString'.static.Trim(Value);
 
         if (AttributeName ~= "Expires")
         {

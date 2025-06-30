@@ -100,7 +100,7 @@ simulated function OnExhausted(DHInventorySpawner Spawner)
 
 defaultproperties
 {
-    GroupClass=class'DHConstructionGroup_Ammunition'
+    GroupClass=Class'DHConstructionGroup_Ammunition'
     bDummyOnConstruction=true
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true

@@ -29,7 +29,7 @@ function DHActorProxy.Context GetContext()
     local DHActorProxy.Context Context;
 
     Context.TeamIndex = Instigator.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = PlayerOwner;
     Context.GroundActor = GroundActor;
     Context.VariantIndex = VariantIndex;
@@ -56,7 +56,7 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
     UpdateAppearance();
 
     // Initialize the local rotation based on the parameters in the new construction class
-    LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
+    LocalRotation = Class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
 }
 
 final function UpdateDefaultSkinIndex()
@@ -112,12 +112,12 @@ function Color GetProxyColor()
     switch (ProxyError.Type)
     {
         case ERROR_None:
-            return class'UColor'.default.Green;
+            return Class'UColor'.default.Green;
         case ERROR_Fatal:
         case ERROR_PlayerBusy:
-            return class'UColor'.default.Black;
+            return Class'UColor'.default.Black;
         default:
-            return class'UColor'.default.Red;
+            return Class'UColor'.default.Red;
     }
 }
 
@@ -312,7 +312,7 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         Forward = HitNormal cross Left;
 
         // Hit something static in the world.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
+        GroundSlopeDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
@@ -324,7 +324,7 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         {
             GetAxes(Rotator(Forward), X, Y, Z);
 
-            CircumferenceInMeters = class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
+            CircumferenceInMeters = Class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
             ArcLengthTraceCount = (CircumferenceInMeters / ConstructionClass.default.ArcLengthTraceIntervalInMeters) / 2;
 
             // For safety's sake, make sure we don't overdo or underdo it.
@@ -355,7 +355,7 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
                 }
 
                 // Trace down from the top of the cylinder to the bottom
-                TraceEnd = TraceStart - (Z * (CollisionHeight + class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.FloatToleranceInMeters)));
+                TraceEnd = TraceStart - (Z * (CollisionHeight + Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.FloatToleranceInMeters)));
 
                 HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, false);
 
@@ -389,7 +389,7 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         }
 
         // Now check the groundslope again.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
+        GroundSlopeDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
@@ -440,7 +440,7 @@ function DHConstruction.ConstructionError GetPositionError()
 
     if (Level.NetMode != NM_DedicatedServer && !bHidden)
     {
-        foreach TouchingActors(class'DHConstructionProxy', CP)
+        foreach TouchingActors(Class'DHConstructionProxy', CP)
         {
             if (CP != none && !CP.bHidden && CP != self)
             {
@@ -459,7 +459,7 @@ function DHConstruction.ConstructionError GetPositionError()
 
     if (!ConstructionClass.default.bCanBePlacedInDangerZone)
     {
-        if (class'DHDangerZone'.static.IsIn(GRI, Location.X, Location.Y, Instigator.GetTeamNum()))
+        if (Class'DHDangerZone'.static.IsIn(GRI, Location.X, Location.Y, Instigator.GetTeamNum()))
         {
             E.Type = ERROR_InDangerZone;
             return E;
@@ -467,7 +467,7 @@ function DHConstruction.ConstructionError GetPositionError()
     }
 
     // Don't allow constructions to overlap restriction volumes that restrict constructions.
-    foreach TouchingActors(class'DHRestrictionVolume', RV)
+    foreach TouchingActors(Class'DHRestrictionVolume', RV)
     {
         if (RV != none)
         {
@@ -491,7 +491,7 @@ function DHConstruction.ConstructionError GetPositionError()
     }
 
     // Don't allow constructions in active minefields.
-    foreach TouchingActors(class'ROMineVolume', MV)
+    foreach TouchingActors(Class'ROMineVolume', MV)
     {
         if (MV != none &&
             MV.bActive &&
@@ -524,7 +524,7 @@ function DHConstruction.ConstructionError GetPositionError()
     {
         // Don't allow this construction to be placed too close to an enemy-controlled objective.
         ObjectiveIndex = -1;
-        DistanceMin = class'UFloat'.static.Infinity();
+        DistanceMin = Class'UFloat'.static.Infinity();
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
         {
@@ -532,7 +532,7 @@ function DHConstruction.ConstructionError GetPositionError()
             {
                 Distance = VSize(Location - GRI.DHObjectives[i].Location);
 
-                if (Distance < class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemyObjectiveDistanceMinMeters) &&
+                if (Distance < Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemyObjectiveDistanceMinMeters) &&
                     Distance < DistanceMin)
                 {
                     DistanceMin = Distance;
@@ -545,7 +545,7 @@ function DHConstruction.ConstructionError GetPositionError()
         {
             E.Type = ERROR_TooCloseToEnemyObjective;
             E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-            E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - Class'DHUnits'.static.UnrealToMeters(DistanceMin));
             return E;
         }
     }
@@ -553,7 +553,7 @@ function DHConstruction.ConstructionError GetPositionError()
     if (ConstructionClass.default.ObjectiveDistanceMinMeters > 0.0)
     {
         // Don't allow this construction to be placed too close to an objective.
-        DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
+        DistanceMin = Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
         ObjectiveIndex = -1;
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
@@ -574,7 +574,7 @@ function DHConstruction.ConstructionError GetPositionError()
         {
             E.Type = ERROR_TooCloseToObjective;
             E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - Class'DHUnits'.static.UnrealToMeters(DistanceMin));
             return E;
         }
     }
@@ -591,7 +591,7 @@ function DHConstruction.ConstructionError GetPositionError()
     // Don't allow the construction to touch blocking actors if we aren't on a socket.
     if (Socket == none)
     {
-        foreach TouchingActors(class'Actor', TouchingActor)
+        foreach TouchingActors(Class'Actor', TouchingActor)
         {
             if (TouchingActor != none && TouchingActor.bBlockActors)
             {
@@ -605,7 +605,7 @@ function DHConstruction.ConstructionError GetPositionError()
         // likely combined radius. Using AllActors would be incredibly slow, and
         // keeping a separate list of constructions via replication or some other
         // mechanism would probably be a bad idea.
-        foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
+        foreach CollidingActors(Class'DHConstruction', C, Class'DHUnits'.static.MetersToUnreal(25.0))
         {
             C.GetCollisionSize(C.GetContext(), OtherRadius, OtherHeight);
 
@@ -656,7 +656,7 @@ function DHConstruction.ConstructionError GetPositionError()
             // above us. We start the trace slightly higher than the ground
             // because uneven terrain tends to produce false positives.
             TraceStart = Location + (vect(0, 0, 1) * ConstructionClass.default.CollisionHeight / 2);
-            TraceEnd = Location + (vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters));
+            TraceEnd = Location + (vect(0, 0, 1) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters));
             HitActor = Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength);
 
             if (HitActor != none)
@@ -668,13 +668,13 @@ function DHConstruction.ConstructionError GetPositionError()
     }
 
     // Don't allow constructions within 2 meters of spawn points or location hints.
-    foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    foreach RadiusActors(Class'DHSpawnPointBase', SP, CollisionRadius + Class'DHUnits'.static.MetersToUnreal(2.0))
     {
         E.Type = ERROR_NearSpawnPoint;
         return E;
     }
 
-    foreach RadiusActors(class'DHLocationHint', LH, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    foreach RadiusActors(Class'DHLocationHint', LH, CollisionRadius + Class'DHUnits'.static.MetersToUnreal(2.0))
     {
         E.Type = ERROR_NearSpawnPoint;
         return E;
@@ -686,13 +686,13 @@ function DHConstruction.ConstructionError GetPositionError()
     {
         F = 0.0;
 
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
+        foreach RadiusActors(ConstructionClass, A, Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
-                F = FMax(F, ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
+                F = FMax(F, ConstructionClass.default.DuplicateFriendlyDistanceInMeters - Class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
         }
 
@@ -708,13 +708,13 @@ function DHConstruction.ConstructionError GetPositionError()
     {
         F = 0.0;
 
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
+        foreach RadiusActors(ConstructionClass, A, Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && !C.IsDummy() && C.GetTeamIndex() != NEUTRAL_TEAM_INDEX && C.GetTeamIndex() != PawnOwner.GetTeamNum())
             {
-                F = FMax(F, ConstructionClass.default.DuplicateEnemyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
+                F = FMax(F, ConstructionClass.default.DuplicateEnemyDistanceInMeters - Class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
         }
 
@@ -731,7 +731,7 @@ function DHConstruction.ConstructionError GetPositionError()
         bDidSatisfyProximityRequirement = false;
 
         foreach RadiusActors(ConstructionClass.default.ProximityRequirements[i].ConstructionClass, A,
-                             class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProximityRequirements[i].DistanceMeters))
+                             Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProximityRequirements[i].DistanceMeters))
         {
             C = DHConstruction(A);
 

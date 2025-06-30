@@ -7,5 +7,5 @@ class DHConstruction_Resupply_Vehicles_USA extends DHConstructionResupplyVehicle
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.USA_AT_Ammo_Box';
+    StaticMesh=StaticMesh'DH_Construction_stc.USA_AT_Ammo_Box';
 }

@@ -58,7 +58,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 
     PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
     
-    PC.ServerSignal(class'DHSignal_Spotting', Location, MapMarkerClass);
+    PC.ServerSignal(Class'DHSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
 }

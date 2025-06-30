@@ -9,8 +9,8 @@ defaultproperties
 {
     Speed=6500
     MaxSpeed=6500
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_A' // TODO: the name is incorrect here
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.IT_SMOKE_M110_A' // TODO: the name is incorrect here
     Damage=500.0
     DamageRadius=1350.0 // ~23 meters
-    ImpactEffect=class'DH_Effects.DHMortarHitEffect105mm'
+    ImpactEffect=Class'DHMortarHitEffect105mm'
 }

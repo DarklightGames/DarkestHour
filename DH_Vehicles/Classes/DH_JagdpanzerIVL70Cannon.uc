@@ -14,9 +14,9 @@ defaultproperties
     ManualRotationsPerSecond=0.025
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL70CannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -39,11 +39,11 @@ defaultproperties
     WeaponFireOffset=6.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_VL_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_VL_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_VL_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.STUG_III_reload_04')
 }

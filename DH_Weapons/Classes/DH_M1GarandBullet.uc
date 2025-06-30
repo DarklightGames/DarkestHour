@@ -10,5 +10,5 @@ defaultproperties
     Speed=51480.0
     BallisticCoefficient=0.41
     Damage=120.0
-    MyDamageType=class'DH_Weapons.DH_M1GarandDamType'
+    MyDamageType=Class'DH_M1GarandDamType'
 }

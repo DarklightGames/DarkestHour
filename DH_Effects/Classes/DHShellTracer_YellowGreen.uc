@@ -11,5 +11,5 @@ class DHShellTracer_YellowGreen extends DHShellTracer;
 defaultproperties
 {
     MaximumDrawScale=0.2
-    Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    Texture=Texture'Effects_Tex.Russ_Flare_Final'
 }

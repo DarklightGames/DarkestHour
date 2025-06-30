@@ -8,11 +8,11 @@ class DHCWTankCrewmanRoles extends DHAlliedTankCrewmanRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_StenMkIIWeapon')
+    PrimaryWeapons(2)=(Item=Class'DH_StenMkIIIWeapon')
+    SecondaryWeapons(0)=(Item=Class'DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=Texture'DHBritishCharactersTex.brit_sleeves'
 }

@@ -11,13 +11,13 @@ defaultproperties
 
     ItemName="Bren Mk.II"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
-    AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
-    PickupClass=class'DH_Weapons.DH_BrenPickup'
+    FireModeClass(0)=Class'DH_BrenFire'
+    AttachmentClass=Class'DH_BrenAttachment'
+    PickupClass=Class'DH_BrenPickup'
 
     Mesh=SkeletalMesh'DH_ZB_1st.BrenMk2_1st'
     bUseHighDetailOverlayIndex=false
-    Skins(0)=Texture'DH_Bren_tex.one.Bren_D'
+    Skins(0)=Texture'DH_Bren_tex.Bren_D'
     HandNum=1
     SleeveNum=2
 
@@ -31,7 +31,7 @@ defaultproperties
     SelectFireBipodIronAnim="deploy_fireswitch"
 
     InitialBarrels=2
-    BarrelClass=class'DH_Weapons.DH_BrenBarrel'
+    BarrelClass=Class'DH_BrenBarrel'
     BarrelSteamBone="Barrel"
 
     PlayerIronsightFOV=65.0

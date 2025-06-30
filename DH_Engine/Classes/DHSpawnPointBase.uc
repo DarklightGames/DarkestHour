@@ -291,7 +291,7 @@ function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotati
             L = Location;
             L.X += Cos(Angle) * SpawnRadius;
             L.Y += Sin(Angle) * SpawnRadius;
-            L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
+            L.Z += 10.0 + Class'DHPawn'.default.CollisionHeight / 2;
 
             // If enabled, this check ensures we don't spawn in a place that's
             // not visible from the origin. This stops a bug where players could
@@ -303,7 +303,7 @@ function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotati
                 continue;
             }
 
-            CT = Spawn(class'DHPawnCollisionTest',,, L);
+            CT = Spawn(Class'DHPawnCollisionTest',,, L);
 
             if (CT != none)
             {
@@ -438,7 +438,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
     EnemyCount = 0;
     TeammateCount = 0;
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
         if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
         {

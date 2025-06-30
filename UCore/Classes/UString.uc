@@ -10,7 +10,7 @@ final static function UString Create(optional string Value)
 {
     local UString S;
 
-    S = new class'UString';
+    S = new Class'UString';
     S.Value = Value;
 
     return S;

@@ -18,8 +18,8 @@ defaultproperties
     DamageRadius=700.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced.

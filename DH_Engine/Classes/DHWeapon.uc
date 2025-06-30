@@ -57,7 +57,7 @@ simulated function float GetPlayerIronsightFOV()
     }
     else
     {
-        return class'DHPlayer'.default.DefaultFOV;
+        return Class'DHPlayer'.default.DefaultFOV;
     }
 }
 
@@ -669,7 +669,7 @@ function SelfDestroy()
 // Then remove hack fix in MG weapon class, which stops the MG34 from bugging out as perma-busy when it's out of ammo, just because it has a non-melee FireMode[1]
 simulated function bool IsBusy()
 {
-    return !FireMode[1].AllowFire() && FireModeClass[1] != class'ROEmptyFireClass';
+    return !FireMode[1].AllowFire() && FireModeClass[1] != Class'ROEmptyFireClass';
 }
 
 // Modified to optimise, as gets called every PostNetReceive()
@@ -855,7 +855,7 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
     V.Y = Y;
     V.Z = Z;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         for (i = 0; i < arraycount(FireMode); ++i)
         {
@@ -891,7 +891,7 @@ exec function SetMuzzleFlashOffset(int X, int Y, int Z)
         return;
     }
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         MuzzleFlashOffset.X = X;
         MuzzleFlashOffset.Y = Y;
@@ -904,7 +904,7 @@ exec function SetMuzzleFlashOffset(int X, int Y, int Z)
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         if (default.HighDetailOverlay != none)
         {
@@ -1037,7 +1037,7 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 
 exec simulated function SetPlayerViewOffset(int X, int Y, int Z)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         default.PlayerViewOffset.X = X;
         default.PlayerViewOffset.Y = Y;
@@ -1079,7 +1079,7 @@ simulated function HandleSleeveSwapping()
     if (RI != none)
     {
         RoleSleeveTexture = RI.static.GetSleeveTexture();
-        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
+        RoleHandTexture = RI.GetHandTexture(Class'DH_LevelInfo'.static.GetInstance(Level));
     }
 
     if (RoleSleeveTexture != none && SleeveNum >= 0)
@@ -1121,8 +1121,8 @@ defaultproperties
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
     ScopeDetail=RO_TextureScope
-    FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    FireModeClass(0)=Class'ROEmptyFireclass'
+    FireModeClass(1)=Class'ROEmptyFireclass'
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
     CrawlForwardAnim="crawlF"

@@ -16,7 +16,7 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Radio = Spawn(class'DHRadio', Owner, Tag, Location, Rotation);
+        Radio = Spawn(Class'DHRadio', Owner, Tag, Location, Rotation);
 
         if (Radio == none)
         {

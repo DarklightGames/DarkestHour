@@ -8,5 +8,5 @@ class DH_Winchester1897BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Winchester1897Weapon'
+    WeaponClass=Class'DH_Winchester1897Weapon'
 }

@@ -7,5 +7,5 @@ class DH_Kar98ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_Kar98ScopedBashDamType'
+    DamageType=Class'DH_Kar98ScopedBashDamType'
 }

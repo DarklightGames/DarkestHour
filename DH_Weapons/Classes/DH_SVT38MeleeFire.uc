@@ -9,8 +9,8 @@ defaultproperties
 {
     BayonetTraceRange=155.0   // +15, SVT-38 had a longer bayonet
     FireRate=0.34 // +0.09
-    DamageType=class'DH_Weapons.DH_SVT38BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_SVT38BayonetDamType'
+    DamageType=Class'DH_SVT38BashDamType'
+    BayonetDamageType=Class'DH_SVT38BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

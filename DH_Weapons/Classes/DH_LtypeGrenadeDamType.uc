@@ -8,8 +8,8 @@ class DH_LTypeGrenadeDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_LTypeGrenadeWeapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
+    WeaponClass=Class'DH_LTypeGrenadeWeapon'
+    HUDIcon=Texture'DH_InterfaceArt_tex.rpg43kill'
 
     VehicleDamageModifier=1.0
     APCDamageModifier=0.75

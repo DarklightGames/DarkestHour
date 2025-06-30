@@ -92,7 +92,7 @@ simulated state Cleared
 
 simulated function SetCleared(bool bIsCleared)
 {
-    local sound ClearSound;
+    local Sound ClearSound;
     local class<Emitter> ClearEmitterClass;
     local float ClearSoundRadius;
 

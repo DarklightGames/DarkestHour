@@ -7,6 +7,6 @@ class DH_JagdpanzerIVL48Factory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_JagdpanzerIVL48Destroyer'
+    VehicleClass=Class'DH_JagdpanzerIVL48Destroyer'
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_ext'
 }

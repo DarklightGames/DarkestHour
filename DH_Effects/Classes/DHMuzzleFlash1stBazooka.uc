@@ -34,7 +34,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.50000)
         StartSizeRange=(X=(Min=10.000000,Max=11.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -63,7 +63,7 @@ defaultproperties
         //InitialParticlesPerSecond=100.000000
         AutomaticInitialSpawning=False
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.effects.dhweaponspark'
+        Texture=Texture'DH_FX_Tex.dhweaponspark'
         MaxParticles=5.00
         LifetimeRange=(Min=0.150000,Max=0.4000) //(Min=0.010000,Max=0.15000)
         StartVelocityRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-100.000000,Max=250.000000))

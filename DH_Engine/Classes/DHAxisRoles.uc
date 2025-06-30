@@ -11,6 +11,6 @@ defaultproperties
     Texture=Texture'DHEngine_Tex.Axis_RoleInfo'
     VoiceType="DH_GerPlayers.DHGerVoice"
     AltVoiceType="DH_GerPlayers.DHGerVoice"
-    DetachedArmClass=class'ROEffects.SeveredArmGerTunic'
-    DetachedLegClass=class'ROEffects.SeveredLegGerTunic'
+    DetachedArmClass=Class'SeveredArmGerTunic'
+    DetachedLegClass=Class'SeveredLegGerTunic'
 }

@@ -42,7 +42,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             GameSpeedRounded = Left(GameSpeedRounded, Len(GameSpeedRounded) - 2);
         }
 
-        class'DH_AdminMenuMutator.DHAdminMenu_Replicator'.static.SetMessageClassLifeTimes(GameSpeed); // adjust LifeTime in all message classes to account for new game speed
+        Class'DHAdminMenu_Replicator'.static.SetMessageClassLifeTimes(GameSpeed); // adjust LifeTime in all message classes to account for new game speed
 
         MessageString = Repl(default.BroadcastChangedGameSpeed, "#insert_number#", GameSpeedRounded);
     }

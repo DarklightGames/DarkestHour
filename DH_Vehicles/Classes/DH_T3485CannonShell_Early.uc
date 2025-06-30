@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=900  //164 gramms TNT filler
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageAP'
     HullFireChance=0.6
     EngineFireChance=0.98
 

@@ -7,5 +7,5 @@ class DH_SpringfieldScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_SpringfieldScopedBashDamType'
+    DamageType=Class'DH_SpringfieldScopedBashDamType'
 }

@@ -32,7 +32,7 @@ defaultproperties
         ParticlesPerSecond=25.000000
         InitialParticlesPerSecond=25.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.DSmoke_2'
         LifetimeRange=(Max=5.000000)
         StartVelocityRange=(X=(Min=45.000000,Max=45.000000),Y=(Min=-45.000000,Max=45.000000),Z=(Min=-45.000000,Max=45.000000))
         VelocityLossRange=(X=(Min=1.000000,Max=1.000000),Y=(Min=1.000000,Max=1.000000),Z=(Min=1.000000,Max=1.000000))
@@ -70,7 +70,7 @@ defaultproperties
         ParticlesPerSecond=25.000000
         InitialParticlesPerSecond=25.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.DSmoke_2'
         LifetimeRange=(Max=4.000000)
         StartVelocityRange=(X=(Min=40.000000,Max=80.000000),Y=(Min=-45.000000,Max=45.000000),Z=(Min=-45.000000,Max=45.000000))
         VelocityLossRange=(X=(Min=2.000000,Max=2.000000),Y=(Min=2.000000,Max=2.000000),Z=(Min=2.000000,Max=2.000000))

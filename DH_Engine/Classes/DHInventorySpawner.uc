@@ -384,7 +384,7 @@ defaultproperties
     CollisionRadius=30.0
     ExhaustedLifespan=15.0
     UsesMax=-1
-    ProxyClass=class'DHWeaponPickupSpawnerProxy'
+    ProxyClass=Class'DHWeaponPickupSpawnerProxy'
     MenuNoun="Crate"
     MenuNameFormat="{name} {noun}"
     OpenAnimation="open"

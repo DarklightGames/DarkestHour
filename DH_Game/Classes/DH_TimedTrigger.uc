@@ -31,7 +31,7 @@ function Timer() // THE SUPER
 {
     bKeepTiming = false;
 
-    foreach TouchingActors(class'Actor', A)
+    foreach TouchingActors(Class'Actor', A)
     {
         if (IsRelevant(A))
         {

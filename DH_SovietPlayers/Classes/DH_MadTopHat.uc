@@ -9,5 +9,5 @@ defaultproperties
 {
     // TODO: These assets got lost in a merge & need to be added back.
     // Mesh=SkeletalMesh'dhgear_anm.MadHat'
-    // Skins(0)=Texture'DH_Halloween_tex.gear.MadHat'
+    // Skins(0)=Texture'DH_Halloween_tex.MadHat'
 }

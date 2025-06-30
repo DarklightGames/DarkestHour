@@ -10,7 +10,7 @@ defaultproperties
     MyName="Artillery Officer"
     AltName="Artillerie Offizier"
 
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn')
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetOne'
+    RolePawns(0)=(PawnClass=Class'DH_GermanArtilleryHeerPawn')
+    Headgear(0)=Class'DH_HeerHelmetThree'
+    Headgear(1)=Class'DH_HeerHelmetOne'
 }

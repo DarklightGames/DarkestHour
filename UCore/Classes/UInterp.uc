@@ -158,8 +158,8 @@ final static function float DialRounding(float X, float Span, optional bool bDeb
     }
 
     AngularStretch = Span * 0.5;
-    LowerAngularBound = class'UInterp'.static.DialCurvature(0.5 - AngularStretch);
-    TopAngularBound = class'UInterp'.static.DialCurvature(0.5 + AngularStretch);
+    LowerAngularBound = Class'UInterp'.static.DialCurvature(0.5 - AngularStretch);
+    TopAngularBound = Class'UInterp'.static.DialCurvature(0.5 + AngularStretch);
 
     if (X > 1.0 || X < 0.0)
     {

@@ -9,8 +9,8 @@ defaultproperties
 {
     VehicleNameString="Panzer T-34"
     VehicleTeam=0
-    Skins(0)=Texture'DH_T34_2_tex.Vehicles.DH_ger_T3485_ext'
-    CannonSkins(0)=Texture'DH_T34_2_tex.Vehicles.DH_ger_T3485_ext'
+    Skins(0)=Texture'DH_T34_2_tex.DH_ger_T3485_ext'
+    CannonSkins(0)=Texture'DH_T34_2_tex.DH_ger_T3485_ext'
     //DestroyedMeshSkins(0)=
 	//to do: above
 }

@@ -7,13 +7,13 @@ class DHScoreEvent_Suicide extends DHScoreEvent;
 
 static function DHScoreEvent_Suicide Create()
 {
-    return new class'DHScoreEvent_Suicide';
+    return new Class'DHScoreEvent_Suicide';
 }
 
 defaultproperties
 {
     HumanReadableName="Suicide"
     Value=-100
-    CategoryClass=class'DHScoreCategory_Combat'
+    CategoryClass=Class'DHScoreCategory_Combat'
 }
 

@@ -8,5 +8,5 @@ class DH_GeratPBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GeratPWeapon'
+    WeaponClass=Class'DH_GeratPWeapon'
 }

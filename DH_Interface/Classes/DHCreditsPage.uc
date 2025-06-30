@@ -96,7 +96,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     BuildCreditLines();
 
@@ -140,7 +140,7 @@ defaultproperties
         OnClick=DHCreditsPage.InternalOnClick
         OnKeyEvent=CloseButton.InternalOnKeyEvent
     End Object
-    b_Close=GUIButton'DH_Interface.DHCreditsPage.CloseButton'
+    b_Close=GUIButton'DH_Interface.CloseButton'
     Begin Object Class=DHGUIScrollTextBox Name=CreditText
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
@@ -152,7 +152,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    lb_Credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
+    lb_Credits=DHGUIScrollTextBox'DH_Interface.CreditText'
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
@@ -167,10 +167,10 @@ defaultproperties
         OnMousePressed=DHCreditsPage.FloatingMousePressed
         OnMouseRelease=DHCreditsPage.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHCreditsPage.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
     WindowName="Credits"
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -180,7 +180,7 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
 
     // TODO: Build the credit lines from lists of a categorized list.
     ProjectLeads(0)="Colin Basnett"

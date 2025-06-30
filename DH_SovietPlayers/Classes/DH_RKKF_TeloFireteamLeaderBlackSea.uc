@@ -7,7 +7,7 @@ class DH_RKKF_TeloFireteamLeaderBlackSea extends DHSOVCorporalRoles; //this role
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietMarinePaddedPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietNavalCap_BlackSea'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+    RolePawns(0)=(PawnClass=Class'DH_SovietMarinePaddedPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietNavalCap_BlackSea'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_tan'
 }

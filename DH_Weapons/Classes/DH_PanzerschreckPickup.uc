@@ -7,6 +7,6 @@ class DH_PanzerschreckPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_PanzerschreckWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Panzerschreck'
+    InventoryType=Class'DH_PanzerschreckWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Panzerschreck'
 }

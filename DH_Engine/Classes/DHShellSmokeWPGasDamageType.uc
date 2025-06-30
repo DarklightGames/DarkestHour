@@ -8,7 +8,7 @@ class DHShellSmokeWPGasDamageType extends DHShellExplosionDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
+    HUDIcon=Texture'InterfaceArt_tex.mine'
     bLocationalHit=false
     GibModifier=0.0
 

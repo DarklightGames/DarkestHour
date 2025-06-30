@@ -15,10 +15,10 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    Impacts(0)=Texture'DH_FX_Tex.Effects.MudImpact01'
-    Impacts(1)=Texture'DH_FX_Tex.Effects.MudImpact02'
-    Impacts(2)=Texture'DH_FX_Tex.Effects.MudImpact03'
-    Impacts(3)=Texture'DH_FX_Tex.Effects.MudImpact04'
+    Impacts(0)=Texture'DH_FX_Tex.MudImpact01'
+    Impacts(1)=Texture'DH_FX_Tex.MudImpact02'
+    Impacts(2)=Texture'DH_FX_Tex.MudImpact03'
+    Impacts(3)=Texture'DH_FX_Tex.MudImpact04'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter4
         FadeOut=true
@@ -73,7 +73,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=12.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.300000)
         StartVelocityRange=(Y=(Min=-10.000000,Max=12.000000),Z=(Min=-10.000000,Max=12.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -112,7 +112,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=25.000000),Y=(Min=10.000000,Max=25.000000),Z=(Min=300.000000,Max=300.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunkssparse'
+        Texture=Texture'DH_FX_Tex.genericchunkssparse'
         LifetimeRange=(Min=1.25000,Max=3.00000)
         StartVelocityRange=(X=(Min=275.000000,Max=400.000000),Y=(Min=-95.000000,Max=105.000000),Z=(Min=-110.000000,Max=95.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -144,7 +144,7 @@ defaultproperties
         StartSizeRange=(X=(Min=6.000000,Max=12.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.250000)
         StartVelocityRange=(X=(Min=20.000000,Max=60.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=-10.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -175,7 +175,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.500000,Max=2.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.groundchunksfinal'
+        Texture=Texture'Effects_Tex.groundchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Max=2.000000)
@@ -207,7 +207,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal'
+        Texture=Texture'Effects_Tex.snowfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.3500000)

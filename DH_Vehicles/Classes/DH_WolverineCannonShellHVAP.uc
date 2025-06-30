@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=460
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.31
     EngineFireChance=0.61
 

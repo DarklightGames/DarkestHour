@@ -79,7 +79,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -192,7 +192,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -218,7 +218,7 @@ defaultproperties
 {
     Damage=525
     DamageRadius=512.0
-    MyDamageType=class'DH_LevelActors.DHATMineDamage'
+    MyDamageType=Class'DHATMineDamage'
     Momentum=3000.0
     bHidden=true
 }

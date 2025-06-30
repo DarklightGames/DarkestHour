@@ -7,6 +7,6 @@ class DH_StuartTank_Sicily extends DH_StuartTank;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.M5_body_Sicily_ext'
-    CannonSkins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.M5_body_Sicily_ext'
+    Skins(0)=Texture'DH_VehiclesUS_tex5.M5_body_Sicily_ext'
+    CannonSkins(0)=Texture'DH_VehiclesUS_tex5.M5_body_Sicily_ext'
 }

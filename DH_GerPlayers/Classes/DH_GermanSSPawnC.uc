@@ -7,11 +7,11 @@ class DH_GermanSSPawnC extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(2)=Texture'DHGermanCharactersTex.WSS.SS_6'  //shirt
+    Skins(2)=Texture'DHGermanCharactersTex.SS_6'  //shirt
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_6' //pants
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' //heer pants
+    BodySkins(0)=Texture'DHGermanCharactersTex.SS_6' //pants
+    BodySkins(1)=Texture'DHGermanCharactersTex.SS_2'
+    BodySkins(2)=Texture'DHGermanCharactersTex.SS_Autumn' //heer pants
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }

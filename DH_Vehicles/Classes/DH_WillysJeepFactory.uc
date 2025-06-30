@@ -7,6 +7,6 @@ class DH_WillysJeepFactory extends DH_USVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_WillysJeep'
+    VehicleClass=Class'DH_WillysJeep'
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
 }

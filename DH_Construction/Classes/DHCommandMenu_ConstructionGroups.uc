@@ -21,7 +21,7 @@ function Setup()
     PC = GetPlayerController();
 
     Context.TeamIndex = PC.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PC.Level);
     Context.PlayerController = PC;
 
     // Compile a list of unique groups from the constructions that can be displayed.
@@ -31,14 +31,14 @@ function Setup()
 
         if (ConstructionClass != none && ConstructionClass.static.ShouldShowOnMenu(Context))
         {
-            class'UArray'.static.AddUnique(Groups, ConstructionClass.default.GroupClass);
+            Class'UArray'.static.AddUnique(Groups, ConstructionClass.default.GroupClass);
         }
     }
 
     // Sort the groups.
-    GroupsComparator = new class'UComparator';
-    GroupsComparator.CompareFunction = class'DHConstructionGroup'.static.SortFunction;
-    class'USort'.static.Sort(Groups, GroupsComparator);
+    GroupsComparator = new Class'UComparator';
+    GroupsComparator.CompareFunction = Class'DHConstructionGroup'.static.SortFunction;
+    Class'USort'.static.Sort(Groups, GroupsComparator);
 
     Options.Length = Groups.Length;
 

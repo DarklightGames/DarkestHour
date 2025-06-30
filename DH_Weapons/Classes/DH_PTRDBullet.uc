@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     Damage=1000.0  //should leave no one alive, as even if it hits a limb, it should be ripped apart making victim uncapable of continuing fighting
-    MyDamageType=class'DH_Weapons.DH_PTRDDamType'
+    MyDamageType=Class'DH_PTRDDamType'
     HullFireChance=0.15  //although its just a bullet, it has a bit of incendiary part in it which should make it more likely to ignite or detonate something
     EngineFireChance=0.23
 

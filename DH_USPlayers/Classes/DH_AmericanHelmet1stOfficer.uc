@@ -8,5 +8,5 @@ class DH_AmericanHelmet1stOfficer extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_GI_Helmet'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.US_Officer_headgear'
+    Skins(0)=Texture'DHUSCharactersTex.US_Officer_headgear'
 }

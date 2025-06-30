@@ -214,8 +214,8 @@ function VerifyTeamChatters()
 
 defaultproperties
 {
-    ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
-    ChatBroadcastClass=class'DH_Engine.DHChatHandler'
+    ChatRoomClass=Class'DHVoiceChatRoom'
+    ChatBroadcastClass=Class'DHChatHandler'
     LocalChannelText="Local"
     PublicChannelNames(0)="Command" //Axis
     PublicChannelNames(1)="Command" //Allies

@@ -10,7 +10,7 @@ var automated DHGUIPlainBackground  sb_ButtonBackground;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
-        class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+        Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 }
 
 defaultproperties
@@ -26,7 +26,7 @@ defaultproperties
         WinHeight=0.547697
         OnPreDraw=ButtonBackground.InternalPreDraw
     End Object
-    sb_ButtonBackground=DHGUIPlainBackground'DH_Interface.DHTab_MutatorSP.ButtonBackground'
+    sb_ButtonBackground=DHGUIPlainBackground'DH_Interface.ButtonBackground'
     Begin Object Class=DHGUISectionBackground Name=AvailBackground
         Caption="Available Mutators"
         LeftPadding=0.0025
@@ -39,7 +39,7 @@ defaultproperties
         WinHeight=0.547697
         OnPreDraw=AvailBackground.InternalPreDraw
     End Object
-    sb_Avail=DHGUISectionBackground'DH_Interface.DHTab_MutatorSP.AvailBackground'
+    sb_Avail=DHGUISectionBackground'DH_Interface.AvailBackground'
     Begin Object Class=DHGUISectionBackground Name=ActiveBackground
         Caption="Active Mutators"
         LeftPadding=0.0025
@@ -52,7 +52,7 @@ defaultproperties
         WinHeight=0.547697
         OnPreDraw=ActiveBackground.InternalPreDraw
     End Object
-    sb_Active=DHGUISectionBackground'DH_Interface.DHTab_MutatorSP.ActiveBackground'
+    sb_Active=DHGUISectionBackground'DH_Interface.ActiveBackground'
     Begin Object Class=DHGUISectionBackground Name=DescriptionBackground
         Caption="Mutator Details"
         LeftPadding=0.0025
@@ -65,7 +65,7 @@ defaultproperties
         WinHeight=0.355936
         OnPreDraw=DescriptionBackground.InternalPreDraw
     End Object
-    sb_Description=DHGUISectionBackground'DH_Interface.DHTab_MutatorSP.DescriptionBackground'
+    sb_Description=DHGUISectionBackground'DH_Interface.DescriptionBackground'
     Begin Object Class=GUIListBox Name=IAMutatorAvailList
         SelectedStyleName="DHListSelectionStyle"
         bVisibleWhenEmpty=true
@@ -80,10 +80,10 @@ defaultproperties
         TabOrder=0
         Begin Object Class=GUIContextMenu Name=RCMenu
         End Object
-        ContextMenu=GUIContextMenu'GUI2K4.UT2K4Tab_MutatorBase.RCMenu'
+        ContextMenu=GUIContextMenu'GUI2K4.RCMenu'
         OnChange=UT2K4Tab_MutatorBase.ListChange
     End Object
-    lb_Avail=GUIListBox'DH_Interface.DHTab_MutatorSP.IAMutatorAvailList'
+    lb_Avail=GUIListBox'DH_Interface.IAMutatorAvailList'
     Begin Object Class=GUIListBox Name=IAMutatorSelectedList
         SelectedStyleName="DHListSelectionStyle"
         bVisibleWhenEmpty=true
@@ -95,10 +95,10 @@ defaultproperties
         WinWidth=0.378955
         WinHeight=0.501446
         TabOrder=5
-        ContextMenu=GUIContextMenu'GUI2K4.UT2K4Tab_MutatorBase.RCMenu'
+        ContextMenu=GUIContextMenu'GUI2K4.RCMenu'
         OnChange=UT2K4Tab_MutatorBase.ListChange
     End Object
-    lb_Active=GUIListBox'DH_Interface.DHTab_MutatorSP.IAMutatorSelectedList'
+    lb_Active=GUIListBox'DH_Interface.IAMutatorSelectedList'
     Begin Object Class=DHGUIScrollTextBox Name=IAMutatorScroll
         bNoTeletype=true
         CharDelay=0.0025
@@ -113,7 +113,7 @@ defaultproperties
         bTabStop=false
         bNeverFocus=true
     End Object
-    lb_MutDesc=DHGUIScrollTextBox'DH_Interface.DHTab_MutatorSP.IAMutatorScroll'
+    lb_MutDesc=DHGUIScrollTextBox'DH_Interface.IAMutatorScroll'
     Begin Object Class=GUIButton Name=IAMutatorConfig
         Caption="Configure Mutators"
         StyleName="DHMenuTextButtonStyle"
@@ -126,7 +126,7 @@ defaultproperties
         OnClick=UT2K4Tab_MutatorBase.MutConfigClick
         OnKeyEvent=IAMutatorConfig.InternalOnKeyEvent
     End Object
-    b_Config=GUIButton'DH_Interface.DHTab_MutatorSP.IAMutatorConfig'
+    b_Config=GUIButton'DH_Interface.IAMutatorConfig'
     Begin Object Class=GUIButton Name=IAMutatorAdd
         Caption="Add"
         StyleName="DHMenuTextButtonStyle"
@@ -139,7 +139,7 @@ defaultproperties
         OnClick=UT2K4Tab_MutatorBase.AddMutator
         OnKeyEvent=IAMutatorAdd.InternalOnKeyEvent
     End Object
-    b_Add=GUIButton'DH_Interface.DHTab_MutatorSP.IAMutatorAdd'
+    b_Add=GUIButton'DH_Interface.IAMutatorAdd'
     Begin Object Class=GUIButton Name=IAMutatorAll
         Caption="Add All"
         StyleName="DHMenuTextButtonStyle"
@@ -152,7 +152,7 @@ defaultproperties
         OnClick=UT2K4Tab_MutatorBase.AddAllMutators
         OnKeyEvent=IAMutatorAll.InternalOnKeyEvent
     End Object
-    b_AddAll=GUIButton'DH_Interface.DHTab_MutatorSP.IAMutatorAll'
+    b_AddAll=GUIButton'DH_Interface.IAMutatorAll'
     Begin Object Class=GUIButton Name=IAMutatorRemove
         Caption="Remove"
         StyleName="DHMenuTextButtonStyle"
@@ -165,7 +165,7 @@ defaultproperties
         OnClick=UT2K4Tab_MutatorBase.RemoveMutator
         OnKeyEvent=IAMutatorRemove.InternalOnKeyEvent
     End Object
-    b_Remove=GUIButton'DH_Interface.DHTab_MutatorSP.IAMutatorRemove'
+    b_Remove=GUIButton'DH_Interface.IAMutatorRemove'
     Begin Object Class=GUIButton Name=IAMutatorClear
         Caption="Remove All"
         StyleName="DHMenuTextButtonStyle"
@@ -178,6 +178,6 @@ defaultproperties
         OnClick=UT2K4Tab_MutatorBase.RemoveAllMutators
         OnKeyEvent=IAMutatorClear.InternalOnKeyEvent
     End Object
-    b_RemoveAll=GUIButton'DH_Interface.DHTab_MutatorSP.IAMutatorClear'
+    b_RemoveAll=GUIButton'DH_Interface.IAMutatorClear'
     MutConfigMenu="DH_Interface.DHMutatorConfigMenu"
 }

@@ -13,7 +13,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.platoon_hq'
     MarkerName="Enemy Command Post"
     LifetimeSeconds=600
     SpottingConsoleCommand="SPEECH SUPPORT 6"

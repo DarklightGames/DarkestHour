@@ -14,7 +14,7 @@ var int SquadIndex;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("type", Type)
         .PutString("message", Message)
         .PutString("sender", ROID)

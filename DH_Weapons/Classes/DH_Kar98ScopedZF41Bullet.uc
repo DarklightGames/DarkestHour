@@ -10,5 +10,5 @@ defaultproperties
     Speed=47678.0
     BallisticCoefficient=0.594
     Damage=115.0
-    MyDamageType=class'DH_Weapons.DH_Kar98ScopedZF41DamType'
+    MyDamageType=Class'DH_Kar98ScopedZF41DamType'
 }

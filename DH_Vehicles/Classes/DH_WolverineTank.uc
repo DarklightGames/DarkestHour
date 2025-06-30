@@ -15,15 +15,15 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(4)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
-    Skins(5)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
+    Skins(0)=Texture'DH_VehiclesUS_tex.M10_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.M10_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.M10_treads'
+    Skins(3)=Texture'DH_VehiclesUS_tex.M10_treads'
+    Skins(4)=Texture'DH_VehiclesUS_tex.M10_body_int'
+    Skins(5)=Texture'DH_VehiclesUS_tex.M10_body_int2'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_WolverineCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-65.0,Z=12.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -73,7 +73,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=15.0,PointBone="body",PointOffset=(Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=62.0
     DamagedEffectOffset=(X=-100.0,Y=0.0,Z=95.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10_Dest'
 
     // Exit
     ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  // driver
@@ -84,13 +84,13 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'Vehicle_Engines.SU76_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.SU76_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.SU76_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="placeholder_int"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -98,16 +98,16 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     TreadVelocityScale=228.0
     WheelRotationScale=71500.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-168.0,Y=0.0,Z=57.0),ExhaustRotation=(Pitch=63500,Yaw=32768))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.wolverine_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Wolverine_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Wolverine_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosX(1)=0.64
@@ -123,7 +123,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.74
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.m10_wolverine'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -159,7 +159,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -168,7 +168,7 @@ defaultproperties
         BoneOffset=(X=10.0,Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -178,7 +178,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -187,7 +187,7 @@ defaultproperties
         BoneOffset=(X=-30.0,Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -196,7 +196,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -204,7 +204,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -225,5 +225,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_WolverineTank.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

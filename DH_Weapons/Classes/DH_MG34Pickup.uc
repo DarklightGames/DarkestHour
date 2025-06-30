@@ -7,7 +7,7 @@ class DH_MG34Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_MG34Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.mg34'
+    InventoryType=Class'DH_MG34Weapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.mg34'
     BarrelSteamEmitterOffset=(X=10.0,Y=-20.0,Z=5.0)
 }

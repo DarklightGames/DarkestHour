@@ -12,5 +12,5 @@ defaultproperties
     AltName="Combat Engineer"
     Limit=2
     bSpawnWithExtraAmmo=true
-    AddedRoleRespawnTime=15
+    AddedRoleRespawnTime=5
 }

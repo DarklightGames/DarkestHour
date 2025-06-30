@@ -12,7 +12,7 @@ defaultproperties
     APCDamageModifier=0.25
     VehicleDamageModifier=0.8
     TreadDamageModifier=0.25
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
+    DeathOverlayMaterial=Combiner'Effects_Tex.PlayerDeathOverlay'
     DeathOverlayTime=999.0
     KDeathVel=150.0
     KDeathUpKick=50.0

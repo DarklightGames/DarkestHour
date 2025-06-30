@@ -22,7 +22,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
+            return Class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
         case 1:
             return default.NotQualifiedMessage;
         case 2:

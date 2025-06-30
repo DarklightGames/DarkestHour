@@ -8,5 +8,5 @@ class DH_ColtM1914BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_ColtM1914Weapon'
+    WeaponClass=Class'DH_ColtM1914Weapon'
 }

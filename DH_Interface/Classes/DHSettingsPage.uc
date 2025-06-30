@@ -55,7 +55,7 @@ function BackButtonClicked()
 
 defaultproperties
 {
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=Texture'DH_GUI_Tex.Setupmenu'
 
     PanelCaption(0)="Game"
     PanelCaption(1)="Display"
@@ -93,7 +93,7 @@ defaultproperties
         OnActivate=SettingTabs.InternalOnActivate
         OnChange=DHSettingsPage.InternalOnChange
     End Object
-    c_Tabs=DHGUITabControl'DH_Interface.DHSettingsPage.SettingTabs'
+    c_Tabs=DHGUITabControl'DH_Interface.SettingTabs'
 
     Begin Object Class=DHGUIHeader Name=SettingHeader
         Caption="Settings"
@@ -101,7 +101,7 @@ defaultproperties
         WinHeight=32.0
         RenderWeight=0.3
     End Object
-    t_Header=DHGUIHeader'DH_Interface.DHSettingsPage.SettingHeader'
+    t_Header=DHGUIHeader'DH_Interface.SettingHeader'
 
     Begin Object Class=DHSettings_Footer Name=SettingFooter
         Spacer=0.01
@@ -110,5 +110,5 @@ defaultproperties
         TabOrder=4
         OnPreDraw=SettingFooter.InternalOnPreDraw
     End Object
-    t_Footer=DHSettings_Footer'DH_Interface.DHSettingsPage.SettingFooter'
+    t_Footer=DHSettings_Footer'DH_Interface.SettingFooter'
 }

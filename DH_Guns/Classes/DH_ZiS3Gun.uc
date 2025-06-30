@@ -9,13 +9,13 @@ defaultproperties
 {
     VehicleNameString="ZiS-3 76mm divisional gun"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawn',WeaponBone="Gun_attachment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS3CannonPawn',WeaponBone="Gun_attachment")
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_destroyed'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.ZiS3_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.ZiS3_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.ZiS3_turret_look'
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3_destroyed'
+    VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
     VehicleHudOccupantsX(1)=0.44
     VehicleHudOccupantsY(1)=0.65
     ExitPositions(1)=(X=-120.00,Y=-38.00,Z=30.00)
@@ -42,5 +42,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_ZiS3Gun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

@@ -22,7 +22,7 @@ simulated function SetSkins(DHPlayer PC)
 
     if (RI != none)
     {
-        Skins[HandsSkinIndex] = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
+        Skins[HandsSkinIndex] = RI.GetHandTexture(Class'DH_LevelInfo'.static.GetInstance(Level));
         Skins[SleeveSkinIndex] = RI.static.GetSleeveTexture();
     }
 }

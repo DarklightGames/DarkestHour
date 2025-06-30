@@ -8,8 +8,8 @@ class DHConstruction_Sandbags extends DHConstruction
 
 defaultproperties
 {
-    GroupClass=class'DHConstructionGroup_Defenses'
-    BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
+    GroupClass=Class'DHConstructionGroup_Defenses'
+    BrokenEmitterClass=Class'DHConstruction_Sandbags_BrokenEmitter'
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
     bShouldAlignToGround=false
@@ -19,7 +19,7 @@ defaultproperties
     bAcceptsProjectors=false
 
     // Damage
-    DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
-    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
-    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
+    DamageTypeScales(0)=(DamageType=Class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
+    DamageTypeScales(1)=(DamageType=Class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
+    DamageTypeScales(2)=(DamageType=Class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
 }

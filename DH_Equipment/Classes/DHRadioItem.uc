@@ -123,9 +123,9 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
 {                 // then change DHPawn.VerifyGivenItems() so it skips check for inventory item if it has no remote role (i.e. client doesn't expect to receive it)?
     ItemName="Radio"
     InventoryGroup=10
-    AttachmentClass=class'DH_Equipment.DHRadioAttachment'
+    AttachmentClass=Class'DHRadioAttachment'
     AttachBoneName="hip"
-    RadioClass=class'DH_Engine.DHInfantryRadio'
+    RadioClass=Class'DHInfantryRadio'
     bCanThrow=false
     bCanResupplyWhenEmpty=false
     bCanSway=false

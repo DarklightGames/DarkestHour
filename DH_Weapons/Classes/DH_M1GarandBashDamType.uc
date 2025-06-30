@@ -8,5 +8,5 @@ class DH_M1GarandBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
+    WeaponClass=Class'DH_M1GarandWeapon'
 }

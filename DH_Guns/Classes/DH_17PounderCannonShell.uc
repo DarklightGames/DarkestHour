@@ -14,7 +14,7 @@ defaultproperties
 
     // Damage
     ImpactDamage=580  //solid shell
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.35
     EngineFireChance=0.75
 

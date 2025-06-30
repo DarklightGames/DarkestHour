@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.OrangeSmoke_ammo'
 }

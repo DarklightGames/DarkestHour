@@ -22,10 +22,10 @@ defaultproperties
         bScaleToParent=true
         OnChange=DHGUIDynArrayPage.InternalOnChange
     End Object
-    lb_Values=DHGUIMultiOptionListBox'DH_Interface.DHGUIDynArrayPage.ValueListBox'
+    lb_Values=DHGUIMultiOptionListBox'DH_Interface.ValueListBox'
     ButtonStyle="DHMenuTextButtonStyle"
     Begin Object Class=AltSectionBackground Name=Bk1
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
+        HeaderBase=Texture'DH_GUI_Tex.DHDisplay'
         LeftPadding=0.01
         RightPadding=0.15
         WinTop=0.095833
@@ -34,7 +34,7 @@ defaultproperties
         WinHeight=0.575
         OnPreDraw=Bk1.InternalPreDraw
     End Object
-    sb_Bk1=AltSectionBackground'DH_Interface.DHGUIDynArrayPage.Bk1'
+    sb_Bk1=AltSectionBackground'DH_Interface.Bk1'
     Begin Object Class=DHGUISectionBackground Name=InternalFrameImage
         WinTop=0.075
         WinLeft=0.04
@@ -42,7 +42,7 @@ defaultproperties
         WinHeight=0.550976
         OnPreDraw=InternalFrameImage.InternalPreDraw
     End Object
-    sb_Main=DHGUISectionBackground'DH_Interface.DHGUIDynArrayPage.InternalFrameImage'
+    sb_Main=DHGUISectionBackground'DH_Interface.InternalFrameImage'
     Begin Object Class=GUIButton Name=LockedCancelButton
         Caption="Cancel"
         bAutoShrink=false
@@ -55,7 +55,7 @@ defaultproperties
         OnClick=DHGUIDynArrayPage.InternalOnClick
         OnKeyEvent=LockedCancelButton.InternalOnKeyEvent
     End Object
-    b_Cancel=GUIButton'DH_Interface.DHGUIDynArrayPage.LockedCancelButton'
+    b_Cancel=GUIButton'DH_Interface.LockedCancelButton'
     Begin Object Class=GUIButton Name=LockedOKButton
         Caption="OK"
         bAutoShrink=false
@@ -68,7 +68,7 @@ defaultproperties
         OnClick=DHGUIDynArrayPage.InternalOnClick
         OnKeyEvent=LockedOKButton.InternalOnKeyEvent
     End Object
-    b_OK=GUIButton'DH_Interface.DHGUIDynArrayPage.LockedOKButton'
+    b_OK=GUIButton'DH_Interface.LockedOKButton'
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
@@ -83,9 +83,9 @@ defaultproperties
         OnMousePressed=FloatingWindow.FloatingMousePressed
         OnMouseRelease=FloatingWindow.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHGUIDynArrayPage.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -95,6 +95,6 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHGUIDynArrayPage.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
     OnCreateComponent=DHGUIDynArrayPage.InternalOnCreateComponent
 }

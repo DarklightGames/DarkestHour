@@ -32,7 +32,7 @@ simulated function SetEmitterStatus(bool bEnabled)
 defaultproperties
 {
      Begin Object Class=MeshEmitter Name=ShellCaseEmitter
-         StaticMesh=StaticMesh'WeaponPickupSM.shells.S762_Rifle_MG'
+         StaticMesh=StaticMesh'WeaponPickupSM.S762_Rifle_MG'
          UseCollision=True
          RespawnDeadParticles=False
          SpawnOnlyInDirectionOfNormal=True
@@ -49,7 +49,7 @@ defaultproperties
          StartVelocityRange=(X=(Min=-1.000000,Max=1.000000),Y=(Min=5.000000,Max=20.000000),Z=(Min=1.000000,Max=1.000000))
          StartVelocityRadialRange=(Min=-250.000000,Max=250.000000)
      End Object
-     Emitters(0)=MeshEmitter'DH_Vehicles.DH_HetzerVehicleMGEmitter.ShellCaseEmitter'
+     Emitters(0)=MeshEmitter'DH_Vehicles.ShellCaseEmitter'
 
      Begin Object Class=SpriteEmitter Name=FlashEmitter
          RespawnDeadParticles=False
@@ -71,12 +71,12 @@ defaultproperties
          SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
          StartSizeRange=(X=(Min=4.000000,Max=5.000000))
          DrawStyle=PTDS_Brighten
-         Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+         Texture=Texture'Effects_Tex.STGmuzzleflash_4frame'
          TextureUSubdivisions=2
          TextureVSubdivisions=2
          LifetimeRange=(Min=0.100000,Max=0.100000)
      End Object
-     Emitters(1)=SpriteEmitter'DH_Vehicles.DH_HetzerVehicleMGEmitter.FlashEmitter'
+     Emitters(1)=SpriteEmitter'DH_Vehicles.FlashEmitter'
 
      CullDistance=4000.000000
      bNoDelete=False

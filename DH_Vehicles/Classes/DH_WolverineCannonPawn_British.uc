@@ -7,5 +7,5 @@ class DH_WolverineCannonPawn_British extends DH_WolverineCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_WolverineCannon_British'
+    GunClass=Class'DH_WolverineCannon_British'
 }

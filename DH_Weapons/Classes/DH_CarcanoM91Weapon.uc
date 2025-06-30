@@ -10,10 +10,10 @@ defaultproperties
     ItemName="Carcano mod. 91"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=class'DH_Weapons.DH_CarcanoM91Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_CarcanoM91MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_CarcanoM91Attachment'
-    PickupClass=class'DH_Weapons.DH_CarcanoM91Pickup'
+    FireModeClass(0)=Class'DH_CarcanoM91Fire'
+    FireModeClass(1)=Class'DH_CarcanoM91MeleeFire'
+    AttachmentClass=Class'DH_CarcanoM91Attachment'
+    PickupClass=Class'DH_CarcanoM91Pickup'
 
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 

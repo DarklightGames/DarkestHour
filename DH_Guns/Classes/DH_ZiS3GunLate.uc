@@ -7,5 +7,5 @@ class DH_ZiS3GunLate extends DH_ZiS3Gun; //added APCR
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawnLate')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS3CannonPawnLate')
 }

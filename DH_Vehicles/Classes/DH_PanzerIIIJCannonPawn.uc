@@ -8,7 +8,7 @@ class DH_PanzerIIIJCannonPawn extends DHGermanCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_PanzerIIIJCannon'
+    GunClass=Class'DH_PanzerIIIJCannon'
 
     //Driver's positions and anims
     DriverPositions(0)=(ViewLocation=(X=10.0,Y=-22.0,Z=1.5),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
@@ -24,13 +24,13 @@ defaultproperties
     FireImpulse=(X=-50000.0)
 
     //Gunsight
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.PZ3_sight_graticule'
     GunsightSize=0.833// 25 degrees visible FOV at 2.5x magnification
-    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ3_Sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ3_sight_destroyed'
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer3shell_reload'
 }

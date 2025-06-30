@@ -8,6 +8,6 @@ class DH_Nagant1895BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Nagant1895Weapon'
+    WeaponClass=Class'DH_Nagant1895Weapon'
 }
 

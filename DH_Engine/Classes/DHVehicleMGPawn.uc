@@ -574,15 +574,15 @@ function Material CreateXRayMaterial()
     local FadeColor FC;
     local FinalBlend FB;
 
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.White;
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.White;
     FC.Color1.A = 32;
-    FC.Color2 = class'UColor'.default.White;
+    FC.Color2 = Class'UColor'.default.White;
     FC.Color2.A = 16;
     FC.FadePeriod = 0.25;
     FC.ColorFadeType = FC_Sinusoidal;
 
-    FB = new class'FinalBlend';
+    FB = new Class'FinalBlend';
     FB.FrameBufferBlending = FB_AlphaBlend;
     FB.ZWrite = false;
     FB.ZTest = true;
@@ -625,5 +625,5 @@ defaultproperties
     bDrawDriverInTP=false
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 }

@@ -85,7 +85,7 @@ function LoadCommands()
     UpdateVoicePackClass();
 
     // Support requests
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[1], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[1], true);
     VoicePackClass.static.GetAllSupports( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -93,7 +93,7 @@ function LoadCommands()
     }
 
     // Acknowledgements requests
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[2], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[2], true);
     VoicePackClass.static.GetAllAcknowledges( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -101,7 +101,7 @@ function LoadCommands()
     }
 
     // Enemy spotted
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[3], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[3], true);
     VoicePackClass.static.GetAllEnemies( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -109,7 +109,7 @@ function LoadCommands()
     }
 
     // Alerts
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[4], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[4], true);
     VoicePackClass.static.GetAllAlerts( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -117,7 +117,7 @@ function LoadCommands()
     }
 
     // Vehicle orders
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[5], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[5], true);
     VoicePackClass.static.GetAllVehicleDirections( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -125,7 +125,7 @@ function LoadCommands()
     }
 
     // Vehicle alerts
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[6], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[6], true);
     VoicePackClass.static.GetAllVehicleAlerts( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -133,7 +133,7 @@ function LoadCommands()
     }
 
     // Commands
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[7], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[7], true);
     VoicePackClass.static.GetAllOrders( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -141,7 +141,7 @@ function LoadCommands()
     }
 
     // Extras
-    CreateAliasMapping("", Section_Speech_Prefix $ class'ROConsole'.default.SMStateName[8], true);
+    CreateAliasMapping("", Section_Speech_Prefix $ Class'ROConsole'.default.SMStateName[8], true);
     VoicePackClass.static.GetAllExtras( VoiceCommands );
     for (i = 0; i < VoiceCommands.Length; ++i)
     {
@@ -336,7 +336,7 @@ defaultproperties
     Captions_Comm(12)="Mute Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
+        HeaderBase=Texture'DH_GUI_Tex.DHDisplay_withcaption'
         Caption="Bindings"
         LeftPadding=0.0
         RightPadding=0.0

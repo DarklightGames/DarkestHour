@@ -21,7 +21,7 @@ function PostBeginPlay()
 
     for (i = 0; i < AttachedArtilleryTags.Length; ++i)
     {
-        foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
+        foreach AllActors(Class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
         {
             ArtyReferences.Insert(0, 1); // adds a new spot at index for the attached arty
             ArtyReferences[0] = RAA;     // sets the attached arty in the reference array
@@ -112,7 +112,7 @@ state Activated
                     FallOffset.Y *= -1.0;
                 }
 
-                Spawn(class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, Rotator(PhysicsVolume.Gravity));
+                Spawn(Class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, Rotator(PhysicsVolume.Gravity));
             }
             else
             {
@@ -133,7 +133,7 @@ state Activated
                 }
 
                 // Spawn the artillery round with the random offset
-                Spawn(class'DHArtilleryShell',,, Location + FallOffset, Rotator(PhysicsVolume.Gravity));
+                Spawn(Class'DHArtilleryShell',,, Location + FallOffset, Rotator(PhysicsVolume.Gravity));
             }
         }
 

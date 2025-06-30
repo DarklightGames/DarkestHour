@@ -16,23 +16,23 @@ defaultproperties
 
     //Damage
     ImpactDamage=350            // TODO: pick an appropriate value
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
 
     Damage=260.0                // TODO: pick an appropriate value
     DamageRadius=650.0          // TODO: pick an appropriate value
 
-    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    MyDamageType=Class'DHShellHE50mmATDamageType'
     
     PenetrationMag=550.0
     HullFireChance=0.5
     EngineFireChance=0.5
 
     //Effects
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+    ShellHitDirtEffectClass=Class'TankHEHitDirtEffect'
+    ShellHitSnowEffectClass=Class'TankHEHitSnowEffect'
+    ShellHitWoodEffectClass=Class'TankHEHitWoodEffect'
+    ShellHitRockEffectClass=Class'TankHEHitRockEffect'
+    ShellHitWaterEffectClass=Class'TankHEHitWaterEffect'
 
     //Penetration (values based on the Krupp calculations)
     DHPenetrationTable(0)=2.3   // 100m

@@ -14,7 +14,7 @@ function Initialized()
     super.Initialized();
 
     PromptText = Repl(PromptText, "{0}", default.SenderPlayerName);
-    PromptText = Repl(PromptText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SenderSquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+    PromptText = Repl(PromptText, "{1}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $ default.SenderSquadName $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
 }
 
 function OnOptionSelected(int Index)

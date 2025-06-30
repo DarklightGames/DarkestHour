@@ -8,5 +8,5 @@ class DHShovelBashDamageType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Equipment.DHShovelItem'
+    WeaponClass=Class'DHShovelItem'
 }

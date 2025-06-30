@@ -12,10 +12,10 @@ var array<string>   PlayerIDs;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutInteger("objective_id", ObjectiveIndex)
         .PutInteger("round_time", RoundTime)
         .PutInteger("team", TeamIndex)
-        .Put("player_ids", class'JSONArray'.static.FromStrings(PlayerIDs));
+        .Put("player_ids", Class'JSONArray'.static.FromStrings(PlayerIDs));
 }
 

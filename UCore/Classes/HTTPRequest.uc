@@ -23,9 +23,9 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    Headers = new class'TreeMap_string_string';
+    Headers = new Class'TreeMap_string_string';
 
-    MyLink = Spawn(class'UCoreBufferedTCPLink');
+    MyLink = Spawn(Class'UCoreBufferedTCPLink');
     MyLink.ResetBuffer();
 }
 
@@ -64,9 +64,9 @@ function static TreeMap_string_string ParseHeaders(string S)
     local string Key;
     local string Value;
 
-    Headers = new class'TreeMap_string_string';
+    Headers = new Class'TreeMap_string_string';
 
-    Split(S, class'UString'.static.CRLF(), Lines);
+    Split(S, Class'UString'.static.CRLF(), Lines);
 
     for (i = 0; i < Lines.Length; ++i)
     {
@@ -129,11 +129,11 @@ function Timer()
                 case 308:   // Permanent Redirect
                     if (bAllowRedirects && ResponseHeaders.Get("Location", Loc) && !OnRedirect(self, Status, Loc))
                     {
-                        U = class'URL'.static.FromString(Loc);
+                        U = Class'URL'.static.FromString(Loc);
 
                         if (U != none)
                         {
-                            R = Spawn(class'HTTPRequest');
+                            R = Spawn(Class'HTTPRequest');
                             R.Method = self.Method;
                             R.Host = U.Host;
                             R.Path = U.Path;
@@ -162,7 +162,7 @@ function Timer()
                     i = InStr(Response, MyLink.CRLF);
 
                     // Parse chunk length
-                    ChunkLength = class'UInteger'.static.FromHex(Mid(Response, 0, i));
+                    ChunkLength = Class'UInteger'.static.FromHex(Mid(Response, 0, i));
 
                     if (ChunkLength <= 0)
                     {

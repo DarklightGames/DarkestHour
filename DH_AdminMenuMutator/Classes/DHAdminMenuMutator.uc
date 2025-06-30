@@ -77,7 +77,7 @@ function SetInitialVariables()
     }
 
     // If we're in single player or DH debug mode (i.e. the development branch), always enable the extra menu options for convenience
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         bParaDropPlayerAllowed = true;
         bShowRealismMenu = true;
@@ -107,7 +107,7 @@ function SetInitialVariables()
     }
 
     // Spawns the 'helper' actor (Replicator) that will get replicated to all clients
-    Replicator = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_Replicator', self);
+    Replicator = Spawn(Class'DHAdminMenu_Replicator', self);
 }
 
 // Builds a SavedMinefields array so we can restore minefield properties if they are disabled then re-enabled
@@ -659,11 +659,11 @@ function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
         // Kill the player (includes custom damage type that shows "was re-spawned by admin" message in the console)
         if (PlayerPawn.IsA('ROPawn'))
         {
-            PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator.DHAdminMenu_DamageType');
+            PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, Class'DHAdminMenu_DamageType');
         }
         else
         {
-            Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator.DHAdminMenu_DamageType');
+            Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, Class'DHAdminMenu_DamageType');
         }
 
         ROTG.FriendlyFireScale = OriginalFriendlyFireScale; // now restore the original friendly fire setting
@@ -957,7 +957,7 @@ function SetRoundMinutesRemaining(float NewMinutesRemaining)
     if (NewMinutesRemaining > 0.0 && DarkestHourGame(ROTG) != none)
     {
         DarkestHourGame(ROTG).ModifyRoundTime(int(NewMinutesRemaining * 60.0), 2);
-        Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ class'ROEngine.ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ Class'ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
     }
 }
 
@@ -1107,7 +1107,7 @@ function BroadcastMessageToAll(int MessageNumber)
 {
     if (MessageNumber > 0 && Admin != none)
     {
-        BroadcastLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+        BroadcastLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
     }
 }
 
@@ -1117,11 +1117,11 @@ function NotifyPlayer(byte MessageNumber, Controller Receiver, optional bool bNo
     {
         if (bNoAdminName)
         {
-            PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber);
+            PlayerController(Receiver).ReceiveLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber);
         }
         else
         {
-            PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+            PlayerController(Receiver).ReceiveLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
         }
     }
 }
@@ -1130,7 +1130,7 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 {
     if (MessageNumber > 0 && Admin != none)
     {
-        Admin.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+        Admin.ClientMessage(Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
     }
 }
 
@@ -1169,7 +1169,7 @@ function string GetAdminName()
         return "'" $ Admin.PlayerReplicationInfo.PlayerName $ "'";
     }
 
-    return class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
+    return Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
 }
 
 // Returns player's name (from their Controller) for use in messages & logging
@@ -1180,7 +1180,7 @@ function string GetPlayerName(Controller Player)
         return Player.PlayerReplicationInfo.PlayerName;
     }
 
-    return class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
+    return Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
 }
 
 // Takes an index number passed by a local menu as a string in brackets (just to add readability to an on-screen command), strips the brackets & converts to a integer
@@ -1596,7 +1596,7 @@ function SetParaDropVariables()
 
     // Get the maximum safe height to paradrop a player, without him getting stuck in the skybox or whatever
     // For a starting location we get the location of the TerrainInfo actor
-    foreach AllActors(class'TerrainInfo', TI)
+    foreach AllActors(Class'TerrainInfo', TI)
     {
         TestLocation = TI.Location;
         break;
@@ -1610,7 +1610,7 @@ function SetParaDropVariables()
         // On the 1st pass we'll spawn the test actor (1920 UU above the TerrainInfo)
         if (TestActor == none)
         {
-            TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM',,, TestLocation); // spawns on 1st pass & then gets moved
+            TestActor = Spawn(Class'DHAdminMenu_TestSM',,, TestLocation); // spawns on 1st pass & then gets moved
         }
         // Only subsequent passes we try to move the test actor to the new higher location
         // If we fail (i.e. SetLocation returns false) then we're too high, so revert to the previous height & stop checking

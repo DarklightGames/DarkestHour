@@ -24,10 +24,10 @@ var     float           MomentumTransfer;   // how much momentum to pass onto wh
 var     float           MinHoldTime;        // held for this time or less will do minimum damage/force
 var     float           FullHeldTime;       // held for this long will do max damage
 var     float           MeleeAttackSpread;  // how "large" the impact area of the bayonet strike is - the larger this is, the easier it is to hit, but the less precise the strike is
-var     sound           GroundStabSound;    // sound of stabbing the ground with the bayonet
-var     sound           GroundBashSound;    // sound of bashing the ground with the rifle butt
-var     sound           PlayerStabSound;    // sound of stabbing the player with the bayonet
-var     sound           PlayerBashSound;    // sound of bashing the player with the rifle butt
+var     Sound           GroundStabSound;    // sound of stabbing the ground with the bayonet
+var     Sound           GroundBashSound;    // sound of bashing the ground with the rifle butt
+var     Sound           PlayerStabSound;    // sound of stabbing the player with the bayonet
+var     Sound           PlayerBashSound;    // sound of bashing the player with the rifle butt
 
 var         name        BayoBackEmptyAnim;
 var         name        BayoStabEmptyAnim;
@@ -487,10 +487,10 @@ defaultproperties
     BayonetDamageMax=85
     VulnerableDamageFactor=3.0
 
-    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
-    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
-    GroundStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit'
+    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit_ground'
+    GroundStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit_ground'
 
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"

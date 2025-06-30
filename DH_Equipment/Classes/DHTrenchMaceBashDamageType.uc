@@ -8,6 +8,6 @@ class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Equipment.DHTrenchMaceItem'
+    WeaponClass=Class'DHTrenchMaceItem'
     bAlwaysSevers=true
 }

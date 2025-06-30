@@ -24,7 +24,7 @@ def spawn_client(args, index):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('mod')
-    parser.add_argument('--server_path', default='System\\ucc.exe')
+    parser.add_argument('--server_path', default='System\\UCC.exe')
     parser.add_argument('server_args')
     parser.add_argument('--client_path', default='System\\RedOrchestraLargeAddressAware.exe')
     parser.add_argument('--clients', type=int)

@@ -22,7 +22,7 @@ final static function Sort(out array<Object> A, UComparator Comparator)
 
         while (j > 0 && Comparator.CompareFunction(A[j - 1], A[j]))
         {
-            class'UCore'.static.Swap(A[j], A[j - 1]);
+            Class'UCore'.static.Swap(A[j], A[j - 1]);
 
             j -= 1;
         }
@@ -39,7 +39,7 @@ final static function ISort(out array<int> A, UComparator_int Comparator)
 
         while (j > 0 && Comparator.CompareFunction(A[j - 1], A[j]))
         {
-            class'UCore'.static.ISwap(A[j], A[j - 1]);
+            Class'UCore'.static.ISwap(A[j], A[j - 1]);
 
             j -= 1;
         }

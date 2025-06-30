@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=600 //64 gramms TNT filler - i assume M61 shot
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanCannonShellDamageAP'
     HullFireChance=0.47
     EngineFireChance=0.85
 

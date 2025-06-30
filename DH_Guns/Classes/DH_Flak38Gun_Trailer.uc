@@ -7,11 +7,11 @@ class DH_Flak38Gun_Trailer extends DH_Flak38Gun;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn_Trailer')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Flak38CannonPawn_Trailer')
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_trailer'
-    Skins(1)=Texture'DH_Artillery_tex.Flak38.Flak38_trailer'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_trailer_dest'
-    VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.flak38_body_trailer'
+    Skins(1)=Texture'DH_Artillery_tex.Flak38_trailer'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38_trailer_dest'
+    VehicleHudImage=Texture'DH_Artillery_tex.flak38_body_trailer'
     ExitPositions(1)=(X=-30.0,Y=85.0,Z=50.0)
     bCanBeRotated=true
 
@@ -33,5 +33,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Flak38Gun_Trailer.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

@@ -13,7 +13,7 @@ var string                  PlayerID;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutInteger("team", TeamIndex)
         .PutInteger("round_time", RoundTime)
         .PutString("class", ConstructionClass)

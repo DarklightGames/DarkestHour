@@ -40,6 +40,6 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 
 defaultproperties
 {
-    Options(0)=(ActionText="Leave Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad_leave')
+    Options(0)=(ActionText="Leave Squad",Material=Texture'DH_InterfaceArt2_tex.squad_leave')
     SlotCountOverride=4
 }

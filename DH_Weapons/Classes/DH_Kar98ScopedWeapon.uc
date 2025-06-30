@@ -9,21 +9,20 @@ defaultproperties
 {
     ItemName="Kar 98k (ZF39)"
     NativeItemName="Karabiner 98k (ZF39)"
-    FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
+    FireModeClass(0)=Class'DH_Kar98ScopedFire'
+    FireModeClass(1)=Class'DH_Kar98ScopedMeleeFire'
+    AttachmentClass=Class'DH_Kar98ScopedAttachment'
+    PickupClass=Class'DH_Kar98ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.DH_kar98k_scoped_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
     bIsSniper=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
-    DisplayFOV=88.0
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
+	ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
     IronSightDisplayFOV=45.0
     IronSightDisplayFOVHigh=45.0
     PlayerFOVZoom=15.0

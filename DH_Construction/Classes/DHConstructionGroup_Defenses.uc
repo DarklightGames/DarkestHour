@@ -7,7 +7,7 @@ class DHConstructionGroup_Defenses extends DHConstructionGroup;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.sandbags_bunker'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.sandbags_bunker'
     GroupName="Defenses"
     SortOrder=1
 }

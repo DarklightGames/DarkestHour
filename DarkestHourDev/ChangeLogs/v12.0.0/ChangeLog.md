@@ -112,7 +112,6 @@ The Cannone da 47/32 is a light 47mm anti-tank gun capable of decent penetration
 ![Cannone da 47/32](./Media/Cannone%2047%20Back%20Right.png)
 
 ### Mortaio da 81/14 mod. 35
-Based on the French Brandt mortar, this was the most successful mortar of the Italian armed forces during the war. It can fire high-explosive shells, smoke shells and an extra large high-explosive shell with additional 
 The most successful mortar of the Italian armed forces during the war. Based on the French Brandt Mle 27/31, the Mortaio da 81/14 mod. 35 is a medium 81mm mortar capable of firing a variety of rounds, as well as an ultra-heavy high-explosive round, as pictured below.
 
 ![Mortaio da 81/14 mod. 35](./Media/8cm%20Mortar.png)
@@ -122,24 +121,36 @@ The most successful mortar of the Italian armed forces during the war. Based on 
 ### Beretta mod. 34
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
 
+![Beretta mod. 34](./Media/Weapons/Beretta%20mod%2034.png)
+
 ### Breda mod. 30
 There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and *unique* loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
 
+![Breda mod. 30](./Media/Weapons/Breda%20mod%2030%20TP.png)
+
 ### Carcano M91/38
 The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+
+![Carcano M91/38](./Media/Weapons/Carcano%20M9138%20TP.png)
 
 > Developer Highlight: When chambering the final round, you can hear the distinctive "ping" of the en-bloc clip being ejected from the bottom of the rifle.
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
 
+![Fucile Contracarro 35(P)](./Media/Weapons/Fucile%20Contracarro%2038P.png)
+
 ### MAB mod. 38-A
 The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
 
 This weapon can be found exclusively in the hands of the Italian "Camicie Nere" (Blackshirts).
 
+![Beretta mod. 34](./Media/Weapons/MAB%2038%20TP.png)
+
 ### OTO Tipo L (Anti-Tank Grenade)
 Continuing the theme of extremely dangerous impact fuzed grenades, the OTO Tipo L is a large anti-tank grenade with a powerful 1.5kg explosive charge useful for destroying or immobilizing vehicles. Since it's heavy and can't be thrown far, make sure to throw this from cover!
+
+![OTO Tipo L](./Media/Weapons/OTO%20Tipo%20L%20TP.png)
 
 ### SRCM mod. 35
 Dubbed the "red devil" by the Allies, the SRCM Mod. 35 was one of the standard hand grenades used by the Italian army. Unlike the standard grenades used by other nations, it uses an impact fuse, making it extremely dangerous to use in close quarters. The impact fuzes had a habit of failing to detonate when landing on soft ground, leaving a live grenade on the ground that could blow up if disturbed.
@@ -166,7 +177,9 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 ### Niscemi Outkirts (24-64 players)
 
-Niscemi was a small town on the road from Gela to the Ponte Olivo airfield. The Allies will have to fight their way up steep terrain and overcome a nest of defensive positions to reach the town.
+Niscemi is a hilltop town that was used as a staging area for counterattacks against the invading Allies immediately following the invasion.
+
+The invading Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outkirts of the town.
 
 |||
 |-|-|
@@ -192,21 +205,12 @@ This is a fictional scenario set during the full-scale retreat of the Italian Li
 |![San Valentino](./Media/San%20Valentino/San%20Valentino%2003.png)|![San Valentino](./Media/San%20Valentino/San%20Valentino%2004.png)|
 
 ### Villa Cecila (8-32 players)
-This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only map with a focus on close-quarters combat in and around the villa.
+This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only map with a focus on close-quarters combat in and around the villa and its gardens.
 
 |||
 |-|-|
 |![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2003.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2004.png)|
 |![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2001.png)|![Villa Cecila](./Media/Villa%20Cecilia/Villa%20Cecilia%2002.png)|
-
-# Mortar Overhaul
-Mortars have been a part of Darkest Hour since they were introduced back in 2010 with the 5.0 update. While they were a great addition to the game, they have had a number of issues that only got more pronounced as the game continued to evolve. Our goals in this overhaul was to:
-
-* Improve the controls to be smooth and more intuitive.
-* Upgrade the visuals to a modern standard (model, animations etc.)
-* Fill the capability gap across factions and eliminate historical inconsistencies (e.g., British and Soviets previously had no native mortars)
-
-This update aims to address all the points above, as well as laying the technical groundwork for additional stationary weapons in the future (e.g., tripod mounted machine-guns).
 
 ## New Mortars
 
@@ -215,32 +219,85 @@ This update aims to address all the points above, as well as laying the technica
 * M1 Mortar (United States of America)
 * Ordnance ML 3-inch Mortar (Britain, Canada)
 
-### Gameplay Changes
-* Mortar Operator roles have been removed.
-* All players are now able to use mortars like other stationary weapons.
-* All mortars are either pre-placed or can be built as a constructions.
-* Players can now sprint, prone, jump and mantle while transporting light mortars.
-* The Kurz Granatwerfer 34 has been removed. This was in reality a weapon used almost exclusively by the Fallschrimjäger, so its inclusion on every map was ahistoric. It has been replaced by the larger Granatwerfer 34. We have decided to remove this rather than leave it in as the last vestige of a deprecated system.
+# Changes
 
-> In future, we want to introduce additional small mortars to the game that can be transported by infantry such as the British 2 inch and Brixia Model 35.
+## Logistics
+* The Platoon HQ has been renamed to Command Post.
+* Panzerfaust crates now contain 4 Panzerfausts instead of 2.
+* The M45 Quadmount has been removed from the default available constructions. This gun was being massively overreppresented on the battlefield in ways that were glaringly ahistoric. It will still be available as a pre-placed gun.
+* Increased the resupply count of vehicle resupply constructions from 15 to 25.
+* Resupplying vehicles and guns now works more consistently. When a vehicle resupply tick happens, it will attempt to distribute a set number of rounds evenly among the available ammunition types. This allows for generally faster and more consistent resupplying.
 
-# Gameplay Changes
+## Gameplay
 * Players can now capture and use enemy stationary weapons. However, these weapons cannot be resupplied by the capturing team.
-* Vehicle passengers may no longer use vehicle voice commands intended for crew members only.
 * Squad leaders and assistant squad leaders are now given wire cutters by default.
+* The artillery response delay has been standardized to 15 seconds for all teams instead of relying on the length of the request sound effect.
+* Reduced or removed role respawn penalties for some roles (e.g., sniper, light-machine gunner etc.)
+* Increased the default pistol rate of fire from 4 per second to 5 per second.
+* Players directly under a landing mortar will no longer hear the incoming whistling sound, mirroring real-life behavior of how the sound propagates.
+* The threshold for surrender votes has been increased from 50% to 60% to combat excessive early retreating.
+* Radios will now be in a "calibrating" stage during the setup phase.
 
-# Logistics Changes
+## Signalling
+Changes to the signalling (in-world fire, move, spotting markers) system:
 
-## New Variant & Skin System
+* The signal transparency is now smoothly modulated based on timing &
+  the viewing angle.
+* The duration of signals has been reduced from 15 seconds to 10
+  seconds.
+* Signals will now be fully transparent if the player's viewing angle is
+  within 2 degrees.
+* The signal recipient radius has been reduced from 50 meters to 25
+  meters.
+
+These changes should alleviate the exploitation of signals to accurately
+shoot through vegetation that they cannot see through either solo or
+with the help of others.
+
+## Vehicles
+* Vehicle passengers may no longer use vehicle voice commands intended for crew members only.
+* Removed non-standard gunner positions on the StuG and StuH that made operating the cannon awkward.
+
+## Interface & Settings
+* The scoreboard can now be visible even when the HUD is hidden.
+* Range indicators on vehicle cannons are now hidden when the HUD is hidden.
+* The "self" color has been changed from orange to gold. This better differentiates the local player from enemy markers.
+* Rocket weapons now display a small readout of the current range after toggling the range setting.
+* Increased the default FOV from 85 to 90 degrees.
+* The option to spawn with a bayonet already attached is now on by default.
+* Vehicle occupant list is no longer displayed if the player is the sole occupant.
+* Vehicle occupant numbers are now white instead of black, making them easier to read.
+* The rally point status icon is no longer displayed while in a vehicle.
+* Improved the appearance and extensibility of control prompt messages.
+
+## Weapons
+* Some scopes have had the reticle updated to be less chunky and view-obscuring.
+* Scoped weapons have been zeroed consistently for 100m.
+* FG42 now has slightly less recoil and a flatter recoil curve, making it more controllable.
+* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschrek, Bazooka)
+
+## Miscellaneous
+* Removed additional patron voting power. This was disabled on all official servers already, but custom servers would have this on by default.
+* American flag texture now uses the historically accurate 48-star version.
+* A hint is now sent to the driver of Higgins boats on how to raise and lower the ramp.
+* Squad names are now reset to the default when a new squad leader is assigned. This is to ensure that squad leaders can't be blamed for bad squad names set by their predecessors.
+* The near-clip distance of the camera has been doubled from 2 units to 4 units. This should reduce the prevalence of z-fighting.
+
+## Maps
+The following maps have been removed due to unpopularity or redundancy.
+
+  * Armored Brenus Clash
+  * Armored La Feuillie Advance
+  * Watrage Push
+
+### New Variant & Skin System
 Players can now select different variants and skins for guns placed in the world. 
 
 For example, the Cannone 47/32 has two variants, one with wheels and one without, this selection affects how high the gun sits.
 
-[[ INSERT GIF OF CHANGING GUN VARIANTS ]]
-
 Skins are also selectable, although winter skins will only be available on winter maps.
 
-## Category & Limits Overhaul
+### Category & Limits Overhaul
 
 The construction loadouts system has been overhauled to allow for easier and more fine-grained control over what each team can build on a map.
 
@@ -250,22 +307,42 @@ Now, we have per-nation default construction loadout limits, as well as retainin
 
 In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
 
-[[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
-
-# Miscellaneous
+# Effects
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
-* The artillery response delay has been standardized to 15 seconds for all teams instead of relying on the length of the request sound effect.
+* Grenades impacting surfaces now have unique sounds depending on the type of surface hit.
+* Mortar and grenade explosions now have new and unique explosion effects.
+* Grenade scorch decal changed to be more realistic.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly attached to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
 * Tracer rounds for some weapons (Bren, ZB30 etc.) will no longer be misaligned with the barrel from the perspective of the gunner.
-* Fixed a bug where the pre-launch-trace would suppress tracer rounds from being spawned when firing at nearby targets. 
+* Fixed a bug where the pre-launch-trace would suppress tracer rounds from being spawned when firing at nearby targets.
+* Vehicle friendly fire beeping sound no longer plays when no damage is done (i.e., meleeing a friendly truck)
+* Fixed a bug where the pitch of the mortar whistling sound would always be incorrect while spectating.
+* Fixed a bug where mortars that hit things on ascent (e.g., nearby trees) wouldn't explode immediately.
+* `ToggleSelectedArtilleryTarget` now has a default keybind set.
+* Fixed default settings being set incorrectly (they are set to "Highest" setting).
+* Fixed a bug where map marker cooldowns (e.g., mortar spotting marks) would be broken after the round was reset.
+* Fixed an issue on Freyneux & Lamormenil where tanks could drive through some buildings.
+* Fixed a bug where the gun rotation projector looked opaque on BSP surfaces.
+* Fixed a bug where the "open the hatch to exit" message would be erroneously sent to players when there was no hatch to open.
+* Fixed a bug where spawn protection would not be applied to players that spawned on vehicles.
+* Fixed issue where AP shell ground impacts could be heard from extreme distances.
+* Fixed an issue where player jumping and landing sounds would not work on sandbags, bricks and other custom surface types.
+* Fixed a bug where the "join a squad" nag message could be sent twice in rapid succession.
+* Fixed primary weapon selection drop-down box being too small.
+* Fixed bug where SL & ASL nameplates would not have their associated icons if they were in a vehicle.
+* Fixed a long-standing bug where players would take half-damage from their own explosives.
+* Fixed missing sleeve textures for some Soviet rifleman roles.
 
 # SDK
 * A team-specific delay to spawning during the setup phase can be added using the neww `TeamAddSpawningEnabledTime` property in the `DHSetupPhaseManager`.
 * Roles can now be locked and unlocked by firing events to the new `DH_ModifyRole` actor.
 * Spawn points can now be set to only allow vehicles to spawn using the new `ESPT_VehicleOnly` spawn point type (previously, `ESPT_Vehicle` spawn points would allow tank crewmen to spawn on foot).
 * Spawn points can now be set to only spawn boat vehicles using the new `bBoatSpawn` spawn point property.
+* New `PhaseEndEventName` added to `DHSetupPhaseManager` to call an event when the setup phase ends.
+* Added `StopArty` console command to stop all artillery spawners while debugging.
+* Added `DH_ModifyVehiclePool` actor that can be triggered to modify the properties of vehicle pools.
