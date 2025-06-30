@@ -173,7 +173,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.Wheel_F_L'
+    Wheels(0)=Wheel_F_L
     Begin Object Class=SVehicleWheel Name=Wheel_F_R
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
@@ -182,7 +182,7 @@ defaultproperties
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.Wheel_F_R'
+    Wheels(1)=Wheel_F_R
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_L
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_F_L"
@@ -190,14 +190,14 @@ defaultproperties
         WheelRadius=25.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_F_L'
+    Wheels(2)=Tread_drive_wheel_F_L
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_R
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_F_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_F_R'
+    Wheels(3)=Tread_drive_wheel_F_R
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_L
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_R_L"
@@ -205,14 +205,14 @@ defaultproperties
         WheelRadius=25.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_R_L'
+    Wheels(4)=Tread_drive_wheel_R_L
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_R
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_R_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_R_R'
+    Wheels(5)=Tread_drive_wheel_R_R
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0

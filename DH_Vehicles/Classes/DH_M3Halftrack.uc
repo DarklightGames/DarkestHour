@@ -175,7 +175,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         BoneOffset=(Y=22.0,Z=-5.0)
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
+    Wheels(0)=RFWheel
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
@@ -186,7 +186,7 @@ defaultproperties
         BoneOffset=(Y=-22.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
+    Wheels(1)=LFWheel
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
@@ -195,7 +195,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
+    Wheels(2)=FLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
@@ -203,7 +203,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=15.0,Z=-5.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
+    Wheels(3)=FRight_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
@@ -212,7 +212,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
+    Wheels(4)=RLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
@@ -220,7 +220,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=-15.0,Z=-5.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
+    Wheels(5)=RRight_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
