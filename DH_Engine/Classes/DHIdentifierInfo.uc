@@ -64,8 +64,6 @@ static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type,
         // Trim the string to the maximum length supported by the identifier.
         TrimmedString = Left(String, default.Identifiers[i].SkinIndices.Length);
 
-        Log("TrimmedString" @ TrimmedString);
-
         // Based on the justification, figure out which skin index to start at.
         switch (default.Identifiers[i].Justification)
         {
