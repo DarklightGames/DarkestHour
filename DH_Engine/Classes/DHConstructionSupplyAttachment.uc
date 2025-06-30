@@ -7,8 +7,6 @@ class DHConstructionSupplyAttachment extends Actor
     abstract
     notplaceable;
 
-#exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
-
 var int                 SupplyPointIndex;
 var private float       SupplyCount;
 var int                 SupplyCountMax;

@@ -7,7 +7,6 @@ class DHHud extends ROHud
     dependson(DHSquadReplicationInfo);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
@@ -25,8 +24,6 @@ struct DHObituary
 };
 
 const   MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
-
-const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking player at which we will show a voice icon
 
 var DHGameReplicationInfo   DHGRI;
 

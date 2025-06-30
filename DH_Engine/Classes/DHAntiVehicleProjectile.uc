@@ -7,6 +7,8 @@ class DHAntiVehicleProjectile extends DHBallisticProjectile
     config
     abstract;
 
+#exec OBJ LOAD FILE=..\Sounds\DH_SundrySounds.uax
+
 enum ERoundType
 {
     RT_APC,   // either APC (with just armor-piercing cap) or APCBC (with both armor-piercing cap & ballistic cap)
@@ -1000,7 +1002,6 @@ simulated function DoShakeEffect()
 
             if (Distance < PenetrationMag * 3.0)
             {
-
                 PC.PlaySound(Sound'DH_SundrySounds.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
 
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);

@@ -5,8 +5,6 @@
 
 class DHBulletHitWaterEffect extends Emitter;
 
-#exec OBJ LOAD FILE=..\Textures\DH_FX_Tex.utx
-
 defaultproperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter24

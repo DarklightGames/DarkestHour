@@ -5,8 +5,6 @@
 
 class DHBulletHitWaterEffectLarge extends Emitter;
 
-#exec OBJ LOAD FILE=..\Textures\DH_FX_Tex.utx
-
 //particles:
 
 defaultproperties
