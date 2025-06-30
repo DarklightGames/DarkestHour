@@ -455,12 +455,21 @@ function Vehicle FindEntryVehicle(Pawn P)
 // Modified to handle optional camera offset for initial overlay position
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local DHPlayer DHPC;
+
     super.ClientKDriverEnter(PC);
 
     // If initial position is an overlay position (e.g. driver's periscope), apply any optional 1st person camera offset for the overlay
     if (DriverPositions[InitialPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
     {
         FPCamPos = OverlayFPCamPos;
+    }
+
+    DHPC = DHPlayer(PC);
+
+    if (DHPC != none && bIsArtilleryVehicle)
+    {
+        DHPC.QueueHint(50, false);
     }
 }
 

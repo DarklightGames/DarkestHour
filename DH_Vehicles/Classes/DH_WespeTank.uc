@@ -19,21 +19,6 @@
 
 class DH_WespeTank extends DHArmoredVehicle;
 
-// TODO: can't we move this check to the base class?
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local DHPlayer DHP;
-
-    super.ClientKDriverEnter(PC);
-
-    DHP = DHPlayer(PC);
-
-    if (DHP != none && DHP.IsArtilleryOperator())
-    {
-        DHP.QueueHint(50, false);
-    }
-}
-
 public function SpawnVehicleAttachments()
 {
     local int i;
