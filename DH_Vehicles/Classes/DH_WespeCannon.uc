@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Wespe_anm.WESPE_TURRET_EXT'
     // Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
     // Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-    FireAttachBone=TURRET_PLACEMENT
+    FireAttachBone="TURRET_PLACEMENT"
     FireEffectScale=2.5 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-55.0,Y=-15.0,Z=100.0)
 
@@ -28,7 +28,7 @@ defaultproperties
     CustomPitchDownLimit=64625 // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellHE'
+    PrimaryProjectileClass=class'DH_LeFH18CannonShellHE'
     // SecondaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellSmoke'
     // TertiaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellAP'
 
@@ -58,22 +58,20 @@ defaultproperties
     bIsArtillery=true
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01',Duration=4.0)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02',Duration=4.0)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03',Duration=2.0)
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.88mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.88mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.88mm_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_01',Duration=4.0)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_02',Duration=4.0)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_03',Duration=2.0)
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_04')
     ResupplyInterval=10.0
 
-    YawBone=GUN_YAW
-    PitchBone=GUN_PITCH
-    WeaponFireAttachmentBone=MUZZLE
-
-    ShootAnim=FIRE
-    ShootAnimBoneName=BARREL
-
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE"
+    ShootAnim="FIRE"
+    ShootAnimBoneName="BARREL"
     GunnerAttachmentBone="TURRET"
 
     ProjectileRotationMode=PRM_MuzzleBone
