@@ -8,10 +8,14 @@ class DH_ZiS3Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+    Mesh=SkeletalMesh'DH_ZiS_anm.ZIS3_TURRET_EXT'
+    // Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    // Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
+    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE_ZIS2"
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees

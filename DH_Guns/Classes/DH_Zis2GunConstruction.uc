@@ -12,5 +12,4 @@ defaultproperties
     VehicleClasses(1)=(VehicleClass=Class'DH_Zis2Gun_Snow',SeasonFilters=((Seasons=(SEASON_Winter))))
     SupplyCost=1250
     ProgressMax=14
-    PlacementOffset=(Z=16)
 }

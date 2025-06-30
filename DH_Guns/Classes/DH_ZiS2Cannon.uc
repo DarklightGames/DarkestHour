@@ -8,24 +8,27 @@ class DH_ZiS2Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS2_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+    Mesh=SkeletalMesh'DH_ZiS_anm.ZIS2_TURRET_EXT'
+    //Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    //Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
+    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE_ZIS2"
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
     MaxNegativeYaw=-4915
-    YawStartConstraint=-5500.0
-    YawEndConstraint=5500.0
-    CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64100
+    YawStartConstraint=-4915.0
+    YawEndConstraint=4915.0
+    CustomPitchUpLimit=5460     // +30 degrees
+    CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_ZiS2CannonShell'
     SecondaryProjectileClass=Class'DH_ZiS2CannonShellHE'
     TertiaryProjectileClass=Class'DH_ZiS2CannonShellAPCR'
-
 
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(2)="APCR"
@@ -46,7 +49,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_VL_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //3.5 seconds reload
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') // 3.5 seconds reload
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
