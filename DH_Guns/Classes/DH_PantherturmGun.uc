@@ -39,7 +39,7 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 
 	Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
