@@ -247,7 +247,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 
     // Because the turret area is partially disconnected from the hull, we assign a smaller chance of
     // hull components being damaged when the turret is penetrated and vice versa.

@@ -227,5 +227,5 @@ defaultproperties
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object
-     KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+     KParams=KParams0
 }

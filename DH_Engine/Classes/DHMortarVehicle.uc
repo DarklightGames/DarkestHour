@@ -204,7 +204,7 @@ defaultproperties
     // Karma properties - minimal, just to stop "KInitActorDynamics: No Model" log error every time actor spawns (also had to add a small karma collision box to mesh)
     Begin Object Class=KarmaParamsRBFull Name=KParams0
     End Object
-    KParams=KarmaParamsRBFull'KParams0'
+    KParams=KParams0
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
