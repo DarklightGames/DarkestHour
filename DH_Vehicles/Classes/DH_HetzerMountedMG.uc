@@ -69,7 +69,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_EXT'
     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext'
-    Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(1)=Texture'Weapons3rd_tex.mg34_world'
     Skins(2)=Texture'DH_Hetzer_tex.hetzer_int'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_MG_COLLISION_YAW',AttachBone="YAW")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_MG_COLLISION_HATCH_L',AttachBone="HATCH_L")
