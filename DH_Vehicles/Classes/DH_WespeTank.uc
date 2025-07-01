@@ -4,17 +4,13 @@
 //==============================================================================
 // https://tanks-encyclopedia.com/ww2/nazi_germany/sdkfz-124_wespe.php
 //==============================================================================
-// [ ] Rename Shells & Set up Classes/loadout
-// [ ] Fix handling to be less bouncy
-// [ ] Fix muzzle smoke to use sideways smoke (do we even have this?)
+// [ ] Rename shells & set up classes & loadout
 // [ ] Damage effect positions
 // [ ] Add to maps
-// [ ] add sounds to hatch opening/closing
-// [ ] driver animations
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] water hit sound on the 105 shell can be heard from infinity
+// [ ] water hit sound on the 105 shell can be heard from infinity (splash sound probably has no distant variant)
 //==============================================================================
 
 class DH_WespeTank extends DHArmoredVehicle;
@@ -88,10 +84,14 @@ defaultproperties
 
     BeginningIdleAnim="idle"
 
+    DriveAnim="wespe_driver_idle"
+    DriverAttachmentBone="body"
+    DrivePos=(Z=58)
+
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="hatch_close",ViewPitchUpLimit=4096,ViewPitchDownLimit=61440,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-8192,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="overlay_out",TransitionDownAnim="hatch_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="raise",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',DriverTransitionAnim="wespe_driver_lower",TransitionUpAnim="raise",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',DriverTransitionAnim="wespe_driver_raise",TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000,bExposed=true)
 
     // Hull armor
     FrontArmor(0)=(Thickness=3.0,Slope=-70.0,MaxRelativeHeight=30.6597)
@@ -174,9 +174,9 @@ defaultproperties
     TreadVelocityScale=110.0
     WheelRotationScale=42250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.30823,Y=37.3244,Z=60.6315),ExhaustRotation=(Pitch=0,Yaw=16384))
-    LeftLeverBoneName=LEVER_L
+    LeftLeverBoneName="LEVER_L"
     LeftLeverAxis=AXIS_Z
-    RightLeverBoneName=LEVER_R
+    RightLeverBoneName="LEVER_R"
     RightLeverAxis=AXIS_Z
 
     // HUD
