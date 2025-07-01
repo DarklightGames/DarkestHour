@@ -14,8 +14,8 @@ defaultproperties
     LifeSpan=20.0
     SpeedFudgeScale=1.0
     
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
-    ShellImpactDamage=class'DH_Engine.DHShellHEImpactDamageType_Artillery'
+    HitMapMarkerClass=class'DHMapMarker_ArtilleryHit_HE'
+    ShellImpactDamage=class'DHShellHEImpactDamageType_Artillery'
 
     // Speed=28486.0
     // MaxSpeed=28486.0
@@ -26,25 +26,25 @@ defaultproperties
     ImpactDamage=2000  //2.2 KG TNT
     Damage=1000.0
     DamageRadius=1350.0
-    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType_Artillery'
+    MyDamageType=class'DHShellHE105mmDamageType_Artillery'
     PenetrationMag=1000.0
     HullFireChance=1.0
     EngineFireChance=1.0
 
     //Effects
     DrawScale=1.5
-    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
-    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
-    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
-    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
+    ExplosionSound(0)=Sound'Artillery.explo01'
+    ExplosionSound(1)=Sound'Artillery.explo02'
+    ExplosionSound(2)=Sound'Artillery.explo03'
+    ExplosionSound(3)=Sound'Artillery.explo04'
     TransientSoundRadius=20000.0    // Match the transient sound radius of the 105mm off-map artillery shell
 
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=class'ROArtilleryWaterEmitter'
 
     //Penetration
     DHPenetrationTable(0)=8.0

@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [1] https://tanks-encyclopedia.com/ww2/nazi_germany/sdkfz-124_wespe.php
+//==============================================================================
 
 class DH_WespeCannon extends DHVehicleCannon;
 
@@ -9,8 +11,6 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Wespe_anm.WESPE_TURRET_EXT'
-    // Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    // Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     FireAttachBone="TURRET_PLACEMENT"
     FireEffectScale=2.5 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-55.0,Y=-15.0,Z=100.0)
@@ -29,25 +29,26 @@ defaultproperties
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_LeFH18CannonShellHE'
-    // SecondaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellSmoke'
-    // TertiaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellAP'
+    SecondaryProjectileClass=class'DH_LeFH18CannonShellSmoke'
+    TertiaryProjectileClass=class'DH_LeFH18CannonShellHEAT'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
-    ProjectileDescriptions(2)="AP"
+    ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="F.H.Gr."
     nProjectileDescriptions(1)="F.H.Gr.Nb."
-    nProjectileDescriptions(2)="Pz.Gr."
+    nProjectileDescriptions(2)="Gr.39 Hl/C"
 
-    InitialPrimaryAmmo=18
-    InitialSecondaryAmmo=8
+    // [1] Loadout was 30 or 32 rounds, the majority being HE.
+    InitialPrimaryAmmo=24
+    InitialSecondaryAmmo=4
     InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=18
-    MaxSecondaryAmmo=8
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=4
     MaxTertiaryAmmo=4
     Spread=0.01
-    SecondarySpread=0.005
+    SecondarySpread=0.01
     TertiarySpread=0.005
 
     // Weapon fire

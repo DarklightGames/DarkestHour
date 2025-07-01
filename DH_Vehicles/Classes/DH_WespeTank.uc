@@ -4,13 +4,10 @@
 //==============================================================================
 // https://tanks-encyclopedia.com/ww2/nazi_germany/sdkfz-124_wespe.php
 //==============================================================================
-// [ ] Rename shells & set up classes & loadout
-// [ ] Damage effect positions
-// [ ] Add to maps
-//==============================================================================
 // BUGS
 //==============================================================================
-// [ ] water hit sound on the 105 shell can be heard from infinity (splash sound probably has no distant variant)
+// [ ] water hit sound on the 105 shell can be heard from infinity (splash sound
+// probably has no distant variant or is using enormous transient radius).
 //==============================================================================
 
 class DH_WespeTank extends DHArmoredVehicle;
@@ -62,17 +59,17 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wespe_anm.WESPE_BODY_EXT'
-    Skins(0)=Texture'DH_Wespe_tex.wespe.wespe_body_ext_camo'
-    Skins(1)=Texture'DH_Wespe_tex.wespe.wespe_treads'
-    Skins(2)=Texture'DH_Wespe_tex.wespe.wespe_treads'
-    Skins(3)=Texture'DH_Wespe_tex.wespe.wespe_body_int'
+    Skins(0)=Texture'DH_Wespe_tex.wespe_body_ext_camo'
+    Skins(1)=Texture'DH_Wespe_tex.wespe_treads'
+    Skins(2)=Texture'DH_Wespe_tex.wespe_treads'
+    Skins(3)=Texture'DH_Wespe_tex.wespe_body_int'
 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_front',AttachBone="driver_hatch_front")
     CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_top_front',AttachBone="driver_hatch_top_01")
     CollisionAttachments(2)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_top_back',AttachBone="driver_hatch_top_02")
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WespeCannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_WespeCannonPawn',WeaponBone="turret_placement")
 
     // Driver
     UnbuttonedPositionIndex=3
@@ -132,12 +129,11 @@ defaultproperties
     VehHitpoints(6)=(HitPointType=HP_AmmoStore,PointRadius=16.0,PointBone="body",PointOffset=(X=-124,Y=26,Z=52),DamageMultiplier=5.0)
     TreadHitMaxHeight=-30.0
 
-    // TODO: set these
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
+    DamagedEffectOffset=(X=-100.0,Y=0.0,Z=70.0)
 
     FireAttachBone="Body"
-    FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
+    FireEffectOffset=(X=80,Y=-20,Z=70)
 
     DestroyedVehicleMesh=StaticMesh'DH_Wespe_stc.WESPE_DESTROYED'
 
@@ -157,12 +153,12 @@ defaultproperties
     ExitPositions(7)=(X=-120.0,Y=130.0,Z=58.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    IdleSound=SoundGroup'Vehicle_Engines.KV1s_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.KV1s_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
     RumbleSoundBone="DRIVER_CAMERA"
     PlayerCameraBone="DRIVER_CAMERA"
 
@@ -180,9 +176,9 @@ defaultproperties
     RightLeverAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_Wespe_tex.interface.wespe_body_icon'
-    VehicleHudTurret=TexRotator'DH_Wespe_tex.interface.wespe_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Wespe_tex.interface.wespe_turret_look'
+    VehicleHudImage=Texture'DH_Wespe_tex.wespe_body_icon'
+    VehicleHudTurret=TexRotator'DH_Wespe_tex.wespe_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Wespe_tex.wespe_turret_look'
     VehicleHudTreadsPosX(0)=0.325
     VehicleHudTreadsPosX(1)=0.675
     VehicleHudTreadsPosY=0.5
@@ -191,7 +187,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.3
     VehicleHudOccupantsX(1)=0.4
     VehicleHudOccupantsY(1)=0.7
-    SpawnOverlay(0)=Material'DH_Wespe_tex.interface.wespe_profile_icon'
+    SpawnOverlay(0)=Material'DH_Wespe_tex.wespe_profile_icon'
     VehicleHudEngineX=0.5
     VehicleHudEngineY=0.75
 
@@ -219,7 +215,7 @@ defaultproperties
 
     ShadowZOffset=40.0
 
-    VehicleAttachments(0)=(AttachClass=class'DH_WespeIdentifierAttachment',AttachBone="BODY")
+    VehicleAttachments(0)=(AttachClass=Class'DH_WespeIdentifierAttachment',AttachBone="BODY")
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=STEER_WHEEL_F_L
