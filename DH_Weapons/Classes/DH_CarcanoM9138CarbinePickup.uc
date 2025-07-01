@@ -3,11 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38DamType extends DHMediumCaliberDamageType
-    abstract;
+class DH_CarcanoM9138CarbinePickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_CarcanoM38Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.b762mm'
+    InventoryType=Class'DH_Weapons.DH_CarcanoM9138CarbineWeapon'
+    StaticMesh=StaticMesh'DH_Carcano_stc.carcano_m91_pickup'
 }

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38CavalryAttachment extends DHWeaponAttachment;
+class DH_CarcanoM9138CarbineAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {

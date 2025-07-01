@@ -3,10 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38CavalryPickup extends DHWeaponPickup;
+class DH_CarcanoM9138ShortRifleDamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    InventoryType=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
-    StaticMesh=StaticMesh'DH_Carcano_stc.carcano_m91_pickup'
+    WeaponClass=Class'DH_Weapons.DH_CarcanoM9138ShortRifleWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

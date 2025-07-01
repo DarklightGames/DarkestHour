@@ -3,17 +3,17 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38Weapon extends DHBoltActionWeapon;
+class DH_CarcanoM9138CarbineWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano mod. 91/38 Short Rifle"
+    ItemName="Carcano mod. 91/38 Cavalry Carbine"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=Class'DH_CarcanoM38Fire'
-    FireModeClass(1)=Class'DH_CarcanoM38MeleeFire'
-    AttachmentClass=Class'DH_CarcanoM38Attachment'
-    PickupClass=Class'DH_CarcanoM38Pickup'
+    FireModeClass(0)=Class'DH_CarcanoM9138CarbineFire'
+    FireModeClass(1)=Class'DH_CarcanoM9138CarbineMeleeFire'
+    AttachmentClass=Class'DH_CarcanoM9138CarbineAttachment'
+    PickupClass=Class'DH_CarcanoM9138CarbinePickup'
 
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 

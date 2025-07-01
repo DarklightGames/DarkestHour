@@ -3,13 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38CavalryBayonetDamType extends DHWeaponBayonetDamageType
-    abstract;
+class DH_CarcanoM9138ShortRiflePickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
-    GibModifier=0.0
-    KDamageImpulse=400
-    PawnDamageEmitter=Class'ROEffects.ROBloodPuff'
+    InventoryType=Class'DH_Weapons.DH_CarcanoM9138ShortRifleWeapon'
+    StaticMesh=StaticMesh'DH_Carcano_stc.carcano_m91_pickup'
 }

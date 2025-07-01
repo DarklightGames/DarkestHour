@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38Fire extends DHBoltFire;
+class DH_CarcanoM9138ShortRifleFire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=Class'DH_CarcanoM38Bullet'
+    ProjectileClass=Class'DH_CarcanoM9138ShortRifleBullet'
     AmmoClass=Class'DH_CarcanoM91Ammo'
     Spread=41.5
     AddedPitch=15

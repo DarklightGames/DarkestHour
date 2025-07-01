@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM38CavalryBashDamType extends DHWeaponBashDamageType
+class DH_CarcanoM9138CarbineDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_CarcanoM38CavalryWeapon'
+    WeaponClass=Class'DH_Weapons.DH_CarcanoM9138CarbineWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }
-
