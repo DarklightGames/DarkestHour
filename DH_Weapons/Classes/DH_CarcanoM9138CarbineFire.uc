@@ -12,9 +12,9 @@ defaultproperties
     Spread=48.0
     AddedPitch=15
     MaxVerticalRecoilAngle=850
-    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoFire01'
-    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoFire02'
-    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoFire03'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoCarbineFire01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoCarbineFire02'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoCarbineFire03'
     FlashEmitterClass=Class'MuzzleFlash1stNagant'
     ShellEjectClass=Class'ShellEject1st762x54mm'
     FireAnim="shoot_last"

@@ -15,7 +15,7 @@ defaultproperties
     AttachmentClass=Class'DH_CarcanoM9138CarbineAttachment'
     PickupClass=Class'DH_CarcanoM9138CarbinePickup'
 
-    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM9138Carbine_1st'
 
     bUseHighDetailOverlayIndex=false
 
@@ -28,8 +28,8 @@ defaultproperties
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
-    BayoAttachAnim="Bayonet_on"
-    BayoDetachAnim="Bayonet_off"
+    BayoAttachAnim="Bayonet_on_carbine"
+    BayoDetachAnim="Bayonet_off_carbine"
 
     PreReloadAnim="reload_half_start"
     FullReloadAnim="reload"
