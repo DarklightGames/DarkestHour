@@ -7,7 +7,7 @@ class DH_CarcanoM91Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano mod. 91"
+    ItemName="Carcano Fucile Mod. 91"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM91Fire'
