@@ -3,15 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_SVT40ScopedFire extends DH_SVT40Fire;
+class DH_Granatwerfer34MortarFactory extends DHATGunFactory;
 
 defaultproperties
 {
-    Spread=45.0
-    AddedPitch=10.0
-    FireIronAnim="Scope_shoot"
-    ProjectileClass=Class'DH_SVT40ScopedBullet'
-    FireLastAnim="shoot_last"
-    FireIronLastAnim="Scope_Shoot_Last"
+    VehicleClass=Class'DH_Granatwerfer34Mortar'
+    Mesh=SkeletalMesh'DH_Granatwerfer34_anm.grw34_body_ext'
+    Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
+    TeamNum=AXIS
 }
-

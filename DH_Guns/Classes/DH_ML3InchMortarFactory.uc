@@ -3,15 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_SVT40ScopedFire extends DH_SVT40Fire;
+class DH_ML3InchMortarFactory extends DHATGunFactory;
 
 defaultproperties
 {
-    Spread=45.0
-    AddedPitch=10.0
-    FireIronAnim="Scope_shoot"
-    ProjectileClass=Class'DH_SVT40ScopedBullet'
-    FireLastAnim="shoot_last"
-    FireIronLastAnim="Scope_Shoot_Last"
+    VehicleClass=Class'DH_ML3InchMortar'
+    Mesh=SkeletalMesh'DH_ML3InchMortar_anm.ml3inch_body_ext'
+    TeamNum=ALLIES
 }
-
