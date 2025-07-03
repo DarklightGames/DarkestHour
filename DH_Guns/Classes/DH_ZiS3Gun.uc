@@ -16,11 +16,13 @@ defaultproperties
     VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
-    ExitPositions(1)=(X=-100.00,Y=-30.00,Z=50.00)
+    ExitPositions(1)=(X=-100.00,Y=-30.00,Z=30.00)
     VehicleMass=11.0
     bCanBeRotated=true
     PlayersNeededToRotate=1
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
+
+    ShadowZOffset=40.0
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

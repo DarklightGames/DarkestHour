@@ -11,8 +11,17 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS2_TURRET_EXT'
     //Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
     //Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS2_TURRET_YAW_COLLISION',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS2_BARREL_COLLISION',AttachBone="BARREL")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS_PITCH_COLLISION',AttachBone="GUN_PITCH")
 
+    AnimationDrivers(0)=(Channel=1,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
+    AnimationDrivers(1)=(Channel=2,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
+
+    GunnerAttachmentBone="GUN_YAW"
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"
     WeaponFireAttachmentBone="MUZZLE_ZIS2"
