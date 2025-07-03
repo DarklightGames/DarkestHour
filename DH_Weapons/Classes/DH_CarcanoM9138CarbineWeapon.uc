@@ -7,7 +7,7 @@ class DH_CarcanoM9138CarbineWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano Moschetto Mod. 91/38"
+    ItemName="Carcano Moschetto mod. 91/38"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM9138CarbineFire'

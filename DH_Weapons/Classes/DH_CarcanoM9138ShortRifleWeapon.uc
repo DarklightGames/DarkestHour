@@ -7,7 +7,7 @@ class DH_CarcanoM9138ShortRifleWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano Fucile Corto Mod. 91/38"
+    ItemName="Carcano Fucile Corto mod. 91/38"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM9138ShortRifleFire'
