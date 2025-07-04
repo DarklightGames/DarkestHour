@@ -7,7 +7,7 @@ class DH_M2MortarCannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_M2MortarCannon'
+    GunClass=Class'DH_Guns.DH_M2MortarCannon'
 
     // Spotting Scope
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
@@ -43,7 +43,7 @@ defaultproperties
     AmmoShellReloadTextures(0)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_HE_ICON_RELOAD'
     AmmoShellReloadTextures(1)=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_WP_ICON_RELOAD'
 
-    ArtillerySpottingScopeClass=class'DH_M2MortarArtillerySpottingScope'
+    ArtillerySpottingScopeClass=Class'DH_M2MortarArtillerySpottingScope'
 
     GunPitchOffset=7280 // +40 degrees
 

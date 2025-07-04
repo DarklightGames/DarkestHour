@@ -7,8 +7,8 @@ class DH_M1919A4Weapon extends DHStationaryWeapon;
 
 defaultproperties
 {
-    VehicleClass=class'DH_M1919A4Gun'
-    AttachmentClass=class'DH_M1919A4Attachment'
-    PickupClass=class'DH_M1919A4Pickup'
+    VehicleClass=Class'DH_M1919A4Gun'
+    AttachmentClass=Class'DH_M1919A4Attachment'
+    PickupClass=Class'DH_M1919A4Pickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
 }

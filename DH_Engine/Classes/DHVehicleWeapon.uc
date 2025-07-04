@@ -1542,7 +1542,7 @@ function DHVehicleWeaponState GetVehicleWeaponState()
 {
     local DHVehicleWeaponState WeaponState;
 
-    WeaponState = new class'DHVehicleWeaponState';
+    WeaponState = new Class'DHVehicleWeaponState';
     WeaponState.LastResupplyTimestamp = LastResupplyTimestamp;
     WeaponState.MainAmmoCharge[0] = MainAmmoCharge[0];
     WeaponState.MainAmmoCharge[1] = MainAmmoCharge[1];

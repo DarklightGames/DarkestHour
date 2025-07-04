@@ -18,12 +18,12 @@ static function DHVehicleState GetDefaultVehicleState(class<DHVehicle> VehicleCl
         return none;
     }
 
-    VehicleState = new class'DHVehicleState';
+    VehicleState = new Class'DHVehicleState';
     VehicleState.Health = VehicleClass.default.Health;
 
     for (i = 0; i < VehicleClass.default.PassengerWeapons.Length; ++i)
     {
-        VehicleState.WeaponStates[i] = new class'DHVehicleWeaponState';
+        VehicleState.WeaponStates[i] = new Class'DHVehicleWeaponState';
     }
 
     return VehicleState;

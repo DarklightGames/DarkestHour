@@ -120,11 +120,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
             if (RotationError != ERROR_None)
             {
-                ORI.InfoColor = class'UColor'.default.Red;
+                ORI.InfoColor = Class'UColor'.default.Red;
             }
             else
             {
-                ORI.InfoColor = class'UColor'.default.White;
+                ORI.InfoColor = Class'UColor'.default.White;
             }
 
             switch (RotationError)
@@ -147,13 +147,13 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                     ORI.InfoText[0] = default.CannotBeRotatedText;
                     break;
                 case ERROR_IsBeingRotated:
-                    ORI.InfoText[0] = class'DHATCannonMessage'.default.GunIsRotating;
+                    ORI.InfoText[0] = Class'DHATCannonMessage'.default.GunIsRotating;
                     break;
                 case ERROR_EnemyGun:
                     ORI.InfoText[0] = default.EnemyGunText;
                     break;
                 case ERROR_NeedMorePlayers:
-                    ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+                    ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
                     ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
                     break;
                 default:
@@ -164,11 +164,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case 1: // Pick Up
             if (PickUpError != ERROR_None)
             {
-                ORI.InfoColor = class'UColor'.default.Red;
+                ORI.InfoColor = Class'UColor'.default.Red;
             }
             else
             {
-                ORI.InfoColor = class'UColor'.default.White;
+                ORI.InfoColor = Class'UColor'.default.White;
             }
 
             switch (PickUpError)

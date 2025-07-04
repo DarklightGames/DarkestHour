@@ -4604,7 +4604,7 @@ function DHVehicleState GetVehicleState()
     local DHVehicleWeapon VehicleWeapon;
     local int i;
 
-    VehicleState = new class'DHVehicleState';
+    VehicleState = new Class'DHVehicleState';
     VehicleState.Health = Health;
 
     for (i = 0; i < WeaponPawns.Length; ++i)

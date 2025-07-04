@@ -347,7 +347,7 @@ simulated state Firing
     // Calculate the linear interpolation value for the camera position and rotation.
     simulated function float GetCameraInterpolationTheta()
     {
-        return class'UInterp'.static.LerpBilateral(
+        return Class'UInterp'.static.LerpBilateral(
             Level.TimeSeconds, 
             FiringStartTimeSeconds, 
             FiringStartTimeSeconds + OverlayFiringAnimDuration, 
@@ -358,7 +358,7 @@ simulated state Firing
 
     simulated function bool GetHandsHidden()
     {
-        return class'UInterp'.static.LerpBilateral(
+        return Class'UInterp'.static.LerpBilateral(
             Level.TimeSeconds, 
             FiringStartTimeSeconds, 
             FiringStartTimeSeconds + OverlayFiringAnimDuration, 
@@ -397,7 +397,7 @@ simulated state Firing
         HandsActor.bHidden = GetHandsHidden();
 
         ViewActor = self;
-        CameraLocation = class'UVector'.static.VLerp(Theta * FiringCameraLocationFactor, NormalCameraLocation, FiringCameraLocation);
+        CameraLocation = Class'UVector'.static.VLerp(Theta * FiringCameraLocationFactor, NormalCameraLocation, FiringCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta * FiringCameraRotationFactor));
 
         // Neutralize the roll to prevent motion sickness.

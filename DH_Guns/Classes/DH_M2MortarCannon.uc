@@ -15,13 +15,13 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_GUN_EXT'
-    Skins(0)=Texture'DH_M2Mortar_tex.m2mortar.M2MORTAR_BODY_EXT'
+    Skins(0)=Texture'DH_M2Mortar_tex.M2MORTAR_BODY_EXT'
 
     WeaponFireAttachmentBone="MUZZLE"
     GunnerAttachmentBone="GUN_YAW"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.Collision.M2MORTAR_COLLISION_GUN',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.M2MORTAR_COLLISION_GUN',AttachBone="GUN_PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-360,RotationAxis=AXIS_Y)
@@ -46,8 +46,8 @@ defaultproperties
     nProjectileDescriptions(0)="M49A2 HE"
     nProjectileDescriptions(1)="M302 WP"
 
-    PrimaryProjectileClass=class'DH_M2MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_M2MortarProjectileSmoke'
+    PrimaryProjectileClass=Class'DH_M2MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=24
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=0
@@ -65,12 +65,12 @@ defaultproperties
 
     // Sounds
     // TODO: use 60mm mortar sounds, or just make new ones??
-    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
-    CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
-    CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_03'
 
     // TODO: figure out what to do with this.
-    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0
@@ -90,7 +90,7 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
 
-    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'     // TODO: probably okay
+    EffectEmitterClass=Class'DH_Effects.DHMortarFireEffect'     // TODO: probably okay
     // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
 

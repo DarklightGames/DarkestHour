@@ -7,7 +7,7 @@ class DH_M2MortarPickup extends DHStationaryWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_M2MortarWeapon'
+    InventoryType=Class'DH_M2MortarWeapon'
     // TODO: not static mesh, use normal mesh in fun pose.
     StaticMesh=StaticMesh'DH_M2Mortar_stc.M2MORTAR_PICKUP'
 }

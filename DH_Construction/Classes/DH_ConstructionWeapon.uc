@@ -266,6 +266,6 @@ simulated function ROIronSights()
 defaultproperties
 {
     ClickSound=Sound'ROMenuSounds.msfxMouseClick'
-    ControlsMessageClass=class'DHConstructionControlsMessage'
+    ControlsMessageClass=Class'DHConstructionControlsMessage'
     DrawScale=0.0
 }

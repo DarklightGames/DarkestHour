@@ -336,7 +336,7 @@ simulated function TraceFromPlayer(
 
     // Trace out into the world and try and hit something static.
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(GetTraceDepthMeters()));
+    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * Class'DHUnits'.static.MetersToUnreal(GetTraceDepthMeters()));
 
     // TODO: make a function that evaluates whether sockets are valid.
 
@@ -378,7 +378,7 @@ simulated function TraceFromPlayer(
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(GetTraceHeightMeters());
+        TraceEnd = TraceStart + vect(0, 0, -1) * Class'DHUnits'.static.MetersToUnreal(GetTraceHeightMeters());
 
         foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
         {
@@ -417,8 +417,8 @@ defaultproperties
     CrawlBackwardAnim="crawl_in"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_in"
-    FireModeClass(0)=class'DH_Engine.DH_EmptyFire'
-    FireModeClass(1)=class'DH_Engine.DH_EmptyFire'
+    FireModeClass(0)=Class'DH_Engine.DH_EmptyFire'
+    FireModeClass(1)=Class'DH_Engine.DH_EmptyFire'
     RestAnim="crawl_in"
     AimAnim="crawl_in"
     RunAnim="crawl_in"
@@ -429,12 +429,12 @@ defaultproperties
     bUsesFreeAim=false
     bCanSway=false
     InventoryGroup=1
-    AttachmentClass=class'DH_Engine.DH_EmptyAttachment'
+    AttachmentClass=Class'DH_Engine.DH_EmptyAttachment'
     ItemName=" "
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_US'
     bForceSwitch=false
     bNoVoluntarySwitch=true
-    ErrorMessageClass=class'DHActorProxyErrorMessage'
+    ErrorMessageClass=Class'DHActorProxyErrorMessage'
     TraceDepthMeters=5.0
     TraceHeightMeters=2.0
     LocalRotationRate=32768

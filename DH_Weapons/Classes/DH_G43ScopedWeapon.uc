@@ -9,19 +9,19 @@ defaultproperties
 {
     ItemName="G 43 (ZF4)"
     NativeItemName="Gewehr 43 (ZF4)"
-    FireModeClass(0)=class'DH_G43ScopedFire'
-    FireModeClass(1)=class'DH_G43MeleeFire'
-    AttachmentClass=class'DH_G43ScopedAttachment'
-    PickupClass=class'DH_G43ScopedPickup'
+    FireModeClass(0)=Class'DH_G43ScopedFire'
+    FireModeClass(1)=Class'DH_G43MeleeFire'
+    AttachmentClass=Class'DH_G43ScopedAttachment'
+    PickupClass=Class'DH_G43ScopedPickup'
 
     Mesh=SkeletalMesh'DH_G43_1st.g43_scoped_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.g43_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
-    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Textured_GerScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'
 
     DisplayFOV=83.0
     IronSightDisplayFOV=45.5

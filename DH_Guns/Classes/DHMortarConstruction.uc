@@ -8,7 +8,7 @@ class DHMortarConstruction extends DHConstruction_Vehicle
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.mortar'
     bIsArtillery=true
     ProxyTraceDepthMeters=2.0
     GroundSlopeMaxInDegrees=5.0

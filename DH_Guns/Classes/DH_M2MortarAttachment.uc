@@ -8,9 +8,9 @@ class DH_M2MortarAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON_TP'
-    Skins(0)=Texture'DH_M2Mortar_tex.m2mortar.M2MORTAR_BODY_EXT'
-    Skins(1)=Texture'DH_M2Mortar_tex.m2mortar.m2mortar_sling'
-    //MenuImage=Texture'InterfaceArt_tex.Menu_weapons.satchel'
+    Skins(0)=Texture'DH_M2Mortar_tex.M2MORTAR_BODY_EXT'
+    Skins(1)=Texture'DH_M2Mortar_tex.m2mortar_sling'
+    //MenuImage=Texture'InterfaceArt_tex.satchel'
     WA_Idle="m2mortar_idle"
     PA_MovementAnims(0)="stand_jogF_m2mortar"
     PA_MovementAnims(1)="stand_jogB_m2mortar"

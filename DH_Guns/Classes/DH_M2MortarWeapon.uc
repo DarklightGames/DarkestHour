@@ -7,9 +7,9 @@ class DH_M2MortarWeapon extends DHStationaryWeapon;
 
 defaultproperties
 {
-    VehicleClass=class'DH_M2Mortar'
-    AttachmentClass=class'DH_M2MortarAttachment'
-    PickupClass=class'DH_M2MortarPickup'
+    VehicleClass=Class'DH_M2Mortar'
+    AttachmentClass=Class'DH_M2MortarAttachment'
+    PickupClass=Class'DH_M2MortarPickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
     DisplayFOV=90.0
     FreeAimRotationSpeed=2.0

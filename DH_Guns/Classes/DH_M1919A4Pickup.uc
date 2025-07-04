@@ -7,6 +7,6 @@ class DH_M1919A4Pickup extends DHStationaryWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_M1919A4Weapon'
+    InventoryType=Class'DH_M1919A4Weapon'
     StaticMesh=StaticMesh'DH_M1919_stc.M1919A6_world'
 }

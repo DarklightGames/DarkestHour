@@ -148,7 +148,7 @@ function UpdateBarrelStatus()
 
 simulated static function float GetFiringSoundPitch(float BarrelTemperature)
 {
-    return class'UInterp'.static.MapRangeClamped(
+    return Class'UInterp'.static.MapRangeClamped(
         BarrelTemperature,
         default.CriticalTemperature,
         default.FailureTemperature,

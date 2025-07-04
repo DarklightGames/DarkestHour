@@ -121,7 +121,7 @@ function bool ArePlayersNearby()
 {
     local DHPawn    DHP;
 
-    foreach RadiusActors(class'DHPawn', DHP, class'DHUnits'.static.MetersToUnreal(PlayerNearbyRadiusMeters))
+    foreach RadiusActors(class'DHPawn', DHP, Class'DHUnits'.static.MetersToUnreal(PlayerNearbyRadiusMeters))
     {
         if (DHP.Controller != none)
         {

@@ -118,7 +118,7 @@ function CreateProgressWheelMaterials()
 
     for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
     {
-        TR = new class'Engine.TexRotator';
+        TR = new Class'Engine.TexRotator';
         TR.Rotation.Yaw = -(i * (65536 / MAX_PROGRESS_SEGMENTS));
         TR.Material = ProgressSegmentTexture;
         TR.TexRotationType = TR_FixedRotation;
@@ -531,7 +531,7 @@ function PostRender(Canvas C)
     // Display hold time progress bar, if holding.
     if (bIsHolding)
     {
-        HoldProgressTheta = class'UInterp'.static.MapRangeClamped(
+        HoldProgressTheta = Class'UInterp'.static.MapRangeClamped(
             ViewportOwner.Actor.Level.TimeSeconds, 
             HoldTimeStart,
             HoldTimeEnd,
@@ -539,7 +539,7 @@ function PostRender(Canvas C)
             1.0);
         
         // Use a deceleration interpolation so that the user can see that progress is being made immediately.
-        HoldProgressTheta = class'UInterp'.static.Interpolate(
+        HoldProgressTheta = Class'UInterp'.static.Interpolate(
             HoldProgressTheta,
             0.0,
             1.0,
@@ -548,9 +548,9 @@ function PostRender(Canvas C)
 
         for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
         {
-            Theta = class'UInterp'.static.MapRangeClamped(HoldProgressTheta, i, i + 1.0, 0.0, 1.0);
+            Theta = Class'UInterp'.static.MapRangeClamped(HoldProgressTheta, i, i + 1.0, 0.0, 1.0);
 
-            C.DrawColor = class'UColor'.static.Interp(Theta, class'UColor'.default.White, SelectedColor);
+            C.DrawColor = Class'UColor'.static.Interp(Theta, Class'UColor'.default.White, SelectedColor);
             C.DrawColor.A = byte(255 * MenuAlpha * Theta);
 
             DrawCenteredTile(C, ProgressWheelTexRotators[i], CenterX, CenterY, GUIScale);

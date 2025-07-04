@@ -248,12 +248,12 @@ function Color GetProxyColor()
     switch (ProxyError.Type)
     {
         case ERROR_None:
-            return class'UColor'.default.Green;
+            return Class'UColor'.default.Green;
         case ERROR_Fatal:
         case ERROR_PlayerBusy:
-            return class'UColor'.default.Black;
+            return Class'UColor'.default.Black;
         default:
-            return class'UColor'.default.Red;
+            return Class'UColor'.default.Red;
     }
 }
 
@@ -486,7 +486,7 @@ function ActorProxyError SetProvisionalLocationAndRotation()
         Forward = HitNormal cross Left;
 
         // Hit something static in the world.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
+        GroundSlopeDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= GetGroundSlopeMaxDegrees())
         {
@@ -498,7 +498,7 @@ function ActorProxyError SetProvisionalLocationAndRotation()
         {
             GetAxes(Rotator(Forward), X, Y, Z);
 
-            CircumferenceInMeters = class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
+            CircumferenceInMeters = Class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
             ArcLengthTraceCount = (CircumferenceInMeters / GetArcLengthTraceIntervalMeters()) / 2;
 
             // For safety's sake, make sure we don't overdo or underdo it.
@@ -529,7 +529,7 @@ function ActorProxyError SetProvisionalLocationAndRotation()
                 }
 
                 // Trace down from the top of the cylinder to the bottom
-                TraceEnd = TraceStart - (Z * (CollisionHeight + class'DHUnits'.static.MetersToUnreal(GetFloatToleranceMeters())));
+                TraceEnd = TraceStart - (Z * (CollisionHeight + Class'DHUnits'.static.MetersToUnreal(GetFloatToleranceMeters())));
 
                 HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, false);
 
@@ -563,7 +563,7 @@ function ActorProxyError SetProvisionalLocationAndRotation()
         }
 
         // Now check the groundslope again.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
+        GroundSlopeDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= GetGroundSlopeMaxDegrees())
         {
@@ -681,7 +681,7 @@ function ActorProxyError GetPositionError()
         // likely combined radius. Using AllActors would be incredibly slow, and
         // keeping a separate list of constructions via replication or some other
         // mechanism would probably be a bad idea.
-        foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
+        foreach CollidingActors(class'DHConstruction', C, Class'DHUnits'.static.MetersToUnreal(25.0))
         {
             C.GetCollisionSize(C.GetContext(), OtherRadius, OtherHeight);
 
@@ -732,7 +732,7 @@ function ActorProxyError GetPositionError()
             // above us. We start the trace slightly higher than the ground
             // because uneven terrain tends to produce false positives.
             TraceStart = Location + (vect(0, 0, 1) * CollisionHeight / 2);
-            TraceEnd = Location + (vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(GetIndoorsCeilingHeightMeters()));
+            TraceEnd = Location + (vect(0, 0, 1) * Class'DHUnits'.static.MetersToUnreal(GetIndoorsCeilingHeightMeters()));
             HitActor = Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength);
 
             if (HitActor != none)
@@ -744,13 +744,13 @@ function ActorProxyError GetPositionError()
     }
 
     // Don't allow actors to be placed within 2 meters of spawn points or location hints.
-    foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + class'DHUnits'.static.MetersToUnreal(GetSpawnPointDistanceThresholdMeters()))
+    foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + Class'DHUnits'.static.MetersToUnreal(GetSpawnPointDistanceThresholdMeters()))
     {
         E.Type = ERROR_NearSpawnPoint;
         return E;
     }
 
-    foreach RadiusActors(class'DHLocationHint', LH, CollisionRadius + class'DHUnits'.static.MetersToUnreal(GetSpawnPointDistanceThresholdMeters()))
+    foreach RadiusActors(class'DHLocationHint', LH, CollisionRadius + Class'DHUnits'.static.MetersToUnreal(GetSpawnPointDistanceThresholdMeters()))
     {
         E.Type = ERROR_NearSpawnPoint;
         return E;

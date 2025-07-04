@@ -97,7 +97,7 @@ function DHVehicleState EnsureVehicleState()
 {
     if (VehicleState == none)
     {
-        VehicleState = class'DHVehicleState'.static.GetDefaultVehicleState(VehicleClass);
+        VehicleState = Class'DHVehicleState'.static.GetDefaultVehicleState(VehicleClass);
     }
 
     return VehicleState;
@@ -177,7 +177,7 @@ function bool FillAmmo()
             bDidResupplyWeapon = true;
         }
 
-        if (ClassIsChildOf(VehicleWeaponClass, class'DHVehicleCannon'))
+        if (ClassIsChildOf(VehicleWeaponClass, Class'DHVehicleCannon'))
         {
             VehicleCannonClass = class<DHVehicleCannon>(VehicleWeaponClass);
             MainAmmoResupplyCount = VehicleCannonClass.default.MainAmmoResupplyPerInterval;

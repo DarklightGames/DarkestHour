@@ -7,6 +7,6 @@ class DH_Fiat1435ACPickup extends DHStationaryWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Fiat1435ACWeapon'
+    InventoryType=Class'DH_Fiat1435ACWeapon'
     StaticMesh=StaticMesh'DH_M1919_stc.M1919A6_world'   // TODO: replace
 }

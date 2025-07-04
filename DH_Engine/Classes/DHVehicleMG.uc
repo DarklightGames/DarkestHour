@@ -496,5 +496,5 @@ defaultproperties
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
 
-    BarrelSteamEmitterClass=class'DHMGSteam'
+    BarrelSteamEmitterClass=Class'DHMGSteam'
 }

@@ -380,7 +380,7 @@ function DrawBubbleLevel(Canvas C, DHVehicleWeaponPawn VWP)
     C.DrawTileJustified(Texture'DH_InterfaceArt2_tex.bubble_level_frame', 1, XL, YL);
 
     // Bubble
-    DeflectionDegrees = class'UUnits'.static.UnrealToDegrees(VWP.Gun.GetBoneRotation(VWP.CameraBone, 1).Roll);
+    DeflectionDegrees = Class'UUnits'.static.UnrealToDegrees(VWP.Gun.GetBoneRotation(VWP.CameraBone, 1).Roll);
 
     if (DeflectionDegrees >= 0)
     {
@@ -393,8 +393,8 @@ function DrawBubbleLevel(Canvas C, DHVehicleWeaponPawn VWP)
 
     const MAX_DEGREES = 1.5;
 
-    Theta = class'UInterp'.static.Interpolate(
-        class'UInterp'.static.MapRangeClamped(Abs(DeflectionDegrees), 0.0, MAX_DEGREES, 0.0, 1.0),
+    Theta = Class'UInterp'.static.Interpolate(
+        Class'UInterp'.static.MapRangeClamped(Abs(DeflectionDegrees), 0.0, MAX_DEGREES, 0.0, 1.0),
         0.0, 1.0, INTERP_Cosine);
 
     const DEFLECTION_SQUISH = 1.0; // squish factor for the bubble level

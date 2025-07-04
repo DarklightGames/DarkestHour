@@ -7,7 +7,7 @@ class DH_M2MortarArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Springfield_Scope_Overlay'
 
     PitchScaleStep=0.5
 

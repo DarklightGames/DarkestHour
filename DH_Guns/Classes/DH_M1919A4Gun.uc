@@ -32,5 +32,5 @@ defaultproperties
     End Object
     KParams=KParams0
     
-    StationaryWeaponClass=class'DH_M1919A4Weapon'
+    StationaryWeaponClass=Class'DH_M1919A4Weapon'
 }
