@@ -20,7 +20,7 @@ defaultproperties
     VehicleHudImage=Texture'DH_Pak36_tex.pak36_body_icon'
     VehicleHudTurret=TexRotator'DH_Pak36_tex.pak36_turret_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak36_tex.pak36_turret_icon_look'
-    ExitPositions(1)=(X=-78,Y=-19,Z=58)
+    ExitPositions(1)=(X=-78,Y=-19,Z=35)
     VehicleMass=11.0
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
