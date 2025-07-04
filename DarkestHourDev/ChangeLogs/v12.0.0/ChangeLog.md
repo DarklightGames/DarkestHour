@@ -20,38 +20,6 @@ The war dragged on, and following the Axis' stunning defeat at Stalingrad in Feb
 
 It is amidst this backdrop that Operation Husky, the Allied invasion of Sicily, began in July 1943.
 
-## Interface
-
-## Localization
-
-The game has now been fully localized to **Russian** and **Ukrainian**. As a result, players are now able to type in Cyrillic characters in the game's chat.
-
-![title info](./Media/Localization%20Ukrainian.png)
-
-Historically, the game only had partial localization support for German. However, the localizations had never been updated after its initial release well over a decade ago.
-
-We have developed a system that will allow us to add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
-
-If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
-
-## Map Icon Overhaul
-
-The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the equipment that they represent.
-
-To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while occupied ones will be blue, or green if the occupant is a squadmate.
-
-Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
-
-The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
-
-## Font Overhaul
-
-To accommodate the localization efforts, all the game's fonts have been completely overhauled!
-
-We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
-
-In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
-
 ## Vehicles
 This update sees the addition of 9 brand new vehicles to the game; 8 of which are unique to the Italian faction.
 
@@ -133,7 +101,7 @@ The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of t
 
 ![Carcano M91/38](./Media/Weapons/Carcano%20M9138%20TP.png)
 
-> Developer Highlight: When chambering the final round, you can hear the distinctive "ping" of the en-bloc clip being ejected from the bottom of the rifle.
+> Developer Highlight: When chambering the final round, you can hear the distinctive sound of the en-bloc clip being ejected from the bottom of the rifle.
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
@@ -162,7 +130,7 @@ The SRCM Mod. 35 (Incendiary Smoke) is a variant of the standard hand grenade th
 
 The Italy expansion sees the addition of 5 brand new maps.
 
-The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
+The new maps in this first Italian expansion are focused on [Operation Husky](https://en.wikipedia.org/wiki/Allied_invasion_of_Sicily), the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
 ### Gela (32-64 players)
 
@@ -188,6 +156,8 @@ The invading Allies will have to fight an uphill battle against fixed Italian de
 
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
+
+This is the largest map in the update and features almost all of the new vehicles and equipment in this update.
 
 |||
 |-|-|
@@ -219,7 +189,45 @@ This map is a fictional representation of a palatial estate in the Sicilian coun
 * M1 Mortar (United States of America)
 * Ordnance ML 3-inch Mortar (Britain, Canada)
 
-# Changes
+# Changes & Additions
+
+## Localization
+
+The game has now been fully localized to the following languages:
+
+* Polski (Polish)
+* русский (Russian)
+* українська (Ukrainian)
+
+As a result, players are now able to type in Cyrillic and Polish characters in the game's chat.
+
+![title info](./Media/Localization%20Ukrainian.png)
+
+Historically, the game only had partial localization support for German. However, the localizations had never been updated after its initial release well over a decade ago.
+
+We have developed a system that will allow us to add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
+
+Please note that in order for the game to show up in these languages, your [Steam Interface Language](https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2) must be set to one of the supported languages. This is because the game's engine code predates Steam's ability to set languages on a per-game basis.
+
+If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
+
+## Map Icon Overhaul
+
+The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the equipment that they represent.
+
+To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while occupied ones will be blue, or green if the occupant is a squadmate.
+
+Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
+
+The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
+
+## Font Overhaul
+
+To accommodate the localization efforts, all the game's fonts have been completely overhauled!
+
+We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
+
+In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 ## Logistics
 * The Platoon HQ has been renamed to Command Post.
@@ -303,7 +311,7 @@ The construction loadouts system has been overhauled to allow for easier and mor
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive ordeal that was prone to human error and oversight.
 
-Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
+Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis, depending on historical accuracy and balance considerations. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
 
 In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
 
@@ -314,7 +322,7 @@ In addition, there are now hard limits on the amount of total constructions that
 * Grenade scorch decal changed to be more realistic.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
+* Voice command audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
@@ -323,8 +331,8 @@ In addition, there are now hard limits on the amount of total constructions that
 * Vehicle friendly fire beeping sound no longer plays when no damage is done (i.e., meleeing a friendly truck)
 * Fixed a bug where the pitch of the mortar whistling sound would always be incorrect while spectating.
 * Fixed a bug where mortars that hit things on ascent (e.g., nearby trees) wouldn't explode immediately.
-* `ToggleSelectedArtilleryTarget` now has a default keybind set.
-* Fixed default settings being set incorrectly (they are set to "Highest" setting).
+* `ToggleSelectedArtilleryTarget` command now has a default keybind set.
+* Fixed default settings being set incorrectly (they are now set to "Highest" setting).
 * Fixed a bug where map marker cooldowns (e.g., mortar spotting marks) would be broken after the round was reset.
 * Fixed an issue on Freyneux & Lamormenil where tanks could drive through some buildings.
 * Fixed a bug where the gun rotation projector looked opaque on BSP surfaces.
@@ -346,3 +354,28 @@ In addition, there are now hard limits on the amount of total constructions that
 * New `PhaseEndEventName` added to `DHSetupPhaseManager` to call an event when the setup phase ends.
 * Added `StopArty` console command to stop all artillery spawners while debugging.
 * Added `DH_ModifyVehiclePool` actor that can be triggered to modify the properties of vehicle pools.
+
+# What's Next?
+
+With such an enormous project now in the rear view mirror, we are excited to switch back to the more incremental update release schedule that we are used to.
+
+We have a fairly large backlog of projects that are complete or nearly complete that we will be rolling out shortly after we make sure the release is stable and any salient bugs are dealt with.
+
+In the near future we plan to add:
+
+* Additional Italy maps
+* Sd.Kfz. 124 "Wespe"
+* PaK 36
+* Fiat-Revelli mod. 35
+* Breda 20/65 mod. 35
+* Remake of the Opel Blitz
+* Remake of *every* anti-tank gun
+* Remake of the M2 60mm mortar
+
+On a slightly longer time scale, we have started building the necessary groundwork for stationary machine-guns for every faction, remaking all of the Allied player models, specialized squad types and much more.
+
+As a reminder, the Darkest Hour development team is entirely volunteers, and we recieve no compensation other than from our generous Patreon supporters, whose donations fund game server costs and development infrastructure. If you like what we're doing, please consider [joining our Patreon](https://www.patreon.com/darkesthourgame)!
+
+See you on the battlefield,
+
+Darklight Games 🕷️
