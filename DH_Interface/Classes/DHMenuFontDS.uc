@@ -8,7 +8,7 @@ class DHMenuFontDS extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    return class'DHFonts'.static.GetDHMenuFontDSByResolution(Controller.ResX, Controller.ResY);
+    return Class'DHFonts'.static.GetDHMenuFontDSByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

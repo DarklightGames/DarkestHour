@@ -43,8 +43,8 @@ defaultproperties
     bUsesTracers=true
     FireRate=0.2
     FAProjSpawnOffset=(X=-20.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stMG'
+    SmokeEmitterClass=Class'ROMuzzleSmoke'
     BlurTime=0.04
     BlurTimeIronsight=0.04
 

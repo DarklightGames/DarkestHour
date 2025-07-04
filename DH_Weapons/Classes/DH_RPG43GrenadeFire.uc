@@ -7,8 +7,8 @@ class DH_RPG43GrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_RPG43GrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_RPG43GrenadeAmmo'
+    ProjectileClass=Class'DH_RPG43GrenadeProjectile'
+    AmmoClass=Class'DH_RPG43GrenadeAmmo'
     MinHoldTime=0.5
     bSplashDamage=false
     bRecommendSplashDamage=false

@@ -9,10 +9,10 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll')
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.pantherg_ext'
+    Skins(1)=Texture'axis_vehicles_tex.pantherg_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panther_turret_coll')
+    HighDetailOverlay=Shader'axis_vehicles_tex.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
@@ -37,9 +37,9 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
+    PrimaryProjectileClass=Class'DH_PantherCannonShell'
+    SecondaryProjectileClass=Class'DH_PantherCannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_PantherCannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -58,11 +58,11 @@ defaultproperties
     TertiarySpread=0.0012
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=9
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -70,15 +70,15 @@ defaultproperties
     AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_VL_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_VL_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_VL_fire03'
     AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

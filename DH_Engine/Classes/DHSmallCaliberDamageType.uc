@@ -8,5 +8,5 @@ class DHSmallCaliberDamageType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffSmallCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffSmallCaliber'
 }

@@ -30,7 +30,7 @@ function SpawnGasHurtRadius()
         return;
     }
 
-    HurtRadiusActor = Spawn(class'DHHurtRadius', self,, Location);
+    HurtRadiusActor = Spawn(Class'DHHurtRadius', self,, Location);
 
     if (HurtRadiusActor != none)
     {
@@ -114,10 +114,10 @@ defaultproperties
     DamageRadius=0.0
     SoundVolume=255
     SoundRadius=200.0
-    SmokeAttachmentClass=class'DH_Effects.DHSmokeEffectAttachment'
+    SmokeAttachmentClass=Class'DHSmokeEffectAttachment'
 
     WhitePhosphorusGasDamageAmount=5
-    WhitePhosphorusGasDamageClass=class'DHShellSmokeWPGasDamageType'
+    WhitePhosphorusGasDamageClass=Class'DHShellSmokeWPGasDamageType'
     WhitePhosphorusGasDamageLifeSpan=30.0
     WhitePhosphorusGasDamageRadius=180.0    // 3 meters
 

@@ -8,9 +8,9 @@ class DH_CSAZBritcoatBritpackPawn extends DH_CSAZPawn_SovGloves; //works as wint
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersSOV_anm.CSAZ_britcoat_britpack'
-    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
-    Skins(1)=Texture'DHBritishCharactersTex.Winter.britcoat'
-    Skins(2)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritParaGear'
+    Skins(0)=Texture'Characters_tex.rus_face05'
+    Skins(1)=Texture'DHBritishCharactersTex.britcoat'
+    Skins(2)=Texture'DHBritishCharactersTex.BritParaGear'
 
     bReversedSkinsSlots=true
 }

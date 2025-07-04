@@ -8,7 +8,7 @@ class DH_HetzerCannonPawn extends DHAssaultGunCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=Class'DH_Vehicles.DH_HetzerCannon'
+    GunClass=Class'DH_HetzerCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=37.000000,Y=-35.000000,Z=12.000000),ViewFOV=15.0,bDrawOverlays=true)
@@ -23,10 +23,10 @@ defaultproperties
 
     //Gunsight
     bIsPeriscopicGunsight=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.stug3_SflZF1a_sight'
     GunsightSize=0.533 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
 
     //HUD
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
 }

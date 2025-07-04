@@ -13,7 +13,7 @@ var int SpawnsRemaining;                        // The amount of spawns remainin
 
 // Creation
 var float CreatedTimeSeconds;                   // The time (relative to Level.TimeSeconds) that this rally point was created
-var sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
+var Sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
 
 // Establishment
 var int   EstablishmentRadiusInMeters;          // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
@@ -306,7 +306,7 @@ function OnPawnSpawned(Pawn P)
         InstigatorController.GetTeamNum() == GetTeamIndex() &&
         InstigatorController.GetSquadIndex() == SquadIndex)
     {
-        InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
+        InstigatorController.ReceiveScoreEvent(Class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
     }
 
     if (MetricsObject != none)
@@ -456,7 +456,7 @@ function AwardScoreOnEstablishment()
 
     EstablisherCount = 1;
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
     {
         if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none && P.GetTeamNum() == GetTeamIndex())
         {
@@ -469,7 +469,7 @@ function AwardScoreOnEstablishment()
                 // Don't award the SL himself, he gets his own award.
                 if (PRI != none && !PRI.IsSquadLeader() && PC.GetSquadIndex() == SquadIndex)
                 {
-                    PC.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
+                    PC.ReceiveScoreEvent(Class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
 
                     ++EstablisherCount;
                 }
@@ -489,7 +489,7 @@ function Destroyed()
 
     if (MetricsObject != none)
     {
-        MetricsObject.DestroyedAt = class'DateTime'.static.Now(self);
+        MetricsObject.DestroyedAt = Class'DateTime'.static.Now(self);
     }
 
     if (SRI != none)
@@ -516,13 +516,13 @@ defaultproperties
 {
     SpawnPointStyle="DHRallyPointButtonStyle"
 
-    StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
+    StaticMesh=StaticMesh'DH_Construction_stc.USA_backpack'
     DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1
     RallyPointIndex=-1
-    CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
+    CreationSound=Sound'Inf_Player.Gibimpact'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50

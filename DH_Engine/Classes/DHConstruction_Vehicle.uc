@@ -249,7 +249,7 @@ static function array<int> GetAvailableVariantIndices(DHActorProxy.Context Conte
     {
         if (IsEntryAvailable(Context, i))
         {
-            class'UArray'.static.IAddUnique(Indices, default.VehicleClasses[i].VariantIndex);
+            Class'UArray'.static.IAddUnique(Indices, default.VehicleClasses[i].VariantIndex);
         }
     }
 
@@ -272,7 +272,7 @@ static function array<int> GetAvailableIndicesForVariant(DHActorProxy.Context Co
     {
         if (default.VehicleClasses[i].VariantIndex == VariantIndex && IsEntryAvailable(Context, i))
         {
-            class'UArray'.static.IAddUnique(Indices, i);
+            Class'UArray'.static.IAddUnique(Indices, i);
         }
     }
 
@@ -391,11 +391,11 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
+    StaticMesh=StaticMesh'DH_Construction_stc.barricade_wire_02'
     bDestroyOnConstruction=false
     BrokenLifespan=0.0
     ConstructionVerb="emplace"
-    GroupClass=class'DHConstructionGroup_Guns'
+    GroupClass=Class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
     CompletionPointValue=100
     bCanOnlyPlaceOnTerrain=false

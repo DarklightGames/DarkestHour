@@ -7,8 +7,8 @@ class DH_StenMkIICMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_StenMkIICBashDamType'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
+    DamageType=Class'DH_StenMkIICBashDamType'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"

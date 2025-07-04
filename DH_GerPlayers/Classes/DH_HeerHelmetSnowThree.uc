@@ -8,5 +8,5 @@ class DH_HeerHelmetSnowThree extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ger_helmet_alt'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.WH_HG_SnowCamo'
+    Skins(0)=Texture'DHGermanCharactersTex.WH_HG_SnowCamo'
 }

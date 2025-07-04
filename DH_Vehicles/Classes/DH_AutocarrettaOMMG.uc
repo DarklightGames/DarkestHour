@@ -17,11 +17,11 @@ defaultproperties
     CustomPitchDownLimit=64808  // -4 degrees
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // replace: fiat 35 bullet & properties
+    ProjectileClass=Class'DH_MG34Bullet' // replace: fiat 35 bullet & properties
     InitialPrimaryAmmo=150
     NumMGMags=5
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=class'DH_Weapons.DH_Breda30TracerBullet'
+    TracerProjectileClass=Class'DH_Breda30TracerBullet'
     TracerFrequency=7
 
     // Weapon fire

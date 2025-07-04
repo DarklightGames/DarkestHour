@@ -10,7 +10,7 @@ final static function UInteger Create(optional int Value)
 {
     local UInteger I;
 
-    I = new class'UInteger';
+    I = new Class'UInteger';
     I.Value = Value;
 
     return I;

@@ -8,8 +8,8 @@ class DHGUINoBackground extends GUISectionBackground;
 defaultproperties
 {
     CaptionStyleName="DHSmallText"
-    HeaderTop=Texture'InterfaceArt_tex.Menu.empty'
-    HeaderBase=Texture'InterfaceArt_tex.Menu.empty'
+    HeaderTop=Texture'InterfaceArt_tex.empty'
+    HeaderBase=Texture'InterfaceArt_tex.empty'
     LeftPadding=0.1
     RightPadding=0.1
     ImageOffset(0)=0.0

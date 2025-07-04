@@ -136,7 +136,7 @@ simulated function InitializeAmmoRounds()
 
     for (i = 0; i < AmmoRoundBones.Length; i++)
     {
-        AmmoRounds[i] = Spawn(class'ROFPAmmoRound', self);
+        AmmoRounds[i] = Spawn(Class'ROFPAmmoRound', self);
 
         if (AmmoRounds[i] == none)
         {
@@ -152,7 +152,7 @@ simulated function InitializeAmmoRounds()
 
     for (i = 0; i < EmptyAmmoRoundBones.Length; i++)
     {
-        EmptyAmmoRounds[i] = Spawn(class'ROFPAmmoRound', self);
+        EmptyAmmoRounds[i] = Spawn(Class'ROFPAmmoRound', self);
 
         if (EmptyAmmoRounds[i] == none)
         {
@@ -308,9 +308,9 @@ simulated function Tick(float DeltaTime)
     {
         if (RangeDriverAnimationFrameTarget != RangeDriverAnimationFrame)
         {
-            T = class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, RangeDriverAnimationTimeSecondsStart, RangeDriverAnimationTimeSecondsEnd, 0.0, 1.0);
+            T = Class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, RangeDriverAnimationTimeSecondsStart, RangeDriverAnimationTimeSecondsEnd, 0.0, 1.0);
 
-            RangeDriverAnimationFrame = class'UInterp'.static.Deceleration(T, RangeDriverAnimationFrameStart, RangeDriverAnimationFrameTarget);
+            RangeDriverAnimationFrame = Class'UInterp'.static.Deceleration(T, RangeDriverAnimationFrameStart, RangeDriverAnimationFrameTarget);
 
             UpdateRangeDriver();
         }
@@ -426,7 +426,7 @@ simulated private function SendRangeMessage()
     // Send a message to the player's HUD.
     if (WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
-        WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', class'UInteger'.static.FromShorts(RangeTable[RangeIndex].Range, int(RangeDistanceUnit)));
+        WeaponPawn.ReceiveLocalizedMessage(Class'DHWeaponRangeMessage', Class'UInteger'.static.FromShorts(RangeTable[RangeIndex].Range, int(RangeDistanceUnit)));
     }
 }
 
@@ -511,9 +511,9 @@ defaultproperties
     CustomPitchDownLimit=61895  // -20 degrees
 
     // Ammo
-    ProjectileClass=class'DH_Guns.DH_Fiat1435Bullet'
+    ProjectileClass=Class'DH_Fiat1435Bullet'
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=class'DH_Guns.DH_Fiat1435TracerBullet'
+    TracerProjectileClass=Class'DH_Fiat1435TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -530,7 +530,7 @@ defaultproperties
     FiringBone="FIRING_ROOT"
 
     ShellEjectBone="EJECTOR"
-    ShellEjectClass=class'RO3rdShellEject762x54mm'
+    ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
 
     ProjectileRotationMode=PRM_MuzzleBone

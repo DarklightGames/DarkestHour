@@ -8,8 +8,8 @@ class DHGUIPlainBackground extends GUISectionBackground;
 defaultproperties
 {
     CaptionStyleName="DHSmallText"
-    HeaderTop=Texture'InterfaceArt_tex.Menu.empty'
-    HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
+    HeaderTop=Texture'InterfaceArt_tex.empty'
+    HeaderBase=Texture'DH_GUI_Tex.DHDisplay'
     LeftPadding=0.1
     RightPadding=0.1
     ImageOffset(0)=0.0

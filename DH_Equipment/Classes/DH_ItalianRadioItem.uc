@@ -7,5 +7,5 @@ class DH_ItalianRadioItem extends DHRadioItem;
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Equipment.DHItalianRadioAttachment'
+    AttachmentClass=Class'DHItalianRadioAttachment'
 }

@@ -7,7 +7,7 @@ class DHConstructionGroup_Logistics extends DHConstructionGroup;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.platoon_hq'
     GroupName="Logistics"
     SortOrder=0
 }

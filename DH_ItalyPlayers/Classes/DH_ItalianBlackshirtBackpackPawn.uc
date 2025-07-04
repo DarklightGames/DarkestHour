@@ -7,5 +7,5 @@ class DH_ItalianBlackshirtBackpackPawn extends DH_ItalianLivornoBackpackPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHItalianCharactersTex.Uniforms.ita_livorno_blackshirt'
+    Skins(0)=Texture'DHItalianCharactersTex.ita_livorno_blackshirt'
 }

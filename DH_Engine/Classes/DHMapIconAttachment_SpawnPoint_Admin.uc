@@ -14,5 +14,5 @@ function EVisibleFor GetVisibility()
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
+    IconMaterial=Texture'DH_GUI_Tex.SpawnPointDiffuse'
 }

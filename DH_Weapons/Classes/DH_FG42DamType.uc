@@ -8,6 +8,6 @@ class DH_FG42DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_FG42Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_FG42Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

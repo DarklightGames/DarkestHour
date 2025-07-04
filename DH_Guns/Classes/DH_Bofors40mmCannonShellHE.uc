@@ -14,28 +14,28 @@ defaultproperties
 
     //Damage
     ImpactDamage=300
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     Damage=165.0   //~90 gramms TNT
     DamageRadius=540.0
-    MyDamageType=class'DH_Engine.DHShellHE37mmATDamageType'
+    MyDamageType=Class'DHShellHE37mmATDamageType'
     HullFireChance=0.50
     EngineFireChance=0.50
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
+    CoronaClass=Class'DHShellTracer_Red'
+    ShellTrailClass=Class'DH20mmShellTrail_Red'
     BlurTime=4.0
     BlurEffectScalar=1.5
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    ShellHitDirtEffectClass=Class'DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'TankHEHitWaterEffect'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Sound
-    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
+    //VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration slightly better than US 37mm HE

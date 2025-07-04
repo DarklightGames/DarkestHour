@@ -284,7 +284,7 @@ private static function TreeMapNode_Object_float PutStatic(TreeMap_Object_float 
 
     if (Node == none)
     {
-        Node = new class'TreeMapNode_Object_float';
+        Node = new Class'TreeMapNode_Object_float';
         Node.Key = D.RecursiveKey;
         Node.KeyString = D.RecursiveKeyString;
         Node.Value = D.RecursiveValue;

@@ -93,7 +93,7 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     }
 
     // Check whether there is an enemy pawn within blocking distance of this spawn vehicle
-    foreach Vehicle.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
+    foreach Vehicle.RadiusActors(Class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
     {
         if (P.Controller != none && Vehicle.GetTeamNum() != P.GetTeamNum())
         {
@@ -229,8 +229,8 @@ function bool PerformSpawn(DHPlayer PC)
         // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
         if (!Vehicle.ShouldPlayersSpawnInsideVehicle())
         {
-            ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
-            class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations
+            ExitPositionIndices = Class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
+            Class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations
             Offset.Z = PC.PawnClass.default.CollisionHeight * 0.5;
 
             for (i = 0; i < ExitPositionIndices.Length; ++i)

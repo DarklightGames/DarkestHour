@@ -111,7 +111,7 @@ exec function CalibrateMortar(string AngleUnitString, int Samples)
         Samples = 25;
     }
 
-    AngleUnit = class'UUnits'.static.GetAngleUnitFromString(AngleUnitString);
+    AngleUnit = Class'UUnits'.static.GetAngleUnitFromString(AngleUnitString);
 
     if (Level.NetMode == NM_Standalone)
     {
@@ -167,7 +167,7 @@ simulated function InitializeHands()
         HandsActor = none;
     }
 
-    HandsActor = Spawn(class'DHFirstPersonHands', self);
+    HandsActor = Spawn(Class'DHFirstPersonHands', self);
 
     if (HandsActor == none)
     {
@@ -192,13 +192,14 @@ simulated function InitializeHands()
         HandsProjectile = none;
     }
 
-    HandsProjectile = Spawn(class'DHDecoAttachment', self);
+    HandsProjectile = Spawn(Class'DHDecoAttachment', self);
 
     // Get the selected projectile & use it's static mesh.
     if (HandsProjectile != none)
     {
         UpdateHandsProjectileStaticMesh();
         HandsActor.AttachToBone(HandsProjectile, HandsProjectileBone);
+
         HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
         HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
     }
@@ -209,9 +210,16 @@ simulated function InitializeHands()
 
 simulated function UpdateHandsProjectileStaticMesh()
 {
+    local int i;
+
     if (HandsProjectile != none && Gun != none && Gun.ProjectileClass != none)
     {
         HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
+
+        for (i = 0; i < Gun.ProjectileClass.default.Skins.Length; ++i)
+        {
+            HandsProjectile.Skins[i] = Gun.ProjectileClass.default.Skins[i];
+        }
     }
 }
 
@@ -246,7 +254,7 @@ simulated function GetFireAnims(out name AnimName1, out name AnimName2, out floa
     local int i, j;
     local float Pitch;
 
-    Pitch = class'UUnits'.static.UnrealToDegrees(GetGunPitch());
+    Pitch = Class'UUnits'.static.UnrealToDegrees(GetGunPitch());
 
     if (Pitch < PlayerFireAnims[0].Angle)
     {
@@ -305,7 +313,7 @@ simulated function PlayThirdPersonFiringAnim()
     Driver.PlayAnim(AnimName2, 1.0, 0.0, 1);
 
     // Spawn the projectile mesh on the client for the firing animation.
-    ProjectileMesh = Spawn(class'DHDecoAttachment', self);
+    ProjectileMesh = Spawn(Class'DHDecoAttachment', self);
     ProjectileMesh.SetStaticMesh(FiringProjectileMesh);
 
     Driver.AttachToBone(ProjectileMesh, 'weapon_rhand');
@@ -373,14 +381,14 @@ simulated state Firing
 
         // Convert the X, Y and Z axis from the bone coords to a quaternion.
         FiringCameraRotation = QuatToRotator(
-            class'UQuaternion'.static.FromAxes(FiringCameraBoneCoords.XAxis, FiringCameraBoneCoords.YAxis, FiringCameraBoneCoords.ZAxis)
+            Class'UQuaternion'.static.FromAxes(FiringCameraBoneCoords.XAxis, FiringCameraBoneCoords.YAxis, FiringCameraBoneCoords.ZAxis)
             );
 
         // Get the linear theta.
         Theta = GetCameraInterpolationTheta();
 
         // Perform a smoothstep on the theta.
-        Theta = class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
+        Theta = Class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
 
         // Interpolate the camera position and rotation between the normal and firing camera positions.
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
@@ -412,7 +420,7 @@ simulated state Firing
             // Trigger the firing animation on the driver.
             ServerPlayThirdPersonFiringAnim(Gun.ProjectileClass);
 
-            if (PC != none && GetGunPitch() > class'UUnits'.static.DegreesToUnreal(89))
+            if (PC != none && GetGunPitch() > Class'UUnits'.static.DegreesToUnreal(89))
             {
                 // "You have just launched a mortar round straight up into the air. You may want to take cover!"
                 PC.QueueHint(66, true);

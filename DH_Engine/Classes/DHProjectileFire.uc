@@ -326,7 +326,7 @@ function bool PreLaunchTrace(Vector Start, Vector Direction)
     // Our Instigator pawn doesn't work, as it has bBlockHitPointTraces=false, meaning it won't detect hits on bullet whip attachments, which we need
     Weapon.bUseCollisionStaticMesh = ProjectileClass.default.bUseCollisionStaticMesh;
 
-    foreach Weapon.TraceActors(class'Actor', A, HitLocation, HitNormal, Start + (PreLaunchTraceDistance * Direction), Start)
+    foreach Weapon.TraceActors(Class'Actor', A, HitLocation, HitNormal, Start + (PreLaunchTraceDistance * Direction), Start)
     {
         // Ignore this traced actor, as it's not something that would trigger HitWall or ProcessTouch for a bullet (i.e. a possible hit)
         if (!A.bWorldGeometry && (A.Physics != PHYS_Karma && A.Physics != PHYS_MovingBrush) && !((A.bBlockActors || A.bProjTarget) && A.bBlockHitPointTraces))
@@ -388,7 +388,7 @@ function bool PreLaunchTrace(Vector Start, Vector Direction)
                     WhizType = class<DHBullet_ArmorPiercing>(ProjectileClass).default.WhizType;
                 }
 
-                class'DHBullet'.static.GetWhizType(WhizType, WhizzedPlayer, Instigator, Start);
+                Class'DHBullet'.static.GetWhizType(WhizType, WhizzedPlayer, Instigator, Start);
 
                 // Server saves player & whiz info, to replicate to net client later if pre-launch trace is successful & we don't spawn a bullet
                 // Server doesn't actually play whiz locally
@@ -808,7 +808,7 @@ defaultproperties
     HipSpreadModifier=3.5
     LeanSpreadModifier=1.15
 
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_rifle'
     FireForce="AssaultRifleFire"
 
     FireAnim="Shoot"

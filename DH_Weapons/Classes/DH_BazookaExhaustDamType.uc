@@ -8,5 +8,5 @@ class DH_BazookaExhaustDamType extends DHRocketExhaustDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BazookaWeapon'
+    WeaponClass=Class'DH_BazookaWeapon'
 }

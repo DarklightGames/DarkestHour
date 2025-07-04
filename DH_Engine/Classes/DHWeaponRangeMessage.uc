@@ -15,8 +15,8 @@ static function string GetString(
     )
 {
     local int Range, Unit;
-    class'UInteger'.static.ToShorts(Switch, Range, Unit);
-    return string(Range) $ class'DHUnits'.static.GetDistanceUnitSymbol(EDistanceUnit(Unit));
+    Class'UInteger'.static.ToShorts(Switch, Range, Unit);
+    return string(Range) $ Class'DHUnits'.static.GetDistanceUnitSymbol(EDistanceUnit(Unit));
 }
 
 static function RenderComplexMessage(Canvas Canvas,
@@ -37,7 +37,7 @@ static function RenderComplexMessage(Canvas Canvas,
 
     const MESSAGE_MARGIN = 8;
 
-    Canvas.Font = class'DHHud'.static.GetConsoleFont(Canvas);
+    Canvas.Font = Class'DHHud'.static.GetConsoleFont(Canvas);
 
     Canvas.TextSize(MessageString, XL, YL);
     Canvas.SetPos(X - (XL / 2) - MESSAGE_MARGIN, Y - (YL / 2) - MESSAGE_MARGIN);

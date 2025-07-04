@@ -184,7 +184,7 @@ final static function Color FromHex(string S)
 
     C.A = 255;
 
-    class'UInteger'.static.ToBytes(class'UInteger'.static.FromHex(S), C.B, C.G, C.R);
+    Class'UInteger'.static.ToBytes(Class'UInteger'.static.FromHex(S), C.B, C.G, C.R);
 
     return C;
 }

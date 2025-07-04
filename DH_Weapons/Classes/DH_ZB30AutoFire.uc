@@ -7,8 +7,8 @@ class DH_ZB30AutoFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=Class'DH_Weapons.DH_ZB30Bullet'
-    AmmoClass=Class'DH_Weapons.DH_FG42Ammo'
+    ProjectileClass=Class'DH_ZB30Bullet'
+    AmmoClass=Class'DH_FG42Ammo'
     FireRate=0.13 // ~512 rpm (value had to be found experimentally due to an engine bug)
     FAProjSpawnOffset=(X=-20.000000)
 
@@ -24,11 +24,11 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=6.0
 
-    FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
+    FlashEmitterClass=Class'MuzzleFlash1stMG'
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren_Fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren_Fire03'
 
     BipodDeployFireAnim="deploy_shoot"
     FireIronAnim="iron_shoot"
@@ -37,7 +37,7 @@ defaultproperties
     ProjSpawnOffset=(X=25.000000)
     TracerFrequency=5
 
-    ShellEjectClass=Class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Z=-10.0)
     ShellHipOffset=(Y=-7.0)
     ShellRotOffsetIron=(Pitch=-13000)

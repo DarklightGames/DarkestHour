@@ -50,7 +50,7 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
     UpdateAppearance();
 
     // Initialize the local rotation based on the parameters in the new construction class
-    LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
+    LocalRotation = Class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
 }
 
 final function UpdateDefaultSkinIndex()
@@ -231,7 +231,7 @@ function ActorProxyError GetPositionError()
     {
         // Don't allow this construction to be placed too close to an enemy-controlled objective.
         ObjectiveIndex = -1;
-        DistanceMin = class'UFloat'.static.Infinity();
+        DistanceMin = Class'UFloat'.static.Infinity();
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
         {
@@ -239,7 +239,7 @@ function ActorProxyError GetPositionError()
             {
                 Distance = VSize(Location - GRI.DHObjectives[i].Location);
 
-                if (Distance < class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemyObjectiveDistanceMinMeters) &&
+                if (Distance < Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemyObjectiveDistanceMinMeters) &&
                     Distance < DistanceMin)
                 {
                     DistanceMin = Distance;
@@ -252,7 +252,7 @@ function ActorProxyError GetPositionError()
         {
             E.Type = ERROR_TooCloseToEnemyObjective;
             E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-            E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - Class'DHUnits'.static.UnrealToMeters(DistanceMin));
             return E;
         }
     }
@@ -260,7 +260,7 @@ function ActorProxyError GetPositionError()
     if (ConstructionClass.default.ObjectiveDistanceMinMeters > 0.0)
     {
         // Don't allow this construction to be placed too close to an objective.
-        DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
+        DistanceMin = Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
         ObjectiveIndex = -1;
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
@@ -281,7 +281,7 @@ function ActorProxyError GetPositionError()
         {
             E.Type = ERROR_TooCloseToObjective;
             E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - Class'DHUnits'.static.UnrealToMeters(DistanceMin));
             return E;
         }
     }
@@ -316,13 +316,13 @@ function ActorProxyError GetPositionError()
     {
         F = 0.0;
 
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
+        foreach RadiusActors(ConstructionClass, A, Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
-                F = FMax(F, ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
+                F = FMax(F, ConstructionClass.default.DuplicateFriendlyDistanceInMeters - Class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
         }
 
@@ -338,13 +338,13 @@ function ActorProxyError GetPositionError()
     {
         F = 0.0;
 
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
+        foreach RadiusActors(ConstructionClass, A, Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && !C.IsDummy() && C.GetTeamIndex() != NEUTRAL_TEAM_INDEX && C.GetTeamIndex() != PawnOwner.GetTeamNum())
             {
-                F = FMax(F, ConstructionClass.default.DuplicateEnemyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
+                F = FMax(F, ConstructionClass.default.DuplicateEnemyDistanceInMeters - Class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
         }
 
@@ -361,7 +361,7 @@ function ActorProxyError GetPositionError()
         bDidSatisfyProximityRequirement = false;
 
         foreach RadiusActors(ConstructionClass.default.ProximityRequirements[i].ConstructionClass, A,
-                             class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProximityRequirements[i].DistanceMeters))
+                             Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProximityRequirements[i].DistanceMeters))
         {
             C = DHConstruction(A);
 

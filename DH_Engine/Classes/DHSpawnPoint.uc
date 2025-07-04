@@ -81,7 +81,7 @@ simulated function PostBeginPlay()
     {
         if (Type == ESPT_Infantry && VehicleLocationHintTag != '')
         {
-            foreach AllActors(class'DHLocationHint', LH, VehicleLocationHintTag)
+            foreach AllActors(Class'DHLocationHint', LH, VehicleLocationHintTag)
             {
                 bCanOnlySpawnInfantryVehicles = true;
                 break; // no need to check for more, we only need to verify there is at least 1
@@ -103,7 +103,7 @@ simulated function PostBeginPlay()
     // Find any linked mine volume (that will only protect this spawn point only if the spawn is active)
     if (MineVolumeProtectionTag != '')
     {
-        foreach AllActors(class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
+        foreach AllActors(Class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
         {
             break;
         }
@@ -113,7 +113,7 @@ simulated function PostBeginPlay()
     // And tell it that it will be controlled by a spawn point, so it does not activate itself
     if (LinkedAmmoResupplyTag != '')
     {
-        foreach DynamicActors(class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
+        foreach DynamicActors(Class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
         {
             LinkedAmmoResupplyRef.bControlledBySpawnPoint = true;
             break;
@@ -124,7 +124,7 @@ simulated function PostBeginPlay()
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this spawn point
     if (NoArtyVolumeProtectionTag != '')
     {
-        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        foreach AllActors(Class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
         {
             NAV.AssociatedActor = self;
             break;
@@ -135,7 +135,7 @@ simulated function PostBeginPlay()
     // And tell them they will be controlled by a spawn point, so they do not activate themselves
     if (LinkedVehicleFactoriesTag != '')
     {
-        foreach DynamicActors(class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
+        foreach DynamicActors(Class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
         {
             LinkedVehicleFactories[LinkedVehicleFactories.Length] = VF;
             VF.bControlledBySpawnPoint = true;
@@ -159,7 +159,7 @@ function BuildLocationHintsArrays()
     local DHLocationHint LH;
 
     // Find associated location hint actors & build arrays of actor references.
-    foreach AllActors(class'DHLocationHint', LH)
+    foreach AllActors(Class'DHLocationHint', LH)
     {
         if (LH.Tag != '')
         {
@@ -408,7 +408,7 @@ function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotati
     {
         LocationHints = InfantryLocationHints;
         LocationHintIndexOffset = InfantryLocationHintIndexOffset;
-        TestCollisionRadius = class'DHPawn'.default.CollisionRadius;
+        TestCollisionRadius = Class'DHPawn'.default.CollisionRadius;
     }
 
     // TODO: make this functionality generic so it applied to all spawn point types?
@@ -441,7 +441,7 @@ function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotati
 
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
+        foreach RadiusActors(Class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
         {
             // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
             bIsBlocked = true;

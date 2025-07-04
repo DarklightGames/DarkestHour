@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=8
     InitialAmount=7
-    IconMaterial=Texture'DH_BerettaM1934_tex.interface.beretta_m1934_ammo'
+    IconMaterial=Texture'DH_BerettaM1934_tex.beretta_m1934_ammo'
 }

@@ -7,6 +7,6 @@ class DH_GreaseGunMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_GreaseGunBashDamType'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
+    DamageType=Class'DH_GreaseGunBashDamType'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 }

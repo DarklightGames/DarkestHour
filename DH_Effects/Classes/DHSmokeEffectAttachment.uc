@@ -43,9 +43,9 @@ simulated function Timer()
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
-    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeEmitterClass=Class'DHSmokeEffect_Grenade'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smoke_loop'
     SmokeSoundDuration=33.0
     RemoteRole=ROLE_DumbProxy
     bHidden=true

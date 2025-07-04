@@ -10,7 +10,7 @@ static function string GetHeaderString(
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject)
 {
-    return class'DHPlayer'.static.GetInventoryName(class<Inventory>(OptionalObject));
+    return Class'DHPlayer'.static.GetInventoryName(class<Inventory>(OptionalObject));
 }
 
 defaultproperties

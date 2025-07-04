@@ -177,7 +177,7 @@ defaultproperties
     TimedSafePeriodDuration=60.0
     SafePeriodWarnInterval=10.0
     KillTime=15.0
-    WarningMessageClass=class'DH_Engine.DHSpawnProtectMineVolMessage'
+    WarningMessageClass=Class'DHSpawnProtectMineVolMessage'
     SafePeriodWarningMessage="This is now an enemy controlled area! You have %remaining% seconds to return to your lines!"
     SpawnMFActivatedMessage="This is now an enemy controlled area, fall back!"
     ExitedMinefieldMessage="You have left enemy territory. Returning again will be considered desertion!"

@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll')
+    Skins(0)=Texture'DH_VehiclesUS_tex5.hellcat_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex5.hellcat_turret_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat_turret_coll')
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=15.0,Y=30.0,Z=0.0)
@@ -36,9 +36,9 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
+    PrimaryProjectileClass=Class'DH_HellcatCannonShell'
+    SecondaryProjectileClass=Class'DH_HellcatCannonShellHVAP'
+    TertiaryProjectileClass=Class'DH_HellcatCannonShellHE'
 
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
@@ -61,11 +61,11 @@ defaultproperties
     AddedPitch=52
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.85mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.85mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.85mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 }

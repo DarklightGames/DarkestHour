@@ -9,10 +9,10 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_3'
-    Skins(2)=Texture'DHGermanCharactersTex.Heer.WH_3'
+    Skins(1)=Texture'DHGermanCharactersTex.WH_3'
+    Skins(2)=Texture'DHGermanCharactersTex.WH_3'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_3'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    BodySkins(0)=Texture'DHGermanCharactersTex.WH_3'
+    BodySkins(1)=Texture'DHGermanCharactersTex.WH_1'
 
 }

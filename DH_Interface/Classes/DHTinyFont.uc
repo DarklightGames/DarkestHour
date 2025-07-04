@@ -8,7 +8,7 @@ class DHTinyFont extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    return class'DHFonts'.static.GetDHTinyFontByResolution(Controller.ResX, Controller.ResY);
+    return Class'DHFonts'.static.GetDHTinyFontByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

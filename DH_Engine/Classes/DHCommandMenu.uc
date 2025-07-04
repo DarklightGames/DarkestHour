@@ -40,6 +40,7 @@ var DHCommandInteraction    Interaction;
 var DHCommandMenu           NextMenu;
 var DHCommandMenu           PreviousMenu;
 var Object                  MenuObject;
+var int                     MenuInteger;
 var int                     SlotCount;
 var int                     SlotCountOverride;  // If non-zero, the amount of slots will always be at least this many.
 
@@ -105,7 +106,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     ORI.OptionName = Options[OptionIndex].ActionText;
     ORI.InfoText[0] = Options[OptionIndex].SubjectText;
-    ORI.InfoColor = class'UColor'.default.White;
+    ORI.InfoColor = Class'UColor'.default.White;
     ORI.DescriptionText = Options[OptionIndex].DescriptionText;
 }
 
@@ -125,7 +126,7 @@ function OnPush()
 
         if (PC.SpottingMarker == none)
         {
-            PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
+            PC.SpottingMarker = PC.Spawn(Class'DHSpottingMarker', PC);
         }
 
         if (PC.SpottingMarker != none)

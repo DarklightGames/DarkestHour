@@ -9,13 +9,13 @@ class DHCSTankCrewmanRoles extends DHAlliedTankCrewmanRoles //WIP; to do: radio 
 defaultproperties
 {
     AltName="Tankista"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_PPS43Weapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')
+    SecondaryWeapons(0)=(Item=Class'DH_Nagant1895Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
-    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
-    DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
-    DetachedLegClass=class'ROEffects.SeveredLegSovTanker'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietTankerHat'
+    SleeveTexture=Texture'Weapons1st_tex.RussianTankerSleeves'
+    DetachedArmClass=Class'SeveredArmSovTanker'
+    DetachedLegClass=Class'SeveredLegSovTanker'
+    Headgear(0)=Class'DH_SovietTankerHat'
     VoiceType="DH_SovietPlayers.DHCzechVoice"
     AltVoiceType="DH_SovietPlayers.DHCzechVoice"
 }

@@ -45,14 +45,14 @@ defaultproperties
     CustomPitchDownLimit=61895  // -20 degrees
 
     // Ammo
-    ProjectileClass=class'DH_30CalBullet'
+    ProjectileClass=Class'DH_30CalBullet'
     FireInterval=0.135
-    TracerProjectileClass=class'DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
-    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
 
@@ -64,7 +64,7 @@ defaultproperties
     FiringBone="FIRING_ROOT"
 
     ShellEjectBone="EJECTOR"
-    ShellEjectClass=class'RO3rdShellEject762x54mm'
+    ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
 
     ProjectileRotationMode=PRM_MuzzleBone

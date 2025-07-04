@@ -8,12 +8,12 @@ class DH_Breda30Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Breda30_anm.Breda30_world'
-    MenuImage=Texture'DH_Breda30_tex.weapon_icons.breda30_icon'
+    MenuImage=Texture'DH_Breda30_tex.breda30_icon'
 
     bStaticReload=true
     
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="MUZZLE"
     ShellEjectionBoneName="EJECTOR"
 

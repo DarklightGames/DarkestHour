@@ -7,5 +7,5 @@ class DH_RKKA_TankCrewman extends DHSOVTankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTankCrewPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietTankCrewPawn',Weight=1.0)
 }

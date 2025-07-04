@@ -177,22 +177,22 @@ function static Material CreateProxyMaterial(Material M)
         M = C.Material1;
     }
 
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.White;
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.White;
     FC.Color1.A = 64;
-    FC.Color2 = class'UColor'.default.White;
+    FC.Color2 = Class'UColor'.default.White;
     FC.Color2.A = 128;
     FC.FadePeriod = 0.25;
     FC.ColorFadeType = FC_Sinusoidal;
 
-    C = new class'Combiner';
+    C = new Class'Combiner';
     C.CombineOperation = CO_Multiply;
     C.AlphaOperation = AO_Multiply;
     C.Material1 = M;
     C.Material2 = FC;
     C.Modulate4X = true;
 
-    FB = new class'FinalBlend';
+    FB = new Class'FinalBlend';
     FB.FrameBufferBlending = FB_AlphaBlend;
     FB.ZWrite = true;
     FB.ZTest = true;
@@ -232,10 +232,10 @@ function static UpdateProxyMaterialColors(Actor A, Color Color)
                 {
                     // Interpolate between white and the specified color.
                     // This allows the user to see the object's original color, which is needed when selecting skins.
-                    FC.Color1 = class'UColor'.static.Interp(0.25, class'UColor'.default.White, Color);
+                    FC.Color1 = Class'UColor'.static.Interp(0.25, Class'UColor'.default.White, Color);
                     FC.Color1.A = 32;
 
-                    FC.Color2 = class'UColor'.static.Interp(0.5, class'UColor'.default.White, Color);
+                    FC.Color2 = Class'UColor'.static.Interp(0.5, Class'UColor'.default.White, Color);
                     FC.Color2.A = 128;
                 }
             }
@@ -362,7 +362,7 @@ function Context GetContext()
     local Context Context;
 
     Context.TeamIndex = PlayerOwner.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = PlayerOwner;
     Context.GroundActor = GroundActor;
 

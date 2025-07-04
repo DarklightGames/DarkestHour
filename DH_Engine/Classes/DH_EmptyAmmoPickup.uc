@@ -9,7 +9,7 @@ defaultproperties
 {
      AmmoAmount=99999
      MaxDesireability=0.300000
-     InventoryType=class'DH_Engine.DH_EmptyAmmo'
+     InventoryType=Class'DH_EmptyAmmo'
      PickupMessage=""
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

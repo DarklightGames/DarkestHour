@@ -56,7 +56,7 @@ function string GetPromptText()
 
     if (PC != none)
     {
-        return Repl(PromptText, "{time}", class'TimeSpan'.static.ToString(ExpirationTime - PC.GameReplicationInfo.ElapsedTime));
+        return Repl(PromptText, "{time}", Class'TimeSpan'.static.ToString(ExpirationTime - PC.GameReplicationInfo.ElapsedTime));
     }
 
     return super.GetPromptText();

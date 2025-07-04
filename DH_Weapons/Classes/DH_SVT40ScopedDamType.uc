@@ -8,7 +8,7 @@ class DH_SVT40ScopedDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SVT40ScopedWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_SVT40ScopedWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
     KDamageImpulse=2500.0
 }

@@ -8,9 +8,9 @@ class DH_StenMkIIIAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk3_3rd'
-    MenuImage=Texture'DH_Sten_tex.interface.stenmk3'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    MenuImage=Texture'DH_Sten_tex.stenmk3'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 
     MuzzleBoneName="tipnew"
     ShellEjectionBoneName="weapon_ejectnew"

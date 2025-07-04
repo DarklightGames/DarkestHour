@@ -8,9 +8,9 @@ class DH_BazookaAttachment extends DHRocketWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Bazooka_3rd.M1A1Bazooka_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
-    mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
-    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
+    MenuImage=Texture'DH_InterfaceArt_tex.Bazooka_icon'
+    mExhFlashClass=Class'DH3rdPersonBazookaExhaustFX'
+    mMuzFlashClass=Class'DHMuzzleFlash3rdBazooka'
     ExhaustBoneName="exhaust"
     MuzzleBoneName="Muzzle"
     WarheadBoneName="Warhead"

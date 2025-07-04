@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Vz.24 Rifle"
     NativeItemName="ZB vz.24 Puska"
-    FireModeClass(0)=class'DH_Weapons.DH_Vz24Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_Vz24MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Vz24Attachment'
-    PickupClass=class'DH_Weapons.DH_Vz24Pickup'
+    FireModeClass(0)=Class'DH_Vz24Fire'
+    FireModeClass(1)=Class'DH_Vz24MeleeFire'
+    AttachmentClass=Class'DH_Vz24Attachment'
+    PickupClass=Class'DH_Vz24Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.Vz24_mesh'
     bUseHighDetailOverlayIndex=false

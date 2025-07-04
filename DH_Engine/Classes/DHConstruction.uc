@@ -288,8 +288,8 @@ simulated function PostBeginPlay()
 
     Disable('Tick');
 
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
-    Manager = class'DHConstructionManager'.static.GetInstance(Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
+    Manager = Class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Role == ROLE_Authority)
     {
@@ -325,7 +325,7 @@ simulated function SpawnConstructionSockets()
             continue;
         }
 
-        Socket = Spawn(class'DHConstructionSocket', self);
+        Socket = Spawn(Class'DHConstructionSocket', self);
 
         if (Socket == none)
         {
@@ -477,7 +477,7 @@ simulated function PokeTerrain(float Radius, float Depth)
     TraceEnd = Location - MyPlacementOffset;
     TraceEnd.Z -= 1000.0;
 
-    foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (TI != none)
         {
@@ -555,7 +555,7 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
-    foreach AllActors(class'DHConstructionSupplyAttachment', Attachment)
+    foreach AllActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
         if (Attachment.IsTouchingActor(self))
         {
@@ -581,9 +581,9 @@ function int RefundSupplies(Pawn Instigator)
     {
         // Sort the supply attachments by priority.
         Attachments = GetTouchingSupplyAttachments();
-        AttachmentComparator = new class'UComparator';
-        AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-        class'USort'.static.Sort(Attachments, AttachmentComparator);
+        AttachmentComparator = new Class'UComparator';
+        AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
+        Class'USort'.static.Sort(Attachments, AttachmentComparator);
 
         // Refund supplies to the touching supply attachments.
         for (i = 0; i < Attachments.Length && MySupplyCost > 0; ++i)
@@ -609,7 +609,7 @@ function TearDown(Pawn Instigator)
         if (SuppliesRefunded > 0)
         {
             // Send a message to the instigating player about the amount of supplies that were refunded.
-            Instigator.ReceiveLocalizedMessage(class'DHsupplyMessage', class'UInteger'.static.FromShorts(7, SuppliesRefunded));
+            Instigator.ReceiveLocalizedMessage(Class'DHsupplyMessage', Class'UInteger'.static.FromShorts(7, SuppliesRefunded));
         }
     }
 
@@ -669,7 +669,7 @@ auto simulated state Constructing
         local DH_LevelInfo LI;
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (bCanDieOfStagnation)
         {
@@ -767,7 +767,7 @@ simulated state Constructed
 
                 if (InstigatorController != none)
                 {
-                    InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
+                    InstigatorController.ReceiveScoreEvent(Class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
                 }
 
                 SpawnConstructionSockets();
@@ -1124,7 +1124,7 @@ static function DHActorProxy.ActorProxyError GetContextError(DHActorProxy.Contex
         return E;
     }
 
-    CM = class'DHConstructionManager'.static.GetInstance(P.Level);
+    CM = Class'DHConstructionManager'.static.GetInstance(P.Level);
 
     if (CM == none)
     {
@@ -1200,7 +1200,7 @@ static function UpdateProxy(DHActorProxy CP)
     CP.SetDrawType(DT_StaticMesh);
     CP.SetStaticMesh(GetProxyStaticMesh(CP.GetContext()));
 
-    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
+    StaticMeshSkins = (new Class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
 
     for (i = 0; i < StaticMeshSkins.Length; ++i)
     {
@@ -1268,7 +1268,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Mo
 {
     local class<DamageType> TearDownDamageType;
 
-    TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
+    TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", Class'class'));
 
     if (DamageType != none && DamageType.static.ClassIsChildOf(DamageType, TearDownDamageType) && CanTakeTearDownDamageFromPawn(InstigatedBy, true))
     {
@@ -1385,7 +1385,7 @@ defaultproperties
     TeamIndex=2     // NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_DumbProxy
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
+    StaticMesh=StaticMesh'DH_Construction_stc.hedgehog_01'
     HealthMax=100
     Health=1
     ProxyTraceDepthMeters=5.0
@@ -1444,8 +1444,8 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact'
-    PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
+    PlacementSound=Sound'Inf_Player.Gibimpact'
+    PlacementEmitterClass=Class'DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
     IndoorsCeilingHeightInMeters=25.0
@@ -1471,17 +1471,17 @@ defaultproperties
     // Damage
     TatteredHealthThreshold=-1
     MinDamagetoHurt=100
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE Splash
-    HarmfulDamageTypes(2)=class'DHShellHEImpactDamageType'          // HE Impact
-    HarmfulDamageTypes(3)=class'DHShellAPImpactDamageType'          // AP Impact
-    HarmfulDamageTypes(4)=class'DHRocketImpactDamage'               // AT Rocket Impact
-    HarmfulDamageTypes(5)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
-    HarmfulDamageTypes(6)=class'DHMortarDamageType'                 // Mortar
+    HarmfulDamageTypes(0)=Class'DHArtilleryDamageType'              // Artillery
+    HarmfulDamageTypes(1)=Class'ROTankShellExplosionDamage'         // HE Splash
+    HarmfulDamageTypes(2)=Class'DHShellHEImpactDamageType'          // HE Impact
+    HarmfulDamageTypes(3)=Class'DHShellAPImpactDamageType'          // AP Impact
+    HarmfulDamageTypes(4)=Class'DHRocketImpactDamage'               // AT Rocket Impact
+    HarmfulDamageTypes(5)=Class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(6)=Class'DHMortarDamageType'                 // Mortar
 
     // Impact
     bCanTakeImpactDamage=false
-    ImpactDamageType=class'Crushed'
+    ImpactDamageType=Class'Crushed'
     ImpactDamageModifier=0.1
 
     SquadMemberCountMinimum=2

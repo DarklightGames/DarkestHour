@@ -8,5 +8,5 @@ class DH_Kar98ScopedZF41BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Kar98ScopedZF41Weapon'
+    WeaponClass=Class'DH_Kar98ScopedZF41Weapon'
 }

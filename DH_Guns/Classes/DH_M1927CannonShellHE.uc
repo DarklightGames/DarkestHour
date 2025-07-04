@@ -17,15 +17,15 @@ defaultproperties
     SpeedFudgeScale=1.0
     LifeSpan=30.0
     bHasTracer=false
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_HE'
 
     //Damage
     ImpactDamage=750
-    ShellImpactDamage=class'DH_Engine.DHArtilleryKillDamageType'
+    ShellImpactDamage=Class'DHArtilleryKillDamageType'
     PenetrationMag=800.0
     Damage=400.0   //710 gramms TNT
     DamageRadius=1000.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType_Artillery'
+    MyDamageType=Class'DHShellHE75mmATDamageType_Artillery'
     HullFireChance=0.8
     EngineFireChance=0.8
 

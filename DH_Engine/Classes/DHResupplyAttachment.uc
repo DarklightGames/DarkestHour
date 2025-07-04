@@ -28,7 +28,7 @@ function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
 
-    ResupplyStrategy = new class'DHResupplyStrategy';
+    ResupplyStrategy = new Class'DHResupplyStrategy';
 
     SetTimer(1.0, true);
 }
@@ -157,7 +157,7 @@ function ProcessActorLeave()
 
         bFound = false;
 
-        foreach VisibleCollidingActors(class'Pawn', P, CollisionRadius)
+        foreach VisibleCollidingActors(Class'Pawn', P, CollisionRadius)
         {
             // This stops us from the vehicle resupplying itself.
             if (Base != none && Base == P && P == R)
@@ -191,7 +191,7 @@ function Timer()
 
     ResupplyActors.Remove(0, ResupplyActors.Length);
 
-    foreach RadiusActors(class'Pawn', recvr, CollisionRadius)
+    foreach RadiusActors(Class'Pawn', recvr, CollisionRadius)
     {
         // This stops us from the vehicle resupplying itself.
         if (Base != none && Base == recvr)
@@ -312,5 +312,5 @@ defaultproperties
     bDramaticLighting=true
     CollisionRadius=300
     CollisionHeight=100
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Resupply'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_Resupply'
 }

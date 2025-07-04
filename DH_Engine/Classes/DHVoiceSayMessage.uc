@@ -24,9 +24,9 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         MyPRI = DHPlayerReplicationInfo(myHUD.PlayerOwner.PlayerReplicationInfo);
     }
 
-    if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
+    if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
     {
-        NameColor = class'DHColor'.default.SquadColor;
+        NameColor = Class'DHColor'.default.SquadColor;
         SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
         if (SquadMemberID != "") SquadMemberID $= " ";
     }
@@ -36,10 +36,10 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     }
 
     return default.MessagePrefix @
-           class'GameInfo'.static.MakeColorCode(NameColor) $
+           Class'GameInfo'.static.MakeColorCode(NameColor) $
            SquadMemberID $
            RelatedPRI_1.PlayerName $
-           class'GameInfo'.static.MakeColorCode(ConsoleColor) @
+           Class'GameInfo'.static.MakeColorCode(ConsoleColor) @
            ":" @
            MessageString;
 }

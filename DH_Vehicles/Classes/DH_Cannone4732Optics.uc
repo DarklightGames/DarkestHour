@@ -16,6 +16,6 @@ class DH_Cannone4732Optics extends DHGunOptics
 defaultproperties
 {
     GunsightSize=0.4
-    GunsightOverlay=Texture'DH_Semovente4732_tex.Interface.semo7518_sight'
+    GunsightOverlay=Texture'DH_Semovente4732_tex.semo7518_sight'
     CannonScopeCenter=None
 }

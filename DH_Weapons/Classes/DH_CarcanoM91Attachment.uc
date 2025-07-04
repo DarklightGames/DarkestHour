@@ -11,9 +11,9 @@ class DH_CarcanoM91Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
-    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_Carcano_tex.carcano_m91_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
     MuzzleBoneName="MUZZLE"

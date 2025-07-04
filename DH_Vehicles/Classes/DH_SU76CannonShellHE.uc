@@ -14,18 +14,18 @@ defaultproperties
 
     //Damage
     ImpactDamage=750
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     PenetrationMag=800.0
     Damage=400.0   //710 gramms TNT
     DamageRadius=1000.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    MyDamageType=Class'DHShellHE75mmATDamageType'
     HullFireChance=0.8
     EngineFireChance=0.8
 
     bDebugInImperial=false
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    CoronaClass=Class'DHShellTracer_Green'
 
     //Penetration
     DHPenetrationTable(0)=3.3

@@ -251,8 +251,8 @@ defaultproperties
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
-    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
-    TouchMessageClass=class'DHWeaponPickupTouchMessage'
+    BarrelSteamEmitterClass=Class'DHMGSteam'
+    TouchMessageClass=Class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
     PlayerNearbyRadiusMeters=5
     PlayerNearbyRetryTime=10

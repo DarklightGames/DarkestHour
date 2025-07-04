@@ -11,7 +11,7 @@ simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
-        SpawnPoint = Spawn(class'DHSpawnPoint_Parachute', self);
+        SpawnPoint = Spawn(Class'DHSpawnPoint_Parachute', self);
 
         if (SpawnPoint == none)
         {
@@ -53,7 +53,7 @@ simulated function bool IsParadrop()
 defaultproperties
 {
     MenuName="Paratroopers"
-    MenuIcon=Material'DH_InterfaceArt2_tex.Icons.paratroopers'
+    MenuIcon=Material'DH_InterfaceArt2_tex.paratroopers'
     LifeSpan=90
     ArtilleryType=ArtyType_Paradrop
 }

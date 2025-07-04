@@ -50,7 +50,7 @@ simulated function InitializeHands()
         HandsActor.Destroy();
     }
 
-    HandsActor = Spawn(class'DHFirstPersonHands', self);
+    HandsActor = Spawn(Class'DHFirstPersonHands', self);
     HandsActor.LinkMesh(HandsMesh);
     HandsActor.PlayAnim('IDLE');
     HandsActor.SetSkins(DHPlayer(Controller));
@@ -168,13 +168,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         ReloadCameraCoords = VW.GetBoneCoords(ReloadCameraBone);
         ReloadCameraLocation = ReloadCameraCoords.Origin;
         ReloadCameraRotation = QuatToRotator(
-            class'UQuaternion'.static.FromAxes(ReloadCameraCoords.XAxis, ReloadCameraCoords.YAxis, ReloadCameraCoords.ZAxis)
+            Class'UQuaternion'.static.FromAxes(ReloadCameraCoords.XAxis, ReloadCameraCoords.YAxis, ReloadCameraCoords.ZAxis)
         );
 
         T = class'UInterp'.static.LerpBilateral(Level.TimeSeconds, VW.ReloadStartTimeSeconds, VW.ReloadEndTimeSeconds, VW.ReloadCameraTweenTime, VW.ReloadCameraTweenTime);
-        T = class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
+        T = Class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
 
-        CameraLocation = class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);
+        CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(CameraRotation), QuatFromRotator(ReloadCameraRotation), T));
     }
 }
@@ -219,7 +219,7 @@ simulated exec function SpawnRangeTarget()
     local Vector Direction, TargetLocation;
     local DH_Fiat1435MG MG;
 
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }
@@ -242,9 +242,9 @@ simulated exec function SpawnRangeTarget()
         TargetActor.Destroy();
     }
 
-    TargetLocation = MuzzleCoords.Origin + (Direction * class'DHUnits'.static.MetersToUnreal(MG.RangeTable[MG.RangeIndex].Range));
+    TargetLocation = MuzzleCoords.Origin + (Direction * Class'DHUnits'.static.MetersToUnreal(MG.RangeTable[MG.RangeIndex].Range));
 
-    TargetActor = Spawn(class'DHRangeTargetActor', self,, TargetLocation, Rotator(-Direction));
+    TargetActor = Spawn(Class'DHRangeTargetActor', self,, TargetLocation, Rotator(-Direction));
     TargetActor.SetStaticMesh(TargetStaticMesh);
 }
 
@@ -253,7 +253,7 @@ simulated exec function SetRangeTheta(float NewTheta)
     local DH_Fiat1435MG MG;
     MG = DH_Fiat1435MG(Gun);
 
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }
@@ -267,7 +267,7 @@ simulated exec function DumpRangeTable()
     local int i;
     local DH_Fiat1435MG MG;
 
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }

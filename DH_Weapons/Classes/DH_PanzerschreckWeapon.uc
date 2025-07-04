@@ -10,9 +10,9 @@ defaultproperties
     ItemName="RPzB 54 'Panzerschrek'"
     NativeItemName="Raketenpanzerbüchse 54 'Panzerschrek'"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_PanzerschreckFire'
-    AttachmentClass=class'DH_Weapons.DH_PanzerschreckAttachment'
-    PickupClass=class'DH_Weapons.DH_PanzerschreckPickup'
+    FireModeClass(0)=Class'DH_PanzerschreckFire'
+    AttachmentClass=Class'DH_PanzerschreckAttachment'
+    PickupClass=Class'DH_PanzerschreckPickup'
 
     Mesh=SkeletalMesh'DH_Panzerschreck_anm.Panzerschreck_1st'
 
@@ -27,9 +27,10 @@ defaultproperties
     IronSightDisplayFOV=60.0
     IronSightDisplayFOVHigh=6.0
 
-    RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot",AssistedReloadAnim="iron_reload")
-    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idle_150",IronFireAnim="iron_shoot_150",AssistedReloadAnim="iron_reload_150")
-    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idle_200",IronFireAnim="iron_shoot_200",AssistedReloadAnim="iron_reload_200")
+    RangeDistanceUnit=DU_Meters
+    RangeSettings(0)=(Range=50,FirePitch=0,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot",AssistedReloadAnim="iron_reload")
+    RangeSettings(1)=(Range=150,FirePitch=350,IronIdleAnim="iron_idle_150",IronFireAnim="iron_shoot_150",AssistedReloadAnim="iron_reload_150")
+    RangeSettings(2)=(Range=200,FirePitch=675,IronIdleAnim="iron_idle_200",IronFireAnim="iron_shoot_200",AssistedReloadAnim="iron_reload_200")
 
     MagEmptyReloadAnims(0)="Reload"
     MagPartialReloadAnims(0)="Reload"

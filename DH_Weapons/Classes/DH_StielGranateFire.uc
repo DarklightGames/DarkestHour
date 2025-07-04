@@ -7,8 +7,8 @@ class DH_StielGranateFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_StielGranateProjectile'
-    AmmoClass=class'DH_Weapons.DH_StielGranateAmmo'
+    ProjectileClass=Class'DH_StielGranateProjectile'
+    AmmoClass=Class'DH_StielGranateAmmo'
     bPullAnimCompensation=true
     AddedFuseTime=0.38
 }

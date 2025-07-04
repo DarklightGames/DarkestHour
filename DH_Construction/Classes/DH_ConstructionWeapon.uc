@@ -78,7 +78,7 @@ simulated function DHActorProxy CreateProxyCursor()
 {
     local DHConstructionProxy Cursor;
 
-    Cursor = Spawn(class'DHConstructionProxy', Instigator);
+    Cursor = Spawn(Class'DHConstructionProxy', Instigator);
     Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
 
     return Cursor;
@@ -127,7 +127,7 @@ function DHConstruction ServerCreateConstruction(class<DHConstruction> Construct
     }
 
     Context.TeamIndex = Instigator.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = DHPlayer(Instigator.Controller);
     Context.VariantIndex = VariantIndex;
     Context.SkinIndex = SkinIndex;
@@ -138,7 +138,7 @@ function DHConstruction ServerCreateConstruction(class<DHConstruction> Construct
     }
 
     // Create a proxy to test placement logic on the server-side.
-    TestProxy = Spawn(class'DHConstructionProxy', Instigator);
+    TestProxy = Spawn(Class'DHConstructionProxy', Instigator);
 
     if (TestProxy == none)
     {

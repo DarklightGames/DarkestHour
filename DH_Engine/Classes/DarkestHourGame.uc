@@ -128,12 +128,12 @@ event InitGame(string Options, out string Error)
     if (Level.NetMode == NM_DedicatedServer && !AccessControl.IsA('DHAccessControl'))
     {
         AccessControl.Destroy();
-        AccessControl = Spawn(class'DH_Engine.DHAccessControl');
+        AccessControl = Spawn(Class'DHAccessControl');
     }
 
     // Handle single-player voting
     if (Level.NetMode == NM_Standalone &&
-        class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
+        Class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
         VotingHandlerClass != none &&
         VotingHandlerClass.static.IsEnabled())
     {
@@ -156,7 +156,7 @@ function PreBeginPlay()
 {
     super.PreBeginPlay();
 
-    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
+    SquadReplicationInfo = Spawn(Class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
@@ -178,7 +178,7 @@ function PostBeginPlay()
     // By setting a default SS&A class the actor gets spawned harmlessly without log errors, although it is pointless & immediately destroys itself
 //  if (Level.NetMode != NM_DedicatedServer)
 //  {
-//      class'PlayerController'.default.SteamStatsAndAchievementsClass = class'ROSteamStatsAndAchievements';
+//      Class'PlayerController'.default.SteamStatsAndAchievementsClass = Class'ROSteamStatsAndAchievements';
 //  }
 
     // Don't call the RO super because we already do everything for DH and don't
@@ -189,7 +189,7 @@ function PostBeginPlay()
 
     // Find the DHLevelInfo
     // Note the DHLI is an extension of RHLI, so we look for RHLIs as that allows us to check for multiple DH/ROLevelInfos (a map set up error)
-    foreach AllActors(class'ROLevelInfo', LI)
+    foreach AllActors(Class'ROLevelInfo', LI)
     {
         if (LevelInfo != none) // if we previously found either an ROLI or a DHLI, it will have been recorded as LevelInfo, so we've got some kind of extra LI
         {
@@ -217,7 +217,7 @@ function PostBeginPlay()
         }
     }
 
-    foreach AllActors(class'DHObstacleInfo', DHOI)
+    foreach AllActors(Class'DHObstacleInfo', DHOI)
     {
         ObstacleManager = Spawn(ObstacleManagerClass);
         break;
@@ -226,7 +226,7 @@ function PostBeginPlay()
     // Make sure we have a DH_LevelInfo actor (stops an ROLevelInfo from trying to work with DH levels)
     if (DHLevelInfo == none)
     {
-        if (class'DHLib'.static.GetMapName(Level) != "DHIntro") // simple hack to prevent logging errors for intro map
+        if (Class'DHLib'.static.GetMapName(Level) != "DHIntro") // simple hack to prevent logging errors for intro map
         {
             Warn("DarkestHourGame: No DH_LevelInfo detected!");
             Warn("Level may not be using DH_LevelInfo and needs to be!");
@@ -240,7 +240,7 @@ function PostBeginPlay()
     // Setup spectator viewpoints
     for (n = 0; n < LevelInfo.EntryCamTags.Length; ++n)
     {
-        foreach AllActors(class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
+        foreach AllActors(Class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
         {
             ViewPoints[ViewPoints.Length] = ViewPoint;
         }
@@ -300,7 +300,7 @@ function PostBeginPlay()
     GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
     GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
 
-    if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
+    if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || Class'DH_LevelInfo'.static.DHDebugMode()))
     {
         GRI.SetDangerZoneEnabled(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
         GRI.SetDangerZoneNeutral(DHLevelInfo.DangerZoneNeutral, true);
@@ -357,18 +357,18 @@ function PostBeginPlay()
     GRI.AlliedNationID = int(DHLevelInfo.AlliedNation);
 
     // Find the location of the map bounds
-    foreach AllActors(class'ROMapBoundsNE', NE)
+    foreach AllActors(Class'ROMapBoundsNE', NE)
     {
         GRI.NorthEastBounds = NE.Location;
     }
 
-    foreach AllActors(class'ROMapBoundsSW', SW)
+    foreach AllActors(Class'ROMapBoundsSW', SW)
     {
         GRI.SouthWestBounds = SW.Location;
     }
 
     // Find all the radios
-    foreach AllActors(class'ROArtilleryTrigger', RAT)
+    foreach AllActors(Class'ROArtilleryTrigger', RAT)
     {
         if ((RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both) && i < arraycount(GRI.AxisRadios))
         {
@@ -389,7 +389,7 @@ function PostBeginPlay()
     }
 
     // Find all the resupply areas
-    foreach AllActors(class'DHAmmoResupplyVolume', ARV)
+    foreach AllActors(Class'DHAmmoResupplyVolume', ARV)
     {
         DHResupplyAreas[m] = ARV;
         GRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
@@ -420,11 +420,11 @@ function PostBeginPlay()
     // Set up the score managers for each team.
     for (i = 0; i < arraycount(TeamScoreManagers); ++i)
     {
-        TeamScoreManagers[i] = new class'DHScoreManager';
+        TeamScoreManagers[i] = new Class'DHScoreManager';
         TeamScoreManagers[i].bSkipLimits = true;
     }
 
-    foreach AllActors(class'ROMineVolume', MV)
+    foreach AllActors(Class'ROMineVolume', MV)
     {
         MineVolumes[o] = MV;
         o++;
@@ -436,7 +436,7 @@ function PostBeginPlay()
         MaxTeamDifference = 1;
     }
 
-    foreach AllActors(class'DHSpawnManager', SpawnManager)
+    foreach AllActors(Class'DHSpawnManager', SpawnManager)
     {
         break;
     }
@@ -452,9 +452,9 @@ function PostBeginPlay()
     }
 
 
-    PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
+    PlayerSessions = Class'Hashtable_string_Object'.static.Create(128);
 
-    VoteManager = Spawn(class'DHVoteManager', self);
+    VoteManager = Spawn(Class'DHVoteManager', self);
 
     if (VoteManager == none)
     {
@@ -554,7 +554,7 @@ function NavigationPoint FindPlayerStart(Controller Player, optional byte InTeam
 
         BestRating = -100000000.0;
 
-        foreach AllActors(class'PlayerStart', PS)
+        foreach AllActors(Class'PlayerStart', PS)
         {
             NewRating = RatePlayerStart(PS, InTeam, Player); // now passing the actual team, where this used to pass zero (& so always axis)
             NewRating += 20.0 * FRand(); // add some randomisation
@@ -715,7 +715,7 @@ function Bot SpawnBot(optional string botName)
     }
 
     // Change default bot class
-    Chosen.PawnClass = class<Pawn>(DynamicLoadObject(DefaultPlayerClassName, class'class'));
+    Chosen.PawnClass = class<Pawn>(DynamicLoadObject(DefaultPlayerClassName, Class'class'));
 
     NewBot = DHBot(Spawn(Chosen.PawnClass.default.ControllerClass));
 
@@ -974,7 +974,7 @@ function ScoreMGResupply(Controller Dropper, Controller Gunner)
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none &&
              DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
+        SendScoreEvent(Dropper, Class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
@@ -987,7 +987,7 @@ function ScoreATResupply(Controller Dropper, Controller Gunner)
     }
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
+        SendScoreEvent(Dropper, Class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
@@ -998,7 +998,7 @@ function ScoreATReload(Controller Loader, Controller Gunner)
         DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none &&
         DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
     {
-        SendScoreEvent(Loader, class'DHScoreEvent_FriendlyReload'.static.Create());
+        SendScoreEvent(Loader, Class'DHScoreEvent_FriendlyReload'.static.Create());
     }
 }
 
@@ -1022,13 +1022,13 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
         return;
     }
 
-    SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
+    SendScoreEvent(Dropper, Class'DHScoreEvent_FriendlyResupply'.static.Create());
 }
 
 // Give spotter a point or two for spotting a kill
 function ScoreFireSupportSpottingAssist(Controller Spotter)
 {
-    SendScoreEvent(Spotter, class'DHScoreEvent_FireSupportSpottingAssist'.static.Create());
+    SendScoreEvent(Spotter, Class'DHScoreEvent_FireSupportSpottingAssist'.static.Create());
 }
 
 // Modified to prevent fellow vehicle crewman from getting kills and score for yours
@@ -1038,15 +1038,15 @@ function ScoreKill(Controller Killer, Controller Other)
 
     if (Killer == Other || Killer == none)
     {
-        SendScoreEvent(Other, class'DHScoreEvent_Suicide'.static.Create());
+        SendScoreEvent(Other, Class'DHScoreEvent_Suicide'.static.Create());
     }
     else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
     {
-        SendScoreEvent(Killer, class'DHScoreEvent_TeamKill'.static.Create());
+        SendScoreEvent(Killer, Class'DHScoreEvent_TeamKill'.static.Create());
     }
     else if (Killer.PlayerReplicationInfo != none)
     {
-        SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create());
+        SendScoreEvent(Killer, Class'DHScoreEvent_Kill'.static.Create());
 
         PRI = DHPlayerReplicationInfo(Killer.PlayerReplicationInfo);
 
@@ -1207,7 +1207,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
 
         // Try to match up to existing unoccupied player in level,
         // for savegames - also needed coop level switching.
-        foreach DynamicActors(class'PlayerController', TestPlayer)
+        foreach DynamicActors(Class'PlayerController', TestPlayer)
         {
             if (TestPlayer.Player == none && TestPlayer.PlayerOwnerName ~= InName)
             {
@@ -1260,7 +1260,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
 
     if (PlayerControllerClass == none)
     {
-        PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, class'Class'));
+        PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, Class'Class'));
     }
 
     NewPlayer = Spawn(PlayerControllerClass,,, StartSpot.Location, StartSpot.Rotation);
@@ -1280,7 +1280,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     NewPlayer.GameReplicationInfo = GameReplicationInfo;
 
     // Apply security to this controller
-    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass, class'class'));
+    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass, Class'class'));
 
     if (MySecurityClass != none)
     {
@@ -1516,7 +1516,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         {
             if (PlayerController(C) != none && Viewport(PlayerController(C).Player) != none)
             {
-                PlayerController(C).ReceiveLocalizedMessage(class'GameMessage', 2, Other.PlayerReplicationInfo);
+                PlayerController(C).ReceiveLocalizedMessage(Class'GameMessage', 2, Other.PlayerReplicationInfo);
             }
         }
     }
@@ -1529,7 +1529,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 
 function BroadcastLastObjectiveMessage(int Team_that_is_about_to_win)
 {
-    BroadcastLocalizedMessage(class'DHLastObjectiveMessage', Team_that_is_about_to_win);
+    BroadcastLocalizedMessage(Class'DHLastObjectiveMessage', Team_that_is_about_to_win);
 }
 
 function AddDefaultInventory(Pawn aPawn)
@@ -2013,7 +2013,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             if (FireSupportMapMarkers.Length > 0)
             {
                 // This kill took place within range of a fire support marker.
-                DamageType = class'DHArtilleryKillDamageType';
+                DamageType = Class'DHArtilleryKillDamageType';
 
                 for (i = 0; i < FireSupportMapMarkers.Length; ++i)
                 {
@@ -2042,7 +2042,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         // Suiciding won't count as a spawn kill - did this because suiciding after a combat spawn will not act the same way & thus is not intuitive
         if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).IsSpawnKillProtected() && Killer != Killed)
         {
-            DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
+            DamageType = Class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
 
             if (DHKiller != none && DHKilled != none) // only relevant to player vs player spawn kills
             {
@@ -2061,13 +2061,13 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     if (bTeamGame && Killer.PlayerReplicationInfo != none && Killed.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team)
                     {
                         DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval) + 1);
-                        DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 5); // "Your weapons have been locked due to spawn killing a friendly!"
+                        DHKiller.ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 5); // "Your weapons have been locked due to spawn killing a friendly!"
                         bInformedKillerOfWeaponLock = true;
                     }
                     else
                     {
                         DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval) + 1);
-                        DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
+                        DHKiller.ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
                     }
                 }
 
@@ -2143,7 +2143,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                             // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
                             if (!bInformedKillerOfWeaponLock)
                             {
-                                DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                                DHKiller.ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
                             }
                         }
                     }
@@ -2578,7 +2578,7 @@ state RoundInPlay
         }
 
         // Reset ALL actors (except controllers and vehicle factories)
-        foreach AllActors(class'Actor', A)
+        foreach AllActors(Class'Actor', A)
         {
             if (!A.IsA('Controller') && !A.IsA('ROVehicleFactory'))
             {
@@ -2587,7 +2587,7 @@ state RoundInPlay
         }
 
         // Reset all vehicle factories - must reset these after vehicles, otherwise the vehicles that get spawned by factories get destroyed instantly as they are reset
-        foreach DynamicActors(class'ROVehicleFactory', ROV)
+        foreach DynamicActors(Class'ROVehicleFactory', ROV)
         {
             ROV.Reset();
         }
@@ -2839,18 +2839,18 @@ state RoundInPlay
         {
             case AXIS_TEAM_INDEX:
                 Teams[AXIS_TEAM_INDEX].Score += 1.0;
-                BroadcastLocalizedMessage(class'DHRoundOverMessage', 0,,, DHLevelInfo);
+                BroadcastLocalizedMessage(Class'DHRoundOverMessage', 0,,, DHLevelInfo);
                 TeamScoreEvent(AXIS_TEAM_INDEX, 1, "team_victory");
                 break;
 
             case ALLIES_TEAM_INDEX:
                 Teams[ALLIES_TEAM_INDEX].Score += 1.0;
-                BroadcastLocalizedMessage(class'DHRoundOverMessage', 1,,, DHLevelInfo);
+                BroadcastLocalizedMessage(Class'DHRoundOverMessage', 1,,, DHLevelInfo);
                 TeamScoreEvent(ALLIES_TEAM_INDEX, 1, "team_victory");
                 break;
 
             default:
-                BroadcastLocalizedMessage(class'RORoundOverMsg', 2);
+                BroadcastLocalizedMessage(Class'RORoundOverMsg', 2);
                 break;
         }
 
@@ -2884,7 +2884,7 @@ state RoundInPlay
 
         super.EndState();
 
-        foreach DynamicActors(class'Pawn', P)
+        foreach DynamicActors(Class'Pawn', P)
         {
             P.StopWeaponFiring();
         }
@@ -3026,12 +3026,12 @@ state ResetGameCountdown
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
 
         // Destroy any artillery spawners so they don't keep calling arty.
-        foreach DynamicActors(class'DHArtillerySpawner', AS)
+        foreach DynamicActors(Class'DHArtillerySpawner', AS)
         {
             AS.Destroy();
         }
 
-        Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 10);
+        Level.Game.BroadcastLocalized(none, Class'DHResetGameMsg', 10);
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
@@ -3044,7 +3044,7 @@ state ResetGameCountdown
         {
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
-                Spawn(class'DHClientResetGame');
+                Spawn(Class'DHClientResetGame');
             }
 
             if (GRI != none)
@@ -3058,14 +3058,14 @@ state ResetGameCountdown
                 SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
-            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 11);
+            Level.Game.BroadcastLocalized(none, Class'DHResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
         {
-            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', RoundStartTime - ElapsedTime);
+            Level.Game.BroadcastLocalized(none, Class'DHResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
 }
@@ -3120,7 +3120,7 @@ state RoundOver
         GRI.bRoundIsOver = true;
 
         // Destroy any artillery spawners so they don't keep calling arty
-        foreach DynamicActors(class'DHArtillerySpawner', AS)
+        foreach DynamicActors(Class'DHArtillerySpawner', AS)
         {
             AS.Destroy();
         }
@@ -3135,7 +3135,7 @@ state RoundOver
         {
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
-                Spawn(class'DHClientResetGame');
+                Spawn(Class'DHClientResetGame');
             }
 
             GotoState('RoundInPlay');
@@ -3168,7 +3168,7 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
     GRI.RoundOverTime = GRI.RoundEndTime - GRI.ElapsedTime;
 
     // Destroy all Inventory (hopeful fix to the constant MG firing)
-    foreach DynamicActors(class'Inventory', Inv)
+    foreach DynamicActors(Class'Inventory', Inv)
     {
         Inv.Destroy();
     }
@@ -3269,7 +3269,7 @@ function HandleReinforcementChangeMessages(int Team)
         while (TeamReinforcementMessageIndices[Team] < default.ReinforcementMessagePercentages.Length &&
                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
         {
-            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]]);
+            BroadcastTeamLocalizedMessage(Level, Team, Class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]]);
 
             ++TeamReinforcementMessageIndices[Team];
         }
@@ -3279,7 +3279,7 @@ function HandleReinforcementChangeMessages(int Team)
         {
             if (bDidSendEnemyTeamWeakMessage[int(!bool(Team))] == 0)
             {
-                BroadcastTeamLocalizedMessage(Level, int(!bool(Team)), class'DHEnemyInformationMsg', 0);
+                BroadcastTeamLocalizedMessage(Level, int(!bool(Team)), Class'DHEnemyInformationMsg', 0);
 
                 bDidSendEnemyTeamWeakMessage[int(!bool(Team))] = 1;
             }
@@ -3350,7 +3350,7 @@ exec function SetServerViewDistance(int NewDistance)
 {
     local DHZoneInfo Z;
 
-    foreach AllActors(class'DHZoneInfo', Z)
+    foreach AllActors(Class'DHZoneInfo', Z)
     {
         Z.SetNewTargetFogDistance(NewDistance);
     }
@@ -3365,7 +3365,7 @@ exec function DebugDestroyConstructions()
 {
     local DHConstruction C;
 
-    foreach AllActors(class'DHConstruction', C)
+    foreach AllActors(Class'DHConstruction', C)
     {
         C.GotoState('Broken');
     }
@@ -3376,7 +3376,7 @@ exec function DebugConstruct()
     local string StatusText;
 
     if (Level.NetMode != NM_Standalone &&
-        !class'DH_LevelInfo'.static.DHDebugMode())
+        !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }
@@ -3452,7 +3452,7 @@ exec function StopArty()
     local Actor A;
     local int Count;
 
-    foreach AllActors(class'Actor', A)
+    foreach AllActors(Class'Actor', A)
     {
         if (A.IsA('DH_ArtilleryActor'))
         {
@@ -3587,7 +3587,7 @@ exec function ChangeSetupPhaseTime(int Minutes, int Seconds, optional string Ope
 
     TimeInSeconds = Max(0, Minutes) * 60 + Max(0, Seconds);
 
-    foreach AllActors(class'DHSetupPhaseManager', SPM)
+    foreach AllActors(Class'DHSetupPhaseManager', SPM)
     {
         switch (OperationType)
         {
@@ -3999,7 +3999,7 @@ exec function DebugObjectiveSpawnDistance(int NewDistanceThreshold)
 {
     local DH_LevelInfo LI;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI != none)
     {
@@ -4043,7 +4043,7 @@ function UpdateObjectiveSpawns()
                 continue;
             }
 
-            if (class'UArray'.static.IIndexOf(ObjIndices, i) == -1)
+            if (Class'UArray'.static.IIndexOf(ObjIndices, i) == -1)
             {
                 // If the objective has a spawn point reference and is neutral
                 // or controlled by current team, destroy the spawn point.
@@ -4070,7 +4070,7 @@ function UpdateObjectiveSpawns()
                     }
                 }
 
-                SpawnPoint = Spawn(class'DH_Engine.DHSpawnPoint_Objective', self,, Obj.Location);
+                SpawnPoint = Spawn(Class'DHSpawnPoint_Objective', self,, Obj.Location);
 
                 // Setup the properties of the new spawn point.
                 SpawnPoint.SetTeamIndex(Team);
@@ -4158,7 +4158,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
     // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
     // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
-    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
     {
         // This sets the DHPlayer NextChangeTeamTime which determines when a player can change team next
         // If the player leaves, it is stored in a player session and restored if they rejoin
@@ -4294,23 +4294,23 @@ static function PrecacheGameTextures(LevelInfo myLevel)
     super.PrecacheGameTextures(myLevel);
 
     // From ROWheeledVehicle:
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.fire_16frame');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.DustCloud');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.Dust_KickUp');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.vehiclesparkhead');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_16frame');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.DustCloud');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Dust_KickUp');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.vehiclesparkhead');
 
     // From ROTreadCraft:
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
-    myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.aptankmark_dirt');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.aptankmark_snow');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.glowfinal');
 
     // From DHArmoredVehicle:
-    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.Alpha');
 
     // From ROTankCannon:
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_122mm');
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_76mm');
-    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_85mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_122mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_76mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.shell_85mm');
     myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_quad');
     myLevel.AddPrecacheMaterial(Material'ROEffects.SmokeAlphab_t');
 }
@@ -4667,7 +4667,7 @@ function CheckSpawnAreas()
     {
         bReqsMet = false;
 
-        foreach DynamicActors(class'ROSpawnArea', Best[0])
+        foreach DynamicActors(Class'ROSpawnArea', Best[0])
         {
             bReqsMet = true;
         }
@@ -4803,7 +4803,7 @@ function CheckVehicleFactories()
     local DHVehicleFactory VehFact;
     local int              TeamIndex;
 
-    foreach DynamicActors(class'DHVehicleFactory', VehFact)
+    foreach DynamicActors(Class'DHVehicleFactory', VehFact)
     {
         if (VehFact.bUsesSpawnAreas && !VehFact.bControlledBySpawnPoint)
         {
@@ -4915,7 +4915,7 @@ function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo
 {
     local DHThrowableExplosiveProjectile TEP;
 
-    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    foreach DynamicActors(Class'DHThrowableExplosiveProjectile', TEP)
     {
         if (PRI != none && TEP.SavedPRI == PRI)
         {
@@ -4977,7 +4977,7 @@ function ModifyRoundTime(int RoundTime, int Type)
                 break;
         }
 
-        Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', Type);
+        Level.Game.BroadcastLocalizedMessage(Class'DH_ModifyRoundTimeMessage', Type);
     }
 }
 
@@ -5051,7 +5051,7 @@ event PostLogin(PlayerController NewPlayer)
     // Tell client what HUD & scoreboard to use
     if (HUDType != "")
     {
-        HudClass = class<HUD>(DynamicLoadObject(HUDType, class'Class'));
+        HudClass = class<HUD>(DynamicLoadObject(HUDType, Class'Class'));
     }
 
     if (HudClass == none)
@@ -5061,7 +5061,7 @@ event PostLogin(PlayerController NewPlayer)
 
     if (ScoreBoardType != "")
     {
-        ScoreboardClass = class<Scoreboard>(DynamicLoadObject(ScoreBoardType, class'Class'));
+        ScoreboardClass = class<Scoreboard>(DynamicLoadObject(ScoreBoardType, Class'Class'));
     }
 
     if (ScoreboardClass == none)
@@ -5115,7 +5115,7 @@ event PostLogin(PlayerController NewPlayer)
     // Find & set player's starting view location based on level's start spectator camera
     if (NewPlayer.Pawn == none && LevelInfo != none && LevelInfo.StartCamTag != '' && Role == ROLE_Authority)
     {
-        foreach AllActors(class'SpectatorCam', StartSpectatorCamera, LevelInfo.StartCamTag)
+        foreach AllActors(Class'SpectatorCam', StartSpectatorCamera, LevelInfo.StartCamTag)
         {
             break;
         }
@@ -5167,7 +5167,7 @@ event PostLogin(PlayerController NewPlayer)
             }
         }
 
-        PRI.bIsDeveloper = class'DHAccessControl'.static.IsDeveloper(ROIDHash);
+        PRI.bIsDeveloper = Class'DHAccessControl'.static.IsDeveloper(ROIDHash);
     }
 
     NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
@@ -5218,7 +5218,7 @@ function Logout(Controller Exiting)
     // Save the current session info
     if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
-        O = new class'DHPlayerSession';
+        O = new Class'DHPlayerSession';
         PlayerSessions.Put(PC.ROIDHash, O);
     }
 
@@ -5406,8 +5406,8 @@ function GetServerDetails(out ServerResponseLine ServerState)
 {
     super.GetServerDetails(ServerState);
 
-    AddServerDetail(ServerState, "Version", class'DHBuildManifest'.default.Version.ToShortString());
-    AddServerDetail(ServerState, "GitCommit", class'DHBuildManifest'.default.GitCommit);
+    AddServerDetail(ServerState, "Version", Class'DHBuildManifest'.default.Version.ToShortString());
+    AddServerDetail(ServerState, "GitCommit", Class'DHBuildManifest'.default.GitCommit);
     AddServerDetail(ServerState, "Location", ServerLocation);
     AddServerDetail(ServerState, "AverageTick", int(ServerTickRateAverage));
 }
@@ -5495,7 +5495,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     {
         // Don't let the player call in an artillery strike on a location that has
         // become an active "no artillery" volume after they marked the location.
-        VT = Spawn(class'DHVolumeTest', self,, Request.Location);
+        VT = Spawn(Class'DHVolumeTest', self,, Request.Location);
 
         if (VT != none && VT.DHIsInNoArtyVolume(GRI))
         {
@@ -5610,7 +5610,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="Gï¿½nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5619,10 +5619,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton Mï¿½ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans Grï¿½schke"
+    GermanNames(12)="Wilhelm Krï¿½ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5640,14 +5640,14 @@ defaultproperties
     MapListType="DH_Engine.DHMapList"
     BroadcastHandlerClass="DH_Engine.DHBroadcastHandler"
     PlayerControllerClassName="DH_Engine.DHPlayer"
-    GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
-    VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
-    VotingHandlerClass=class'DH_Engine.DHVotingHandler'
+    GameReplicationInfoClass=Class'DHGameReplicationInfo'
+    VoiceReplicationInfoClass=Class'DHVoiceReplicationInfo'
+    VotingHandlerClass=Class'DHVotingHandler'
     DecoTextName="DH_Engine.DarkestHourGame"
-    ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
-    GameMessageClass=class'DH_Engine.DHGameMessage'
-    TeamAIType(0)=class'DH_Engine.DHTeamAI'
-    TeamAIType(1)=class'DH_Engine.DHTeamAI'
+    ObstacleManagerClass=Class'DHObstacleManager'
+    GameMessageClass=Class'DHGameMessage'
+    TeamAIType(0)=Class'DHTeamAI'
+    TeamAIType(1)=Class'DHTeamAI'
     LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
     ReinforcementMessagePercentages(0)=0.75
@@ -5657,7 +5657,7 @@ defaultproperties
 
     ServerLocation="Unspecified"
 
-    MetricsClass=class'DHMetrics'
+    MetricsClass=Class'DHMetrics'
     bEnableMetrics=true
     bUseWeaponLocking=true
 

@@ -7,8 +7,8 @@ class DH_M1924MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_M1924BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_M1924BayonetDamType'
+    DamageType=Class'DH_M1924BashDamType'
+    BayonetDamageType=Class'DH_M1924BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

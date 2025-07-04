@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=10
     InitialAmount=10
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Sniper_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.EnfieldNo4Sniper_ammo'
 }

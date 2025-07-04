@@ -11,13 +11,13 @@ defaultproperties
         BarStyleName="DHMultiColBar"
         StyleName="DHMultiColBar"
     End Object
-    Header=GUIMultiColumnListHeader'DH_Interface.DHBrowser_PlayersListBox.MyHeader'
+    Header=GUIMultiColumnListHeader'DH_Interface.MyHeader'
     SelectedStyleName="DHListSelectionStyle"
     DefaultListClass="DH_Interface.DHBrowser_PlayersList"
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHBrowser_PlayersListBox.TheScrollbar'
+    MyScrollBar=DHGUIVertScrollBar'DH_Interface.TheScrollbar'
     StyleName="DHComboListBox"
 }

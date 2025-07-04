@@ -94,7 +94,7 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
 
     if (ColMeshActorClass == none)
     {
-        ColMeshActorClass = class'DHCollisionMeshActor'; // default is base col mesh class, but a specialised subclass can be specified if desired
+        ColMeshActorClass = Class'DHCollisionMeshActor'; // default is base col mesh class, but a specialised subclass can be specified if desired
     }
 
     ColMeshActor = ColMeshOwner.Spawn(ColMeshActorClass, ColMeshOwner); // vital that the actor that spawns the col mesh is its owner
@@ -193,7 +193,7 @@ simulated function HideOwner(bool bHide)
     {
         if (bHide)
         {
-            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.Alpha';
         }
         else if (bUseCannonSkinsArray && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
         {

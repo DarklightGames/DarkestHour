@@ -7,6 +7,6 @@ class DH_STG44Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_STG44Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.stg44'
+    InventoryType=Class'DH_STG44Weapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.stg44'
 }

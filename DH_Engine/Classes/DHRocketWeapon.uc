@@ -9,6 +9,7 @@ class DHRocketWeapon extends DHProjectileWeapon
 // Range Settings
 struct RangeSetting
 {
+    var int Range;
     var int  FirePitch;
     var name IronIdleAnim;
     var name IronFireAnim;
@@ -17,6 +18,7 @@ struct RangeSetting
     var name AssistedReloadAnim;
 };
 
+var     DHUnits.EDistanceUnit   RangeDistanceUnit;            // unit of measure for range settings
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
 
@@ -60,6 +62,11 @@ exec simulated function SwitchFireMode()
         if (InstigatorIsLocallyControlled())
         {
             PlayIdle();
+
+            Instigator.ReceiveLocalizedMessage(
+                Class'DHWeaponRangeMessage', 
+                Class'UInteger'.static.FromShorts(RangeSettings[RangeIndex].Range, int(RangeDistanceUnit))
+            );
         }
     }
 }
@@ -151,7 +158,7 @@ simulated function bool PutDown()
 
         if (InstigatorIsLocalHuman())
         {
-            Instigator.ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
+            Instigator.ReceiveLocalizedMessage(Class'DHATLoadMessage', 2); // rocket unloaded
         }
     }
 
@@ -168,11 +175,11 @@ simulated function NotifyOwnerJumped()
         // Clumsy, but different mode timings mean on net client the player will be controlling the vehicle, while in single player he will be controlling the player pawn
         if (Instigator.DrivenVehicle.IsLocallyControlled() && Instigator.DrivenVehicle.IsHumanControlled())
         {
-            Instigator.DrivenVehicle.ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
+            Instigator.DrivenVehicle.ReceiveLocalizedMessage(Class'DHATLoadMessage', 2); // rocket unloaded
         }
         else if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
-            Instigator.ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
+            Instigator.ReceiveLocalizedMessage(Class'DHATLoadMessage', 2);
         }
     }
 
@@ -503,7 +510,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(Class'Actor', Victims, DamageRadius, HitLocation)
     {
         if (Victims != self && Victims != Pawn(Owner) && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {
@@ -569,7 +576,7 @@ defaultproperties
 {
     InventoryGroup=5
     Priority=8
-    WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
+    WarningMessageClass=Class'DHRocketWarningMessage'
 
     IronSightDisplayFOV=25.0
     FreeAimRotationSpeed=2.0

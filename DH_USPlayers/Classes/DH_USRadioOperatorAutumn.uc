@@ -7,9 +7,9 @@ class DH_USRadioOperatorAutumn extends DHUSRadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
-    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioTrenchcoatPawn')
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNet'
+    RolePawns(0)=(PawnClass=Class'DH_USRadioWinterPawn')
+    RolePawns(1)=(PawnClass=Class'DH_USRadioTrenchcoatPawn')
+    Headgear(0)=Class'DH_AmericanHelmet'
+    Headgear(1)=Class'DH_AmericanHelmetNet'
     HandType=Hand_Gloved
 }

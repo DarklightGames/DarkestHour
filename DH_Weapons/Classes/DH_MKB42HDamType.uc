@@ -8,8 +8,8 @@ class DH_MKB42HDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MKB42HWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_MKB42HWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=1500.0
     KDeathVel=110.0
     KDeathUpKick=2.0

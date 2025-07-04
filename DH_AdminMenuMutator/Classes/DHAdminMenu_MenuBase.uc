@@ -298,7 +298,7 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
             // Note: would like to check here if admin login was successful, but bIsAdmin won't have had time to replicate
             if (AdminName != "" && AdminPassword != "")
             {
-                PC.AdminLoginSilent(class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
+                PC.AdminLoginSilent(Class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
                 bMenuDidAdminLogin = true;
             }
             else
@@ -397,7 +397,7 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 {
     if (MessageNumber > 0)
     {
-        PC.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+        PC.ClientMessage(Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
     }
 }
 
@@ -438,7 +438,7 @@ function BuildMutateCommand(string CommandString, optional int MessageNumber)
 
     if (MessageNumber > 0) // display the relevant prompt/confirmation message across the admin's screen
     {
-        PC.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_AdminMessages', MessageNumber);
+        PC.ReceiveLocalizedMessage(Class'DHAdminMenu_AdminMessages', MessageNumber);
     }
 }
 

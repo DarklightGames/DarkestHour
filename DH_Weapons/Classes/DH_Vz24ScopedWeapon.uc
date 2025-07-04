@@ -17,17 +17,17 @@ defaultproperties
 {
     ItemName="Vz.24 Rifle (IOR)"
     NativeItemName="ZB vz.24 Puska (IOR)"
-    FireModeClass(0)=class'DH_Weapons.DH_Vz24ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Vz24ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Vz24ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Vz24ScopedPickup'
+    FireModeClass(0)=class'DH_Vz24ScopedFire'
+    FireModeClass(1)=class'DH_Vz24ScopedMeleeFire'
+    AttachmentClass=class'DH_Vz24ScopedAttachment'
+    PickupClass=class'DH_Vz24ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.Vz24scoped_mesh'
 
     bHasScope=true
     bIsSniper=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
+	ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
     DisplayFOV=88.0
     IronSightDisplayFOV=38.0
     IronSightDisplayFOVHigh=38.0

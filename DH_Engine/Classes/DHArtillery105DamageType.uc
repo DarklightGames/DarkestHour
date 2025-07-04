@@ -21,7 +21,7 @@ defaultproperties
     KDeadLinZVelScale=0.00025
     KDeadAngVelScale=0.002
 
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=Texture'InterfaceArt_tex.artkill'
     VehicleMomentumScaling=1.3
     bThrowRagdoll=true
     GibPerterbation=0.15

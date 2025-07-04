@@ -28,9 +28,9 @@ simulated function bool AllowFire()
     }
 
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
+    TraceEnd = TraceStart + (Class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
 
-    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
+    foreach Weapon.TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
         if (HitActor != none &&
             HitActor.bStatic &&
@@ -137,8 +137,8 @@ defaultproperties
     FireAnim="dig"
     FireAnimRate=1.0
     FireTweenTime=0.25
-    FireSounds(0)=Sound'DH_WeaponSounds.Shovel.shovel_1'
-    FireSounds(1)=Sound'DH_WeaponSounds.Shovel.shovel_3'
-    FireSounds(2)=Sound'DH_WeaponSounds.Shovel.shovel_4'
+    FireSounds(0)=Sound'DH_WeaponSounds.shovel_1'
+    FireSounds(1)=Sound'DH_WeaponSounds.shovel_3'
+    FireSounds(2)=Sound'DH_WeaponSounds.shovel_4'
     bIgnoresWeaponLock=true
 }

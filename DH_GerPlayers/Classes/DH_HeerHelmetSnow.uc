@@ -8,5 +8,5 @@ class DH_HeerHelmetSnow extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_HelmetCover'
-    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1'
+    Skins(0)=Texture'DHGermanCharactersTex.HeerParkaSnow1'
 }

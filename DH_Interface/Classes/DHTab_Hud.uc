@@ -59,7 +59,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowIndicators = class'DHHud'.default.bShowIndicators;
+                bShowIndicators = Class'DHHud'.default.bShowIndicators;
             }
             ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
             break;
@@ -70,7 +70,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bSimpleColours = class'DHHud'.default.bSimpleColours;
+                bSimpleColours = Class'DHHud'.default.bSimpleColours;
             }
             ch_SimpleColours.SetComponentValue(bSimpleColours, true);
             break;
@@ -81,12 +81,12 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowChatMessages = bool(class'DHHud'.default.ConsoleMessageCount);
+                bShowChatMessages = bool(Class'DHHud'.default.ConsoleMessageCount);
             }
             ch_ShowChatMessages.SetComponentValue(bShowChatMessages,true);
             break;
         case ch_ShowDeathMessages:
-             bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
+             bShowDeathMessages = Class'DHHud'.default.bShowDeathMessages;
              ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
              break;
         case ch_UseNativeRoleNames:
@@ -96,7 +96,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseNativeRoleNames = class'DHPlayer'.default.bUseNativeRoleNames;
+                bUseNativeRoleNames = Class'DHPlayer'.default.bUseNativeRoleNames;
             }
             bUseNativeRoleNamesD = bUseNativeRoleNames;
             ch_UseNativeRoleNames.SetComponentValue(bUseNativeRoleNames,true);
@@ -108,7 +108,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseTechnicalAmmoNames = class'DHHud'.default.bUseTechnicalAmmoNames;
+                bUseTechnicalAmmoNames = Class'DHHud'.default.bUseTechnicalAmmoNames;
             }
             ch_UseTechnicalAmmoNames.SetComponentValue(bUseTechnicalAmmoNames,true);
             break;
@@ -120,7 +120,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseNativeItemNames = class'DHPlayer'.default.bUseNativeItemNames;
+                bUseNativeItemNames = Class'DHPlayer'.default.bUseNativeItemNames;
             }
             ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
             break;
@@ -131,7 +131,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowMapOnFirstSpawn = class'DHPlayer'.default.bShowMapOnFirstSpawn;
+                bShowMapOnFirstSpawn = Class'DHPlayer'.default.bShowMapOnFirstSpawn;
             }
             bShowMapOnFirstSpawnD=bShowMapOnFirstSpawn;
             ch_ShowMapFirstSpawn.SetComponentValue(bShowMapOnFirstSpawn,true);
@@ -143,7 +143,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowCompass = class'ROHud'.default.bShowCompass;
+                bShowCompass = Class'ROHud'.default.bShowCompass;
             }
             ch_ShowCompass.SetComponentValue(bShowCompass,true);
             break;
@@ -154,7 +154,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowRallyPoint = class'DHHud'.default.bShowRallyPoint;
+                bShowRallyPoint = Class'DHHud'.default.bShowRallyPoint;
             }
             ch_ShowRallyPoint.SetComponentValue(bShowRallyPoint, true);
             break;
@@ -176,7 +176,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                if (class'DHPlayer'.default.bShowHints)
+                if (Class'DHPlayer'.default.bShowHints)
                     HintLevel = 1;
                 else
                     HintLevel = 2;
@@ -210,8 +210,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -225,8 +225,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -240,8 +240,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -267,9 +267,9 @@ function SaveSettings()
             }
             else
             {
-                class'DHHintManager'.static.StaticReset();
-                class'DHPlayer'.default.bShowHints = true;
-                class'DHPlayer'.static.StaticSaveConfig();
+                Class'DHHintManager'.static.StaticReset();
+                Class'DHPlayer'.default.bShowHints = true;
+                Class'DHPlayer'.static.StaticSaveConfig();
             }
         }
         else
@@ -283,8 +283,8 @@ function SaveSettings()
             }
             else
             {
-                class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
-                class'DHPlayer'.static.StaticSaveConfig();
+                Class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
+                Class'DHPlayer'.static.StaticSaveConfig();
             }
         }
     }
@@ -347,13 +347,13 @@ function SaveSettings()
     }
     else
     {
-        class'DHHud'.default.bShowCompass = bShowCompass;
-        class'DHHud'.default.bShowIndicators = bShowIndicators;
-        class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
-        class'DHHud'.default.bSimpleColours = bSimpleColours;
-        class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-        class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
-        class'DHHud'.static.StaticSaveConfig();
+        Class'DHHud'.default.bShowCompass = bShowCompass;
+        Class'DHHud'.default.bShowIndicators = bShowIndicators;
+        Class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
+        Class'DHHud'.default.bSimpleColours = bSimpleColours;
+        Class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+        Class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
+        Class'DHHud'.static.StaticSaveConfig();
     }
 }
 
@@ -373,7 +373,7 @@ function InternalOnChange(GUIComponent Sender)
             }
             else if (nu_MsgCount.GetValue() == 0)
             {
-                nu_MsgCount.SetValue(class'DHHud'.default.ConsoleMessageCount);
+                nu_MsgCount.SetValue(Class'DHHud'.default.ConsoleMessageCount);
             }
             break;
         case nu_MsgCount:
@@ -632,7 +632,7 @@ defaultproperties
         OnChange=InternalOnChange
         OnLoadINI=InternalOnLoadINI
     End Object
-    sl_Opacity=moSlider'DH_Interface.DHTab_Hud.myGameHudOpacity'
+    sl_Opacity=moSlider'DH_Interface.myGameHudOpacity'
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageCount
         MinValue=0

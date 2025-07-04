@@ -111,7 +111,7 @@ defaultproperties
     GroundSpeed=200.0
     DustSlipRate=0.0
     DustSlipThresh=100000.0
-    VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+    VehicleAttachments(0)=(AttachClass=Class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
     WashSoundRadius=300.0
 
     // Vehicle properties
@@ -121,10 +121,10 @@ defaultproperties
 
     // Damage
     EngineHealth=100
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
+    DisintegrationEffectClass=Class'ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=Class'ROVehicleObliteratedEmitter_simple'
     ImpactDamageThreshold=5000.0
 
     // View

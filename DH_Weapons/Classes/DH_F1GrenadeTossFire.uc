@@ -7,6 +7,6 @@ class DH_F1GrenadeTossFire extends DH_M1GrenadeTossFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_F1GrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_F1GrenadeAmmo'
+    ProjectileClass=Class'DH_F1GrenadeProjectile'
+    AmmoClass=Class'DH_F1GrenadeAmmo'
 }

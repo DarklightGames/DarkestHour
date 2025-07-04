@@ -7,6 +7,6 @@ class DH_CV33TankFactory_CamoTwo extends DH_CV33TankFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_CV33Tank_CamoTwo'
+    VehicleClass=Class'DH_CV33Tank_CamoTwo'
     Skins(0)=Texture'DH_CV33_tex.cv33_body_ext_camo2'
 }

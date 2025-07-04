@@ -11,7 +11,7 @@ defaultproperties
     MyName="Sniper"
     AltName="Sniper"
     Limit=1
-    AddedRoleRespawnTime=15
+    AddedRoleRespawnTime=5
     bExemptSquadRequirement=true
     bCanBeSquadLeader=false
 }

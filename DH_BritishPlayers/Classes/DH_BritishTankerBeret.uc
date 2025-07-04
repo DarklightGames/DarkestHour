@@ -9,6 +9,6 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.Brit_Beret'
-    Skins(0)=Texture'DHBritishCharactersTex.Headgear.Brit_tanker_beret'
-    Skins(1)=Texture'DHBritishCharactersTex.Headgear.Tanker_Badge'
+    Skins(0)=Texture'DHBritishCharactersTex.Brit_tanker_beret'
+    Skins(1)=Texture'DHBritishCharactersTex.Tanker_Badge'
 }

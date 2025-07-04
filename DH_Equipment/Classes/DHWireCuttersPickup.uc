@@ -7,6 +7,6 @@ class DHWireCuttersPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DHWireCuttersItem'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.CCwirecutters'
+    InventoryType=Class'DHWireCuttersItem'
+    StaticMesh=StaticMesh'DH_WeaponPickups.CCwirecutters'
 }

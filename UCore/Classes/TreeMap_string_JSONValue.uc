@@ -278,7 +278,7 @@ private static function TreeMapNode_string_JSONValue PutStatic(TreeMap_string_JS
 
     if (Node == none)
     {
-        Node = new class'TreeMapNode_string_JSONValue';
+        Node = new Class'TreeMapNode_string_JSONValue';
         Node.Key = D.RecursiveKey;
         Node.Value = D.RecursiveValue;
 

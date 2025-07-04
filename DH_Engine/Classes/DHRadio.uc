@@ -146,7 +146,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_Calibrating;
     }
 
-    if (VSize(P.Location - Location) > class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
+    if (VSize(P.Location - Location) > Class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
     {
         return ERROR_TooFarAway;
     }
@@ -170,7 +170,7 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
         return;
     }
 
-    Request = new class'DHArtilleryRequest';
+    Request = new Class'DHArtilleryRequest';
     Request.TeamIndex = PC.GetTeamNum();
     Request.Sender = PC;
     Request.ArtilleryTypeIndex = ArtilleryTypeIndex;
@@ -209,7 +209,7 @@ state Requesting extends Busy
 
         super.BeginState();
 
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (LI == none)
         {
@@ -227,7 +227,7 @@ state Requesting extends Busy
         }
 
         // "Requesting {name}."
-        Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
+        Request.Sender.ReceiveLocalizedMessage(Class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
         RequestSound = GetRequestSound(Request.TeamIndex, LI);
@@ -259,7 +259,7 @@ state Responding extends Busy
 
         super.BeginState();
 
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (LI == none)
         {
@@ -276,7 +276,7 @@ state Responding extends Busy
             GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
 
             // "Artillery strike confirmed."
-            Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
+            Request.Sender.ReceiveLocalizedMessage(Class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
             ResponseSound = GetConfirmSound(Request.TeamIndex, LI);
         }
         else
@@ -347,27 +347,27 @@ simulated function NotifySelected(Pawn User)
     {
         case ERROR_None:
             // "Press [%USE%] to request artillery"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 0,,, User.Controller);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 0,,, User.Controller);
             break;
         case ERROR_NotQualified:
             // "You are not qualified to use this radio"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 1);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 1);
             break;
         case ERROR_NoTarget:
             // "No artillery target marked"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 2);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 2);
             break;
         case ERROR_NotOwned:
             // "You cannot use enemy radios"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 3);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 3);
             break;
         case ERROR_Busy:
             // "Radio is currently in use"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 4);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 4);
             break;
         case ERROR_Calibrating:
             // "Radio is calibrating"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 5);
             break;
         default:
             break;
@@ -419,12 +419,12 @@ defaultproperties
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
     ResponseDelaySeconds=15.0   // TODO: also make italian request sounds shorter
-    AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
+    AmbientSound=Sound'DH_SundrySounds.RadioStatic'
 
     ResponseSoundRadius=100.0
     ResponseSoundVolume=3.0
 
-    ArtilleryMessageClass=class'DHArtilleryMessage'
+    ArtilleryMessageClass=Class'DHArtilleryMessage'
 
     UsageDistanceMaximumMeters=2.0
 

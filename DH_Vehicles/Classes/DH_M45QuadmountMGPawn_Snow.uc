@@ -7,5 +7,5 @@ class DH_M45QuadmountMGPawn_Snow extends DH_M45QuadmountMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M45QuadmountMG_Snow'
+    GunClass=Class'DH_M45QuadmountMG_Snow'
 }

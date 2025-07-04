@@ -10,7 +10,7 @@ var DHProjectileCalibrationInfo DebugCalibrationInfo;
 
 function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon VehicleWeapon, Vector StartLocation, float DebugAngleValue, UUnits.EAngleUnit DebugAngleUnit)
 {
-    DebugCalibrationInfo = new class'DHProjectileCalibrationInfo';
+    DebugCalibrationInfo = new Class'DHProjectileCalibrationInfo';
     DebugCalibrationInfo.VehicleWeapon = VehicleWeapon;
     DebugCalibrationInfo.StartLocation = StartLocation;
     DebugCalibrationInfo.DebugAngleValue = DebugAngleValue;
@@ -47,7 +47,7 @@ function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker
         RequestLocation.Z = 0.0;
         HitLocation.Z = 0.0;
         Distance = VSize(RequestLocation - HitLocation);
-        Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
+        Threshold = Class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
 
         if (Distance < Threshold)
         {

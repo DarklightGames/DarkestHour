@@ -107,7 +107,7 @@ simulated function HandlePrecache()
         {
             if (GivenItems[i] != "")
             {
-                GivenItemClass = class<DHWeapon>(DynamicLoadObject(GivenItems[i], class'class'));
+                GivenItemClass = class<DHWeapon>(DynamicLoadObject(GivenItems[i], Class'class'));
 
                 if (GivenItemClass != none)
                 {
@@ -141,33 +141,33 @@ simulated function HandlePrecache()
     {
         if (default.Models[i] != "")
         {
-            PR = class'xUtil'.static.FindPlayerRecord(default.Models[i]);
+            PR = Class'xUtil'.static.FindPlayerRecord(default.Models[i]);
 
             if (PR.MeshName != "")
             {
-                DynamicLoadObject(PR.MeshName, class'Mesh');
+                DynamicLoadObject(PR.MeshName, Class'Mesh');
             }
 
             if (PR.BodySkinName != "")
             {
-                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.BodySkinName, Class'Material')));
             }
 
             if (PR.FaceSkinName != "")
             {
-                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
+                Level.ForceLoadTexture(Texture(DynamicLoadObject(PR.FaceSkinName, Class'Material')));
             }
         }
     }
 
     if (default.VoiceType != "")
     {
-        DynamicLoadObject(default.VoiceType, class'Class');
+        DynamicLoadObject(default.VoiceType, Class'Class');
     }
 
     if (default.AltVoiceType != "")
     {
-        DynamicLoadObject(default.AltVoiceType, class'Class');
+        DynamicLoadObject(default.AltVoiceType, Class'Class');
     }
 }
 
@@ -346,7 +346,7 @@ simulated function bool IsValidCharacterName(string InCharacterName)
 
 simulated static function string GetDisplayName()
 {
-    if (class'DHPlayer'.default.bUseNativeRoleNames)
+    if (Class'DHPlayer'.default.bUseNativeRoleNames)
     {
         return default.AltName;
     }
@@ -367,8 +367,8 @@ defaultproperties
     HeadgearProbabilities(0)=1.0
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.hands'
+    GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
     HandType=HAND_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
