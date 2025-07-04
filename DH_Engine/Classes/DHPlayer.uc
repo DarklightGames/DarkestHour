@@ -7751,7 +7751,10 @@ function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
 
 exec simulated function ListWeapons()
 {
-    Class'DHWeaponRegistry'.static.DumpToLog(self);
+    if (IsDebugModeAllowed())
+    {
+        Class'DHWeaponRegistry'.static.DumpToLog(self);
+    }
 }
 
 exec function DebugStartRound()
@@ -8014,7 +8017,10 @@ simulated static function string GetInventoryName(class<Inventory> InventoryClas
 
 exec simulated function ListVehicles()
 {
-    Class'DHVehicleRegistry'.static.DumpToLog(self);
+    if (IsDebugModeAllowed())
+    {
+        Class'DHVehicleRegistry'.static.DumpToLog(self);
+    }
 }
 
 exec function MapBoundsOffset(int X, int Y)
