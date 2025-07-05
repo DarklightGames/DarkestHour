@@ -2,6 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] Investigate issue where gunsight pitch is way off.
+// [ ] Fix camera transition animations not playing.
+// [ ] Textures
+// [ ] Variants
+// [ ] Destroyed mesh
+// [ ] Any construction loadout changes that need to be made.
+// [ ] Third person animations.
+// [ ] Possibly redo interface art.
+// [ ] Fix geo misalignment from yaw driver.
+//==============================================================================
 
 class DH_ZiS2Gun extends DHATGun;
 

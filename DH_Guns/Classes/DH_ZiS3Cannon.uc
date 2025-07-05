@@ -13,8 +13,8 @@ defaultproperties
     //Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
     //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
 
-    AnimationDrivers(0)=(Channel=1,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
-    AnimationDrivers(1)=(Channel=2,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+    AnimationDrivers(0)=(Channel=2,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
+    AnimationDrivers(1)=(Channel=3,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
 
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
@@ -92,4 +92,6 @@ defaultproperties
     RangeSettings(20)=4000
 
     ResupplyInterval=7.5
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }
