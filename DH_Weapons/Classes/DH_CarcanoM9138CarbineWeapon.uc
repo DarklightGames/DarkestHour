@@ -40,4 +40,5 @@ defaultproperties
     BoltIronLastAnim="iron_bolt_clipfall"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=1,BoneName="Hammer",Animation="Hammer")
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bayonet,Channel=2,BoneName="folding_bayonet_car",Animation="Bayonet_unfolded_carbine")
 }
