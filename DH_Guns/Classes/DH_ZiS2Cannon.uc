@@ -21,6 +21,8 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
 
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
     GunnerAttachmentBone="GUN_YAW"
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"

@@ -13,9 +13,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS_BODY_EXT'
     //Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
     //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS2_destroyed'
-    //VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
-    //VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
-    //VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
+    VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
     ExitPositions(1)=(X=-100.00,Y=-30.00,Z=30.00)
     VehicleMass=11.0
     bCanBeRotated=true

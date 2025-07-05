@@ -23,9 +23,11 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS3_BARREL_COLLISION',AttachBone="BARREL")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS_PITCH_COLLISION',AttachBone="GUN_PITCH")
 
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"
-    WeaponFireAttachmentBone="MUZZLE_ZIS2"
+    WeaponFireAttachmentBone="MUZZLE_ZIS3"
     GunnerAttachmentBone="GUN_YAW"
 
     // Turret movement
