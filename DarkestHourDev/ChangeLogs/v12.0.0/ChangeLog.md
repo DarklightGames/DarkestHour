@@ -282,7 +282,7 @@ with the help of others.
 * Some scopes have had the reticle updated to be less chunky and view-obscuring.
 * Scoped weapons have been zeroed consistently for 100m.
 * FG42 now has slightly less recoil and a flatter recoil curve, making it more controllable.
-* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschrek, Bazooka)
+* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschreck, Bazooka)
 
 ## Miscellaneous
 * Removed additional patron voting power. This was disabled on all official servers already, but custom servers would have this on by default.
