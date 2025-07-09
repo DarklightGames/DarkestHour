@@ -2,7 +2,7 @@
 
 At *long last* and after much anticipation, we are proud to announce the release of the Italy Expansion for Darkest Hour: Europe '44-'45!
 
-As the name implies, this expansion adds the Italian faction to the game, as well as a bevy of new vehicles, weapons, and maps.
+This expansion adds the Italian faction to the game, as well as a bevy of new vehicles, weapons, and maps.
 
 This has been a huge undertaking for our team, and speaking as the team lead, I'm very proud of everything that we've accomplished. We know that all the content we've created for this update is by far the best we've ever made, and think you'll agree.
 
@@ -10,7 +10,7 @@ This has been a huge undertaking for our team, and speaking as the team lead, I'
 
 ![Italian Soldiers](./Media/Meet%20the%20Italians.png)
 
-Coming out of the crucible of World War I, Italian did not fare very well. Although it had ostensibly been victorious, its ambitions of vast territorial expansion had been thwarted by post-war treaties, leaving the political landscape of Italy in turmoil.
+Coming out of the crucible of World War I, Italy did not fare very well. Although it had ostensibly been victorious, its ambitions of vast territorial expansion had been thwarted by post-war treaties, leaving the political landscape of Italy in turmoil.
 
 The rise of Benito Mussolini and the fascist party in the 1920s saw a renewed interest in military expansionism, culminating in the successful Italian invasions of Ethiopia and Albania in the 1930s in an attempt to restore the lost glory of the Roman Empire around the Mediterranean Sea (the "Mare Nostrum", lit. "Our Sea").
 
@@ -24,9 +24,9 @@ It is amidst this backdrop that Operation Husky, the Allied invasion of Sicily, 
 This update sees the addition of 9 brand new vehicles to the game; 8 of which are unique to the Italian faction.
 
 ### Autoblinda 41
-This Autoblinda 41 armored car is a fast and extremely maneuverable vehicle excellent for scouting and anti-infantry. Its 20mm cannon is capable of destroying light vehicles with ease, but will be dramatically less effective attempting to engage even lightly armored tanks head-on.
+The Autoblinda 41 armored car is a fast and extremely maneuverable vehicle that's excellent for scouting and anti-infantry. Its 20mm cannon is capable of destroying light vehicles with ease, but will be dramatically less effective attempting to engage even lightly armored tanks head-on.
 
-It is also unique in that it is the only vehicle in the game with a rear-facing machine-gun, allowing it to defend itself from enemy infantry tempting to flank it.
+It is also unique in that it is the only vehicle in the game with a rear-facing machine-gun, allowing it to defend itself from enemy infantry attempting to flank it.
 
 ![Autoblinda 41](./Media/Autoblinda%2041%20Front.png)
 
@@ -38,7 +38,7 @@ The Autocaretta OM 32 and 36P are light trucks used for both transporting troops
 ![OM 32](./Media/OM%2032.png)
 
 ### Carro Velocce 33 (CV-33, L3/33)
-One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored. It is armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
+One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored and armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
 
 ![Carro Velocce 33](./Media/CV33%20Front.png)
 
@@ -58,7 +58,7 @@ A light tank armed with a 20mm cannon and a 8mm machine-gun; the majority of the
 ![Fiat L6/40](./Media/Fiat%20L640%20Front.png)
 
 ### Semovente 47/32
-Ther most produced Italian self-propelled gun of the war, the Semovente 47/32 is armed with a 47mm cannon capable of penetrating most enemy tanks from the side and rear. It's low profile and good maneuverability make it an excellent ambush vehicle, but it's thin armor and an open-topped turret make it extremely vulnerable to enemy fire.
+The most produced Italian self-propelled gun of the war, the Semovente 47/32 is armed with a 47mm cannon capable of penetrating most enemy tanks from the side and rear. It's low profile and good maneuverability make it an excellent ambush vehicle, but thin armor and an open-topped turret make it extremely vulnerable to enemy fire.
 
 ![Semovente 47/32](./Media/Semovente%2047%20Front.png)
 
@@ -68,7 +68,7 @@ A self-propelled gun sporting a devastating 90mm cannon, the Semovente 90/53 is 
 ![Semovente 90/53](./Media/Semovente%2090%20Front.png)
 
 ### DUKW
-The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
+The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transport troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
 
 ![DUKW](./Media/DUKW.png)
 
@@ -97,7 +97,7 @@ There are many things that have been said about the Breda modello 30; most of th
 ![Breda mod. 30](./Media/Weapons/Breda%20mod%2030%20TP.png)
 
 ### Carcano M91/38
-The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+The Carcano M91/38 was the standard issue bolt-action rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
 
 ![Carcano M91/38](./Media/Weapons/Carcano%20M9138%20TP.png)
 
@@ -109,7 +109,7 @@ Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bol
 ![Fucile Contracarro 35(P)](./Media/Weapons/Fucile%20Contracarro%2038P.png)
 
 ### MAB mod. 38-A
-The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
+This sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
 
 This weapon can be found exclusively in the hands of the Italian "Camicie Nere" (Blackshirts).
 
@@ -147,7 +147,7 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 Niscemi is a hilltop town that was used as a staging area for counterattacks against the invading Allies immediately following the invasion.
 
-The invading Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outkirts of the town.
+The Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outskirts of the town.
 
 |||
 |-|-|
@@ -157,7 +157,7 @@ The invading Allies will have to fight an uphill battle against fixed Italian de
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
 
-This is the largest map in the update and features almost all of the new vehicles and equipment in this update.
+This is the largest map in the update and features almost all of the new vehicles and equipment.
 
 |||
 |-|-|
@@ -167,7 +167,7 @@ This is the largest map in the update and features almost all of the new vehicle
 ### San Valentino (24-64 players)
 This popular map has been completely re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
-This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division back to more defensible positions once the Allies had established unassailable beachheads.
+This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division to more defensible positions once the Allies had established unassailable beachheads.
 
 |||
 |-|-|
@@ -217,9 +217,9 @@ The map icons for vehicles and stationary weapons have been completely overhaule
 
 To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while occupied ones will be blue, or green if the occupant is a squadmate.
 
-Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
+In addition, the icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
 
-The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
+Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
 
 ## Font Overhaul
 
@@ -249,18 +249,12 @@ In addition, text will scale more consistently based on the resolution. As a res
 ## Signalling
 Changes to the signalling (in-world fire, move, spotting markers) system:
 
-* The signal transparency is now smoothly modulated based on timing &
-  the viewing angle.
-* The duration of signals has been reduced from 15 seconds to 10
-  seconds.
-* Signals will now be fully transparent if the player's viewing angle is
-  within 2 degrees.
-* The signal recipient radius has been reduced from 50 meters to 25
-  meters.
+* The signal transparency is now smoothly modulated based on timing & the viewing angle.
+* The duration of signals has been reduced from 15 seconds to 10 seconds.
+* Signals will now be fully transparent if the player's viewing angle is within 2 degrees.
+* The signal recipient radius has been reduced from 50 meters to 25 meters.
 
-These changes should alleviate the exploitation of signals to accurately
-shoot through vegetation that they cannot see through either solo or
-with the help of others.
+These changes should alleviate the exploitation of signals to accurately shoot through vegetation that the gunner they cannot see through either solo or with the help of others.
 
 ## Vehicles
 * Vehicle passengers may no longer use vehicle voice commands intended for crew members only.
@@ -296,7 +290,7 @@ The following maps have been removed due to unpopularity or redundancy.
 
   * Armored Brenus Clash
   * Armored La Feuillie Advance
-  * Watrage Push
+  * Watrange Push
 
 ### New Variant & Skin System
 Players can now select different variants and skins for guns placed in the world. 
@@ -306,7 +300,6 @@ For example, the Cannone 47/32 has two variants, one with wheels and one without
 Skins are also selectable, although winter skins will only be available on winter maps.
 
 ### Category & Limits Overhaul
-
 The construction loadouts system has been overhauled to allow for easier and more fine-grained control over what each team can build on a map.
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive ordeal that was prone to human error and oversight.
@@ -318,7 +311,7 @@ In addition, there are now hard limits on the amount of total constructions that
 # Effects
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 * Grenades impacting surfaces now have unique sounds depending on the type of surface hit.
-* Mortar and grenade explosions now have new and unique explosion effects.
+* Mortar and grenades now have new and unique explosion effects.
 * Grenade scorch decal changed to be more realistic.
 
 # Bug Fixes
@@ -332,7 +325,7 @@ In addition, there are now hard limits on the amount of total constructions that
 * Fixed a bug where the pitch of the mortar whistling sound would always be incorrect while spectating.
 * Fixed a bug where mortars that hit things on ascent (e.g., nearby trees) wouldn't explode immediately.
 * `ToggleSelectedArtilleryTarget` command now has a default keybind set.
-* Fixed default settings being set incorrectly (they are now set to "Highest" setting).
+* Fixed an issues where the default graphics settings we set incorrectly (they are now set to "Highest" setting).
 * Fixed a bug where map marker cooldowns (e.g., mortar spotting marks) would be broken after the round was reset.
 * Fixed an issue on Freyneux & Lamormenil where tanks could drive through some buildings.
 * Fixed a bug where the gun rotation projector looked opaque on BSP surfaces.
@@ -374,8 +367,11 @@ In the near future we plan to add:
 
 On a slightly longer time scale, we have started building the necessary groundwork for stationary machine-guns for every faction, remaking all of the Allied player models, specialized squad types and much more.
 
-As a reminder, the Darkest Hour development team is entirely volunteers, and we recieve no compensation other than from our generous Patreon supporters, whose donations fund game server costs and development infrastructure. If you like what we're doing, please consider [joining our Patreon](https://www.patreon.com/darkesthourgame)!
+# Support Us On Patreon!
+
+The Darkest Hour development team is made entirely of volunteers, and we recieve no compensation other than from our generous Patreon supporters, whose donations fund game server costs and development infrastructure.
+
+If you like what we're doing, please consider [joining our Patreon](https://www.patreon.com/darkesthourgame)!
 
 See you on the battlefield,
-
 Darklight Games 🕷️
