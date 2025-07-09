@@ -13,40 +13,40 @@ defaultproperties
     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
-    MuzzleBoneName="MUZZLE"
+    MuzzleBoneName="MUZZLE_CAR"
     ShellEjectionBoneName="EJECTOR"
 
-    WA_Idle="idle_m38car"
-    WA_Fire="idle_m38car"
+    // Idle / Fire
+    WA_Idle="idle_carcano"
+    WA_Fire="idle_carcano"
+    WA_BayonetIdle="idle_carcano_bayo"
+    WA_BayonetIdleEmpty="idle_carcano_bayo"
+    WA_BayonetFire="idle_carcano_bayo"
 
     // Reload
-    WA_ReloadEmpty="stand_reload_m38car"
-    WA_ProneReloadEmpty="prone_reload_m38car"
-
-    // Reload (bayonet)
-    WA_BayonetReloadEmpty="stand_reload_m38car_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_m38car_bayo"
+    WA_ReloadEmpty="stand_reload_carcano"
+    WA_ProneReloadEmpty="prone_reload_carcano"
+    WA_BayonetReloadEmpty="stand_reload_carcano_bayo"
+    WA_BayonetProneReloadEmpty="prone_reload_carcano_bayo"
 
     // Partial reload
-    WA_PreReload="open_m38car"
-    WA_Reload="insert_m38car"
-    WA_PostReload="close_m38car"
-    WA_ProneReload="insert_m38car"
+    WA_PreReload="open_carcano"
+    WA_Reload="insert_carcano"
+    WA_PostReload="close_carcano"
+    WA_ProneReload="insert_carcano"
+    WA_BayonetPreReload="open_carcano_bayo"
+    WA_BayonetReload="insert_carcano_bayo"
+    WA_BayonetPostReload="close_carcano_bayo"
 
-    // Partial reload (bayonet)
-    WA_BayonetPreReload="open_m38car_bayo"
-    WA_BayonetReload="insert_m38car_bayo"
-    WA_BayonetPostReload="close_m38car_bayo"
+    // Bolt
+    WA_WorkBolt="bolt_carcano"
+    WA_BayonetWorkBolt="bolt_carcano_bayo"
 
-    WA_BayonetIdle="idle_m38car_bayo"
-    WA_BayonetIdleEmpty="idle_m38car_bayo"
-    WA_BayonetFire="idle_m38car_bayo"
-    WA_BayonetAttach="stand_bayattach_m38car"
-    WA_BayonetDetach="stand_bayremove_m38car"
-    WA_BayonetAttachProne="prone_bayattach_m38car"
-    WA_BayonetDetachProne="prone_bayremove_m38car"
-    WA_WorkBolt="bolt_m38car"
-    WA_BayonetWorkBolt="bolt_m38car_bayo"
+    // Bayonet attach
+    WA_BayonetAttach="stand_bayattach_carcano_m38car"
+    WA_BayonetDetach="stand_bayremove_carcano_m38car"
+    WA_BayonetAttachProne="prone_bayattach_carcano_m38car"
+    WA_BayonetDetachProne="prone_bayremove_carcano_m38car"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
