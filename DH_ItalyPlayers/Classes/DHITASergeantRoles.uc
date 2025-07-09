@@ -10,8 +10,8 @@ defaultproperties
 {
     AltName="Sergente"
 
-    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM91Weapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
-    // TODO: Add Carcano Carbine as an option.
+    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM9138CarbineWeapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_CarcanoM91Weapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
 
     SecondaryWeapons(0)=(Item=Class'DH_BerettaM1934Weapon',AssociatedAttachment=Class'DH_BerettaM1934AmmoPouch')
 

@@ -10,7 +10,7 @@ defaultproperties
 {
     AltName="Guastatori"
 
-    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM91Weapon')
+    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM9138CarbineWeapon')
 
     Grenades(0)=(Item=Class'DH_LTypeGrenadeWeapon')
     Grenades(1)=(Item=Class'DH_SRCMMod35SmokeGrenadeWeapon')
