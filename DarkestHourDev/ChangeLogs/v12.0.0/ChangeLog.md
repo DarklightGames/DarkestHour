@@ -96,8 +96,10 @@ There are many things that have been said about the Breda modello 30; most of th
 
 ![Breda mod. 30](./Media/Weapons/Breda%20mod%2030%20TP.png)
 
-### Carcano M91/38
-The Carcano M91/38 was the standard issue bolt-action rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+### Carcano mod. 91 and 91/38
+The Carcano mod. 91 was the standard issue bolt-action rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+
+In addition, certain roles will have access to the Carcano mod. 91/38, a short barreled variant with a foldable bayonet.
 
 ![Carcano M91/38](./Media/Weapons/Carcano%20M9138%20TP.png)
 
