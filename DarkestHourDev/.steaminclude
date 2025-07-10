@@ -8,9 +8,8 @@ System/dh_server_launcher.bat
 
 !*.git
 !*.gitignore
-!*.make
 !*.steaminclude
-!*.i18n
+!*.ucl
 !submodules
 !tools
 !DarkestHourDev/System/DarkestHourDev.ini
@@ -20,7 +19,7 @@ System/dh_server_launcher.bat
 !DarkestHourDev/Maps/DH-StaticTestPlayground.rom
 !DarkestHourDev/Maps/DH-Target_Range_Bullets.rom
 !DarkestHourDev/Maps/DH-Target_Range_Effects.rom
-!DarkestHourDev/Maps/DH-Template_*
+!DarkestHourDev/Maps/DH-TEMPLATE_*
 !DarkestHourDev/Maps/DH-INCOMPLETE_*
 !DarkestHourDev/Fonts/*
 !DarkestHourDev/ChangeLogs/*
