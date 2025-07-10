@@ -119,6 +119,7 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
     PA_IdleProneAnim="prone_idle_kar"
+    PA_ProneIdleRestAnim="prone_idle_kar"
     PA_TurnLeftAnim="stand_turnLhip_kar"
     PA_TurnRightAnim="stand_turnRhip_kar"
     PA_TurnIronLeftAnim="stand_turnLiron_kar"
