@@ -292,6 +292,9 @@ The following maps have been removed due to unpopularity or redundancy.
 
   * Armored Brenus Clash
   * Armored La Feuillie Advance
+  * Gorlitz Push
+  * Grain Elevator
+  * Nuenen Clash
   * Watrange Push
 
 ### New Variant & Skin System
