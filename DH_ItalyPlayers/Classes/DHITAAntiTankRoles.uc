@@ -11,6 +11,7 @@ defaultproperties
     AltName="Fuciliere Anticarro"
 
     PrimaryWeapons(0)=(Item=Class'DH_Wz35Weapon')
+    PrimaryWeapons(1)=(Item=Class'DH_CarcanoM9138CarbineWeapon')
     SecondaryWeapons(0)=(Item=Class'DH_BerettaM1934Weapon')
 
     Grenades(0)=(Item=Class'DH_LTypeGrenadeWeapon')

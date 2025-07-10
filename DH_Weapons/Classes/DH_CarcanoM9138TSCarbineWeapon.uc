@@ -3,17 +3,17 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM91Weapon extends DHBoltActionWeapon;
+class DH_CarcanoM9138TSCarbineWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano Fucile mod. 91"
+    ItemName="Carcano Moschetto TS mod. 91/38"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=Class'DH_CarcanoM91Fire'
-    FireModeClass(1)=Class'DH_CarcanoM91MeleeFire'
-    AttachmentClass=Class'DH_CarcanoM91Attachment'
-    PickupClass=Class'DH_CarcanoM91Pickup'
+    FireModeClass(0)=Class'DH_CarcanoM9138TSCarbineFire'
+    FireModeClass(1)=Class'DH_CarcanoM9138TSCarbineMeleeFire'
+    AttachmentClass=Class'DH_CarcanoM9138TSCarbineAttachment'
+    PickupClass=Class'DH_CarcanoM9138TSCarbinePickup'
 
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 

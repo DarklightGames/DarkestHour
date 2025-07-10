@@ -2,54 +2,40 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// TODO:
-// - Add WA anims.
-// - Add PA reload and bayonet attachment anims.
 
-class DH_CarcanoM91Attachment extends DHWeaponAttachment;
+class DH_CarcanoM9138ShortRifleAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
-    MenuImage=Texture'DH_Carcano_tex.carcano_m91_icon'
-    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
-    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_Carcano_tex.carcano_m38_icon'
+    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
     MuzzleBoneName="MUZZLE"
     ShellEjectionBoneName="EJECTOR"
 
-    // Idle / Fire
     WA_Idle="idle_carcano"
     WA_Fire="idle_carcano"
-    WA_BayonetIdle="idle_carcano_bayo"
-    WA_BayonetIdleEmpty="idle_carcano_bayo"
-    WA_BayonetFire="idle_carcano_bayo"
-
-    // Reload
-    WA_ReloadEmpty="stand_reload_carcano"
-    WA_ProneReloadEmpty="prone_reload_carcano"
-    WA_BayonetReloadEmpty="stand_reload_carcano_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_carcano_bayo"
-
-    // Partial reload
-    WA_PreReload="open_carcano"
-    WA_Reload="insert_carcano"
-    WA_PostReload="close_carcano"
-    WA_ProneReload="insert_carcano"
-    WA_BayonetPreReload="open_carcano_bayo"
-    WA_BayonetReload="insert_carcano_bayo"
-    WA_BayonetPostReload="close_carcano_bayo"
-
-    // Bolt
-    WA_WorkBolt="bolt_carcano"
-    WA_BayonetWorkBolt="bolt_carcano_bayo"
-
-    // Bayonet attach
-    WA_BayonetAttach="stand_bayattach_carcano_m91"
-    WA_BayonetDetach="stand_bayremove_carcano_m91"
-    WA_BayonetAttachProne="prone_bayattach_carcano_m91"
-    WA_BayonetDetachProne="prone_bayremove_carcano_m91"
+    WA_Reload="idle_carcano"
+    WA_ProneReload="idle_carcano"
+    WA_ReloadEmpty="idle_carcano"
+    WA_ProneReloadEmpty="idle_carcano"
+    WA_PostReload="idle_carcano"
+    WA_BayonetIdle="idle_bayonet_carcano"
+    WA_BayonetIdleEmpty="idle_bayonet_carcano"
+    WA_BayonetFire="idle_bayonet_carcano"
+    WA_BayonetReload="idle_bayonet_carcano"
+    WA_BayonetProneReload="idle_bayonet_carcano"
+    WA_BayonetReloadEmpty="idle_bayonet_carcano"
+    WA_BayonetProneReloadEmpty="idle_bayonet_carcano"
+    WA_BayonetAttach="idle_bayonet_carcano"
+    WA_BayonetDetach="idle_bayonet_carcano"
+    WA_BayonetAttachProne="idle_bayonet_carcano"
+    WA_BayonetDetachProne="idle_bayonet_carcano"
+    WA_WorkBolt="idle_carcano"
+    WA_BayonetWorkBolt="idle_bayonet_carcano"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -181,9 +167,9 @@ defaultproperties
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
     PA_ReloadAnim="stand_insert_karscope"
-    PA_ReloadEmptyAnim="stand_reload_carcano"
+    PA_ReloadEmptyAnim="stand_reload_kar"
     PA_ProneReloadAnim="prone_insert_karscope"
-    PA_ProneReloadEmptyAnim="prone_reload_carcano"
+    PA_ProneReloadEmptyAnim="prone_reload_kar"
     PA_PreReloadAnim="stand_open_karscope"
     PA_PostReloadAnim="stand_close_karscope"
     PA_PronePreReloadAnim="prone_open_karscope"
@@ -194,10 +180,10 @@ defaultproperties
     PA_BayonetAltFire="stand_stab_kar"
     PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
     PA_ProneBayonetAltFire="prone_idlestrike_bayo"
-    PA_BayonetAttachAnim="stand_bayattach_carcano_m91"
-    PA_ProneBayonetAttachAnim="prone_bayattach_carcano_m91"
-    PA_BayonetDetachAnim="stand_bayremove_carcano_m91"
-    PA_ProneBayonetDetachAnim="prone_bayremove_carcano_m91"
+    PA_BayonetAttachAnim="stand_bayattach_svt40"
+    PA_ProneBayonetAttachAnim="prone_bayattach_svt40"
+    PA_BayonetDetachAnim="stand_bayremove_svt40"
+    PA_ProneBayonetDetachAnim="prone_bayremove_svt40"
     PA_AirStillAnim="jump_mid_kar"
     PA_AirAnims(0)="jumpF_mid_kar"
     PA_AirAnims(1)="jumpB_mid_kar"
