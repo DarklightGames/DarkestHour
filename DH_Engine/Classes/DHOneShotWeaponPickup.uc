@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHOneShotWeaponPickup extends DHWeaponPickup
@@ -32,6 +32,6 @@ function InitDroppedPickupFor(Inventory Inv)
 
 defaultproperties
 {
-    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupSound=Sound'Inf_Weapons_Foley.ammopickup'
     CollisionRadius=15.0
 }

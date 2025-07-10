@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroups extends DHCommandMenu
@@ -15,27 +15,30 @@ function Setup()
     local DHGameReplicationInfo GRI;
     local array<class<DHConstructionGroup> > Groups;
     local UComparator GroupsComparator;
+    local class<DHConstruction> ConstructionClass;
 
     GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
     PC = GetPlayerController();
 
     Context.TeamIndex = PC.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PC.Level);
     Context.PlayerController = PC;
 
     // Compile a list of unique groups from the constructions that can be displayed.
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    for (i = 0; i < Context.LevelInfo.ConstructionsEvaluated.Length; ++i)
     {
-        if (GRI.ConstructionClasses[i] != none && GRI.ConstructionClasses[i].static.ShouldShowOnMenu(Context))
+        ConstructionClass = Context.LevelInfo.ConstructionsEvaluated[i].ConstructionClass;
+
+        if (ConstructionClass != none && ConstructionClass.static.ShouldShowOnMenu(Context))
         {
-            class'UArray'.static.AddUnique(Groups, GRI.ConstructionClasses[i].default.GroupClass);
+            Class'UArray'.static.AddUnique(Groups, ConstructionClass.default.GroupClass);
         }
     }
 
     // Sort the groups.
-    GroupsComparator = new class'UComparator';
-    GroupsComparator.CompareFunction = class'DHConstructionGroup'.static.SortFunction;
-    class'USort'.static.Sort(Groups, GroupsComparator);
+    GroupsComparator = new Class'UComparator';
+    GroupsComparator.CompareFunction = Class'DHConstructionGroup'.static.SortFunction;
+    Class'USort'.static.Sort(Groups, GroupsComparator);
 
     Options.Length = Groups.Length;
 
@@ -49,7 +52,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroup", Options[OptionIndex].OptionalObject);
 }

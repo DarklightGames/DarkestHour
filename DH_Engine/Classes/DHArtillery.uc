@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillery extends Actor
@@ -123,7 +123,7 @@ defaultproperties
     MenuName="Long-Range Artillery"
     bAlwaysRelevant=true
 
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Artillery'
 
     bCanBeCancelled=true
     RequiredSquadMemberCount=3

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // The FG-42 has a unique bolt operation. It operates in open-bolt while in
 // automatic mode and closed bolt in single-fire mode.
@@ -41,7 +41,7 @@ simulated function SetBoltMode(EBoltMode BoltMode)
 }
 
 // This hides & shows the correct bolt bones depending on the bolt mode.
-simulated private function UpdateBolt()
+private simulated function UpdateBolt()
 {
     if (BoltMode == BM_Closed)
     {
@@ -70,13 +70,13 @@ defaultproperties
     ItemName="FG 42"
     NativeItemName="Fallschirmjägergewehr 42"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_FG42Attachment'
-    PickupClass=class'DH_Weapons.DH_FG42Pickup'
+    FireModeClass(0)=Class'DH_FG42Fire'
+    FireModeClass(1)=Class'DH_FG42MeleeFire'
+    AttachmentClass=Class'DH_FG42Attachment'
+    PickupClass=Class'DH_FG42Pickup'
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_FG42Barrel'
+    BarrelClass=Class'DH_FG42Barrel'
     BarrelSteamBone="Muzzle"
 
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42_1st'
@@ -108,7 +108,6 @@ defaultproperties
 
     // Bolt operation
     BoltMode=BM_Closed
-    BoltOpenSlot=0
     BoltClosedSlot=1
     BoltOpenBoneName="bolt_open"
     BoltClosedBoneName="bolt_closed"

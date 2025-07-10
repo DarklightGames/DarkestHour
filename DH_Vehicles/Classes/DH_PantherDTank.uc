@@ -1,20 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PantherDTank extends DHArmoredVehicle;
-
-// Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
-simulated function SpawnVehicleAttachments()
-{
-    if (RandomAttachment.Skins[0] == none)
-    {
-        RandomAttachOptions.Length = 0;
-    }
-
-    super.SpawnVehicleAttachments();
-}
 
 defaultproperties
 {
@@ -25,17 +14,17 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.pantherg_ext'
+    Skins(1)=Texture'axis_vehicles_tex.PantherG_treads'
+    Skins(2)=Texture'axis_vehicles_tex.PantherG_treads'
+    Skins(3)=Texture'axis_vehicles_tex.pantherg_int'
+    HighDetailOverlay=Shader'axis_vehicles_tex.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PantherDCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -47,7 +36,7 @@ defaultproperties
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
     DriveAnim="VPanther_driver_idle_close"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
@@ -82,13 +71,13 @@ defaultproperties
     DisintegrationHealth=-800.0 //petrol
 
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=0.0
     TreadDamageThreshold=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherG_Destroyed0'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.PantherG_Destroyed0'
 
     // Exit
     ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0) // driver
@@ -102,12 +91,12 @@ defaultproperties
     // Sounds
     SoundPitch=32
     MaxPitchSpeed=100.0
-    IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L05'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R05'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    IdleSound=SoundGroup'Vehicle_Engines.Tiger_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L05'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R05'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02'
     RumbleSoundBone="driver_attachment"
 
     // Visual effects
@@ -115,16 +104,11 @@ defaultproperties
     WheelRotationScale=81250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    RandomAttachment=(AttachBone="body",Skins=(none)) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
-
+    
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.panther_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.panther_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.panther_turret_look'
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.49
@@ -141,7 +125,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.605
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panther'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.panther'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -175,7 +159,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -184,7 +168,7 @@ defaultproperties
         BoneOffset=(X=32.0,Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -194,7 +178,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -203,7 +187,7 @@ defaultproperties
         BoneOffset=(X=-14.0,Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -212,7 +196,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -221,7 +205,7 @@ defaultproperties
         BoneOffset=(Y=15.0,Z=-1.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -242,5 +226,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_PantherDTank.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

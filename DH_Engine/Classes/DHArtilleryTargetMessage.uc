@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtilleryTargetMessage extends ROCriticalMessage
@@ -69,5 +69,5 @@ defaultproperties
     TargetMarkedSmoke="{0} has marked a artillery smoke target"
     CannotMarkTargetYet="You cannot mark another artillery target marker yet"
     TooManyArtilleryTargets="There are too many active artillery targets"
-    iconTexture=Material'DH_GUI_tex.GUI.criticalmessages_icons'
+    iconTexture=Material'DH_GUI_tex.criticalmessages_icons'
 }

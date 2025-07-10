@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_OpenIP extends UT2K4GetDataMenu;
@@ -104,7 +104,7 @@ defaultproperties
         OnClick=DHBrowser_OpenIP.InternalOnClick
         OnKeyEvent=CancelButton.InternalOnKeyEvent
     End Object
-    b_Cancel=GUIButton'DH_Interface.DHBrowser_OpenIP.CancelButton'
+    b_Cancel=GUIButton'DH_Interface.CancelButton'
 
     Begin Object Class=DHmoEditBox Name=IpEntryBox
         LabelJustification=TXTA_Right
@@ -116,7 +116,7 @@ defaultproperties
         WinHeight=0.04
         TabOrder=0
     End Object
-    ed_Data=DHmoEditBox'DH_Interface.DHBrowser_OpenIP.IpEntryBox'
+    ed_Data=DHmoEditBox'DH_Interface.IpEntryBox'
 
     Begin Object Class=GUIButton Name=OkButton
         Caption="OK"
@@ -127,7 +127,7 @@ defaultproperties
         OnClick=DHBrowser_OpenIP.InternalOnClick
         OnKeyEvent=OkButton.InternalOnKeyEvent
     End Object
-    b_OK=GUIButton'DH_Interface.DHBrowser_OpenIP.OkButton'
+    b_OK=GUIButton'DH_Interface.OkButton'
 
     Begin Object Class=GUILabel Name=IPDesc
         Caption="Enter New IP Address"
@@ -138,10 +138,10 @@ defaultproperties
         WinTop=0.38
         WinHeight=32.0
     End Object
-    l_Text=GUILabel'DH_Interface.DHBrowser_OpenIP.IPDesc'
+    l_Text=GUILabel'DH_Interface.IPDesc'
 
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=Texture'DH_GUI_Tex.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"
@@ -150,5 +150,5 @@ defaultproperties
         WinWidth=0.47
         WinHeight=0.8
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHBrowser_OpenIP.MessageWindowFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.MessageWindowFrameBackground'
 }

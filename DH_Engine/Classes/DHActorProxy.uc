@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHActorProxy extends Actor;
@@ -15,10 +15,10 @@ var DHConstructionProxyProjector    Projector;
 var array<Actor>                    Attachments;
 
 // Rotation
-var rotator                         LocalRotation;
-var rotator                         LocalRotationRate;
-
-var bool                            bIsInterpolated;    // NOTE: this is for some unused functionality that may find a home at some point
+var Rotator                         LocalRotation;
+var Rotator                         LocalRotationRate;
+var bool                            bLimitLocalRotation;    // Whether or not the limit the local rotation.
+var Range                           LocalRotationYawRange;
 
 // A context object used for passing context-relevant values to functions that
 // determine various parameters of the construction.
@@ -29,6 +29,8 @@ struct Context
     var DHPlayer PlayerController;
     var Actor GroundActor;
     var Object OptionalObject;
+    var int VariantIndex;
+    var int SkinIndex;
 };
 
 function PostBeginPlay()
@@ -49,7 +51,7 @@ function PostBeginPlay()
         Destroy();
     }
 
-    Projector = Spawn(class'DHConstructionProxyProjector', self);
+    Projector = Spawn(Class'DHConstructionProxyProjector', self);
 
     if (Projector != none)
     {
@@ -104,22 +106,22 @@ function static Material CreateProxyMaterial(Material M)
         M = C.Material1;
     }
 
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.White;
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.White;
     FC.Color1.A = 64;
-    FC.Color2 = class'UColor'.default.White;
+    FC.Color2 = Class'UColor'.default.White;
     FC.Color2.A = 128;
     FC.FadePeriod = 0.25;
     FC.ColorFadeType = FC_Sinusoidal;
 
-    C = new class'Combiner';
+    C = new Class'Combiner';
     C.CombineOperation = CO_Multiply;
     C.AlphaOperation = AO_Multiply;
     C.Material1 = M;
     C.Material2 = FC;
     C.Modulate4X = true;
 
-    FB = new class'FinalBlend';
+    FB = new Class'FinalBlend';
     FB.FrameBufferBlending = FB_AlphaBlend;
     FB.ZWrite = true;
     FB.ZTest = true;
@@ -131,7 +133,7 @@ function static Material CreateProxyMaterial(Material M)
     return FB;
 }
 
-function static UpdateProxyMaterialColors(Actor A, color Color)
+function static UpdateProxyMaterialColors(Actor A, Color Color)
 {
     local FinalBlend FB;
     local Combiner C;
@@ -152,10 +154,12 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
 
                 if (FC != none)
                 {
-                    FC.Color1 = Color;
+                    // Interpolate between white and the specified color.
+                    // This allows the user to see the object's original color, which is needed when selecting skins.
+                    FC.Color1 = Class'UColor'.static.Interp(0.25, Class'UColor'.default.White, Color);
                     FC.Color1.A = 32;
 
-                    FC.Color2 = Color;
+                    FC.Color2 = Class'UColor'.static.Interp(0.5, Class'UColor'.default.White, Color);
                     FC.Color2.A = 128;
                 }
             }
@@ -163,12 +167,12 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
     }
 }
 
-function color GetProxyColor()
+function Color GetProxyColor()
 {
-    return class'UColor'.default.White;
+    return Class'UColor'.default.White;
 }
 
-function UpdateColor(color Color)
+function UpdateColor(Color Color)
 {
     local int i;
 
@@ -193,11 +197,16 @@ function Tick(float DeltaTime)
     }
 
     LocalRotation += LocalRotationRate * DeltaTime;
+
+    if (bLimitLocalRotation)
+    {
+        LocalRotation.Yaw = Clamp(LocalRotation.Yaw, LocalRotationYawRange.Min, LocalRotationYawRange.Max);
+    }
 }
 
 simulated function UpdateProjector()
 {
-    local vector RL;
+    local Vector RL;
 
     // NOTE: The relative location and rotation needs to be set every tick.
     // Without it, the projector seems to "drift" away from the object it's
@@ -207,7 +216,7 @@ simulated function UpdateProjector()
 
     if (Projector != none)
     {
-        if (bHidden || bIsInterpolated)
+        if (bHidden)
         {
             RL.Z -= 2048.0;
         }
@@ -224,7 +233,7 @@ function Context GetContext()
     local Context Context;
 
     Context.TeamIndex = PlayerOwner.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = PlayerOwner;
     Context.GroundActor = none/*GroundActor*/;  // TODO: we want ground actor in the actor proxy???
 

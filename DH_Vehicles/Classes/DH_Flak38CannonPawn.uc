@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Flak38CannonPawn extends DHATGunCannonPawn;
@@ -8,7 +8,7 @@ class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_Flak38Cannon'
+    GunClass=Class'DH_Flak38Cannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=0.0,Z=0.0),ViewFOV=25.0,PositionMesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret',TransitionUpAnim="optic_out",bDrawOverlays=true,bExposed=true)
@@ -24,11 +24,11 @@ defaultproperties
     CameraBone="Camera_com"
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_3x8_Flak2cm'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_3x8_Flak2cm'
     GunsightSize=0.32 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Flak sight)
     OverlayCorrectionX=-6
 
     //HUD
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.2341Mag'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.2341Mag_reload'
 }

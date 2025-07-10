@@ -1,0 +1,177 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// [ ] Third person animations are not done yet.
+//==============================================================================
+
+class DH_Wz35Attachment extends DHWeaponAttachment;
+
+defaultproperties
+{
+    Mesh=SkeletalMesh'DH_Wz35_anm.wz35_3rd'
+    MenuImage=Texture'DH_Wz35_tex.wz35_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPTRD'
+    MuzzleBoneName="MUZZLE"
+    ROShellCaseClass=Class'RO3rdShellEject14mm'
+    bRapidFire=false
+
+    ShellEjectionBoneName=""        // No shell ejection bone?
+    bAnimNotifiedShellEjects=true   // Only eject shells when bolting.
+
+    WA_Idle="idle_wz35"
+    WA_IdleEmpty="idle_open"
+    WA_Fire="shoot_wz35"
+    WA_Reload="reload_wz35"
+    WA_ReloadEmpty="reload_wz35"
+    WA_ProneReload="prone_reload_wz35"
+    WA_ProneReloadEmpty="prone_reload_wz35"
+
+    PA_MovementAnims(0)="stand_jogF_wz35"
+    PA_MovementAnims(1)="stand_jogB_wz35"
+    PA_MovementAnims(2)="stand_jogL_wz35"
+    PA_MovementAnims(3)="stand_jogR_wz35"
+    PA_MovementAnims(4)="stand_jogFL_wz35"
+    PA_MovementAnims(5)="stand_jogFR_wz35"
+    PA_MovementAnims(6)="stand_jogBL_wz35"
+    PA_MovementAnims(7)="stand_jogBR_wz35"
+    PA_CrouchAnims(0)="crouch_walkF_wz35"
+    PA_CrouchAnims(1)="crouch_walkB_wz35"
+    PA_CrouchAnims(2)="crouch_walkL_wz35"
+    PA_CrouchAnims(3)="crouch_walkR_wz35"
+    PA_CrouchAnims(4)="crouch_walkFL_wz35"
+    PA_CrouchAnims(5)="crouch_walkFR_wz35"
+    PA_CrouchAnims(6)="crouch_walkBL_wz35"
+    PA_CrouchAnims(7)="crouch_walkBR_wz35"
+
+    PA_ProneIronAnims(0)="prone_slowcrawlF_wz35"
+    PA_ProneIronAnims(1)="prone_slowcrawlB_wz35"
+    PA_ProneIronAnims(2)="prone_slowcrawlL_wz35"
+    PA_ProneIronAnims(3)="prone_slowcrawlR_wz35"  //i dont think these work because the ptrd/wz is locked to one spot when ironed
+    PA_ProneIronAnims(4)="prone_slowcrawlL_wz35"
+    PA_ProneIronAnims(5)="prone_slowcrawlR_wz35"
+    PA_ProneIronAnims(6)="prone_slowcrawlB_wz35"
+    PA_ProneIronAnims(7)="prone_slowcrawlB_wz35"
+
+
+    PA_WalkAnims(0)="stand_walkFhip_wz35"
+    PA_WalkAnims(1)="stand_walkBhip_wz35"
+    PA_WalkAnims(2)="stand_walkLhip_wz35"
+    PA_WalkAnims(3)="stand_walkRhip_wz35"
+    PA_WalkAnims(4)="stand_walkFLhip_wz35"
+    PA_WalkAnims(5)="stand_walkFRhip_wz35"
+    PA_WalkAnims(6)="stand_walkBLhip_wz35"
+    PA_WalkAnims(7)="stand_walkBRhip_wz35"
+    PA_WalkIronAnims(0)="stand_walkFiron_wz35"
+    PA_WalkIronAnims(1)="stand_walkBiron_wz35"
+    PA_WalkIronAnims(2)="stand_walkLiron_wz35"
+    PA_WalkIronAnims(3)="stand_walkRiron_wz35"
+    PA_WalkIronAnims(4)="stand_walkFLiron_wz35"
+    PA_WalkIronAnims(5)="stand_walkFRiron_wz35"
+    PA_WalkIronAnims(6)="stand_walkBLiron_wz35"
+    PA_WalkIronAnims(7)="stand_walkBRiron_wz35"
+    PA_SprintAnims(0)="stand_sprintF_wz35"
+    PA_SprintAnims(1)="stand_sprintB_wz35"
+    PA_SprintAnims(2)="stand_sprintL_wz35"
+    PA_SprintAnims(3)="stand_sprintR_wz35"
+    PA_SprintAnims(4)="stand_sprintFL_wz35"
+    PA_SprintAnims(5)="stand_sprintFR_wz35"
+    PA_SprintAnims(6)="stand_sprintBL_wz35"
+    PA_SprintAnims(7)="stand_sprintBR_wz35"
+    PA_SprintCrouchAnims(0)="crouch_sprintF_wz35"
+    PA_SprintCrouchAnims(1)="crouch_sprintB_wz35"
+    PA_SprintCrouchAnims(2)="crouch_sprintL_wz35"
+    PA_SprintCrouchAnims(3)="crouch_sprintR_wz35"
+    PA_SprintCrouchAnims(4)="crouch_sprintFL_wz35"
+    PA_SprintCrouchAnims(5)="crouch_sprintFR_wz35"
+    PA_SprintCrouchAnims(6)="crouch_sprintBL_wz35"
+    PA_SprintCrouchAnims(7)="crouch_sprintBR_wz35"
+    PA_TurnRightAnim="stand_turnRhip_wz35"
+    PA_TurnLeftAnim="stand_turnLhip_wz35"
+    PA_TurnIronRightAnim="stand_turnRiron_wz35"
+    PA_TurnIronLeftAnim="stand_turnLiron_wz35"
+    PA_CrouchTurnIronRightAnim="crouch_turnRiron_wz35"
+    PA_CrouchTurnIronLeftAnim="crouch_turnRiron_wz35"
+    PA_ProneTurnRightAnim="prone_turnR_wz35"
+    PA_ProneTurnLeftAnim="prone_turnL_wz35"
+    PA_StandToProneAnim="StandtoProne_wz35"
+    PA_CrouchToProneAnim="CrouchtoProne_wz35"
+    PA_ProneToStandAnim="PronetoStand_wz35"
+    PA_ProneToCrouchAnim="PronetoCrouch_wz35"
+    PA_DiveToProneStartAnim="prone_diveF_kar"
+    PA_DiveToProneEndAnim="prone_diveend_kar"
+    PA_CrouchTurnRightAnim="crouch_turnR_wz35"
+    PA_CrouchTurnLeftAnim="crouch_turnL_wz35"
+    PA_CrouchIdleRestAnim="crouch_idle_wz35"
+    PA_IdleCrouchAnim="crouch_idle_wz35"
+    PA_IdleRestAnim="stand_idlehip_wz35"
+    PA_IdleWeaponAnim="stand_idlehip_wz35"
+    PA_IdleIronRestAnim="stand_idleiron_wz35"
+    PA_IdleIronWeaponAnim="stand_idleiron_wz35"
+    PA_IdleCrouchIronWeaponAnim="crouch_idleiron_wz35"
+    PA_IdleProneAnim="prone_idle_wz35"
+    PA_IdleDeployedAnim="stand_idleiron_wz35"
+    PA_IdleDeployedProneAnim="prone_idle_wz35"
+    PA_IdleDeployedCrouchAnim="crouch_idleiron_wz35"
+    PA_ReloadAnim="stand_reload_wz35"   // TODO: this animation doesn'rt exist???
+    PA_ProneReloadAnim="prone_reload_wz35"
+    PA_ReloadEmptyAnim="stand_reload_wz35"     // TODO: this animation doesn'rt exist??? use the ptrd one?
+    PA_ProneReloadEmptyAnim="prone_reload_wz35"
+    PA_ProneIdleRestAnim="prone_idle_wz35"
+    PA_StandWeaponDeployAnim="stand_idleiron_wz35"
+    PA_ProneWeaponDeployAnim="prone_idle_wz35"
+    PA_StandWeaponUnDeployAnim="stand_idlehip_wz35"
+    PA_ProneWeaponUnDeployAnim="prone_idle_wz35"
+    PA_Fire="stand_shoothip_wz35"
+    PA_IronFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
+    PA_CrouchFire="crouch_shootiron_wz35"
+    PA_ProneFire="prone_shoot_wz35"
+    PA_DeployedFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
+    PA_CrouchDeployedFire="crouch_shootiron_wz35"
+    PA_ProneDeployedFire="prone_shoot_wz35"
+
+
+    PA_MoveStandFire(0)="stand_shootFhip_wz35"
+    PA_MoveStandFire(1)="stand_shootFhip_wz35"
+    PA_MoveStandFire(2)="stand_shootLRhip_wz35"
+    PA_MoveStandFire(3)="stand_shootLRhip_wz35"
+    PA_MoveStandFire(4)="stand_shootFLhip_wz35"
+    PA_MoveStandFire(5)="stand_shootFRhip_wz35"
+    PA_MoveStandFire(6)="stand_shootFRhip_wz35"
+    PA_MoveStandFire(7)="stand_shootFLhip_wz35"
+
+    PA_MoveCrouchFire(0)="crouch_shootF_wz35"
+    PA_MoveCrouchFire(1)="crouch_shootF_wz35"
+    PA_MoveCrouchFire(2)="crouch_shootLR_wz35"
+    PA_MoveCrouchFire(3)="crouch_shootLR_wz35"
+    PA_MoveCrouchFire(4)="crouch_shootF_wz35"
+    PA_MoveCrouchFire(5)="crouch_shootF_wz35"
+    PA_MoveCrouchFire(6)="crouch_shootF_wz35"
+    PA_MoveCrouchFire(7)="crouch_shootF_wz35"
+
+    PA_MoveWalkFire(0)="stand_shootFwalk_wz35"
+    PA_MoveWalkFire(1)="stand_shootFwalk_wz35"
+    PA_MoveWalkFire(2)="stand_shootLRwalk_wz35"
+    PA_MoveWalkFire(3)="stand_shootLRwalk_wz35"
+    PA_MoveWalkFire(4)="stand_shootFLwalk_wz35"
+    PA_MoveWalkFire(5)="stand_shootFRwalk_wz35"
+    PA_MoveWalkFire(6)="stand_shootFRwalk_wz35"
+    PA_MoveWalkFire(7)="stand_shootFLwalk_wz35"
+
+    PA_MoveStandIronFire(0)="stand_shootiron_wz35"
+    PA_MoveStandIronFire(1)="stand_shootiron_wz35"
+    PA_MoveStandIronFire(2)="stand_shootLRiron_wz35"
+    PA_MoveStandIronFire(3)="stand_shootLRiron_wz35"
+    PA_MoveStandIronFire(4)="stand_shootFLiron_wz35"
+    PA_MoveStandIronFire(5)="stand_shootFRiron_wz35"
+    PA_MoveStandIronFire(6)="stand_shootFRiron_wz35"
+    PA_MoveStandIronFire(7)="stand_shootFLiron_wz35"
+
+    PA_AltFire="single_iron_wz35"
+    PA_CrouchAltFire="crouch_single_wz35"
+    PA_ProneAltFire="prone_single_wz35"
+    PA_FireLastShot="stand_shoothip_wz35"
+    PA_IronFireLastShot="stand_shootironptrd"
+    PA_CrouchFireLastShot="crouch_shoot_wz35"
+    PA_ProneFireLastShot="prone_shoot_wz35"
+}

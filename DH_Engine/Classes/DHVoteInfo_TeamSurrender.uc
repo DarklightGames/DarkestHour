@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
@@ -55,7 +55,7 @@ function OnVoteEnded()
     VotesThresholdCount = GetVotesThresholdCount(G);
 
     bVotePassed = Options[0].Voters.Length >= VotesThresholdCount;
-    VoteResults = class'UInteger'.static.FromBytes(int(!bVotePassed),
+    VoteResults = Class'UInteger'.static.FromBytes(int(!bVotePassed),
                                                    Options[0].Voters.Length,
                                                    VotesThresholdCount);
 
@@ -66,7 +66,7 @@ function OnVoteEnded()
 
         if (PC != none && C.GetTeamNum() == TeamIndex)
         {
-            PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', VoteResults);
+            PC.ReceiveLocalizedMessage(Class'DHTeamSurrenderVoteMessage', VoteResults);
             PC.bSurrendered = false;
         }
     }
@@ -79,9 +79,9 @@ function OnVoteEnded()
         G.DelayedEndRound(G.default.SurrenderEndRoundDelaySeconds,
                           "The {0} won the round because the other team has retreated",
                           int(!bool(TeamIndex)),
-                          class'DHEnemyInformationMsg',
+                          Class'DHEnemyInformationMsg',
                           1,
-                          class'DHFriendlyinformationmsg',
+                          Class'DHFriendlyinformationmsg',
                           0);
     }
 
@@ -117,10 +117,10 @@ static function OnNominated(PlayerController Player, LevelInfo Level, optional i
         PC.bSurrendered = true;
 
         // DHPlayer wants to surrender.
-        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
                                                                     PC.GetTeamNum(),
-                                                                    class'DHTeamSurrenderVoteMessage',
-                                                                    class'UInteger'.static.FromBytes(2, NominationsRemaining),
+                                                                    Class'DHTeamSurrenderVoteMessage',
+                                                                    Class'UInteger'.static.FromBytes(2, NominationsRemaining),
                                                                     PC.PlayerReplicationInfo);
     }
 }
@@ -190,7 +190,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     }
 
     // You cannot vote to surrender during the setup phase.
-    if (!class'DH_LevelInfo'.static.DHDebugMode() &&
+    if (!Class'DH_LevelInfo'.static.DHDebugMode() &&
         GRI.bIsInSetupPhase)
     {
         PC.ClientTeamSurrenderResponse(10);
@@ -219,7 +219,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     }
 
     // The team has voted to surrender recently.
-    if (VM.GetVoteTime(class'DHVoteInfo_TeamSurrender', TeamIndex) > GRI.ElapsedTime)
+    if (VM.GetVoteTime(Class'DHVoteInfo_TeamSurrender', TeamIndex) > GRI.ElapsedTime)
     {
         PC.ClientTeamSurrenderResponse(6);
         return false;
@@ -230,27 +230,27 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
 
 static function float GetNominationsThresholdPercent()
 {
-    return FMax(0.0, class'DarkestHourGame'.default.SurrenderNominationsThresholdPercent);
+    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderNominationsThresholdPercent);
 }
 
 static function float GetVotesThresholdPercent()
 {
-    return FMax(0.0, class'DarkestHourGame'.default.SurrenderVotesThresholdPercent);
+    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderVotesThresholdPercent);
 }
 
 static function float GetReinforcementsRequiredPercent()
 {
-    return FMax(0.0, class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent);
+    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent);
 }
 
 static function int GetRoundTimeRequiredSeconds()
 {
-    return Max(0, class'DarkestHourGame'.default.SurrenderRoundTimeRequiredSeconds);
+    return Max(0, Class'DarkestHourGame'.default.SurrenderRoundTimeRequiredSeconds);
 }
 
 static function int GetCooldownSeconds()
 {
-    return Max(0, class'DarkestHourGame'.default.SurrenderCooldownSeconds);
+    return Max(0, Class'DarkestHourGame'.default.SurrenderCooldownSeconds);
 }
 
 defaultproperties

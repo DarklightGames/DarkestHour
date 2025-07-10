@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_20mmShellCaseEmitter extends Emitter;
@@ -13,7 +13,7 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.German20mmShellCase'
+        StaticMesh=StaticMesh'DH_WeaponPickups.German20mmShellCase'
         UseCollision=true
         RespawnDeadParticles=false
         SpawnOnlyInDirectionOfNormal=true

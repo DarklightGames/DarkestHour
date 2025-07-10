@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StenMkIICWeapon extends DHAutoWeapon;
@@ -8,17 +8,17 @@ class DH_StenMkIICWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="STEN Mk.II"
-    FireModeClass(0)=class'DH_Weapons.DH_StenMkIICFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StenMkIICMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_StenMkIICAttachment'
-    PickupClass=class'DH_Weapons.DH_StenMkIICPickup'
+    FireModeClass(0)=Class'DH_StenMkIICFire'
+    FireModeClass(1)=Class'DH_StenMkIICMeleeFire'
+    AttachmentClass=Class'DH_StenMkIICAttachment'
+    PickupClass=Class'DH_StenMkIICPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.StenMk2C_mesh'
     //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
-    Skins(2)=Texture'DH_Sten_tex.Sten.StenMk2_tex'
+    Skins(2)=Texture'DH_Sten_tex.StenMk2_tex'
     HandNum=0
     SleeveNum=1
 
@@ -32,7 +32,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

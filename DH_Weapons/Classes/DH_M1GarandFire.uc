@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1GarandFire extends DHSemiAutoFire;
@@ -25,7 +25,7 @@ function PlayFiring()
 {
     local DH_M1GarandWeapon Garand;
     local name              Anim;
-    local sound             FiringSound;
+    local Sound             FiringSound;
     local bool              bLastRound;
 
     Garand = DH_M1GarandWeapon(Weapon);
@@ -96,8 +96,8 @@ function PlayFiring()
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
-    AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
+    ProjectileClass=Class'DH_M1GarandBullet'
+    AmmoClass=Class'DH_M1GarandAmmo'
     FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760
@@ -109,13 +109,13 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire03'
-    FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
-    FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
-    FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.garand_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.garand_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.garand_fire03'
+    FirePingSounds(0)=SoundGroup'DH_WeaponSounds.garand_firePing01'
+    FirePingSounds(1)=SoundGroup'DH_WeaponSounds.garand_firePing02'
+    FirePingSounds(2)=SoundGroup'DH_WeaponSounds.garand_firePing03'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     ShellHipOffset=(X=0,Y=-3,Z=0)
     FireLastAnim="shoot_last"

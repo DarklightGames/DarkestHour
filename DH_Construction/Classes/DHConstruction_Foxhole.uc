@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -37,13 +37,13 @@ simulated function PostBeginPlay()
 
 simulated function OnConstructed()
 {
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
 
     super.OnConstructed();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        DirtProjector = Spawn(class'DynamicProjector', self);
+        DirtProjector = Spawn(Class'DynamicProjector', self);
 
         if (DirtProjector != none)
         {
@@ -83,7 +83,7 @@ static function float GetTerrainScale(TerrainInfo TI)
 {
     if (TI != none)
     {
-        return class'UVector'.static.MaxElement(TI.TerrainScale);
+        return Class'UVector'.static.MaxElement(TI.TerrainScale);
     }
 
     return 0.0;
@@ -144,7 +144,7 @@ simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 
 defaultproperties
 {
-    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpacked')
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.foxhole_01_unpacked')
     ProgressMax=8
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
@@ -154,8 +154,8 @@ defaultproperties
     bCanBeDamaged=false
     ProxyTraceDepthMeters=10
     CollisionRadius=192.0
-    StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
-    LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
+    StaticMesh=StaticMesh'DH_Construction_stc.foxhole_01'
+    LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.foxhole_02'
     PokeTerrainDepth=128
     PokeTerrainRadius=128
     PokeTerrainDepthLarge=82
@@ -163,7 +163,7 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.foxhole'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.foxhole'
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=10.0
     bLimitTerrainSurfaceTypes=true
@@ -180,6 +180,6 @@ defaultproperties
     ConstructionVerb="dig"
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
-    GroupClass=class'DHConstructionGroup_Defenses'
-    DirtProjectorMaterial=Material'DH_Construction_tex.Foxholes.foxhole_01_projector'
+    GroupClass=Class'DHConstructionGroup_Defenses'
+    DirtProjectorMaterial=Material'DH_Construction_tex.foxhole_01_projector'
 }

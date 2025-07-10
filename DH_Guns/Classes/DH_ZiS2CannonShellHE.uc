@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2CannonShellHE extends DHCannonShellHE;
@@ -14,10 +14,10 @@ defaultproperties
 
     //Damage
     ImpactDamage=350
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     Damage=260.0  //220 gramms TNT
     DamageRadius=650.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    MyDamageType=Class'DHShellHE50mmATDamageType'
     PenetrationMag=690.0
     HullFireChance=0.5
     EngineFireChance=0.50
@@ -25,8 +25,8 @@ defaultproperties
     bDebugInImperial=false
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    CoronaClass=Class'DHShellTracer_Green'
+    ShellTrailClass=Class'DHShellTrail_Green'
 
     //Penetration
     //left it as it was on zis3

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFuryLogsRightEmitter extends Emitter;
@@ -14,7 +14,7 @@ defaultproperties
     bHardAttach=true
 
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.Log'
+        StaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.Log'
         UseCollision=True
         UseMaxCollisions=True
         UseActorForces=True

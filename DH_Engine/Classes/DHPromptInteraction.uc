@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // An interaction that prompts the player for a response.
 //==============================================================================
@@ -19,7 +19,7 @@ struct Option
 };
 var array<Option> Options;
 var string OptionsText;
-var color KeyTextColor;
+var Color KeyTextColor;
 
 function OnOptionSelected(int Index)
 {
@@ -35,11 +35,11 @@ function Initialize()
 
     for (i = 0; i < Options.Length; ++i)
     {
-        OptionStrings[OptionStrings.Length] = class'GameInfo'.static.MakeColorCode(KeyTextColor) $
-        "[" $ GetFriendlyName(Options[i].Key) $ "]" $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) @ Options[i].Text;
+        OptionStrings[OptionStrings.Length] = Class'GameInfo'.static.MakeColorCode(KeyTextColor) $
+        "[" $ GetFriendlyName(Options[i].Key) $ "]" $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White) @ Options[i].Text;
     }
 
-    OptionsText = class'UString'.static.Join(" ", OptionStrings);
+    OptionsText = Class'UString'.static.Join(" ", OptionStrings);
 }
 
 simulated function PostRender(Canvas C)
@@ -51,8 +51,8 @@ simulated function PostRender(Canvas C)
 
     super.PostRender(C);
 
-    C.DrawColor = class'UColor'.default.White;
-    C.Font = class'DHHud'.static.GetConsoleFont(C);
+    C.DrawColor = Class'UColor'.default.White;
+    C.Font = Class'DHHud'.static.GetConsoleFont(C);
 
     // Prompt Text
     MyPromptText = GetPromptText();

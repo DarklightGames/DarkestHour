@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Flak38Cannon extends DHVehicleAutoCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
-    Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll')
+    Skins(0)=Texture'DH_Artillery_tex.Flak38_gun'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38_turret_coll')
     GunnerAttachmentBone="Turret" // gunner doesn't move so we don't need a dedicated attachment bone
 
     // Turret movement
@@ -20,9 +20,9 @@ defaultproperties
     CustomPitchDownLimit=64800
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
+    PrimaryProjectileClass=Class'DHCannonShell_MixedMag'
+    SecondaryProjectileClass=Class'DH_Flak38CannonShellAP'
+    TertiaryProjectileClass=Class'DH_Flak38CannonShellHE'
 
     ProjectileDescriptions(0)="Mixed"
     ProjectileDescriptions(1)="AP"
@@ -43,7 +43,7 @@ defaultproperties
     FireInterval=0.2
     WeaponFireOffset=5.0
     AddedPitch=35 // tricky one as has no range settings & AddedPitch varies widely between ranges (35/44/32/17/-5 for 500/800/1000/1200/1500m) - this global adjustment works well up to 1000m
-    ShellCaseEmitterClass=class'DH_Effects.DH_20mmShellCaseEmitter'
+    ShellCaseEmitterClass=Class'DH_20mmShellCaseEmitter'
     ShellCaseEjectorBone="Gun"
 
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0,RotationAxis=AXIS_Z)

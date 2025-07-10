@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyMineVolumeStatus extends DH_ModifyActors;
@@ -23,7 +23,7 @@ function PostBeginPlay()
     }
 
     // Volume are static so use the all actor list
-    foreach AllActors(class'ROMineVolume', MineVolume, MineVolumeToModify)
+    foreach AllActors(Class'ROMineVolume', MineVolume, MineVolumeToModify)
     {
         MineVolumes[MineVolumes.Length] = MineVolume;
     }

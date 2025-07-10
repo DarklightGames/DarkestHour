@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_Header extends ROSTY_Header;
@@ -13,10 +13,10 @@ defaultproperties
     FontNames(2)="DHSmallFont"
     FontNames(3)="DHSmallFont"
     FontNames(4)="DHSmallFont"
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHSectionHeader'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHSectionHeader'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHSectionHeader'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHSectionHeader'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHSectionHeader'
+    Images(0)=Texture'DH_GUI_Tex.DHSectionHeader'
+    Images(1)=Texture'DH_GUI_Tex.DHSectionHeader'
+    Images(2)=Texture'DH_GUI_Tex.DHSectionHeader'
+    Images(3)=Texture'DH_GUI_Tex.DHSectionHeader'
+    Images(4)=Texture'DH_GUI_Tex.DHSectionHeader'
     BorderOffsets(1)=4
 }

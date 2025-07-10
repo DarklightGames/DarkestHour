@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -48,7 +48,7 @@ static function DumpToLog(PlayerController PC)
 
     for (i = 0; i < default.Records.Length; ++i)
     {
-        PC.Log(class'UString'.static.Join(",", default.Records[i].WeaponNames) @ " - " @ default.Records[i].ClassName);
+        PC.Log(Class'UString'.static.Join(",", default.Records[i].WeaponNames) @ " - " @ default.Records[i].ClassName);
     }
 }
 
@@ -68,7 +68,7 @@ defaultproperties
     Records(8)=(ClassName="DH_Weapons.DH_DP27Weapon",WeaponNames=("dp27"))
     Records(9)=(ClassName="DH_Weapons.DH_EnfieldNo2Weapon",WeaponNames=("enfield2", "webley"))
     Records(10)=(ClassName="DH_Weapons.DH_EnfieldNo4Weapon",WeaponNames=("enfield", "enfield4"))
-    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfieldscoped", "enfield4scoped"))
+    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfieldscoped", "enfield4scoped", "no4scoped", "no4T"))
     Records(12)=(ClassName="DH_Weapons.DH_F1GrenadeWeapon",WeaponNames=("f1"))
     Records(13)=(ClassName="DH_Weapons.DH_FG42Weapon",WeaponNames=("fg42"))
     Records(14)=(ClassName="DH_Weapons.DH_G41Weapon",WeaponNames=("g41"))
@@ -78,7 +78,7 @@ defaultproperties
     Records(18)=(ClassName="DH_Weapons.DH_GreaseGunWeapon",WeaponNames=("greasegun"))
     Records(19)=(ClassName="DH_Weapons.DH_Kar98Weapon",WeaponNames=("k98", "kar98"))
     Records(20)=(ClassName="DH_Weapons.DH_Kar98NoCoverWeapon",WeaponNames=("k98nohood"))
-    Records(21)=(ClassName="DH_Weapons.DH_Kar98ScopedWeapon",WeaponNames=("k98scoped", "kar98scoped"))
+    Records(21)=(ClassName="DH_Weapons.DH_Kar98ScopedWeapon",WeaponNames=("k98scoped", "kar98scoped","scopedk98"))
     Records(22)=(ClassName="DH_Weapons.DH_KorovinWeapon",WeaponNames=("korovin"))
     Records(23)=(ClassName="DH_Weapons.DH_Kz8cmGrW42Weapon",bShouldExcludeFromGiveAll=true,WeaponNames=("grw42"))
     Records(24)=(ClassName="DH_Weapons.DH_M1928_20rndWeapon",WeaponNames=("m1928-20"))
@@ -170,6 +170,18 @@ defaultproperties
     Records(110)=(ClasSName="DH_Weapons.DH_MKB42HWeapon",WeaponNames=("mkb42","mkb42h"))
     Records(111)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
     Records(112)=(ClassName="DH_Weapons.DH_WitchEnder666Weapon",WeaponNames=("WitchEnder", "satansbane"))
-    Records(113)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
-
+    Records(113)=(ClassName="DH_Weapons.DH_Breda30Weapon",WeaponNames=("breda", "breda30"))
+    Records(114)=(ClassName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
+    Records(115)=(ClassName="DH_Weapons.DH_MAB42Weapon",WeaponNames=("mab42"))
+    Records(116)=(ClassName="DH_Weapons.DH_LtypeGrenadeWeapon",WeaponNames=("Ltype"))
+    Records(117)=(ClassName="DH_Weapons.DH_Wz35Weapon",WeaponNames=("wz35", "wz", "fc35", "fc"))
+    Records(118)=(ClassName="DH_Weapons.DH_BerettaM1934Weapon",WeaponNames=("beretta", "m34","m1934"))
+    Records(119)=(ClassName="DH_Weapons.DH_SRCMMod35GrenadeWeapon",WeaponNames=("srcm","srcm35"))
+    Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
+    Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
+    Records(122)=(ClassName="DH_Equipment.DHBrokenBottleItem",WeaponNames=("brokenbottle"))
+    Records(123)=(ClassName="DH_Weapons.DH_MN9130ScopedWeapon",WeaponNames=("mosinscoped","scopedmosinpu","scopedmosinlate"))
+    Records(124)=(ClassName="DH_Weapons.DH_CarcanoM9138ShortRifleWeapon",WeaponNames=("carcanoshort","carcanom38","corto"))
+    Records(125)=(ClassName="DH_Weapons.DH_CarcanoM9138CarbineWeapon",WeaponNames=("carcanocarbine","carcanom38carbine","moschetto","cav"))
+    Records(126)=(ClassName="DH_Weapons.DH_CarcanoM9138TSCarbineWeapon",WeaponNames=("carcanots","carcanom38ts","moschettots","ts"))
 }

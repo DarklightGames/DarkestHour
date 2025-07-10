@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_SmallText extends ROSTY_TextLabel;
@@ -8,24 +8,24 @@ class DHStyle_SmallText extends ROSTY_TextLabel;
 defaultproperties
 {
     KeyName="DHSmallText"
-    FontNames(0)="DHSmallFont"
-    FontNames(1)="DHSmallFont"
-    FontNames(2)="DHSmallFont"
-    FontNames(3)="DHSmallFont"
-    FontNames(4)="DHSmallFont"
-    FontNames(5)="DHSmallFont"
-    FontNames(6)="DHSmallFont"
-    FontNames(7)="DHSmallFont"
-    FontNames(8)="DHSmallFont"
-    FontNames(9)="DHSmallFont"
-    FontNames(10)="DHSmallFont"
-    FontNames(11)="DHSmallFont"
-    FontNames(12)="DHSmallFont"
-    FontNames(13)="DHSmallFont"
-    FontNames(14)="DHSmallFont"
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    FontNames(0)="DHSmallFontDS"
+    FontNames(1)="DHSmallFontDS"
+    FontNames(2)="DHSmallFontDS"
+    FontNames(3)="DHSmallFontDS"
+    FontNames(4)="DHSmallFontDS"
+    FontNames(5)="DHSmallFontDS"
+    FontNames(6)="DHSmallFontDS"
+    FontNames(7)="DHSmallFontDS"
+    FontNames(8)="DHSmallFontDS"
+    FontNames(9)="DHSmallFontDS"
+    FontNames(10)="DHSmallFontDS"
+    FontNames(11)="DHSmallFontDS"
+    FontNames(12)="DHSmallFontDS"
+    FontNames(13)="DHSmallFontDS"
+    FontNames(14)="DHSmallFontDS"
+    Images(0)=Texture'InterfaceArt_tex.empty'
+    Images(1)=Texture'InterfaceArt_tex.empty'
+    Images(2)=Texture'InterfaceArt_tex.empty'
+    Images(3)=Texture'InterfaceArt_tex.empty'
+    Images(4)=Texture'InterfaceArt_tex.empty'
 }

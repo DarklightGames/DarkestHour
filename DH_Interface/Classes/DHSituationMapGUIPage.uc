@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSituationMapGUIPage extends GUIPage;
@@ -12,13 +12,13 @@ var string                                  HideExecs[2];
 var array<int>                              HideKeys;
 
 var int     SavedZoomLevel;
-var vector  SavedOrigin;
+var Vector  SavedOrigin;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
-    local vector Origin;
+    local Vector Origin;
 
     super.InitComponent(MyController, MyOwner);
 

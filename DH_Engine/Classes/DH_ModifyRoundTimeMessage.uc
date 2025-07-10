@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyRoundTimeMessage extends ROCriticalMessage
@@ -12,21 +12,27 @@ var localized string    ChangedText;
 var localized string    RoundTimeModifiedText;
 
 //The sound to play when this actor is triggered.
-var sound               Sound;
+var Sound               Sound;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local string S;
+
+    S = default.RoundTimeModifiedText;
+
     switch (Switch)
     {
         case 0:
-            return default.RoundTimeModifiedText @ default.IncreasedText $ ".";
+            S = Repl(S, "{0}", default.IncreasedText);
         case 1:
-            return default.RoundTimeModifiedText @ default.DecreasedText $ ".";
+            S = Repl(S, "{0}", default.DecreasedText);
         case 2:
-            return default.RoundTimeModifiedText @ default.ChangedText $ ".";
+            S = Repl(S, "{0}", default.ChangedText);
         default:
-            return default.RoundTimeModifiedText @ default.ChangedText $ ".";
+            S = Repl(S, "{0}", default.ChangedText);
     }
+
+    return S;
 }
 
 simulated static function ClientReceive(PlayerController P, optional int Switch,
@@ -39,9 +45,9 @@ simulated static function ClientReceive(PlayerController P, optional int Switch,
 
 defaultproperties
 {
-    Sound=Sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.notify_drum'
     IncreasedText="increased"
     DecreasedText="decreased"
     ChangedText="changed"
-    RoundTimeModifiedText="Time remaining has been"
+    RoundTimeModifiedText="Time remaining has been {0}."
 }

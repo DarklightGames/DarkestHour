@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_AmericanHelmet506101stNCOb extends DHHeadgear;
@@ -8,5 +8,5 @@ class DH_AmericanHelmet506101stNCOb extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_Airborne_Helmet2'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.US101AB506NCO_headgear2'
+    Skins(0)=Texture'DHUSCharactersTex.US101AB506NCO_headgear2'
 }

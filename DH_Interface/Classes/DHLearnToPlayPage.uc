@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHLearnToPlayPage extends UT2K4MainPage;
@@ -12,7 +12,7 @@ function BackButtonClicked()
 
 defaultproperties
 {
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=Texture'DH_GUI_Tex.Setupmenu'
 
     PanelCaption(0)="Video Guides"
     PanelCaption(1)=""

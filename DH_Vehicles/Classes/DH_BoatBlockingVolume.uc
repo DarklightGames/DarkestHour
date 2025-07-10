@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BoatBlockingVolume extends BlockingVolume;
@@ -8,6 +8,7 @@ class DH_BoatBlockingVolume extends BlockingVolume;
 defaultproperties
 {
     bClassBlocker=true
-    BlockedClasses(0)=class'DH_Vehicles.DH_HigginsBoat'
+    BlockedClasses(0)=Class'DH_HigginsBoat'
+    BlockedClasses(1)=Class'DH_DUKW'
     bBlockZeroExtentTraces=true
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GreaseGunAttachment extends DHWeaponAttachment;
@@ -8,10 +8,10 @@ class DH_GreaseGunAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.GreaseGun_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.GreaseGun_icon'
 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
 

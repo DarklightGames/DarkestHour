@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAntiVehicleProjectile, but has so much in common with HEAT shell it's simpler & cleaner to extend that
@@ -31,7 +31,7 @@ simulated function PostBeginPlay()
 
     SetTimer(StraightFlightTime, false); // added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
 
-    if (ExplosionSound[3] == class'DHCannonShellHEAT'.default.ExplosionSound[3]) // remove unwanted 4th sound inherited from DHCannonShellHEAT (unless overridden)
+    if (ExplosionSound[3] == Class'DHCannonShellHEAT'.default.ExplosionSound[3]) // remove unwanted 4th sound inherited from DHCannonShellHEAT (unless overridden)
     {
         ExplosionSound.Length = 3;
     }
@@ -94,7 +94,7 @@ simulated function Timer()
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     super.BlowUp(HitLocation);
 
@@ -134,25 +134,25 @@ defaultproperties
     ImpactDamage=675
     Damage=300.0
     DamageRadius=180.0
-    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
-    MyDamageType=class'DamageType'
+    ShellImpactDamage=Class'RORocketImpactDamage'
+    MyDamageType=Class'DamageType'
 
     //Effects
     bHasTracer=true
     bHasSmokeTrail=false
     bHasShellTrail=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
-    ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
-    ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
-    ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
-    ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
-    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'//temp
+    CoronaClass=Class'DHShellTracer_Orange'
+    RocketSmokeTrailClass=Class'PanzerfaustTrail'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellHitDirtEffectClass=Class'PanzerfaustHitDirt'
+    ShellHitSnowEffectClass=Class'PanzerfaustHitSnow'
+    ShellHitWoodEffectClass=Class'PanzerfaustHitWood'
+    ShellHitRockEffectClass=Class'PanzerfaustHitConcrete'
+    ShellHitWaterEffectClass=Class'PanzerfaustHitWater'
+    ShellDeflectEffectClass=Class'TankHEHitDeflect'//temp
 
-    ExplosionDecal=class'ROEffects.RocketMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
+    ExplosionDecal=Class'RocketMarkDirt'
+    ExplosionDecalSnow=Class'RocketMarkSnow'
 
     //Lighting
     LightType=LT_Steady
@@ -174,16 +174,16 @@ defaultproperties
     TransientSoundVolume=1.0 //0.3
     TransientSoundRadius=300.0
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
-    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    VehicleHitSound=SoundGroup'Inf_Weapons.faust_explode01'
+    DirtHitSound=SoundGroup'Inf_Weapons.faust_explode01'
+    RockHitSound=SoundGroup'Inf_Weapons.faust_explode02'
+    WoodHitSound=SoundGroup'Inf_Weapons.faust_explode03'
+    WaterHitSound=Sound'ProjectileSounds.AP_Impact_Water'
     VehicleDeflectSound=Sound'ProjectileSounds.PTRD_deflect' //temp
 
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.faust_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.faust_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.faust_explode03'
 
     //Start DH defaults
     bExplodesOnHittingBody=true

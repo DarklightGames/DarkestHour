@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1928_50rndWeapon extends DHFastAutoWeapon;
@@ -38,10 +38,10 @@ defaultproperties
 {
     ItemName="M1928A1 Thompson (50rd)"
     SwayModifyFactor=0.84 // +0.14
-    FireModeClass(0)=class'DH_Weapons.DH_M1928_50rndFire'
-    FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M1928_50rndAttachment'
-    PickupClass=class'DH_Weapons.DH_M1928_50rndPickup'
+    FireModeClass(0)=Class'DH_M1928_50rndFire'
+    FireModeClass(1)=Class'DH_ThompsonMeleeFire'
+    AttachmentClass=Class'DH_M1928_50rndAttachment'
+    PickupClass=Class'DH_M1928_50rndPickup'
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1928_50rnd'
 
@@ -53,7 +53,7 @@ defaultproperties
     InitialNumPrimaryMags=3
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_ThompsonBarrel'
+    BarrelClass=Class'DH_ThompsonBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

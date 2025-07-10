@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WirbelwindCannon extends DH_Flakvierling38Cannon;
@@ -22,8 +22,8 @@ defaultproperties
     RearLeftAngle=195.0
 
     Mesh=SkeletalMesh'DH_Flak38_anm.Wirbelwind_turret'
-    Skins(0)=Texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
-    Skins(1)=Texture'DH_Artillery_tex.Flak38.Wirberlwind_turret'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc4.wirbelwind.wirbelwind_turret_col')
+    Skins(0)=Texture'DH_Artillery_tex.FlakVeirling38'
+    Skins(1)=Texture'DH_Artillery_tex.Wirberlwind_turret'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc4.wirbelwind_turret_col')
 }
 

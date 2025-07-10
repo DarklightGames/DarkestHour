@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MKB42HFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MKB42HBullet'
-    AmmoClass=class'ROAmmo.STG44Ammo'
+    ProjectileClass=Class'DH_MKB42HBullet'
+    AmmoClass=Class'STG44Ammo'
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.135 // ~491rpm  (value had to be found experimentally due to an engine bug)
 
@@ -24,10 +24,10 @@ defaultproperties
     FireIronLastAnim="iron_shoot_last"
     FireLastAnim="shoot_last"
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44_fire02'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44_fire03'
+    ShellEjectClass=Class'ShellEject1st556mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)
     bReverseShellSpawnDirection=true

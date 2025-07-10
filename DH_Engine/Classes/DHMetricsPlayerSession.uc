@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsPlayerSession extends JSONSerializable;
@@ -11,7 +11,7 @@ var DateTime EndedAt;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("ip", NetworkAddress)
         .PutString("started_at", StartedAt.IsoFormat())
         .PutString("ended_at", EndedAt.IsoFormat());

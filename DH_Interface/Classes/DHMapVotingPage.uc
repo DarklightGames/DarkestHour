@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapVotingPage extends MapVotingPage;
@@ -83,7 +83,7 @@ function SendVote(GUIComponent Sender)
 
             if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
             {
-                class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+                Class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
                 // Do a check if the current player count is in bounds of recommended range or if level has failed QA
                 if (!GRI.IsPlayerCountInRange(Min, Max))
@@ -183,11 +183,12 @@ defaultproperties
         bBoundToParent=true
         FontScale=FNS_Small
         HeaderColumnPerc(0)=0.40 // Map Name
-        HeaderColumnPerc(1)=0.20 // Country
-        HeaderColumnPerc(2)=0.20 // Type
-        HeaderColumnPerc(3)=0.20 // Player Range
+        HeaderColumnPerc(1)=0.15 // Allied Country
+        HeaderColumnPerc(2)=0.15 // Axis Country
+        HeaderColumnPerc(3)=0.15 // Type
+        HeaderColumnPerc(4)=0.15 // Player Range
     End Object
-    lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
+    lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.MapListBox'
 
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
@@ -205,7 +206,7 @@ defaultproperties
         bScaleToParent=true
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
-    lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
+    lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.VoteCountListBox'
 
     Begin Object Class=moComboBox Name=GameTypeCombo
         CaptionWidth=0.35
@@ -214,15 +215,15 @@ defaultproperties
         bScaleToParent=true
         bVisible=false
     End Object
-    co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
+    co_GameType=moComboBox'DH_Interface.GameTypeCombo'
 
     i_MapListBackground=none
     Begin Object Class=GUIImage Name=MapCountListBackground
-        Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
+        Image=Texture'InterfaceArt_tex.buttonGreyDark01'
         ImageStyle=ISTY_Stretched
         OnDraw=DHMapVotingPage.AlignBK
     End Object
-    i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
+    i_MapCountListBackground=GUIImage'DH_Interface.MapCountListBackground'
 
     Begin Object class=moEditBox Name=FilterEditbox
         WinWidth=0.86

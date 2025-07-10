@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -25,6 +25,7 @@ enum ERoleEnabledResult
     RER_SquadOnly,
     RER_SquadLeaderOnly,
     RER_NonSquadLeaderOnly,
+    RER_Locked,
 };
 
 enum EAutomaticVehicleAlerts
@@ -34,9 +35,25 @@ enum EAutomaticVehicleAlerts
     AVAM_Always
 };
 
+enum EMapMarkerCooldownType
+{
+    MMCT_Class,
+    MMCT_Group
+};
+
+struct MapMarkerCooldown
+{
+    var EMapMarkerCooldownType Type;
+    var class<DHMapMarker> MarkerClass;
+    var byte GroupIndex;
+    var int ExpiryTime;
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
-var     Hashtable_string_int                                    MapMarkerCooldowns;
+
+const MAX_MAP_MARKER_COOLDOWNS = 8;
+var     private MapMarkerCooldown                               MapMarkerCooldowns[MAX_MAP_MARKER_COOLDOWNS];
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -78,11 +95,11 @@ var     globalconfig float      DHBipodTurnSpeedFactor;     // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 // Player flinch
-var     vector                  FlinchRotMag;
-var     vector                  FlinchRotRate;
+var     Vector                  FlinchRotMag;
+var     Vector                  FlinchRotRate;
 var     float                   FlinchRotTime;
-var     vector                  FlinchOffsetMag;
-var     vector                  FlinchOffsetRate;
+var     Vector                  FlinchOffsetMag;
+var     Vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
 var     float                   FlinchMeterSwayMultiplier;
@@ -148,7 +165,7 @@ var     DHMapDatabase           MapDatabase;
 struct Signal
 {
     var class<DHSignal> SignalClass;
-    var vector Location;
+    var Vector Location;
     var float TimeSeconds;
     var Object OptionalObject;
 };
@@ -177,7 +194,7 @@ var     DHScoreManager          ScoreManager;
 // "Lazy" camera controls
 var     bool                    bLazyCam;
 var     float                   LazyCamLaziness;
-var     rotator                 LazyCamRotationTarget;
+var     Rotator                 LazyCamRotationTarget;
 
 // Surrender
 var     bool                    bSurrendered;
@@ -207,7 +224,8 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged, ArtillerySupportSquadIndex;
+        bSurrendered, bIQManaged, ArtillerySupportSquadIndex,
+        MapMarkerCooldowns;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -232,7 +250,8 @@ replication
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
-        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs;
+        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
+        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -245,7 +264,7 @@ replication
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientReceiveSquadPromotionRequest, ClientSendSquadPromotionRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt, ClientMapVoteResponse, ClientSetMapMarkerClassLock,
+        ClientReceiveVotePrompt, ClientMapVoteResponse,
         ClientAddPersonalMapMarker;
 
     unreliable if (Role < ROLE_Authority)
@@ -258,16 +277,16 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byt
 // Class is enforced here because InputClass is a config variable & so can easily be changed in the player's .ini file
 event InitInputSystem()
 {
-    InputClass = class'DH_Engine.DHPlayerInput';
+    InputClass = Class'DHPlayerInput';
 
     super(UnrealPlayer).InitInputSystem();
 }
 
 // Allows the server to tell the client to set a personal map marker
-simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass, vector MarkerLocation)
+simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass, Vector MarkerLocation)
 {
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -295,7 +314,7 @@ simulated event PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
-        foreach AllActors(class'DH_LevelInfo', ClientLevelInfo)
+        foreach AllActors(Class'DH_LevelInfo', ClientLevelInfo)
         {
             break;
         }
@@ -313,11 +332,9 @@ simulated event PostBeginPlay()
     {
         if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
         {
-            IQManager = Spawn(class'DHIQManager', self);
+            IQManager = Spawn(Class'DHIQManager', self);
         }
     }
-
-    MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
 }
 
 simulated function InitializeMapDatabase()
@@ -325,7 +342,7 @@ simulated function InitializeMapDatabase()
     // Initialize the map database (for local player only!)
     if (MapDatabase == none && Level.GetLocalPlayerController() == self)
     {
-        MapDatabase = new class'DHMapDatabase';
+        MapDatabase = new Class'DHMapDatabase';
         MapDatabase.Initialize();
     }
 }
@@ -357,7 +374,7 @@ function OnPlayerLogin()
     // Create score manager if it wasn't recovered from a previous session
     if (ScoreManager == none)
     {
-        ScoreManager = new class'DHScoreManager';
+        ScoreManager = new Class'DHScoreManager';
     }
 }
 
@@ -469,7 +486,7 @@ simulated function GUIPage GetGUIPage()
 
     if (GC != none)
     {
-        return GC.FindMenuByClass(class'GUIPage');
+        return GC.FindMenuByClass(Class'GUIPage');
     }
 }
 
@@ -499,7 +516,7 @@ event ClientReset()
     local Actor A;
 
     // Reset special timed actors on the client
-    foreach AllActors(class'Actor', A)
+    foreach AllActors(Class'Actor', A)
     {
         if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
         {
@@ -553,12 +570,12 @@ function EnterStartState()
 }
 
 // Calculate free-aim and process recoil
-simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
+simulated function Rotator FreeAimHandler(Rotator  NewRotation, float DeltaTime)
 {
-    local rotator NewPlayerRotation;
+    local Rotator NewPlayerRotation;
     local int     YawAdjust;
     local int     PitchAdjust;
-    local rotator AppliedRecoil;
+    local Rotator AppliedRecoil;
 
     if (Pawn == none || ROWeapon(Pawn.Weapon) == none || !ROWeapon(Pawn.Weapon).ShouldUseFreeAim())
     {
@@ -683,7 +700,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 // bAimingHelp is false for humans, so so the complicated parent function always returns the Controller's rotation (or pawn's rotation if in behind view)
 // But if we're aiming at a bot with certain types of weapons, the Super can be relevant because it results in the bot receiving a warning
 // Nearly all the time though, that isn't the case and so there's no point doing traces & calcs to get a target for a warning that won't happen
-function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int AimError)
+function Rotator AdjustAim(FireProperties FiredAmmunition, Vector ProjStart, int AimError)
 {
     // These are the rare situations where we call the Super as we may be aiming at a bot with a relevant weapon that could result in it receiving a warning
     if (Level.Game.NumBots > 0 &&       // only need to consider this if there are some bots in the game
@@ -801,7 +818,7 @@ exec function Say(string Msg)
     // If all chat is not allowed, then don't broadcast (serversay) and tell the user
     if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllChatEnabled)
     {
-        ReceiveLocalizedMessage(class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
+        ReceiveLocalizedMessage(Class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
         return;
     }
 
@@ -862,7 +879,7 @@ simulated function PlayerWhizzed(float DistSquared)
 
 simulated function PlayerFlinched(float Intensity)
 {
-    local rotator AfterFlinchRotation;
+    local Rotator AfterFlinchRotation;
     local float   FlinchRate, FlinchIntensity;
 
     if (!Pawn.bBipodDeployed)
@@ -953,7 +970,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     local ROWeapon  ROWeap;
     local DHProjectileWeapon  DHPW;
     local ROVehicle ROVeh;
-    local rotator   NewRotation, ViewRotation;
+    local Rotator   NewRotation, ViewRotation;
     local float     TurnSpeedFactor;
     local Quat      A, B;
 
@@ -1017,7 +1034,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         A = QuatFromRotator(Rotation);
         B = QuatFromRotator(LazyCamRotationTarget);
 
-        if (class'UQuaternion'.static.Angle(A, B) < class'UUnits'.static.DegreesToRadians(0.125))
+        if (Class'UQuaternion'.static.Angle(A, B) < Class'UUnits'.static.DegreesToRadians(0.125))
         {
             ViewRotation = LazyCamRotationTarget;
         }
@@ -1105,7 +1122,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         // Look directly at the look target
         if (LookTarget != none)
         {
-            ViewRotation = rotator(Normal(LookTarget.Location - (Pawn.Location + Pawn.EyePosition())));
+            ViewRotation = Rotator(Normal(LookTarget.Location - (Pawn.Location + Pawn.EyePosition())));
         }
 
         // Apply any pawn limits on pitch & yaw
@@ -1149,7 +1166,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     }
 }
 
-function ServerSaveArtilleryTarget(vector Location)
+function ServerSaveArtilleryTarget(Vector Location)
 {
     SavedArtilleryCoords = Location;
 }
@@ -1160,7 +1177,7 @@ function ServerSaveArtillerySupportSquadIndex(int Index)
 }
 
 // This function checks if the player can call artillery on the selected target.
-function bool IsArtilleryTargetValid(vector ArtilleryLocation, vector HitNormal)
+function bool IsArtilleryTargetValid(Vector ArtilleryLocation, Vector HitNormal)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
@@ -1171,7 +1188,7 @@ function bool IsArtilleryTargetValid(vector ArtilleryLocation, vector HitNormal)
         return false;
     }
 
-    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+    VT = Spawn(Class'DHVolumeTest', self,, ArtilleryLocation);
 
     if (VT != none)
     {
@@ -1392,9 +1409,9 @@ state PlayerWalking
     }
 
     // Added a test for mantling
-    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
+    function ProcessMove(float DeltaTime, Vector NewAccel, eDoubleClickDir DoubleClickMove, Rotator DeltaRot)
     {
-        local vector  OldAccel;
+        local Vector  OldAccel;
         local DHPawn P;
 
         P = DHPawn(Pawn);
@@ -1474,9 +1491,9 @@ state PlayerWalking
     // Client side
     function PlayerMove(float DeltaTime)
     {
-        local vector          X, Y, Z, NewAccel;
+        local Vector          X, Y, Z, NewAccel;
         local eDoubleClickDir DoubleClickMove;
-        local rotator         OldRotation, ViewRotation;
+        local Rotator         OldRotation, ViewRotation;
         local bool            bSaveJump;
         local DHPawn          P;
 
@@ -1685,7 +1702,7 @@ state Mantling
         }
     }
 
-    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
+    function ProcessMove(float DeltaTime, Vector NewAccel, eDoubleClickDir DoubleClickMove, Rotator DeltaRot)
     {
         local DHPawn DHP;
 
@@ -1721,9 +1738,9 @@ state Mantling
 
     function PlayerMove(float DeltaTime)
     {
-        local vector          NewAccel;
+        local Vector          NewAccel;
         local eDoubleClickDir DoubleClickMove;
-        local rotator         OldRotation, ViewRotation;
+        local Rotator         OldRotation, ViewRotation;
         local DHPawn          DHP;
 
         DHP = DHPawn(Pawn);
@@ -2037,7 +2054,7 @@ ignores SeePlayer, HearNoise, Bump;
     // Modified so if player moves into a shallow water volume, they exit swimming state, same as if they move into a non-water volume
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
-        local vector CheckPoint, HitLocation, HitNormal;
+        local Vector CheckPoint, HitLocation, HitNormal;
 
         if (!NewVolume.bWaterVolume || (NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater)) // moving into shallow water volume also exits swimming state
         {
@@ -2082,7 +2099,7 @@ ignores SeePlayer, HearNoise, Bump;
     }
 
     // Modified so landing in a shallow water volume doesn't send player into swimming state
-    function bool NotifyLanded(vector HitNormal)
+    function bool NotifyLanded(Vector HitNormal)
     {
         if (Pawn.PhysicsVolume != none && Pawn.PhysicsVolume.bWaterVolume && !(Pawn.PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(Pawn.PhysicsVolume).bIsShallowWater))
         {
@@ -2097,9 +2114,9 @@ ignores SeePlayer, HearNoise, Bump;
     }
 
     // Modified so moving into a shallow water volume also triggers NotifyPhysicsVolumeChange(), same as if they move into a non-water volume
-    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
+    function ProcessMove(float DeltaTime, Vector NewAccel, eDoubleClickDir DoubleClickMove, Rotator DeltaRot)
     {
-        local vector OldAccel;
+        local Vector OldAccel;
         local bool   bUpAndOut;
 
         OldAccel = Pawn.Acceleration;
@@ -2109,7 +2126,7 @@ ignores SeePlayer, HearNoise, Bump;
             Pawn.Acceleration = NewAccel;
         }
 
-        bUpAndOut = (Pawn.Acceleration.Z > 0.0 || Rotation.Pitch > 2048) && (vector(Rotation) Dot Pawn.Acceleration) > 0.0;
+        bUpAndOut = (Pawn.Acceleration.Z > 0.0 || Rotation.Pitch > 2048) && (Vector(Rotation) Dot Pawn.Acceleration) > 0.0;
 
         if (Pawn.bUpAndOut != bUpAndOut)
         {
@@ -2125,8 +2142,8 @@ ignores SeePlayer, HearNoise, Bump;
     // Modified to use VSizeSquared instead of VSize for more efficient processing, as this is a many-times-a-second function
     function PlayerMove(float DeltaTime)
     {
-        local vector  NewAccel, X, Y, Z;
-        local rotator OldRotation;
+        local Vector  NewAccel, X, Y, Z;
+        local Rotator OldRotation;
 
         GetAxes(Rotation, X, Y, Z);
 
@@ -2267,7 +2284,7 @@ function ServerUse()
     }
 
     // Send the 'UsedBy' event to each actor the player is touching, including its Base
-    foreach Pawn.TouchingActors(class'Actor', A)
+    foreach Pawn.TouchingActors(Class'Actor', A)
     {
         if (!A.bCanAutoTraceSelect)
         {
@@ -2342,7 +2359,7 @@ function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, c
     }
 }
 
-function bool IsPositionOfArtillery(vector Position)
+function bool IsPositionOfArtillery(Vector Position)
 {
     local int i;
     local DHGameReplicationInfo GRI;
@@ -2366,7 +2383,7 @@ function bool IsPositionOfArtillery(vector Position)
     return false;
 }
 
-function bool IsPositionOfParadrop(vector Position)
+function bool IsPositionOfParadrop(Vector Position)
 {
     local int i;
     local DHGameReplicationInfo GRI;
@@ -2410,7 +2427,7 @@ function int GetActiveOffMapSupportNumber()
 }
 
 // Modified to allow mortar operator to make a resupply request
-function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
+function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional Vector RequestLocation)
 {
     local DHRoleInfo RI;
 
@@ -2635,7 +2652,7 @@ simulated function UpdateHintManagement(bool bUseHints)
     {
         if (bUseHints && DHHintManager == none)
         {
-            DHHintManager = Spawn(class'DHHintManager', self);
+            DHHintManager = Spawn(Class'DHHintManager', self);
 
             if (DHHintManager == none)
             {
@@ -2681,7 +2698,7 @@ function bool CanRestartPlayer()
 
     NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, DHRoleInfo(GetRoleInfo()), VehiclePoolIndex);
 
-    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
+    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTimes[GetTeamNum()])
     {
         return false;
     }
@@ -2968,6 +2985,10 @@ exec simulated function ROIronSights()
     {
         Pawn.Weapon.ROIronSights();
     }
+    else if (Pawn != none && DHVehicleWeaponPawn(Pawn) != none)
+    {
+        DHVehicleWeaponPawn(Pawn).ROIronSights();
+    }
 }
 
 // Client function to fade from black
@@ -3243,7 +3264,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
 function OnTeamChanged()
 {
     local DarkestHourGame G;
-    local int TeamIndex;
 
     G = DarkestHourGame(Level.Game);
 
@@ -3252,7 +3272,7 @@ function OnTeamChanged()
         // Reset player's surrender status
         if (bSurrendered)
         {
-            G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+            G.VoteManager.RemoveNomination(self, Class'DHVoteInfo_TeamSurrender');
         }
     }
 
@@ -3435,7 +3455,7 @@ event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string 
 }
 
 // Modified for DHObjectives
-function vector GetObjectiveLocation(int Index)
+function Vector GetObjectiveLocation(int Index)
 {
     local DHGameReplicationInfo GRI;
 
@@ -3452,11 +3472,11 @@ function vector GetObjectiveLocation(int Index)
 // Modified to not have player automatically switch to best weapon when player requests to drop weapon
 function ServerThrowWeapon()
 {
-    local vector TossVel;
+    local Vector TossVel;
 
     if (Pawn != none && Pawn.CanThrowWeapon())
     {
-        TossVel = vector(GetViewRotation());
+        TossVel = Vector(GetViewRotation());
         TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150.0) + vect(0.0, 0.0, 100.0);
         Pawn.TossWeapon(TossVel);
     }
@@ -3548,9 +3568,9 @@ function ServerListClientGUIDs()
 
         if (PC != none)
         {
-            Message = PC.GetPlayerIDHash() @ Caps(class'MD5Hash'.static.GetHashString(PC.ClientGUID)) @ C.PlayerReplicationInfo.PlayerName;
+            Message = PC.GetPlayerIDHash() @ Caps(Class'MD5Hash'.static.GetHashString(PC.ClientGUID)) @ C.PlayerReplicationInfo.PlayerName;
 
-            ClipboardString $= Message @ class'UString'.static.CRLF();
+            ClipboardString $= Message @ Class'UString'.static.CRLF();
 
             ClientMessage(Message);
         }
@@ -3590,7 +3610,7 @@ function ServerListPlayers()
         if (PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
         {
             ClientMessage(Right("   " $ AllPRI[i].PlayerID, 3) $ ")" @ AllPRI[i].PlayerName @ " " $ PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
-            ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ class'UString'.static.CRLF();
+            ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ Class'UString'.static.CRLF();
         }
         else
         {
@@ -3608,7 +3628,7 @@ simulated function ClientOpenLogFile(String FileNameString)
 {
     if (ClientLogFile == none)
     {
-        ClientLogFile = Spawn(class'FileLog');
+        ClientLogFile = Spawn(Class'FileLog');
 
         if (ClientLogFile != none)
         {
@@ -3663,7 +3683,7 @@ function ClientSaveROIDHash(string ROID)
 
     SaveConfig();
     
-    PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
+    PatronTier = Class'DHAccessControl'.static.GetPatronTier(ROIDHash);
 
     // If we have script patron status, then set patron status on server
     if (PatronTier != "")
@@ -3672,7 +3692,7 @@ function ClientSaveROIDHash(string ROID)
     }
     else // Else, check via HTTP request for patron status
     {
-        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest = Spawn(Class'HTTPRequest');
         PatronRequest.Method = "GET";
         PatronRequest.Host = "api.darklightgames.com";
         PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
@@ -3810,7 +3830,7 @@ simulated function CheckUnlockWeapons()
     if (WeaponUnlockTime > 0 && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
     {
         WeaponUnlockTime = 0; // reset this now, as when set it effectively acts as a flag that weapons are locked
-        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
+        ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
     }
 }
 
@@ -3828,11 +3848,11 @@ simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
         {
             if (GRI.bIsInSetupPhase)
             {
-                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 3,,, self); // "Your weapons are locked during the setup phase"
+                ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 3,,, self); // "Your weapons are locked during the setup phase"
             }
             else
             {
-                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+                ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
             }
         }
 
@@ -3849,7 +3869,7 @@ simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Modified to ignore the Super in ROPlayer, which mostly added repeated info (player name & our state), plus pretty useless bCrawl, all badly formatted
@@ -3924,7 +3944,7 @@ exec function DebugObstacles(optional int Option)
 
     if (IsDebugModeAllowed())
     {
-        foreach AllActors(class'DHObstacleInfo', OI)
+        foreach AllActors(Class'DHObstacleInfo', OI)
         {
             Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
 
@@ -3979,11 +3999,11 @@ exec function DebugHints()
 // New debug exec to play a sound (playing sounds in RO editor often doesn't work, so this is just a way of trying out sounds)
 exec function SoundPlay(string SoundName, optional float Volume)
 {
-    local sound SoundToPlay;
+    local Sound SoundToPlay;
 
     if (IsDebugModeAllowed() && SoundName != "")
     {
-        SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
+        SoundToPlay = sound(DynamicLoadObject(SoundName, Class'Sound'));
 
         if (SoundToPlay != none)
         {
@@ -4018,7 +4038,7 @@ exec function ClearArrows()
 
     if (IsDebugModeAllowed())
     {
-        foreach DynamicActors(class'RODebugTracer', Tracer)
+        foreach DynamicActors(Class'RODebugTracer', Tracer)
         {
             Tracer.Destroy();
         }
@@ -4160,7 +4180,7 @@ function ServerPossessBody(Pawn NewPawn)
         // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
         if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
         {
-            Pawn.Died(none, class'DamageType', vect(0.0, 0.0, 0.0));
+            Pawn.Died(none, Class'DamageType', vect(0.0, 0.0, 0.0));
             Unpossess();
             Possess(NewPawn);
         }
@@ -4196,7 +4216,7 @@ exec simulated function DebugRaptor()
 {
     local Actor A;
 
-    foreach AllActors(class'Actor', A)
+    foreach AllActors(Class'Actor', A)
     {
         if (A.Location == vect(0, 0, 0) &&
             A.DrawType == DT_Sprite &&
@@ -4231,7 +4251,7 @@ exec function GetMyRotation()
     }
 }
 
-exec function SetMyLocation(vector NewLocation)
+exec function SetMyLocation(Vector NewLocation)
 {
     if (IsDebugModeAllowed())
     {
@@ -4239,7 +4259,7 @@ exec function SetMyLocation(vector NewLocation)
     }
 }
 
-exec function SetMyRotation(rotator NewRotation)
+exec function SetMyRotation(Rotator  NewRotation)
 {
     if (IsDebugModeAllowed())
     {
@@ -4287,7 +4307,7 @@ exec function VehicleTranslucent(optional bool bRevert)
                 if (!bRevert)
                 {
                     Index = TranslucentSkins.Length;
-                    TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                    TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(Class'Shader'));
                     TranslucentSkins[Index].Diffuse = V.default.Skins[i];
                     TranslucentSkins[Index].OutputBlending = OB_Translucent;
                     V.Skins[i] = TranslucentSkins[Index];
@@ -4328,7 +4348,7 @@ exec function VehicleTranslucent(optional bool bRevert)
                     if (!bRevert)
                     {
                         Index = TranslucentSkins.Length;
-                        TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                        TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(Class'Shader'));
                         TranslucentSkins[Index].Diffuse = NormalSkin;
                         TranslucentSkins[Index].OutputBlending = OB_Translucent;
                         V.WeaponPawns[j].Gun.Skins[i] = TranslucentSkins[Index];
@@ -4467,11 +4487,11 @@ exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 exec function ExitPosTool()
 {
     local ROVehicle NearbyVeh;
-    local vector    Offset;
+    local Vector    Offset;
 
     if (IsDebugModeAllowed())
     {
-        foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
+        foreach RadiusActors(Class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
         {
             Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
             Log("Vehicle:" @ NearbyVeh.GetHumanReadableName() @ "(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
@@ -4483,22 +4503,22 @@ exec function ExitPosTool()
 exec function DrawExits(optional bool bClearScreen)
 {
     local DHVehicle V;
-    local vector    ExitPosition, ZOffset, X, Y, Z;
-    local color     C;
+    local Vector    ExitPosition, ZOffset, X, Y, Z;
+    local Color     C;
     local int       i;
 
     ClearLines();
 
     if (!bClearScreen && IsVehicleDebugModeAllowed(V))
     {
-        ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+        ZOffset = Class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
         GetAxes(V.Rotation, X, Y, Z);
 
         for (i = V.ExitPositions.Length - 1; i >= 0; --i)
         {
             if (i == 0)
             {
-                C = class'HUD'.default.BlueColor; // driver
+                C = Class'HUD'.default.BlueColor; // driver
             }
             else
             {
@@ -4506,25 +4526,25 @@ exec function DrawExits(optional bool bClearScreen)
                 {
                     if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
                     {
-                        C = class'HUD'.default.RedColor; // commander
+                        C = Class'HUD'.default.RedColor; // commander
                     }
                     else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
                     {
-                        C = class'HUD'.default.GoldColor; // machine gunner
+                        C = Class'HUD'.default.GoldColor; // machine gunner
                     }
                     else
                     {
-                        C = class'HUD'.default.WhiteColor; // rider
+                        C = Class'HUD'.default.WhiteColor; // rider
                     }
                 }
                 else
                 {
-                    C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                    C = Class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
                 }
             }
 
             ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
-            class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+            Class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, Class'DHPawn'.default.CollisionRadius, Class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
         }
     }
 }
@@ -4594,7 +4614,7 @@ exec function SetCamPos(string NewX, string NewY, string NewZ)
 {
     local Vehicle             V;
     local ROVehicleWeaponPawn WP;
-    local vector              OldCamPos;
+    local Vector              OldCamPos;
 
     if (IsDebugModeAllowed())
     {
@@ -4676,7 +4696,7 @@ exec function DebugPenetration(bool bEnable)
         }
 
         // Change debug settings for current vehicles
-        foreach DynamicActors(class'DHArmoredVehicle', AV)
+        foreach DynamicActors(Class'DHArmoredVehicle', AV)
         {
             AV.bDebugPenetration = bEnable;
             AV.bLogDebugPenetration = bEnable;
@@ -4684,7 +4704,7 @@ exec function DebugPenetration(bool bEnable)
             AV.Class.default.bLogDebugPenetration = bEnable;
         }
 
-        foreach DynamicActors(class'DHVehicleCannon', VC)
+        foreach DynamicActors(Class'DHVehicleCannon', VC)
         {
             VC.bDebugPenetration = bEnable;
             VC.bLogDebugPenetration = bEnable;
@@ -4726,7 +4746,7 @@ exec function DebugPenetration(bool bEnable)
 exec function SetTreadDir(int NewPitch, int NewYaw, int NewRoll)
 {
     local DHVehicle V;
-    local rotator   NewPanDirection;
+    local Rotator   NewPanDirection;
 
     if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
@@ -4812,6 +4832,18 @@ exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, str
     }
 }
 
+// New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
+exec function SetHudEnginePos(string NewPosX, string NewPosY)
+{
+    local DHVehicle V;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        V.VehicleHudEngineX = float(NewPosX);
+        V.VehicleHudEngineY = float(NewPosY);
+    }
+}
+
 // New debug exec to set a vehicle's exhaust emitter location
 exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
@@ -4853,7 +4885,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelRadius(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
     local int       i;
@@ -4878,7 +4910,7 @@ exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, option
 exec function SetWheelOffset(string NewX, string NewY, string NewZ, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
-    local vector    NewBoneOffset;
+    local Vector    NewBoneOffset;
     local int       i;
 
     if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
@@ -4990,7 +5022,7 @@ exec function SetMass(float NewValue)
 exec function DrawCOM(optional bool bClearScreen)
 {
     local DHVehicle V;
-    local vector    COM, X, Y, Z;
+    local Vector    COM, X, Y, Z;
 
     ClearLines();
 
@@ -5008,7 +5040,7 @@ exec function DrawCOM(optional bool bClearScreen)
 exec function SetCOM(string NewX, string NewY, string NewZ)
 {
     local DHVehicle V;
-    local vector    COM, OldCOM;
+    local Vector    COM, OldCOM;
 
     if (IsVehicleDebugModeAllowed(V))
     {
@@ -5102,7 +5134,7 @@ exec function SetHitPoint(byte Index, string NewX, string NewY, string NewZ, opt
 exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional string NewScale)
 {
     local DHVehicle V;
-    local vector    OldOffset;
+    local Vector    OldOffset;
     local float     OldScale;
 
     if (IsVehicleDebugModeAllowed(V) && Level.NetMode != NM_DedicatedServer)
@@ -5173,7 +5205,7 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
 }
 
 // New debug exec to adjust the position of a vehicle's shadow so it looks right by adjusting the vertical position offset (ShadowZOffset) of attached ShadowProjector
-exec function SetVehShadowHeight(float NewValue)
+exec function SetShadowZOffset(float NewValue)
 {
     local DHVehicle V;
 
@@ -5233,7 +5265,7 @@ exec function SetArmorHeight(optional string Side, optional byte Index, optional
 // New helper function for debug exec SetArmorHeight
 function ProcessSetArmorHeight(DHVehicle V, out array<DHArmoredVehicle.ArmorSection> ArmorArray, byte Index, float NewValue, string SideText, int PlaneYaw, optional bool bDontChangeValue)
 {
-    local rotator PlaneRotation;
+    local Rotator PlaneRotation;
 
     // Option to just display the existing height, not setting a new value
     if (bDontChangeValue)
@@ -5294,7 +5326,7 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
     local DHVehicle       V;
     local DHVehicleCannon Cannon;
     local Actor           BaseActor;
-    local rotator         NewRotation;
+    local Rotator         NewRotation;
     local string          AnglesList;
 
     if (IsVehicleDebugModeAllowed(V))
@@ -5408,7 +5440,7 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
 }
 
 // Helper function to spawn debug plane attachments
-simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, optional vector RelLocation, optional Actor BaseActor)
+simulated function SpawnPlaneAttachment(DHVehicle V, Rotator RelRotation, optional Vector RelLocation, optional Actor BaseActor)
 {
     local Actor Plane;
 
@@ -5419,7 +5451,7 @@ simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, option
             BaseActor = V;
         }
 
-        Plane = Spawn(class'DH_Engine.DHDecoAttachment',,, BaseActor.Location);
+        Plane = Spawn(Class'DHDecoAttachment',,, BaseActor.Location);
 
         if (Plane != none)
         {
@@ -5433,7 +5465,7 @@ simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, option
             }
 
             // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
-            Plane.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh')));
+            Plane.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", Class'StaticMesh')));
             Plane.SetRelativeRotation(RelRotation);
             Plane.SetRelativeLocation(RelLocation);
             V.VehicleAttachments.Length = V.VehicleAttachments.Length + 1;
@@ -5451,7 +5483,7 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
     if (V != none)
     {
         // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
-        PlaneStaticMesh = StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh'));
+        PlaneStaticMesh = StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", Class'StaticMesh'));
 
         for (i = V.VehicleAttachments.Length - 1; i >= 0; --i)
         {
@@ -5487,7 +5519,7 @@ exec function DebugDriverAttachment()
 
 simulated function ClientTeamKillPrompt(string LastFFKillerString)
 {
-    class'DHTeamKillInteraction'.default.LastFFKillerName = LastFFKillerString;
+    Class'DHTeamKillInteraction'.default.LastFFKillerName = LastFFKillerString;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
 }
@@ -5536,7 +5568,7 @@ function ServerSquadVolunteerToAssist()
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 // Moves the player to a specified location and gives him a parachute.
-function Paradrop(vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function Paradrop(Vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local Pawn PlayerPawn;
     local Vehicle DrivenVehicle;
@@ -5558,12 +5590,12 @@ function Paradrop(vector DropLocation, optional float SpreadModifier, optional b
 
     if (PlayerPawn != none)
     {
-        PlayerPawn.SetLocation(DropLocation + RandRange(1.0, 2.0) * SpreadModifier * vector(RotRand()));
+        PlayerPawn.SetLocation(DropLocation + RandRange(1.0, 2.0) * SpreadModifier * Vector(RotRand()));
         DHPawn(PlayerPawn).GiveChute();
     }
 }
 
-function ParadropGroup(out array<DHPlayerReplicationInfo> PlayersToDrop, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ParadropGroup(out array<DHPlayerReplicationInfo> PlayersToDrop, Vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local DHPlayer PC;
     local int i;
@@ -5579,7 +5611,7 @@ function ParadropGroup(out array<DHPlayerReplicationInfo> PlayersToDrop, vector 
     }
 }
 
-function ServerParadropPlayer(DHPlayerReplicationInfo PRI, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ServerParadropPlayer(DHPlayerReplicationInfo PRI, Vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local DHPlayer PC;
 
@@ -5596,7 +5628,7 @@ function ServerParadropPlayer(DHPlayerReplicationInfo PRI, vector DropLocation, 
     }
 }
 
-function ServerParadropTeam(byte TeamIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ServerParadropTeam(byte TeamIndex, Vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -5623,7 +5655,7 @@ function ServerParadropTeam(byte TeamIndex, vector DropLocation, optional float 
     ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
 }
 
-function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ServerParadropSquad(byte TeamIndex, int SquadIndex, Vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local array<DHPlayerReplicationInfo> PlayersToDrop;
 
@@ -5644,7 +5676,7 @@ function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation
     ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
 }
 
-simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
+simulated function bool GetMarkedParadropLocation(out Vector ParadropLocation)
 {
     local DHGameReplicationInfo.MapMarker ParadropMarker;
 
@@ -5659,7 +5691,7 @@ simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
     }
 }
 
-simulated function bool GetSquadLeaderParadropLocation(out vector ParadropLocation, DHPlayerReplicationInfo SelectedPRI)
+simulated function bool GetSquadLeaderParadropLocation(out Vector ParadropLocation, DHPlayerReplicationInfo SelectedPRI)
 {
     local DHGameReplicationInfo GRI;
 
@@ -5672,7 +5704,7 @@ simulated function bool GetSquadLeaderParadropLocation(out vector ParadropLocati
 
     // We use squad leader's quantized position since we don't need
     // precision here.
-    class'UQuantize'.static.DequantizeClamped2DPose(SquadMemberLocations[0],
+    Class'UQuantize'.static.DequantizeClamped2DPose(SquadMemberLocations[0],
                                                     ParadropLocation.X,
                                                     ParadropLocation.Y);
 
@@ -5690,10 +5722,10 @@ simulated function ClientSquadInvite(string SenderName, string SquadName, int Te
 {
     if (!bIgnoreSquadInvitations)
     {
-        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
-        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
-        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
-        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+        Class'DHSquadInviteInteraction'.default.SenderName = SenderName;
+        Class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+        Class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        Class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
 
         Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
     }
@@ -5703,9 +5735,9 @@ simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadInde
 {
     if (!bIgnoreSquadLeaderVolunteerPrompts)
     {
-        class'DHSquadLeaderVolunteerInteraction'.default.TeamIndex = TeamIndex;
-        class'DHSquadLeaderVolunteerInteraction'.default.SquadIndex = SquadIndex;
-        class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
+        Class'DHSquadLeaderVolunteerInteraction'.default.TeamIndex = TeamIndex;
+        Class'DHSquadLeaderVolunteerInteraction'.default.SquadIndex = SquadIndex;
+        Class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
 
         Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderVolunteerInteraction", Player);
     }
@@ -5732,9 +5764,9 @@ simulated function ClientSquadAssistantVolunteerPrompt(int TeamIndex, int SquadI
 
     SquadAssistantVolunteers[VolunteerIndex] = VolunteerPRI;
 
-    class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
-    class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
-    class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerIndex = VolunteerIndex;
+    Class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
+    Class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
+    Class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerIndex = VolunteerIndex;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderAssistantVolunteerInteraction", Player);
 }
@@ -5999,7 +6031,7 @@ function ServerSendSquadPromotionRequest(DHPlayerReplicationInfo Recipient)
     }
 }
 
-function ServerSignal(class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
+function ServerSignal(class<DHSignal> SignalClass, Vector Location, optional Object OptionalObject)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -6023,11 +6055,11 @@ function ServerSquadRename(string Name)
     }
 }
 
-function bool ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
+function bool ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, Vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -6099,7 +6131,7 @@ function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
     }
 }
 
-function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, Vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker PMM;
@@ -6164,7 +6196,7 @@ function RemovePersonalMarker(int Index)
     PersonalMapMarkers.Remove(Index, 1);
 }
 
-simulated function ClientSignal(class<DHSignal> SignalClass, vector L, optional Object OptionalObject)
+simulated function ClientSignal(class<DHSignal> SignalClass, Vector L, optional Object OptionalObject)
 {
     local int i;
     local int Index;
@@ -6249,6 +6281,95 @@ function ServerSquadSwapRallyPoints()
     }
 }
 
+// Place a spawn as an admin
+function ServerPlaceAdminSpawn(Vector WorldLocation, byte TeamIndex)
+{
+    local DHSpawnPointBase AdminSpawn;
+
+    if (IsLoggedInAsAdmin() || IsDebugModeAllowed())
+    {
+        AdminSpawn = Spawn(Class'DHSpawnPoint_Admin', none,, WorldLocation);
+        AdminSpawn.SetTeamIndex(TeamIndex);
+        AdminSpawn.SetIsActive(true);
+
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', Class'UInteger'.static.FromShorts(2, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has placed a spawn on team" @ TeamIndex);
+    }
+}
+
+// Destroy an admin-placed spawn
+function ServerDestroyAdminSpawn(DHSpawnPoint_Admin AdminSpawn)
+{
+    if (AdminSpawn != none && (IsLoggedInAsAdmin() || IsDebugModeAllowed()))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', Class'UInteger'.static.FromShorts(3, AdminSpawn.GetTeamIndex()), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has destroyed an admin spawn on team" @ AdminSpawn.GetTeamIndex());
+
+        AdminSpawn.Destroy();
+    }
+}
+
+// Destroy admin-placed spawns by team
+function ServerDestroyAllAdminSpawns(byte TeamIndex)
+{
+    local DHSpawnPoint_Admin AdminSpawn;
+    local bool bSpawnDestroyed;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    foreach AllActors(Class'DHSpawnPoint_Admin', AdminSpawn)
+    {
+        if (AdminSpawn != none && AdminSpawn.GetTeamIndex() == TeamIndex)
+        {
+            AdminSpawn.Destroy();
+            bSpawnDestroyed = true;
+        }
+    }
+
+    if (bSpawnDestroyed)
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', Class'UInteger'.static.FromShorts(4, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has has destroyed all admin spawns on team" @ TeamIndex);
+    }
+}
+
+// Moves the player to a location based on map coordinates
+function ServerTeleportToMapLocation(float X, float Y)
+{
+    local DHPawn P;
+    local DHGameReplicationInfo GRI;
+    local Vector NewLocation;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    P = DHPawn(Pawn);
+
+    if (P == none)
+    {
+        return;
+    }
+
+    NewLocation = GRI.GetWorldSurfaceCoords(X, Y, 10000);
+    NewLocation.Z += 52;
+
+    if (P.SetLocation(NewLocation))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', 5, PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has teleported to" @ NewLocation);
+    }
+}
+
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -6316,7 +6437,7 @@ function ServerForgiveLastFFKiller()
     if (KillerPC != none && KillerPC.AreWeaponsLocked(true))
     {
         KillerPC.LockWeapons(1); // Unlock weapons as soon as possible
-        KillerPC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
+        KillerPC.ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
     }
 
     // Set none as we have handled the current LastFFKiller
@@ -6331,7 +6452,7 @@ function ServerPunishLastFFKiller()
     {
         PC = DHPlayer(LastFFKiller.Owner);
 
-        PC.ReceiveScoreEvent(class'DHScoreEvent_TeamKillPunish'.static.Create());
+        PC.ReceiveScoreEvent(Class'DHScoreEvent_TeamKillPunish'.static.Create());
     }
 
     LastFFKiller = none;
@@ -6407,7 +6528,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     local DHPlayerReplicationInfo PRI;
     local DHRadio Radio;
     local DHATGun Gun;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local Actor HitActor;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -6422,10 +6543,10 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+    TraceStart = CalcViewLocation;
+    TraceEnd = TraceStart + (Vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
 
-    foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (HitActor.IsA('DHRadio'))
         {
@@ -6510,6 +6631,33 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     return false;
 }
 
+// Exec function to set the player's patron tier for testing purposes.
+exec function DebugPatron(int Tier)
+{
+    local DHPlayerReplicationInfo.EPatronTier PatronTier;
+    
+    switch (Tier)
+    {
+        case 0:
+            PatronTier = PATRON_None;
+            break;
+        case 1:
+            PatronTier = PATRON_Lead;
+            break;
+        case 2:
+            PatronTier = PATRON_Bronze;
+            break;
+        case 3:
+            PatronTier = PATRON_Silver;
+            break;
+        case 4:
+            PatronTier = PATRON_Gold;
+            break;
+    }
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).PatronTier = PatronTier;
+}
+
 exec function HideOrderMenu()
 {
     if (CommandInteraction != none)
@@ -6518,7 +6666,7 @@ exec function HideOrderMenu()
     }
 }
 
-function bool TeleportPlayer(vector SpawnLocation, rotator SpawnRotation)
+function bool TeleportPlayer(Vector SpawnLocation, Rotator SpawnRotation)
 {
     if (Pawn != none && Pawn.SetLocation(SpawnLocation))
     {
@@ -6605,7 +6753,7 @@ simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerRe
         }
         else
         {
-            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.LocalChannelText, RelatedPRI));
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, Class'DHVoiceReplicationInfo'.default.LocalChannelText, RelatedPRI));
         }
     }
 }
@@ -6832,7 +6980,7 @@ function PatronRequestOnResponse(HTTPRequest Request, int Status, TreeMap_string
     {
         Log("Patron status request success (" $ Status  $ ")");
 
-        Parser = new class'JSONParser';
+        Parser = new Class'JSONParser';
         O = Parser.ParseObject(Content);
 
         Results = O.Get("results").AsArray();
@@ -6920,7 +7068,7 @@ function ServerCancelArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 
     if (ArtilleryActor != none && ArtilleryActor.bCanBeCancelled && ArtilleryActor.Requester == self)
     {
-        ReceiveLocalizedMessage(class'DHArtilleryMessage', 8,,, ArtilleryActor.Class);
+        ReceiveLocalizedMessage(Class'DHArtilleryMessage', 8,,, ArtilleryActor.Class);
 
         if (!ArtilleryActor.HasStarted())
         {
@@ -6971,14 +7119,14 @@ function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
     // Keep fighting
     if (bSurrendered)
     {
-        G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+        G.VoteManager.RemoveNomination(self, Class'DHVoteInfo_TeamSurrender');
         return;
     }
 
     // Surrender
     if (bAskForConfirmation)
     {
-        if (class'DHVoteInfo_TeamSurrender'.static.CanNominate(self, G))
+        if (Class'DHVoteInfo_TeamSurrender'.static.CanNominate(self, G))
         {
             // Send the confirmation prompt
             ClientTeamSurrenderResponse(-1);
@@ -6986,7 +7134,7 @@ function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
     }
     else
     {
-        G.VoteManager.AddNomination(self, class'DHVoteInfo_TeamSurrender');
+        G.VoteManager.AddNomination(self, Class'DHVoteInfo_TeamSurrender');
     }
 }
 
@@ -7012,8 +7160,8 @@ simulated function ClientReceiveVotePrompt(class<DHVoteInfo> VoteInfoClass, int 
 {
     // TODO: display the interaction prompt!
     // TODO: how are we showing other interactions?
-    class'DHVoteInteraction'.default.VoteInfoClass = VoteInfoClass;
-    class'DHVoteInteraction'.default.VoteId = VoteId;
+    Class'DHVoteInteraction'.default.VoteInfoClass = VoteInfoClass;
+    Class'DHVoteInteraction'.default.VoteId = VoteId;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHVoteInteraction", Player);
 }
@@ -7163,9 +7311,9 @@ function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPl
         return;
     }
 
-    class'DHSquadMergeRequestInteraction'.default.SquadMergeRequestID = SquadMergeRequestID;
-    class'DHSquadMergeRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
-    class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
+    Class'DHSquadMergeRequestInteraction'.default.SquadMergeRequestID = SquadMergeRequestID;
+    Class'DHSquadMergeRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    Class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
 }
@@ -7180,9 +7328,9 @@ function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string 
         return;
     }
 
-    class'DHSquadPromotionRequestInteraction'.default.SquadPromotionRequestID = SquadPromotionRequestID;
-    class'DHSquadPromotionRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
-    class'DHSquadPromotionRequestInteraction'.default.SenderSquadName = SenderSquadName;
+    Class'DHSquadPromotionRequestInteraction'.default.SquadPromotionRequestID = SquadPromotionRequestID;
+    Class'DHSquadPromotionRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    Class'DHSquadPromotionRequestInteraction'.default.SenderSquadName = SenderSquadName;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadPromotionRequestInteraction", Player);
 }
@@ -7200,7 +7348,7 @@ function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeReq
         return;
     }
 
-    Page = GUIController.FindMenuByClass(class'GUIPage');
+    Page = GUIController.FindMenuByClass(Class'GUIPage');
 
     if (Page != none)
     {
@@ -7221,7 +7369,7 @@ function ClientSendSquadPromotionRequestResult(DHSquadReplicationInfo.ESquadProm
         return;
     }
 
-    Page = GUIController.FindMenuByClass(class'GUIPage');
+    Page = GUIController.FindMenuByClass(Class'GUIPage');
 
     if (Page != none)
     {
@@ -7238,49 +7386,53 @@ simulated function bool IsSquadLeader()
     return PRI != none && PRI.IsSquadLeader();
 }
 
+simulated function bool IsLoggedInAsAdmin()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsLoggedInAsAdmin();
+}
+
 function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
                                       PlayerReplicationInfo Recipient,
                                       name messagetype, byte messageID,
-                                      optional Pawn senderPawn, optional vector senderLocation)
+                                      optional Pawn senderPawn, optional Vector senderLocation)
 {
     local VoicePack Voice;
     local ROVoicePack V;
     local bool bIsTeamVoice;
     local class<ROVoicePack> ROV;
+    local class<DHVoicePack> DHV;
     local ROPlayerReplicationInfo PRI;
+    local DH_LevelInfo LI;
 
-    if (Sender == none || Sender.VoiceType == none || Sender.Team == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
+    if (Sender == none || Sender.VoiceType == none || Sender.Team == none ||
+        Player == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
     {
         return;
     }
 
-    // If the sender is receiving the sound then allow them to hear the
-    // voicepack from their settings instead of the regular voicepack
     PRI = ROPlayerReplicationInfo(Sender);
+    bIsTeamVoice = Level.GetLocalPlayerController().PlayerReplicationInfo.Team != none && Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex;
 
     if (PRI != none && PRI.RoleInfo != none)
     {
-        if (Level.GetLocalPlayerController().PlayerReplicationInfo.Team == none ||
-            Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex)
-        {
-            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.AltVoiceType, class'Class'));
-            bIsTeamVoice = true;
-            V = Spawn(ROV, self);
-        }
-        else
-        {
-            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, class'Class'));
-            V = Spawn(ROV, self);
+        ROV = Class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, Class'Class'));
+        DHV = Class<DHVoicePack>(ROV);
 
-            if (V != none)
-            {
-                V.bUseLocationalVoice = true;
-                V.bIsFromDifferentTeam = true;
-            }
+        if (DHV != none)
+        {
+            LI = Class'DH_LevelInfo'.static.GetInstance(Level);
+            ROV = DHV.static.GetVoicePackClass(LI.GetTeamNationClass(int(!bool(Sender.Team.TeamIndex))));
         }
+
+        V = Spawn(ROV, self);
 
         if (V != none)
         {
+            V.bUseLocationalVoice = true;
             V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
 
             if (bIsTeamVoice)
@@ -7332,7 +7484,7 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
                           byte MessageID,
                           name BroadcastType,
                           optional Pawn SoundSender,
-                          optional vector SenderLocation)
+                          optional Vector SenderLocation)
 {
     local Controller P;
     local ROPlayer ROP;
@@ -7384,16 +7536,9 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
                 {
                     DistanceToOther = VSize(Pawn.Location - ROP.Pawn.Location);
 
-                    if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
+                    if (Class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
                     {
-                        if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, none, SenderLocation);
-                        }
-                        else
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
-                        }
+                        ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
                     }
                 }
                 else
@@ -7483,69 +7628,9 @@ function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
     }
 }
 
-exec function TestIp(string IpAddress)
+simulated function GetEyeTraceLocation(out Vector HitLocation, out Vector HitNormal, optional out Actor HitActor)
 {
-    if (Level.NetMode == NM_Standalone)
-    {
-        class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
-    }
-}
-
-exec function IpCache()
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        class'DHGeolocationService'.static.DumpCache();
-    }
-}
-
-exec function SetCountry(string CountryCode)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-        PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
-    }
-}
-
-exec function IpFuzz(int Iterations)
-{
-    local int Result;
-    local string IpAddress, CountryCode;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        if (Iterations == 0)
-        {
-            Iterations = 1000;
-        }
-
-        while (Iterations-- > 0)
-        {
-            IpAddress = Rand(256) $ "." $ Rand(256) $ "." $ Rand(256) $ "." $ Rand(256);
-            CountryCode = class'DHGeolocationService'.default.CountryCodes[Rand(class'DHGeolocationService'.default.CountryCodes.Length)];
-
-            class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
-
-            // Once more to test that it can't be inserted twice!
-            Result = class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
-
-            if (Result != -1)
-            {
-                Warn("BAD RESULT" @ RESULT);
-            }
-        }
-
-        class'DHGeolocationService'.static.StaticSaveConfig();
-    }
-}
-
-simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
-{
-    local vector TraceStart, TraceEnd;
+    local Vector TraceStart, TraceEnd;
     local Actor A;
     local Actor PawnVehicleBase;
 
@@ -7555,10 +7640,10 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
     }
     
     TraceStart = CalcViewLocation;
-    TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+    TraceEnd = TraceStart + (Vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
     PawnVehicleBase = Pawn.GetVehicleBase();
 
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (A == Pawn ||
             A == PawnVehicleBase ||
@@ -7605,10 +7690,10 @@ simulated function bool CanUseFireSupportMenu()
     return P != none && IsSquadLeader();
 }
 
-function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional Vector L)
 {
     local DHGameReplicationInfo GRI;
-    local vector                WorldLocation;
+    local Vector                WorldLocation;
     local int                   MapMarkerPlacingLockTimeout;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -7625,11 +7710,11 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
 
     if (MarkerClass.default.Cooldown > 0)
     {
-        MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
+        MapMarkerPlacingLockTimeout = GetMapMarkerLockExpiryTime(MarkerClass) - GRI.ElapsedTime;
 
         if (MapMarkerPlacingLockTimeout > 0)
         {
-            ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, class'UInteger'.static.Create(MapMarkerPlacingLockTimeout));
+            ReceiveLocalizedMessage(Class'DHFireSupportMessage', 1,,, Class'UInteger'.static.Create(MapMarkerPlacingLockTimeout));
             return;
         }
     }
@@ -7653,7 +7738,7 @@ exec function DebugAddMapMarker(string MapMarkerClassName, int X, int Y)
     {
         XX = float(x) / 10;
         YY = float(y) / 10;
-        MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, class'Class'));
+        MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, Class'Class'));
 
         Log("Adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ XX @ "," @ YY);
 
@@ -7680,7 +7765,7 @@ function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
 
 exec simulated function ListWeapons()
 {
-    class'DHWeaponRegistry'.static.DumpToLog(self);
+    Class'DHWeaponRegistry'.static.DumpToLog(self);
 }
 
 exec function DebugStartRound()
@@ -7697,42 +7782,48 @@ exec function DebugStartRound()
             return;
         }
 
-        GRI.SpawningEnableTime = 0;
+        GRI.SpawningEnableTimes[0] = 0;
+        GRI.SpawningEnableTimes[1] = 0;
 
-        foreach AllActors(class'DHSetupPhaseManager', SPM)
+        foreach AllActors(Class'DHSetupPhaseManager', SPM)
         {
             SPM.ModifySetupPhaseDuration(3, true);
         }
     }
 }
 
-function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
+simulated function int GetMapMarkerLockExpiryTime(class<DHMapMarker> MapMarkerClass)
 {
-    local DHGameReplicationInfo GRI;
-    local int ExpiryTime;
+    local int i;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (MapMarkerClass.default.Cooldown > 0)
+    if (MapMarkerClass.default.Cooldown == 0)
     {
-        switch(MapMarkerClass.default.OverwritingRule)
-        {
-            case UNIQUE:
-                MapMarkerCooldowns.Get("" $ MapMarkerClass, ExpiryTime);
-                return ExpiryTime - GRI.ElapsedTime;
-            case UNIQUE_PER_GROUP:
-                // to do: implement an int->int hashmap & use it here
-                MapMarkerCooldowns.Get("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
-                return ExpiryTime - GRI.ElapsedTime;
-        }
+        return 0;
+    }
+    
+    switch(MapMarkerClass.default.OverwritingRule)
+    {
+        case UNIQUE:
+            for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+            {
+                if (MapMarkerCooldowns[i].Type == MMCT_Class && MapMarkerCooldowns[i].MarkerClass == MapMarkerClass)
+                {
+                    return MapMarkerCooldowns[i].ExpiryTime;
+                }
+            }
+            break;
+        case UNIQUE_PER_GROUP:
+            for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+            {
+                if (MapMarkerCooldowns[i].Type == MMCT_Group && MapMarkerCooldowns[i].GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    return MapMarkerCooldowns[i].ExpiryTime;
+                }
+            }
+            break;
     }
 
     return 0;
-}
-
-function ClientSetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
-{
-    SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
 }
 
 function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
@@ -7749,32 +7840,81 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
 
     ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
 
-    if (MapMarkerClass.default.Scope != PERSONAL)
+    if (Role == ROLE_Authority)
     {
-        // We are on the server at this point, as this function is called from OnMapMarkerPlaced
-        // which for non-personal markers is executed on the server.
-        // Save the lock expiry time on the client.
-        ClientSetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
-    }
-    else
-    {
-        // We are on the client here anyway.
         SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
     }
+}
 
-    return;
+simulated function int GetMapMarkerCooldownIndex(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        switch (MapMarkerClass.default.OverwritingRule)
+        {
+            case UNIQUE:
+                if (MapMarkerCooldowns[i].Type == MMCT_Class && MapMarkerCooldowns[i].MarkerClass == MapMarkerClass)
+                {
+                    return i;
+                }
+                break;
+            case UNIQUE_PER_GROUP:
+                if (MapMarkerCooldowns[i].Type == MMCT_Group && MapMarkerCooldowns[i].GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    return i;
+                }
+                break;
+        }
+    }
+
+    // Couldn't find a relevant cooldown entry. Find one that is no longer valid and return it.
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        if (GameReplicationInfo.ElapsedTime >= MapMarkerCooldowns[i].ExpiryTime)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 function SetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
 {
+    local int Index;
+
+    Index = GetMapMarkerCooldownIndex(MapMarkerClass);
+
+    if (Index == -1)
+    {
+        Warn("Failed to find a valid cooldown entry for map marker class " @ MapMarkerClass @ ".");
+        Index = 0;
+    }
+
     switch (MapMarkerClass.default.OverwritingRule)
     {
         case UNIQUE:
-            MapMarkerCooldowns.Put("" $ MapMarkerClass, ExpiryTime);
+            MapMarkerCooldowns[Index].Type = MMCT_Class;
+            MapMarkerCooldowns[Index].MarkerClass = MapMarkerClass;
             break;
         case UNIQUE_PER_GROUP:
-            MapMarkerCooldowns.Put("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+            MapMarkerCooldowns[Index].Type = MMCT_Group;
+            MapMarkerCooldowns[Index].GroupIndex = MapMarkerClass.default.GroupIndex;
             break;
+    }
+    
+    MapMarkerCooldowns[Index].ExpiryTime = ExpiryTime;
+}
+
+function ClearMapMarkerCooldowns()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        MapMarkerCooldowns[i].ExpiryTime = 0;
     }
 }
 
@@ -7840,6 +7980,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 
     if (RI == none || PRI == none || GRI == none) { return RER_Fatal; }
 
+    if (RI.bIsLocked)
+    {
+        return RER_Locked;
+    }
+
     GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
     if (GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0)
@@ -7873,7 +8018,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 // Function for getting the correct inventory item name to display depending on settings.
 simulated static function string GetInventoryName(class<Inventory> InventoryClass)
 {
-    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, class'DHWeapon'))
+    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, Class'DHWeapon'))
     {
         if (class<DHWeapon>(InventoryClass).default.NativeItemName != "")
         {
@@ -7884,9 +8029,45 @@ simulated static function string GetInventoryName(class<Inventory> InventoryClas
     return InventoryClass.default.ItemName;
 }
 
-simulated exec function ListVehicles()
+exec simulated function ListVehicles()
 {
-    class'DHVehicleRegistry'.static.DumpToLog(self);
+    Class'DHVehicleRegistry'.static.DumpToLog(self);
+}
+
+exec function MapBoundsOffset(int X, int Y)
+{
+    local DHGameReplicationInfo GRI;
+    local ROMapBoundsNE NE;
+    local ROMapBoundsSW SW;
+    local Vector NorthEastBounds, SouthWestBounds, Offset;
+    
+    // Find the location of the map bounds
+    foreach AllActors(Class'ROMapBoundsNE', NE)
+    {
+        NorthEastBounds = NE.Location;
+    }
+
+    foreach AllActors(Class'ROMapBoundsSW', SW)
+    {
+        SouthWestBounds = SW.Location;
+    }
+
+    Offset.X = X;
+    Offset.Y = Y;
+
+    // Move the map bounds
+    NorthEastBounds += Offset;
+    SouthWestBounds += Offset;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.NorthEastBounds = NorthEastBounds;
+        GRI.SouthWestBounds = SouthWestBounds;
+    }
+
+    Level.Game.Broadcast(self, "(X: " $ NorthEastBounds.X $ ", Y: " $ SouthWestBounds.Y $ ")");
 }
 
 defaultproperties
@@ -7928,10 +8109,10 @@ defaultproperties
     // FOV
     ViewFOVMin=80.0
     ViewFOVMax=100.0
-    ConfigViewFOV=85.0
+    ConfigViewFOV=90.0
 
     // Admin-initialed paradrops
-    ParadropMarkerClass=class'DH_Engine.DHMapMarker_AdminParadrop'
+    ParadropMarkerClass=Class'DHMapMarker_AdminParadrop'
     ParadropHeight=10000
     ParadropSpreadModifier=600
 
@@ -7940,9 +8121,9 @@ defaultproperties
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     ChatRoomMessageClass="DH_Engine.DHChatRoomMessage"
     GlobalDetailLevel=5
-    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-    InputClass=class'DH_Engine.DHPlayerInput'
-    PawnClass=class'DH_Engine.DHPawn'
+    PlayerReplicationInfoClass=Class'DHPlayerReplicationInfo'
+    InputClass=Class'DHPlayerInput'
+    PawnClass=Class'DHPawn'
     SteamStatsAndAchievementsClass=none
     SpawnPointIndex=-1
     VehiclePoolIndex=-1
@@ -7957,8 +8138,8 @@ defaultproperties
 
     ToggleDuckIntervalSeconds=0.5
 
-    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
-    PersonalMapMarkerClasses(1)=class'DHMapMarker_AdminParadrop'
+    PersonalMapMarkerClasses(0)=Class'DHMapMarker_Ruler'
+    PersonalMapMarkerClasses(1)=Class'DHMapMarker_AdminParadrop'
 
     MinIQToGrowHead=100
     ArtillerySupportSquadIndex=255
@@ -7966,4 +8147,6 @@ defaultproperties
     LastTeamKillTimeSeconds=-100000
 
     AutomaticVehicleAlerts=1 // AVAM_OnlyWithCrew
+
+    bSpawnWithBayonet=true
 }

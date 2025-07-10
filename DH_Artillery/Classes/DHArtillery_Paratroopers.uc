@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillery_Paratroopers extends DHArtillery;
@@ -11,7 +11,7 @@ simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
-        SpawnPoint = Spawn(class'DHSpawnPoint_Parachute', self);
+        SpawnPoint = Spawn(Class'DHSpawnPoint_Parachute', self);
 
         if (SpawnPoint == none)
         {
@@ -53,7 +53,7 @@ simulated function bool IsParadrop()
 defaultproperties
 {
     MenuName="Paratroopers"
-    MenuIcon=Material'DH_InterfaceArt2_tex.Icons.paratroopers'
+    MenuIcon=Material'DH_InterfaceArt2_tex.paratroopers'
     LifeSpan=90
     ArtilleryType=ArtyType_Paradrop
 }

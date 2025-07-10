@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MG42Attachment extends DHHighROFWeaponAttachment;
@@ -8,14 +8,14 @@ class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg42'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'InterfaceArt_tex.mg42'
+    mMuzFlashClass=Class'MuzzleFlash3rdMG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    ClientProjectileClass=Class'DH_MG42Bullet'
     bUsesTracers=true
     TracerFrequency=7
-    ClientTracerClass=class'DH_Weapons.DH_MG42TracerBullet'
+    ClientTracerClass=Class'DH_MG42TracerBullet'
 
     WA_Idle="idle_mg42"
     WA_IdleEmpty="idle_mg42"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUISquadComponent extends GUIPanel;
@@ -125,7 +125,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     if (MembersListContextMenuWrapper == none)
     {
-        MembersListContextMenuWrapper = new class'DHContextMenu_SquadMembers';
+        MembersListContextMenuWrapper = new Class'DHContextMenu_SquadMembers';
     }
 
     if (MembersListContextMenuWrapper == none)
@@ -179,7 +179,7 @@ defaultproperties
         WinHeight=0.075
         WinLeft=0.1
         WinTop=0.05
-        Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
+        Image=Texture'DH_InterfaceArt2_tex.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -198,7 +198,7 @@ defaultproperties
         WinHeight=0.075
         WinLeft=0.76
         WinTop=0.05
-        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        Image=Texture'DH_InterfaceArt2_tex.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -218,7 +218,7 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        Image=Texture'DH_GUI_tex.DeployMenu.squad_panel'
+        Image=Texture'DH_GUI_tex.squad_panel'
         ImageColor=(R=192,G=192,B=192,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Stretched
@@ -227,17 +227,17 @@ defaultproperties
     End Object
     i_Background=BackgroundImage
 
-    Begin Object Class=GUIContextMenu Name=MembersListContextMenu
-        OnSelect=DHGUISquadComponent.MembersListContextMenuSelect
-        OnOpen=DHGUISquadComponent.MembersListContextMenuOpen
-        OnClose=DHGUISquadComponent.MembersListContextMenuClose
+    Begin Object Class=DHGUIContextMenu Name=MembersListContextMenu
+        OnSelect=MembersListContextMenuSelect
+        OnOpen=MembersListContextMenuOpen
+        OnClose=MembersListContextMenuClose
     End Object
 
     Begin Object Class=DHGUIListBox Name=MembersList
         OutlineStyleName="ItemOutline"
         SectionStyleName="ListSection"
-        SelectedStyleName="DHItemLargeOutline"
-        StyleName="DHLargeText"
+        SelectedStyleName="DHItemOutline"
+        StyleName="DHSmallText"
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none
@@ -246,7 +246,7 @@ defaultproperties
         WinLeft=0.1
         WinTop=0.15
         bVisible=false
-        ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
+        ContextMenu=GUIContextMenu'DH_Interface.MembersListContextMenu'
     End Object
     lb_Members=MembersList
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Bofors40mmCannonShell extends DHCannonShell;
@@ -16,26 +16,26 @@ defaultproperties
 
     //Damage
     ImpactDamage=180 //solid shell, i assume because didnt find any info
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.14
     EngineFireChance=0.23
 
     bShatterProne=true
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    CoronaClass=Class'DHShellTracer_RedLarge'
+    ShellTrailClass=Class'DH20mmShellTrail_Red'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    ShellHitVehicleEffectClass=Class'DH20mmAPHitPenetrate'
+    ShellHitDirtEffectClass=Class'DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmAPHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=6.0  // 100m // TODO: try to get some accurate penetration data (this uses reported penetration at 100, 500, 1k & 2k ranges, with the gaps then estimated)

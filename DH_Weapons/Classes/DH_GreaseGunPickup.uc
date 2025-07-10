@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GreaseGunPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_GreaseGunWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M3_GreaseGun'
+    InventoryType=Class'DH_GreaseGunWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.M3_GreaseGun'
 }

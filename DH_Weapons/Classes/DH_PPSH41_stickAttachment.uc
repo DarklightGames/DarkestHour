@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PPSh41_stickAttachment extends DHHighROFWeaponAttachment;
@@ -8,11 +8,11 @@ class DH_PPSh41_stickAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PPSH_stick_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_stick_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.ppsh41_stick_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_PPSH41_stickBullet'
+    ClientProjectileClass=Class'DH_PPSH41_stickBullet'
 
     WA_Idle="idle_pps43"
     WA_IdleEmpty="idle_pps43"

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class JSONArray extends JSONValue;
@@ -53,17 +53,17 @@ function Add(JSONValue Item)
 
 function AddString(coerce string Value)
 {
-    Add(class'JSONString'.static.Create(Value));
+    Add(Class'JSONString'.static.Create(Value));
 }
 
 function AddInt(int Value)
 {
-    Add(class'JSONNumber'.static.Create(string(Value)));
+    Add(Class'JSONNumber'.static.Create(string(Value)));
 }
 
 function AddFloat(float Value)
 {
-    Add(class'JSONNumber'.static.Create(string(Value)));
+    Add(Class'JSONNumber'.static.Create(string(Value)));
 }
 
 function AddAtIndex(int Index, JSONValue Item)
@@ -80,32 +80,32 @@ static function JSONArray Create()
 {
     local JSONArray A;
 
-    A = new class'JSONArray';
-    A.Values = new class'ArrayList_JSONValue';
+    A = new Class'JSONArray';
+    A.Values = new Class'ArrayList_JSONValue';
 
     return A;
 }
 
-static function JSONArray FromVector(vector V)
+static function JSONArray FromVector(Vector V)
 {
     local JSONArray A;
 
     A = Create();
-    A.Add(class'JSONNumber'.static.FCreate(V.X));
-    A.Add(class'JSONNumber'.static.FCreate(V.Y));
-    A.Add(class'JSONNumber'.static.FCreate(V.Z));
+    A.Add(Class'JSONNumber'.static.FCreate(V.X));
+    A.Add(Class'JSONNumber'.static.FCreate(V.Y));
+    A.Add(Class'JSONNumber'.static.FCreate(V.Z));
 
     return A;
 }
 
-static function JSONArray IFromVector(vector V)
+static function JSONArray IFromVector(Vector V)
 {
     local JSONArray A;
 
     A = Create();
-    A.Add(class'JSONNumber'.static.ICreate(V.X));
-    A.Add(class'JSONNumber'.static.ICreate(V.Y));
-    A.Add(class'JSONNumber'.static.ICreate(V.Z));
+    A.Add(Class'JSONNumber'.static.ICreate(V.X));
+    A.Add(Class'JSONNumber'.static.ICreate(V.Y));
+    A.Add(Class'JSONNumber'.static.ICreate(V.Z));
 
     return A;
 }

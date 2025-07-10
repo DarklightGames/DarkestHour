@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SVT40ScopedAttachment extends DHWeaponAttachment;
@@ -8,9 +8,9 @@ class DH_SVT40ScopedAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.svt40Scope' // placeholder until we get SVT world mesh
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40scoped_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.svt40scoped_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false
 
     WA_Idle="idle_svt40"

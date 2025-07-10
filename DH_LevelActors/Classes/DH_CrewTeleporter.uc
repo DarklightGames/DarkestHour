@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CrewTeleporter extends DH_Teleporter;
@@ -30,7 +30,7 @@ simulated function PostTouch(Actor Other)
     else
     {
         // Teleport to a random teleporter in this local level - if more than one pick random
-        foreach AllActors(class'Teleporter', D)
+        foreach AllActors(Class'Teleporter', D)
         {
             if (string(D.Tag) ~= URL && D != self)
             {

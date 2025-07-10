@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAxisRoles extends DHRoleInfo
@@ -11,6 +11,6 @@ defaultproperties
     Texture=Texture'DHEngine_Tex.Axis_RoleInfo'
     VoiceType="DH_GerPlayers.DHGerVoice"
     AltVoiceType="DH_GerPlayers.DHGerVoice"
-    DetachedArmClass=class'ROEffects.SeveredArmGerTunic'
-    DetachedLegClass=class'ROEffects.SeveredLegGerTunic'
+    DetachedArmClass=Class'SeveredArmGerTunic'
+    DetachedLegClass=Class'SeveredLegGerTunic'
 }

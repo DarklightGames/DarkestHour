@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M45QuadmountMGPawn extends DHVehicleMGPawn;
@@ -47,9 +47,9 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
 // Modified so camera rotation & offset positioning is always based on the weapon's aim, so player's view always moves with turret
 // But with 'look around' rotation added in when player's head is raised above the reflector sight
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, TurretQuat, NonRelativeQuat;
+    local Quat RelativeQuat, TurretQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -130,7 +130,7 @@ function bool CanFire()
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M45QuadmountMG'
+    GunClass=Class'DH_M45QuadmountMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -144,9 +144,9 @@ defaultproperties
     DrivePos=(X=-10.0,Y=0.0,Z=-37.0)
     DriveAnim="VSU76_driver_idle_close"
     CameraBone="Camera_com"
-    VehicleMGReloadTexture=Texture'DH_Artillery_tex.ATGun_Hud.m45_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_Artillery_tex.m45_ammo_reload'
     bSpecialRotateSounds=true
-    RotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    PitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
+    RotateSound=Sound'Vehicle_Weapons.electric_turret_traverse'
+    PitchSound=Sound'Vehicle_Weapons.electric_turret_traverse'
+    RotateAndPitchSound=Sound'Vehicle_Weapons.electric_turret_traverse'
 }

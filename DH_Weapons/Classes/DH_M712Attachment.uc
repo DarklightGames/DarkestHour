@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M712Attachment extends DHHighROFWeaponAttachment;
@@ -8,13 +8,13 @@ class DH_M712Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.M712_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    MenuImage=Texture'DH_InterfaceArt_tex.C96_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     ShellEjectionBoneName="ejector"
 
-    ClientProjectileClass=class'DH_Weapons.DH_M712Bullet'
+    ClientProjectileClass=Class'DH_M712Bullet'
 
     WA_Idle="idle_c96"
     WA_IdleEmpty="idle_c96"

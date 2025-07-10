@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGAutomaticFire extends DHFastAutoFire
@@ -42,8 +42,8 @@ defaultproperties
 
     PackingThresholdTime=0.12
     bUsesTracers=true
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    FlashEmitterClass=Class'MuzzleFlash1stMG'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04
 

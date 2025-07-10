@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Winchester1897Weapon extends DHBoltActionWeapon;
@@ -17,10 +17,10 @@ simulated function int GetMaxLoadedRounds()
 defaultproperties
 {
     ItemName="Winchester Model 1897"
-    FireModeClass(0)=class'DH_Weapons.DH_Winchester1897Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_Winchester1897MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Winchester1897Attachment'
-    PickupClass=class'DH_Weapons.DH_Winchester1897Pickup'
+    FireModeClass(0)=Class'DH_Winchester1897Fire'
+    FireModeClass(1)=Class'DH_Winchester1897MeleeFire'
+    AttachmentClass=Class'DH_Winchester1897Attachment'
+    PickupClass=Class'DH_Winchester1897Pickup'
 
     Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_1st'
 
@@ -60,5 +60,5 @@ defaultproperties
     BayoDetachAnim="Bayonet_off"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
-    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer") 
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer")
 }

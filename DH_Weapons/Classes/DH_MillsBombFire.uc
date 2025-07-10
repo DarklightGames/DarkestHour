@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MillsBombFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MillsBombProjectile'
-    AmmoClass=class'DH_Weapons.DH_MillsBombAmmo'
+    ProjectileClass=Class'DH_MillsBombProjectile'
+    AmmoClass=Class'DH_MillsBombAmmo'
 }

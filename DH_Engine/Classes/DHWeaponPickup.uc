@@ -1,12 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
-
-var     DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
 // General
 var     int                     PlayerNearbyRadius;
@@ -23,7 +21,7 @@ var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
-var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+var     Vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
 var     StaticMesh              EmptyStaticMesh;
 
@@ -34,17 +32,13 @@ replication
         bBarrelSteamActive;
 }
 
-// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
-// Also to set up new NotifyParameters object, including pickup's InventoryType, which gets passed to screen messages & allows them to display weapon's name
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles.
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
-        TouchMessageParameters.InventoryClass = InventoryType;
-
         if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
         {
             bNetNotify = class<DHProjectileWeapon>(InventoryType).default.InitialBarrels > 0;
@@ -60,11 +54,6 @@ simulated function Destroyed()
     if (BarrelSteamEmitter != none)
     {
         BarrelSteamEmitter.Destroy();
-    }
-
-    if (TouchMessageParameters != none)
-    {
-        TouchMessageParameters.PlayerController = none;
     }
 }
 
@@ -108,7 +97,7 @@ function bool ArePlayersNearby()
 {
     local DHPawn    DHP;
 
-    foreach RadiusActors(class'DHPawn', DHP, PlayerNearbyRadius)
+    foreach RadiusActors(Class'DHPawn', DHP, PlayerNearbyRadius)
     {
         return true;
     }
@@ -217,25 +206,11 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Modified to work generically, using ItemName
-static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
-{
-    switch (Switch)
-    {
-        case 0:
-            return Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
-        case 1:
-            return Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
-    }
-}
-
-// Modified to add the Controller to NotifyParameters object & pass that to screen message, allowing it to display both the use/pick up key & weapon name
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        TouchMessageParameters.PlayerController = PlayerController(User.Controller);
-        User.ReceiveLocalizedMessage(TouchMessageClass, 1,,, TouchMessageParameters);
+        User.ReceiveLocalizedMessage(TouchMessageClass, 1, User.PlayerReplicationInfo,, InventoryType);
         LastNotifyTime = Level.TimeSeconds;
     }
 }
@@ -245,12 +220,11 @@ defaultproperties
     DrawType=DT_StaticMesh
     AmbientGlow=64
     PickupMessage="You got the {0}"
-    TouchMessage="Press [%USE%] to pick up {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
-    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
-    TouchMessageClass=class'DHWeaponPickupTouchMessage'
+    BarrelSteamEmitterClass=Class'DHMGSteam'
+    TouchMessageClass=Class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
     PlayerNearbyRadius=256
     PlayerNearbyRetryTime=10

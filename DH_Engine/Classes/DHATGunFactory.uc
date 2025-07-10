@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHATGunFactory extends DHVehicleFactory
@@ -73,7 +73,7 @@ function SetupATGunGroup()
     local int            i;
 
     // Find & build array of all AT Gun factories in this group, & determine how many factories we should randomly select to be activated
-    foreach DynamicActors(class'DHATGunFactory', GunFactory)
+    foreach DynamicActors(Class'DHATGunFactory', GunFactory)
     {
         if (GunFactory.GroupTag == GroupTag)
         {

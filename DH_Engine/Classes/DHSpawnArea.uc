@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnArea extends ROSpawnArea
@@ -32,7 +32,7 @@ function PostBeginPlay()
 
     if (VolumeTag != '')
     {
-        foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
+        foreach AllActors(Class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -16,7 +16,8 @@ enum ERotateError
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
     ERROR_Cooldown,
-    ERROR_TooFarAway
+    ERROR_TooFarAway,
+    ERROR_Busy,
 };
 
 var DHPawn            RotateControllerPawn;
@@ -24,7 +25,7 @@ var DHRotatingActor   RotatingActor;
 var Actor             OldBase;
 
 var ROSoundAttachment RotateSoundAttachment;
-var sound             RotateSound;
+var Sound             RotateSound;
 var float             RotateSoundVolume;
 
 var bool              bIsBeingRotated;
@@ -117,9 +118,22 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Overridden to bypass attaching as a driver and go straight to the gun
+function SetVehicleTeam(int TeamIndex)
+{
+    VehicleTeam = TeamIndex;
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(VehicleTeam);
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun, and to update the owning team of the gun.
 function KDriverEnter(Pawn P)
 {
+    // Update the owning team of the gun.
+    SetVehicleTeam(P.GetTeamNum());
+
     if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
         WeaponPawns[0].KDriverEnter(P);
@@ -145,17 +159,17 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 
     if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
     {
-        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber,,, Controller);
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber,,, Controller);
     }
     else
     {
-        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber);
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber);
     }
 }
 
 // Modified to use APCDamageModifier, & to remove code preventing players damaging own team's gun that hasn't been entered (only designed to protect vehicles in spawn)
 // Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float DamageModifier;
     local int   i;
@@ -163,9 +177,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     ServerExitRotation();
 
     // Suicide/self-destruction
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
+    if (DamageType == Class'Suicided' || DamageType == Class'ROSuicided')
     {
-        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, Class'ROSuicided');
 
         return;
     }
@@ -203,7 +217,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 
@@ -224,12 +238,17 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-    if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_Busy;
+    }
+
+    if (VSize(Pawn.Location - Location) > Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
     {
         return ERROR_TooFarAway;
     }
 
-    if (Pawn.GetTeamNum() != VehicleTeam)
+    if (bTeamLocked && Pawn.GetTeamNum() != VehicleTeam)
     {
         return ERROR_EnemyGun;
     }
@@ -294,7 +313,7 @@ simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
     local DHPlayerReplicationInfo OtherPRI;
     local int Count;
 
-    foreach RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    foreach RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
     {
         if (OtherPawn != none &&
             OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
@@ -362,7 +381,7 @@ function ServerRotate(byte InputRotationFactor)
 simulated function ClientEnterRotation()
 {
 
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
     local Combiner CombinerMaterial;
@@ -376,22 +395,22 @@ simulated function ClientEnterRotation()
 
     bOldIsRotating = bIsBeingRotated;
 
-    FadeMaterial = new class'FadeColor';
-    FadeMaterial.Color1 = class'UColor'.default.White;
+    FadeMaterial = new Class'FadeColor';
+    FadeMaterial.Color1 = Class'UColor'.default.White;
     FadeMaterial.Color1.A = 50;
-    FadeMaterial.Color2 = class'UColor'.default.White;
+    FadeMaterial.Color2 = Class'UColor'.default.White;
     FadeMaterial.Color2.A = 95;
     FadeMaterial.FadePeriod = 0.33;
     FadeMaterial.ColorFadeType = FC_Sinusoidal;
 
-    CombinerMaterial = new class'Combiner';
+    CombinerMaterial = new Class'Combiner';
     CombinerMaterial.CombineOperation = CO_Multiply;
     CombinerMaterial.AlphaOperation = AO_Multiply;
     CombinerMaterial.Material1 = RotationProjectionTexture;
     CombinerMaterial.Material2 = FadeMaterial;
     CombinerMaterial.Modulate4X = true;
 
-    FinalMaterial = new class'FinalBlend';
+    FinalMaterial = new Class'FinalBlend';
     FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
     FinalMaterial.ZWrite = true;
     FinalMaterial.ZTest = true;
@@ -400,7 +419,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector = Spawn(Class'DHConstructionProxyProjector', self, ,Location,Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;
@@ -408,7 +427,7 @@ simulated function ClientEnterRotation()
     RotationProjector.AttachActor(self);
     RotationProjector.SetBase(self);
     RotationProjector.bNoProjectOnOwner = true;
-    RotationProjector.MaterialBlendingOp = PB_AlphaBlend;
+    RotationProjector.MaterialBlendingOp = PB_None;
     RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
     RotationProjector.FOV = 1;
     RotationProjector.MaxTraceDistance = 1024.0;
@@ -457,14 +476,14 @@ state Rotating
     {
         bIsBeingRotated = true;
 
-        RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor = Spawn(Class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
         RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
         RotatingActor.ControllerPawn = RotateControllerPawn;
 
         if (RotateSound != none)
         {
-            RotateSoundAttachment = Spawn(class'ROSoundAttachment');
+            RotateSoundAttachment = Spawn(Class'ROSoundAttachment');
             RotateSoundAttachment.AmbientSound = RotateSound;
             RotateSoundAttachment.SetBase(self);
         }
@@ -613,7 +632,7 @@ function PrependFactoryExitPositions()
 
     if (Factory != none && Factory.ExitPositionHintTag != '')
     {
-        foreach AllActors(class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
+        foreach AllActors(Class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
         {
             AbsoluteExitPositions.Insert(0, 1);
             AbsoluteExitPositions[0].Location = LocationHint.Location;
@@ -629,10 +648,10 @@ simulated function SetEngine();
 simulated function StopEmitters();
 simulated function StartEmitters();
 simulated function UpdateMovementSound(float MotionSoundVolume);
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType);
 simulated function SetupTreads();
 simulated function DestroyTreads();
-function CheckTreadDamage(vector HitLocation, vector Momentum);
+function CheckTreadDamage(Vector HitLocation, Vector Momentum);
 function DestroyTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 simulated event DrivingStatusChanged();
@@ -650,7 +669,7 @@ simulated function bool CanExit() { return false; }
 function bool PlaceExitingDriver() { return false; }
 simulated function Destroyed_HandleDriver();
 simulated function SetPlayerPosition();
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
 simulated function DrawPeriscopeOverlay(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
@@ -676,15 +695,14 @@ defaultproperties
     EngineHealth=0
     VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
     DamagedEffectClass=none
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DestructionEffectClass=Class'ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=Class'ATCannonDestroyedEmitter'
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
     bCanCrash=false
 
     // Miscellaneous
-    TouchMessageClass=class'DHATGunTouchMessage'
-    TouchMessage="Use the "
+    TouchMessageClass=Class'DHATGunTouchMessage'
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     MaxDesireability=1.9
     CollisionRadius=75.0
@@ -719,7 +737,7 @@ defaultproperties
     bFixedRotationDir=false
     RotateCooldown=5
     RotateControlRadiusInMeters=5
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     RotateSoundVolume=200
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
@@ -728,7 +746,7 @@ defaultproperties
     bReplicateMovement=true
     bSkipActorPropertyReplication=false
     OldBase=none
-    RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
+    RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -749,8 +767,9 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+    bTeamLocked=false
 }

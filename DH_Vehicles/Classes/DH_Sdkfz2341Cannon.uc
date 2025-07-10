@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz2341Cannon extends DHVehicleAutoCannon;
@@ -9,13 +9,13 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-    Skins(2)=Texture'Weapons1st_tex.MG.mg42_barrel'
-    Skins(3)=Texture'Weapons1st_tex.MG.mg42'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll')
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll',AttachBone="com_hatch_L",bWontStopBullet=true,bWontStopBlastDamage=true)
-    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll',AttachBone="com_hatch_R",bWontStopBullet=true,bWontStopBlastDamage=true)
+    Skins(0)=Texture'DH_VehiclesGE_tex6.sdkfz2341_body_dunk'
+    Skins(1)=Texture'DH_VehiclesGE_tex6.sdkfz2341_extras_dunk'
+    Skins(2)=Texture'Weapons1st_tex.mg42_barrel'
+    Skins(3)=Texture'Weapons1st_tex.mg42'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234_turret_coll')
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234_TurretCoverLeft_coll',AttachBone="com_hatch_L",bWontStopBullet=true,bWontStopBlastDamage=true)
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234_TurretCoverRight_coll',AttachBone="com_hatch_R",bWontStopBullet=true,bWontStopBlastDamage=true)
     FireEffectScale=1.3 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=20.0,Y=-25.0,Z=10.0)
 
@@ -39,9 +39,9 @@ defaultproperties
     CustomPitchDownLimit=64443
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellAPCR'
+    PrimaryProjectileClass=Class'DH_Sdkfz2341CannonShell'
+    SecondaryProjectileClass=Class'DH_Sdkfz2341CannonShellHE'
+    TertiaryProjectileClass=Class'DH_Sdkfz2341CannonShellAPCR'
 
     ProjectileDescriptions(0)="AP-T"
     ProjectileDescriptions(1)="HE-T"
@@ -60,10 +60,10 @@ defaultproperties
     InitialTertiaryAmmo=10
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    AltFireProjectileClass=Class'DH_MG42Bullet'
     InitialAltAmmo=150
     NumMGMags=12
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -73,8 +73,8 @@ defaultproperties
     AltFireOffset=(X=-65.0,Y=-24.0,Z=-3.0)
 
     // Sounds
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Mg42_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Mg42_FireEnd01'
 
     // Cannon range settings
     RangeSettings(1)=100

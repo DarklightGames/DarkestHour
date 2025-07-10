@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_P38Weapon extends DHPistolWeapon;
@@ -8,13 +8,13 @@ class DH_P38Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Walther P38"
-    FireModeClass(0)=class'DH_Weapons.DH_P38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_P38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_P38Attachment'
-    PickupClass=class'DH_Weapons.DH_P38Pickup'
+    FireModeClass(0)=Class'DH_P38Fire'
+    FireModeClass(1)=Class'DH_P38MeleeFire'
+    AttachmentClass=Class'DH_P38Attachment'
+    PickupClass=Class'DH_P38Pickup'
 
     Mesh=SkeletalMesh'DH_P38_1st.P-38-Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.p38_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.p38_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

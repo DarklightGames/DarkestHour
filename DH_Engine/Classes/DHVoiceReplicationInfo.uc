@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoiceReplicationInfo extends TeamVoiceReplicationInfo;
@@ -214,8 +214,8 @@ function VerifyTeamChatters()
 
 defaultproperties
 {
-    ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
-    ChatBroadcastClass=class'DH_Engine.DHChatHandler'
+    ChatRoomClass=Class'DHVoiceChatRoom'
+    ChatBroadcastClass=Class'DHChatHandler'
     LocalChannelText="Local"
     PublicChannelNames(0)="Command" //Axis
     PublicChannelNames(1)="Command" //Allies

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz2519DCannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_SdKfz2519DCannon'
+    GunClass=Class'DH_SdKfz2519DCannon'
 
     bMustBeTankCrew=true
     bHasAltFire=false
@@ -24,14 +24,14 @@ defaultproperties
     DrivePos=(X=0.0,Y=-2.0,Z=-12.0)
     DriveAnim="stummel_com_idle_close"
 
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Panzer3shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Panzer3shell_reload'
 
     PlayerCameraBone="com_camera"
 
     // Sounds
-    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    ManualPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
 }

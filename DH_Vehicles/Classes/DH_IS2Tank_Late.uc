@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_IS2Tank_Late extends DH_IS2Tank; // late war tank with APBC rounds instead of AP
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn_Late')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_IS2CannonPawn_Late')
 
         // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=-0.5,LocationName="lower")

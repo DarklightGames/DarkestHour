@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTrenchMaceItem_Grenade extends DHTrenchMaceItem;
@@ -8,7 +8,7 @@ class DHTrenchMaceItem_Grenade extends DHTrenchMaceItem;
 defaultproperties
 {
     ItemName="Trench Mace"
-    AttachmentClass=class'DHTrenchMaceAttachment_Grenade'
+    AttachmentClass=Class'DHTrenchMaceAttachment_Grenade'
     Mesh=SkeletalMesh'DH_Halloween_anm.grenademace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchMaceTexture'
+    Skins(2)=Texture'DH_Halloween_tex.TrenchMaceTexture'
 }

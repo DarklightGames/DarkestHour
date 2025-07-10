@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RPG43GrenadeProjectile extends DHThrowableHEATProjectile;
@@ -12,7 +12,7 @@ defaultproperties
     ShellDiameter=9.5
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
-    PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
+    PickupClass=Class'DH_RPG43GrenadePickup'
 
     // Impact fuze
     bExplodesOnHittingWater=false
@@ -38,32 +38,32 @@ defaultproperties
     Damage=300.0
     DamageRadius=700.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
     EngineFireChance=0.7  //weaker HEAT round
-    ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
+    ShellImpactDamage=Class'DH_RPG43GrenadeImpactDamType'
+    MyDamageType=Class'DH_RPG43GrenadeDamType'
 
     // Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'
-    ShellHitDirtEffectClass=class'GrenadeExplosion'
-    ShellHitWoodEffectClass=class'GrenadeExplosion'
-    ShellHitRockEffectClass=class'GrenadeExplosion'
-    ShellHitSnowEffectClass=class'GrenadeExplosionSnow'
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellDeflectEffectClass=class'GrenadeExplosion'
+    StaticMesh=StaticMesh'DH_WeaponPickups.RPG43Grenade_throw'
+    ShellHitDirtEffectClass=Class'GrenadeExplosion'
+    ShellHitWoodEffectClass=Class'GrenadeExplosion'
+    ShellHitRockEffectClass=Class'GrenadeExplosion'
+    ShellHitSnowEffectClass=Class'GrenadeExplosionSnow'
+    ShellHitWaterEffectClass=Class'ROBulletHitWaterEffect'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellDeflectEffectClass=Class'GrenadeExplosion'
 
-    ExplosionDecal=class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+    ExplosionDecal=Class'GrenadeMark'
+    ExplosionDecalSnow=Class'GrenadeMarkSnow'
 
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
     VehicleDeflectSound=Sound'Inf_Weapons_Foley.grenadeland'
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     DirtHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     RockHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WoodHitSound=Sound'Inf_Weapons_Foley.grenadeland'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp02'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp03'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PiatExp01'
 }

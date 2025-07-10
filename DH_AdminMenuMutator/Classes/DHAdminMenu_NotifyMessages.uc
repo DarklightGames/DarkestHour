@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // Messages to notify a player that an admin has done something to them (e.g. killed, switched or dropped) - displayed as large red text in the centre of the screen
@@ -42,7 +42,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             GameSpeedRounded = Left(GameSpeedRounded, Len(GameSpeedRounded) - 2);
         }
 
-        class'DH_AdminMenuMutator.DHAdminMenu_Replicator'.static.SetMessageClassLifeTimes(GameSpeed); // adjust LifeTime in all message classes to account for new game speed
+        Class'DHAdminMenu_Replicator'.static.SetMessageClassLifeTimes(GameSpeed); // adjust LifeTime in all message classes to account for new game speed
 
         MessageString = Repl(default.BroadcastChangedGameSpeed, "#insert_number#", GameSpeedRounded);
     }

@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShellTracer_Green extends DHShellTracer;
 
 defaultproperties
 {
-    Texture=Texture'DH_FX_Tex.Effects.GreenFlare'
+    Texture=Texture'DH_FX_Tex.GreenFlare'
 }

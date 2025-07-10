@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz251Transport extends DHArmoredVehicle;
@@ -16,26 +16,27 @@ defaultproperties
     MaxDesireability=1.2
     MinRunOverSpeed=300
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
+
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.halftrack_int'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.halftrack_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Halftrack_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Halftrack_treads'
+    Skins(3)=Texture'axis_vehicles_tex.halftrack_int'
+    HighDetailOverlay=Shader'axis_vehicles_tex.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
     bUsesCodedDestroyedSkins=false
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz251MGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="passenger_l_3",DriveAnim="VHalftrack_Rider3_idle")
@@ -50,12 +51,11 @@ defaultproperties
     DriverAttachmentBone="driver_player"
     DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
-    HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
+    HUDOverlayClass=Class'Sdkfz251DriverOverlay'
     HUDOverlayOffset=(X=0.0,Y=0.0,Z=0.8)
     HUDOverlayFOV=100.0
 
     // Movement & physics wheels properties
-    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5
@@ -82,9 +82,9 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.2
     EngineHealth=150.0
     VehHitpoints(0)=(PointRadius=50.0,PointOffset=(X=120.0)) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-   VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.000000,Y=0.0,Z=-35.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // fuel tank
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+   VehHitpoints(3)=(PointRadius=25.0,PointBone="body",PointOffset=(X=-70.000000,Y=0.0,Z=-35.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // fuel tank
     EngineDamageFromGrenadeModifier=0.05
     DamagedWheelSpeedFactor=0.4
     DirectHEImpactDamageMult=4.0
@@ -92,11 +92,11 @@ defaultproperties
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack0_Destroyed'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="body"
     FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
     EngineToHullFireChance=0.05 //Unlikely for a fire to spread
@@ -131,14 +131,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     LeftTrackSoundBone="steer_wheel_LF"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L02'
     RightTrackSoundBone="steer_wheel_RF"
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -151,7 +151,7 @@ defaultproperties
     SteerBoneName="Steering"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.sdkfz251_body'
     VehicleHudEngineY=0.3
     VehicleHudTreadsPosX(0)=0.4
     VehicleHudTreadsPosX(1)=0.6
@@ -171,7 +171,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.7
     VehicleHudOccupantsX(7)=0.55
     VehicleHudOccupantsY(7)=0.8
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.hanomag'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.hanomag'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"
@@ -201,7 +201,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
@@ -210,7 +210,7 @@ defaultproperties
         SupportBoneName="Axle_RF"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_LF"
@@ -219,7 +219,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.FLeft_Drive_Wheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_RF"
@@ -227,7 +227,7 @@ defaultproperties
         BoneOffset=(Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.FRight_Drive_Wheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_LR"
@@ -236,7 +236,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RLeft_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_RR"
@@ -244,7 +244,7 @@ defaultproperties
         BoneOffset=(Z=-2.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RRight_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -264,5 +264,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz251Transport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

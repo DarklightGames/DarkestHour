@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_ListLargeHighlight extends GUI2Styles;
@@ -23,9 +23,9 @@ defaultproperties
     FontNames(12)="DHLargeFont"
     FontNames(13)="DHLargeFont"
     FontNames(14)="DHLargeFont"
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(0)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(1)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(2)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(3)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(4)=Texture'DH_GUI_Tex.DHSmallBox'
 }

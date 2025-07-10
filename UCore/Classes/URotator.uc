@@ -1,18 +1,18 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class URotator extends Object
     abstract;
 
-static function rotator RandomRange(rotator Min, rotator Max)
+static function Rotator RandomRange(Rotator  Min, Rotator Max)
 {
     return RLerp(Min, Max, FRand());
 }
 
-static function rotator RLerp(rotator A, rotator B, float T)
+static function Rotator RLerp(Rotator  A, Rotator B, float T)
 {
-    local rotator R;
+    local Rotator R;
 
     R.Pitch = A.Pitch + ((B.Pitch - A.Pitch) * T);
     R.Yaw = A.Yaw + ((B.Yaw - A.Yaw) * T);
@@ -25,7 +25,7 @@ static function rotator RLerp(rotator A, rotator B, float T)
 // rotator values can use the full 32-bit integer range, but only the lowest
 // 16-bits are actually really used at all. This comparison only uses the lowest
 // 16-bits to determine effective equality.
-static function bool Equal(rotator LHS, rotator RHS)
+static function bool Equal(Rotator  LHS, Rotator RHS)
 {
     return (LHS.Pitch & 0xFFFF) == (RHS.Pitch & 0xFFFF) &&
            (LHS.Yaw & 0xFFFF) == (RHS.Yaw & 0xFFFF) &&
@@ -38,13 +38,13 @@ static function bool Equal(rotator LHS, rotator RHS)
 // them to 16bit unsigned integers. This does not mean the rotator has changed,
 // just that e.g. log() is not giving you their true value! To get the true
 // value write your own rotator to string function.
-static function string ToString(rotator R)
+static function string ToString(Rotator  R)
 {
     return "(" $ R.Pitch $ "," $ R.Yaw $ "," $ R.Roll $ ")";
 }
 
 // Check whether two rotators are close to each other within given tolerance.
-final static function bool IsClose(rotator LHS, rotator RHS, int Tolerance)
+final static function bool IsClose(Rotator  LHS, Rotator RHS, int Tolerance)
 {
     LHS = Normalize(LHS);
     RHS = Normalize(RHS);

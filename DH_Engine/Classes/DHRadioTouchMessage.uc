@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadioTouchMessage extends ROTouchMessagePlus
@@ -11,6 +11,7 @@ var localized string NotQualifiedMessage;
 var localized string NoTargetMessage;
 var localized string NotOwnedMessage;
 var localized string BusyMessage;
+var localized string CalibratingMessage;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -21,7 +22,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
+            return Class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
         case 1:
             return default.NotQualifiedMessage;
         case 2:
@@ -30,6 +31,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.NotOwnedMessage;
         case 4:
             return default.BusyMessage;
+        case 5:
+            return default.CalibratingMessage;
         default:
             break;
     }
@@ -44,5 +47,6 @@ defaultproperties
     NoTargetMessage="No artillery target marked"
     NotOwnedMessage="You cannot use enemy radios"
     BusyMessage="Radio is currently in use"
+    CalibratingMessage="Radio is calibrating"
 }
 

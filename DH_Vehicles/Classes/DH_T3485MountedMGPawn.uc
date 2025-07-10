@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3485MountedMGPawn extends DH_T3476MountedMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3485MountedMG'
+    GunClass=Class'DH_T3485MountedMG'
 }

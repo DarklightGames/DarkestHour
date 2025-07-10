@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GermanCarrierMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_GermanCarrierMG'
+    GunClass=Class'DH_GermanCarrierMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -25,7 +25,7 @@ defaultproperties
     PitchDownLimit=60000
 
     //HUD
-    HUDOverlayClass=class'DH_Vehicles.DH_MG34_VehHUDOverlay'
+    HUDOverlayClass=Class'DH_MG34_VehHUDOverlay'
     HUDOverlayFOV=45.0
 
     //Shake and effects

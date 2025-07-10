@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVotingHandler extends xVotingHandler;
@@ -30,7 +30,7 @@ function PostBeginPlay()
     super(VotingHandler).PostBeginPlay();
 
     if (Level.NetMode == NM_Standalone &&
-        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
+        !Class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
     {
         return;
     }
@@ -287,7 +287,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
 function PlayerJoin(PlayerController Player)
 {
     if (Level.NetMode == NM_Standalone &&
-        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
+        !Class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
     {
         return;
     }
@@ -313,7 +313,7 @@ function PlayerExit(Controller Exiting)
     local int ExitingPlayerIndex, i, x;
 
     if (Level.NetMode == NM_Standalone &&
-        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
+        !Class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
     {
         return;
     }
@@ -899,12 +899,12 @@ function LoadMapList()
     MapList.Length = 0;
     MapCount = 0;
 
-    MapVoteHistoryClass = class<MapVoteHistory>(DynamicLoadObject(MapVoteHistoryType, class'Class'));
+    MapVoteHistoryClass = class<MapVoteHistory>(DynamicLoadObject(MapVoteHistoryType, Class'Class'));
     History = new(none, "MapVoteHistory" $ string(ServerNumber)) MapVoteHistoryClass;
 
     if (History == none)
     {
-        History = new(none, "MapVoteHistory" $ string(ServerNumber)) class'MapVoteHistory_INI';
+        History = new(none, "MapVoteHistory" $ string(ServerNumber)) Class'MapVoteHistory_INI';
     }
 
     Log("GameTypes:", 'MapVote');
@@ -935,12 +935,12 @@ function LoadMapList()
 
     Log("MapListLoaderType = " $ MapListLoaderType, 'MapVote');
 
-    MapListLoaderClass = class<MapListLoader>(DynamicLoadObject(MapListLoaderType, class'Class'));
+    MapListLoaderClass = class<MapListLoader>(DynamicLoadObject(MapListLoaderType, Class'Class'));
     Loader = Spawn(MapListLoaderClass);
 
     if (Loader == none)
     {
-        Loader = Spawn(class'DefaultMapListLoader');
+        Loader = Spawn(Class'DefaultMapListLoader');
     }
 
     if (bUseSwapVote)
@@ -985,13 +985,13 @@ static function FillPlayInfo(PlayInfo PlayInfo)
     PlayInfo.AddSetting(default.MapVoteGroup,"bDefaultToCurrentGameType",default.PropsDisplayText[10],0,1,"Check",,,true,true);
     PlayInfo.AddSetting(default.MapVoteGroup,"GameConfig",default.PropsDisplayText[15],0, 1,"Custom",";;"$default.GameConfigPage,,true,true);
 
-    class'DefaultMapListLoader'.static.FillPlayInfo(PlayInfo);
+    Class'DefaultMapListLoader'.static.FillPlayInfo(PlayInfo);
     PlayInfo.PopClass();
 }
 
 defaultproperties
 {
-    VotingReplicationInfoClass=class'DHVotingReplicationInfo'
+    VotingReplicationInfoClass=Class'DHVotingReplicationInfo'
 
     bUseSwapVote=true
     MapVoteIntervalDuration=3.0

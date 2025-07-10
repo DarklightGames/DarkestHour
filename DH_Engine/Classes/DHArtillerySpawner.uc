@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillerySpawner extends Actor;
@@ -76,7 +76,7 @@ function Destroyed()
 function Timer()
 {
     local DHVolumeTest VT;
-    local vector       RandomSpread;
+    local Vector       RandomSpread;
     local bool         bInvalid;
 
     // Cancel the strike if the arty officer has switched teams or left the server, or if the round is over
@@ -87,7 +87,7 @@ function Timer()
     // Check whether the target location has become a NoArtyVolume after the strike was called - if it has then cancel the strike
     else
     {
-        VT = Spawn(class'DHVolumeTest', self,, Location); // using Location instead of deprecated OriginalArtyLocation this actor now located on strike location
+        VT = Spawn(Class'DHVolumeTest', self,, Location); // using Location instead of deprecated OriginalArtyLocation this actor now located on strike location
 
         if (VT != none)
         {
@@ -97,7 +97,7 @@ function Timer()
 
                 if (Owner.IsA('PlayerController'))
                 {
-                    PlayerController(Owner).ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid artillery target
+                    PlayerController(Owner).ReceiveLocalizedMessage(Class'ROArtilleryMsg', 5); // not a valid artillery target
                 }
             }
 
@@ -125,7 +125,7 @@ function Timer()
         RandomSpread.Y += Rand((2 * SpreadAmount) + 1) - SpreadAmount;
 
         // Altered to spawn shell a standard approx 50m above strike location & to use a different method of setting shell's InstigatorController
-        LastSpawnedShell = Spawn(class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, rotator(PhysicsVolume.Gravity));
+        LastSpawnedShell = Spawn(Class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, Rotator(PhysicsVolume.Gravity));
 
         if (LastSpawnedShell != none)
         {

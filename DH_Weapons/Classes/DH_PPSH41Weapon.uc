@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PPSh41Weapon extends DHFastAutoWeapon;
@@ -47,13 +47,13 @@ defaultproperties
     SwayModifyFactor=0.83 // +0.13
     ItemName="PPSh-41"
 
-    FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_PPSH41MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
-    PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
+    FireModeClass(0)=Class'DH_PPSH41Fire'
+    FireModeClass(1)=Class'DH_PPSH41MeleeFire'
+    AttachmentClass=Class'DH_PPSH41Attachment'
+    PickupClass=Class'DH_PPSH41Pickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-1st'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -76,7 +76,7 @@ defaultproperties
     SelectFireIronEmptyAnim="Iron_selectfire_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"

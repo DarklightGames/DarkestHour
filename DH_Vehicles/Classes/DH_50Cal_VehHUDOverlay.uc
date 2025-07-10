@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_50Cal_VehHUDOverlay extends VehicleHUDOverlay;
@@ -14,8 +14,8 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_50Cal_1st.50Cal_1st'
-    Skins(0)=Texture'DHGermanCharactersTex.Heads.Ger_facef' // player's hands look better using this instead of US character skins (close up view of US hands is poor)
-    Skins(1)=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
-    Skins(3)=Texture'DH_Weapon_tex.AmmoPouches.50CalAmmoTin'
+    Skins(0)=Texture'DHGermanCharactersTex.Ger_facef' // player's hands look better using this instead of US character skins (close up view of US hands is poor)
+    Skins(1)=Texture'DHUSCharactersTex.USAB_sleeves'
+    Skins(2)=Texture'DH_Weapon_tex.50CalMain'
+    Skins(3)=Texture'DH_Weapon_tex.50CalAmmoTin'
 }

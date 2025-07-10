@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTankAPHitDeflect extends Emitter;
@@ -30,7 +30,7 @@ defaultproperties
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
         UseRotationFrom=PTRS_Actor
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.DSmoke_2'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Min=2.500000,Max=3.000000)
         StartVelocityRange=(X=(Min=-100.000000,Max=300.000000),Y=(Min=-300.000000,Max=300.000000),Z=(Min=-200.000000,Max=200.000000))
@@ -60,7 +60,7 @@ defaultproperties
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_Brighten
         UseRotationFrom=PTRS_Actor
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.200000,Max=0.200000)
@@ -88,7 +88,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SphereRadiusRange=(Max=1.000000)
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.sparkfinal2'
         LifetimeRange=(Min=0.5,Max=0.75)
         StartVelocityRange=(X=(Min=-200,Max=300.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-50.000000,Max=500.000000))
     End Object
@@ -111,7 +111,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SphereRadiusRange=(Max=1.000000)
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.sparkfinal2'
         LifetimeRange=(Min=0.500000,Max=0.750000)
         StartVelocityRange=(X=(Min=-50,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=200.000000,Max=350.000000))
     End Object
@@ -143,7 +143,7 @@ defaultproperties
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
         UseRotationFrom=PTRS_Actor
-        Texture=Texture'DH_FX_Tex.Effects.FlareOrange'
+        Texture=Texture'DH_FX_Tex.FlareOrange'
         LifetimeRange=(Min=1.000000,Max=2.5)
         StartVelocityRange=(X=(Min=100.000000,Max=400.000000),Y=(Min=-400.000000,Max=400.000000),Z=(Min=-150.000000,Max=500.000000))
     End Object
@@ -168,7 +168,7 @@ defaultproperties
         StartSizeRange=(X=(Min=2.00000,Max=3.0000))
         InitialParticlesPerSecond=300.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        Texture=Texture'Effects_Tex.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.500000)

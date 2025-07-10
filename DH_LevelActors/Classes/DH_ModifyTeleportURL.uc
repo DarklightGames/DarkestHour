@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyTeleportURL extends DH_ModifyActors;
@@ -21,7 +21,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     //Teleporter is bStatic so use AllActors list
-    foreach AllActors(class'Teleporter', TeleReference, TeleporterToModify)
+    foreach AllActors(Class'Teleporter', TeleReference, TeleporterToModify)
     {
         break;
     }

@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BritishOfficerHampshiresPawn extends DH_BritishOfficerPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHBritishCharactersTex.PBI.British_Hampshires_Officer'
+    Skins(1)=Texture'DHBritishCharactersTex.British_Hampshires_Officer'
 }

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class UFloat extends Object;
@@ -10,7 +10,7 @@ final static function UFloat Create(optional float Value)
 {
     local UFloat F;
 
-    F = new class'UFloat';
+    F = new Class'UFloat';
     F.Value = Value;
 
     return F;

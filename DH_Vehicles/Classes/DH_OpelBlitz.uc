@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -13,13 +13,13 @@ defaultproperties
     VehicleMass=3.0
     ReinforcementCost=2
     MaxDesireability=0.12
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_ext'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.OpelBlitz_body_int'
     BeginningIdleAnim="Overlay_Idle"
 
     // Passengers
@@ -46,7 +46,6 @@ defaultproperties
     MaxBrakeTorque=10.0
     bHasHandbrake=true
     HandbrakeThresh=100.0
-    MaxCriticalSpeed=1077.0 // 64 kph
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -60,17 +59,17 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=16.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_RR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_LR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",PointOffset=(X=16.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=24.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=24.0,PointBone="Wheel_RR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=24.0,PointBone="Wheel_LR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.OpelBlitz_dest'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -84,22 +83,22 @@ defaultproperties
     ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)  // front passenger
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=180.0,Z=-50.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     SteerBoneName="WheelDrive"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.opelblitz_body'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.opelblitz'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.opelblitz'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -110,7 +109,7 @@ defaultproperties
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -120,7 +119,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -130,7 +129,7 @@ defaultproperties
         SupportBoneName="Axle_R_R"
         SupportBoneAxis=AXIS_Z
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.RRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.RRWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -141,7 +140,7 @@ defaultproperties
         SupportBoneAxis=AXIS_Z
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LRWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.LRWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -160,5 +159,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_OpelBlitz.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

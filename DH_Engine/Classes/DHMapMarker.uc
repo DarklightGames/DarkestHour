@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker extends Object
@@ -54,7 +54,7 @@ var int                       OnPlacedMessageIndex;
 var localized string    MarkerName;
 var Material            IconMaterial;
 var IntBox              IconCoords;
-var color               IconColor;
+var Color               IconColor;
 var int                 LifetimeSeconds;        // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
 var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
@@ -63,7 +63,7 @@ var int                 RequiredSquadMembers;
 var int                 Cooldown;               // [s] reenabling interval between adding two consequent markers
 var int                 ActivationTimeout;      // [s] how long it takes after placing for this marker to become activated
 
-var     string          CalculatingString;
+var localized string    CalculatingString;
 
 enum EMarkerType
 {
@@ -163,12 +163,12 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
     return CheckPermissions(default.Permissions_CanSee, PRI, Marker);
 }
 
-static function color GetBeeLineColor()
+static function Color GetBeeLineColor()
 {
     return default.IconColor;
 }
 
-static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return default.IconColor;
 }
@@ -235,7 +235,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local int Distance;
-    local vector V;
+    local Vector V;
 
     if (PC == none || PC.Pawn == none)
     {
@@ -250,9 +250,9 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
     V = PC.Pawn.Location - Marker.WorldLocation;
     V.Z = 0.0;
 
-    Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
+    Distance = Class'DHUnits'.static.UnrealToMeters(VSize(V));
 
-    return (Distance / 5) * 5 $ "m";
+    return (Distance / 5) * 5 $ Class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
 }
 
 defaultproperties

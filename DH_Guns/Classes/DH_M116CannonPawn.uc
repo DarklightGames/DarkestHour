@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M116CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_M116Cannon'
+    GunClass=Class'DH_M116Cannon'
 
     // spotting scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M116_anm.m116_turret',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewFOV=40.0,ViewLocation=(X=10,Y=-16.0,Z=20.0),ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
@@ -32,13 +32,13 @@ defaultproperties
     DrivePos=(X=0,Y=0.0,Z=60.0)
     DriveAnim="crouch_idle_binoc"
 
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 
-    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
-    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_M116'
+    AmmoShellTexture=Texture'DH_LeIG18_tex.leig18_he'   // TODO: swap it out
+    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.leig18_he_reload'
+    ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M116'
 }

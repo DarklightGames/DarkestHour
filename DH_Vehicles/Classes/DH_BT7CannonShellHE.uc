@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://www.russianammo.org/Russian_Ammunition_Page_57mm.html
 //==============================================================================
@@ -16,25 +16,25 @@ defaultproperties
 
     //Damage
     ImpactDamage=425
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     Damage=190.0  //118 gramms TNT
     DamageRadius=560.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    MyDamageType=Class'DHShellHE50mmATDamageType'
     HullFireChance=0.50
     EngineFireChance=0.5
 
     bDebugInImperial=false
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    CoronaClass=Class'DHShellTracer_Green'
     BlurTime=4.0
     BlurEffectScalar=1.5
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    ShellHitDirtEffectClass=Class'GrenadeExplosion'
+    ShellHitSnowEffectClass=Class'GrenadeExplosionSnow'
+    ShellHitWoodEffectClass=Class'GrenadeExplosion'
+    ShellHitRockEffectClass=Class'GrenadeExplosion'
+    ShellHitWaterEffectClass=Class'GrenadeExplosion'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration same as Bofors 40mm HE, slightly better than US 37mm HE

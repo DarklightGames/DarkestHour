@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAccessControl extends AccessControlINI;
@@ -93,8 +93,8 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
 
         if (!bAdminMenuMutatorLogin) // server log entry (unless was an auto-login by the admin menu mutator, which would be too much log spam))
         {
-            Log(P.PlayerReplicationInfo.PlayerName @ "(ROID =" @ ROID $ ") logged in as SILENT ADMIN, on map" @ class'DHLib'.static.GetMapName(Level) @ "at server time"
-                @ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2) @ "on" @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year);
+            Log(P.PlayerReplicationInfo.PlayerName @ "(ROID =" @ ROID $ ") logged in as SILENT ADMIN, on map" @ Class'DHLib'.static.GetMapName(Level) @ "at server time"
+                @ Level.Hour $ ":" $ Class'UString'.static.ZFill(Level.Minute, 2) @ "on" @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year);
         }
 
         return true;
@@ -202,12 +202,30 @@ function int CheckID(string CDHash)
     return 0;
 }
 
+// Modified to send localized strings.
+function AdminEntered(PlayerController P, string Username)
+{
+	Log(P.PlayerReplicationInfo.PlayerName @ "logged in as Administrator.");
+
+    // "<Player Name> logged in as a server administrator."
+	Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', 6, P.PlayerReplicationInfo);
+}
+
+// Modified to send localized strings.
+function AdminExited(PlayerController P)
+{
+	Log(P.PlayerReplicationInfo.PlayerName @ "logged out.");
+
+    // "<Player Name> gave up administrator abilities."
+	Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', 7, P.PlayerReplicationInfo);
+}
+
 defaultproperties
 {
     IPBanned="You cannot join this server, you have been banned."
     SessionBanned="You cannot join this server until it changes level."
 
-    AdminClass=class'DH_Engine.DHAdmin'
+    AdminClass=Class'DHAdmin'
     DeveloperIDs(0)="76561197989090226" // Napoleon Blownapart
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy

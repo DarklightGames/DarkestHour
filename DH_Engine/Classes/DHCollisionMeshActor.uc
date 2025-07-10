@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCollisionMeshActor extends StaticMeshActor
@@ -83,7 +83,7 @@ simulated function PostBeginPlay()
 
 // New function to spawn, attach & align a collision static mesh actor (used by the classes that spawn a col mesh)
 simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMeshOwner, StaticMesh ColStaticMesh,
-    name AttachBone, optional vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
+    name AttachBone, optional Vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
 {
     local DHCollisionMeshActor ColMeshActor;
 
@@ -94,7 +94,7 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
 
     if (ColMeshActorClass == none)
     {
-        ColMeshActorClass = class'DHCollisionMeshActor'; // default is base col mesh class, but a specialised subclass can be specified if desired
+        ColMeshActorClass = Class'DHCollisionMeshActor'; // default is base col mesh class, but a specialised subclass can be specified if desired
     }
 
     ColMeshActor = ColMeshOwner.Spawn(ColMeshActorClass, ColMeshOwner); // vital that the actor that spawns the col mesh is its owner
@@ -136,7 +136,7 @@ simulated event NotifySelected(Pawn User)
 }
 
 // Col mesh actor should never take damage, so just in case we'll call TakeDamage on the owning actor, which would have otherwise have received the damage call
-function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Owner.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 }
@@ -183,7 +183,7 @@ simulated function HideOwner(bool bHide)
     {
         if (bHide)
         {
-            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.Alpha';
         }
         else if (bUseCannonSkinsArray && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
         {

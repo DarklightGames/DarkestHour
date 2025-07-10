@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleMGPawn extends DHVehicleWeaponPawn
@@ -9,6 +9,7 @@ class DHVehicleMGPawn extends DHVehicleWeaponPawn
 var     bool        bMustUnbuttonToReload;       // player must be unbuttoned to load MG
 var     Texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 var     Vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
+var     Rotator     BinocsDriveRot;              // this is a stupid hack made by someone because they didn't have a way to create new animations.
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
 var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
@@ -25,9 +26,9 @@ var     name        HudOverlayFireEndAnim;
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to make into a generic function, avoiding need for overrides in subclasses, to properly handle vehicle roll, & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
     local bool bOnTheGun;
 
     ViewActor = self;
@@ -88,7 +89,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           GunOffset;
+    local Vector           GunOffset;
     local float            SavedOpacity;
 
     PC = PlayerController(Controller);
@@ -304,7 +305,12 @@ exec simulated function ROManualReload()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to exit to added state LeavingViewTransition, just to allow CanReload() functionality to work correctly
-// Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong, & a reloading hint
+// Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights
+// as it sometimes looks wrong, & a reloading hint.
+//
+// Based on discussions with some of the folks from the OldUnreal community,
+// for net clients, Timers and Latent functions are not called when Role is
+// ROLE_SimulatedProxy, so we need to use tick to change states on net clients.
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -345,6 +351,10 @@ simulated state ViewTransition
     }
 
 Begin:
+    // Note that this is only executed on the authority, since the client does not execute state
+    // code or timers when Role == ROLE_SimulatedProxy. The client handles via counting ticks,
+    // but we keep this around because it's likely cheaper than executing Tick functions
+    // on the server.
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('LeavingViewTransition'); // go to this added state very briefly, just so CanReload() doesn't return false due to being in state ViewTransition
@@ -419,15 +429,15 @@ simulated function UpdatePrecacheMaterials()
 // RelativeRotation & RelativeLocation are set on server & get replicated to net clients, but we still set them on clients so it happens instantly, without waiting for replication
 simulated function HandleBinoculars(bool bMovingOntoBinocs)
 {
-    local rotator DesiredRelativeRotation;
-    local vector  DesiredRelativeLocation;
+    local Rotator DesiredRelativeRotation;
+    local Vector  DesiredRelativeLocation;
 
     // On binocs, remove any player rotation (DriveRot), as some MGs turn player sideways when on the gun & that's no good for the binocs pose
     if (DriveRot != rot(0, 0, 0))
     {
         if (bMovingOntoBinocs)
         {
-            DesiredRelativeRotation = rot(0, 0, 0);
+            DesiredRelativeRotation = BinocsDriveRot;
         }
         else
         {
@@ -559,6 +569,54 @@ exec function LogMG() // DEBUG (Matt: please use & report if you ever find you c
         @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
 }
 
+function Material CreateXRayMaterial()
+{
+    local FadeColor FC;
+    local FinalBlend FB;
+
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.White;
+    FC.Color1.A = 32;
+    FC.Color2 = Class'UColor'.default.White;
+    FC.Color2.A = 16;
+    FC.FadePeriod = 0.25;
+    FC.ColorFadeType = FC_Sinusoidal;
+
+    FB = new Class'FinalBlend';
+    FB.FrameBufferBlending = FB_AlphaBlend;
+    FB.ZWrite = false;
+    FB.ZTest = true;
+    FB.AlphaTest = true;
+    FB.TwoSided = false;
+    FB.Material = FC;
+
+    return FB;
+}
+
+exec function XRayVehicle(bool bHide)
+{
+    local int i;
+
+    if (IsDebugModeAllowed())
+    {
+        // Set all the material slots to a new very transparent material.
+        if (bHide)
+        {
+            for (i = 0; i < Gun.Base.Skins.Length; i++)
+            {
+                Gun.Base.Skins[i] = CreateXRayMaterial();
+            }
+        }
+        else
+        {
+            for (i = 0; i < Gun.Base.Skins.Length; i++)
+            {
+                Gun.Base.Skins[i] = Gun.Base.default.Skins[i];
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     bMustBeTankCrew=true
@@ -567,6 +625,5 @@ defaultproperties
     bDrawDriverInTP=false
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="MG"
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
@@ -9,12 +9,12 @@ defaultproperties
 {
     ItemName="Lee Enfield No.4 Rifle"
     SwayModifyFactor=0.62 // +0.02
-    FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'
-    PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
+    FireModeClass(0)=Class'DH_EnfieldNo4Fire'
+    FireModeClass(1)=Class'DH_EnfieldNo4MeleeFire'
+    AttachmentClass=Class'DH_EnfieldNo4Attachment'
+    PickupClass=Class'DH_EnfieldNo4Pickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_1st'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_1st'
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles

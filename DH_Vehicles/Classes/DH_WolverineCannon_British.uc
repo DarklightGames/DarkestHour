@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WolverineCannon_British extends DH_WolverineCannon_Early; // British Wolverine won't have HVAP
@@ -16,11 +16,11 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        StowageAttachment = Spawn(class'DHDecoAttachment');
+        StowageAttachment = Spawn(Class'DHDecoAttachment');
 
         if (StowageAttachment != none)
         {
-            StowageAttachment.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.M10.Brit_M10_StowageAttachment');
+            StowageAttachment.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.Brit_M10_StowageAttachment');
             AttachToBone(StowageAttachment, 'Turret');
         }
     }
@@ -39,5 +39,5 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(0)=Texture'DH_VehiclesUK_tex.Achilles_turret_ext'
 }
