@@ -115,7 +115,10 @@ This sub-machine gun was a very effective weapon owing to it's great handling an
 
 This weapon can be found exclusively in the hands of the Italian "Camicie Nere" (Blackshirts).
 
-![Beretta mod. 34](./Media/Weapons/MAB%2038%20TP.png)
+![MAB mod. 38-A](./Media/Weapons/MAB%2038%20TP.png)
+
+### MAB mod. 38-A/42
+Originally of Italian design, this later variant of the MAB can be found in the hands of late war German troops on the eastern front.
 
 ### OTO Tipo L (Anti-Tank Grenade)
 Continuing the theme of extremely dangerous impact fuzed grenades, the OTO Tipo L is a large anti-tank grenade with a powerful 1.5kg explosive charge useful for destroying or immobilizing vehicles. Since it's heavy and can't be thrown far, make sure to throw this from cover!
