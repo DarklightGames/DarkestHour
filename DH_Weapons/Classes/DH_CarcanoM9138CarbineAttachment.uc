@@ -36,6 +36,7 @@ defaultproperties
     WA_ProneReload="insert_carcano"
     WA_BayonetPreReload="open_carcano_bayo"
     WA_BayonetReload="insert_carcano_bayo"
+    WA_BayonetProneReload="insert_carcano_bayo"
     WA_BayonetPostReload="close_carcano_bayo"
 
     // Bolt
@@ -130,6 +131,7 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
     PA_IdleProneAnim="prone_idle_kar"
+    PA_ProneIdleRestAnim="prone_idle_kar"
     PA_TurnLeftAnim="stand_turnLhip_kar"
     PA_TurnRightAnim="stand_turnRhip_kar"
     PA_TurnIronLeftAnim="stand_turnLiron_kar"
