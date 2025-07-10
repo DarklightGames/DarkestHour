@@ -3,19 +3,19 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_CarcanoM91Weapon extends DHBoltActionWeapon;
+class DH_CarcanoM9138CarbineWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano Fucile mod. 91"
+    ItemName="Carcano Moschetto mod. 91/38"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=Class'DH_CarcanoM91Fire'
-    FireModeClass(1)=Class'DH_CarcanoM91MeleeFire'
-    AttachmentClass=Class'DH_CarcanoM91Attachment'
-    PickupClass=Class'DH_CarcanoM91Pickup'
+    FireModeClass(0)=Class'DH_CarcanoM9138CarbineFire'
+    FireModeClass(1)=Class'DH_CarcanoM9138CarbineMeleeFire'
+    AttachmentClass=Class'DH_CarcanoM9138CarbineAttachment'
+    PickupClass=Class'DH_CarcanoM9138CarbinePickup'
 
-    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM9138Carbine_1st'
 
     bUseHighDetailOverlayIndex=false
 
@@ -28,8 +28,8 @@ defaultproperties
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
-    BayoAttachAnim="Bayonet_on"
-    BayoDetachAnim="Bayonet_off"
+    BayoAttachAnim="Bayonet_on_carbine"
+    BayoDetachAnim="Bayonet_off_carbine"
 
     PreReloadAnim="reload_half_start"
     FullReloadAnim="reload"
@@ -40,4 +40,5 @@ defaultproperties
     BoltIronLastAnim="iron_bolt_clipfall"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=1,BoneName="Hammer",Animation="Hammer")
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bayonet,Channel=2,BoneName="folding_bayonet_car",Animation="Bayonet_unfolded_carbine")
 }

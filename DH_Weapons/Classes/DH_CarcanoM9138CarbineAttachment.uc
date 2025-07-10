@@ -2,21 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// TODO:
-// - Add WA anims.
-// - Add PA reload and bayonet attachment anims.
 
-class DH_CarcanoM91Attachment extends DHWeaponAttachment;
+class DH_CarcanoM9138CarbineAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
-    MenuImage=Texture'DH_Carcano_tex.carcano_m91_icon'
-    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
-    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM9138Carbine_world'
+    MenuImage=Texture'DH_Carcano_tex.carcano_m38_cavalry_icon'
+    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
-    MuzzleBoneName="MUZZLE"
+    MuzzleBoneName="MUZZLE_CAR"
     ShellEjectionBoneName="EJECTOR"
 
     // Idle / Fire
@@ -46,10 +43,10 @@ defaultproperties
     WA_BayonetWorkBolt="bolt_carcano_bayo"
 
     // Bayonet attach
-    WA_BayonetAttach="stand_bayattach_carcano_m91"
-    WA_BayonetDetach="stand_bayremove_carcano_m91"
-    WA_BayonetAttachProne="prone_bayattach_carcano_m91"
-    WA_BayonetDetachProne="prone_bayremove_carcano_m91"
+    WA_BayonetAttach="stand_bayattach_carcano_m38car"
+    WA_BayonetDetach="stand_bayremove_carcano_m38car"
+    WA_BayonetAttachProne="prone_bayattach_carcano_m38car"
+    WA_BayonetDetachProne="prone_bayremove_carcano_m38car"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -194,10 +191,10 @@ defaultproperties
     PA_BayonetAltFire="stand_stab_kar"
     PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
     PA_ProneBayonetAltFire="prone_idlestrike_bayo"
-    PA_BayonetAttachAnim="stand_bayattach_carcano_m91"
-    PA_ProneBayonetAttachAnim="prone_bayattach_carcano_m91"
-    PA_BayonetDetachAnim="stand_bayremove_carcano_m91"
-    PA_ProneBayonetDetachAnim="prone_bayremove_carcano_m91"
+    PA_BayonetAttachAnim="stand_bayattach_carcano_m38car"
+    PA_ProneBayonetAttachAnim="prone_bayattach_carcano_m38car"
+    PA_BayonetDetachAnim="stand_bayremove_carcano_m38car"
+    PA_ProneBayonetDetachAnim="prone_bayremove_carcano_m38car"
     PA_AirStillAnim="jump_mid_kar"
     PA_AirAnims(0)="jumpF_mid_kar"
     PA_AirAnims(1)="jumpB_mid_kar"
