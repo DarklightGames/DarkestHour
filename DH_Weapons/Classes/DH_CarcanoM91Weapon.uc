@@ -23,8 +23,8 @@ defaultproperties
     DisplayFOV=85.0
     ZoomOutTime=0.35
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
