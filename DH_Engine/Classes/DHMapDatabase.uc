@@ -327,4 +327,12 @@ defaultproperties
     MapInfos(171)=(Name="DH-Armored_Yaryshivka_Domination",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Domination',Size=SIZE_Any)
     MapInfos(172)=(Name="DH-Hattert_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(173)=(Name="DH-Watrange_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
+    MapInfos(174)=(Name="DH-Armored-Black_Day_July_Clash_Event",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Clash',Size=SIZE_Large)
+    MapInfos(175)=(Name="DH-BattleInHouse_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Small)
+    MapInfos(176)=(Name="DH-Gran_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
+    MapInfos(177)=(Name="DH-Haunted_Flugplatz_Survival",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
+    MapInfos(178)=(Name="DH-Haunted_Fury_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
+    MapInfos(179)=(Name="DH-Haunted_Hattert_Clash",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Clash',Size=SIZE_Any)
+    MapInfos(180)=(Name="DH-Haunted_Inferno_Verde_Survival",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
+    MapInfos(181)=(Name="DH-Pariserplatz_Survival",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
 }
