@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=Class'DH_CarcanoM9138CarbineBullet'
     AmmoClass=Class'DH_CarcanoM91Ammo'
     Spread=48.0
-    AddedPitch=15
+    AddedPitch=30.0 // zeroed to 300m
     MaxVerticalRecoilAngle=850
     FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoCarbineFire01'
     FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.CarcanoCarbineFire02'
