@@ -28,9 +28,9 @@ defaultproperties
     Headgear(1)=Class'DH_ItalianHelmet_Livorno'
     Headgear(2)=Class'DH_ItalianCapNCO'
     
-    HeadgearProbabilities(0)=0.4
-    HeadgearProbabilities(1)=0.4
-    HeadgearProbabilities(2)=0.2
+    HeadgearProbabilities(0)=0.1
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.8
 
     DetachedArmClass=Class'DHSeveredArm_ItalianLivorno'
     DetachedLegClass=Class'DHSeveredLeg_ItalianLivorno'
