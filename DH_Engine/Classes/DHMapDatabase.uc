@@ -228,7 +228,7 @@ defaultproperties
     MapInfos(72)=(Name="DH-Riga_Docks_Push",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Push',Size=SIZE_ExtraSmall)
     MapInfos(73)=(Name="DH-Rhine_River_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(74)=(Name="DH-Salaca_River_Clash",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Clash',Size=SIZE_Medium)
-    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
+    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Medium)
     MapInfos(76)=(Name="DH-Schijndel_Advance",AlliedNation=NATION_Britain,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(77)=(Name="DH-Smolensk_Advance",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Small)
     MapInfos(78)=(Name="DH-Turqueville_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_ExtraSmall)
