@@ -8,5 +8,5 @@ class DH_Vz24BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Vz24Weapon'
+    WeaponClass=Class'DH_Vz24Weapon'
 }

@@ -7,7 +7,7 @@ class DH_ShermanCannonPawn_M4A3E8 extends DH_ShermanCannonPawnA_76mm;
 
 defaultproperties
 {
-    GunClass=class'DH_ShermanCannon_M4A3E8'
+    GunClass=Class'DH_ShermanCannon_M4A3E8'
 
     // Gun
     DriverPositions(0)=(ViewFOV=17.0,ViewLocation=(X=18.0,Y=20.0,Z=7.0),ViewPitchUpLimit=5461,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

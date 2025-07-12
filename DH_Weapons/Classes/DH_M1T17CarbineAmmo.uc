@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=16
     InitialAmount=15
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Carbine_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.Carbine_ammo'
 }

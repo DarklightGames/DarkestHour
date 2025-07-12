@@ -7,7 +7,7 @@ class DH_BritishRadioOperatorRMCommando extends DHCWRadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioRMCommandoPawn')
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
+    RolePawns(0)=(PawnClass=Class'DH_BritishRadioRMCommandoPawn')
+    Headgear(0)=Class'DH_BritishRMCommandoBeret'
     HeadgearProbabilities(0)=1.0
 }

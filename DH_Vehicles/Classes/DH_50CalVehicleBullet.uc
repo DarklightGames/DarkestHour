@@ -26,7 +26,7 @@ defaultproperties
     Damage=450.0
     HullFireChance=0.05
     EngineFireChance=0.07  //assuming that some bullets in the belt are incendiary
-    MyDamageType=class'DH_Vehicles.DH_50CalDamType'
+    MyDamageType=Class'DH_50CalDamType'
 
 	//Speed
     Speed=53268.0 // 880 m/s

@@ -7,10 +7,10 @@ class DH_PanzerfaustCrateConstruction extends DHConstruction_InventorySpawner;
 
 defaultproperties
 {
-    SpawnerClass=class'DH_Weapons.DH_PanzerfaustSpawner'
+    SpawnerClass=Class'DH_PanzerfaustSpawner'
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
     SupplyCost=850
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_crate'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.at_crate'
 }
 

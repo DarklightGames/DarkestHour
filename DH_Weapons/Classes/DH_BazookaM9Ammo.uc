@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Texture'DH_Bazooka_tex.Interface.bazooka_m9_ammo'
+    IconMaterial=Texture'DH_Bazooka_tex.bazooka_m9_ammo'
 }

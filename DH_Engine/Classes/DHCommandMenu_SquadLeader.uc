@@ -54,7 +54,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
 
-            PC.ServerSignal(class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
+            PC.ServerSignal(Class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2:
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");
@@ -67,7 +67,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
                 // Player Menu
                 OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+                if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
                 {
                     Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
                 }
@@ -83,7 +83,7 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSignal(class'DHSignal_Move', Location);
+            PC.ServerSignal(Class'DHSignal_Move', Location);
             break;
         default:
             break;
@@ -120,11 +120,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
                 if (PC.SquadReplicationInfo.bAllowRallyPointsBehindEnemyLines)
                 {
-                    ORI.InfoColor = class'UColor'.default.Yellow;
+                    ORI.InfoColor = Class'UColor'.default.Yellow;
                 }
                 else
                 {
-                    ORI.InfoColor = class'UColor'.default.Red;
+                    ORI.InfoColor = Class'UColor'.default.Red;
                 }
             }
             break;
@@ -169,10 +169,10 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     InEnemyTerritory="In enemy territory"
-    Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
-    Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
-    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.Icons.infantry')
-    Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
-    Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.Icons.move')
+    Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.rally_point')
+    Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.fire')
+    Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.construction')
+    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.infantry')
+    Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.binoculars')
+    Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.move')
 }

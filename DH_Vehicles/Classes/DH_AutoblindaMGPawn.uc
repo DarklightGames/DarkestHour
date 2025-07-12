@@ -7,8 +7,8 @@ class DH_AutoblindaMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_AutoblindaMG'
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'   // replace with one with no crosshair
+    GunClass=Class'DH_AutoblindaMG'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.KZF2_MGSight'   // replace with one with no crosshair
     GunsightSize=0.381 // 18 degrees visible FOV at 1.8x magnification (KFZ2 sight)
     GunsightCameraBone=GUNSIGHT_CAMERA
     WeaponFOV=60

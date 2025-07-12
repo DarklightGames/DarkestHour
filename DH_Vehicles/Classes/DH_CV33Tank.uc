@@ -21,13 +21,13 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_CV33_anm.cv33_body_ext'
-    Skins(0)=Texture'DH_CV33_tex.cv33.cv33_body_ext'
-    Skins(1)=Texture'DH_CV33_tex.cv33.cv33_treads'
-    Skins(2)=Texture'DH_CV33_tex.cv33.cv33_treads'
+    Skins(0)=Texture'DH_CV33_tex.cv33_body_ext'
+    Skins(1)=Texture'DH_CV33_tex.cv33_treads'
+    Skins(2)=Texture'DH_CV33_tex.cv33_treads'
     BeginningIdleAnim="driver_closed_idle"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_CV33MGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_CV33MGPawn',WeaponBone="turret_placement")
 
     // Driver
     InitialPositionIndex=1
@@ -68,11 +68,11 @@ defaultproperties
 
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
-    DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.destroyed.cv33_destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.cv33_destroyed'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_attachment"
     FireEffectOffset=(X=0,Y=0,Z=50.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.5  // There is no firewall between the engine and the crew compartment, so the engine fire can spread to the crew compartment quite easily.
@@ -118,14 +118,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=125.0
-    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC_engine_loop'
+    StartUpSound=Sound'Vehicle_EnginesTwo.UC_engine_start'
+    ShutDownSound=Sound'Vehicle_EnginesTwo.UC_engine_stop'
     LeftTrackSoundBone="TRACK_L"
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
     RightTrackSoundBone="TRACK_R"
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -144,9 +144,9 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_CV33_tex.interface.cv33_body'
-    VehicleHudTurret=TexRotator'DH_CV33_tex.interface.cv33_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_CV33_tex.interface.cv33_turret_look'
+    VehicleHudImage=Texture'DH_CV33_tex.cv33_body'
+    VehicleHudTurret=TexRotator'DH_CV33_tex.cv33_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_CV33_tex.cv33_turret_look'
     VehicleHudEngineY=0.75
     VehicleHudTreadsPosX(0)=0.345
     VehicleHudTreadsPosX(1)=0.655
@@ -156,7 +156,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.56
     VehicleHudOccupantsX(1)=0.43
     VehicleHudOccupantsY(1)=0.56
-    SpawnOverlay(0)=Material'DH_CV33_tex.interface.cv33_icon'
+    SpawnOverlay(0)=Material'DH_CV33_tex.cv33_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_1_L"
@@ -183,8 +183,8 @@ defaultproperties
     ShadowZOffset=20.0
 
     // Collision Attachments
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_hatch_collision',AttachBone="hatch")
-    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_vision_port_collision',AttachBone="vision_port")
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_CV33_stc.cv33_body_hatch_collision',AttachBone="hatch")
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_CV33_stc.cv33_body_vision_port_collision',AttachBone="vision_port")
 
     // Destroyed Treads
     DamagedTrackStaticMeshLeft=StaticMesh'DH_CV33_stc.cv33_tread_dest_L'

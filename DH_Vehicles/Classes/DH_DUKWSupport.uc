@@ -10,8 +10,8 @@ defaultproperties
     VehicleNameString="DUKW (Logistics)"
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_supply_topdown'
 
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
-    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.USA_Supply_cache_full'
     SupplyAttachmentBone="SUPPLY_ATTACHMENT"
 
     PassengerPawns(0)=(AttachBone="passenger_01",DriveAnim="dukw_passenger_01",DrivePos=(Z=58))

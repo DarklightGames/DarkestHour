@@ -7,13 +7,13 @@ class DHScoreEvent_FireSupportSpottingAssist extends DHScoreEvent;
 
 static function DHScoreEvent_FireSupportSpottingAssist Create()
 {
-    return new class'DHScoreEvent_FireSupportSpottingAssist';
+    return new Class'DHScoreEvent_FireSupportSpottingAssist';
 }
 
 defaultproperties
 {
     HumanReadableName="Fire Support Spotting Assist"
-    CategoryClass=class'DHScoreCategory_Support'
+    CategoryClass=Class'DHScoreCategory_Support'
     Value=25
 }
 

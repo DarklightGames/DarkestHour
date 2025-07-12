@@ -7,5 +7,5 @@ class DH_ShermanFactoryA_M4A176W extends DH_ShermanFactory; // later version wit
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_ShermanTankA_M4A176W'
+    VehicleClass=Class'DH_ShermanTankA_M4A176W'
 }

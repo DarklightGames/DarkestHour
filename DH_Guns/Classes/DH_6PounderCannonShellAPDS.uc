@@ -15,12 +15,12 @@ defaultproperties
     //Damage
     bShatterProne=true
     ImpactDamage=310
-    ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
+    ShellImpactDamage=Class'DH_Cromwell6PdrCannonShellDamageAPDS'
     HullFireChance=0.4
     EngineFireChance=0.6
 
     //Effects
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
 
     //Penetration
     DHPenetrationTable(0)=14.2

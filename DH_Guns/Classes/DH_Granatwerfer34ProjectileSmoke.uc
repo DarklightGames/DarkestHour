@@ -9,5 +9,6 @@ defaultproperties
 {
     Speed=6500
     MaxSpeed=6500
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.DE_SMOKE_WGR38'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.DE_SMOKE_WGR38'
+    Skins(0)=Texture'DH_Model35Mortar_tex.8cm_shell_nb'
 }

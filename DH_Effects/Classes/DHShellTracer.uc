@@ -25,7 +25,7 @@ defaultproperties
     MaximumDrawScale=0.3
     bTrailerSameRotation=true
     Physics=PHYS_Trailer
-    Texture=Texture'DH_FX_Tex.Effects.RedFlare'
+    Texture=Texture'DH_FX_Tex.RedFlare'
     DrawScale=0.01
     Style=STY_Additive
     Mass=13.0

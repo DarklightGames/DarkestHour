@@ -15,8 +15,6 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
-var class<DHConstruction>       InfantryResupplyClass;
-
 var class<DHConstructionLoadout>    DefaultConstructionLoadoutClass;
 
 // TODO: move these to classes as well.

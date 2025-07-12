@@ -7,6 +7,6 @@ class DH_HellcatFactory extends DH_USVehicles;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_HellcatTank'
+    VehicleClass=Class'DH_HellcatTank'
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
 }

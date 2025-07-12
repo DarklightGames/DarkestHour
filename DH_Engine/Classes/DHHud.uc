@@ -222,7 +222,7 @@ function DrawDebugInformation(Canvas C)
     C.SetPos(X, Y);
     C.DrawTextClipped(S);
 
-    S = class'DHBuildManifest'.default.Version.ToString() @ "(" $ class'DHBuildManifest'.default.GitBranch $ ")";
+    S = Class'DHBuildManifest'.default.Version.ToString() @ "(" $ Class'DHBuildManifest'.default.GitBranch $ ")";
     C.TextSize(S, StrX, StrY);
     Y += StrY;
     X = C.ClipX - StrX - MARGIN;
@@ -240,8 +240,8 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(HintBackground.WidgetTexture);
 
     // Overhead map
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.GUI.overheadmap_Icons');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
+    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.overheadmap_Icons');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.overheadmap_Icons');
     Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.overheadmap_flags');
     Level.AddPrecacheMaterial(MapPlayerIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SupplyPointIcon.WidgetTexture);
@@ -251,11 +251,11 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconsAltFastFlash);
 
     // TODO: Remove this as it's not necessary
-    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.fire_pulse');
-    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.move_pulse');
+    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.fire_pulse');
+    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.move_pulse');
 
     // On screen indicator icons
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DeployIcon');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.DeployIcon');
     Level.AddPrecacheMaterial(CanMantleIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
@@ -280,7 +280,7 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(StanceStanding);
     Level.AddPrecacheMaterial(StanceCrouch);
     Level.AddPrecacheMaterial(StanceProne);
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DHCompassBackground');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.DHCompassBackground');
     Level.AddPrecacheMaterial(CompassBase.WidgetTexture);
     Level.AddPrecacheMaterial(CompassNeedle.WidgetTexture);
 
@@ -306,8 +306,8 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleRPMNeedlesTextures[1]);
 
     // Other vehicle HUD icons
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.Tank_Hud.clock_face');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.Tank_Hud.clock_numbers');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.clock_face');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.clock_numbers');
     Level.AddPrecacheMaterial(VehicleLockedIcon.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleOccupants.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleEngineDamagedTexture);
@@ -323,32 +323,32 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleSmokeLauncherAimIcon.WidgetTexture);
 
     // Death message icons
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Generic');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.buttsmack');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.knife');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Strike');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b9mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b762mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b792mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.sniperkill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.artkill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.mine');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.satchel');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.germgrenade');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.rusgrenade');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.rpg43kill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.faustkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.schreckkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.zookakill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.piatkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.backblastkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.ATGunKill');
-    Level.AddPrecacheMaterial(Texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.canisterkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.spawnkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Generic');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.buttsmack');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.knife');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Strike');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.b9mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.b762mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.b792mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.sniperkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.artkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.mine');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.satchel');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.germgrenade');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.rusgrenade');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.usgrenade');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.rpg43kill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.faustkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.schreckkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.zookakill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.piatkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.backblastkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.ATGunKill');
+    Level.AddPrecacheMaterial(Texture'DH_Artillery_tex.flakv38_deathicon');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.canisterkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.VehicleFireKill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.PlayerFireKill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.spawnkill');
 
     // Rally points
     Level.AddPrecacheMaterial(RallyPointBase);
@@ -378,53 +378,53 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
     switch (MsgType)
     {
         case 'Say':
-            DHMessageClassType = class'DHSayMessage';
+            DHMessageClassType = Class'DHSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'TeamSay':
-            DHMessageClassType = class'DHTeamSayMessage';
+            DHMessageClassType = Class'DHTeamSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'SquadSay':
             if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
             {
-                DHMessageClassType = class'DHSquadLeaderSayMessage';
+                DHMessageClassType = Class'DHSquadLeaderSayMessage';
             }
             else
             {
-                DHMessageClassType = class'DHSquadSayMessage';
+                DHMessageClassType = Class'DHSquadSayMessage';
             }
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'VehicleSay':
-            DHMessageClassType = class'DHVehicleSayMessage';
+            DHMessageClassType = Class'DHVehicleSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'VehicleVoiceSay':
-            DHMessageClassType = class'DHVehicleVoiceSayMessage';
+            DHMessageClassType = Class'DHVehicleVoiceSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'CommandSay':
-            DHMessageClassType = class'DHCommandSayMessage';
+            DHMessageClassType = Class'DHCommandSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'VoiceSay':
             // Voice say type for distinguishing voice commands from real player text.
-            DHMessageClassType = class'DHVoiceSayMessage';
+            DHMessageClassType = Class'DHVoiceSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'CriticalEvent':
-            MessageClassType = class'CriticalEventPlus';
+            MessageClassType = Class'CriticalEventPlus';
             LocalizedMessage(MessageClassType, 0, none, none, none, Msg);
             return;
         case 'DeathMessage':
             return;
         case 'ServerMessage':
-            DHMessageClassType = class'DHServerSayMessage';
+            DHMessageClassType = Class'DHServerSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         default:
-            DHMessageClassType = class'DHLocalMessage';
+            DHMessageClassType = Class'DHLocalMessage';
             break;
     }
 
@@ -517,7 +517,7 @@ function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMes
     local  int            InitialNumLines, i, j;
 
     // Hackish for ROCriticalMessages
-    if (ClassIsChildOf(Message.Message, class'ROCriticalMessage'))
+    if (ClassIsChildOf(Message.Message, Class'ROCriticalMessage'))
     {
         // Set a random background type
         MessageExtra.background_type = Rand(4);
@@ -581,49 +581,49 @@ function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMes
 // Font functions.
 static function Font GetMediumFontFor(Canvas C)
 {
-    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 function Font GetFontSizeIndex(Canvas C, int FontSize)
 {
     // FontSize always seems to be passed in as a NEGATIVE value.
-    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetPlayerNameFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetConsoleFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetTinyFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHSmallFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHSmallFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetLargeMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetSmallMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 static function Font GetSmallerMenuFont(Canvas C)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipX, C.ClipY);
 }
 
 function Font GetCriticalMsgFontSizeIndex(Canvas C, int FontSize)
 {
     // TODO: Index is irrelevant here (although we probably want an offset here because we want it kinda big).
-    return class'DHFonts'.static.GetDHConsoleFontByResolution(C.ClipX, C.ClipY);
+    return Class'DHFonts'.static.GetDHConsoleFontByResolution(C.ClipX, C.ClipY);
 }
 
 // This is more or less just a re-stating of the ROHud function with a couple of
@@ -1081,12 +1081,12 @@ function DrawHudPassC(Canvas C)
                 if (PortraitPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[AXIS_TEAM_INDEX];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
                 else if (PortraitPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[ALLIES_TEAM_INDEX];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
                 else
                 {
@@ -1096,9 +1096,9 @@ function DrawHudPassC(Canvas C)
 
                 if (VCR != none &&
                     VCR.IsSquadChannel() &&
-                    class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                    Class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
                 {
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
+                    PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.SquadColor;
                 }
             }
 
@@ -1125,7 +1125,7 @@ function DrawHudPassC(Canvas C)
                 }
                 else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
                 {
-                    PortraitText[1].Text = "(" @ class'DHVoiceReplicationInfo'.default.LocalChannelText @ ")";
+                    PortraitText[1].Text = "(" @ Class'DHVoiceReplicationInfo'.default.LocalChannelText @ ")";
                 }
             }
             else
@@ -1180,7 +1180,7 @@ function DrawHudPassC(Canvas C)
         }
     }
 
-    if (IsDebugModeAllowed() || class'DHBuildManifest'.default.Version.IsPrerelease())
+    if (IsDebugModeAllowed() || Class'DHBuildManifest'.default.Version.IsPrerelease())
     {
         DrawDebugInformation(C);
     }
@@ -1330,10 +1330,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
     }
 
-    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
+    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.clock_face';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
-    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
+    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.clock_numbers';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
     // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
@@ -1444,7 +1444,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
                 PlayerNumberText.Text = string(i + 1);
 
-                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
+                Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
 
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
@@ -1498,7 +1498,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
                 PlayerNumberText.text = string(i + 1);
-                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
+                Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
         }
@@ -1935,16 +1935,16 @@ function Color GetPlayerColor(PlayerReplicationInfo PRI)
         MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
     }
 
-    if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
+    if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
     {
-        return class'DHColor'.default.SquadColor;
+        return Class'DHColor'.default.SquadColor;
     }
     else if (PRI != none && PRI.Team != none)
     {
-        return class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
+        return Class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
     }
 
-    return class'UColor'.default.White;
+    return Class'UColor'.default.White;
 }
 
 function DrawSignals(Canvas C)
@@ -2017,16 +2017,16 @@ function DrawSignals(Canvas C)
         }
         
         // Fade the signal out based on the angle so that it doesn't obscure the view.
-        AngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Direction dot ViewDirection));
-        Alpha *= class'UInterp'.static.MapRangeClamped(AngleDegrees, 2.0, 5.0, 0.0, 1.0);
+        AngleDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(Direction dot ViewDirection));
+        Alpha *= Class'UInterp'.static.MapRangeClamped(AngleDegrees, 2.0, 5.0, 0.0, 1.0);
 
         // Fade out the signal in the final moments.
         TimeRemaining = PC.Signals[i].SignalClass.default.DurationSeconds - T;
         const FADE_DURATION = 0.5;
-        Alpha *= class'UInterp'.static.MapRangeClamped(TimeRemaining, 0.0, FADE_DURATION, 0.0, 1.0);
+        Alpha *= Class'UInterp'.static.MapRangeClamped(TimeRemaining, 0.0, FADE_DURATION, 0.0, 1.0);
         
         // Set the minimum alpha so that the signal is always visible for the first few moments.
-        AlphaMin = class'UInterp'.static.MapRangeClamped(T, SignalNewTimeSeconds, SignalNewTimeSeconds + FADE_DURATION, 1.0, 0.0);
+        AlphaMin = Class'UInterp'.static.MapRangeClamped(T, SignalNewTimeSeconds, SignalNewTimeSeconds + FADE_DURATION, 1.0, 0.0);
 
         Alpha = FMax(Alpha, AlphaMin);
 
@@ -2040,7 +2040,7 @@ function DrawSignals(Canvas C)
         if (Level.TimeSeconds - PC.Signals[i].TimeSeconds < SignalShrinkTimeSeconds)
         {
             T = Level.TimeSeconds - PC.Signals[i].TimeSeconds / SignalShrinkTimeSeconds;
-            SignalIconSize = class'UInterp'.static.SmoothStep(T, SignalIconSizeStart, SignalIconSizeEnd);
+            SignalIconSize = Class'UInterp'.static.SmoothStep(T, SignalIconSizeStart, SignalIconSizeEnd);
         }
         else
         {
@@ -2069,8 +2069,8 @@ function DrawSignals(Canvas C)
         if (PC.Signals[i].SignalClass.default.bShouldShowDistance)
         {
             // Draw distance text
-            Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
-            DistanceText = string(Distance) $ class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
+            Distance = (int(Class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
+            DistanceText = string(Distance) $ Class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
             C.TextSize(DistanceText, XL, YL);
             X = ScreenLocation.X - (XL / 2);
             Y = ScreenLocation.Y + (SignalIconSize / 2);
@@ -2176,7 +2176,7 @@ function GetPlayerNamePlateIcon(Pawn P, DHPlayerReplicationInfo OtherPRI, out Ma
     local DHMortarVehicle Mortar;
 
     IconMaterial = none;
-    IconMaterialColor = class'UColor'.default.White;
+    IconMaterialColor = Class'UColor'.default.White;
 
     if (OtherPRI == PortraitPRI)
     {
@@ -2267,7 +2267,7 @@ function DrawPlayerNames(Canvas C)
     bForceHideAllNames = MyProjWeapon != none && MyProjWeapon.bHasModelScope && MyProjWeapon.bUsingSights;
 
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50.0) * Vector(PlayerOwner.CalcViewRotation)), ViewLocation)
+    foreach TraceActors(Class'Actor', A, HitLocation, HitNormal, ViewLocation + (Class'DHUnits'.static.MetersToUnreal(50.0) * Vector(PlayerOwner.CalcViewRotation)), ViewLocation)
     {
         // Ignore non-blocking actors
         if (!A.bBlockActors)
@@ -2361,7 +2361,7 @@ function DrawPlayerNames(Canvas C)
     }
 
     // STAGE 2: find all other pawns within 25 meters & build our Pawns array (excluding our own pawn & any LookedAtPawn we've already added)
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(25.0), ViewLocation)
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(25.0), ViewLocation)
     {
         if (P != PawnOwner && P != LookedAtPawn)
         {
@@ -2393,7 +2393,7 @@ function DrawPlayerNames(Canvas C)
         }
         // Player is a leader, talking, or he's in our squad; he will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
         else if (P.PlayerReplicationInfo == PortraitPRI ||
-                 class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI) ||
+                 Class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI) ||
                  (PRI.IsSLorASL() && OtherPRI.IsSLorASL()))
         {
             bMayBeValid = true;
@@ -2971,7 +2971,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         // Squad leader
         if (PC.GetSquadIndex() != -1 && PC.GetSquadMemberIndex() != 0 && PC.SquadMemberLocations[0] != 0)
         {
-            class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[0], Target.X, Target.Y);
+            Class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[0], Target.X, Target.Y);
             Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
 
             // Update widget color & texture
@@ -2981,7 +2981,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
             CompassIcons.TextureCoords.X2 = 31;
             CompassIcons.TextureCoords.Y2 = 31;
 
-            CompassIcons.Tints[TeamIndex] = class'DHColor'.default.SquadColor;
+            CompassIcons.Tints[TeamIndex] = Class'DHColor'.default.SquadColor;
             CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
 
             // Calculate rotation
@@ -3013,7 +3013,7 @@ function DrawNetworkActors(Canvas C)
         return;
     }
 
-    foreach DynamicActors(class'Actor', A)
+    foreach DynamicActors(Class'Actor', A)
     {
         // Check whether it's a network actor, i.e. has been, or would be, replicated by a server
         if (A.bNoDelete)
@@ -3108,7 +3108,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     // Show all pawns only (DebugMode 0)
     if (NetDebugMode == ND_PawnsOnly)
     {
-        foreach DynamicActors(class'Pawn', P)
+        foreach DynamicActors(Class'Pawn', P)
         {
             if (Vehicle(P) != none)
             {
@@ -3132,7 +3132,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     // Show vehicles only (DebugMode 1)
     else if (NetDebugMode == ND_VehiclesOnly)
     {
-        foreach DynamicActors(class'Vehicle', V)
+        foreach DynamicActors(Class'Vehicle', V)
         {
             if (ROWheeledVehicle(V) != none)
             {
@@ -3147,7 +3147,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     // Show player pawns only (DebugMode 2)
     else if (NetDebugMode == ND_PlayersOnly)
     {
-        foreach DynamicActors(class'DHPawn', DHP)
+        foreach DynamicActors(Class'DHPawn', DHP)
         {
             Widget = MapIconTeam[DHP.GetTeamNum()];
             Widget.TextureScale = 0.04;
@@ -3166,7 +3166,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 
         C.Font = GetTinyFont(C); // changed to use smallest font available
 
-        foreach DynamicActors(class'Actor', A)
+        foreach DynamicActors(Class'Actor', A)
         {
             if (!A.bNoDelete)
             {
@@ -3215,7 +3215,7 @@ function DrawVehiclePointSphere()
     local Color            C;
     local int              i;
 
-    foreach DynamicActors(class'DHVehicle', V)
+    foreach DynamicActors(Class'DHVehicle', V)
     {
         for (i = 0; i < V.VehHitpoints.Length; ++i)
         {
@@ -3306,7 +3306,7 @@ function DrawPointSphere()
     local Vector Loc;
     local int    i;
 
-    foreach DynamicActors(class'ROPawn', P)
+    foreach DynamicActors(Class'ROPawn', P)
     {
         if (P != none && ((P != PawnOwner && P.Owner != PawnOwner) || PlayerOwner.bBehindView)) // only draw player's own collision if he's in behind view
         {
@@ -3341,7 +3341,7 @@ function DrawVehiclePhysiscsWheels()
     local Vector    Loc;
     local int       i;
 
-    foreach DynamicActors(class'ROVehicle', V)
+    foreach DynamicActors(Class'ROVehicle', V)
     {
         if (V != none)
         {
@@ -3392,7 +3392,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
     
     // Draw objectives
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Player.Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Player.Level);
     AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
     AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
 
@@ -3411,11 +3411,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
 
     // Draw level map overlay
-    MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GUI.GridOverlay';
+    MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GridOverlay';
 
     if (MapLevelOverlay.WidgetTexture != none)
     {
-        MapLevelOverlay.Tints[0].A = 128 + class'UInterp'.static.Linear(Viewport.Max.X - Viewport.Min.X, 128, 0);
+        MapLevelOverlay.Tints[0].A = 128 + Class'UInterp'.static.Linear(Viewport.Max.X - Viewport.Min.X, 128, 0);
         MapLevelOverlay.TextureCoords.X1 = Viewport.Min.X * MapLevelOverlay.WidgetTexture.MaterialUSize();
         MapLevelOverlay.TextureCoords.Y1 = Viewport.Min.Y * MapLevelOverlay.WidgetTexture.MaterialVSize();
         MapLevelOverlay.TextureCoords.X2 = (Viewport.Max.X * MapLevelOverlay.WidgetTexture.MaterialUSize()) - 1;
@@ -3615,14 +3615,14 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             }
 
             // ObjA.Location ObjB.Location
-            ObjLineColor = class'UColor'.default.White;
+            ObjLineColor = Class'UColor'.default.White;
 
             if (ObjA.ObjState == ObjB.ObjState && ObjA.ObjState != OBJ_Neutral)
             {
                 ObjLineColor = GetTeamColor(int(ObjA.ObjState) ^ 1);
             }
 
-            HSV = class'UColor'.static.RGB2HSV(ObjLineColor);
+            HSV = Class'UColor'.static.RGB2HSV(ObjLineColor);
 
             if (ObjA.bActive && ObjB.bActive)
             {
@@ -3633,7 +3633,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                 HSV.V = 0.5;
             }
 
-            ObjLineColor = class'UColor'.static.HSV2RGB(HSV);
+            ObjLineColor = Class'UColor'.static.HSV2RGB(HSV);
 
             DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, ObjA.Location, ObjB.Location, ObjLineColor);
         }
@@ -3721,13 +3721,13 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             if (DHGRI.DHObjectives[i].IsFrozen(DHGRI))
             {
                 Widget = MapIconObjectiveStatusIcon;
-                Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.lockdown';
+                Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.lockdown';
                 DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport);
             }
             else if (DHGRI.DHObjectives[i].IsTeamNeutralLocked(DHGRI, OwnerTeam))
             {
                 Widget = MapIconObjectiveStatusIcon;
-                Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.chain';
+                Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.chain';
                 DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport);
             }
             else if (DHGRI.DHObjectives[i].bIsCritical)
@@ -3788,7 +3788,7 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
         return;
     }
 
-    foreach AllActors(class'DHMapIconAttachment', MIA)
+    foreach AllActors(Class'DHMapIconAttachment', MIA)
     {
         if (MIA == none || MIA.GetVisibilityIndex() == 255)
         {
@@ -3923,7 +3923,7 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
         return;
     }
 
-    DangerZoneOverlayPointIcon.Tints[0] = default.DangerZoneOverlayPointIcon.Tints[class'UMath'.static.SwapFirstPair(PC.GetTeamNum())];
+    DangerZoneOverlayPointIcon.Tints[0] = default.DangerZoneOverlayPointIcon.Tints[Class'UMath'.static.SwapFirstPair(PC.GetTeamNum())];
 
     for (i = 0; i < DangerZoneOverlayAxis.Length; ++i)
     {
@@ -3964,7 +3964,7 @@ function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, V
     X1 = B.X;
     Y1 = B.Y;
 
-    if (!class'UCollision'.static.ClipLineToViewport(X0, Y0, X1, Y1, Box))
+    if (!Class'UCollision'.static.ClipLineToViewport(X0, Y0, X1, Y1, Box))
     {
         return;
     }
@@ -4001,7 +4001,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
     }
     
     // Set the font to be used to draw player icons.
-    C.Font = class'DHFonts'.static.GetDHTinyFontByResolution(C.ClipX, C.ClipY);
+    C.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(C.ClipX, C.ClipY);
 
     // Draw other squad leaders on map
     if (PRI.IsSLorASL() || PRI.IsRadioman())
@@ -4013,10 +4013,10 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 continue;
             }
 
-            class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
+            Class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
             PlayerLocation = DHGRI.GetWorldCoords(X, Y);
 
-            SquadMemberColor = class'DHColor'.default.FriendlyColor;
+            SquadMemberColor = Class'DHColor'.default.FriendlyColor;
             SquadMemberColor.A = 160;
 
             IconScale = PlayerIconScale;
@@ -4046,7 +4046,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
             // TODO: Run this periodically, not every frame.
             OtherPawn = none;
 
-            foreach DynamicActors(class'Pawn', P)
+            foreach DynamicActors(Class'Pawn', P)
             {
                 if (P.PlayerReplicationInfo == OtherPRI)
                 {
@@ -4066,7 +4066,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
             }
             else if (OtherPRI.SquadMemberIndex != -1 && PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != 0)
             {
-                class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[OtherPRI.SquadMemberIndex], X, Y, PlayerYaw);
+                Class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[OtherPRI.SquadMemberIndex], X, Y, PlayerYaw);
                 PlayerLocation = DHGRI.GetWorldCoords(X, Y);
             }
             else
@@ -4074,7 +4074,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 continue;
             }
 
-            SquadMemberColor = class'DHColor'.default.SquadColor;
+            SquadMemberColor = Class'DHColor'.default.SquadColor;
             SquadMemberColor.A = 160;
 
             if (i == 0)
@@ -4122,7 +4122,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
         if (PRI != none)
         {
-            SelfColor = class'DHColor'.default.SelfColor;
+            SelfColor = Class'DHColor'.default.SelfColor;
             SelfColor.A = 160;
 
             // Display a smaller icon if we are in a vehicle.
@@ -4461,22 +4461,22 @@ function DrawIndicators(Canvas Canvas)
 
     if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 12)
     {
-        PacketLossIndicator.Tints[0] = class'UColor'.default.Red;
+        PacketLossIndicator.Tints[0] = Class'UColor'.default.Red;
         PacketLossIndicator.Tints[0].A = 255;
     }
     else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 8)
     {
-        PacketLossIndicator.Tints[0] = class'UColor'.default.OrangeRed;
+        PacketLossIndicator.Tints[0] = Class'UColor'.default.OrangeRed;
         PacketLossIndicator.Tints[0].A = 210;
     }
     else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 4)
     {
-        PacketLossIndicator.Tints[0] = class'UColor'.default.Orange;
+        PacketLossIndicator.Tints[0] = Class'UColor'.default.Orange;
         PacketLossIndicator.Tints[0].A = 180;
     }
     else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss)
     {
-        PacketLossIndicator.Tints[0] = class'UColor'.default.Yellow;
+        PacketLossIndicator.Tints[0] = Class'UColor'.default.Yellow;
         PacketLossIndicator.Tints[0].A = 150;
     }
     else
@@ -4615,7 +4615,7 @@ function DrawCaptureBar(Canvas Canvas)
         }
     }
 
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
     AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
     AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
 
@@ -4637,8 +4637,8 @@ function DrawCaptureBar(Canvas Canvas)
         CaptureBarIcons[1].TextureCoords = AxisNationClass.default.MapFlagIconSpriteWidget.TextureCoords;
     }
 
-    CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[OwnTeam];
-    CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[EnemyTeam];
+    CaptureBarAttacker.Tints[TeamIndex] = Class'DHColor'.default.TeamColors[OwnTeam];
+    CaptureBarDefender.Tints[TeamIndex] = Class'DHColor'.default.TeamColors[EnemyTeam];
 
     // Set capture bar to show 50% faded if teams are at a stalemate in the cap zone
     if (PlayersInCap[AXIS_TEAM_INDEX] == PlayersInCap[ALLIES_TEAM_INDEX])
@@ -4709,13 +4709,13 @@ function DrawCaptureBar(Canvas Canvas)
     if (Objective.IsFrozen(DHGRI))
     {
         // Draw the lockdown icon and the time remainnig
-        StatusText = class'TimeSpan'.static.ToString(Objective.UnfreezeTime - DHGRI.ElapsedTime);
-        StatusIcon = Texture'DH_InterfaceArt2_tex.icons.lockdown';
+        StatusText = Class'TimeSpan'.static.ToString(Objective.UnfreezeTime - DHGRI.ElapsedTime);
+        StatusIcon = Texture'DH_InterfaceArt2_tex.lockdown';
     }
     else if (Objective.IsTeamNeutralLocked(DHGRI, OwnTeam))
     {
         StatusText = default.ConnectedObjectivesNotSecuredText;
-        StatusIcon = Texture'DH_InterfaceArt2_tex.icons.chain';
+        StatusIcon = Texture'DH_InterfaceArt2_tex.chain';
     }
 
     // Draw status text and icon, if available
@@ -4848,7 +4848,7 @@ function DrawSpectatingHud(Canvas C)
         }
         else
         {
-            s = default.TimeRemainingText $ class'TimeSpan'.static.ToString(CurrentTime);
+            s = default.TimeRemainingText $ Class'TimeSpan'.static.ToString(CurrentTime);
         }
 
         X = 8.0 * Scale;
@@ -4878,7 +4878,7 @@ function DrawSpectatingHud(Canvas C)
                     {
                         // Spawning not enabled yet
                         s = default.NotReadyToSpawnText;
-                        s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTimes[PRI.Team.TeamIndex] - DHGRI.ElapsedTime));
+                        s = Repl(s, "{s}", Class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTimes[PRI.Team.TeamIndex] - DHGRI.ElapsedTime));
                         bShouldFlashText = true;
                     }
                     else if (Time == 0)
@@ -4939,7 +4939,7 @@ function DrawSpectatingHud(Canvas C)
                 s = default.SpawnNoRoleText;
             }
 
-            s = Repl(s, "{2}", class'TimeSpan'.static.ToString(Max(0, Time)));
+            s = Repl(s, "{2}", Class'TimeSpan'.static.ToString(Max(0, Time)));
         }
 
         Y += 4.0 * Scale + StrY;
@@ -4947,7 +4947,7 @@ function DrawSpectatingHud(Canvas C)
         // Flash the "Press ESC to select a spawn point" message to make it more noticeable.
         if (bShouldFlashText)
         {
-            C.DrawColor = class'UColor'.static.Interp(class'UInterp'.static.Cosine(Level.TimeSeconds, 0.0, 1.0), WhiteColor, RedColor);
+            C.DrawColor = Class'UColor'.static.Interp(Class'UInterp'.static.Cosine(Level.TimeSeconds, 0.0, 1.0), WhiteColor, RedColor);
         }
 
         C.SetPos(X, Y);
@@ -4995,7 +4995,7 @@ function DrawSpectatingHud(Canvas C)
 
         if (!IsBlackedOut() && (PC.SpecMode == SPEC_Players || PC.SpecMode == SPEC_ViewPoints))
         {
-            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
+            S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
             C.TextSize(S, StrX, StrY);
             C.SetPos(X - StrX / 2.0, Y - StrY);
             C.DrawTextClipped(S);
@@ -5004,7 +5004,7 @@ function DrawSpectatingHud(Canvas C)
 
         if (PC.GetValidSpecModeCount() > 1)
         {
-            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
+            S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
             C.TextSize(S, StrX, StrY);
             C.SetPos(X - StrX / 2.0, Y - StrY);
             C.DrawTextClipped(S);
@@ -5013,7 +5013,7 @@ function DrawSpectatingHud(Canvas C)
 
         if (PC.SpecMode == SPEC_Players && !PC.bFirstPersonSpectateOnly)
         {
-            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
+            S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
             C.TextSize(S, StrX, StrY);
             C.SetPos(X - StrX / 2.0, Y - StrY);
             C.DrawTextClipped(S);
@@ -5205,7 +5205,7 @@ function LocalizedMessage(class<LocalMessage> Message, optional int Switch, opti
     local int i, Count;
     local PlayerReplicationInfo PRI;
 
-    if (Message == none || (bIsCinematic && !ClassIsChildOf(Message, class'ActionMessage')))
+    if (Message == none || (bIsCinematic && !ClassIsChildOf(Message, Class'ActionMessage')))
     {
         return;
     }
@@ -5259,26 +5259,26 @@ function LocalizedMessage(class<LocalMessage> Message, optional int Switch, opti
         return;
     }
 
-    if (ClassIsChildOf(Message, class'ROCriticalMessage') &&
-        class'ROCriticalMessage'.default.MaxMessagesOnScreen > 0)
+    if (ClassIsChildOf(Message, Class'ROCriticalMessage') &&
+        Class'ROCriticalMessage'.default.MaxMessagesOnScreen > 0)
     {
         // Check if we have too many critical messages in stack
         Count = 0;
 
         for (i = 0; i < arraycount(LocalMessages); ++i)
         {
-            if (ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+            if (ClassIsChildOf(LocalMessages[i].Message, Class'ROCriticalMessage'))
             {
                 Count++;
             }
         }
 
-        if (Count >= class'ROCriticalMessage'.default.MaxMessagesOnScreen)
+        if (Count >= Class'ROCriticalMessage'.default.MaxMessagesOnScreen)
         {
             // We have too many critical messages -- delete oldest one
             for (i = 0; i < arraycount(LocalMessages); ++i)
             {
-                if (ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+                if (ClassIsChildOf(LocalMessages[i].Message, Class'ROCriticalMessage'))
                 {
                     break;
                 }
@@ -5356,7 +5356,7 @@ function LocalizedMessage(class<LocalMessage> Message, optional int Switch, opti
     LocalMessages[i].OptionalObject = OptionalObject;
 
     // Hackish for ROCriticalMessages
-    if (ClassIsChildOf(Message, class'ROCriticalMessage') &&
+    if (ClassIsChildOf(Message, Class'ROCriticalMessage') &&
         class<ROCriticalMessage>(Message).default.bQuickFade)
     {
          LocalMessages[i].LifeTime = Message.static.GetLifetime(Switch) + class<ROCriticalMessage>(Message).default.QuickFadeTime;
@@ -5365,7 +5365,7 @@ function LocalizedMessage(class<LocalMessage> Message, optional int Switch, opti
          // Mild hax: used to show hints when an obj is captured
          // This was simpliest way of doing it without having server call another
          // server-to-client function
-         if (ClassIsChildOf(Message, class'ROObjectiveMsg') &&
+         if (ClassIsChildOf(Message, Class'ROObjectiveMsg') &&
             (Switch == 0 || Switch == 1) &&
             ROPlayer(PlayerOwner) != none)
          {
@@ -5425,7 +5425,7 @@ function DisplayVoiceGain(Canvas C)
             }
             else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
             {
-                ActiveName = class'DHVoiceReplicationInfo'.default.LocalChannelText;
+                ActiveName = Class'DHVoiceReplicationInfo'.default.LocalChannelText;
             }
         }
         else if (PlayerOwner.ActiveRoom != none)
@@ -5461,7 +5461,7 @@ function DisplayVoiceGain(Canvas C)
 
         if (VCR != none && VCR.IsSquadChannel())
         {
-            C.DrawColor = class'DHColor'.default.SquadColor;
+            C.DrawColor = Class'DHColor'.default.SquadColor;
         }
         else if (PlayerOwner != none && PlayerOwner.PlayerReplicationInfo != none)
         {
@@ -5469,11 +5469,11 @@ function DisplayVoiceGain(Canvas C)
             {
                 if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
+                    C.DrawColor = Class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
                 else
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
+                    C.DrawColor = Class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
             }
         }
@@ -5531,15 +5531,15 @@ function DrawIQWidget(Canvas C)
 
     if (PRI.PlayerIQ >= PC.MinIQToGrowHead * 2)
     {
-        IQWidgetColor = class'UColor'.default.Red;
+        IQWidgetColor = Class'UColor'.default.Red;
     }
     else if (PRI.PlayerIQ > PC.MinIQToGrowHead)
     {
-        IQWidgetColor = class'UColor'.default.Yellow;
+        IQWidgetColor = Class'UColor'.default.Yellow;
     }
     else
     {
-        IQWidgetColor = class'UColor'.default.White;
+        IQWidgetColor = Class'UColor'.default.White;
     }
 
     IQIconWidget.Tints[0] = IQWidgetColor;
@@ -5610,7 +5610,7 @@ function DrawRallyPointStatus(Canvas C)
         RallyPointGlowWidget.PosX = default.RallyPointGlowWidget.PosX;
     }
 
-    DrawColor = class'UColor'.default.White;
+    DrawColor = Class'UColor'.default.White;
     GlobalCoors.Width = C.ClipX;
     GlobalCoors.Height = C.ClipY;
 
@@ -5647,7 +5647,7 @@ function DrawRallyPointStatus(Canvas C)
     // Draw the bag!
     DrawSpriteWidgetClipped(C, RallyPointWidget, GlobalCoors, true, XL, YL, true, true, true);
 
-    IconColor = class'UColor'.default.White;
+    IconColor = Class'UColor'.default.White;
 
     BaseX = C.CurX - XL;
     BaseY = C.CurY;
@@ -5660,27 +5660,27 @@ function DrawRallyPointStatus(Canvas C)
             break;
         case ERROR_BadLocation:
             ErrorIcon = default.RallyPointIconBadLocation;
-            IconColor = class'UColor'.default.Red;
+            IconColor = Class'UColor'.default.Red;
             break;
         case ERROR_TooCloseToOtherRallyPoint:
             ErrorIcon = default.RallyPointIconDistance;
-            ErrorString = Result.Error.OptionalInt $ class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
+            ErrorString = Result.Error.OptionalInt $ Class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
             break;
         case ERROR_MissingSquadmate:
             ErrorIcon = default.RallyPointIconMissingSquadmate;
             break;
         case ERROR_TooSoon:
             ErrorIcon = default.RallyPointIconCooldown;
-            ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
+            ErrorString = Class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
             break;
         case ERROR_BehindEnemyLines:
         case ERROR_InUncontrolledObjective:
             ErrorIcon = default.RallyPointIconFlag;
-            IconColor = class'UColor'.default.Red;
+            IconColor = Class'UColor'.default.Red;
             break;
         case ERROR_None:
             ErrorIcon = default.RallyPointIconKey;
-            ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.PlaceRallyPointText, PC);
+            ErrorString = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.PlaceRallyPointText, PC);
             break;
         default:
             break;
@@ -5696,7 +5696,7 @@ function DrawRallyPointStatus(Canvas C)
         }
         else
         {
-            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+            C.Font = Class'DHHud'.static.GetSmallerMenuFont(C);
         }
 
         // Measure the font size.
@@ -5768,7 +5768,7 @@ function DrawRallyPointStatus(Canvas C)
 // New helper function to check whether debug execs can be run
 function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Modified to use DHDebugMode
@@ -5924,12 +5924,12 @@ function DHDrawTypingPrompt(Canvas C)
     {
         // We have to handle the admin menu mutator functionality "gracefully",
         // so here ya go.
-        SayTypeColor = class'UColor'.default.White;
+        SayTypeColor = Class'UColor'.default.White;
         SayTypeText = default.SayTypeConsoleText;
     }
-    else if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
+    else if (SayTypeMessageClass == none || SayTypeMessageClass == Class'DHSayMessage')
     {
-        SayTypeColor = class'UColor'.default.White;
+        SayTypeColor = Class'UColor'.default.White;
         SayTypeText = default.SayTypeAllText;
     }
     else
@@ -5949,7 +5949,7 @@ function DHDrawTypingPrompt(Canvas C)
 
     C.SetPos(XPos, YPos);
 
-    SayTypeText = class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ class'GameInfo'.static.MakeColorCode(WhiteColor);
+    SayTypeText = Class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ Class'GameInfo'.static.MakeColorCode(WhiteColor);
 
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
@@ -5988,7 +5988,7 @@ simulated function DrawWeaponName(Canvas C)
 		return;
     }
 
-	CurWeaponName = class'DHPlayer'.static.GetInventoryName(PawnOwner.PendingWeapon.Class);
+	CurWeaponName = Class'DHPlayer'.static.GetInventoryName(PawnOwner.PendingWeapon.Class);
 
 	if (CurWeaponName != LastWeaponName)
 	{
@@ -6002,7 +6002,7 @@ simulated function DrawWeaponName(Canvas C)
 defaultproperties
 {
     // General
-    MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.Menu.DHPointer')
+    MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.DHPointer')
     PlayerNameFontSize=6
     SpacingText="      "
     ConsoleMessageCount=8
@@ -6052,60 +6052,60 @@ defaultproperties
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
 
     // Screen indicator icons & player HUD
-    CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
-    PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world'
-    PlayerNameFilledIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
-    SquadLeaderIconMaterial=Material'DH_InterfaceArt2_tex.Icons.squad_leader'
-    AssistantIconMaterial=Material'DH_InterfaceArt2_tex.Icons.assistant'
-    SpeakerIconMaterial=Texture'DH_InterfaceArt_tex.Communication.speaker_icon'
-    NeedAssistIconMaterial=Texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
-    NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.resupply_box'
-    ExtraAmmoIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.resupply_box',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanDigIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
-    DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
-    DeployInObjectiveIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture
+    PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.player_icon_world'
+    PlayerNameFilledIconMaterial=Material'DH_InterfaceArt_tex.player_icon_world_filled'
+    SquadLeaderIconMaterial=Material'DH_InterfaceArt2_tex.squad_leader'
+    AssistantIconMaterial=Material'DH_InterfaceArt2_tex.assistant'
+    SpeakerIconMaterial=Texture'DH_InterfaceArt_tex.speaker_icon'
+    NeedAssistIconMaterial=Texture'DH_InterfaceArt_tex.need_assist_icon'
+    NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.resupply_box'
+    ExtraAmmoIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.resupply_box',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanDigIcon=(WidgetTexture=Texture'DH_GUI_Tex.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    DeployInObjectiveIcon=(WidgetTexture=Material'DH_GUI_tex.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
 
     // Screen weapon & ammo resupply icons
-    WeaponCanRestIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=100,G=100,B=100,A=255),Tints[1]=(R=100,G=100,B=100,A=255))
-    WeaponRestingIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MGDeployIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    ResupplyZoneNormalPlayerIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
-    ResupplyZoneNormalVehicleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
+    WeaponCanRestIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=100,G=100,B=100,A=255),Tints[1]=(R=100,G=100,B=100,A=255))
+    WeaponRestingIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MGDeployIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    ResupplyZoneNormalPlayerIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
+    ResupplyZoneNormalVehicleIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
     ResupplyZoneResupplyingPlayerIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
     ResupplyZoneResupplyingVehicleIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
 
     // Capture bar variables
-    CaptureBarBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Background',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CaptureBarOutline=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Overlay',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CaptureBarAttacker=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Right,Scale=0.45,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CaptureBarDefender=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=0.55,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarBackground=(WidgetTexture=Texture'DH_GUI_Tex.DH_CaptureBar_Background',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarOutline=(WidgetTexture=Texture'DH_GUI_Tex.DH_CaptureBar_Overlay',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarAttacker=(WidgetTexture=Texture'DH_GUI_Tex.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Right,Scale=0.45,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarDefender=(WidgetTexture=Texture'DH_GUI_Tex.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=0.55,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CaptureBarTeamIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
-    CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
+    CaptureBarTeamIcons(0)=Texture'DH_GUI_Tex.GerCross'
+    CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.AlliedStar'
     NeedsClearedText=" (Not Secured)"
-    EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_UpperRight,PosX=1.0,PosY=0.001,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     PlayerNumberText=(RenderStyle=STY_Alpha,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,WrapHeight=1.0,Tints[0]=(B=0,G=0,R=0,A=255),Tints[1]=(B=0,G=0,R=0,A=255),bDrawShadow=false)
-    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
-    MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconObjectiveStatusIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.lockdown',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
+    MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconObjectiveStatusIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.lockdown',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
-    MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMGResupplyRequest(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconRally(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconRally(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
+    MapIconMGResupplyRequest(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
+    MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconRally(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
+    MapIconRally(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
 
-    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map markers/attachments
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
@@ -6113,12 +6113,12 @@ defaultproperties
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
-    MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
-    MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
-    MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_fast_flash'
-    MapIconTeam(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconTeam(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconsFlash=FinalBlend'DH_GUI_Tex.overheadmap_flags_flashing'
+    MapIconsFastFlash=FinalBlend'DH_GUI_Tex.overheadmap_flags_fast_flash'
+    MapIconsAltFlash=FinalBlend'DH_GUI_Tex.overheadmap_flags_alt_flashing'
+    MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.overheadmap_flags_alt_fast_flash'
+    MapIconTeam(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
+    MapIconTeam(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_Icons')
 
     // Map player number icons
     PlayerIconScale=0.03
@@ -6126,7 +6126,7 @@ defaultproperties
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0)
-    VehicleLockedIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.lock',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.21,DrawPivot=DP_MiddleMiddle,PosX=0.98,PosY=0.85,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleLockedIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.lock',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.21,DrawPivot=DP_MiddleMiddle,PosX=0.98,PosY=0.85,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
     VehicleAmmoAmount=(OffsetX=125)
     VehicleAmmoTypeText=(PosX=0.24)
@@ -6137,18 +6137,18 @@ defaultproperties
     VehicleSmokeLauncherAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.19,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=0,OffsetY=-9,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.19,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=0,OffsetY=-9,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleSmokeLauncherAmmoAmount=(TextureScale=0.19,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=125,OffsetY=-43,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.OverheadMap.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
-    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
+    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
-    VehicleVisionConeIcon=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Soliton_rot',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,OffsetX=0,OffsetY=0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleVisionConeIcon=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Soliton_rot',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,OffsetX=0,OffsetY=0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Construction
-    VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=-8,OffsetY=-16,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Indicators
-    PacketLossIndicator=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.PacketLoss_Indicator',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.4,DrawPivot=DP_MiddleMiddle,PosX=0.97,PosY=0.5,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    PacketLossIndicator=(WidgetTexture=Texture'DH_InterfaceArt_tex.PacketLoss_Indicator',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.4,DrawPivot=DP_MiddleMiddle,PosX=0.97,PosY=0.5,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Signals
     SignalNewTimeSeconds=2.0
@@ -6167,40 +6167,40 @@ defaultproperties
     ConnectedObjectivesNotSecuredText="Connected objective(s) not secured"
 
     // Supply
-    SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
-    SupplyCountIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=51,OffsetY=8)
+    SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
+    SupplyCountIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.supply_cache',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=51,OffsetY=8)
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),OffsetX=16,OffsetY=24)
 
     // Rally Point
     bShowRallyPoint=true
-    RallyPointWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    RallyPointGlowWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    RallyPointAlertWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_alert',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.25,DrawPivot=DP_UpperRight,PosX=0.85,PosY=0.15,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    RallyPointWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    RallyPointGlowWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_glow',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    RallyPointAlertWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_icon_alert',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.25,DrawPivot=DP_UpperRight,PosX=0.85,PosY=0.15,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
-    RallyPointBase=Material'DH_InterfaceArt2_tex.RallyPoint.rp'
-    RallyPointBaseRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_red'
-    RallyPointBaseDark=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark'
-    RallyPointBaseGlow=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow'
-    RallyPointBaseDarkRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark_red'
+    RallyPointBase=Material'DH_InterfaceArt2_tex.rp'
+    RallyPointBaseRed=Material'DH_InterfaceArt2_tex.rp_red'
+    RallyPointBaseDark=Material'DH_InterfaceArt2_tex.rp_dark'
+    RallyPointBaseGlow=Material'DH_InterfaceArt2_tex.rp_glow'
+    RallyPointBaseDarkRed=Material'DH_InterfaceArt2_tex.rp_dark_red'
 
-    RallyPointIconNotOnFoot=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_notonfoot'
-    RallyPointIconDistance=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_distance'
-    RallyPointIconCooldown=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_cooldown'
-    RallyPointIconAlert=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_alert'
-    RallyPointIconFlag=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_flag'
-    RallyPointIconBadLocation=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_badlocation'
-    RallyPointIconMissingSquadmate=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_missingsquadmate'
-    RallyPointIconKey=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_key'
+    RallyPointIconNotOnFoot=Material'DH_InterfaceArt2_tex.rp_icon_notonfoot'
+    RallyPointIconDistance=Material'DH_InterfaceArt2_tex.rp_icon_distance'
+    RallyPointIconCooldown=Material'DH_InterfaceArt2_tex.rp_icon_cooldown'
+    RallyPointIconAlert=Material'DH_InterfaceArt2_tex.rp_icon_alert'
+    RallyPointIconFlag=Material'DH_InterfaceArt2_tex.rp_icon_flag'
+    RallyPointIconBadLocation=Material'DH_InterfaceArt2_tex.rp_icon_badlocation'
+    RallyPointIconMissingSquadmate=Material'DH_InterfaceArt2_tex.rp_icon_missingsquadmate'
+    RallyPointIconKey=Material'DH_InterfaceArt2_tex.rp_icon_key'
 
     // Danger Zone
-    DangerZoneClass=class'DH_Engine.DHDangerZone'
+    DangerZoneClass=Class'DHDangerZone'
     DangerZoneOverlayResolution=30
     DangerZoneOverlaySubResolution=57
     bDangerZoneOverlayUpdatePending=true
-    DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
+    DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
 
     // IQ
-    IQIconWidget=(/*WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',*/RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
+    IQIconWidget=(/*WidgetTexture=Texture'DH_InterfaceArt2_tex.Intelligence',*/RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
     IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),OffsetX=-55,OffsetY=-118)
 
     SayTypeConsoleText="[CONSOLE]"

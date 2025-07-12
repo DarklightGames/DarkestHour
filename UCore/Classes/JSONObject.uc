@@ -37,7 +37,7 @@ function JSONObject Put(string Key, JSONValue Value)
 
     if (Map == none)
     {
-        Map = new class'TreeMap_string_JSONValue';
+        Map = new Class'TreeMap_string_JSONValue';
     }
 
     Map.Put(Key, Value);
@@ -47,47 +47,47 @@ function JSONObject Put(string Key, JSONValue Value)
 
 function JSONObject PutString(string Key, coerce string Value)
 {
-    return Put(Key, class'JSONString'.static.Create(Value));
+    return Put(Key, Class'JSONString'.static.Create(Value));
 }
 
 function JSONObject PutInteger(string Key, int Value)
 {
-    return Put(Key, class'JSONNumber'.static.Create(string(Value)));
+    return Put(Key, Class'JSONNumber'.static.Create(string(Value)));
 }
 
 function JSONObject PutBoolean(string Key, bool Value)
 {
-    return Put(Key, class'JSONLiteral'.static.CreateBoolean(Value));
+    return Put(Key, Class'JSONLiteral'.static.CreateBoolean(Value));
 }
 
 function JSONObject PutFloat(string Key, float Value)
 {
-    return Put(Key, class'JSONNumber'.static.Create(string(Value)));
+    return Put(Key, Class'JSONNumber'.static.Create(string(Value)));
 }
 
 function JSONObject PutVector(string Key, Vector Value)
 {
-    return Put(Key, class'JSONArray'.static.FromVector(Value));
+    return Put(Key, Class'JSONArray'.static.FromVector(Value));
 }
 
 function JSONObject PutNull(string Key)
 {
-    return Put(Key, class'JSONLiteral'.static.CreateNull());
+    return Put(Key, Class'JSONLiteral'.static.CreateNull());
 }
 
 function JSONObject PutIVector(string Key, Vector Value)
 {
-    return Put(Key, class'JSONArray'.static.IFromVector(Value));
+    return Put(Key, Class'JSONArray'.static.IFromVector(Value));
 }
 
 function JSONObject PutArrayValues(string Key, array<JSONValue> Values)
 {
-    return Put(Key, class'JSONArray'.static.FromValues(Values));
+    return Put(Key, Class'JSONArray'.static.FromValues(Values));
 }
 
 function JSONObject PutArraySerializables(string Key, array<JSONSerializable> Serializables)
 {
-    return Put(Key, class'JSONArray'.static.FromSerializables(Serializables));
+    return Put(Key, Class'JSONArray'.static.FromSerializables(Serializables));
 }
 
 function JSONObject Erase(string Key)
@@ -135,7 +135,7 @@ function string Encode()
             Strings[Strings.Length] = "\"" $ GetSanitizedString(Keys[i]) $ "\":" $ V.Encode();
         }
 
-        S $= class'UString'.static.Join(",", Strings);
+        S $= Class'UString'.static.Join(",", Strings);
     }
 
     S $= "}";

@@ -11,6 +11,6 @@ defaultproperties
     BroadcastedMessageIndex=3
     MarkerName="Squad Move"
     IconColor=(R=165,G=2,B=255,A=255)
-    IconMaterial=Material'DH_InterfaceArt2_tex.Icons.move'
+    IconMaterial=Material'DH_InterfaceArt2_tex.move'
     bShouldDrawBeeLine=true
 }

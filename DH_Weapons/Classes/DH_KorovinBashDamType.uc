@@ -8,5 +8,5 @@ class DH_korovinBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_korovinWeapon'
+    WeaponClass=Class'DH_korovinWeapon'
 }

@@ -7,7 +7,7 @@ class DH_Sdkfz251MGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Sdkfz251MG'
+    GunClass=Class'DH_Sdkfz251MG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -20,7 +20,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     CameraBone="Camera_com"
-    HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
+    HUDOverlayClass=Class'ROVehMG34Overlay'
     HUDOverlayFOV=45.0
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=2.0

@@ -17,10 +17,10 @@ simulated function int GetMaxLoadedRounds()
 defaultproperties
 {
     ItemName="WitchEnder 666 'Satan's Bane'"
-    FireModeClass(0)=class'DH_Weapons.DH_WitchEnder666Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_WitchEnder666MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_WitchEnder666Attachment'
-    PickupClass=class'DH_Weapons.DH_WitchEnder666Pickup'
+    FireModeClass(0)=Class'DH_WitchEnder666Fire'
+    FireModeClass(1)=Class'DH_WitchEnder666MeleeFire'
+    AttachmentClass=Class'DH_WitchEnder666Attachment'
+    PickupClass=Class'DH_WitchEnder666Pickup'
 
     Mesh=SkeletalMesh'DH_Winchester1897_anm.WitchEnder666_1st'
 

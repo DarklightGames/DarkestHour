@@ -10,5 +10,5 @@ defaultproperties
     Speed=48282.0 // 2625 fps
     BallisticCoefficient=0.511
     Damage=115.0
-    MyDamageType=class'DH_Weapons.DH_M38DamType'
+    MyDamageType=Class'DH_M38DamType'
 }

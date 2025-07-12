@@ -8,11 +8,11 @@ class DHStyle_SpawnAdminButton extends DHStyle_SpawnPointButton;
 defaultproperties
 {
     KeyName="DHSpawnAdminButtonStyle"
-    Images(0)=Material'DH_GUI_Tex.DeployMenu.SpawnPoint_Osc'
-    Images(1)=Material'DH_GUI_Tex.DeployMenu.SpawnPoint_Osc'
-    Images(2)=Material'DH_GUI_Tex.DeployMenu.SpawnPoint_Osc'
-    Images(3)=Material'DH_GUI_Tex.DeployMenu.SpawnPoint_Down'
-    Images(4)=Material'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
+    Images(0)=Material'DH_GUI_Tex.SpawnPoint_Osc'
+    Images(1)=Material'DH_GUI_Tex.SpawnPoint_Osc'
+    Images(2)=Material'DH_GUI_Tex.SpawnPoint_Osc'
+    Images(3)=Material'DH_GUI_Tex.SpawnPoint_Down'
+    Images(4)=Material'DH_GUI_Tex.SpawnPointDiffuse'
 
     ImgColors(0)=(R=0,G=124,B=252,A=255)
     ImgColors(1)=(R=0,G=124,B=252,A=255)

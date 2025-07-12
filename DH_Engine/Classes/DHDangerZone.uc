@@ -18,7 +18,7 @@ final static function Vector IndicesToCoords(int X, int Y, float StepX, float St
 
 final static function Vector GetInterpCoords(float Value, float ValueA, float ValueB, Vector A, Vector B)
 {
-    return class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
+    return Class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
 }
 
 // Returns a positive value when inside the zone
@@ -54,7 +54,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.DHObjectives[i].Location.X;
         V1.Y = GRI.DHObjectives[i].Location.Y;
 
-        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.DHObjectives[i].BaseInfluenceModifier);
+        Intensity = Class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.DHObjectives[i].BaseInfluenceModifier);
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(NEUTRAL_TEAM_INDEX))
         {
@@ -95,7 +95,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.SpawnPoints[i].Location.X;
         V1.Y = GRI.SpawnPoints[i].Location.Y;
 
-        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.SpawnPoints[i].BaseInfluenceModifier);
+        Intensity = Class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.SpawnPoints[i].BaseInfluenceModifier);
 
         switch (GRI.SpawnPoints[i].GetTeamIndex())
         {
@@ -270,10 +270,10 @@ static function array<Vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
         for (j = 0; j < Resolution - 1; ++j)
         {
             Mask = 0;
-            Mask += Normal[class'UArray'.static.RavelIndices(i, j + 1, Resolution)] << 3;
-            Mask += Normal[class'UArray'.static.RavelIndices(i + 1, j + 1, Resolution)] << 2;
-            Mask += Normal[class'UArray'.static.RavelIndices(i + 1, j, Resolution)] << 1;
-            Mask += Normal[class'UArray'.static.RavelIndices(i, j, Resolution)];
+            Mask += Normal[Class'UArray'.static.RavelIndices(i, j + 1, Resolution)] << 3;
+            Mask += Normal[Class'UArray'.static.RavelIndices(i + 1, j + 1, Resolution)] << 2;
+            Mask += Normal[Class'UArray'.static.RavelIndices(i + 1, j, Resolution)] << 1;
+            Mask += Normal[Class'UArray'.static.RavelIndices(i, j, Resolution)];
 
             CellCoords = static.IndicesToCoords(i, j, StepX, StepY, Origin);
             VertexIndices = GetVertexIndices(i, j, Mask, static.IsIn(GRI, CellCoords.X + StepX / 2.0, CellCoords.Y - StepY / 2.0, TeamIndex));
@@ -281,8 +281,8 @@ static function array<Vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
             for (k = 0; k < VertexIndices.Length; ++k)
             {
                 Segments[Segments.Length] = GetInterpCoords(0,
-                                                            Intensity[class'UArray'.static.RavelIndices(VertexIndices[k].X1, VertexIndices[k].Y1, Resolution)],
-                                                            Intensity[class'UArray'.static.RavelIndices(VertexIndices[k].X2, VertexIndices[k].Y2, Resolution)],
+                                                            Intensity[Class'UArray'.static.RavelIndices(VertexIndices[k].X1, VertexIndices[k].Y1, Resolution)],
+                                                            Intensity[Class'UArray'.static.RavelIndices(VertexIndices[k].X2, VertexIndices[k].Y2, Resolution)],
                                                             static.IndicesToCoords(VertexIndices[k].X1, VertexIndices[k].Y1, StepX, StepY, Origin),
                                                             static.IndicesToCoords(VertexIndices[k].X2, VertexIndices[k].Y2, StepX, StepY, Origin));
             }

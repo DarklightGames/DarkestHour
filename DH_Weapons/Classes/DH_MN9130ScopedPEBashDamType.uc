@@ -8,6 +8,6 @@ class DH_MN9130ScopedPEBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MN9130ScopedPEWeapon'
+    WeaponClass=Class'DH_MN9130ScopedPEWeapon'
 }
 

@@ -7,5 +7,5 @@ class DH_LivornoCorporal extends DHITCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianLivornoCorporalPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_ItalianLivornoCorporalPawn',Weight=1.0)
 }

@@ -7,5 +7,5 @@ class DH_ShermanCannonPawnA_76mm_Early extends DH_ShermanCannonPawnA_76mm;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ShermanCannonA_76mm_Early'
+    GunClass=Class'DH_ShermanCannonA_76mm_Early'
 }

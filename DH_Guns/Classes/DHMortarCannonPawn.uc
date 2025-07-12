@@ -37,16 +37,6 @@ struct FireAnim
 };
 var private array<FireAnim> PlayerFireAnims;
 
-struct SAnimationDriver
-{
-    var int Channel;
-    var name BoneName;
-    var name SequenceName;
-    var int SequenceFrameCount;
-};
-
-var SAnimationDriver PitchAnimationDriver;
-
 // Used for triggering the firing animation on the client since
 // server-to-client functions are for the owning client only.
 var byte PlayerFireCount;
@@ -112,7 +102,7 @@ exec function CalibrateMortar(string AngleUnitString, int Samples)
         Samples = 25;
     }
 
-    AngleUnit = class'UUnits'.static.GetAngleUnitFromString(AngleUnitString);
+    AngleUnit = Class'UUnits'.static.GetAngleUnitFromString(AngleUnitString);
 
     if (Level.NetMode == NM_Standalone)
     {
@@ -154,22 +144,8 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-simulated function InitializeVehicleAndWeapon()
-{
-    super.InitializeVehicleAndWeapon();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SetupGunAnimationDrivers();
-        UpdateGunAnimationDrivers();
-    }
-}
-
 simulated function InitializeHands()
 {
-    local DHPlayer PC;
-    local DHRoleInfo RI;
-
     if (Gun == none)
     {
         Warn("No gun found for mortar cannon pawn!");
@@ -182,7 +158,7 @@ simulated function InitializeHands()
         HandsActor = none;
     }
 
-    HandsActor = Spawn(class'DHFirstPersonHands', self);
+    HandsActor = Spawn(Class'DHFirstPersonHands', self);
 
     if (HandsActor == none)
     {
@@ -207,13 +183,14 @@ simulated function InitializeHands()
         HandsProjectile = none;
     }
 
-    HandsProjectile = Spawn(class'DHDecoAttachment', self);
+    HandsProjectile = Spawn(Class'DHDecoAttachment', self);
 
     // Get the selected projectile & use it's static mesh.
     if (HandsProjectile != none)
     {
         UpdateHandsProjectileStaticMesh();
         HandsActor.AttachToBone(HandsProjectile, HandsProjectileBone);
+
         HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
         HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
     }
@@ -224,9 +201,16 @@ simulated function InitializeHands()
 
 simulated function UpdateHandsProjectileStaticMesh()
 {
+    local int i;
+
     if (HandsProjectile != none && Gun != none && Gun.ProjectileClass != none)
     {
         HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
+
+        for (i = 0; i < Gun.ProjectileClass.default.Skins.Length; ++i)
+        {
+            HandsProjectile.Skins[i] = Gun.ProjectileClass.default.Skins[i];
+        }
     }
 }
 
@@ -261,7 +245,7 @@ simulated function GetFireAnims(out name AnimName1, out name AnimName2, out floa
     local int i, j;
     local float Pitch;
 
-    Pitch = class'UUnits'.static.UnrealToDegrees(GetGunPitch());
+    Pitch = Class'UUnits'.static.UnrealToDegrees(GetGunPitch());
 
     if (Pitch < PlayerFireAnims[0].Angle)
     {
@@ -320,7 +304,7 @@ simulated function PlayThirdPersonFiringAnim()
     Driver.PlayAnim(AnimName2, 1.0, 0.0, 1);
 
     // Spawn the projectile mesh on the client for the firing animation.
-    ProjectileMesh = Spawn(class'DHDecoAttachment', self);
+    ProjectileMesh = Spawn(Class'DHDecoAttachment', self);
     ProjectileMesh.SetStaticMesh(FiringProjectileMesh);
 
     Driver.AttachToBone(ProjectileMesh, 'weapon_rhand');
@@ -390,14 +374,14 @@ simulated state Firing
 
         // Convert the X, Y and Z axis from the bone coords to a quaternion.
         FiringCameraRotation = QuatToRotator(
-            class'UQuaternion'.static.FromAxes(FiringCameraBoneCoords.XAxis, FiringCameraBoneCoords.YAxis, FiringCameraBoneCoords.ZAxis)
+            Class'UQuaternion'.static.FromAxes(FiringCameraBoneCoords.XAxis, FiringCameraBoneCoords.YAxis, FiringCameraBoneCoords.ZAxis)
             );
 
         // Get the linear theta.
         Theta = GetCameraInterpolationTheta();
 
         // Perform a smoothstep on the theta.
-        Theta = class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
+        Theta = Class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
 
         // Interpolate the camera position and rotation between the normal and firing camera positions.
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
@@ -406,7 +390,7 @@ simulated state Firing
         HandsActor.bHidden = Theta < 1.0;
 
         ViewActor = self;
-        CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
+        CameraLocation = Class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
 
         // Neutralize the roll to prevent motion sickness.
@@ -429,7 +413,7 @@ simulated state Firing
             // Trigger the firing animation on the driver.
             ServerPlayThirdPersonFiringAnim(Gun.ProjectileClass);
 
-            if (PC != none && GetGunPitch() > class'UUnits'.static.DegreesToUnreal(89))
+            if (PC != none && GetGunPitch() > Class'UUnits'.static.DegreesToUnreal(89))
             {
                 // "You have just launched a mortar round straight up into the air. You may want to take cover!"
                 PC.QueueHint(66, true);
@@ -466,54 +450,6 @@ Begin:
 function SuperFire()
 {
     super.Fire();
-}
-
-simulated function SetupGunAnimationDrivers()
-{
-    Gun.AnimBlendParams(PitchAnimationDriver.Channel, 1.0, 0.0, 0.0, PitchAnimationDriver.BoneName);
-    Gun.PlayAnim(PitchAnimationDriver.SequenceName, 1.0, 0.0, PitchAnimationDriver.Channel);
-    UpdateGunAnimationDrivers();
-}
-
-simulated function UpdateGunAnimationDrivers()
-{
-    local float Time;
-
-    if (Gun != none)
-    {
-        Time = class'UInterp'.static.MapRangeClamped(
-            GetGunPitch(),
-            GetGunPitchMin(), GetGunPitchMax(),
-            PitchAnimationDriver.SequenceFrameCount, 0.0
-            );
-
-        Gun.FreezeAnimAt(Time, PitchAnimationDriver.Channel);
-    }
-}
-
-// Modified so that we call our special tick function here.
-// TODO: Just move this to the base class.
-simulated state ViewTransition
-{
-    simulated function Tick(float DeltaTime)
-    {
-        super.Tick(DeltaTime);
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            UpdateGunAnimationDrivers();
-        }
-    }
-}
-
-simulated function Tick(float DeltaTime)
-{
-    super.Tick(DeltaTime);
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        UpdateGunAnimationDrivers();
-    }
 }
 
 simulated function ClientKDriverEnter(PlayerController PC)

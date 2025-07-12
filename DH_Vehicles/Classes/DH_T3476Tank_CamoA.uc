@@ -8,8 +8,8 @@ class DH_T3476Tank_CamoA extends DH_T3476Tank;
 defaultproperties
 {
 
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T3476_camoA_ext'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.T3476_camoA_ext'
 
-    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T3476_camoA_ext'
+    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.T3476_camoA_ext'
 
 }

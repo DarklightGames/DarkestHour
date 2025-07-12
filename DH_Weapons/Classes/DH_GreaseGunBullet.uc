@@ -11,5 +11,5 @@ defaultproperties
     BallisticCoefficient=0.195
     WhizType=2
     Damage=65.0
-    MyDamageType=class'DH_Weapons.DH_GreaseGunDamType'
+    MyDamageType=Class'DH_GreaseGunDamType'
 }

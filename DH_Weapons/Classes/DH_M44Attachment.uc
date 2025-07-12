@@ -8,9 +8,9 @@ class DH_M44Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.m44_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m44_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
+    MenuImage=Texture'DH_InterfaceArt_tex.m44_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
     bBayonetAttached=true

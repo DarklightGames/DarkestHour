@@ -43,7 +43,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         StartVelocityRange=(X=(Min=10.000000,Max=30.000000))
@@ -78,7 +78,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         InitialDelayRange=(Min=0.050000,Max=0.050000)
@@ -113,7 +113,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
     End Object
@@ -129,7 +129,7 @@ defaultproperties
         MaxParticles=1
         Name="SpriteEmitter5"
         StartSizeRange=(X=(Min=50.000000,Max=50.000000))
-        Texture=Texture'Effects_Tex.Smoke.glowfinal'
+        Texture=Texture'Effects_Tex.glowfinal'
         LifetimeRange=(Min=0.100000,Max=0.100000)
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter5'
@@ -158,7 +158,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.500000)
         StartSizeRange=(X=(Min=5.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         LifetimeRange=(Min=1.200000,Max=1.200000)
         StartVelocityRange=(X=(Max=40.000000),Z=(Min=10.000000,Max=20.000000))
         VelocityLossRange=(X=(Max=2.000000))
@@ -189,7 +189,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=25.000000,Max=50.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         LifetimeRange=(Min=1.500000,Max=3.000000)
         StartVelocityRange=(X=(Min=50.000000,Max=75.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))

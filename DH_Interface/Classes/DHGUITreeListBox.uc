@@ -12,6 +12,6 @@ defaultproperties
         bVisible=false
         OnPreDraw=DHTreeScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUITreeScrollBar'DH_Interface.DHGUITreeListBox.DHTreeScrollbar'
+    MyScrollBar=DHGUITreeScrollBar'DH_Interface.DHTreeScrollbar'
     StyleName="DHSmallText"
 }

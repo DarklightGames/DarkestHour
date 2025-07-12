@@ -11,6 +11,6 @@ defaultproperties
     BallisticCoefficient=0.14
     WhizType=2
     Damage=60.0
-    MyDamageType=class'DH_Weapons.DH_TT33DamType'
+    MyDamageType=Class'DH_TT33DamType'
 }
 

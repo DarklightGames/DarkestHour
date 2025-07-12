@@ -8,5 +8,5 @@ class DH_GermanSmockToqueHeerPawn extends DH_GermanPawn_Gloves;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_SmockToque'
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
+    Skins(1)=Texture'DHGermanCharactersTex.HeerSmockSnow1'
 }

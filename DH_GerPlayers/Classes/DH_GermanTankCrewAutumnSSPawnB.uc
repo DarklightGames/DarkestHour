@@ -7,9 +7,9 @@ class DH_GermanTankCrewAutumnSSPawnB extends DH_GermanTankCrewPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_2'
-    Skins(3)=Texture'DHGermanCharactersTex.WSS.WH_Panzer_1'
+    Skins(0)=Texture'DHGermanCharactersTex.SS_PanzerAutumn_2'
+    Skins(3)=Texture'DHGermanCharactersTex.WH_Panzer_1'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.WH_Panzer_1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_2'
+    BodySkins(0)=Texture'DHGermanCharactersTex.WH_Panzer_1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.SS_PanzerAutumn_2'
 }

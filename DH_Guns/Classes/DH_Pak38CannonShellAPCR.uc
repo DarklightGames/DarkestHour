@@ -17,7 +17,7 @@ defaultproperties
     //Damage
     bShatterProne=true
     ImpactDamage=310
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
+    ShellImpactDamage=Class'DH_PanzerIIILCannonShellDamageAPCR'
     HullFireChance=0.4
     EngineFireChance=0.6
 
@@ -35,9 +35,9 @@ defaultproperties
     DHPenetrationTable(10)=1.4
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    StaticMesh=StaticMesh'DH_Tracers.German_shell'
 
     bDebugInImperial=false
 

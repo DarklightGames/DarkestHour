@@ -51,7 +51,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.000000,Max=2.000000),Y=(Min=1.000000,Max=2.000000),Z=(Min=1.000000,Max=2.000000))
         InitialParticlesPerSecond=0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         LifetimeRange=(Min=1.500000,Max=1.500000)
         InitialDelayRange=(Min=0.0,Max=0.0) // was 0.3 to 0.4
     End Object

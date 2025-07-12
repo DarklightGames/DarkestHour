@@ -7,5 +7,5 @@ class DH_JacksonFactory_Early extends DH_JacksonFactory; // earlier version with
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_JacksonTank_Early'
+    VehicleClass=Class'DH_JacksonTank_Early'
 }

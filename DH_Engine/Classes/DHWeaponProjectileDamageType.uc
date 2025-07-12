@@ -17,5 +17,5 @@ defaultproperties
     VehicleDamageModifier=0.1
     KDamageImpulse=2250.0 // default for full power rifle ammo
     GibModifier=0.0
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROBloodPuff'
 }

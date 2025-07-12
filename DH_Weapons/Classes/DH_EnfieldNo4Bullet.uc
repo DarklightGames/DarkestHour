@@ -10,5 +10,5 @@ defaultproperties
     Speed=44902.0
     BallisticCoefficient=0.39
     Damage=115.0
-    MyDamageType=class'DH_Weapons.DH_EnfieldNo4DamType'
+    MyDamageType=Class'DH_EnfieldNo4DamType'
 }

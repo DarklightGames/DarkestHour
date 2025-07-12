@@ -207,7 +207,7 @@ simulated function bool CanDeploy(DHPawn P)
     // Display a screen message to the player saying why he can't deploy
     if (Error != DE_None)
     {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', int(Error));
+        P.ReceiveLocalizedMessage(Class'DHMortarMessage', int(Error));
 
         return false;
     }

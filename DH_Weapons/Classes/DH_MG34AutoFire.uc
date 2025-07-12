@@ -7,9 +7,9 @@ class DH_MG34AutoFire extends DHFastAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
+    ProjectileClass=Class'DH_MG34Bullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
+    AmmoClass=Class'MG50Rd792x57DrumAmmo'
     FireRate=0.08 // 862 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=7
     Spread=88.0
@@ -25,9 +25,9 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=34.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Y=0.0,Z=-10.0)
     ShellRotOffsetIron=(Pitch=3000)
     FireEndAnim="Hip_Shoot_End"

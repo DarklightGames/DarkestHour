@@ -24,7 +24,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.000000,Max=7.000000),Y=(Min=0.000000,Max=7.000000),Z=(Min=0.000000,Max=7.000000))
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.Sparks.ElectricalSparks'
+        Texture=Texture'DH_FX_Tex.ElectricalSparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.030000,Max=0.120000)
@@ -49,7 +49,7 @@ defaultproperties
       
         StartSizeRange=(X=(Min=0.800000,Max=2.000000),Y=(Min=0.800000,Max=2.000000),Z=(Min=0.800000,Max=2.000000))
         InitialParticlesPerSecond=5.000000
-        Texture=Texture'DH_FX_Tex.Effects.dhweaponspark'
+        Texture=Texture'DH_FX_Tex.dhweaponspark'
         LifetimeRange=(Min=1.500000,Max=1.500000)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=20.000000,Max=80.000000))
     End Object
@@ -75,7 +75,7 @@ defaultproperties
         SizeScale(0)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=2.000000,Max=4.000000),Y=(Min=2.000000,Max=4.000000),Z=(Min=2.000000,Max=4.000000))
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.papersmoke'
+        Texture=Texture'Effects_Tex.papersmoke'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=2.000000)

@@ -10,7 +10,7 @@ final static function UFloat Create(optional float Value)
 {
     local UFloat F;
 
-    F = new class'UFloat';
+    F = new Class'UFloat';
     F.Value = Value;
 
     return F;

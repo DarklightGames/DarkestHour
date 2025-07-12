@@ -18,10 +18,10 @@ defaultproperties
     HullFireChance=0.12
     EngineFireChance=0.2
 
-    MyDamageType=class'DH_Weapons.DH_GeratPIIDamType'
+    MyDamageType=Class'DH_GeratPIIDamType'
     
     bHasTracer=true
-    TracerEffectClass=class'DH_Effects.DHBulletTracer_YellowOrange'
+    TracerEffectClass=Class'DHBulletTracer_YellowOrange'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     SpeedFudgeScale=0.50

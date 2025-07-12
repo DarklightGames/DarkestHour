@@ -19,11 +19,11 @@ defaultproperties
     CustomPitchDownLimit=63767
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    ProjectileClass=Class'DH_Breda38Bullet'
     InitialPrimaryAmmo=24
     NumMGMags=20
     FireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
+    TracerProjectileClass=Class'DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire

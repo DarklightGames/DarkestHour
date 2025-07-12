@@ -7,5 +7,5 @@ class DH_ShermanCannonPawn_DDay extends DH_ShermanCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ShermanCannon_DDay'
+    GunClass=Class'DH_ShermanCannon_DDay'
 }

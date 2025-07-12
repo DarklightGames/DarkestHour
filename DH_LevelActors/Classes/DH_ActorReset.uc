@@ -17,7 +17,7 @@ function PostBeginPlay()
         return; //Actor tag wasn't set no reason to continue
     }
 
-    foreach AllActors(class'Actor', ActorReference, ActorToReset)
+    foreach AllActors(Class'Actor', ActorReference, ActorToReset)
     {
         break;
     }

@@ -82,6 +82,6 @@ defaultproperties
     OpticalRangeTables(1)=RangeTable2
 
     GunsightSize=0.4
-    GunsightOverlay=Texture'DH_Semovente9053_tex.Interface.semovente9053_sight_background'
-    CannonScopeCenter=Texture'DH_Semovente9053_tex.interface.semovente9053_sight_mover'
+    GunsightOverlay=Texture'DH_Semovente9053_tex.semovente9053_sight_background'
+    CannonScopeCenter=Texture'DH_Semovente9053_tex.semovente9053_sight_mover'
 }

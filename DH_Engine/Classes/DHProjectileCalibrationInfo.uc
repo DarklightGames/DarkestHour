@@ -20,8 +20,8 @@ function LogHit(Vector HitLocation)
 
     if (VehicleWeapon != none)
     {
-        Distance = class'DHUnits'.static.UnrealToMeters(VSize(HitLocation - StartLocation));
-        Angle = class'UUnits'.static.ConvertAngleUnit(DebugAngleValue, AU_Unreal, DebugAngleUnit);
+        Distance = Class'DHUnits'.static.UnrealToMeters(VSize(HitLocation - StartLocation));
+        Angle = Class'UUnits'.static.ConvertAngleUnit(DebugAngleValue, AU_Unreal, DebugAngleUnit);
 
         Log("" $ Angle $ "," $ Distance);
     }

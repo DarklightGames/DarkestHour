@@ -7,8 +7,8 @@ class DHCannonShellSmoke extends DHCannonShellHE
     abstract;
 
 var  class<Emitter> SmokeEmitterClass;
-var  sound          SmokeIgniteSound;
-var  sound          SmokeLoopSound;
+var  Sound          SmokeIgniteSound;
+var  Sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
 // Modified to add smoke effects
@@ -53,16 +53,16 @@ defaultproperties
 {
     RoundType=RT_Smoke
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Shell'
-    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeEmitterClass=Class'DHSmokeEffect_Shell'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smoke_loop'
     SmokeSoundDuration=33.0
     ImpactDamage=125
     BallisticCoefficient=0.6
     MaxSpeed=500.0
     Damage=75.0
     DamageRadius=50.0
-    MyDamageType=class'DH_Engine.DHShellSmokeDamageType'
+    MyDamageType=Class'DHShellSmokeDamageType'
     LifeSpan=12.0
     AmbientGlow=50
 //  SoundVolume=175 // removed as affects shell's flight 'whistle' & smoke sounds (i.e. AmbientSound), not the explosion sound volume (same with radius below)

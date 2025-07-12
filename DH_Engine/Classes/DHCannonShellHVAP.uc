@@ -11,6 +11,6 @@ defaultproperties
     RoundType=RT_HVAP
     bShatterProne=true
     SpeedFudgeScale=0.4
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellImpactDamage=Class'DHShellSubCalibreImpactDamageType'
+    CoronaClass=Class'DHShellTracer_Red'
 }

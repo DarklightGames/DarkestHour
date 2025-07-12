@@ -7,5 +7,5 @@ class DHShellTracer_White extends DHShellTracer;
 
 defaultproperties
 {
-    Texture=Texture'DH_FX_Tex.Effects.FlareWhite'
+    Texture=Texture'DH_FX_Tex.FlareWhite'
 }

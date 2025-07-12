@@ -12,10 +12,10 @@ event InitializeController()
 {
     super.InitializeController();
 
-    RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
-    RegisterStyle(class'ROInterface.ROSTY2SelectButton');
-    RegisterStyle(class'ROInterface.ROSTY2SelectTab');
-    RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
+    RegisterStyle(Class'ROSTY2_ImageButton');
+    RegisterStyle(Class'ROSTY2SelectButton');
+    RegisterStyle(Class'ROSTY2SelectTab');
+    RegisterStyle(Class'ROSTY_CaptionLabel');
 
     LastGameType = "DH_Engine.DarkestHourGame";
 }
@@ -303,17 +303,17 @@ simulated static function string GetQuitPage()
 defaultproperties
 {
     FONT_NUM=17
-    FontStack(0)=fntUT2k4Menu'ROInterface.ROGUIController.GUIMenuFont'
-    FontStack(1)=fntUT2k4Default'ROInterface.ROGUIController.GUIDefaultFont'
-    FontStack(2)=fntUT2k4Large'ROInterface.ROGUIController.GUILargeFont'
-    FontStack(3)=fntUT2k4Header'ROInterface.ROGUIController.GUIHeaderFont'
-    FontStack(4)=fntUT2k4Small'ROInterface.ROGUIController.GUISmallFont'
-    FontStack(5)=fntUT2k4MidGame'ROInterface.ROGUIController.GUIMidGameFont'
-    FontStack(6)=fntUT2k4SmallHeader'ROInterface.ROGUIController.GUISmallHeaderFont'
-    FontStack(7)=fntUT2k4ServerList'ROInterface.ROGUIController.GUIServerListFont'
-    FontStack(8)=fntUT2k4IRC'ROInterface.ROGUIController.GUIIRCFont'
-    FontStack(9)=fntROMainMenu'ROInterface.ROGUIController.GUIMainMenuFont'
-    FontStack(10)=fntUT2K4Medium'ROInterface.ROGUIController.GUIMediumMenuFont'
+    FontStack(0)=fntUT2k4Menu'ROInterface.GUIMenuFont'
+    FontStack(1)=fntUT2k4Default'ROInterface.GUIDefaultFont'
+    FontStack(2)=fntUT2k4Large'ROInterface.GUILargeFont'
+    FontStack(3)=fntUT2k4Header'ROInterface.GUIHeaderFont'
+    FontStack(4)=fntUT2k4Small'ROInterface.GUISmallFont'
+    FontStack(5)=fntUT2k4MidGame'ROInterface.GUIMidGameFont'
+    FontStack(6)=fntUT2k4SmallHeader'ROInterface.GUISmallHeaderFont'
+    FontStack(7)=fntUT2k4ServerList'ROInterface.GUIServerListFont'
+    FontStack(8)=fntUT2k4IRC'ROInterface.GUIIRCFont'
+    FontStack(9)=fntROMainMenu'ROInterface.GUIMainMenuFont'
+    FontStack(10)=fntUT2K4Medium'ROInterface.GUIMediumMenuFont'
     Begin Object Class=DHMenuFont Name=fntDHMenuFont
     End Object
     FontStack(11)=fntDHMenuFont
@@ -338,21 +338,21 @@ defaultproperties
     Begin Object class=DHSmallFontDS Name=fntDHSmallFontDS
     End Object
     FontStack(18)=fntDHSmallFontDS
-    MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
-    MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'
-    MouseCursors(2)=Texture'InterfaceArt_tex.Cursors.ResizeSWNE'
-    MouseCursors(3)=Texture'InterfaceArt_tex.Cursors.Resize'
-    MouseCursors(4)=Texture'InterfaceArt_tex.Cursors.ResizeNWSE'
-    MouseCursors(5)=Texture'InterfaceArt_tex.Cursors.ResizeHorz'
-    MouseCursors(6)=Texture'DH_GUI_Tex.Menu.DHPointer'
-    ImageList(0)=Texture'InterfaceArt_tex.Menu.checkBoxBall_b'
-    ImageList(1)=Texture'InterfaceArt_tex.Menu.AltComboTickBlurry'
-    ImageList(2)=Texture'InterfaceArt_tex.Menu.LeftMark'
-    ImageList(3)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(4)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(5)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(6)=Texture'InterfaceArt_tex.Menu.UpMark'
-    ImageList(7)=Texture'InterfaceArt_tex.Menu.DownMark'
+    MouseCursors(0)=Texture'DH_GUI_Tex.DHPointer'
+    MouseCursors(1)=Texture'InterfaceArt_tex.ResizeAll'
+    MouseCursors(2)=Texture'InterfaceArt_tex.ResizeSWNE'
+    MouseCursors(3)=Texture'InterfaceArt_tex.Resize'
+    MouseCursors(4)=Texture'InterfaceArt_tex.ResizeNWSE'
+    MouseCursors(5)=Texture'InterfaceArt_tex.ResizeHorz'
+    MouseCursors(6)=Texture'DH_GUI_Tex.DHPointer'
+    ImageList(0)=Texture'InterfaceArt_tex.checkBoxBall_b'
+    ImageList(1)=Texture'InterfaceArt_tex.AltComboTickBlurry'
+    ImageList(2)=Texture'InterfaceArt_tex.LeftMark'
+    ImageList(3)=Texture'InterfaceArt_tex.RightMark'
+    ImageList(4)=Texture'InterfaceArt_tex.RightMark'
+    ImageList(5)=Texture'InterfaceArt_tex.RightMark'
+    ImageList(6)=Texture'InterfaceArt_tex.UpMark'
+    ImageList(7)=Texture'InterfaceArt_tex.DownMark'
     DefaultStyleNames(0)="ROInterface.ROSTY2CloseButton"
     DefaultStyleNames(1)="ROInterface.ROSTY_RoundScaledButton"
     DefaultStyleNames(2)="DH_Interface.DHStyle_SquareButton"
@@ -447,5 +447,5 @@ defaultproperties
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"
     MainMenuOptions(3)="DH_Interface.DHSettingsPage"
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
-    LCDLogo=Texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
+    LCDLogo=Texture'DH_G15LCD.DH_BWLogoRGB8A'
 }

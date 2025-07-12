@@ -19,7 +19,7 @@ function PostBeginPlay()
     //Spawn areas are dynamic so use dynamic actor list
     for (i = 0; i < SpawnsToModify.Length; ++i)
     {
-        foreach DynamicActors(class'ROSpawnArea', ROSA, SpawnsToModify[i])
+        foreach DynamicActors(Class'ROSpawnArea', ROSA, SpawnsToModify[i])
         {
             SpawnReference.Insert(0, 1); //Adds a new spot at index for the attached Spawns
             SpawnReference[0] = ROSA; //Sets the attached Spawns in the reference array

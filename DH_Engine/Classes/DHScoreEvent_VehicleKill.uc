@@ -11,7 +11,7 @@ static function DHScoreEvent_VehicleKill Create(class<DHVehicle> VehicleClass)
 {
     local DHScoreEvent_VehicleKill ScoreEvent;
 
-    ScoreEvent = new class'DHScoreEvent_VehicleKill';
+    ScoreEvent = new Class'DHScoreEvent_VehicleKill';
     ScoreEvent.VehicleClass = VehicleClass;
 
     return ScoreEvent;
@@ -25,6 +25,6 @@ function int GetValue()
 defaultproperties
 {
     HumanReadableName="Vehicle Kill"
-    CategoryClass=class'DHScoreCategory_Combat'
+    CategoryClass=Class'DHScoreCategory_Combat'
 }
 

@@ -7,8 +7,8 @@ class DH_ShermanCannonA_76mm_Early extends DH_ShermanCannonA_76mm;
 
 defaultproperties
 {
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+    SecondaryProjectileClass=Class'DH_ShermanM4A176WCannonShellHE'
+    TertiaryProjectileClass=Class'DH_ShermanM4A176WCannonShellSmoke'
 
 
     ProjectileDescriptions(1)="HE"

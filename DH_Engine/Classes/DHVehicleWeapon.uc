@@ -66,7 +66,7 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Reloading
 struct ReloadStage
 {
-    var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+    var     Sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
     var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
     var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
@@ -108,6 +108,37 @@ var() enum EProjectileRotationMode {
 var()   float               FireBlurTime;
 var()   float               FireBlurScale;
 
+// TODO: this can go into the top-level weapon class.
+// Gun wheels
+enum ERotationType
+{
+    ROTATION_Yaw,
+    ROTATION_Pitch
+};
+
+struct SGunWheel
+{
+    var() ERotationType   RotationType;
+    var() name            BoneName;
+    var() float           Scale;
+    var() EAxis           RotationAxis;
+};
+
+var() array<SGunWheel> GunWheels;
+
+// Animation drivers for playing animations based on the turret's rotation.
+struct SAnimationDriver
+{
+    var() name          BoneName;
+    var() name          AnimationName;
+    var() int           AnimationFrameCount;
+    var() int           Channel;
+    var() ERotationType RotationType;
+    var() bool          bIsReversed;
+};
+
+var() array<SAnimationDriver> AnimationDrivers;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -138,6 +169,11 @@ simulated function PostBeginPlay()
         // Separate animation channel for driver camera.
         AnimBlendParams(DriverAnimationChannel, 1.0,,, DriverAnimationChannelBone);
     }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupAnimationDrivers();
+    }
 }
 
 // Spawns the vehicle attachments. This is only run for the client.
@@ -158,7 +194,7 @@ simulated function SpawnVehicleAttachments()
         
         if (VA.AttachClass == none)
         {
-            VA.AttachClass = class'DHDecoAttachment';
+            VA.AttachClass = Class'DHDecoAttachment';
         }
 
         VA.Actor = Spawn(VA.AttachClass, self);
@@ -170,7 +206,7 @@ simulated function SpawnVehicleAttachments()
         }
 
         // Assign the radio to the correct team if we are attaching a radio.
-        if (VA.AttachClass == class'DHRadio')
+        if (VA.AttachClass == Class'DHRadio')
         {
             Radio = DHRadio(VA.Actor);
             Radio.TeamIndex = NEUTRAL_TEAM_INDEX;
@@ -178,12 +214,12 @@ simulated function SpawnVehicleAttachments()
 
             if (VA.RadioCollisionRadius == 0.0)
             {
-                VA.RadioCollisionRadius = class'DHRadio'.default.CollisionRadius;
+                VA.RadioCollisionRadius = Class'DHRadio'.default.CollisionRadius;
             }
 
             if (VA.RadioCollisionHeight == 0.0)
             {
-                VA.RadioCollisionHeight = class'DHRadio'.default.CollisionHeight;
+                VA.RadioCollisionHeight = Class'DHRadio'.default.CollisionHeight;
             }
             
             Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
@@ -246,7 +282,7 @@ simulated function SpawnWeaponAttachments()
             {
                 if (VA.AttachClass == none)
                 {
-                    VA.AttachClass = class'DHDecoAttachment';
+                    VA.AttachClass = Class'DHDecoAttachment';
                 }
 
                 Attachment = V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
@@ -275,6 +311,21 @@ simulated function SpawnWeaponAttachments()
     }
 }
 
+simulated function int GetGunPitchMin()
+{
+    if (CustomPitchDownLimit >= 32768)
+    {
+        return CustomPitchDownLimit - 65535;
+    }
+    
+    return CustomPitchDownLimit;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return CustomPitchUpLimit;
+}
+
 simulated function AttachCollisionMeshes()
 {
     local name AttachBone;
@@ -294,7 +345,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
 
         if (CMA != none)
         {
@@ -351,6 +402,8 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = false;
         bInitializedVehicleAndWeaponPawn = false;
     }
+    
+    UpdateGunWheels();
 }
 
 // Implemented here to handle multi-stage reload
@@ -848,7 +901,7 @@ simulated function Sound GetFireSound()
 simulated function DryFireEffects(optional bool bAltFire)
 {
     ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1461,6 +1514,96 @@ state InstantFireMode
 simulated function SimulateTraceFire(out Vector Start, out Rotator Dir, out Vector HitLocation, out Vector HitNormal);
 function TraceFire(Vector Start, Rotator Dir);
 
+// Animation Drivers & Gun Wheels
+simulated function SetupAnimationDrivers()
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        AnimBlendParams(AnimationDrivers[i].Channel, 1.0,,, AnimationDrivers[i].BoneName);
+        PlayAnim(AnimationDrivers[i].AnimationName, 1.0, 0.0, AnimationDrivers[i].Channel);
+    }
+
+    UpdateAnimationDrivers();
+}
+
+simulated function UpdateAnimationDrivers()
+{
+    local int i, CurrentPitch;
+    local float Theta;
+
+    for (i = 0;  i < AnimationDrivers.Length; ++i)
+    {
+        switch (AnimationDrivers[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                // Get the yaw min->max range.
+                Theta = Class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                break;
+            case ROTATION_Pitch:
+                if (CurrentAim.Pitch > 32768)
+                {
+                    CurrentPitch = CurrentAim.Pitch - 65536;
+                }
+                else
+                {
+                    CurrentPitch = CurrentAim.Pitch;
+                }
+
+                Theta = Class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                break;
+        }
+
+        if (AnimationDrivers[i].bIsReversed)
+        {
+            Theta = 1.0 - Theta;
+        }
+
+        FreezeAnimAt(Theta * AnimationDrivers[i].AnimationFrameCount, AnimationDrivers[i].Channel);
+    }
+}
+
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateGunWheels()
+{
+    local int i;
+    local Rotator BoneRotation;
+    local int Value;
+
+    for (i = 0; i < GunWheels.Length; ++i)
+    {
+        BoneRotation = rot(0, 0, 0);
+
+        switch (GunWheels[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                Value = CurrentAim.Yaw * GunWheels[i].Scale;
+                break;
+            case ROTATION_Pitch:
+                Value = CurrentAim.Pitch * GunWheels[i].Scale;
+                break;
+            default:
+                break;
+        }
+
+        switch (GunWheels[i].RotationAxis)
+        {
+            case AXIS_X:
+                BoneRotation.Roll = Value;
+                break;
+            case AXIS_Y:
+                BoneRotation.Pitch = Value;
+                break;
+            case AXIS_Z:
+                BoneRotation.Yaw = Value;
+                break;
+        }
+
+        SetBoneRotation(GunWheels[i].BoneName, BoneRotation);
+    }
+}
+
 defaultproperties
 {
     bNetNotify=true // necessary to do set up requiring the 'Base' actor reference to the vehicle base
@@ -1469,7 +1612,7 @@ defaultproperties
     PitchUpLimit=15000
     PitchDownLimit=45000
     SoundRadius=272.7
-    FireEffectClass=class'DH_Effects.DHTurretFireEffect'
+    FireEffectClass=Class'DHTurretFireEffect'
     FireEffectScale=1.0
     bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
     bAutoTraceNotify=true

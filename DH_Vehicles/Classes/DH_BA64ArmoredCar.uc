@@ -20,17 +20,17 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BA64_anm.BA64_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.BA64_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
-    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.BA64_int_s'
+    Skins(0)=Texture'allies_vehicles_tex.BA64_ext'
+    Skins(1)=Texture'allies_vehicles_tex.BA64_int'
+    HighDetailOverlay=Material'allies_vehicles_tex.BA64_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BA64MGPawn',WeaponBone=turret_placement)
 
     // Collision
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BA64.BA64_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BA64_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Driver
     DriverAttachmentBone=driver_attachment
@@ -42,7 +42,7 @@ defaultproperties
     BeginningIdleAnim=driver_hatch_idle_close
 
     // Driver overlay
-    HUDOverlayClass=class'ROVehicles.BA64DriverOverlay'
+    HUDOverlayClass=Class'BA64DriverOverlay'
     HUDOverlayOffset=(X=2,Y=0,Z=0)
     HUDOverlayFOV=85
 
@@ -137,19 +137,19 @@ defaultproperties
     ExitPositions(1)=(X=-92.0,Y=4.0,Z=150.0)
 
     // Sounds
-    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.ba64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-20,Y=30,Z=-35),ExhaustRotation=(pitch=34000,yaw=-5000,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.BA64_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BA64_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BA64_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.BA64_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.BA64_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.BA64_turret_look'
     VehicleHudEngineX=0.5
     VehicleHudEngineY=0.3
     VehicleHudOccupantsX(0)=0.5
@@ -158,7 +158,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.5
     VehicleHudOccupantsY(1)=0.665
     VehicleHudOccupantsY(2)=none
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.ba64'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.ba64'
 
     // Physics wheels
      Begin Object Class=SVehicleWheel Name=LFWheel
@@ -171,7 +171,7 @@ defaultproperties
          SupportBoneName="Axle_RF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BA64ArmoredCar.LFWheel'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.LFWheel'
 
      Begin Object Class=SVehicleWheel Name=RFWheel
          bPoweredWheel=False
@@ -183,7 +183,7 @@ defaultproperties
          SupportBoneName="Axle_LF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BA64ArmoredCar.RFWheel'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.RFWheel'
 
      Begin Object Class=SVehicleWheel Name=LRWheel
          bPoweredWheel=True
@@ -195,7 +195,7 @@ defaultproperties
          SupportBoneName="Axle_LR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BA64ArmoredCar.LRWheel'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.LRWheel'
 
      Begin Object Class=SVehicleWheel Name=RRWheel
          bPoweredWheel=True
@@ -207,7 +207,7 @@ defaultproperties
          SupportBoneName="Axle_RR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BA64ArmoredCar.RRWheel'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.RRWheel'
 
     // Karma
      Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -227,5 +227,5 @@ defaultproperties
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object
-     KParams=KarmaParamsRBFull'DH_Vehicles.DH_BA64ArmoredCar.KParams0'
+     KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

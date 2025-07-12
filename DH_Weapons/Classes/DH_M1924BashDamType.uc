@@ -8,5 +8,5 @@ class DH_M1924BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M1924Weapon'
+    WeaponClass=Class'DH_M1924Weapon'
 }

@@ -21,7 +21,7 @@ defaultproperties
     Physics=PHYS_Falling
     DrawType=DT_StaticMesh
     bFixedRotationDir=true
-    StaticMesh=StaticMesh'DH_SRCMMod35_stc.world.srcm_spoon'
+    StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_spoon'
     RemoteRole=ROLE_None
     LifeSpan=10.0
     bBlockProjectiles=false

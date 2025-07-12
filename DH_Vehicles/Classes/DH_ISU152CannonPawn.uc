@@ -40,7 +40,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ISU152Cannon'
+    GunClass=Class'DH_ISU152Cannon'
     DriverPositions(0)=(ViewFOV=42.5,ViewLocation=(X=30.0,Y=-10.5,Z=8.0),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=85.0,ViewLocation=(X=7.0,Y=0.0,Z=11.5),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',ViewPitchDownLimit=65536,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(ViewFOV=17.0,ViewLocation=(X=7.0,Y=0.0,Z=11.5),PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_int',TransitionUpAnim="com_open",ViewPitchDownLimit=65536,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
@@ -58,14 +58,14 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true // stops player looking sideways & seeing through the vehicle
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
-    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.isu152_sight_background'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.424 // 18 degrees visible FOV at 2x magnification (ST-10 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.ISU152_shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ISU152_shell_reload'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_gun_traverse'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_gun_traverse'
     FireImpulse=(X=-200000.0)
 }

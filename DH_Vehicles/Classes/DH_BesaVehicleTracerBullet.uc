@@ -8,7 +8,7 @@ class DH_BesaVehicleTracerBullet extends DH_BesaVehicleBullet;
 defaultproperties
 {
     bIsTracerBullet=true
-    TracerEffectClass=class'DH_Effects.DHBulletTracer_Red'
+    TracerEffectClass=Class'DHBulletTracer_Red'
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'//'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'
     SpeedFudgeScale=0.50

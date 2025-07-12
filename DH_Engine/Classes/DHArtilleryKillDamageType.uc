@@ -8,5 +8,5 @@ class DHArtilleryKillDamageType extends DHInstantObituaryDamageTypes
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=Texture'InterfaceArt_tex.artkill'
 }

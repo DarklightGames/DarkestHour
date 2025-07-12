@@ -32,7 +32,7 @@ simulated function SetEmitterStatus(bool bEnabled)
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.50calShellCase'
+        StaticMesh=StaticMesh'DH_WeaponPickups.50calShellCase'
         UseCollision=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -48,7 +48,7 @@ defaultproperties
         StartVelocityRange=(X=(Min=-1.0,Max=1.0),Y=(Min=25.0,Max=100.0),Z=(Min=0.1,Max=1.0))
         StartVelocityRadialRange=(Min=-250.0,Max=250.0)
     End Object
-    Emitters(0)=MeshEmitter'DH_Vehicles.DH_Vehicle50CalMGEmitter.MeshEmitter0'
+    Emitters(0)=MeshEmitter'DH_Vehicles.MeshEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         RespawnDeadParticles=false
@@ -70,12 +70,12 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.0)
         StartSizeRange=(X=(Min=4.0,Max=5.0))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+        Texture=Texture'Effects_Tex.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.1)
     End Object
-    Emitters(1)=SpriteEmitter'DH_Vehicles.DH_Vehicle50CalMGEmitter.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'DH_Vehicles.SpriteEmitter1'
 
     bUnlit=false
     bNoDelete=false

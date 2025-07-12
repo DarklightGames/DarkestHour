@@ -8,5 +8,5 @@ class DH_AVT40BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_AVT40Weapon'
+    WeaponClass=Class'DH_AVT40Weapon'
 }

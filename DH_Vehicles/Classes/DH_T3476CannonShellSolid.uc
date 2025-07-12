@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=530  //solid shell - no filler
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanCannonShellDamageAP'
     HullFireChance=0.26
     EngineFireChance=0.66
 

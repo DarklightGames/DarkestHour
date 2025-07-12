@@ -124,7 +124,7 @@ auto state Timing
 
                     if (PC != none)
                     {
-                        PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
+                        PC.ReceiveLocalizedMessage(Class'DHSetupPhaseMessage', Class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
                     }
                 }
             }
@@ -171,7 +171,7 @@ auto state Timing
         // Disable phase minefields (volumes are static, so use AllActors)
         if (PhaseMineFieldTag != '')
         {
-            foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
+            foreach AllActors(Class'ROMineVolume', V, PhaseMineFieldTag)
             {
                 V.Deactivate();
             }
@@ -180,7 +180,7 @@ auto state Timing
         if (PhaseBoundaryTag != '')
         {
             // Remove boundary (DSMs are dynamic)
-            foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
+            foreach DynamicActors(Class'DHDestroyableSM', DSM, PhaseBoundaryTag)
             {
                 DSM.DestroyDSM(none);
             }
@@ -251,7 +251,7 @@ auto state Timing
         }
 
         // Announce the end of the phase
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         TeamRoundStartSounds[AXIS_TEAM_INDEX] = LI.GetTeamNationClass(AXIS_TEAM_INDEX).default.RoundStartSound;
         TeamRoundStartSounds[ALLIES_TEAM_INDEX] = LI.GetTeamNationClass(ALLIES_TEAM_INDEX).default.RoundStartSound;
@@ -262,7 +262,7 @@ auto state Timing
 
             if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
-                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', 1);
+                PC.ReceiveLocalizedMessage(Class'DHSetupPhaseMessage', 1);
                 PC.PlayAnnouncement(TeamRoundStartSounds[PC.GetTeamNum()], 1, true);
             }
         }

@@ -40,7 +40,7 @@ function InternalOnButtonClick(byte bButton)
     switch (bButton)
     {
         case QBTN_OK:
-            PlayerOwner().ConsoleCommand("START" @ class'DHMainMenu'.default.DiscordURL);
+            PlayerOwner().ConsoleCommand("START" @ Class'DHMainMenu'.default.DiscordURL);
             break;
     }
 }
@@ -64,7 +64,7 @@ defaultproperties
         OnPreDraw=DHServerBrowser.ComboOnPreDraw
         OnLoadINI=DHServerBrowser.InternalOnLoadINI
     End Object
-    co_GameType=DHmoComboBox'DH_Interface.DHServerBrowser.GameTypeCombo'
+    co_GameType=DHmoComboBox'DH_Interface.GameTypeCombo'
 
     Begin Object Class=DHGUITabControl Name=PageTabs
         bFillSpace=false
@@ -78,14 +78,14 @@ defaultproperties
         OnActivate=PageTabs.InternalOnActivate
         OnChange=DHServerBrowser.InternalOnChange
     End Object
-    c_Tabs=DHGUITabControl'DH_Interface.DHServerBrowser.PageTabs'
+    c_Tabs=DHGUITabControl'DH_Interface.PageTabs'
 
     Begin Object Class=DHGUIHeader Name=ServerBrowserHeader
         bUseTextHeight=true
         Caption="Server Browser"
         StyleName="DHTopper"
     End Object
-    t_Header=DHGUIHeader'DH_Interface.DHServerBrowser.ServerBrowserHeader'
+    t_Header=DHGUIHeader'DH_Interface.ServerBrowserHeader'
 
     Begin Object Class=DHBrowser_Footer Name=FooterPanel
         Spacer=0.01
@@ -94,10 +94,10 @@ defaultproperties
         TabOrder=4
         OnPreDraw=FooterPanel.InternalOnPreDraw
     End Object
-    t_Footer=DHBrowser_Footer'DH_Interface.DHServerBrowser.FooterPanel'
+    t_Footer=DHBrowser_Footer'DH_Interface.FooterPanel'
 
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.MultiMenuBack'
+        Image=Texture'DH_GUI_Tex.MultiMenuBack'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -105,7 +105,7 @@ defaultproperties
         X2=1024
         Y2=1024
     End Object
-    i_Background=BackgroundImage'DH_Interface.DHServerBrowser.PageBackground'
+    i_Background=BackgroundImage'DH_Interface.PageBackground'
 
     PanelClass(0)="DH_Interface.DHBrowser_ServerListPageFavorites"
     PanelClass(1)="DH_Interface.DHBrowser_ServerListPageLAN"

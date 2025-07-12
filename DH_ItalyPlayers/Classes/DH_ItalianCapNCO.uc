@@ -8,5 +8,5 @@ class DH_ItalianCapNCO extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ita_cap_nco'
-    Skins(0)=Texture'DHItalianCharactersTex.Gear.ita_gear'
+    Skins(0)=Texture'DHItalianCharactersTex.ita_gear'
 }

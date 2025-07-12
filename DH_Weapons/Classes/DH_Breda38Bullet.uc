@@ -12,5 +12,5 @@ defaultproperties
     Speed=46471 // 770 m/s [1]
     BallisticCoefficient=0.515
     Damage=120.0
-    MyDamageType=class'DH_Weapons.DH_Breda38DamType'
+    MyDamageType=Class'DH_Breda38DamType'
 }

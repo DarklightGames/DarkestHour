@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=3
     InitialAmount=2
-    IconMaterial=Material'DH_SRCMMod35_tex.interface.srcm_frag_ammo'
+    IconMaterial=Material'DH_SRCMMod35_tex.srcm_frag_ammo'
 }

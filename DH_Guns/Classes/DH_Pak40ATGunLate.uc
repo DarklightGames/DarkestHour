@@ -7,5 +7,5 @@ class DH_Pak40ATGunLate extends DH_Pak40ATGun; // late war version with much les
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawnLate')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak40CannonPawnLate')
 }

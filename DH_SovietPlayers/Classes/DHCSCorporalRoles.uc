@@ -9,11 +9,11 @@ class DHCSCorporalRoles extends DHAlliedCorporalRoles
 defaultproperties
 {
     AltName="Desatnik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPSH41_stickWeapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
+    PrimaryWeapons(0)=(Item=Class'DH_SVT40Weapon',AssociatedAttachment=Class'ROInventory.SVT40AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_PPSH41_stickWeapon',AssociatedAttachment=Class'ROInventory.ROPPS43AmmoPouch')
+    Grenades(0)=(Item=Class'DH_F1GrenadeWeapon')
+    Grenades(1)=(Item=Class'DH_RDG1SmokeGrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHCzechVoice"
     AltVoiceType="DH_SovietPlayers.DHCzechVoice"
-    GlovedHandTexture=Texture'DHBritishCharactersTex.Winter.hands_BRITgloves'
+    GlovedHandTexture=Texture'DHBritishCharactersTex.hands_BRITgloves'
 }

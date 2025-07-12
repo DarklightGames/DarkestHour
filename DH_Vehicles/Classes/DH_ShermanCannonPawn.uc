@@ -8,7 +8,7 @@ class DH_ShermanCannonPawn extends DHAmericanCannonPawn;
 defaultproperties
 {
     //Gun Class
-    GunClass=class'DH_Vehicles.DH_ShermanCannon'
+    GunClass=Class'DH_ShermanCannon'
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=21.0,Y=19.0,Z=4.0),ViewFOV=25.0,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
@@ -22,16 +22,16 @@ defaultproperties
     bLockCameraDuringTransition=true
 
     //Gunsight
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Sherman_sight_background'
     GunsightSize=0.492 // 12.3 degrees visible FOV at 3x magnification (M70F sight)
 
     //HUD
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ShermanShell_reload'
 
     //Sounds
-    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
 }

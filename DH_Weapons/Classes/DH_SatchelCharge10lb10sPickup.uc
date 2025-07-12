@@ -7,6 +7,6 @@ class DH_SatchelCharge10lb10sPickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel'
+    InventoryType=Class'DH_SatchelCharge10lb10sWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.satchel'
 }

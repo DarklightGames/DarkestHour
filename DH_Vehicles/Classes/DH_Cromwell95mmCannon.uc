@@ -16,9 +16,9 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_ext'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellSmoke'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_Cromwell95mmCannonShellHE'
+    SecondaryProjectileClass=Class'DH_Cromwell95mmCannonShellSmoke'
+    TertiaryProjectileClass=Class'DH_Cromwell95mmCannonShellHEAT'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
@@ -39,11 +39,11 @@ defaultproperties
     TertiarySpread=0.0036
     WeaponFireOffset=-39.8
     CustomPitchDownLimit=64900 // slightly reduced so bigger barrel & counterweight clear hull fixtures
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01' // same as 105mm howitzers
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01') // as Sherman 105mm
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.88mm_fire01' // same as 105mm howitzers
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.88mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.88mm_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_01') // as Sherman 105mm
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Pz_IV_F2_Reload_04')
 }

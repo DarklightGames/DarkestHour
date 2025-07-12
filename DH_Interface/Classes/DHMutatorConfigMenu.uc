@@ -22,7 +22,7 @@ defaultproperties
         bScaleToParent=true
         OnChange=DHMutatorConfigMenu.InternalOnChange
     End Object
-    lb_Config=DHGUIMultiOptionListBox'DH_Interface.DHMutatorConfigMenu.ConfigList'
+    lb_Config=DHGUIMultiOptionListBox'DH_Interface.ConfigList'
     Begin Object Class=DHmoCheckBox Name=AdvancedButton
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
@@ -35,7 +35,7 @@ defaultproperties
         bBoundToParent=true
         OnChange=DHMutatorConfigMenu.InternalOnChange
     End Object
-    ch_Advanced=DHmoCheckBox'DH_Interface.DHMutatorConfigMenu.AdvancedButton'
+    ch_Advanced=DHmoCheckBox'DH_Interface.AdvancedButton'
     Begin Object Class=DHGUIPlainBackground Name=InternalFrameImage
         WinTop=0.092
         WinLeft=0.04
@@ -43,7 +43,7 @@ defaultproperties
         WinHeight=0.548976
         OnPreDraw=InternalFrameImage.InternalPreDraw
     End Object
-    sb_Main=DHGUIPlainBackground'DH_Interface.DHMutatorConfigMenu.InternalFrameImage'
+    sb_Main=DHGUIPlainBackground'DH_Interface.InternalFrameImage'
     Begin Object Class=GUIButton Name=LockedCancelButton
         Caption="Cancel"
         bAutoShrink=false
@@ -56,7 +56,7 @@ defaultproperties
         OnClick=DHMutatorConfigMenu.InternalOnClick
         OnKeyEvent=LockedCancelButton.InternalOnKeyEvent
     End Object
-    b_Cancel=GUIButton'DH_Interface.DHMutatorConfigMenu.LockedCancelButton'
+    b_Cancel=GUIButton'DH_Interface.LockedCancelButton'
     Begin Object Class=GUIButton Name=LockedOKButton
         Caption="OK"
         bAutoShrink=false
@@ -69,7 +69,7 @@ defaultproperties
         OnClick=DHMutatorConfigMenu.InternalOnClick
         OnKeyEvent=LockedOKButton.InternalOnKeyEvent
     End Object
-    b_OK=GUIButton'DH_Interface.DHMutatorConfigMenu.LockedOKButton'
+    b_OK=GUIButton'DH_Interface.LockedOKButton'
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
@@ -84,9 +84,9 @@ defaultproperties
         OnMousePressed=FloatingWindow.FloatingMousePressed
         OnMouseRelease=FloatingWindow.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHMutatorConfigMenu.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -96,5 +96,5 @@ defaultproperties
         WinHeight=1.0
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHMutatorConfigMenu.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
 }

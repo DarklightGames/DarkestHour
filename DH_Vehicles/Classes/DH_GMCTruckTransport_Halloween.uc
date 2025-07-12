@@ -7,9 +7,9 @@ class DH_GMCTruckTransport_Halloween extends DH_GMCTruckSupport;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHEventVehiclesTex.LogiDemonsGMC.GMC_Halloween_body'
-    Skins(1)=Texture'DHEventVehiclesTex.LogiDemonsGMC.GMC_Halloween_canvas'
-    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_USOD_Snow_Destroyed'
-    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC.GMC_Canvas_Destroyed'
+    Skins(0)=Texture'DHEventVehiclesTex.GMC_Halloween_body'
+    Skins(1)=Texture'DHEventVehiclesTex.GMC_Halloween_canvas'
+    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC_USOD_Snow_Destroyed'
+    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC_Canvas_Destroyed'
 }
 

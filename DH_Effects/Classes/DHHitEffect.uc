@@ -17,7 +17,7 @@ struct DHHitEffectData
     var class<ProjectedDecal>       HitDecal;
     var class<Emitter>      HitEffect;
     var class<Emitter>      FlashEffect; //new for DH
-    var sound               HitSound;
+    var Sound               HitSound;
 };
 
 //overwritten from ROHitEffect to expand array to 50 from 20

@@ -35,9 +35,9 @@ simulated function SpawnSpoonProjectile()
 
     // Perturb the direction of the spoon projectile slightly.
     SpoonDirection = Rotator(Velocity);
-    SpoonDirection.Yaw += class'UInterp'.static.Linear(FRand(), -300, 300);
+    SpoonDirection.Yaw += Class'UInterp'.static.Linear(FRand(), -300, 300);
 
-    SpoonProjectile.Velocity = Vector(SpoonDirection) * VSize(Velocity) * class'UInterp'.static.Linear(FRand(), 0.5, 0.75);
+    SpoonProjectile.Velocity = Vector(SpoonDirection) * VSize(Velocity) * Class'UInterp'.static.Linear(FRand(), 0.5, 0.75);
     SpoonProjectile.RandSpin(100000);
 }
 
@@ -88,7 +88,7 @@ function BlowUp(Vector HitLocation)
     if (Role == ROLE_Authority)
     {
         // Check for any players so close that they must be on top of the grenade
-        foreach RadiusActors(class'DHPawn', DHP, 10.0)
+        foreach RadiusActors(Class'DHPawn', DHP, 10.0)
         {
             // Make sure player is actually lying on the grenade, not just standing over it
             if (DHP.bIsCrawling)
@@ -106,10 +106,10 @@ defaultproperties
 {
     // FuzeLengthRange=(Min=4.5,Max=5.5)
     Speed=1100.0
-    MyDamageType=class'DHThrowableExplosiveDamageType'
-    ExplodeDirtEffectClass=class'DHGrenadeEffect_Generic'
-    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
-    ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
+    MyDamageType=Class'DHThrowableExplosiveDamageType'
+    ExplodeDirtEffectClass=Class'DHGrenadeEffect_Generic'
+    ExplodeSnowEffectClass=Class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
+    ExplodeMidAirEffectClass=Class'GrenadeExplosion_midair'
     ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
     ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'

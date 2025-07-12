@@ -7,7 +7,7 @@ class DH_PIATPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_PIATWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
-    EmptyStaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT_empty'
+    InventoryType=Class'DH_PIATWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.PIAT'
+    EmptyStaticMesh=StaticMesh'DH_WeaponPickups.PIAT_empty'
 }

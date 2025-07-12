@@ -23,8 +23,8 @@ defaultproperties
     bDebugInImperial=false
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    CoronaClass=Class'DHShellTracer_GreenLarge'
+    ShellTrailClass=Class'DHShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=4.0

@@ -103,7 +103,7 @@ function DrawTable(Canvas C, float X, float Y)
         if (i > 0)
         {
             // Draw vertical column separator
-            C.DrawColor = class'UColor'.default.DarkGray;
+            C.DrawColor = Class'UColor'.default.DarkGray;
             C.SetPos(X1, Y);
             C.DrawVertical(X1, TableHeight);
         }
@@ -114,7 +114,7 @@ function DrawTable(Canvas C, float X, float Y)
     Y1 += YL + PaddingVertical;
 
     // Draw horizontal header separator
-    C.DrawColor = class'UColor'.default.DarkGray;
+    C.DrawColor = Class'UColor'.default.DarkGray;
     C.SetPos(X, Y1);
     C.DrawHorizontal(Y1 - 2, TableWidth);
 
