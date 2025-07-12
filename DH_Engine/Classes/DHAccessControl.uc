@@ -237,6 +237,8 @@ defaultproperties
     DeveloperIDs(8)="76561198176185585" // Backis
     DeveloperIDs(9)="76561198144056227" // Mechanic
     DeveloperIDs(10)="76561197981578171"// Enfield
+    DeveloperIDs(11)="76561198124713411" // Red
+    DeveloperIDs(12)="76561198023805987" // SoulSeek
 
     // Mac clients are unable to determine their patron status
     // normally, so we hard-code these
