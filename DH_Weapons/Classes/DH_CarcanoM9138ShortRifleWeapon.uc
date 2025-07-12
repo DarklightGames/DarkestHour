@@ -39,4 +39,6 @@ defaultproperties
     BoltHipLastAnim="bolt_clipfall"
     BoltIronLastAnim="iron_bolt_clipfall"
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=1,BoneName="Hammer",Animation="Hammer")
+
+    StripperClipSize=6
 }
