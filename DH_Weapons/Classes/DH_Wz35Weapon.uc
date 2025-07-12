@@ -62,6 +62,11 @@ simulated state WorkingBolt
     {
         return false;
     }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
 }
 
 defaultproperties
