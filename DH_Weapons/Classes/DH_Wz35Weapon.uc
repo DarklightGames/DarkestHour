@@ -56,11 +56,6 @@ simulated function byte GetRoundsToLoad()
     return GetMaxLoadedRounds();
 }
 
-simulated function int GetStripperClipSize()
-{
-    return 4;
-}
-
 simulated state WorkingBolt
 {
     simulated function bool WeaponAllowCrouchChange()
@@ -106,4 +101,6 @@ defaultproperties
 
     bShouldZoomWhenBolting=true
     bMustBeDeployedToBolt=true
+
+    StripperClipSize=4
 }
