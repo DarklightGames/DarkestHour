@@ -349,7 +349,7 @@ def command_export(args):
     try:
         localization_data = read_localization_config(root_path, args.mod)
     except FileNotFoundError as e:
-        print(f'{Fore.RED}{filename}')
+        print(f'{Fore.RED}{e}')
 
     input_patterns = localization_data['export']['input_patterns']
 
@@ -434,7 +434,10 @@ def sync(args):
     start_time = time.time()
 
     root_path = Path(args.path).absolute().resolve()
-    localization_data = read_localization_config(root_path, args.mod)
+    try:
+        localization_data = read_localization_config(root_path, args.mod)
+    except FileNotFoundError as e:
+        print(f'{Fore.RED}{e}')
     repository_path = root_path / localization_data['repository']['path']
 
     # Do a submodule update to get the latest changes from the repository.
