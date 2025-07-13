@@ -334,7 +334,7 @@ def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
 
     # Make sure the configuration file exists.
     if not localization_config_path.is_file():
-        raise FileNotFoundError(f'Configuration file {localization_config_path} not found')
+        raise FileNotFoundError(f'Configuration file "{localization_config_path.resolve().absolute()}" not found')
 
     # Load the YAML configuration file.
     with open(str(localization_config_path), 'r') as file:
@@ -345,7 +345,11 @@ def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
 
 def command_export(args):
     root_path = Path(args.path).absolute().resolve()
-    localization_data = read_localization_config(root_path, args.mod)
+
+    try:
+        localization_data = read_localization_config(root_path, args.mod)
+    except FileNotFoundError as e:
+        print(f'{Fore.RED}{filename}')
 
     input_patterns = localization_data['export']['input_patterns']
 
