@@ -43,6 +43,8 @@ var     bool            bEjectRoundOnReload;  // eject the chambered round when 
 
 var     bool            bShouldZoomWhenBolting; // if true, do a zoom cycle when working the bolt (similar to reloads)
 
+var     int             StripperClipSize;
+
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -274,7 +276,7 @@ simulated function OutOfAmmo()
 
 simulated function int GetStripperClipSize()
 {
-    return 5;   // TODO: get this from the ammo class??
+    return default.StripperClipSize;
 }
 
 // Modified to update number of individual spare rounds
@@ -838,7 +840,6 @@ defaultproperties
     BobModifyFactor=0.6
     ZoomOutTime=0.4
 
-
     IronIdleAnim="Iron_idle"
     PostFireIdleAnim="Idle"
     PostFireIronIdleAnim="Iron_idlerest"
@@ -852,4 +853,6 @@ defaultproperties
 
     bCanUseUnfiredRounds=true
     bEjectRoundOnReload=true
+
+    StripperClipSize=5
 }

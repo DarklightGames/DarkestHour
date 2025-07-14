@@ -2,6 +2,8 @@ import copy
 import glob
 import os
 import sys
+import platform
+import subprocess
 from collections import OrderedDict
 from pathlib import Path
 from typing import List, Union, Tuple, Iterable, Optional, Dict
@@ -68,7 +70,6 @@ class UnicodeRanges:
         return self._ranges
 
     def merge(self, other):
-        print(other.get_ranges())
         for start, end in other.get_ranges():
             self.add_range(start, end)
         return self
@@ -330,26 +331,35 @@ def generate_font_scripts(args):
                 item = FontStyleItem(font_index=font_index, resolution=resolution)
 
                 font_style_items[font_style_name].append(item)
+    
+    def get_font_paths() -> List[str]:
+        font_paths = []
+        match platform.system():
+            case 'Linux':
+                import shutil
+                if shutil.which('fc-list') is None:
+                    raise RuntimeError('fc-list is not installed')
+                fc_list_output = subprocess.run(['fc-list', '--format=%{file}\n'], capture_output=True, text=True).stdout
+                font_paths.extend([x for x in fc_list_output.split('\n') if x])
+            case 'Windows':
+                from os import walk
+                font_directories = [
+                    Path(r'C:\Windows\Fonts').resolve(),
+                    Path(fr'{os.getenv("LOCALAPPDATA")}\Microsoft\Windows\Fonts').resolve(),
+                ]
+                font_extensions = ['.ttf', '.otf', '.ttc', '.ttz', '.woff', '.woff2']
+                for font_directory in font_directories:
+                    for (dirpath, dirnames, filenames) in walk(font_directory):
+                        for filename in filenames:
+                            if any(filename.endswith(ext) for ext in font_extensions):
+                                font_paths.append(dirpath.replace('\\\\', '\\') + '\\' + filename)
+            case _:
+                raise RuntimeError(f'Unhandled platform: {platform.system()}')
+        return font_paths
+                
 
     # Get the list of all installed Fonts.
     def get_installed_fonts() -> Dict[str, Dict[str, str]]:
-        from os import walk
-
-        font_directories = [
-            Path(r'C:\Windows\Fonts').resolve(),
-            Path(fr'{os.getenv("LOCALAPPDATA")}\Microsoft\Windows\Fonts').resolve(),
-        ]
-
-        print(font_directories)
-
-        font_extensions = ['.ttf', '.otf', '.ttc', '.ttz', '.woff', '.woff2']
-        font_paths = []
-        for font_directory in font_directories:
-            for (dirpath, dirnames, filenames) in walk(font_directory):
-                for filename in filenames:
-                    if any(filename.endswith(ext) for ext in font_extensions):
-                        font_paths.append(dirpath.replace('\\\\', '\\') + '\\' + filename)
-
         def get_font(font: TTFont, font_path: str):
             x = lambda x: font['name'].getDebugName(x)
             if x(16) is None:
@@ -360,6 +370,7 @@ def generate_font_scripts(args):
                 return None
 
         ttf_fonts = []
+        font_paths = get_font_paths()
 
         for font_path in font_paths:
             if font_path.endswith('.ttc'):
@@ -403,8 +414,11 @@ def generate_font_scripts(args):
 
         style_name = weight_to_style(font_weight)
 
+        if font.fontname not in installed_fonts:
+            raise Exception(f'Font family "{font.fontname} is not installed')
+
         # Check if the font is installed.
-        font_path = installed_fonts[font.fontname][style_name]
+        font_path = installed_fonts[font.fontname].get(style_name, None)
         if font_path is None:
             raise Exception(f'Could not find font "{font.fontname}" with style "{style_name}"')
 
@@ -474,7 +488,7 @@ def generate_font_scripts(args):
                 '',
                 f'event Font GetFont(int ResX)',
                 '{',
-                f'    return class\'{package_name}\'.static.Get{font_style_name}ByResolution(Controller.ResX, Controller.ResY);',
+                f'    return Class\'{package_name}\'.static.Get{font_style_name}ByResolution(Controller.ResX, Controller.ResY);',
                 '}',
                 '',
                 'defaultproperties',
@@ -524,7 +538,7 @@ def generate_font_scripts(args):
         lines += [
             'static function Font GetFontByIndex(int i) {',
             '    if (default.Fonts[i] == none) {',
-            '        default.Fonts[i] = Font(DynamicLoadObject(default.FontNames[i], class\'Font\'));',
+            '        default.Fonts[i] = Font(DynamicLoadObject(default.FontNames[i], Class\'Font\'));',
             '        if (default.Fonts[i] == none) {',
             '            Warn("Could not dynamically load" @ default.FontNames[i]);',
             '        }',

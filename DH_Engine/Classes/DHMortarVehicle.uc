@@ -208,4 +208,6 @@ defaultproperties
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 }
