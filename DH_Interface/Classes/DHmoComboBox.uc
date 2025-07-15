@@ -13,6 +13,6 @@ function Clear()
 defaultproperties
 {
     ComponentClassName="DH_Interface.DHGUIComboBox"
-    LabelStyleName="DHLargeText"
+    LabelStyleName="DHSmallText"
     StyleName="DHSmallText"
 }

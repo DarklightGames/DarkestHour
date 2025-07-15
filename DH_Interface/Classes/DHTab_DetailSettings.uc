@@ -978,10 +978,10 @@ defaultproperties
 
     Begin Object Class=moSlider Name=BrightnessSlider
         MaxValue=1.0
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Brightness"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=BrightnessSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -994,10 +994,10 @@ defaultproperties
     Begin Object Class=moSlider Name=GammaSlider
         MaxValue=2.5
         MinValue=0.5
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Gamma"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=GammaSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -1009,10 +1009,10 @@ defaultproperties
 
     Begin Object Class=moSlider Name=ContrastSlider
         MaxValue=1.0
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Contrast"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=ContrastSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -1312,8 +1312,8 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Dynamic Fog Distance (Recommended)"
-        Hint="Keeps FPS as high as possible by adjusting the fog distance automatically based on FPS"
+        Caption="Dynamic Fog Distance"
+        Hint="Keeps FPS as high as possible by adjusting the fog distance automatically based on performance"
         OnCreateComponent=DynamicFogRatioCH.InternalOnCreateComponent
         IniDefault="false"
         TabOrder=41
@@ -1324,14 +1324,14 @@ defaultproperties
     ch_DynamicFogRatio=DynamicFogRatioCH
 
     Begin Object class=DHmoNumericEdit Name=MinDesiredFPS_NU
-        Caption="Min Desired FPS"
+        Caption="Dynamic Fog FPS Threshold"
         CaptionWidth=0.85
         OnCreateComponent=MinDesiredFPS_NU.InternalOnCreateComponent
         MinValue=20
         MaxValue=300
         Step=10
         ComponentJustification=TXTA_Left
-        Hint="Used by Dynamic Fog Distance to determine when to start lowing fog distance"
+        Hint="Used by Dynamic Fog Distance to determine when to start lowing fog distance to improve FPS"
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
         INIOption="@Internal"
@@ -1343,10 +1343,10 @@ defaultproperties
     Begin Object Class=moSlider Name=DistanceLODSlider
         MaxValue=1.0
         Value=0.5
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.65
         Caption="Fog Distance"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
         TabOrder=43
@@ -1355,15 +1355,16 @@ defaultproperties
     End Object
     sl_DistanceLOD=moSlider'DH_Interface.DistanceLODSlider'
 
+    // TODO: this should be a combo box with sensible defaults (5 (Short), 30 (Moderate), 60 (Long))
     Begin Object Class=moSlider Name=CorpseStayTime
         Value=15.0
         MinValue=5.0
         MaxValue=60.0
         bIntSlider=true
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.65
         Caption="Corpse Stay Time (Seconds)"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
         TabOrder=44

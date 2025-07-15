@@ -151,6 +151,7 @@ defaultproperties
         WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
+        TextAlign=TXTA_Center
     End Object
     lb_Credits=CreditText
 
