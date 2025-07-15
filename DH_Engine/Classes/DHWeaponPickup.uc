@@ -25,6 +25,8 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     StaticMesh              EmptyStaticMesh;
 
+var    bool                     bWaitingToBolt;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -118,6 +120,7 @@ function InitDroppedPickupFor(Inventory Inv)
         AmmoAmount[0] = W.AmmoAmount(0);
         AmmoAmount[1] = W.AmmoAmount(1);
         bHasBayonetMounted = W.bBayonetMounted;
+        bWaitingToBolt = W.bWaitingToBolt;
     }
 
     SetPhysics(PHYS_Falling);
