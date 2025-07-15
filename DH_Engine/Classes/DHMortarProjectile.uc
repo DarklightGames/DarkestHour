@@ -663,8 +663,8 @@ simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float V
     const PITCH_DISTANCE_METERS_MAX = 50;
     const PITCH_MIN = 0.875;
     const PITCH_MAX = 1.125;
-    const VOLUME_DISTANCE_METERS_MIN = 10;
-    const VOLUME_DISTANCE_METERS_MAX = 20;
+    const VOLUME_DISTANCE_METERS_MIN = 5;
+    const VOLUME_DISTANCE_METERS_MAX = 10;
     const VOLUME_MIN = 0.0;
     const VOLUME_MAX = 1.0;
 

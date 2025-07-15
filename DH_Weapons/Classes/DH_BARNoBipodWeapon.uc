@@ -3,36 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_BARNoBipodWeapon extends DHAutoWeapon;
-
-var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
-
-simulated function UpdateFireRate()
-{
-    if (bSlowFireRate)
-    {
-        FireMode[0].FireRate = 0.2;  // slow rate ~330rpm (? to be tested)
-
-    }
-    else
-    {
-        FireMode[0].FireRate = 0.12; // fast rate ~550rpm
-    }
-}
-
-// Modified as BAR switches between slow/fast auto fire
-simulated function ToggleFireMode()
-{
-    bSlowFireRate = !bSlowFireRate;
-
-    UpdateFireRate();
-}
-
-// Modified as BAR switches between slow/fast auto fire, so the HUD ammo icon needs to display based on that (not the usual semi/full auto fire)
-simulated function bool UsingAutoFire()
-{
-    return !bSlowFireRate;
-}
+class DH_BARNoBipodWeapon extends DH_BARWeapon;
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -78,14 +49,7 @@ defaultproperties
     bSlowFireRate=true
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
-    //SightUpSelectFireIronAnim="fireswitch_aim"
 
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
-
-    //SightUpIronBringUp="bipod_in"
-    //SightUpIronPutDown="bipod_out"
-    //SightUpIronIdleAnim="iron_idle"
-    //SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    //SightUpMagPartialReloadAnim="bipod_reload_half"
 }

@@ -61,6 +61,13 @@ simulated function BringUp(optional Weapon PrevWeapon)
     UpdateFireRate();
 }
 
+simulated function SetFireModeIndex(byte FireModeIndex)
+{
+    super.SetFireModeIndex(FireModeIndex);
+    
+    UpdateFireRate();
+}
+
 simulated function UpdateFireRate()
 {
     local DHAutomaticFire AF;
@@ -137,17 +144,17 @@ simulated state SwitchingFireMode extends WeaponBusy
 // New function to toggle the fire mode - allows subclassing for weapons that do something different, e.g. BAR toggles between slow/fast fire mode
 simulated function ToggleFireMode()
 {
-    if (bHasSelectFire)
+    if (!bHasSelectFire)
     {
-        if (SelectFireSound != none)
-        {
-            PlaySound(SelectFireSound,, SelectFireVolume);
-        }
-
-        FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-
-        UpdateFireRate();
+        return;
     }
+
+    if (SelectFireSound != none)
+    {
+        PlaySound(SelectFireSound,, SelectFireVolume);
+    }
+
+    SetFireModeIndex(byte(!GetFireMode(0).bWaitForRelease));
 }
 
 // Client to server function to toggle the fire mode

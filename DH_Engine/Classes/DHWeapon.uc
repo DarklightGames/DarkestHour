@@ -42,11 +42,30 @@ var     float           SprintEndAnimRate;
 var     float           SprintStartAnimRate;
 var     float           SprintLoopAnimRate;
 
+
+// Initial replication variable so that the fire switch is set to the correct setting.
+// Note that this has no effect outside of initial replication.
+var     byte            FireModeIndex;
+
 replication
 {
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetInitial && Role == ROLE_Authority)
+        FireModeIndex;
+
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
+}
+
+simulated function byte GetFireModeIndex()
+{
+    if (FireMode[0] == none)
+    {
+        return 0;
+    }
+    
+    return byte(FireMode[0].bWaitForRelease);
 }
 
 simulated function float GetPlayerIronsightFOV()
@@ -67,6 +86,11 @@ simulated function BringUp(optional Weapon PrevWeapon)
     super.BringUp(PrevWeapon);
 
     ResetPlayerFOV();
+
+    if (!bHasBeenDrawn && InstigatorIsLocallyControlled())
+    {
+        SetFireModeIndex(FireModeIndex);
+    }
 }
 
 // Modified to prevent firing if player's weapons are locked due to spawn killing, with screen message if the local player
@@ -221,6 +245,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         if (DHWP != none)
         {
             bWaitingToBolt = DHWP.bWaitingToBolt;
+            FireModeIndex = DHWP.FireModeIndex;
         }
     }
 
@@ -670,6 +695,12 @@ function SelfDestroy()
     ClientWeaponThrown();
 
     Destroy();
+}
+
+simulated function SetFireModeIndex(byte FireModeIndex)
+{
+    // By default, this changes between automatic and semi-automatic.
+    FireMode[0].bWaitForRelease = bool(FireModeIndex);
 }
 
 // Modified so an ROEmptyFireClass won't return busy just because it can't fire (it never can)

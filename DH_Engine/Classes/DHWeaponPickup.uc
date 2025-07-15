@@ -26,6 +26,7 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 var     StaticMesh              EmptyStaticMesh;
 
 var    bool                     bWaitingToBolt;
+var    byte                     FireModeIndex;
 
 replication
 {
@@ -121,6 +122,7 @@ function InitDroppedPickupFor(Inventory Inv)
         AmmoAmount[1] = W.AmmoAmount(1);
         bHasBayonetMounted = W.bBayonetMounted;
         bWaitingToBolt = W.bWaitingToBolt;
+        FireModeIndex = W.GetFireModeIndex();
     }
 
     SetPhysics(PHYS_Falling);

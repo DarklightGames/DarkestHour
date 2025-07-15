@@ -7,6 +7,16 @@ class DH_BARWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
+simulated function byte GetFireModeIndex()
+{
+    if (FireMode[0] == none)
+    {
+        return 0;
+    }
+    
+    return byte(bSlowFireRate);
+}
+
 simulated function UpdateFireRate()
 {
     if (bSlowFireRate)
@@ -20,10 +30,9 @@ simulated function UpdateFireRate()
     }
 }
 
-// Modified as BAR switches between slow/fast auto fire
-simulated function ToggleFireMode()
+simulated function SetFireMode(byte FiringMode)
 {
-    bSlowFireRate = !bSlowFireRate;
+    bSlowFireRate = bool(FiringMode);
 
     UpdateFireRate();
 }
