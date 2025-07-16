@@ -58,6 +58,9 @@ simulated function byte GetRoundsToLoad()
 
 simulated state WorkingBolt
 {
+    // Fire button does nothing while working the bolt.
+    simulated function Fire(float F);
+
     simulated function bool WeaponAllowCrouchChange()
     {
         return false;
@@ -67,6 +70,12 @@ simulated state WorkingBolt
     {
         return false;
     }
+}
+
+simulated state ReloadingBipod
+{
+    // Modified to not do reload interrupting logic.
+    simulated function Fire(float F);
 }
 
 defaultproperties
