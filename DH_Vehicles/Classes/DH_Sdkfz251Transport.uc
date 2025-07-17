@@ -8,7 +8,7 @@ class DH_Sdkfz251Transport extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.251 Halftrack"
+    VehicleNameString="Sd.Kfz. 251 Halftrack"
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5

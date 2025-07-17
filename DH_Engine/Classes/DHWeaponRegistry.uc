@@ -184,4 +184,5 @@ defaultproperties
     Records(124)=(ClassName="DH_Weapons.DH_CarcanoM9138ShortRifleWeapon",WeaponNames=("carcanoshort","carcanom38","corto"))
     Records(125)=(ClassName="DH_Weapons.DH_CarcanoM9138CarbineWeapon",WeaponNames=("carcanocarbine","carcanom38carbine","moschetto","cav"))
     Records(126)=(ClassName="DH_Weapons.DH_CarcanoM9138TSCarbineWeapon",WeaponNames=("carcanots","carcanom38ts","moschettots","ts"))
+    Records(127)=(ClassName="DH_Weapons.DH_ColtM1914Weapon",WeaponNames=("kongsberg"))
 }

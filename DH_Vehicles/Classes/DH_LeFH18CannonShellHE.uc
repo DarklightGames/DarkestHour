@@ -1,22 +1,32 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Copyright (c) Darklight Games.  All rights reserved.
+// Darklight Games (c) 2008-2023
+//==============================================================================
+// Carbon-copy of the priest shell, atm.
 //==============================================================================
 
-class DH_ShermanM4A3105CannonShellHE extends DHCannonShellHE;
+class DH_LeFH18CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=28486.0
-    MaxSpeed=28486.0
+    Speed=8962.5         // 198m/s x 75%
+    MaxSpeed=8962.5
+    LifeSpan=20.0
+    SpeedFudgeScale=1.0
+    
+    HitMapMarkerClass=class'DHMapMarker_ArtilleryHit_HE'
+    ShellImpactDamage=class'DHShellHEImpactDamageType_Artillery'
+
+    // Speed=28486.0
+    // MaxSpeed=28486.0
     ShellDiameter=10.5
-    BallisticCoefficient=2.96 //TODO: pls check
+    BallisticCoefficient=2.96
 
     //Damage
     ImpactDamage=2000  //2.2 KG TNT
     Damage=1000.0
     DamageRadius=1350.0
-    MyDamageType=Class'DHShellHE105mmDamageType'
+    MyDamageType=class'DHShellHE105mmDamageType_Artillery'
     PenetrationMag=1000.0
     HullFireChance=1.0
     EngineFireChance=1.0
@@ -29,12 +39,12 @@ defaultproperties
     ExplosionSound(3)=Sound'Artillery.explo04'
     TransientSoundRadius=20000.0    // Match the transient sound radius of the 105mm off-map artillery shell
 
-    ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=Class'ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=Class'ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=class'ROArtilleryWaterEmitter'
 
     //Penetration
     DHPenetrationTable(0)=8.0
