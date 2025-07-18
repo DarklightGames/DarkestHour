@@ -1,16 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_6PounderGunCannon extends DH_AT57Cannon;
 
 defaultproperties
 {
-    Skins(1)=Texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
-    PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
-    TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
+    Skins(1)=Texture'DH_Artillery_Tex.6pounder' // show 6 pdr's muzzle brake
+    PrimaryProjectileClass=Class'DH_6PounderCannonShell'
+    SecondaryProjectileClass=Class'DH_6PounderCannonShellAPDS'
+    TertiaryProjectileClass=Class'DH_6PounderCannonShellHE'
 
 
     ProjectileDescriptions(1)="APDS"

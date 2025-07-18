@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGWeapon extends DHProjectileWeapon
@@ -140,9 +140,9 @@ Begin:
 }
 
 // Modified to allow for different free aim conditions in this class (due to possibility of hip fire from ironsights key))
-function SetServerOrientation(rotator NewRotation)
+function SetServerOrientation(Rotator  NewRotation)
 {
-    local rotator WeaponRotation;
+    local Rotator WeaponRotation;
 
     if (bUsesFreeAim && bUsingSights && Instigator != none)
     {

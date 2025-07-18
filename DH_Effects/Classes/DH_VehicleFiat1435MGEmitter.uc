@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_VehicleFiat1435MGEmitter extends WeaponAmbientEmitter;
@@ -42,7 +42,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.0)
         StartSizeRange=(X=(Min=1.5,Max=2.5))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+        Texture=Texture'Effects_Tex.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.1)

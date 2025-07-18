@@ -1,24 +1,24 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MAB38Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="MAB 38"
-    NativeItemName="Moschetto Automatico Beretta M1938"
-    FireModeClass(0)=class'DH_Weapons.DH_MAB38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MAB38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MAB38Attachment'
-    PickupClass=class'DH_Weapons.DH_MAB38Pickup'
+    ItemName="MAB mod. 38-A"
+    NativeItemName="Moschetto Automatico Beretta M1938A"
+    FireModeClass(0)=Class'DH_MAB38Fire'
+    FireModeClass(1)=Class'DH_MAB38MeleeFire'
+    AttachmentClass=Class'DH_MAB38Attachment'
+    PickupClass=Class'DH_MAB38Pickup'
 
     Mesh=SkeletalMesh'DH_MAB_anm.MAB38-Mesh'
 
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
+    Skins(0)=Texture'DH_MAB38_tex.MAB38'
 
     handnum=0
     sleevenum=1
@@ -33,7 +33,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

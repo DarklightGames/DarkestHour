@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHObstacleInfo extends Info
@@ -151,7 +151,7 @@ simulated function int GetDamageThreshold(int Index, bool bIsDefault)
     }
 }
 
-simulated function sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
+simulated function Sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
 {
     if (bIsDefault)
     {
@@ -217,19 +217,19 @@ simulated function class<Emitter> GetClearEmitterClass(int Index, int InstanceIn
 
 defaultproperties
 {
-    DefaultTypes(0)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_braced',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_braced_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=7.0)
-    DefaultTypes(1)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=3.0)
-    DefaultTypes(2)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm02',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_farm02_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=3.0)
-    DefaultTypes(3)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_braced',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_braced_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=7.0)
-    DefaultTypes(4)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_military',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_military_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=5.0)
-    DefaultTypes(5)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_rabbit',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Barbed.fence_rabbit_destroyed'),ClearSound=Sound'DH_Obstacles.Barbed.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=6.0)
-    DefaultTypes(6)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.fence_rail2_12ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.fence_rail2_12ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
-    DefaultTypes(7)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.fence_rail2_6ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.fence_rail2_6ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
-    DefaultTypes(8)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.fence_rail4_12ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.fence_rail4_12ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
-    DefaultTypes(9)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.fence_rail4_6ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.fence_rail4_6ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
-    DefaultTypes(10)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.gate_rail',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.gate_rail_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=250)
-    DefaultTypes(11)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.PicketFence_intact',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.PicketFence_destr_01',StaticMesh'DH_Obstacles_stc.Wood.PicketFence_destr_02'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=50)
-    DefaultTypes(12)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.Wood.PicketFence_intactw',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.Wood.PicketFence_destr_01w',StaticMesh'DH_Obstacles_stc.Wood.PicketFence_destr_02w'),ClearSound=SoundGroup'DH_Obstacles.Wooden.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=50)
+    DefaultTypes(0)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_braced',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_braced_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=7.0)
+    DefaultTypes(1)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_farm01',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_farm01_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=3.0)
+    DefaultTypes(2)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_farm02',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_farm02_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=3.0)
+    DefaultTypes(3)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_braced',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_braced_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=7.0)
+    DefaultTypes(4)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_military',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_military_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=5.0)
+    DefaultTypes(5)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_rabbit',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_rabbit_destroyed'),ClearSound=Sound'DH_Obstacles.FenceBreaking',bCanBeCut=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300,CutDuration=6.0)
+    DefaultTypes(6)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_rail2_12ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_rail2_12ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
+    DefaultTypes(7)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_rail2_6ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_rail2_6ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
+    DefaultTypes(8)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_rail4_12ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_rail4_12ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
+    DefaultTypes(9)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.fence_rail4_6ft',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.fence_rail4_6ft_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=300)
+    DefaultTypes(10)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.gate_rail',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.gate_rail_destroyed'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=250)
+    DefaultTypes(11)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.PicketFence_intact',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.PicketFence_destr_01',StaticMesh'DH_Obstacles_stc.PicketFence_destr_02'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=50)
+    DefaultTypes(12)=(IntactStaticMesh=StaticMesh'DH_Obstacles_stc.PicketFence_intactw',ClearedStaticMeshes=(StaticMesh'DH_Obstacles_stc.PicketFence_destr_01w',StaticMesh'DH_Obstacles_stc.PicketFence_destr_02w'),ClearSound=SoundGroup'DH_Obstacles.Break',bCanBeMantled=true,bCanBeCrushed=true,bCanBeDestroyedByExplosives=true,ExplosionDamageThreshold=50)
 
     Texture=Texture'DHEngine_Tex.ObstacleInfo'
     bStatic=true

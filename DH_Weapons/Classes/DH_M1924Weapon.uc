@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1924Weapon extends DHBoltActionWeapon;
@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="M1924 Rifle"
     NativeItemName="M1924 Puska"
-    FireModeClass(0)=class'DH_Weapons.DH_M1924Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M1924MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M1924Attachment'
-    PickupClass=class'DH_Weapons.DH_M1924Pickup'
+    FireModeClass(0)=Class'DH_M1924Fire'
+    FireModeClass(1)=Class'DH_M1924MeleeFire'
+    AttachmentClass=Class'DH_M1924Attachment'
+    PickupClass=Class'DH_M1924Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.m24_mesh'
     bUseHighDetailOverlayIndex=false

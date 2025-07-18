@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_MainMP extends DHTab_MainSP;
@@ -16,5 +16,5 @@ defaultproperties
         WinHeight=0.325816
         OnPreDraw=ButtonBackground2.InternalPreDraw
     End Object
-    sb_ButtonBackground2=DHGUIPlainBackground'DH_Interface.DHTab_MainMP.ButtonBackground2'
+    sb_ButtonBackground2=DHGUIPlainBackground'DH_Interface.ButtonBackground2'
 }

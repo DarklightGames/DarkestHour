@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPlayerSetupPage extends ROUT2K4PlayerSetupPage;
@@ -8,7 +8,7 @@ class DHPlayerSetupPage extends ROUT2K4PlayerSetupPage;
 defaultproperties
 {
     Begin Object Class=GUIImage Name=MyBackground
-        Image=Texture'InterfaceArt_tex.Menu.button_normal'
+        Image=Texture'InterfaceArt_tex.button_normal'
         ImageStyle=ISTY_Stretched
         WinHeight=1.0
         RenderWeight=0.0001
@@ -16,7 +16,7 @@ defaultproperties
         bScaleToParent=true
         bNeverFocus=true
     End Object
-    BackgroundImage=GUIImage'DH_Interface.DHPlayerSetupPage.MyBackground'
+    BackgroundImage=GUIImage'DH_Interface.MyBackground'
     Begin Object Class=GUITitleBar Name=psTitleBar
         bUseTextHeight=false
         Caption="Player Setup"
@@ -27,7 +27,7 @@ defaultproperties
         WinHeight=0.056055
         RenderWeight=0.3
     End Object
-    TitleBar=GUITitleBar'DH_Interface.DHPlayerSetupPage.psTitleBar'
+    TitleBar=GUITitleBar'DH_Interface.psTitleBar'
     Begin Object Class=DHGUITabControl Name=PageTabs
         bDockPanels=true
         TabHeight=0.06
@@ -40,6 +40,6 @@ defaultproperties
         bAcceptsInput=true
         OnActivate=PageTabs.InternalOnActivate
     End Object
-    playerTabs=DHGUITabControl'DH_Interface.DHPlayerSetupPage.PageTabs'
+    playerTabs=DHGUITabControl'DH_Interface.PageTabs'
     OnCanClose=DHPlayerSetupPage.InternalOnCanClose
 }

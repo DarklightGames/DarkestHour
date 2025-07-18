@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanCannonA_76mm_Early extends DH_ShermanCannonA_76mm;
 
 defaultproperties
 {
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+    SecondaryProjectileClass=Class'DH_ShermanM4A176WCannonShellHE'
+    TertiaryProjectileClass=Class'DH_ShermanM4A176WCannonShellSmoke'
 
 
     ProjectileDescriptions(1)="HE"

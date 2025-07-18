@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBinocularsItemGerman extends DHBinocularsItem;
@@ -10,6 +10,6 @@ class DHBinocularsItemGerman extends DHBinocularsItem;
 defaultproperties
 {
     ItemName="Zeiss Dienstglas 6x30"
-    PickupClass=class'DH_Equipment.DHBinocularsPickupGerman'
-    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
+    PickupClass=Class'DHBinocularsPickupGerman'
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.BINOC_overlay_6x30Germ'
 }

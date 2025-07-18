@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BerettaM1934Bullet extends DHBullet;
@@ -11,6 +11,6 @@ defaultproperties
     BallisticCoefficient=0.118
     WhizType=2
     Damage=50.0
-    MyDamageType=class'DH_Weapons.DH_BerettaM1934DamType'
+    MyDamageType=Class'DH_BerettaM1934DamType'
 }
 

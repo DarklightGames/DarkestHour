@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBoltActionWeapon extends DHProjectileWeapon
@@ -43,6 +43,8 @@ var     bool            bEjectRoundOnReload;  // eject the chambered round when 
 
 var     bool            bShouldZoomWhenBolting; // if true, do a zoom cycle when working the bolt (similar to reloads)
 
+var     int             StripperClipSize;
+
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -57,10 +59,26 @@ replication
         ServerSetInterruptReload;
 }
 
+// Function to return if the player is able to bolt.
+simulated function bool CanWorkBolt()
+{
+    if (IsBusy() && !bWaitingToBolt)
+    {
+        return false;
+    }
+
+    if (bMustBeDeployedToBolt && !Instigator.bBipodDeployed)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
+    if (!bShouldSkipBolt && CanWorkBolt())
     {
         WorkBolt();
     }
@@ -117,7 +135,7 @@ simulated state WorkingBolt extends WeaponBusy
         {
             GetAnimParams(0, Anim, Frame, Rate);
 
-            if (Anim == BoltIronAnim || 
+            if (Anim == BoltIronAnim ||
                 Anim == BoltHipAnim ||
                 Anim == BoltIronLastAnim ||
                 Anim == BoltHipLastAnim)
@@ -133,6 +151,12 @@ simulated state WorkingBolt extends WeaponBusy
 
     simulated function BeginState()
     {
+        // TODO: don't do this unless we're using a textured scope
+        if (InstigatorIsLocallyControlled() && bUsingSights && bHasScope && ScopeDetail == RO_TextureScope)
+        {
+            PlayerViewZoom(false);
+        }
+
         if (bUsingSights || Instigator.bBipodDeployed)
         {
             if (HasAnim(BoltIronLastAnim) && AmmoAmount(0) == 1)
@@ -252,7 +276,7 @@ simulated function OutOfAmmo()
 
 simulated function int GetStripperClipSize()
 {
-    return 5;   // TODO: get this from the ammo class??
+    return default.StripperClipSize;
 }
 
 // Modified to update number of individual spare rounds
@@ -816,7 +840,6 @@ defaultproperties
     BobModifyFactor=0.6
     ZoomOutTime=0.4
 
-
     IronIdleAnim="Iron_idle"
     PostFireIdleAnim="Idle"
     PostFireIronIdleAnim="Iron_idlerest"
@@ -830,4 +853,6 @@ defaultproperties
 
     bCanUseUnfiredRounds=true
     bEjectRoundOnReload=true
+
+    StripperClipSize=5
 }

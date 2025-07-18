@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIIIJTank extends DHArmoredVehicle;
@@ -15,20 +15,20 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3j_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.Panzer3J_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Panzer3_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Panzer3_treads'
+    Skins(3)=Texture'axis_vehicles_tex.panzer3_int'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.gear_Stug'
 
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="periscope_idle_out"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIJCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_PanzerIIIJCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-90.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-120.0,Y=-30.0,Z=50.0),DriveRot=(Pitch=3500,Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-125.0,Y=30.0,Z=50.0),DriveRot=(Pitch=3900,Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -40,7 +40,7 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
-    PeriscopeOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
+    PeriscopeOverlay=Texture'Vehicle_Optic.MG_sight'
     PeriscopeSize=0.765 //65° FOV 1x magnification KFF2 driver's scope
 
     // Hull armor
@@ -78,7 +78,7 @@ defaultproperties
     TreadDamageThreshold=0.5
     DamagedEffectScale=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3n_destroyed2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3n_destroyed2'
 
     // Exit
     ExitPositions(0)=(X=-66.0,Y=1.0,Z=145.0)
@@ -90,12 +90,12 @@ defaultproperties
     ExitPositions(6)=(X=-87.0,Y=156.0,Z=10.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.Panzeriii.PanzerIII_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    IdleSound=SoundGroup'Vehicle_Engines.PanzerIII_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.PanzerIII_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.PanzerIII_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
     // Visual effects
     TreadVelocityScale=98.0
@@ -105,9 +105,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3j_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3j_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3j_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.panzer3j_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.panzer3j_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.panzer3j_turret_look'
     VehicleHudOccupantsX(3)=0.375
     VehicleHudOccupantsY(3)=0.7
     VehicleHudOccupantsX(4)=0.45
@@ -116,7 +116,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_j'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.panzer3_j'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -152,7 +152,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -161,7 +161,7 @@ defaultproperties
         BoneOffset=(X=40.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -171,7 +171,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -180,7 +180,7 @@ defaultproperties
         BoneOffset=(X=-5.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -189,7 +189,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -197,5 +197,5 @@ defaultproperties
         BoneOffset=(X=10.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

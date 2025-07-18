@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPassengerPawn extends DHVehicleWeaponPawn
@@ -74,9 +74,9 @@ function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -129,7 +129,7 @@ simulated function DrawHUD(Canvas C)
 }
 
 // Modified (from deprecated ROPassengerPawn) to use the vehicle's WeaponBone we now use to attach this passenger, instead of the confusing CameraBone
-simulated function vector GetCameraLocationStart()
+simulated function Vector GetCameraLocationStart()
 {
     if (VehicleBase != none)
     {
@@ -287,17 +287,16 @@ defaultproperties
     bPassengerOnly=true
     bSinglePositionExposed=true
     bUseDriverHeadBoneCam=true
-    HudName="Rider"
 
-    PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
-    PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'
-    PassengerClasses(2)=class'DH_Engine.DHPassengerPawnTwo'
-    PassengerClasses(3)=class'DH_Engine.DHPassengerPawnThree'
-    PassengerClasses(4)=class'DH_Engine.DHPassengerPawnFour'
-    PassengerClasses(5)=class'DH_Engine.DHPassengerPawnFive'
-    PassengerClasses(6)=class'DH_Engine.DHPassengerPawnSix'
-    PassengerClasses(7)=class'DH_Engine.DHPassengerPawnSeven'
-    PassengerClasses(8)=class'DH_Engine.DHPassengerPawnEight'
-    PassengerClasses(9)=class'DH_Engine.DHPassengerPawnNine'
-    PassengerClasses(10)=class'DH_Engine.DHPassengerPawnTen'
+    PassengerClasses(0)=Class'DHPassengerPawnZero'
+    PassengerClasses(1)=Class'DHPassengerPawnOne'
+    PassengerClasses(2)=Class'DHPassengerPawnTwo'
+    PassengerClasses(3)=Class'DHPassengerPawnThree'
+    PassengerClasses(4)=Class'DHPassengerPawnFour'
+    PassengerClasses(5)=Class'DHPassengerPawnFive'
+    PassengerClasses(6)=Class'DHPassengerPawnSix'
+    PassengerClasses(7)=Class'DHPassengerPawnSeven'
+    PassengerClasses(8)=Class'DHPassengerPawnEight'
+    PassengerClasses(9)=Class'DHPassengerPawnNine'
+    PassengerClasses(10)=Class'DHPassengerPawnTen'
 }

@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_30calFire extends DHMGAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_30calBullet'
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AmmoClass=class'DH_Weapons.DH_30CalAmmo'
+    ProjectileClass=Class'DH_30calBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
+    AmmoClass=Class'DH_30CalAmmo'
     FireRate=0.135 // ~500 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     Spread=75.0
@@ -17,7 +17,7 @@ defaultproperties
     MuzzleBone="MUZZLE_A6"
     ShellEmitBone="EJECTOR_LINK"
     
-    ShellEjectors(0)=(EjectClass=class'ROAmmo.ShellEject1st762x54mm',EjectBone="EJECTOR",IronSightOffset=(X=40,Z=-10),RotOffsetIron=(Yaw=16384))
+    ShellEjectors(0)=(EjectClass=Class'ShellEject1st762x54mm',EjectBone="EJECTOR",IronSightOffset=(X=40,Z=-10),RotOffsetIron=(Yaw=16384))
 
     // Recoil
     RecoilRate=0.0675
@@ -27,9 +27,9 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=30.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ShellEjectClass=class'DH_Weapons.DH_30cal1stLinkEject'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ShellEjectClass=Class'DH_30cal1stLinkEject'
     ShellIronSightOffset=(X=30,Z=-3)
     ShellRotOffsetIron=(Pitch=-1500)
 

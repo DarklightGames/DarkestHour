@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHNation extends Object
@@ -15,17 +15,12 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
-var class<DHConstruction>       PlatoonHQClass;
-var class<DHConstruction>       SupplyCacheClass;
-var class<DHInventorySpawner>   GrenadeCrateClass;
+var class<DHConstructionLoadout>    DefaultConstructionLoadoutClass;
 
 // TODO: move these to classes as well.
 // Rally Point
 var StaticMesh                  RallyPointStaticMesh;
 var StaticMesh                  RallyPointStaticMeshActive;
-
-// Resupply Point
-var StaticMesh                  InfantryResupplyStaticMesh;
 
 // Flags
 var Material                    DeployMenuFlagTexture;

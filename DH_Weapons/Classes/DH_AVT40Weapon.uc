@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_AVT40Weapon extends DHAutoWeapon;
@@ -9,14 +9,14 @@ defaultproperties
 {
     ItemName="AVT-40"
     SwayModifyFactor=0.66 // -0.04
-    FireModeClass(0)=class'DH_Weapons.DH_AVT40Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_AVT40MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_AVT40Attachment'
-    PickupClass=class'DH_Weapons.DH_AVT40Pickup'
+    FireModeClass(0)=Class'DH_AVT40Fire'
+    FireModeClass(1)=Class'DH_AVT40MeleeFire'
+    AttachmentClass=Class'DH_AVT40Attachment'
+    PickupClass=Class'DH_AVT40Pickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt40_1st'
-    Skins(2)=Texture'Weapons1st_tex.Rifles.svt40_sniper'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.svt40_sniper_s'
+    Skins(2)=Texture'Weapons1st_tex.svt40_sniper'
+    HighDetailOverlay=Shader'Weapons1st_tex.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -27,7 +27,7 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_AVT40Barrel'
+    BarrelClass=Class'DH_AVT40Barrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

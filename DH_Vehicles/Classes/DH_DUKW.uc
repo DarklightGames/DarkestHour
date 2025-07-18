@@ -1,23 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Wheels should appear to be stationary while in water
-// [ ] Have different driving characteristics when in water/on land
-// [ ] Splash guard functionality
-// [ ] Exit positions
-// [ ] Turn off wash sound when out of water
-// [ ] Fix for propeller wash
-// [ ] Add bow water spray
-// [ ] Fix issue with wheel and suspension misalignment
-// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
-// [ ] Add engine hitpoint
 // [ ] Fix engine fire position
-// [ ] Fix issue where vehicle is inoperable after changing positions
+// [ ] Idle anims do not loop
+//==============================================================================
+// Bonus Marks:
+// [ ] Have a special emitter for the propeller and bow wash
+// [ ] Have different driving characteristics when in water/on land
 // [ ] Maybe make the propeller spin cause it'd be fun
+// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] Add bow water spray
+// [ ] Wheels should appear to be stationary while in water
 //==============================================================================
 
-class DH_DUKW extends DHBoatVehicle;
+class DH_DUKW extends DHBoatVehicle
+    abstract;
 
 var name WaterIdleAnim;
 var name GroundIdleAnim;
@@ -30,14 +28,22 @@ var Sound WaterShutDownSound;
 var Sound GroundStartUpSound;
 var Sound GroundShutDownSound;
 
+// State tracking whether the vehicle is in water or not.
 var bool bIsInWater;
 
-var DH_DUKWSplashGuard SplashGuard;
+// A set of exit positions for use when the vehicle is in water.
+var array<Vector> WaterExitPositions;
 
-replication
+// Modified so that players will exit inside the vehicle when it's in water.
+function array<Vector> GetExitPositions()
 {
-    reliable if (Role < ROLE_Authority)
-        ServerToggleSplashGuard;
+    // If we are in the water, return the positions of each passenger in the vehicle.
+    if (bIsInWater)
+    {
+        return WaterExitPositions;
+    }
+
+    return super.GetExitPositions();
 }
 
 simulated event DestroyAppearance()
@@ -59,68 +65,91 @@ simulated function name GetIdleAnim()
     }
 }
 
-simulated function PostBeginPlay()
+simulated function PostNetBeginPlay()
 {
-    super.PostBeginPlay();
+    super.PostNetBeginPlay();
 
-    SplashGuard = Spawn(class'DH_DUKWSplashGuard', self);
+    // Force update the water status and run the callbacks so that
+    // we initialize into the correct state.
+    UpdateInWaterStatus(true);
 }
 
-function ServerToggleSplashGuard()
+function RaiseSplashGuard()
 {
-    if (SplashGuard == none)
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
     {
-        return;
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Raise();
+        }
     }
-
-    SplashGuard.Toggle();
 }
 
-exec simulated function ROMGOperation()
+function LowerSplashGuard()
 {
-    ServerToggleSplashGuard();
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
+    {
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Lower();
+        }
+    }
 }
 
 simulated function OnWaterEntered()
 {
-    LoopAnim(WaterIdleAnim);
+    LoopAnim(WaterIdleAnim, 1.0, 1.0);
     
-    SplashGuard.Raise();
+    if (Role == ROLE_Authority)
+    {
+        RaiseSplashGuard();
+    }
 
     WheelRotationScale = 0;
 
     // Change the engine sound to the boat engine.
-    Ambientsound = WaterEngineSound;
+    AmbientSound = WaterEngineSound;
 
-    // Play the startup sound for the boat engine if the engine is on.
-    // if (!bEngineOff)
-    // {
-    //     PlaySound(WaterStartUpSound, SLOT_None, 1.0);
-    //     PlaySound(GroundShutDownSound, SLOT_None, 1.0);
-    // }
-    
-    // TODO: turn on the wash sound.
+    SetWashSoundActive(true);
 }
 
 simulated function OnWaterLeft()
 {
     WheelRotationScale = default.WheelRotationScale;
 
-    SplashGuard.Lower();
+    if (Role == ROLE_Authority)
+    {
+        LowerSplashGuard();
+    }
 
-    LoopAnim(GroundIdleAnim);
+    LoopAnim(GroundIdleAnim, 1.0, 0.5);
 
     // Change the engine sound to the truck engine.
     AmbientSound = GroundEngineSound;
 
-    // Play the startup sound for the truck engine if the engine is on.
-    // if (!bEngineOff)
-    // {
-    //     PlaySound(GroundStartUpSound, SLOT_None, 1.0);
-    //     PlaySound(WaterShutDownSound, SLOT_None, 1.0);
-    // }
+    SetWashSoundActive(false);
+}
 
-    // TODO: turn off the wash sound.
+simulated function UpdateInWaterStatus(optional bool bForceUpdate)
+{
+    local bool bNewIsInWater;
+
+    bNewIsInWater = PhysicsVolume != none && PhysicsVolume.bWaterVolume;
+
+    if (bNewIsInWater && (bForceUpdate || !bIsInWater))
+    {
+        OnWaterEntered();
+    }
+    else if (!bNewIsInWater && (bForceUpdate || bIsInWater))
+    {
+        OnWaterLeft();
+    }
+
+    bIsInWater = bNewIsInWater;
 }
 
 simulated event PhysicsVolumeChange(PhysicsVolume NewPhysicsVolume)
@@ -176,8 +205,22 @@ simulated function Sound GetShutDownSound()
     }
 }
 
+// Vehicle is amphibious, so players should spawn inside the vehicle when it's in water
+// before all other considerations.
+function bool ShouldPlayersSpawnInsideVehicle()
+{
+    if (bIsInWater)
+    {
+        return true;
+    }
+
+    return super.ShouldPlayersSpawnInsideVehicle();
+}
+
 defaultproperties
 {
+    bIsAmphibious=true
+
     WaterIdleAnim="idle_water"
     GroundIdleAnim="idle_ground"
 
@@ -185,6 +228,8 @@ defaultproperties
     VehicleTeam=1
 
     Mesh=SkeletalMesh'DH_DUKW_anm.dukw_ext'
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_amphibious_topdown'
 
     BeginningIdleAnim="idle_water"
 
@@ -203,16 +248,16 @@ defaultproperties
 
     // Sounds
     EngineSoundBone="ENGINE"
-    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-    WaterEngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-    GroundEngineSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
-    WaterStartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-    WaterShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
-    GroundStartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    GroundShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    EngineSound=SoundGroup'DH_AlliedVehicleSounds.HigginsEngine_loop'
+    WaterEngineSound=SoundGroup'DH_AlliedVehicleSounds.HigginsEngine_loop'
+    GroundEngineSound=SoundGroup'DH_alliedvehiclesounds.gmctruck_engine_loop'
+    WaterStartUpSound=Sound'DH_AlliedVehicleSounds.HigginsStart01'
+    WaterShutDownSound=Sound'DH_AlliedVehicleSounds.HigginsStop01'
+    GroundStartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    GroundShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     // TODO: startup sounds for both types of engine, automatically play when the vehicle changes volumes
 
-    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
+    WashSound=Sound'DH_AlliedVehicleSounds.wash01'
     VehicleAttachments(0)=(AttachBone="WASH")
 
     // TODO: idle sound?
@@ -273,13 +318,7 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointBone="ENGINE",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    // VehHitpoints(1)=(PointRadius=24.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    // VehHitpoints(2)=(PointRadius=24.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    // VehHitpoints(3)=(PointRadius=12.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(4)=(PointRadius=12.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(5)=(PointRadius=12.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(6)=(PointRadius=12.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(0)=(PointRadius=42.0,PointBone="ENGINE",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
 
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
@@ -296,26 +335,36 @@ defaultproperties
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
-    ExitPositions(0)=(X=57.0,Y=-132.0,Z=25.0) // driver
-    ExitPositions(1)=(X=65.0,Y=137.0,Z=25.0)  // front passenger
+    ExitPositions(0)=(X=65.0,Y=-135.0,Z=60.0)       // Driver
+    ExitPositions(1)=(X=65.0,Y=135.0,Z=60.0)        // Front passenger
+    ExitPositions(2)=(X=-8.00,Y=135.00,Z=60.00)     // Right Passenger 01
+    ExitPositions(3)=(X=-8.00,Y=-135.00,Z=60.00)    // Left Passenger 01
+
+    WaterExitPositions(0)=(X=76.91966247558594,Y=-28.477802276611328,Z=153.4036407470703)
+    WaterExitPositions(1)=(X=76.91966247558594,Y=22.614728927612305,Z=152.4199981689453)
+    WaterExitPositions(2)=(X=0.4548492431640625,Y=34.716644287109375,Z=153.4036407470703)
+    WaterExitPositions(3)=(X=0.4548492431640625,Y=-34.71664047241211,Z=153.4036407470703)
+    WaterExitPositions(4)=(X=-59.236663818359375,Y=34.716644287109375,Z=153.4036407470703)
+    WaterExitPositions(5)=(X=-59.236663818359375,Y=-34.71664047241211,Z=153.4036407470703)
+    WaterExitPositions(6)=(X=-115.40373992919922,Y=34.716644287109375,Z=153.4036407470703)
+    WaterExitPositions(7)=(X=-115.40373992919922,Y=-34.71664047241211,Z=153.4036407470703)
+    WaterExitPositions(8)=(X=-170.43197631835938,Y=34.716644287109375,Z=153.4036407470703)
+    WaterExitPositions(9)=(X=-170.43197631835938,Y=-34.71664047241211,Z=153.4036407470703)
 
     // Sounds
     SoundPitch=32.0
     MaxPitchSpeed=10.0 //150.0
     IdleSound=none
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
     RumbleSoundBone="body"
-
-    // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-39.98,Y=-69.71,Z=46.37),ExhaustRotation=(Pitch=-4096,Yaw=-16384))
 
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_DUKW_tex.interface.DUKW_body_icon'
+    VehicleHudImage=Texture'DH_DUKW_tex.DUKW_body_icon'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
@@ -342,10 +391,12 @@ defaultproperties
     VehicleHudOccupantsX(9)=0.44
     VehicleHudOccupantsY(9)=0.775
 
-    SpawnOverlay(0)=Material'DH_DUKW_tex.interface.DUKW_icon'
+    SpawnOverlay(0)=Material'DH_DUKW_tex.DUKW_icon'
 
-    // Splashguard 
+    // Splashguard
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
+
+    VehicleComponentControllers(0)=(Channel=2,BoneName="SPLASH_GUARD",RaisingAnim="splash_guard_up",LoweringAnim="splash_guard_down")
 
     //================copypaste from gmc
 

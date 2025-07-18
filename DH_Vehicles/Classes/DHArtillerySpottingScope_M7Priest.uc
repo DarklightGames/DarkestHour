@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope;
@@ -8,7 +8,7 @@ class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope;
 defaultproperties
 {
     // to do: replace with some cool American overlay (maybe just the springfield sight)
-    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Springfield_Scope_Overlay'
 
     YawScaleStep=5.0
     PitchScaleStep=10.0

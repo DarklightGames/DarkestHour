@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M44BayonetDamType extends DHWeaponBayonetDamageType
@@ -8,8 +8,8 @@ class DH_M44BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M44Weapon'
+    WeaponClass=Class'DH_M44Weapon'
     GibModifier=0.0
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROBloodPuff'
     KDamageImpulse=400.0
 }

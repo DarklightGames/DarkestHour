@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_TriggerProjector extends Projector;
@@ -37,7 +37,7 @@ simulated event PostBeginPlay()
     super.PostBeginPlay();
 
     // Allocate a new scripted texture from the pool & and have it call us for updates
-    ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
+    ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(Class'Scriptedtexture'));
     ScriptTexture.SetSize(ProjTexture.MaterialUSize(), ProjTexture.MaterialVSize());
     ScriptTexture.Client = self;
 
@@ -107,7 +107,7 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-simulated function SetColors(color NewColor, color NewTint)
+simulated function SetColors(Color NewColor, Color NewTint)
 {
     // Check to see if it's a new color
     if (CurrentColor != NewColor || CurrentTint != NewTint)
@@ -131,7 +131,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 simulated function Tick(float DeltaTime)
 {
     local float Percent;
-    local color NewColor, NewTint;
+    local Color NewColor, NewTint;
 
     TimeSinceTriggered += DeltaTime;
     Percent = TimeSinceTriggered / SwapTime;

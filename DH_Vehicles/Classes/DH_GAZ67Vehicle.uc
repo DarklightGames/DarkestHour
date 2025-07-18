@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GAZ67Vehicle extends DHVehicle;
@@ -12,12 +12,12 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=3.5
     ReinforcementCost=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GAZ67_anm.GAZ67_ext'
-    Skins(0)=Texture'MilitaryAlliesSMT.Vehicles.RO_gaz67'
-    Skins(1)=FinalBlend'DH_VehiclesSOV_tex.ext_vehicles.GAZ67_glass_finalblend'
+    Skins(0)=Texture'MilitaryAlliesSMT.RO_gaz67'
+    Skins(1)=FinalBlend'DH_VehiclesSOV_tex.GAZ67_glass_finalblend'
     BeginningIdleAnim=""
 
     // Passengers
@@ -76,7 +76,7 @@ defaultproperties
     ImpactWorldDamageMult=0.008
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=25.0)
-    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.GAZ67.GAZ67_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.GAZ67_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -93,17 +93,17 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=Sound'Vehicle_Engines.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.ba64_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=40.0,Z=-28.0),ExhaustRotation=(Yaw=22000))
     SteerBoneName="Steering_wheel"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GAZ67_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.GAZ67_body'
     VehicleHudEngineY=0.29
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsY(0)=0.53
@@ -113,7 +113,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.7
     VehicleHudOccupantsX(3)=0.57
     VehicleHudOccupantsY(3)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.GAZ67'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.GAZ67'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=Wheel_FrontL
@@ -126,7 +126,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_FrontL'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
         SteerType=VST_Steered
         BoneName="Wheel_FR"
@@ -136,7 +136,7 @@ defaultproperties
         SupportBoneName="Axle_FL"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_FrontR'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.Wheel_FrontR'
     Begin Object Class=SVehicleWheel Name=Wheel_BackL
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -147,7 +147,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_BackL'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.Wheel_BackL'
     Begin Object Class=SVehicleWheel Name=Wheel_BackR
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -157,7 +157,7 @@ defaultproperties
         SupportBoneName="Axle_BL"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_BackR'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.Wheel_BackR'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -177,5 +177,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_GAZ67Vehicle.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

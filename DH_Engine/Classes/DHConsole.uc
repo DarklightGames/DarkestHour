@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConsole extends ROConsole;
@@ -143,19 +143,19 @@ event ConnectFailure(string FailCode, string URL)
     else if (FailCode == "LOCALBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'DHAccessControl'.default.IPBanned);
+        ViewportOwner.GUIController.OpenMenu(Class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), Class'DHAccessControl'.default.IPBanned);
         return;
     }
     else if (FailCode == "SESSIONBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'DHAccessControl'.default.SessionBanned);
+        ViewportOwner.GUIController.OpenMenu(Class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), Class'DHAccessControl'.default.SessionBanned);
         return;
     }
     else if (FailCode == "SERVERFULL")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass, ServerFullMsg);
+        ViewportOwner.GUIController.OpenMenu(Class'GameEngine'.default.DisconnectMenuClass, ServerFullMsg);
 
         return;
     }
@@ -228,7 +228,7 @@ event ConnectFailure(string FailCode, string URL)
     }
 
     Log("Unhandled connection failure!  FailCode '" $ FailCode @ "'   URL '" $ URL $ "'");
-    ViewportOwner.Actor.ProgressCommand("menu:" $ class'GameEngine'.default.DisconnectMenuClass, FailCode, Error);
+    ViewportOwner.Actor.ProgressCommand("menu:" $ Class'GameEngine'.default.DisconnectMenuClass, FailCode, Error);
 }
 
 // Modified for DHObjectives and to give squad leaders access to order commands.
@@ -252,6 +252,11 @@ state SpeechMenuVisible
         {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
@@ -296,6 +301,11 @@ state SpeechMenuVisible
        {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
@@ -336,6 +346,11 @@ state SpeechMenuVisible
        {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                 SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
                 SMArraySize++;
@@ -389,21 +404,52 @@ state SpeechMenuVisible
 
         if (CanUseOrderCommands())
         {
-            for (i = 0; i < ROVP.Default.numCommands; i++)
+            for (i = 0; i < ROVP.default.numCommands; i++)
             {
-                if(ROVP.Default.OrderAbbrev[i] != "")
+                if(ROVP.default.OrderAbbrev[i] != "")
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderAbbrev[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderAbbrev[i];
                 }
                 else
                 {
-                    SMNameArray[SMArraySize] = ROVP.Default.OrderString[i];
+                    SMNameArray[SMArraySize] = ROVP.default.OrderString[i];
                 }
 
                 SMIndexArray[SMArraySize] = i;
                 SMArraySize++;
             }
         }
+    }
+
+    function buildSMVehicleDirectionArray()
+    {
+        local int i;
+		local class<ROVoicePack> VoicePack;
+
+		SMArraySize = 0;
+		PreviousStateName = ROSMS_Main;
+
+		VoicePack = GetROVoiceClass();
+        
+		if (VoicePack == none)
+        {
+			return;
+        }
+
+		for(i=0; i< VoicePack.default.numVehicleDirections; i++)
+		{
+            if (VoicePack.default.VehicleDirectionAbbrev[i] != "")
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionAbbrev[i];
+            }
+            else
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionString[i];
+            }
+
+			SMIndexArray[SMArraySize] = i;
+			SMArraySize++;
+		}
     }
 
     // Overriden to give squad leaders the ability to use order commands.
@@ -591,7 +637,7 @@ state SpeechMenuVisible
 		local int SelLeft, i;
 		local float XMax, YMax;
 
-		C.Font = class'DHHud'.static.GetConsoleFont(C);
+		C.Font = Class'DHHud'.static.GetConsoleFont(C);
 
 		for (i = 0; i < 10; i++)
 		{
@@ -622,14 +668,14 @@ state SpeechMenuVisible
 		YMax -= C.ClipY * SMOriginY;
 		C.SetDrawColor(139, 28, 28, 255);
 		C.SetPos(C.ClipX * SMOriginX, C.ClipY * SMOriginY);
-		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), YMax + (SMMargin * C.ClipY));
+		C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), YMax + (SMMargin * C.ClipY));
 
 		// Draw highlight
 		if (bSpeechMenuUseMouseWheel)
 		{
 			C.SetDrawColor(255, 202, 180, 128);
 			C.SetPos(C.ClipX * SMOriginX, C.ClipY * (SMOriginY + SMMargin) + ((HighlightRow - 0.1) * SMLineSpace));
-			C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), 1.1 * SMLineSpace);
+			C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), 1.1 * SMLineSpace);
 		}
 
 		// Then actually draw the stuff
@@ -639,7 +685,7 @@ state SpeechMenuVisible
 		// Finally, draw a nice title bar.
 		C.SetDrawColor(139, 28, 28, 255);
 		C.SetPos(C.ClipX * SMOriginX, (C.ClipY * SMOriginY) - (1.5 * SMLineSpace));
-		C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', XMax + (SMMargin * C.ClipX), (1.5 * SMLineSpace));
+		C.DrawTileStretched(Texture'InterfaceArt_tex.RODisplay', XMax + (SMMargin * C.ClipX), (1.5 * SMLineSpace));
 
 		C.SetDrawColor(255, 255, 128, 255);
 		C.SetPos(C.ClipX * (SMOriginX + SMMargin), (C.ClipY * SMOriginY) - (1.2 * SMLineSpace));
@@ -832,15 +878,15 @@ static function class<DHLocalMessage> GetSayTypeMessageClass(string SayType)
     switch (SayType)
     {
         case "Say":
-            return class'DHSayMessage';
+            return Class'DHSayMessage';
         case "TeamSay":
-            return class'DHTeamSayMessage';
+            return Class'DHTeamSayMessage';
         case "SquadSay":
-            return class'DHSquadSayMessage';
+            return Class'DHSquadSayMessage';
         case "VehicleSay":
-            return class'DHVehicleSayMessage';
+            return Class'DHVehicleSayMessage';
         case "CommandSay":
-            return class'DHCommandSayMessage';
+            return Class'DHCommandSayMessage';
     }
 
     return none;
@@ -1014,7 +1060,7 @@ state ConsoleVisible
 		local float YClip, Y;
 		local int Index;
 
-		Canvas.Font = class'DHHud'.static.GetConsoleFont(Canvas);
+		Canvas.Font = Class'DHHud'.static.GetConsoleFont(Canvas);
         
 		YClip = Canvas.ClipY * 0.5;
 		Canvas.StrLen("X", FW, FH);
@@ -1023,12 +1069,12 @@ state ConsoleVisible
 		Canvas.SetDrawColor(255, 255, 255, 200);
 		Canvas.Style = 4;
         
-        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.HUD.console_background',Canvas.ClipX,yClip);
+        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.console_background',Canvas.ClipX,yClip);
 		Canvas.Style = 1;
 
 		Canvas.SetPos(0, YClip - 1);
 		Canvas.SetDrawColor(255, 255, 255, 255);
-        Canvas.DrawTile(Texture'InterfaceArt_tex.Menu.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
+        Canvas.DrawTile(Texture'InterfaceArt_tex.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
 		Canvas.SetDrawColor(255, 255, 255, 255);
 		Canvas.SetPos(0, YClip - 5 - FH);
 		Canvas.DrawTextClipped("(>" @ Left(TypedStr, TypedStrPos) $ Chr(4) $ Eval(TypedStrPos < Len(TypedStr), Mid(TypedStr, TypedStrPos), "_"), true);

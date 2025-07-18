@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerDestroyer_CamoTwo_Bushes extends DH_HetzerDestroyer_CamoTwo;
 
 defaultproperties
 {
-     Skins(3)=Texture'VegetationSMT.WildBushesFall.WildBush_A_FallB'
+     Skins(3)=Texture'VegetationSMT.WildBush_A_FallB'
 }

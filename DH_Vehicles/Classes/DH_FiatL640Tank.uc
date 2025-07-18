@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Fire/damaged effect locations (didn't i already do this?)
 // [ ] Adjust handling & engine
@@ -35,7 +35,7 @@ defaultproperties
 
     // Vehicle weapons & passengers
     BeginningIdleAnim="closed"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02",InitialViewRotationOffset=(Yaw=-16384))
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01",InitialViewRotationOffset=(Yaw=-16384))
 
@@ -90,7 +90,7 @@ defaultproperties
     DamagedEffectOffset=(X=-70,Y=0,Z=80)
     DamagedEffectScale=1.0
     FireAttachBone="body"
-    DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.Destroyed.fiatl640_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.fiatl640_destroyed'
     ShadowZOffset=20.0
 
     DamagedTrackStaticMeshLeft=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_L'
@@ -108,13 +108,13 @@ defaultproperties
 
     // Sounds
     SoundPitch=48
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="body"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart_inside_rumble'
 
     // Visual effects
     LeftTreadIndex=1
@@ -128,9 +128,9 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_FiatL640_tex.interface.fiatl640_body'
-    VehicleHudTurret=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_look'
+    VehicleHudImage=Texture'DH_FiatL640_tex.fiatl640_body'
+    VehicleHudTurret=TexRotator'DH_FiatL640_tex.fiatl640_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_FiatL640_tex.fiatl640_turret_look'
 
     VehicleHudEngineX=0.50
 
@@ -148,7 +148,7 @@ defaultproperties
     VehicleHudOccupantsX(3)=0.65
     VehicleHudOccupantsY(3)=0.65
 
-    SpawnOverlay(0)=Material'DH_FiatL640_tex.interace.fiatl640_icon'
+    SpawnOverlay(0)=Material'DH_FiatL640_tex.fiatl640_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_01_L"
@@ -174,7 +174,7 @@ defaultproperties
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
 
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
 
     // Movement
     GearRatios(3)=0.65

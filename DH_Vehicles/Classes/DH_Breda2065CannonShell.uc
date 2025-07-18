@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Granata Perforante Modello 1935
 //==============================================================================
@@ -22,7 +22,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=155
-    ShellImpactDamage=class'DH_Vehicles.DH_Breda2065CannonShellDamageAP'
+    ShellImpactDamage=Class'DH_Breda2065CannonShellDamageAP'
     HullFireChance=0.15
     EngineFireChance=0.3
 
@@ -31,27 +31,27 @@ defaultproperties
 
     //Effects
     DrawScale=0.75
-    CoronaClass=class'DH_Effects.DHShellTracer_White'
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_White'
+    CoronaClass=Class'DHShellTracer_White'
+    ShellTrailClass=Class'DH20mmShellTrail_White'
 
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    ShellDeflectEffectClass=Class'TankAPHitDeflect'
+    ShellHitVehicleEffectClass=Class'DH20mmAPHitPenetrate'
+    ShellHitDirtEffectClass=Class'DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmAPHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
-    ExplosionDecal=class'ROEffects.BulletHoleConcrete'
-    ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
+    ExplosionDecal=Class'BulletHoleConcrete'
+    ExplosionDecalSnow=Class'BulletHoleSnow'
 
     // Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Impact_Wood'
 
     // Penetration
     // Pen table just scaled by 1.35x from the Flak 38 20mm AP since the 500m penetration is 27mm vs 20mm for the Flak 38.

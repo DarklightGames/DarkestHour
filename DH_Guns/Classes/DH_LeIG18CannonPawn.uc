@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LeIG18CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_LeIG18Cannon'
+    GunClass=Class'DH_LeIG18Cannon'
     // spotting scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_LeIG18_anm.leig18_turret',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewFOV=80.0,ViewLocation=(X=0.0,Y=-10.0,Z=40.0),ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // kneeling
@@ -35,7 +35,7 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 
-    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
-    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_LeIG18'
+    AmmoShellTexture=Texture'DH_LeIG18_tex.leig18_he'
+    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.leig18_he_reload'
+    ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_LeIG18'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillerySpottingScope extends Object
@@ -57,10 +57,10 @@ var     localized string    ElevationString;
 var     localized string    LeftString, RightString;
 var     localized string    CorrectionString;
 var     localized string    DistanceString;
-var     texture             SpottingScopeOverlay;       // periscope overlay texture
+var     Texture             SpottingScopeOverlay;       // Periscope overlay texture
 
-var     float               YawScaleStep;               // how quickly yaw indicator should traverse
-var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
+var     float               YawScaleStep;               // The step of the yaw dial in the angle units.
+var     float               PitchScaleStep;             // The step of the pitch dial in the angle units.
 var     int                 PitchIndicatorLength;       // [px], should be a multiple of number of visible pitch ticks
 var     int                 YawIndicatorLength;         // [px], should be a multiple of number of visible yaw ticks
 var     int                 StrikeThroughThickness;     // [px]
@@ -101,6 +101,10 @@ var     array<float>                    YawTicksShading;  // used by target tick
 var     array<float>                    YawTicksCurvature;
 var     array<float>                    PitchTicksCurvature;
 
+var localized string SquadText;
+var localized string SelectedTargetText;
+var localized string MeasurementToolText;
+
 enum ETargetWidgetLineType
 {
     TWLT_Header,
@@ -135,18 +139,18 @@ function CreateRenderTable(Canvas C)
         return;
     }
 
-    RenderTable = new class'DHDataTable';
+    RenderTable = new Class'DHDataTable';
 
-    RenderTable.Font = class'DHHud'.static.GetTinyFont(C);
+    RenderTable.Font = Class'DHHud'.static.GetTinyFont(C);
     RenderTable.Columns.Insert(0, 2);
 
-    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ class'DHUnits'.static.GetDistanceUnitString(DistanceUnit) $ ")";
-    RenderTable.Columns[0].TextColor = class'UColor'.default.White;
+    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ Class'DHUnits'.static.GetDistanceUnitSymbol(DistanceUnit) $ ")";
+    RenderTable.Columns[0].TextColor = Class'UColor'.default.White;
     RenderTable.Columns[0].Width = 80;
     RenderTable.Columns[0].HeaderJustification = 2;
     RenderTable.Columns[0].RowJustification = 2;
-    RenderTable.Columns[1].Header = PitchHeaderString @ "(" $ class'UUnits'.static.GetAngleUnitString(PitchAngleUnit) $ ")";
-    RenderTable.Columns[1].TextColor = class'UColor'.default.White;
+    RenderTable.Columns[1].Header = PitchHeaderString @ "(" $ Class'UUnits'.static.GetAngleUnitString(PitchAngleUnit) $ ")";
+    RenderTable.Columns[1].TextColor = Class'UColor'.default.White;
     RenderTable.Columns[1].Width = 80;
     RenderTable.Columns[1].HeaderJustification = 0;
     RenderTable.Columns[1].RowJustification = 0;
@@ -157,9 +161,9 @@ function CreateRenderTable(Canvas C)
     {
         RenderTable.Rows[i].Columns.Insert(0, 2);
         RenderTable.Rows[i].Columns[0].Value = string(RangeTable[i].Range);
-        RenderTable.Rows[i].Columns[0].TextColor = class'UColor'.default.Green;
-        RenderTable.Rows[i].Columns[1].Value = class'UFloat'.static.Format(RangeTable[i].Pitch, PitchDecimalsTable);
-        RenderTable.Rows[i].Columns[1].TextColor = class'UColor'.default.White;
+        RenderTable.Rows[i].Columns[0].TextColor = Class'UColor'.default.Green;
+        RenderTable.Rows[i].Columns[1].Value = Class'UFloat'.static.Format(RangeTable[i].Pitch, PitchDecimalsTable);
+        RenderTable.Rows[i].Columns[1].TextColor = Class'UColor'.default.White;
     }
 }
 
@@ -174,13 +178,13 @@ function CalculateShadingAndCurvature()
     // Calculate curvature & shading coefficients for ticks on artillery scope's dial
     for (i = 0; i < VisibleYawSegmentsNumber; ++i)
     {
-        YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / VisibleYawSegmentsNumber, YawDialSpan);
+        YawTicksCurvature[i] = Class'UInterp'.static.DialRounding(float(i) / VisibleYawSegmentsNumber, YawDialSpan);
         YawTicksShading[i] = 1 - 2 * Abs(YawTicksCurvature[i] - 0.5);
     }
 
     for (i = 0; i < VisiblePitchSegmentsNumber; ++i)
     {
-        PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / VisiblePitchSegmentsNumber, PitchDialSpan);
+        PitchTicksCurvature[i] = Class'UInterp'.static.DialRounding(float(i) / VisiblePitchSegmentsNumber, PitchDialSpan);
     }
 }
 
@@ -197,7 +201,7 @@ function DrawSpottingScopeOverlay(Canvas C)
         TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
         C.SetPos(0.0, 0.0);
 
-        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor = Class'UColor'.default.White;
         C.DrawTile(SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
 }
@@ -215,7 +219,7 @@ function UpdateTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBou
 
 function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
 {
-    local vector                                        Delta;
+    local Vector                                        Delta;
     local float                                         Deflection;
     local int                                           Distance, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
     local array<STargetInfo>                            Targets;
@@ -224,8 +228,8 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
     local DHGameReplicationInfo.MapMarker               MapMarker;
     local DHGameReplicationInfo                         GRI;
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers, GlobalArtilleryRequests, PersonalMapMarkers;
-    local rotator WeaponRotation;
-    local vector WeaponLocation;
+    local Rotator WeaponRotation;
+    local Vector WeaponLocation;
 
     if (PC == none || PC.SquadReplicationInfo == none || VW == none)
     {
@@ -278,11 +282,11 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
         Delta = MapMarker.WorldLocation - WeaponLocation;
         Delta.Z = 0;
         // calculate deflection between target's shift (Delta) and weapon's direction (VehicleRotation)
-        Deflection = class'UVector'.static.SignedAngle(vector(rotator(Normal(Delta))), vector(WeaponRotation), vect(0, 0, 1));
-        Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
+        Deflection = Class'UVector'.static.SignedAngle(Vector(Rotator(Normal(Delta))), Vector(WeaponRotation), vect(0, 0, 1));
+        Deflection = Class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
         SquadName = PC.SquadReplicationInfo.GetSquadName(PC.GetTeamNum(), MapMarker.SquadIndex);
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+        Distance = int(Class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
 
         if (MapMarker.ExpiryTime != -1)
         {
@@ -363,8 +367,8 @@ function DrawRangeTable(Canvas C, DHVehicleWeaponPawn VWP)
         return;
     }
 
-    ActiveLowerBoundPitch = class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch + VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit);
-    ActiveUpperBoundPitch = class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch + VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit);
+    ActiveLowerBoundPitch = Class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch + VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit);
+    ActiveUpperBoundPitch = Class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch + VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit);
 
     UpdateTable(C, ActiveLowerBoundPitch, ActiveUpperBoundPitch);
 
@@ -379,14 +383,14 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
 {
     local string Labels[2];
     local int Deflection;
-    local color IconColor, LabelColors[2];
+    local Color IconColor, LabelColors[2];
     local float XL, YL;
     local int LabelIndex, LineIndex, MaxLines, LineOffsetX, i;
 
-    CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
+    CurrentYaw = int(Class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
 
     C.SetDrawColor(White.R, White.G, White.B, White.A);
-    C.Font = C.MedFont;
+    C.Font = Class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.SizeX, C.SizeY);
 
     MaxLines = arraycount(TargetWidgetLayout.LineConfig);
 
@@ -406,7 +410,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
-                        Labels[0] = "SELECTED TARGET";
+                        Labels[0] = SelectedTargetText;
 
                         if (TargetInfo.MarkersTotal > 1)
                         {
@@ -415,7 +419,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                         }
                         break;
                     case MT_Measurement:
-                        Labels[0] = "MEASUREMENT TOOL";
+                        Labels[0] = MeasurementToolText;
                         break;
                     case MT_Measurement:
                         break;
@@ -426,12 +430,12 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
-                        Labels[0] = "Squad: ";
+                        Labels[0] = SquadText $ ": ";
                         Labels[1] = TargetInfo.SquadName @ "-" @ TargetInfo.Marker.MapMarkerClass.default.MarkerName;
                         LabelColors[1] = Green;
                         break;
                     case MT_Measurement:
-                        Labels[0] = "Ruler marker";
+                        Labels[0] = Class'DHMapMarker_Ruler'.default.MarkerName;
                         break;
                     default:
                         break;
@@ -440,7 +444,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
             case TWLT_ExpiryTime:
                 if (TargetInfo.Timeout != -1)
                 {
-                    Labels[0] = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
+                    Labels[0] = Class'TimeSpan'.static.ToString(TargetInfo.Timeout);
 
                     if (TargetInfo.Timeout > 10)
                     {
@@ -465,7 +469,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 {
                     if (Deflection > 0)
                     {
-                        Labels[1] = Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.LeftString;
+                        Labels[1] = Deflection $ Class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.LeftString;
 
                         if (CurrentYaw - Deflection < MinimumGunYaw)
                         {
@@ -480,12 +484,12 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                     }
                     else if (Deflection == 0)
                     {
-                        Labels[1] = "0" $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit);
+                        Labels[1] = "0" $ Class'UUnits'.static.GetAngleUnitString(YawAngleUnit);
                         LabelColors[1] = Green;
                     }
                     else
                     {
-                        Labels[1] = -Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.RightString;
+                        Labels[1] = -Deflection $ Class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.RightString;
 
                         if (CurrentYaw - Deflection > MaximumGunYaw)
                         {
@@ -584,12 +588,12 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         return;
     }
 
-    CurrentYaw = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYaw(), AU_Unreal, YawAngleUnit);
-    GunYawMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMin(), AU_Unreal, YawAngleUnit);
-    GunYawMax = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMax(), AU_Unreal, YawAngleUnit);
+    CurrentYaw = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYaw(), AU_Unreal, YawAngleUnit);
+    GunYawMin = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMin(), AU_Unreal, YawAngleUnit);
+    GunYawMax = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMax(), AU_Unreal, YawAngleUnit);
 
-    GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, YawScaleStep);
-    GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, YawScaleStep);
+    GunYawMaxTruncated = Class'UMath'.static.Floor(GunYawMax, YawScaleStep);
+    GunYawMinTruncated = Class'UMath'.static.Floor(GunYawMin, YawScaleStep);
 
     for (i = 0; i < Targets.Length; ++i)
     {
@@ -617,7 +621,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         }
     }
 
-    LabelColor = class'UColor'.default.White;
+    LabelColor = Class'UColor'.default.White;
 
     if (ArtilleryMarkers.Length > 0 && (!bSelectedMarkerAvailable || PC.ArtillerySupportSquadIndex == 255))
     {
@@ -625,7 +629,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
         Label = Repl(Label, "{0}", ToggleButtonText);
         // Flash the label to get the player's attention
-        LabelColor = class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
+        LabelColor = Class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
     }
     else if (bSelectedMarkerAvailable)
     {
@@ -634,7 +638,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
             // The player has selected an available marker but there are more to toggle between
             Label = Repl(TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
             Label = Repl(Label, "{0}", ToggleButtonText);
-            LabelColor = class'UColor'.default.Green;
+            LabelColor = Class'UColor'.default.Green;
         }
         else
         {
@@ -647,7 +651,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         Label = NoTargetsHint;
     }
 
-    Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
+    Label = Class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
 
     C.CurX = WidgetsPanelTopLeftX - 40;
     C.CurY = WidgetsPanelTopLeftY - 30;
@@ -664,7 +668,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local int StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local int GunYawMaxTruncated, GunYawMinTruncated;
-    local int BottomDialBound, TopDialBound;
     local int CurrentYaw, GunYawMin, GunYawMax;
     local array<int> TargetTickBuckets;
     local float CurvatureCoefficient, ShadingCoefficient;
@@ -677,10 +680,10 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
         return;
     }
 
-    CurrentYaw = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYaw(), AU_Unreal, YawAngleUnit);
-    CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
-    GunYawMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMin(), AU_Unreal, YawAngleUnit);
-    GunYawMax = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMax(), AU_Unreal, YawAngleUnit);
+    CurrentYaw = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYaw(), AU_Unreal, YawAngleUnit);
+    CurrentYaw = int(Class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
+    GunYawMin = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMin(), AU_Unreal, YawAngleUnit);
+    GunYawMax = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunYawMax(), AU_Unreal, YawAngleUnit);
 
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - 0.5 * YawIndicatorLength;
     IndicatorTopLeftCornerY = C.SizeY * 0.95;
@@ -690,13 +693,10 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     YawUpperBound = CurrentYaw + YawScaleStep * VisibleYawSegmentsNumber * 0.5;
     IndicatorStep = YawIndicatorLength / VisibleYawSegmentsNumber;
 
-    GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, YawScaleStep);
-    GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, YawScaleStep);
+    GunYawMaxTruncated = Class'UMath'.static.Floor(GunYawMax, YawScaleStep);
+    GunYawMinTruncated = Class'UMath'.static.Floor(GunYawMin, YawScaleStep);
 
-    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - YawDialSpan * 0.5);
-    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + YawDialSpan * 0.5);
-
-    C.Font = class'DHHud'.static.GetTinyFont(C);
+    C.Font = Class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
 
     // Start drawing scale ticks
@@ -711,9 +711,9 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
         CurvatureCoefficient = YawTicksCurvature[Index];
 
         // Calculate index of the current readout value on the mortar yaw span
-        Quotient = int(class'UMath'.static.FlooredDivision(Yaw, YawScaleStep));
+        Quotient = int(Class'UMath'.static.FlooredDivision(Yaw, YawScaleStep));
 
-        Label = string(int(class'UMath'.static.Floor(Yaw, YawScaleStep)));
+        Label = string(int(Class'UMath'.static.Floor(Yaw, YawScaleStep)));
 
         // Get the label's length
         C.StrLen(Label, TextWidthFloat, TextHeightFloat);
@@ -885,12 +885,13 @@ function float GetPitchUpperBound(float CurrentPitch)
 
 function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
-    local int CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
+    local float CurrentPitch, GunPitchOffset;
     local float TextWidthFloat, TextHeightFloat;
     local int TextWidth, TextHeight;
-    local int Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound;
+    local float Pitch, GunPitchMin, GunPitchMax;
+    local float PitchUpperBound, PitchLowerBound;
+    local int IndicatorTopLeftCornerX, IndicatorTopLeftCornerY;
     local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep;
-    local int BottomDialBound, TopDialBound;
     local int StrikeThroughStart, StrikeThroughEnd;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex, TickPosition;
     local float CurvatureConstant;
@@ -901,27 +902,26 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         return;
     }
 
-    CurrentPitch = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitch(), AU_Unreal, PitchAngleUnit);
-    GunPitchOffset = class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch, AU_Unreal, PitchAngleUnit);
-    CurrentPitch = class'UMath'.static.Floor(CurrentPitch + GunPitchOffset, PitchScaleStep);
+    CurrentPitch = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitch(), AU_Unreal, PitchAngleUnit);
+    GunPitchOffset = Class'UUnits'.static.ConvertAngleUnit(Normalize(VWP.VehicleBase.Rotation).Pitch, AU_Unreal, PitchAngleUnit);
+    CurrentPitch = Class'UMath'.static.Floor(CurrentPitch + GunPitchOffset, PitchScaleStep);
 
-    GunPitchMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
-    GunPitchMin = class'UMath'.static.Floor(GunPitchMin, PitchScaleStep);
-    GunPitchMax = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
-    GunPitchMax = class'UMath'.static.Floor(GunPitchMax, PitchScaleStep);
+    GunPitchMin = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
+    GunPitchMin = Class'UMath'.static.Floor(GunPitchMin, PitchScaleStep);
+    GunPitchMax = Class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
+    GunPitchMax = Class'UMath'.static.Floor(GunPitchMax, PitchScaleStep);
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
     IndicatorTopLeftCornerY = C.SizeY * 0.5 - 0.5 * PitchIndicatorLength;
 
     VisiblePitchSegmentsNumber = NumberOfPitchSegments * PitchSegmentSchema.Length;
 
+    // TODO: something needs to be fixed in here to handle lower bounds not being astronomical.
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
     IndicatorStep = PitchIndicatorLength / VisiblePitchSegmentsNumber;
-    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - PitchDialSpan * 0.5);
-    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + PitchDialSpan * 0.5);
 
-    C.Font = class'DHHud'.static.GetTinyFont(C);
+    C.Font = Class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
     C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY);
 
@@ -931,13 +931,18 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
 
+        if (Index < 0 || Index >= PitchTicksCurvature.Length)
+        {
+            continue;
+        }
+
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index];
 
         // Calculate index of the current readout value on the mortar pitch span
-        Quotient = class'UMath'.static.FlooredDivision(Pitch, PitchScaleStep);
+        Quotient = Class'UMath'.static.FlooredDivision(Pitch, PitchScaleStep);
 
-        Label = class'UFloat'.static.Format(Pitch, PitchDecimalsDial);
+        Label = Class'UFloat'.static.Format(Pitch, PitchDecimalsDial);
 
         // Get the label's length
         C.StrLen(Label, TextWidthFloat, TextHeightFloat);
@@ -983,37 +988,44 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     }
 
     // Draw a strike-through for values outside of the traverse range
-
     if (PitchLowerBound < GunPitchMin)
     {
-        StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMin - PitchLowerBound) / PitchScaleStep - 1;
-        StrikeThroughStart = PitchTicksCurvature[StrikeThroughStartIndex] * PitchIndicatorLength;
-        StrikeThroughEnd = PitchIndicatorLength;
+        StrikeThroughStartIndex = VisiblePitchSegmentsNumber - ((GunPitchMin - PitchLowerBound) / PitchScaleStep) - 1;
 
-        // Draw the strike-through
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
-        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+        if (StrikeThroughStartIndex >= 0 && StrikeThroughStartIndex < PitchTicksCurvature.Length)
+        {
+            StrikeThroughStart = PitchTicksCurvature[StrikeThroughStartIndex] * PitchIndicatorLength;
+            StrikeThroughEnd = PitchIndicatorLength;
 
-        // Add the missing tick on the end of the strike-through line
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
-        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughStart, StrikeThroughThickness);
+            // Draw the strike-through
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+            C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+            // Add the missing tick on the end of the strike-through line
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughStart, StrikeThroughThickness);
+        }
     }
 
     // Draw a strike-through if this segment is above the upper limit.
     if (PitchUpperBound > GunPitchMax)
     {
-        StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = (PitchUpperBound - GunPitchMax) / PitchScaleStep - 1;
-        StrikeThroughStart = 0;
-        StrikeThroughEnd = PitchTicksCurvature[StrikeThroughEndIndex] * PitchIndicatorLength;
 
-        // Draw the strike-through
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
-        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+        if (StrikeThroughEndIndex >= 0 && StrikeThroughStartIndex < PitchTicksCurvature.Length)
+        {
+            StrikeThroughStartIndex = 0;
+            StrikeThroughStart = 0;
+            StrikeThroughEnd = PitchTicksCurvature[StrikeThroughEndIndex] * PitchIndicatorLength;
 
-        // Add the missing tick on the end of the strike-through line
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
-        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
+            // Draw the strike-through
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+            C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+            // Add the missing tick on the end of the strike-through line
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
+        }
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
@@ -1033,7 +1045,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German_sight_background'
     YawScaleStep=1.0
     PitchScaleStep=1.0
 
@@ -1079,6 +1091,10 @@ defaultproperties
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.5
 
-    GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
-    GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
+    GradientOverlayX=Texture'DH_InterfaceArt2_tex.dials_gradient_x'
+    GradientOverlayY=Texture'DH_InterfaceArt2_tex.dials_gradient_y'
+
+    SelectedTargetText="Selected Target"
+    MeasurementToolText="Measurement Tool"
+    SquadText="Squad"
 }

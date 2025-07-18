@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifySupplyVol extends DH_ModifyActors;
@@ -17,7 +17,7 @@ function PostBeginPlay()
 
     if (SupplyVolumeToModify != '')
     {
-        foreach AllActors(class'ROAmmoResupplyVolume', SupplyVolumeReference, SupplyVolumeToModify) // volumes are static so have to use the all actor list
+        foreach AllActors(Class'ROAmmoResupplyVolume', SupplyVolumeReference, SupplyVolumeToModify) // volumes are static so have to use the all actor list
         {
             break;
         }

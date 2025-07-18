@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSetupPhaseMessage extends LocalMessage;
@@ -17,12 +17,12 @@ static function string GetString(
 {
     local int S, ExtraInteger;
 
-    class'UInteger'.static.ToShorts(Switch, S, ExtraInteger);
+    Class'UInteger'.static.ToShorts(Switch, S, ExtraInteger);
 
     switch (S)
     {
         case 0:
-            return Repl(default.PhaseMessage, "{0}", class'TimeSpan'.static.ToString(ExtraInteger));
+            return Repl(default.PhaseMessage, "{0}", Class'TimeSpan'.static.ToString(ExtraInteger));
         case 1:
             return default.PhaseEndMessage;
     }

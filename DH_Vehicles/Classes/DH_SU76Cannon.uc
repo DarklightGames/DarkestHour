@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SU76Cannon extends DHVehicleCannon;
@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=Mesh'DH_SU76_anm.SU76_turret_ext'
-    skins(0)=Texture'allies_vehicles_tex.ext_vehicles.SU76_ext'
-    skins(1)=Texture'allies_vehicles_tex.int_vehicles.SU76_int'
-    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.SU76_int_s'
+    skins(0)=Texture'allies_vehicles_tex.SU76_ext'
+    skins(1)=Texture'allies_vehicles_tex.SU76_int'
+    HighDetailOverlay=Material'allies_vehicles_tex.SU76_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
@@ -32,8 +32,8 @@ defaultproperties
     CustomPitchDownLimit=64620
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellHE'
+    PrimaryProjectileClass=Class'DH_SU76CannonShell'
+    SecondaryProjectileClass=Class'DH_SU76CannonShellHE'
     ProjectileDescriptions(0)="APBC"
 
     nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
@@ -45,7 +45,7 @@ defaultproperties
     MaxSecondaryAmmo=27
     SecondarySpread=0.002
 
-    TertiaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_SU76CannonShellAPCR'
     InitialTertiaryAmmo=2
     MaxTertiaryAmmo=6
     nProjectileDescriptions(2)="BR-350P"
@@ -57,13 +57,13 @@ defaultproperties
 
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload, according to books it could be even faster. Comfortable opened loader space allows that.
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.76mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.76mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.76mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //3.5 seconds reload, according to books it could be even faster. Comfortable opened loader space allows that.
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // View shake
 

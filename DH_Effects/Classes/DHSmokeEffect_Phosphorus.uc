@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSmokeEffect_Phosphorus extends DHSmokeEffectBase;
@@ -31,7 +31,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=4.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=3.0)
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=15.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
@@ -63,7 +63,7 @@ defaultproperties
         StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=45.0,Max=50.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -95,7 +95,7 @@ defaultproperties
         StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=55.0,Max=60.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -126,7 +126,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=100.0),Y=(Min=50.0,Max=100.0),Z=(Min=50.0,Max=100.0))
         InitialParticlesPerSecond=1.5
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke_fill'
+        Texture=Texture'Effects_Tex.grenadesmoke_fill'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=8.0,Max=9.0)
         InitialDelayRange=(Min=0.75,Max=0.75)
@@ -158,7 +158,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=14.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.Effects.sunflare_danzig'
+        Texture=Texture'DH_FX_Tex.sunflare_danzig'
         LifetimeRange=(Min=0.400000,Max=0.400010)
         InitialDelayRange=(Min=0.050000,Max=0.050000)
         StartVelocityRange=(Z=(Min=10.000000,Max=10.000000))
@@ -189,7 +189,7 @@ defaultproperties
         StartSizeRange=(Z=(Min=5.000000))
         InitialParticlesPerSecond=1.500000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.flak_flash'
+        Texture=Texture'DH_FX_Tex.flak_flash'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Min=8.000000,Max=9.000000)
         InitialDelayRange=(Min=0.750000,Max=0.750000)
@@ -216,7 +216,7 @@ defaultproperties
         StartSizeRange=(X=(Min=20.000000,Max=20.000000),Y=(Min=20.000000,Max=20.000000),Z=(Min=20.000000,Max=20.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'SpecialEffects.Flares.Spikeyflare'
+        Texture=Texture'SpecialEffects.Spikeyflare'
         MinSquaredVelocity=1.000000
         LifetimeRange=(Min=3.000000,Max=4.000000)
         StartVelocityRange=(X=(Min=-175.000000,Max=175.000000),Y=(Min=-175.000000,Max=175.000000),Z=(Min=20.000000,Max=300.000000))
@@ -250,7 +250,7 @@ defaultproperties
         StartSizeRange=(X=(Min=5.000000,Max=6.000000),Y=(Min=5.000000,Max=6.000000),Z=(Min=5.000000,Max=6.000000))
         InitialParticlesPerSecond=350.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'SpecialEffects.Smoke.MuchSmoke2t'
+        Texture=Texture'SpecialEffects.MuchSmoke2t'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         SecondsBeforeInactive=0.000000
@@ -282,7 +282,7 @@ defaultproperties
         StartSizeRange=(X=(Min=32.0,Max=32.0),Y=(Min=32.0,Max=32.0),Z=(Min=32.0,Max=32.0))
         InitialParticlesPerSecond=100.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.explosion_1frame'
+        Texture=Texture'Effects_Tex.explosion_1frame'
         LifetimeRange=(Min=0.4,Max=0.5)
         StartVelocityRange=(Z=(Min=300.0,Max=300.0))
     End Object

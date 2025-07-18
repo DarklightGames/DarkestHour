@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleMessage extends ROVehicleMessage
@@ -120,7 +120,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     if (PlayerController(OptionalObject) != none)
     {
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PlayerController(OptionalObject));
+        S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PlayerController(OptionalObject));
     }
 
     return S;

@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIIINCannonPawn_CamoOne extends DH_PanzerIIINCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_PanzerIIINCannon_CamoOne'
+    GunClass=Class'DH_PanzerIIINCannon_CamoOne'
 }

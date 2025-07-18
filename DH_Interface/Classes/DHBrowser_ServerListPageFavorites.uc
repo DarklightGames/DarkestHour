@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_ServerListPageFavorites extends UT2k4Browser_ServerListPageFavorites;
@@ -9,11 +9,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
 }
 
 defaultproperties
@@ -29,17 +29,17 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageFavorites.InternalOnLoadINI
     End Object
-    sp_Main=DHGUISplitter'DH_Interface.DHBrowser_ServerListPageFavorites.HorzSplitter'
+    sp_Main=DHGUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
     DetailSplitterPosition=0.465621
 
-    Begin Object Class=ROGUIContextMenu Name=FavoritesContextMenu
+    Begin Object Class=DHGUIContextMenu Name=FavoritesContextMenu
         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
     End Object
-    ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    ContextMenu=DHGUIContextMenu'DH_Interface.FavoritesContextMenu'
 
     bStandardized=true
     StandardHeight=0.8

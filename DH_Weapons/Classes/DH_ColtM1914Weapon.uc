@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ColtM1914Weapon extends DHPistolWeapon;
@@ -8,10 +8,10 @@ class DH_ColtM1914Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Kongsberg Colten M/1914"
-    FireModeClass(0)=class'DH_Weapons.DH_ColtM1914Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_ColtM1914MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ColtM1914Attachment'
-    PickupClass=class'DH_Weapons.DH_ColtM1914Pickup'
+    FireModeClass(0)=Class'DH_ColtM1914Fire'
+    FireModeClass(1)=Class'DH_ColtM1914MeleeFire'
+    AttachmentClass=Class'DH_ColtM1914Attachment'
+    PickupClass=Class'DH_ColtM1914Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt1914'
     bUseHighDetailOverlayIndex=false
@@ -19,13 +19,13 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    Skins(0)=Texture'DH_ColtM1911_tex.ColtM1911.1914_Colt'
+    Skins(0)=Texture'DH_ColtM1911_tex.1914_Colt'
 
 	DisplayFOV=85.0
     IronSightDisplayFOV=75.0
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     SelectEmptyAnim="Draw_empty"
     PutDownAnim="put_away"

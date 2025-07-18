@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_C96Weapon extends DHPistolWeapon;
@@ -8,17 +8,17 @@ class DH_C96Weapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Mauser C96"
-    FireModeClass(0)=class'DH_Weapons.DH_C96Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_C96MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_C96Attachment'
-    PickupClass=class'DH_Weapons.DH_C96Pickup'
+    FireModeClass(0)=Class'DH_C96Fire'
+    FireModeClass(1)=Class'DH_C96MeleeFire'
+    AttachmentClass=Class'DH_C96Attachment'
+    PickupClass=Class'DH_C96Pickup'
 
     Mesh=SkeletalMesh'DH_C96_1st.c96_mesh'
 
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(0)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
+    Skins(0)=Texture'Weapons1st_tex.Mauser_c96'
+    HighDetailOverlay=Shader'Weapons1st_tex.c96_S'
     handnum=2
     sleevenum=1
 

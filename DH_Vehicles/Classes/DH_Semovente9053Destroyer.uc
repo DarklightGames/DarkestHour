@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Add positional offset to turret angle calculations to fix hit detection
 //     issues (probably not worth it since there's almost no armor anyways)
@@ -45,7 +45,7 @@ defaultproperties
     BeginningIdleAnim="body_closed_idle"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
 
     // Driver
     InitialPositionIndex=0
@@ -78,11 +78,8 @@ defaultproperties
     GearRatios(4)=0.72
     TransRatio=0.1
 
-    // Damage
-	// cons: petrol fuel
-	// note: 4 men crew
-    Health=525
-    HealthMax=525.0
+    Health=500
+    HealthMax=500
 	EngineHealth=300
 
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
@@ -112,12 +109,12 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=450.0
 
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    IdleSound=SoundGroup'Vehicle_Engines.KV1s_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.KV1s_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=2
@@ -132,20 +129,20 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_Semovente9053_tex.Tank_Hud.semo9053_body'
-    VehicleHudTurret=TexRotator'DH_Semovente9053_tex.Tank_Hud.semo9053_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Semovente9053_tex.Tank_Hud.semo9053_turret_look'
+    VehicleHudImage=Texture'DH_Semovente9053_tex.semo9053_body'
+    VehicleHudTurret=TexRotator'DH_Semovente9053_tex.semo9053_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Semovente9053_tex.semo9053_turret_look'
     VehicleHudEngineX=0.50
     VehicleHudEngineY=0.50
-    VehicleHudTreadsPosX(0)=0.35
-    VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.6
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
     VehicleHudOccupantsX(0)=0.425
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.75
-    SpawnOverlay(0)=Material'DH_Semovente9053_tex.Interface.semovente9053_icon'
+    SpawnOverlay(0)=Material'DH_Semovente9053_tex.semovente9053_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_B_01_L"
@@ -184,7 +181,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -192,7 +189,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -201,7 +198,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -209,7 +206,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -217,14 +214,14 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -245,7 +242,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Semovente9053Destroyer.KParams0'
+    KParams=KParams0
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
 
@@ -257,14 +254,14 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_hatch_collision',AttachBone="driver_hatch")
 
     // Shell attachments
-    VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-31.8017,Z=46.0125))
-    VehicleAttachments(1)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-21.5638,Z=46.0125))
-    VehicleAttachments(2)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-26.7217,Z=37.901))
-    VehicleAttachments(3)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-16.4839,Z=37.901))
-    VehicleAttachments(4)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=21.542,Z=46.0125))
-    VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
-    VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
-    VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
+    VehicleAttachments(0)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=-31.8017,Z=46.0125))
+    VehicleAttachments(1)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=-21.5638,Z=46.0125))
+    VehicleAttachments(2)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=-26.7217,Z=37.901))
+    VehicleAttachments(3)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=-16.4839,Z=37.901))
+    VehicleAttachments(4)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=21.542,Z=46.0125))
+    VehicleAttachments(5)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
+    VehicleAttachments(6)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
+    VehicleAttachments(7)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
 
     // Because the turret is completely disconnected from the hull, there should be no chance of
     // hull components being damaged when the turret is penetrated and vice versa.

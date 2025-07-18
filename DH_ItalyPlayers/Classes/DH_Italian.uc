@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Italian extends DHSPECIES_Human;
 
 defaultproperties
 {
-    MaleVoice="DH_ItalyPlayers.DHItalianVoice"
-    FemaleVoice="DH_ItalyPlayers.DHItalianVoice"
+    MaleVoice="DH_ItalyPlayers.DHItalyVoice"
+    FemaleVoice="DH_ItalyPlayers.DHItalyVoice"
 }

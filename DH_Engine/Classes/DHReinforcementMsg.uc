@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHReinforcementMsg extends DHFriendlyInformationMsg
@@ -14,7 +14,7 @@ var localized string ReinforcementsDepleted;
 // Modified to play a sound to go with screen screen message
 static function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    P.ClientPlaySound(Sound'DH_SundrySounds.Messages.ReinforcementsLow',,, SLOT_Interface);
+    P.ClientPlaySound(Sound'DH_SundrySounds.ReinforcementsLow',,, SLOT_Interface);
 
     super(LocalMessage).ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 }

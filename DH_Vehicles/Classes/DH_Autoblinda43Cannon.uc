@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Autoblinda43Cannon extends DHVehicleCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll')
+    Skins(0)=Texture'DH_VehiclesGE_tex6.Puma_turret_dunk'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -33,8 +33,8 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Sdkfz2342CannonShell'
+    SecondaryProjectileClass=Class'DH_Sdkfz2342CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.38"
@@ -48,15 +48,15 @@ defaultproperties
     SecondarySpread=0.0013
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    AltFireProjectileClass=Class'DH_MG42Bullet'
     InitialAltAmmo=150
     NumMGMags=10
     AltFireInterval=0.05
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerProjectileClass=Class'DH_MG42TracerBullet'
     TracerFrequency=7
 
     // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_ExternalSmokeCandleDischarger'
+    SmokeLauncherClass=Class'DH_ExternalSmokeCandleDischarger'
     SmokeLauncherFireOffset(0)=(X=38.0,Y=-39.0,Z=35.0)
     SmokeLauncherFireOffset(1)=(X=38.0,Y=37.0,Z=35.0)
     SmokeLauncherFireOffset(2)=(X=37.0,Y=-45.0,Z=29.0)
@@ -69,15 +69,15 @@ defaultproperties
     AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Mg42_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Mg42_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

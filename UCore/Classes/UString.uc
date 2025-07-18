@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class UString extends Object;
@@ -10,7 +10,7 @@ final static function UString Create(optional string Value)
 {
     local UString S;
 
-    S = new class'UString';
+    S = new Class'UString';
     S.Value = Value;
 
     return S;

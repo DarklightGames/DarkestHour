@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUISquadComponent extends GUIPanel;
@@ -93,7 +93,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     if (MembersListContextMenuWrapper == none)
     {
-        MembersListContextMenuWrapper = new class'DHContextMenu_SquadMembers';
+        MembersListContextMenuWrapper = new Class'DHContextMenu_SquadMembers';
     }
 
     if (MembersListContextMenuWrapper == none)
@@ -212,7 +212,7 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        Image=Texture'DH_GUI_tex.DeployMenu.squad_panel'
+        Image=Texture'DH_GUI_tex.squad_panel'
         ImageColor=(R=192,G=192,B=192,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Stretched
@@ -231,8 +231,8 @@ defaultproperties
     Begin Object Class=DHGUIListBox Name=MembersList
         OutlineStyleName="ItemOutline"
         SectionStyleName="ListSection"
-        SelectedStyleName="DHItemLargeOutline"
-        StyleName="DHLargeText"
+        SelectedStyleName="DHItemOutline"
+        StyleName="DHSmallText"
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none
@@ -241,7 +241,7 @@ defaultproperties
         WinHeight=0.77
         WinTop=0.05
         bVisible=false
-        ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
+        ContextMenu=GUIContextMenu'DH_Interface.MembersListContextMenu'
     End Object
     lb_Members=MembersList
 

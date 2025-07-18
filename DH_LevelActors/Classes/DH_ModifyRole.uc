@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyRole extends DH_ModifyActors;
@@ -19,7 +19,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     local int MessageId;
     local DHRoleInfo RoleInfo;
 
-    foreach AllActors(class'DHRoleInfo', RoleInfo, RoleTag)
+    foreach AllActors(Class'DHRoleInfo', RoleInfo, RoleTag)
     {
         switch (RoleAction)
         {
@@ -35,7 +35,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     
         if (bSendMessage)
         {
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, int(RoleInfo.Side), class'DHGameMessage', MessageID,,, RoleInfo);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, int(RoleInfo.Side), Class'DHGameMessage', MessageID,,, RoleInfo);
         }
     }
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M9530Weapon extends DHBoltActionWeapon;
@@ -26,10 +26,10 @@ defaultproperties
     NativeItemName="Gewehr M95/30"
     SwayModifyFactor=0.50  // -0.10
 
-    FireModeClass(0)=class'DH_Weapons.DH_M9530Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M9530MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M9530Attachment'
-    PickupClass=class'DH_Weapons.DH_M9530Pickup'
+    FireModeClass(0)=Class'DH_M9530Fire'
+    FireModeClass(1)=Class'DH_M9530MeleeFire'
+    AttachmentClass=Class'DH_M9530Attachment'
+    PickupClass=Class'DH_M9530Pickup'
 
     Mesh=SkeletalMesh'DH_Mannlicher_1st.m9530_mesh'
 

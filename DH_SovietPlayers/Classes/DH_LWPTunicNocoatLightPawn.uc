@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LWPTunicNocoatLightPawn extends DH_LWPPawn;
@@ -8,8 +8,8 @@ class DH_LWPTunicNocoatLightPawn extends DH_LWPPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_nocoat_late'
-    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic_light'
-    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
+    Skins(1)=Texture'DHSovietCharactersTex.DH_LWP_wz43_tunic_light'
+    Skins(0)=Texture'Characters_tex.rus_face05'
 
     bReversedSkinsSlots=true
 }

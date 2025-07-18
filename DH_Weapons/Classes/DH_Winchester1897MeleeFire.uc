@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Winchester1897MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_Winchester1897BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_Winchester1897BayonetDamType'
+    DamageType=Class'DH_Winchester1897BashDamType'
+    BayonetDamageType=Class'DH_Winchester1897BayonetDamType'
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"
     BashEmptyAnim="bash_attack_empty"

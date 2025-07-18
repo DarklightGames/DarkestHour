@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MKB42HAttachment extends DHWeaponAttachment;
@@ -8,9 +8,9 @@ class DH_MKB42HAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mkb42h_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mkb42h_icon' 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.mkb42h_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'DH_3rdShellEject556mm'
 
     WA_Idle="idle_mkb"
     WA_IdleEmpty="idle_mkb"

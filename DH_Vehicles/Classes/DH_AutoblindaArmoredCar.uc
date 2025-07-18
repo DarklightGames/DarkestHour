@@ -1,10 +1,8 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Ammo hitpoint areas
-// [ ] Armor values (wolfkraut)
-// [ ] Fix wheel suspension skinning in the rig
 // [ ] Fix collision area for the driver's hatch on the body
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
@@ -34,7 +32,7 @@ defaultproperties
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
     PassengerPawns(0)=(AttachBone="PASSENGER_L",DrivePos=(Z=58),DriveAnim="autoblinda_passenger_l")
     PassengerPawns(1)=(AttachBone="PASSENGER_R",DrivePos=(Z=58),DriveAnim="autoblinda_passenger_r")
 
@@ -47,23 +45,28 @@ defaultproperties
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="VBA64_driver_idle_close" // default driver anim
 
-    // Hull armor   // TODO: get all this
-    FrontArmor(0)=(Thickness=3.0,Slope=-41.0,MaxRelativeHeight=40.0,LocationName="lower nose") // assumed 30mm to all front & 8mm elsewhere; measured all the slopes in the hull mesh
-    FrontArmor(1)=(Thickness=3.0,Slope=42.0,MaxRelativeHeight=61.0,LocationName="upper nose")
-    FrontArmor(2)=(Thickness=3.0,Slope=73.0,MaxRelativeHeight=77.0,LocationName="upper")
-    FrontArmor(3)=(Thickness=3.0,Slope=37.0,LocationName="driver plate")
-    RightArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower") // composite slope & height for sides, as varies along length of hull
-    RightArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
-    RearArmor(0)=(Thickness=0.8,Slope=-27.5,MaxRelativeHeight=46.0,LocationName="lower")
-    RearArmor(1)=(Thickness=0.8,Slope=24.0,MaxRelativeHeight=75.5,LocationName="upper")
-    RearArmor(2)=(Thickness=0.8,Slope=38.0,LocationName="turret upstand")
+    FrontArmor(0)=(Thickness=0.9,Slope=-50.0,MaxRelativeHeight=27.3843)
+    FrontArmor(1)=(Thickness=0.9,Slope=-15.0,MaxRelativeHeight=43.1217)
+    FrontArmor(2)=(Thickness=0.9,Slope=50.0,MaxRelativeHeight=70.8217)
+    FrontArmor(3)=(Thickness=0.9,Slope=74.0,MaxRelativeHeight=79.1801)
+    FrontArmor(4)=(Thickness=0.9,Slope=18.0)
 
-    FrontLeftAngle=338.0
-    FrontRightAngle=22.0
-    RearRightAngle=158.0
-    RearLeftAngle=202.0
+    RightArmor(0)=(Thickness=0.9,Slope=-8.0,MaxRelativeHeight=79.1801)
+    RightArmor(1)=(Thickness=0.9,Slope=32.0)
+
+    LeftArmor(0)=(Thickness=0.9,Slope=-8.0,MaxRelativeHeight=79.1801)
+    LeftArmor(1)=(Thickness=0.9,Slope=32.0)
+
+    RearArmor(0)=(Thickness=0.9,Slope=-62.0,MaxRelativeHeight=31.8721)
+    RearArmor(1)=(Thickness=0.9,Slope=-33.0,MaxRelativeHeight=56.2083)
+    RearArmor(2)=(Thickness=0.8,Slope=40.0,MaxRelativeHeight=76.9121)
+    RearArmor(3)=(Thickness=0.8,Slope=6.60,MaxRelativeHeight=85.9233)
+    RearArmor(4)=(Thickness=0.8,Slope=20.0)
+
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=160.0
+    RearLeftAngle=200.0
 
     // Movement
     GearRatios(0)=-0.35
@@ -78,7 +81,7 @@ defaultproperties
     WheelSuspensionTravel=10.0
     WheelSuspensionMaxRenderTravel=5.0
     ChassisTorqueScale=0.095
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=20.0),(InVal=500.0,OutVal=15.0),(InVal=600.0,OutVal=10.0),(InVal=1000000000.0,OutVal=8.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=32.0),(InVal=500.0,OutVal=16.0),(InVal=600.0,OutVal=8.0),(InVal=1000000000.0,OutVal=4.0)))
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     SteerSpeed=75.0
@@ -91,8 +94,8 @@ defaultproperties
     // Damage
 	// pros: diesel fuel; 20mm ammo is very unlikely to detonate;
 	// 4 men crew
-    Health=525
-    HealthMax=525.0
+    Health=500
+    HealthMax=500
 	EngineHealth=300
 	AmmoIgnitionProbability=0.2  // 0.75 default
     TurretDetonationThreshold=5000.0 // increased from 1750
@@ -108,7 +111,7 @@ defaultproperties
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_dest'   // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234_dest'   // TODO: replace
 
     // Exit
     ExitPositions(0)=(X=-34,Y=-104,Z=57)        // Driver
@@ -119,9 +122,9 @@ defaultproperties
     ExitPositions(5)=(X=-206,Y=0,Z=57)          // Fallback exit (rear)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.85,Y=50.59,Z=33.88),ExhaustRotation=(Roll=0,Pitch=4354,Yaw=23546))
@@ -133,7 +136,7 @@ defaultproperties
     //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Autoblinda_stc.autoblinda_vision_port_collision',AttachBone=VISION_PORT)
 
     // HUD
-    VehicleHudImage=Texture'DH_Autoblinda_tex.interface.ab41_body'
+    VehicleHudImage=Texture'DH_Autoblinda_tex.ab41_body'
     VehicleHudEngineX=0.50
     VehicleHudEngineY=0.75
     VehicleHudOccupantsX(0)=0.5
@@ -154,42 +157,41 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         //BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_RF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_F_R"
+        SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FRWheel'
+    Wheels(0)=FRWheel
     Begin Object Class=SVehicleWheel Name=FLWheel
         SteerType=VST_Steered
         BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
         // BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_LF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_F_L"
+        SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FLWheel'
+    Wheels(1)=FLWheel
     Begin Object Class=SVehicleWheel Name=BRWheel
         SteerType=VST_Inverted
         BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
         // BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_RF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_B_R"
+        SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BRWheel'
+    Wheels(2)=BRWheel
     Begin Object Class=SVehicleWheel Name=BLWheel
         SteerType=VST_Inverted
         BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        //BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_LF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_B_L"
+        SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BLWheel'
+    Wheels(3)=BLWheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -209,5 +211,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_AutoblindaArmoredCar.KParams0'
+    KParams=KParams0
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment_SupplyCache extends DHMapIconAttachment
@@ -42,7 +42,7 @@ function EVisibleFor GetVisibilityInDangerZone()
     return VISIBLE_All;
 }
 
-simulated function color GetIconColor(DHPlayer PC)
+simulated function Color GetIconColor(DHPlayer PC)
 {
     local byte PlayerTeamIndex;
 
@@ -52,30 +52,30 @@ simulated function color GetIconColor(DHPlayer PC)
 
         if (PlayerTeamIndex > 1)
         {
-            if (GetTeamIndex() < arraycount(class'DHColor'.default.TeamColors))
+            if (GetTeamIndex() < arraycount(Class'DHColor'.default.TeamColors))
             {
-                return class'DHColor'.default.TeamColors[GetTeamIndex()];
+                return Class'DHColor'.default.TeamColors[GetTeamIndex()];
             }
         }
         else if (PlayerTeamIndex != GetTeamIndex() && GetTeamIndex() < 2)
         {
-            return class'UColor'.default.Red;
+            return Class'UColor'.default.Red;
         }
     }
 
     if (IsCacheConstructed())
     {
-        return class'DHColor'.default.FriendlyColor;
+        return Class'DHColor'.default.FriendlyColor;
     }
     else
     {
-        return class'UColor'.default.Gray;
+        return Class'UColor'.default.Gray;
     }
 }
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Supply_Cache'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Supply_Cache'
     IconScale=0.03
     bNetNotify=true
 }

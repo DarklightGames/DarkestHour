@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Granata Modello 1935
 //==============================================================================
@@ -18,10 +18,10 @@ defaultproperties
 
     //Damage
     ImpactDamage=200
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
+    ShellImpactDamage=Class'DH_Sdkfz2341CannonShellDamageHE'
     Damage=80.0 // 6.2g PETN
     DamageRadius=375.0
-    MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
+    MyDamageType=Class'DHShellHE20mmDamageType'
     HullFireChance=0.25
     EngineFireChance=0.35
 
@@ -29,24 +29,24 @@ defaultproperties
     DrawScale=0.75
     bHasTracer=true
     bHasShellTrail=true
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_White'
-    CoronaClass=class'DH_Effects.DHShellTracer_White'
+    ShellTrailClass=Class'DH20mmShellTrail_White'
+    CoronaClass=Class'DHShellTracer_White'
 
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+    ShellHitDirtEffectClass=Class'DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'TankHEHitWaterEffect'
 
-    ExplosionDecal=class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+    ExplosionDecal=Class'GrenadeMark'
+    ExplosionDecalSnow=Class'GrenadeMarkSnow'
 
     BlurTime=1.9
     BlurEffectScalar=1.3
     PenetrationMag=110.0
 
     //Sound
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     bDebugInImperial=false
 

@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSmokeEffectAttachment_Red extends DHSmokeEffectAttachment;
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Red'
+    SmokeEmitterClass=Class'DHSmokeEffect_Red'
 }

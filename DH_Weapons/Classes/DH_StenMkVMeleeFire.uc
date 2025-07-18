@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StenMkVMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_StenMkVBashDamType'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
+    DamageType=Class'DH_StenMkVBashDamType'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 
     BayonetTraceRange=120.0   // -20
     FireRate=0.23 // -0.02

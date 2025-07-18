@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CanadianVestBrunswicksPawn extends DH_BritishVestPawn;
 
 defaultproperties
 {
-    Species=class'DH_BritishPlayers.DH_Canadian'
-    Skins(1)=Texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Vest'
+    Species=Class'DH_Canadian'
+    Skins(1)=Texture'DHCanadianCharactersTex.CanadianRoyalNewBrunswicks_Vest'
 }

@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GermanSPGunCrewPawn extends DH_GermanTankCrewPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Heer.WH_SP'
+    Skins(0)=Texture'DHGermanCharactersTex.WH_SP'
 }

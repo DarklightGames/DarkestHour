@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -60,7 +60,7 @@ simulated function PostBeginPlay()
 // Meaning the shell would explode at a zero vector location, i.e. the world origin, instead of where it actually is!
 simulated function Destroyed()
 {
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     // If shell is being destroyed without having exploded, usually it means a replicated client version of shell actor is being destroyed
     // by server just before client actor has had time to impact & explode locally - so we spawn explosion effects so the player sees them
@@ -68,7 +68,7 @@ simulated function Destroyed()
     {
         // Do a trace up to 10m forward, along shell's flight path, to get a hit location & normal for what we should be just about to hit
         // If trace fails to hit anything we fall back to using shell's current location & a 'straight up' hit normal
-        if (Trace(HitLocation, HitNormal, Location + (600.0 * vector(Rotation)), Location, true) != none)
+        if (Trace(HitLocation, HitNormal, Location + (600.0 * Vector(Rotation)), Location, true) != none)
         {
             SpawnExplosionEffects(HitLocation, HitNormal);
         }
@@ -125,12 +125,12 @@ simulated static function float GetYAdjustForRange(int Range)
     return 0.0;
 }
 
-simulated function Landed(vector HitNormal)
+simulated function Landed(Vector HitNormal)
 {
     Explode(Location, HitNormal);
 }
 
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -154,7 +154,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-simulated function BlowUp(vector HitLocation)
+simulated function BlowUp(Vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
@@ -168,12 +168,12 @@ simulated function BlowUp(vector HitLocation)
 }
 
 // New function just to consolidate long code that's repeated in more than one function
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local sound          HitSound;
+    local Sound          HitSound;
     local class<Emitter> HitEmitterClass;
-    local vector         TraceHitLocation, TraceHitNormal;
-    local material       HitMaterial;
+    local Vector         TraceHitLocation, TraceHitNormal;
+    local Material       HitMaterial;
     local ESurfaceTypes  SurfType;
     local bool           bShowDecal, bSnowDecal;
 
@@ -188,12 +188,12 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         //VehicleShellShockEffect();
         HitSound = VehicleHitSound;
         HitEmitterClass = ShellHitVehicleEffectClass;
-        PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true);
+        PlayOwnedSound(Sound'DH_SundrySounds.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true);
     }
     // Hit something else - get material type & set effects
     else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
-        Trace(TraceHitLocation, TraceHitNormal, HitLocation + (16.0 * vector(Rotation)), HitLocation, false,, HitMaterial);
+        Trace(TraceHitLocation, TraceHitNormal, HitLocation + (16.0 * Vector(Rotation)), HitLocation, false,, HitMaterial);
 
         if (HitMaterial == none)
         {
@@ -265,7 +265,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Effect relevance check is skipped altogether for an HE explosion, as it's big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it
     if (HitEmitterClass != none && (RoundType == RT_HE || EffectIsRelevant(HitLocation, false)))
     {
-        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
+        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, Rotator(HitNormal));
     }
 
     // Spawn explosion decal
@@ -279,11 +279,11 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 
         if (bSnowDecal && ExplosionDecalSnow != none)
         {
-            Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecalSnow, self,, HitLocation, Rotator(-HitNormal));
         }
         else if (ExplosionDecal != none)
         {
-            Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+            Spawn(ExplosionDecal, self,, HitLocation, Rotator(-HitNormal));
         }
     }
 
@@ -299,10 +299,10 @@ defaultproperties
     bHasTracer=true
     bHasShellTrail=true
     DrawScale=1.5
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
-    CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Red'
-    ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
+    StaticMesh=StaticMesh'WeaponPickupSM.76mm_Shell'
+    CoronaClass=Class'DHShellTracer_RedLarge'
+    ShellTrailClass=Class'DHShellTrail_Red'
+    ShellImpactDamage=Class'DHShellImpactDamageType'
     ImpactDamage=400
 
     Speed=22000.0
@@ -313,23 +313,23 @@ defaultproperties
     HullFireChance=0.25 // defaults here - customize per shell class
     EngineFireChance=0.50 // defaults here - customize per shell class
 
-    VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-    RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
-    ShellDeflectEffectClass=class'DH_Effects.DHTankAPHitDeflect'
-    ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.AP_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.AP_Impact_Dirt'
+    RockHitSound=SoundGroup'ProjectileSounds.AP_Impact_Rock'
+    WaterHitSound=SoundGroup'ProjectileSounds.AP_Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.AP_Impact_Wood'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrate'
+    ShellDeflectEffectClass=Class'DHTankAPHitDeflect'
+    ShellHitDirtEffectClass=Class'TankAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'TankAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'TankAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'TankAPHitRockEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
     MomentumTransfer=10000.0
-    MyDamageType=class'DH_Engine.DHShellAPExplosionDamageType'
-    ExplosionDecal=class'ROEffects.TankAPMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
+    MyDamageType=Class'DHShellAPExplosionDamageType'
+    ExplosionDecal=Class'TankAPMarkDirt'
+    ExplosionDecalSnow=Class'TankAPMarkSnow'
     DrawType=DT_StaticMesh
 
     bNetTemporary=true // false
@@ -340,7 +340,7 @@ defaultproperties
     FluidSurfaceShootStrengthMod=10.0
 
     //Sound
-    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01' //TODO: replace this
+    AmbientSound=Sound'Vehicle_Weapons.projectile_whistle01' //TODO: replace this
     AmbientVolumeScale=5.0 //5.0
     SoundVolume=255 // full volume
     SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km

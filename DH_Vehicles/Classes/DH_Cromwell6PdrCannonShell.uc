@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShell extends DHCannonShell;
@@ -14,13 +14,13 @@ defaultproperties
 
     //Damage
     ImpactDamage=390  //solid shell
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.25
     EngineFireChance=0.45
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    CoronaClass=Class'DHShellTracer_Red'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
 
     //Penetration
     DHPenetrationTable(0)=11.5

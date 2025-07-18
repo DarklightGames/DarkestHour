@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleMGPawn extends DHVehicleWeaponPawn
@@ -26,9 +26,9 @@ var     name        HudOverlayFireEndAnim;
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to make into a generic function, avoiding need for overrides in subclasses, to properly handle vehicle roll, & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
     local bool bOnTheGun;
 
     ViewActor = self;
@@ -89,7 +89,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           GunOffset;
+    local Vector           GunOffset;
     local float            SavedOpacity;
 
     PC = PlayerController(Controller);
@@ -429,8 +429,8 @@ simulated function UpdatePrecacheMaterials()
 // RelativeRotation & RelativeLocation are set on server & get replicated to net clients, but we still set them on clients so it happens instantly, without waiting for replication
 simulated function HandleBinoculars(bool bMovingOntoBinocs)
 {
-    local rotator DesiredRelativeRotation;
-    local vector  DesiredRelativeLocation;
+    local Rotator DesiredRelativeRotation;
+    local Vector  DesiredRelativeLocation;
 
     // On binocs, remove any player rotation (DriveRot), as some MGs turn player sideways when on the gun & that's no good for the binocs pose
     if (DriveRot != rot(0, 0, 0))
@@ -574,15 +574,15 @@ function Material CreateXRayMaterial()
     local FadeColor FC;
     local FinalBlend FB;
 
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.White;
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.White;
     FC.Color1.A = 32;
-    FC.Color2 = class'UColor'.default.White;
+    FC.Color2 = Class'UColor'.default.White;
     FC.Color2.A = 16;
     FC.FadePeriod = 0.25;
     FC.ColorFadeType = FC_Sinusoidal;
 
-    FB = new class'FinalBlend';
+    FB = new Class'FinalBlend';
     FB.FrameBufferBlending = FB_AlphaBlend;
     FB.ZWrite = false;
     FB.ZTest = true;
@@ -625,6 +625,5 @@ defaultproperties
     bDrawDriverInTP=false
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="MG"
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 }

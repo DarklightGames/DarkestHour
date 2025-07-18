@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // The top menu, which lists all the players on the server, allowing a selection to be made
@@ -105,14 +105,14 @@ function SelectPlayerInSights()
 {
     local string PlayerName;
     local int    TraceDistance;
-    local vector HitLocation, HitNormal, StartTrace, EndTrace;
+    local Vector HitLocation, HitNormal, StartTrace, EndTrace;
     local Pawn   HitPawn;
 
     if (ROPlayer(PC) != none)
     {
         TraceDistance = ROPlayer(PC).GetMaxViewDistance();
         StartTrace = PC.Pawn.Location + PC.Pawn.EyePosition();
-        EndTrace = StartTrace + TraceDistance * vector(PC.Pawn.GetViewRotation());
+        EndTrace = StartTrace + TraceDistance * Vector(PC.Pawn.GetViewRotation());
 
         HitPawn = Pawn(PC.Trace(HitLocation, HitNormal, EndTrace, StartTrace, true));
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBurningVolume extends PhysicsVolume;
@@ -47,8 +47,8 @@ defaultproperties
 {
     FireDamageAmount=1
     DamagePerSec=45.0
-    FireDamageType=class'DH_Engine.DHBurningDamageType'
-    DamageType=class'FellLava'
+    FireDamageType=Class'DHBurningDamageType'
+    DamageType=Class'FellLava'
     bPainCausing=true
     bDestructive=true
     bNoInventory=true

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBinocularsPickupGerman extends DHBinocularsPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DHBinocularsItemGerman'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
-    Skins(0)=Texture'Weapons3rd_tex.German.Binoc_world_ger'
+    InventoryType=Class'DHBinocularsItemGerman'
+    StaticMesh=StaticMesh'DetailSM.Binocs'
+    Skins(0)=Texture'Weapons3rd_tex.Binoc_world_ger'
 }

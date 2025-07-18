@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Breda30DamType extends DHMediumCaliberDamageType
@@ -8,6 +8,6 @@ class DH_Breda30DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Breda30Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_Breda30Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

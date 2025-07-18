@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SRCMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
@@ -8,6 +8,6 @@ class DH_SRCMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SRCMMod35GrenadeWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
+    WeaponClass=Class'DH_SRCMMod35GrenadeWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.rusgrenade'
 }

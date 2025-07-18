@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleMG extends DHVehicleWeapon
@@ -138,7 +138,7 @@ simulated function InitializeVehicleBase()
 }
 
 // Modified to get the firing location for the barrel that is next to fire, if the MG has multiple barrels
-function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+function Vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
     if (bHasMultipleBarrels && Barrels.Length > 0)
     {
@@ -246,7 +246,7 @@ simulated function DestroyBarrelEffects()
 
 // Modified to pass damage on to vehicle base, same as a vehicle cannon
 // TODO: should we just put this in the base class?
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
@@ -276,21 +276,21 @@ defaultproperties
     bUsesTracers=true
     WeaponFireAttachmentBone="mg_yaw"
     bDoOffsetTrace=true
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.mg42_ammo'
     AIInfo(0)=(bFireOnRelease=true,AimError=750.0,RefireRate=0.99)
 
     // Firing effects
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    AmbientEffectEmitterClass=Class'TankMGEmitter'
     bAmbientFireSound=true
     AmbientSoundScaling=2.75
     FireForce="minifireb"
     bIsRepeatingFF=true
 
     // Reload (default is MG34 reload sounds as is used by most vehicles, even allies)
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105)
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden01',Duration=1.105)
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
 
     // Screen shake
     ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)

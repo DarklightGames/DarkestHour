@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -64,7 +64,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
 
-    l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
+    l_Version.Caption = Class'DHBuildManifest'.default.Version.ToString();
 
     // If they have not changed their name from the default, change their
     // name to their Steam name!
@@ -320,9 +320,9 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("CANCEL");
     }
 
-    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
+    if (SavedVersion != Class'DHBuildManifest'.default.Version.ToString())
     {
-        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
+        SavedVersionObject = Class'UVersion'.static.FromString(SavedVersion);
 
         // To make a long story short, we can't force the client to delete
         // their configuration file at will, so we need to forcibly create
@@ -338,26 +338,26 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.0.9")) < 0)
         {
             Log("Configuration file is older than v8.0.9, attempting to assign new controls created in version v8.0.9");
             SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
             SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.2.6")) < 0)
         {
             Log("Configuration file is older than v8.2.6, attempting to assign new controls created in version v8.2.6");
             SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.0")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.4.0")) < 0)
         {
             Log("Configuration file is older than v8.4.0, attempting to assign new controls created in version v8.4.0");
             SetKeyBindIfAvailable("J", "PlaceRallyPoint");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.3")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v8.4.3")) < 0)
         {
             Log("Configuration file is older than v8.4.3, attempting to assign a min netspeed value");
 
@@ -371,7 +371,7 @@ event Opened(GUIComponent Sender)
             }
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v9.7.6")) < 0)
         {
             Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
 
@@ -382,14 +382,14 @@ event Opened(GUIComponent Sender)
             }
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v10.0.0")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(Class'UVersion'.static.FromString("v10.0.0")) < 0)
         {
             Log("Configuration file is older than v10.0.0, assigning the artillery target toggle keybind");
 
             SetKeyBindIfAvailable("Comma", "ToggleSelectedArtilleryTarget");
         }
 
-        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
+        SavedVersion = Class'DHBuildManifest'.default.Version.ToString();
         SaveConfig();
     }
 
@@ -449,7 +449,7 @@ function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string H
     local JSONParser Parser;
     local JSONObject Announcement;
 
-    Parser = new class'JSONParser';
+    Parser = new Class'JSONParser';
 
     if (Status == 200)
     {
@@ -500,7 +500,7 @@ function GetMOTD()
         return;
     }
 
-    MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
+    MOTDRequest = PlayerOwner().Spawn(Class'HTTPRequest');
     MOTDRequest.Host = "api.darklightgames.com";
     MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;
@@ -551,7 +551,7 @@ defaultproperties
     i_Announcement=AnnouncementImage
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
+        Image=Texture'DHEngine_Tex.Trans_50'
         TopPadding=0.25
         LeftPadding=0.1
         BottomPadding=0.25
@@ -670,13 +670,13 @@ defaultproperties
     End Object
     b_MOTDTitle=MOTDTitleButton
 
-    Begin Object Class=DHGUIGFXButton Name=FacebookButton
+    Begin Object Class=GUIGFXButton Name=FacebookButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.facebook'
+        Graphic=Texture'DH_GUI_Tex.facebook'
         bTabStop=true
         Position=ICP_Center
         Hint="Follow us on Facebook!"
@@ -685,13 +685,13 @@ defaultproperties
     End Object
     b_Facebook=FacebookButton
 
-    Begin Object Class=DHGUIGFXButton Name=GitHubButton
+    Begin Object Class=GUIGFXButton Name=GitHubButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.github'
+        Graphic=Texture'DH_GUI_Tex.github'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us on GitHub!"
@@ -700,13 +700,13 @@ defaultproperties
     End Object
     b_GitHub=GitHubButton
 
-    Begin Object Class=DHGUIGFXButton Name=SteamCommunityButton
+    Begin Object Class=GUIGFXButton Name=SteamCommunityButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.steam'
+        Graphic=Texture'DH_GUI_Tex.steam'
         bTabStop=true
         Position=ICP_Center
         Hint="Join the Steam Community!"
@@ -715,13 +715,13 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
-    Begin Object Class=DHGUIGFXButton Name=PatreonButton
+    Begin Object Class=GUIGFXButton Name=PatreonButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
+        Graphic=Texture'DH_GUI_Tex.patreon'
         bTabStop=true
         Position=ICP_Center
         Hint="Support us on Patreon!"
@@ -730,13 +730,13 @@ defaultproperties
     End Object
     b_Patreon=PatreonButton
 
-    Begin Object Class=DHGUIGFXButton Name=DiscordButton
+    Begin Object Class=GUIGFXButton Name=DiscordButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.discord'
+        Graphic=Texture'DH_GUI_Tex.discord'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us in Discord!"
@@ -766,7 +766,7 @@ defaultproperties
     l_Version=VersionNum
 
     Begin Object class=GUIImage Name=LogoImage
-        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.DHTextLogo'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -779,7 +779,7 @@ defaultproperties
     i_DHTextLogo=LogoImage
 
     Begin Object class=GUIImage Name=MOTDLoadingImage
-        Image=TexRotator'DH_GUI_Tex.MainMenu.LoadingRotator'
+        Image=TexRotator'DH_GUI_Tex.LoadingRotator'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -809,7 +809,7 @@ defaultproperties
     tb_MOTDContent=MyMOTDText
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
-        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
+        Image=Texture'DHEngine_Tex.Trans_50'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHObstacleInstance extends Actor
@@ -52,7 +52,7 @@ simulated state Intact
         super.Touch(Other);
     }
 
-    simulated function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    simulated function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         local DarkestHourGame G;
 
@@ -92,7 +92,7 @@ simulated state Cleared
 
 simulated function SetCleared(bool bIsCleared)
 {
-    local sound ClearSound;
+    local Sound ClearSound;
     local class<Emitter> ClearEmitterClass;
     local float ClearSoundRadius;
 

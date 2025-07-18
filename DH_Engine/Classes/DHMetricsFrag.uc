@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsFrag extends JSONSerializable;
@@ -11,13 +11,13 @@ var int                 RoundTime;
 
 var string              KillerID;
 var class<Pawn>         KillerPawn;
-var vector              KillerLocation;
+var Vector              KillerLocation;
 var byte                KillerTeam;
 var class<DHVehicle>    KillerVehicle;
 
 var string              VictimID;
 var class<Pawn>         VictimPawn;
-var vector              VictimLocation;
+var Vector              VictimLocation;
 var byte                VictimTeam;
 var class<DHVehicle>    VictimVehicle;
 
@@ -28,25 +28,25 @@ function JSONValue ToJSON()
 
     if (KillerVehicle != none)
     {
-        KillerVehicleObject = class'JSONString'.static.Create(KillerVehicle.Name);
+        KillerVehicleObject = Class'JSONString'.static.Create(KillerVehicle.Name);
     }
 
     if (VictimVehicle != none)
     {
-        VictimVehicleObject = class'JSONString'.static.Create(VictimVehicle.Name);
+        VictimVehicleObject = Class'JSONString'.static.Create(VictimVehicle.Name);
     }
 
-    return (new class'JSONObject')
+    return (new Class'JSONObject')
         .PutString("damage_type", DamageType.Name)
         .PutInteger("hit_index", HitIndex)
         .PutInteger("time", RoundTime)
-        .Put("killer", (new class'JSONObject')
+        .Put("killer", (new Class'JSONObject')
             .PutString("id", KillerID)
             .PutInteger("team", KillerTeam)
             .PutString("pawn", KillerPawn.Name)
             .PutIVector("location", KillerLocation)
             .Put("vehicle", KillerVehicleObject))
-        .Put("victim", (new class'JSONObject')
+        .Put("victim", (new Class'JSONObject')
             .PutString("id", VictimID)
             .PutInteger("team", VictimTeam)
             .PutString("pawn", VictimPawn.Name)

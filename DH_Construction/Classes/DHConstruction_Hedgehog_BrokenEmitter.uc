@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Hedgehog_BrokenEmitter extends Emitter;
@@ -8,7 +8,7 @@ class DHConstruction_Hedgehog_BrokenEmitter extends Emitter;
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01_destro_element'
+        StaticMesh=StaticMesh'DH_Construction_stc.hedgehog_01_destro_element'
         UseCollision=false
         RespawnDeadParticles=false
         SpinParticles=true

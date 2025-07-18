@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBloodPuffLargeCaliber extends Emitter;
@@ -28,7 +28,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.150000,Max=0.250000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter15'
@@ -48,7 +48,7 @@ defaultproperties
         StartSizeRange=(X=(Min=6.000000,Max=10.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.150000)
@@ -77,7 +77,7 @@ defaultproperties
         StartSizeRange=(X=(Min=55.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=-100.000000,Max=-250.000000),Y=(Min=-20.000000,Max=35.000000),Z=(Min=-35.000000,Max=200.000000))
     End Object
@@ -106,7 +106,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=35.000000),Y=(Min=30.000000,Max=35.000000),Z=(Min=35.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.500000,Max=0.850000)
         StartVelocityRange=(Y=(Min=-20.000000,Max=35.000000),Z=(Min=-125.000000,Max=100.000000))
     End Object
@@ -140,7 +140,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.750000,Max=2.000000)
@@ -177,7 +177,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.000000,Max=1.250000),Y=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.250000,Max=1.250000)
@@ -218,7 +218,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.250000,Max=1.600000)
@@ -228,7 +228,7 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter19'
 
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'EffectsSM.PlayerGibbs.Chunk1_Gibb'
+        StaticMesh=StaticMesh'EffectsSM.Chunk1_Gibb'
         UseCollision=True
         RespawnDeadParticles=False
         SpinParticles=True

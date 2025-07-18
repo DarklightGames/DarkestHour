@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GeratPBashDamType extends DHWeaponBashDamageType
@@ -8,5 +8,5 @@ class DH_GeratPBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_GeratPWeapon'
+    WeaponClass=Class'DH_GeratPWeapon'
 }

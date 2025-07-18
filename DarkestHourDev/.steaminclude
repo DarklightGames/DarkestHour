@@ -8,16 +8,22 @@ System/dh_server_launcher.bat
 
 !*.git
 !*.gitignore
-!*.make
 !*.steaminclude
-!*.i18n
+!submodules
+!tools
 !DarkestHourDev/System/DarkestHourDev.ini
 !DarkestHourDev/System/DarkestHourDevUser.ini
-!tools
 !DarkestHourDev/System/DarkestHourDev Server.bat
-!DarkestHourDev/Maps/DH-Template_*
+!DarkestHourDev/Maps/DH-San_Celeste_Defence.rom
+!DarkestHourDev/Maps/DH-StaticTestPlayground.rom
+!DarkestHourDev/Maps/DH-Sourdeval_Advance.rom
+!DarkestHourDev/Maps/DH-Target_Range_Bullets.rom
+!DarkestHourDev/Maps/DH-Target_Range_Effects.rom
+!DarkestHourDev/Maps/DH-TEMPLATE_*
 !DarkestHourDev/Maps/DH-INCOMPLETE_*
-!DarkestHourDev/Maps/Incomplete
-!DarkestHourDev/Maps/Deprecated
-!DarkestHourDev/Fonts
-!DarkestHourDev/ChangeLogs
+!DarkestHourDev/Fonts/*
+!DarkestHourDev/ChangeLogs/*
+!DarkestHourDev/BDK/*
+!DarkestHourDev/localization.yml
+!DarkestHourDev/make-config.json
+!DarkestHourDev/bdk-default.json

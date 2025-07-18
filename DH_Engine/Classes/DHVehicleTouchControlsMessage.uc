@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Usage
 // RelatedPRI_1: The PRI of the local player (needed for PlayerController)
@@ -11,8 +11,8 @@ class DHVehicleTouchControlsMessage extends DHControlsMessage
     abstract;
 
 static function string GetHeaderString(
-    optional PlayerReplicationInfo RelatedPRI_1, 
-    optional PlayerReplicationInfo RelatedPRI_2, 
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject)
 {
     return Vehicle(OptionalObject).VehicleNameString;

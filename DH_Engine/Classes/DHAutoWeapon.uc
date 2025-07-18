@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAutoWeapon extends DHProjectileWeapon
@@ -14,13 +14,13 @@ var     name    SelectFireBipodIronAnim;
 var     name    SelectFireBipodIronEmptyAnim;
 
 // Sound effect for the fire selector switch (in case it's not handled by the animation).
-var     sound   SelectFireSound;
+var     Sound   SelectFireSound;
 var     float   SelectFireVolume;
 
 // Fire select switch
 var     name            FireSelectSwitchBoneName;
-var     rotator         FireSelectSemiRotation;
-var     rotator         FireSelectAutoRotation;
+var     Rotator         FireSelectSemiRotation;
+var     Rotator         FireSelectAutoRotation;
 
 replication
 {

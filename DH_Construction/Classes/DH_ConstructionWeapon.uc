@@ -1,17 +1,61 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ConstructionWeapon extends DH_ProxyWeapon;
 
 var class<DHConstruction>       ConstructionClass;
 
+var Sound                       ClickSound;
+
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerCreateConstruction;
+}
+
+simulated function ClientPlayClickSound()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none)
+    {
+        PC.ClientPlaySound(ClickSound);
+    }
+}
+
+// Overridden to cycle the variant of the construction proxy.
+exec simulated function SwitchFireMode()
+{
+    local DHConstructionProxy CP;
+
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP != none && CP.GetRuntimeData().bHasVariants)
+    {
+        CP.CycleVariant();
+
+        ClientPlayClickSound();
+    }
+}
+
+// Overridden to cycle the skin of the construction proxy.
+exec simulated function ROMGOperation()
+{
+    local DHConstructionProxy CP;
+
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP != none && CP.GetRuntimeData().bHasSkins)
+    {
+        CP.CycleSkin();
+
+        ClientPlayClickSound();
+    }
 }
 
 simulated function SetConstructionClass(class<DHConstruction> NewConstructionClass)
@@ -53,11 +97,11 @@ simulated function OnTick(float DeltaTime)
 
             if (CP.ProxyError.Type != ERROR_None)
             {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
+                Instigator.ReceiveLocalizedMessage(Class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
             }
             else
             {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
+                Instigator.ReceiveLocalizedMessage(Class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
             }
         }
     }
@@ -67,7 +111,7 @@ simulated function DHActorProxy CreateProxyCursor()
 {
     local DHConstructionProxy Cursor;
 
-    Cursor = Spawn(class'DHConstructionProxy', Instigator);
+    Cursor = Spawn(Class'DHConstructionProxy', Instigator);
     Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
 
     return Cursor;
@@ -90,7 +134,7 @@ simulated function OnConfirmPlacement()
 
     if (CP != none)
     {
-        ServerCreateConstruction(CP.ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
+        ServerCreateConstruction(CP.ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation, CP.VariantIndex, CP.DefaultSkinIndex + CP.SkinIndex);
     }
 }
 
@@ -138,10 +182,10 @@ simulated function TraceFromPlayer(
 
     // Trace out into the world and try and hit something static.
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
+    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
 
     // Trace for location hints.
-    foreach TraceActors(class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
+    foreach TraceActors(Class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
     {
         if (Socket == none)
         {
@@ -163,7 +207,7 @@ simulated function TraceFromPlayer(
     }
 
     // Trace static actors and (world geometry etc.)
-    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
         {
@@ -177,9 +221,9 @@ simulated function TraceFromPlayer(
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
+        TraceEnd = TraceStart + vect(0, 0, -1) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
 
-        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
         {
             if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
             {
@@ -195,8 +239,7 @@ simulated function TraceFromPlayer(
     }
 }
 
-// TODO: This hardly seems like the right place to put the construction supply extraction logic!
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation)
+function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
 {
     local DHConstruction C;
     local DHPawn P;
@@ -212,8 +255,10 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     Context.TeamIndex = Instigator.GetTeamNum();
-    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = DHPlayer(Instigator.Controller);
+    Context.VariantIndex = VariantIndex;
+    Context.SkinIndex = SkinIndex;
 
     if (ConstructionClass.static.GetPlayerError(Context).Type != ERROR_None)
     {
@@ -221,7 +266,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     // Create a proxy to test placement logic on the server-side.
-    TestProxy = Spawn(class'DHConstructionProxy', Instigator);
+    TestProxy = Spawn(Class'DHConstructionProxy', Instigator);
 
     if (TestProxy == none)
     {
@@ -269,13 +314,18 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
             Socket.Occupant = C;
         }
 
+        C.VariantIndex = VariantIndex;
+        C.SkinIndex = Context.SkinIndex;
+        
+        C.OnPlaced();
+
         if (!C.bIsNeutral)
         {
             C.SetTeamIndex(Instigator.GetTeamNum());
         }
 
         C.UpdateAppearance();
-        C.OnSpawnedByPlayer();
+        C.OnSpawnedByPlayer(C.InstigatorController);
     }
 }
 
@@ -289,5 +339,12 @@ simulated function ResetCursor()
     {
         // This resets the proxy.
         CP.SetConstructionClass(CP.ConstructionClass);
+
+        ClientPlayClickSound();
     }
+}
+
+defaultproperties
+{
+    ClickSound=Sound'ROMenuSounds.msfxMouseClick'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_KubelwagenCar_WH extends DHVehicle;
@@ -11,12 +11,12 @@ defaultproperties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
-    Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'
-    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
+    Skins(0)=FinalBlend'DH_VehiclesGE_tex.kubelwagen_glass_FB'
+    Skins(1)=Texture'DH_VehiclesGE_tex.kubelwagen_body_grau'
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Passengers
@@ -76,7 +76,7 @@ defaultproperties
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=-100.0,Y=0.0,Z=15.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_wh_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen_wh_dest'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -93,10 +93,10 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=250.0
-    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
-    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_loop01'
+    StartUpSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_start'
+    ShutDownSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.0,Y=45.0,Z=0.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
@@ -104,7 +104,7 @@ defaultproperties
     SteerBoneName="Steer_Wheel"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.kubelwagen_body'
     VehicleHudEngineY=0.69
     VehicleHudOccupantsX(0)=0.46
     VehicleHudOccupantsX(1)=0.54
@@ -114,7 +114,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.49
     VehicleHudOccupantsY(2)=0.6
     VehicleHudOccupantsY(3)=0.6
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.kubelwagen'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.kubelwagen'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -127,7 +127,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -137,7 +137,7 @@ defaultproperties
         SupportBoneName="RightFrontSusp00"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.RFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
         bHandbrakeWheel=true
         BoneName="LeftRearWheel"
@@ -147,7 +147,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
         bHandbrakeWheel=true
         BoneName="RightRearWheel"
@@ -156,7 +156,7 @@ defaultproperties
         SupportBoneName="RightRearAxle"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.RRWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RRWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -176,5 +176,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_KubelwagenCar_WH.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

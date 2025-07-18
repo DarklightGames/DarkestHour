@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_SupplyCache extends DHConstruction;
@@ -14,11 +14,6 @@ var() int BonusSupplyGenerationRate;
 
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
-
-static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
-{
-    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.SupplyCacheClass;
-}
 
 simulated function PostBeginPlay()
 {
@@ -83,7 +78,7 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
     if (CSA != none && IsConstructed())
     {
-        SetStaticMesh(CSA.StaticMesh);
+        SetStaticMesh(StaticMesh);
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
@@ -108,7 +103,7 @@ simulated function OnTeamIndexChanged()
 
 static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
-    return default.SupplyAttachmentClass.static.GetStaticMesh(Context.LevelInfo.Level, Context.TeamIndex);
+    return default.StaticMesh;
 }
 
 function StaticMesh GetStageStaticMesh(int StageIndex)
@@ -128,6 +123,8 @@ simulated state Constructed
 
 simulated function OnBroken()
 {
+    super.OnBroken();
+
     DestroySupplyAttachment();
 }
 
@@ -145,11 +142,11 @@ defaultproperties
     ProgressMax=5
     HealthMax=350
     MenuName="Supply Cache"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.supply_cache'
     MenuDescription="Stores and generates supplies over time."
     SupplyCost=500
     InitialSupplyCount=500
-    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
+    StaticMesh=StaticMesh'DH_Military_stc.cratepile1'
     DrawType=DT_StaticMesh
     DuplicateFriendlyDistanceInMeters=300
     CollisionRadius=100
@@ -157,18 +154,18 @@ defaultproperties
     bCanBeTornDownByFriendlies=false
     bCanBeTornDownWhenConstructed=true
     bCanBePlacedInDangerZone=false
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Static'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"
     ExplosionDamageTraceOffset=(Z=40.0)
 
     // Essentially we are just making this a satchel explosion
-    BrokenEmitterClass=class'ROEffects.ROSatchelExplosion'
+    BrokenEmitterClass=Class'ROSatchelExplosion'
     BrokenSoundRadius=4000.0
     BrokenSoundVolume=5.0
-    BrokenSounds(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
-    BrokenSounds(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
-    BrokenSounds(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
+    BrokenSounds(0)=Sound'Inf_Weapons.satchel_explode01'
+    BrokenSounds(1)=Sound'Inf_Weapons.satchel_explode02'
+    BrokenSounds(2)=Sound'Inf_Weapons.satchel_explode03'
 
     GroupClass=class'DHConstructionGroup_Headquarters'
 }

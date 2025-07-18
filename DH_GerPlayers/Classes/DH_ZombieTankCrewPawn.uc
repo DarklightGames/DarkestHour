@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Halloween Special 2020
 
@@ -10,8 +10,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_TankCrew'
 
-    Skins(0)=Texture'DHEventCharactersTex.GetTunics.ger_tanker_zombie01'
-    Skins(1)=Texture'DHEventCharactersTex.GerHeads.ger_face01_zombie01'
+    Skins(0)=Texture'DHEventCharactersTex.ger_tanker_zombie01'
+    Skins(1)=Texture'DHEventCharactersTex.ger_face01_zombie01'
 
     bReversedSkinsSlots=false
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://wwiitanks.co.uk/FORM-Gun_Data.php?I=192
 //==============================================================================
@@ -12,7 +12,9 @@ defaultproperties
     Speed=15088
     MaxSpeed=15088
     ShellDiameter=4.7
-    BallisticCoefficient=1.3
+    BallisticCoefficient=1.8218
+
+    SpeedFudgeScale=0.75    // Increased from the normal 0.5 because the shell is so slow
 
     //Damage
     ImpactDamage=210
@@ -20,8 +22,8 @@ defaultproperties
     DamageRadius=415.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'  // TODO: white corna/shell trail
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'  // TODO: white corna/shell trail
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     DHPenetrationTable(0)=5.5
     DHPenetrationTable(1)=5.5
@@ -35,14 +37,12 @@ defaultproperties
     DHPenetrationTable(9)=5.5
     DHPenetrationTable(10)=5.5
 
-    // TODO: fill these in!
-    MechanicalRanges(0)=(Range=0,RangeValue=120)
-    MechanicalRanges(1)=(Range=100,RangeValue=120)
-    MechanicalRanges(2)=(Range=200,RangeValue=192)
-    MechanicalRanges(3)=(Range=300,RangeValue=273)
-    MechanicalRanges(4)=(Range=400,RangeValue=359)
+    bMechanicalAiming=true
+    MechanicalRanges(0)=(Range=0,RangeValue=123)
+    MechanicalRanges(1)=(Range=100,RangeValue=123)
+    MechanicalRanges(2)=(Range=200,RangeValue=193)
+    MechanicalRanges(3)=(Range=300,RangeValue=278)
+    MechanicalRanges(4)=(Range=400,RangeValue=403)
     MechanicalRanges(5)=(Range=500,RangeValue=532)
     // TODO: anything beyond this stretches credulity with how far the pitch of the projectile is from the gun itself
-
-    bMechanicalAiming=true
 }

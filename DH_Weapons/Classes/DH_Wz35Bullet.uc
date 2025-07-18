@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Wz35Bullet extends DHBullet_ArmorPiercing;
@@ -18,7 +18,7 @@ defaultproperties
     //Damage
     ImpactDamage=120
     Damage=1000.0  //should leave no one alive, as even if it hits a limb, it should be ripped apart making victim uncapable of continuing fighting
-    MyDamageType=class'DH_Weapons.DH_Wz35DamType'
+    MyDamageType=Class'DH_Wz35DamType'
 
     //Penetration
     DHPenetrationTable(0)=3.3  // 100

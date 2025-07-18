@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPoint extends DHSpawnPointBase
@@ -74,7 +74,7 @@ simulated function PostBeginPlay()
     {
         if (Type == ESPT_Infantry && VehicleLocationHintTag != '')
         {
-            foreach AllActors(class'DHLocationHint', LH, VehicleLocationHintTag)
+            foreach AllActors(Class'DHLocationHint', LH, VehicleLocationHintTag)
             {
                 bCanOnlySpawnInfantryVehicles = true;
                 break; // no need to check for more, we only need to verify there is at least 1
@@ -96,7 +96,7 @@ simulated function PostBeginPlay()
     // Find any linked mine volume (that will only protect this spawn point only if the spawn is active)
     if (MineVolumeProtectionTag != '')
     {
-        foreach AllActors(class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
+        foreach AllActors(Class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
         {
             break;
         }
@@ -106,7 +106,7 @@ simulated function PostBeginPlay()
     // And tell it that it will be controlled by a spawn point, so it does not activate itself
     if (LinkedAmmoResupplyTag != '')
     {
-        foreach DynamicActors(class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
+        foreach DynamicActors(Class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
         {
             LinkedAmmoResupplyRef.bControlledBySpawnPoint = true;
             break;
@@ -117,7 +117,7 @@ simulated function PostBeginPlay()
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this spawn point
     if (NoArtyVolumeProtectionTag != '')
     {
-        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        foreach AllActors(Class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
         {
             NAV.AssociatedActor = self;
             break;
@@ -128,7 +128,7 @@ simulated function PostBeginPlay()
     // And tell them they will be controlled by a spawn point, so they do not activate themselves
     if (LinkedVehicleFactoriesTag != '')
     {
-        foreach DynamicActors(class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
+        foreach DynamicActors(Class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
         {
             LinkedVehicleFactories[LinkedVehicleFactories.Length] = VF;
             VF.bControlledBySpawnPoint = true;
@@ -152,7 +152,7 @@ function BuildLocationHintsArrays()
     local DHLocationHint LH;
 
     // Find associated location hint actors & build arrays of actor references.
-    foreach AllActors(class'DHLocationHint', LH)
+    foreach AllActors(Class'DHLocationHint', LH)
     {
         if (LH.Tag != '')
         {
@@ -300,10 +300,14 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
         return false;
     }
 
-    // If this is not a boat, and the spawn point only allows boats, then don't allow spawning into it
+    // If this is not a boat, and the spawn point only allows boats, then don't allow spawning into it.
     if (bBoatSpawn != VehicleClass.default.bCanSwim)
     {
-        return false;
+        // Ambphibious vehicles can be spawned from boat and land spawn points.
+        if (class<DHVehicle>(VehicleClass) != none && !class<DHVehicle>(VehicleClass).default.bIsAmphibious)
+        {
+            return false;
+        }
     }
 
     return GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
@@ -316,8 +320,8 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector          SpawnLocation;
-    local rotator         SpawnRotation;
+    local Vector          SpawnLocation;
+    local Rotator         SpawnRotation;
     local Pawn            P;
 
     G = DarkestHourGame(Level.Game);
@@ -347,11 +351,11 @@ function bool PerformSpawn(DHPlayer PC)
 
 // Modified to try to use one of the spawn point's linked LocationHint actors for the spawn location & rotation
 // A random selection, ignoring any locations that have enemy nearby, or that are blocked by another pawn
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local array<DHLocationHint> LocationHints;
     local DHLocationHint        LocationHint;
-    local array<vector>         EnemyLocations;
+    local array<Vector>         EnemyLocations;
     local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;
@@ -407,7 +411,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     {
         LocationHints = InfantryLocationHints;
         LocationHintIndexOffset = InfantryLocationHintIndexOffset;
-        TestCollisionRadius = class'DHPawn'.default.CollisionRadius;
+        TestCollisionRadius = Class'DHPawn'.default.CollisionRadius;
     }
 
     // TODO: make this functionality generic so it applied to all spawn point types?
@@ -440,7 +444,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
+        foreach RadiusActors(Class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
         {
             // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
             bIsBlocked = true;

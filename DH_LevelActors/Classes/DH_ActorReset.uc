@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ActorReset extends DH_LevelActors;
@@ -17,7 +17,7 @@ function PostBeginPlay()
         return; //Actor tag wasn't set no reason to continue
     }
 
-    foreach AllActors(class'Actor', ActorReference, ActorToReset)
+    foreach AllActors(Class'Actor', ActorReference, ActorToReset)
     {
         break;
     }

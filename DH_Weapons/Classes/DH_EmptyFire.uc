@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_EmptyFire extends ROWeaponFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Weapons.DH_EmptyAmmo'
+    AmmoClass=Class'DH_EmptyAmmo'
     AmmoPerFire=0
     FireRate=0.1
     RecoilRate=0.0

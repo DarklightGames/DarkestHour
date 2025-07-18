@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WitchEnder666Weapon extends DHBoltActionWeapon;
@@ -17,10 +17,10 @@ simulated function int GetMaxLoadedRounds()
 defaultproperties
 {
     ItemName="WitchEnder 666 'Satan's Bane'"
-    FireModeClass(0)=class'DH_Weapons.DH_WitchEnder666Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_WitchEnder666MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_WitchEnder666Attachment'
-    PickupClass=class'DH_Weapons.DH_WitchEnder666Pickup'
+    FireModeClass(0)=Class'DH_WitchEnder666Fire'
+    FireModeClass(1)=Class'DH_WitchEnder666MeleeFire'
+    AttachmentClass=Class'DH_WitchEnder666Attachment'
+    PickupClass=Class'DH_WitchEnder666Pickup'
 
     Mesh=SkeletalMesh'DH_Winchester1897_anm.WitchEnder666_1st'
 
@@ -58,5 +58,5 @@ defaultproperties
     
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
-    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer") 
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer")
 }

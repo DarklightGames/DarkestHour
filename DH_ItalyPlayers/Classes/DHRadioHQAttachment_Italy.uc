@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadioHQAttachment_Italy extends DHRadioHQAttachment;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Military_Italy.HQ.ITA_HQ_RadioTableau'
+    StaticMesh=StaticMesh'DH_Military_Italy.ITA_HQ_RadioTableau'
     RadioOffset=(Y=-10,Z=70)
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // Confirmation prompts or instructions to an admin using various menu options
@@ -162,5 +162,5 @@ defaultproperties
     SetGamePasswordText="Please specify the new game password"
     ToggleWeaponLockText="Press enter to confirm you want to toggle weapon locking on/off"
     ConfirmDisableRallyPoints="Press enter to confirm you want to DISABLE rally point placement"
-    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally poiint placement"
+    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally point placement"
 }

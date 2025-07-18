@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
@@ -49,7 +49,7 @@ function array<Object> Union(array<Object> LHS, array<Object> RHS)
 
     for (i = 0; i < RHS.Length; ++i)
     {
-        if (class'UArray'.static.IndexOf(U, RHS[i]) == -1)
+        if (Class'UArray'.static.IndexOf(U, RHS[i]) == -1)
         {
             U[U.Length] = RHS[i];
         }
@@ -162,7 +162,7 @@ final static function Reverse(out array<Object> A)
 
     for (i = 0; i < (A.Length - 1) / 2; ++i)
     {
-        class'UCore'.static.Swap(A[i], A[A.Length - 1 - i]);
+        Class'UCore'.static.Swap(A[i], A[A.Length - 1 - i]);
     }
 }
 
@@ -172,7 +172,7 @@ final static function IReverse(out array<int> A)
 
     for (i = 0; i < (A.Length - 1) / 2; ++i)
     {
-        class'UCore'.static.ISwap(A[i], A[A.Length - 1 - i]);
+        Class'UCore'.static.ISwap(A[i], A[A.Length - 1 - i]);
     }
 }
 
@@ -184,7 +184,7 @@ final static function Shuffle(out array<Object> _Array)
     {
         j = Rand(i);
 
-        class'UCore'.static.Swap(_Array[i], _Array[j]);
+        Class'UCore'.static.Swap(_Array[i], _Array[j]);
     }
 }
 
@@ -196,7 +196,7 @@ final static function IShuffle(out array<int> _Array)
     {
         j = Rand(i);
 
-        class'UCore'.static.ISwap(_Array[i], _Array[j]);
+        Class'UCore'.static.ISwap(_Array[i], _Array[j]);
     }
 }
 
@@ -312,7 +312,7 @@ final static function array<string> ToStringArray(array<Object> A)
 
 final static function string ToString(array<Object> A)
 {
-    return "[" $ class'UString'.static.Join(", ", ToStringArray(A)) $ "]";
+    return "[" $ Class'UString'.static.Join(", ", ToStringArray(A)) $ "]";
 }
 
 final static function array<string> IToStringArray(array<int> A)
@@ -330,7 +330,7 @@ final static function array<string> IToStringArray(array<int> A)
 
 final static function string IToString(array<int> A)
 {
-    return "[" $ class'UString'.static.Join(", ", IToStringArray(A)) $ "]";
+    return "[" $ Class'UString'.static.Join(", ", IToStringArray(A)) $ "]";
 }
 
 final static function array<string> FToStringArray(array<float> A)
@@ -348,7 +348,7 @@ final static function array<string> FToStringArray(array<float> A)
 
 final static function string FToString(array<float> A)
 {
-    return "[" $ class'UString'.static.Join(", ", FToStringArray(A)) $ "]";
+    return "[" $ Class'UString'.static.Join(", ", FToStringArray(A)) $ "]";
 }
 
 final static function string SToString(array<string> A)
@@ -361,7 +361,7 @@ final static function string SToString(array<string> A)
         A[i] = Repl(A[i], "\"", "\\\"");
     }
 
-    return "[" $ class'UString'.static.Join(", ", A) $ "]";
+    return "[" $ Class'UString'.static.Join(", ", A) $ "]";
 }
 
 final static function array<int> Range(int Min, int Max)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -411,20 +411,20 @@ function UpdateRoundStatus()
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
         {
-            l_Reinforcements.TextColor = class'UColor'.default.Red;
-            i_Reinforcements.ImageColor = class'UColor'.default.Red;
+            l_Reinforcements.TextColor = Class'UColor'.default.Red;
+            i_Reinforcements.ImageColor = Class'UColor'.default.Red;
         }
         else
         {
-            l_Reinforcements.TextColor = class'UColor'.default.White;
-            i_Reinforcements.ImageColor = class'UColor'.default.White;
+            l_Reinforcements.TextColor = Class'UColor'.default.White;
+            i_Reinforcements.ImageColor = Class'UColor'.default.White;
         }
 
         if (GRI.bIsInSetupPhase)
         {
             l_Reinforcements.Caption = "???";
-            l_Reinforcements.TextColor = class'UColor'.default.White;
-            i_Reinforcements.ImageColor = class'UColor'.default.White;
+            l_Reinforcements.TextColor = Class'UColor'.default.White;
+            i_Reinforcements.ImageColor = Class'UColor'.default.White;
         }
         else if (GRI.SpawnsRemaining[CurrentTeam] == -1)
         {
@@ -449,11 +449,11 @@ function UpdateRoundStatus()
 
         if (GRI.DHRoundDuration == 0 && GRI.bMatchHasBegun)
         {
-            l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
+            l_RoundTime.Caption = Class'DHHud'.default.NoTimeLimitText;
         }
         else
         {
-            l_RoundTime.Caption = class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
+            l_RoundTime.Caption = Class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
         }
     }
 }
@@ -519,11 +519,11 @@ function UpdateStatus()
         if (!PC.bSurrendered && GRI.ElapsedTime < SurrenderButtonUnlockTime)
         {
             bSurrenderButtonEnabled = false;
-            b_MenuOptions[2].Caption @= "(" $ class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
+            b_MenuOptions[2].Caption @= "(" $ Class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
         }
 
         bSurrenderButtonEnabled = bSurrenderButtonEnabled &&
-                                  (class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
+                                  (Class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
                                   !GRI.IsSurrenderVoteInProgress(PC.GetTeamNum()) &&
                                   GRI.RoundWinnerTeamIndex > 1;
     }
@@ -552,7 +552,7 @@ function string GetStatusText()
 
     if (SpawnTime > 0)
     {
-        return Repl(default.DeployInTimeText, "{0}", class'DHLib'.static.GetDurationString(SpawnTime, "m:ss"));
+        return Repl(default.DeployInTimeText, "{0}", Class'DHLib'.static.GetDurationString(SpawnTime, "m:ss"));
     }
     else
     {
@@ -571,7 +571,7 @@ function PopulateVehicles()
         if (GRI.VehiclePoolVehicleClasses[i] != none &&
             GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam == CurrentTeam)
         {
-            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, class'UInteger'.static.Create(i));
+            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, Class'UInteger'.static.Create(i));
         }
     }
 
@@ -640,7 +640,7 @@ function UpdateVehicles(optional bool bShowAlert)
 
             if (RespawnTime > 0)
             {
-                S @= "(" $ class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
+                S @= "(" $ Class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
             }
 
             li_Vehicles.SetItemAtIndex(i, S);
@@ -667,11 +667,11 @@ function UpdateVehicles(optional bool bShowAlert)
 
     if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
     {
-        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+        l_MaxVehicles.TextColor = Class'UColor'.default.Red;
     }
     else
     {
-        l_MaxVehicles.TextColor = class'UColor'.default.White;
+        l_MaxVehicles.TextColor = Class'UColor'.default.White;
     }
 }
 
@@ -943,7 +943,7 @@ function bool OnClick(GUIComponent Sender)
                 // Player is prevented from changing team as he switched recently
                 if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
-                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", Class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
                     Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
                 }
                 // Player can change team, but give him a screen prompt & ask him to confirm the change
@@ -951,14 +951,14 @@ function bool OnClick(GUIComponent Sender)
                 {
                     // Player can switch freely in single player mode, or within the first ChangeTeamInterval seconds of the round
                     // So this is just a simple confirmation prompt, without any warning
-                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= class'DarkestHourGame'.default.ChangeTeamInterval)
+                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= Class'DarkestHourGame'.default.ChangeTeamInterval)
                     {
                         ConfirmMessage = FreeChangeTeamConfirmText;
                     }
                     // Otherwise warn the player that if he changes team, he'll have to wait a certain time before being allowed to switch again
                     else
                     {
-                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval);
+                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", Class'DarkestHourGame'.default.ChangeTeamInterval);
                     }
 
                     ConfirmWindow = Controller.ShowQuestionDialog(ConfirmMessage, QBTN_YesNo);
@@ -1164,12 +1164,12 @@ function UpdateButtons()
     if (bContinueEnabled)
     {
         b_MenuOptions[6].EnableMe();
-        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_blurry';
+        i_Arrows.Image = Material'DH_GUI_Tex.arrow_blurry';
     }
     else
     {
         b_MenuOptions[6].DisableMe();
-        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
+        i_Arrows.Image = Material'DH_GUI_Tex.arrow_disabled';
     }
 }
 
@@ -1388,7 +1388,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 break;
 
             default:
-                MessageText = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
+                MessageText = Class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
                 Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
                 break;
         }
@@ -1414,7 +1414,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 else
                 {
                     // The vote will be nominated
-                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
+                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(Class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
                 }
 
                 ConfirmWindow = Controller.ShowQuestionDialog(MessageText, QBTN_YesNo, QBTN_Yes);
@@ -1434,12 +1434,12 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     }
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
     {
-        MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        MessageText = Class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
     else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
     {
-        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
+        MessageText = Class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
 
@@ -1502,7 +1502,7 @@ function InternalOnChange(GUIComponent Sender)
 {
     local class<Inventory> InventoryClass;
     local RORoleInfo       RI;
-    local material         InventoryMaterial;
+    local Material         InventoryMaterial;
     local int              i, j;
 
     switch (Sender)
@@ -1529,17 +1529,17 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(Class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
                     {
-                        cb_PrimaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
+                        cb_PrimaryWeapon.AddItem(Class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(Class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
                     {
-                        cb_SecondaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
+                        cb_SecondaryWeapon.AddItem(Class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
@@ -1551,12 +1551,12 @@ function InternalOnChange(GUIComponent Sender)
             {
                 if (PC.DHPrimaryWeapon >= 0)
                 {
-                    cb_PrimaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
+                    cb_PrimaryWeapon.SetIndex(Class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
                 }
 
                 if (PC.DHSecondaryWeapon >= 0)
                 {
-                    cb_SecondaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
+                    cb_SecondaryWeapon.SetIndex(Class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
                 }
             }
 
@@ -1583,7 +1583,7 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.GivenItems[i] != "")
                     {
-                        InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'class'));
+                        InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], Class'class'));
 
                         if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                         {
@@ -2711,7 +2711,7 @@ defaultproperties
     // SquadPlayerMode=MODE_Squads
     bButtonsEnabled=true
     SpawnPointIndex=-1
-    VehicleNoneMaterial=Material'DH_GUI_tex.DeployMenu.vehicle_none'
+    VehicleNoneMaterial=Material'DH_GUI_tex.vehicle_none'
 
     OnMessage=InternalOnMessage
     OnPreDraw=InternalOnPreDraw
@@ -2722,7 +2722,7 @@ defaultproperties
     WinHeight=1.0
 
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=Texture'DH_GUI_Tex.DeployMenu.Background'
+        Image=Texture'DH_GUI_Tex.Background'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -2764,7 +2764,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.025
-        Image=Material'DH_GUI_tex.DeployMenu.flag_germany'
+        Image=Material'DH_GUI_tex.flag_germany'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2797,7 +2797,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.00
         WinLeft=0.425
-        Image=Material'DH_GUI_tex.DeployMenu.flag_usa'
+        Image=Material'DH_GUI_tex.flag_usa'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2830,7 +2830,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.85
-        Image=Material'DH_GUI_tex.DeployMenu.spectate'
+        Image=Material'DH_GUI_tex.spectate'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -2843,7 +2843,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.reinforcements'
+        Image=Texture'DH_GUI_Tex.reinforcements'
     End Object
     i_Reinforcements=ReinforcementsImageObject
 
@@ -2866,7 +2866,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.ForceScale'
+        Image=Texture'DH_GUI_Tex.ForceScale'
     End Object
     i_SizeAdvantage=SizeAdvantageImageObject
 
@@ -2889,7 +2889,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.StopWatch'
+        Image=Texture'DH_GUI_Tex.StopWatch'
     End Object
     i_RoundTime=RoundTimeImageObject
 
@@ -3017,7 +3017,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.equipment'
+        Image=Texture'DH_GUI_Tex.equipment'
     End Object
     i_EquipmentButton=EquipmentButtonImageObject
 
@@ -3039,7 +3039,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.vehicles'
+        Image=Texture'DH_GUI_Tex.vehicles'
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
 
@@ -3093,7 +3093,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.compass'
+        Image=Texture'DH_GUI_Tex.compass'
     End Object
     i_MapButton=MapButtonImageObject
 
@@ -3116,7 +3116,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Texture'DH_GUI_Tex.DeployMenu.squads'
+        Image=Texture'DH_GUI_Tex.squads'
     End Object
     i_SquadsButton=SquadsButtonImageObject
 
@@ -3299,7 +3299,7 @@ defaultproperties
     b_MenuOptions(6)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
-        Image=Material'DH_GUI_tex.DeployMenu.arrow_blurry'
+        Image=Material'DH_GUI_tex.arrow_blurry'
         WinHeight=1.0
         WinLeft=0.875
         WinWidth=0.125
@@ -3428,39 +3428,39 @@ defaultproperties
     End Object
     i_Vehicle=VehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=SpawnVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=SpawnVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        Graphic=Material'DH_GUI_Tex.DeployEnabled'
         Hint="Spawn Vehicle"
         bVisible=false
         StyleName="TextLabel"
     End Object
     i_SpawnVehicle=SpawnVehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=ArtilleryVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=ArtilleryVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_GUI_Tex.DeployMenu.artillery'
+        Graphic=Material'DH_GUI_Tex.artillery'
         bVisible=false
         Hint="Artillery Vehicle"
         StyleName="TextLabel"
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
 
-    Begin Object Class=DHGUIGFXButton Name=MaxVehiclesImageObject
+    Begin Object Class=GUIGFXButton Name=MaxVehiclesImageObject
         WinWidth=0.125
         WinHeight=0.125
         WinLeft=0.0
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_InterfaceArt2_tex.Icons.tank'
+        Graphic=Material'DH_InterfaceArt2_tex.tank'
         bVisible=false
         Hint="Tanks Available"
         StyleName="TextLabel"
@@ -3478,13 +3478,13 @@ defaultproperties
     End Object
     l_MaxVehicles=MaxVehiclesLabelObject
 
-    Begin Object Class=DHGUIGFXButton Name=SupplyVehicleImageObject
+    Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.5
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'
+        Graphic=Material'DH_InterfaceArt2_tex.supply_cache'
         bVisible=false
         Hint="Construction Supply Vehicle"
         StyleName="TextLabel"

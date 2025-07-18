@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGSingleFire extends DHProjectileFire
@@ -43,8 +43,8 @@ defaultproperties
     bUsesTracers=true
     FireRate=0.2
     FAProjSpawnOffset=(X=-20.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stMG'
+    SmokeEmitterClass=Class'ROMuzzleSmoke'
     BlurTime=0.04
     BlurTimeIronsight=0.04
 

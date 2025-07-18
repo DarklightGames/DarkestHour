@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUITeamSelection extends ROGUITeamSelection;
 
-var array<texture>                          BackgroundTextures;
+var array<Texture>                          GermanyBackgroundTextures;
+var array<Texture>                          ItalyBackgroundTextures;
 
 var automated GUIButton                     b_Disconnect, b_Settings;
 
@@ -95,14 +96,24 @@ function SetBackground()
     local DH_LevelInfo LI;
 
     // Find nationinfo
-    foreach PlayerOwner().AllActors(class'DH_LevelInfo', LI)
+    foreach PlayerOwner().AllActors(Class'DH_LevelInfo', LI)
     {
         break;
     }
 
     if (LI != none)
     {
-        bg_Background.Image = BackgroundTextures[int(LI.AlliedNation)];
+        // HACK: This screen is a disaster. When we make this page modular, each team will define their own
+        // screen elements. For now, just carve out a special case for Italy.
+        switch (LI.AxisNation)
+        {
+            case NATION_Italy:
+                bg_Background.Image = ItalyBackgroundTextures[int(LI.AlliedNation)];
+                break;
+            case NATION_Germany:
+                bg_Background.Image = GermanyBackgroundTextures[int(LI.AlliedNation)];
+                break;
+        }
     }
 }
 
@@ -173,7 +184,7 @@ function SelectTeam(int Team)
         PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         // Trying to change teams, but recently did (give an error)
-        Controller.ShowQuestionDialog(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
+        Controller.ShowQuestionDialog(Repl(Class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
 
         return;
     }
@@ -225,7 +236,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 return;
 
             default: // Couldn't change teams: get error msg
-                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForId(result);
+                ErrorMessage = Class'ROGUIRoleSelection'.static.GetErrorMessageForId(result);
         }
 
         SetButtonsState(false);
@@ -239,34 +250,41 @@ defaultproperties
     UnitsText=" players"
     SizeBonusText="army size"
 
-    BackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
-    BackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
-    BackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
-    BackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
-    BackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectP'
-    BackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectCS'
+    GermanyBackgroundTextures(0)=Texture'DH_GUI_Tex.Teamselect'
+    GermanyBackgroundTextures(1)=Texture'DH_GUI_Tex.TeamselectB'
+    GermanyBackgroundTextures(2)=Texture'DH_GUI_Tex.TeamselectC'
+    GermanyBackgroundTextures(3)=Texture'DH_GUI_Tex.TeamselectD'
+    GermanyBackgroundTextures(4)=Texture'DH_GUI_Tex.TeamselectP'
+    GermanyBackgroundTextures(5)=Texture'DH_GUI_Tex.TeamselectCS'
+
+    ItalyBackgroundTextures(0)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(1)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(2)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(3)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(4)=Texture'DH_GUI_Tex.TeamselectIT'
+    ItalyBackgroundTextures(5)=Texture'DH_GUI_Tex.TeamselectIT'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
         TextAlign=TXTA_Center
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.871667
         WinLeft=0.09625
         WinWidth=0.3
         WinHeight=0.04
     End Object
-    l_TeamCount(0)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount'
+    l_TeamCount(0)=GUILabel'DH_Interface.TeamsCount'
 
     Begin Object Class=GUILabel Name=TeamsCount2
         Caption="? players"
         TextAlign=TXTA_Center
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.415
         WinLeft=0.09625
         WinWidth=0.3
         WinHeight=0.04
     End Object
-    l_TeamCount(1)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount2'
+    l_TeamCount(1)=GUILabel'DH_Interface.TeamsCount2'
 
     Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing
         bNoTeletype=true
@@ -277,7 +295,7 @@ defaultproperties
         WinWidth=0.44625
         WinHeight=0.342498
     End Object
-    l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing'
+    l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.TeamsBriefing'
 
     Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing2
         bNoTeletype=true
@@ -288,7 +306,7 @@ defaultproperties
         WinWidth=0.44625
         WinHeight=0.342498
     End Object
-    l_TeamBriefing(1)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing2'
+    l_TeamBriefing(1)=DHGUIScrollTextBox'DH_Interface.TeamsBriefing2'
 
     Begin Object Class=DHGUIButton Name=JoinTeamButton
         StyleName="DHSmallTextButtonStyle"
@@ -300,7 +318,7 @@ defaultproperties
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
-    b_TeamSelect(0)=DHGUIButton'DH_Interface.DHGUITeamSelection.JoinTeamButton'
+    b_TeamSelect(0)=DHGUIButton'DH_Interface.JoinTeamButton'
 
     Begin Object class=DHGUIButton Name=JoinTeamButton2
         StyleName="DHSmallTextButtonStyle"
@@ -312,7 +330,7 @@ defaultproperties
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
-    b_TeamSelect(1)=DHGUIButton'DH_Interface.DHGUITeamSelection.JoinTeamButton2'
+    b_TeamSelect(1)=DHGUIButton'DH_Interface.JoinTeamButton2'
 
     // Disconnect
     Begin Object class=DHGUIButton Name=Disconnect
@@ -376,7 +394,7 @@ defaultproperties
 
     // Background
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.Teamselect'
+        Image=Texture'DH_GUI_Tex.Teamselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -384,7 +402,7 @@ defaultproperties
         X2=1023
         Y2=1023
     End Object
-    bg_Background=BackgroundImage'DH_Interface.DHGUITeamSelection.PageBackground'
+    bg_Background=BackgroundImage'DH_Interface.PageBackground'
 
     OnClose=DHGUITeamSelection.InternalOnClose
     OnMessage=DHGUITeamSelection.InternalOnMessage

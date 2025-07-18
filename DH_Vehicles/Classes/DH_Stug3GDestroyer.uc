@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without remote-controlled MG & with boxy mantlet
@@ -14,16 +14,16 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.Stug3g_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Alpha'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Stug3g_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.Stug3g_treads'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.Stug3g_body_int'
     FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_01",DrivePos=(X=8.0,Y=0.0,Z=3.0),DriveRot=(Yaw=49152),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="passenger_02",DrivePos=(X=-11.0,Y=0.0,Z=78.0),DriveRot=(Pitch=34600),DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_03",DrivePos=(X=10.0,Y=0.0,Z=84.0),DriveRot=(Pitch=32768,Yaw=26500),DriveAnim="VHalftrack_Rider3_idle")
@@ -77,7 +77,7 @@ defaultproperties
     TreadDamageThreshold=0.5
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.stug3g_destroyed'
 
     // Exit
     ExitPositions(0)=(X=-95.0,Y=-40.0,Z=130.0)
@@ -89,13 +89,13 @@ defaultproperties
     ExitPositions(6)=(X=-235.0,Y=-3.0,Z=5.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
+    IdleSound=SoundGroup'Vehicle_Engines.stugiii_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.stugiii_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.stugiii_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L08'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R08'
     RumbleSoundBone="driver_attachment"
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -107,9 +107,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.stug3g_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Stug3g_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Stug3g_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.66
@@ -127,7 +127,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.7
     VehicleHudOccupantsX(6)=0.5
     VehicleHudOccupantsY(6)=0.75
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stug3g'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.stug3g'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -163,7 +163,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -172,7 +172,7 @@ defaultproperties
         BoneOffset=(X=35.0,Y=5.0,Z=6.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -182,7 +182,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -191,7 +191,7 @@ defaultproperties
         BoneOffset=(X=-7.0,Y=5.0,Z=6.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -200,7 +200,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -208,7 +208,7 @@ defaultproperties
         BoneOffset=(Z=6.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -229,5 +229,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Stug3GDestroyer.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

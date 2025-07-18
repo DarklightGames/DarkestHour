@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BazookaExhaustDamType extends DHRocketExhaustDamageType
@@ -8,5 +8,5 @@ class DH_BazookaExhaustDamType extends DHRocketExhaustDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_BazookaWeapon'
+    WeaponClass=Class'DH_BazookaWeapon'
 }

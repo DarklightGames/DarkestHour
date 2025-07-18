@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSovietCannonPawn extends DHVehicleCannonPawn
@@ -84,9 +84,9 @@ exec function AdjustAllOpticalRanges(float Adjustment)
 defaultproperties
 {
     RangePositionX=0.1
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
     ScopeCenterPositionX=0.215
     ScopeCenterScaleX=1.35
     ScopeCenterScaleY=1.35
-    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload' // TODO: make a proper version of this, this texture is just a quick hack job (Oct 2016)
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.DT_ammo_reload' // TODO: make a proper version of this, this texture is just a quick hack job (Oct 2016)
 }

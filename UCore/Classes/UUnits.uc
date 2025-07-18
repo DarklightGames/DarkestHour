@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class UUnits extends Object
@@ -17,6 +17,24 @@ enum EAngleUnit
     AU_Milliradians,
     AU_Radians
 };
+
+// Used for debugging purposes.
+final static function EAngleUnit GetAngleUnitFromString(coerce string AngleUnitString)
+{
+    switch (Caps(AngleUnitString))
+    {
+        case "U":
+            return AU_Unreal;
+        case "D":
+            return AU_Degrees;
+        case "M":
+            return AU_Milliradians;
+        case "R":
+            return AU_Radians;
+        default:
+            return AU_Unreal;
+    }
+}
 
 final static function string GetAngleUnitString(EAngleUnit Unit)
 {

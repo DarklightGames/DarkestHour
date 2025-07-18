@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHThrownExplosiveFire extends DHProjectileFire
@@ -105,11 +105,11 @@ function CalcSpreadModifiers()
 }
 
 // Custom projectile spawning for thrown explosives
-function Projectile SpawnProjectile(vector Start, rotator Dir)
+function Projectile SpawnProjectile(Vector Start, Rotator Dir)
 {
     local Projectile SpawnedProjectile;
     local float      PawnSpeed, ThrowSpeed, SetFuseTime;
-    local vector     X, Y, Z;
+    local Vector     X, Y, Z;
 
     // Spawn the projectile
     Dir.Pitch += AddedPitch; // this will increase the angle the grenade is thrown at
@@ -161,7 +161,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     ThrowSpeed = HoldTime * SpeedFromHoldingPerSec;
     SpawnedProjectile.Speed = FClamp(ThrowSpeed, MinimumThrowSpeed, MaximumThrowSpeed);
     SpawnedProjectile.Speed += PawnSpeed;
-    SpawnedProjectile.Velocity = SpawnedProjectile.Speed * vector(Dir);
+    SpawnedProjectile.Velocity = SpawnedProjectile.Speed * Vector(Dir);
 
     // Set the remaining fuse time
     if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIEditBox extends GUIEditBox;
@@ -28,8 +28,4 @@ defaultproperties
 {
     OnEnter=InternalOnEnter
     StyleName="DHEditBox"
-
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }

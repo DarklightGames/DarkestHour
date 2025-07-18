@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_Enemy_Vehicle extends DHMapMarker_Enemy
@@ -9,7 +9,7 @@ class DHMapMarker_Enemy_Vehicle extends DHMapMarker_Enemy
 defaultproperties
 {
     MarkerName="Enemy Vehicle"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.truck_topdown'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
     LifetimeSeconds=120
     SpottingConsoleCommand="SPEECH ENEMY 5"
 }

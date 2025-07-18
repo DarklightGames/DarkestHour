@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMediumCaliberDamageType extends DHWeaponProjectileDamageType
@@ -8,5 +8,5 @@ class DHMediumCaliberDamageType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffMediumCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffMediumCaliber'
 }

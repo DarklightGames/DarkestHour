@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SachelChargeAmmo extends DHAmmunition;
@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=2
     InitialAmount=1
-    IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo'
+    IconMaterial=Material'InterfaceArt_tex.satchel_ammo'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellDamageAP extends DHShellAPImpactDamageType
@@ -21,5 +21,5 @@ defaultproperties
     KDeathVel=500.000000 //350.0
     KDeathUpKick=150 //50
     bAlwaysSevers=true
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
 }

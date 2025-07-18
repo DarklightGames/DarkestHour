@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporating ROGrenadeProjectile
@@ -8,8 +8,8 @@ class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporatin
 
 var enum ESpinType
 {
-    ST_Normal,        // Normal spin for egg-shaped or canister grenades.
-    ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades.
+    ST_Normal,      // Normal spin for egg-shaped or canister grenades.
+    ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades).
 } SpinType;
 
 // Client-side only projectile class to accompany a throw
@@ -35,9 +35,9 @@ simulated function SpawnSpoonProjectile()
 
     // Perturb the direction of the spoon projectile slightly.
     SpoonDirection = Rotator(Velocity);
-    SpoonDirection.Yaw += class'UInterp'.static.Linear(FRand(), -300, 300);
+    SpoonDirection.Yaw += Class'UInterp'.static.Linear(FRand(), -300, 300);
 
-    SpoonProjectile.Velocity = Vector(SpoonDirection) * VSize(Velocity) * class'UInterp'.static.Linear(FRand(), 0.5, 0.75);
+    SpoonProjectile.Velocity = Vector(SpoonDirection) * VSize(Velocity) * Class'UInterp'.static.Linear(FRand(), 0.5, 0.75);
     SpoonProjectile.RandSpin(100000);
 }
 
@@ -63,13 +63,13 @@ simulated function PostBeginPlay()
         RandSpin(100000.0);
         break;
     case ST_Tumble:
-        RotationRate.Pitch = -(90000 + Rand(30000)); 
+        RotationRate.Pitch = -(90000 + Rand(30000));
         break;
     }
 }
 
 // TODO: pretty sure this is obsolete & can be deleted, as only ROCollisionAttachment in game is bullet whip attachment, which triggers Touch() not HitWall() & is already ignored by ProcessTouch()
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     // Return here, this was causing the famous "nade bug"
     if (ROCollisionAttachment(Wall) != none)
@@ -81,14 +81,14 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // Modified to allow players to dive on grenades to save teammates
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     local DHPawn DHP;
 
     if (Role == ROLE_Authority)
     {
         // Check for any players so close that they must be on top of the grenade
-        foreach RadiusActors(class'DHPawn', DHP, 10.0)
+        foreach RadiusActors(Class'DHPawn', DHP, 10.0)
         {
             // Make sure player is actually lying on the grenade, not just standing over it
             if (DHP.bIsCrawling)
@@ -106,10 +106,20 @@ defaultproperties
 {
     // FuzeLengthRange=(Min=4.5,Max=5.5)
     Speed=1100.0
-    MyDamageType=class'DHThrowableExplosiveDamageType'
-    ExplodeDirtEffectClass=class'GrenadeExplosion'
-    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
-    ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
+    MyDamageType=Class'DHThrowableExplosiveDamageType'
+    ExplodeDirtEffectClass=Class'DHGrenadeEffect_Generic'
+    ExplodeSnowEffectClass=Class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
+    ExplodeMidAirEffectClass=Class'GrenadeExplosion_midair'
+    ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
+    ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'
+    ImpactSoundMetal=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Metal'
+    ImpactSoundMud=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Mud'
+    ImpactSoundGrass=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Grass'
+    ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
+    ImpactSoundVolumeRange=(Min=0.5,Max=4.0)
+    ImpactSoundRadius=45.0
     CollisionHeight=2.0
     CollisionRadius=4.0
     bSwitchToZeroCollision=true
@@ -121,4 +131,5 @@ defaultproperties
     ShakeOffsetRate=(Z=200.0)
     ShakeOffsetTime=6.0
     ShakeScale=3.0
+    ExplodeEmitterOffset=(z=8)
 }

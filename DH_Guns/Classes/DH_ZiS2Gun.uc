@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2Gun extends DHATGun;
@@ -9,22 +9,20 @@ defaultproperties
 {
     VehicleNameString="ZiS-2 57mm AT gun"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS2CannonPawn',WeaponBone="Gun_attachment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS2CannonPawn',WeaponBone="Gun_attachment")
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS2_destroyed'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.ZiS3_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.ZiS3_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.ZiS3_turret_look'
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS2_destroyed'
+    VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
     VehicleHudOccupantsX(1)=0.44
     VehicleHudOccupantsY(1)=0.65
     ExitPositions(1)=(X=-120.00,Y=-38.00,Z=30.00)
     VehicleMass=11.0
-    SupplyCost=1250
-    ConstructionPlacementOffset=(Z=16)
     bCanBeRotated=true
     PlayersNeededToRotate=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -44,5 +42,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_ZiS2Gun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

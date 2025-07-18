@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionSupplyAttachment extends Actor
@@ -118,7 +118,7 @@ function SetInitialSupply(optional int Amount)
     }
     else
     {
-        SetSupplyCount(default.SupplyCount);
+        SetSupplyCount(SupplyCountMax);
     }
 }
 
@@ -137,30 +137,15 @@ simulated function float GetSupplyCount()
     return SupplyCount;
 }
 
-static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
+function SetSupplyCountMax(int Amount)
 {
-    local DH_LevelInfo LI;
-
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (LI != none)
-    {
-        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheClass.default.StaticMesh;
-    }
-
-    return none;
-}
-
-function UpdateAppearance()
-{
-    SetStaticMesh(GetStaticMesh(Level, TeamIndex));
-    NetUpdateTime = Level.TimeSeconds - 1.0;
+    SupplyCountMax = Amount;
+    SetSupplyCount(FMin(SupplyCount, float(SupplyCountMax)));
 }
 
 function SetSupplyCount(float Amount)
 {
     SupplyCount = FClamp(Amount, 0.0, float(SupplyCountMax));
-    UpdateAppearance();
     OnSupplyCountChanged(self);
 }
 
@@ -177,14 +162,14 @@ function Destroyed()
 
         if (P != none)
         {
-            class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+            Class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
         }
 
         V = DHVehicle(TouchingPawns[i]);
 
         if (V != none)
         {
-            class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
+            Class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
         }
     }
 
@@ -205,7 +190,7 @@ function Destroyed()
 
 function bool IsTouchingActor(Actor A)
 {
-    return A != none && VSize(Location - A.Location) <= class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
+    return A != none && VSize(Location - A.Location) <= Class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
 }
 
 function Timer()
@@ -233,7 +218,7 @@ function Timer()
     NewTouchingPawns.Length = 0;
 
     // Gather all relevant pawns within the radius.
-    foreach CollidingActors(class'Pawn', Pawn, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
+    foreach CollidingActors(Class'Pawn', Pawn, Class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
     {
         if (Pawn != none && Pawn.GetTeamNum() == TeamIndex)
         {
@@ -243,7 +228,7 @@ function Timer()
 
     for (i = 0; i < NewTouchingPawns.Length; ++i)
     {
-        Index = class'UArray'.static.IndexOf(TouchingPawns, NewTouchingPawns[i]);
+        Index = Class'UArray'.static.IndexOf(TouchingPawns, NewTouchingPawns[i]);
 
         if (Index == -1)
         {
@@ -264,7 +249,7 @@ function Timer()
 
     for (i = 0; i < TouchingPawns.Length; ++i)
     {
-        Index = class'UArray'.static.IndexOf(NewTouchingPawns, TouchingPawns[i]);
+        Index = Class'UArray'.static.IndexOf(NewTouchingPawns, TouchingPawns[i]);
 
         if (Index == -1)
         {
@@ -275,11 +260,11 @@ function Timer()
 
             if (P != none)
             {
-                class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+                Class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
             }
             else if (V != none)
             {
-                class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
+                Class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
             }
         }
     }
@@ -361,7 +346,6 @@ simulated function int GetTeamIndex()
 function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
-    UpdateAppearance();
 
     if (MapIconAttachment != none)
     {

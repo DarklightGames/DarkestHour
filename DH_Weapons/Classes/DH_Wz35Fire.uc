@@ -1,26 +1,26 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Wz35Fire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PTRDBullet' // TODO: replace with WZ35 bullet
-    AmmoClass=class'DH_Weapons.DH_Wz35Ammo'
+    ProjectileClass=Class'DH_PTRDBullet' // TODO: replace with WZ35 bullet
+    AmmoClass=Class'DH_Wz35Ammo'
     bUsePreLaunchTrace=false
     Spread=75.0
     MaxVerticalRecoilAngle=750
     MaxHorizontalRecoilAngle=650
-    FireSounds(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-    FireSounds(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-    FireSounds(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPTRD'
-    ShellEjectClass=class'ROAmmo.ShellEject1st14mm'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Boys01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Boys01'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Boys01'
+    FlashEmitterClass=Class'MuzzleFlash1stPTRD'
+    ShellEjectClass=Class'ShellEject1st14mm'
     //ShellIronSightOffset=(X=10.0,Y=3.0,Z=0.0)
     //ShellRotOffsetIron=()
-    bAnimNotifiedShellEjects=false
+    bAnimNotifiedShellEjects=true
     FireIronAnim="deploy_shoot"
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetTime=4.0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -74,7 +74,6 @@ var(DH_GameSettings) bool                           bHardTeamRatio;             
 var(DH_GameSettings) class<DHGameType>              GameTypeClass;
 var(DH_GameSettings) ESpawnMode                     SpawnMode;
 
-var(DH_GameSettings) array<class<DHConstruction> >  RestrictedConstructions;
 var(DH_GameSettings) int                            InfantrySpawnVehicleDuration;
 var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
 
@@ -95,23 +94,40 @@ var(DH_SpecialEvents) float                         ZombieHealthMultiplier;
 // when the enemy holds 50% more of the objectives. (eg. Team A has 2
 // objectives, while Team B has 4.)
 
-var() material              LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
+var() Material              LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
                                                      // Must be set to myLevel.GUI.LoadingScreen to work!
 
 var const bool              bDHDebugMode;            // flag for whether debug commands can be run
 
-struct STeamConstruction
+struct SConstruction
 {
-    var() class<DHConstruction> ConstructionClass;
-    var() int TeamIndex;
-    var() int Limit;
-    var() int ReplenishPeriodSeconds;   // How long it takes, in seconds, for the limit to be increased by one
+    var() byte TeamIndex;
+    var() class<DHConstruction> ConstructionClass;  // Construction class.
+    var() int Limit; // The total limit alotted per round. -1 means no limit.
+    var() int MaxActive; // The maximum amount active at a time. -1 means no limit.
 };
-var(DH_Constructions) array<STeamConstruction> TeamConstructions;
+
+// Leveler-defined constructions.
+var(DH_Constructions) array<class<DHConstruction> > RestrictedConstructions;
+// When set, use this construction loadout for the team. Otherwise, use the nation's default loadout.
+var(DH_Constructions) array<class<DHConstructionLoadout> > TeamConstructionLoadoutClasses[2];
+var(DH_Constructions) protected array<SConstruction> Constructions;
+
+// Evaluated construction loadouts.
+// The list is populated by the nation's default loadout classes and any level-specific overrides.
+// The construction list in the GRI maps to this list by index.
+var array<SConstruction> ConstructionsEvaluated;
 
 singular static function bool DHDebugMode()
 {
     return default.bDHDebugMode;
+}
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    EvaluateConstructions();
 }
 
 // This is a backwards compatibility method.
@@ -168,18 +184,48 @@ simulated function class<DHNation> GetTeamNationClass(int TeamIndex)
         case AXIS_TEAM_INDEX:
             if (AxisNationClass == none)
             {
-                AxisNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(AXIS_TEAM_INDEX), class'Class'));
+                AxisNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(AXIS_TEAM_INDEX), Class'Class'));
             }
             return AxisNationClass;
         case ALLIES_TEAM_INDEX:
             if (AlliedNationClass == none)
             {
-                AlliedNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(ALLIES_TEAM_INDEX), class'Class'));
+                AlliedNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(ALLIES_TEAM_INDEX), Class'Class'));
             }
             return AlliedNationClass;
     }
 
     return none;
+}
+
+simulated function bool IsConstructionUnlimited(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+
+    ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex != -1)
+    {
+        return ConstructionsEvaluated[ConstructionIndex].Limit == -1;
+    }
+
+    return false;
+}
+
+simulated function int GetConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < ConstructionsEvaluated.Length; ++i)
+    {
+        if (ConstructionsEvaluated[i].TeamIndex == TeamIndex &&
+            ConstructionsEvaluated[i].ConstructionClass == ConstructionClass)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 simulated function bool IsConstructionRestricted(class<DHConstruction> ConstructionClass)
@@ -188,13 +234,98 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
 
     for (i = 0; i < RestrictedConstructions.Length; ++i)
     {
-        if (ConstructionClass == RestrictedConstructions[i])
+        if (ClassIsChildOf(ConstructionClass, RestrictedConstructions[i]))
         {
             return true;
         }
     }
 
     return false;
+}
+
+// Returns the maximum active limit for a team's construction class.
+// If the value is -1, there is no limit to the number of active constructions.
+simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+
+    ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex != -1)
+    {
+        return ConstructionsEvaluated[ConstructionIndex].MaxActive;
+    }
+
+    return -1;
+}
+
+// This function evaluates the level's construction classes and populates the ConstructionsEvaluated list.
+simulated function EvaluateConstructions()
+{
+    local int i, TeamIndex, ConstructionIndex;
+    local class<DHNation> NationClass;
+    local class<DHConstructionLoadout> LoadoutClass;
+    local SConstruction Construction;
+
+    // Clear the evaluated constructions.
+    ConstructionsEvaluated.Length = 0;
+
+    // Add the nation's default construction classes.
+    for (TeamIndex = 0; TeamIndex < 2; ++TeamIndex)
+    {
+        if (TeamConstructionLoadoutClasses[TeamIndex] != none)
+        {
+            // Use the level's construction loadout for this team.
+            LoadoutClass = TeamConstructionLoadoutClasses[TeamIndex];
+        }
+        else
+        {
+            // No level-specific construction loadout, use the nation's default.
+            NationClass = GetTeamNationClass(TeamIndex);
+
+            if (NationClass == none)
+            {
+                Warn("Failed to get nation class for team index " $ TeamIndex);
+                continue;
+            }
+
+            LoadoutClass = NationClass.default.DefaultConstructionLoadoutClass;
+        }
+
+        if (LoadoutClass == none)
+        {
+            Warn("Failed to get default construction loadout class for nation " $ NationClass);
+            continue;
+        }
+
+        for (i = 0; i < LoadoutClass.default.Constructions.Length; ++i)
+        {
+            Construction.TeamIndex = TeamIndex;
+            Construction.ConstructionClass = LoadoutClass.default.Constructions[i].ConstructionClass;
+            Construction.Limit = LoadoutClass.default.Constructions[i].Limit;
+            Construction.MaxActive = LoadoutClass.default.Constructions[i].MaxActive;
+
+            ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+        }
+    }
+
+    // Now add or override any construction classes with the level's list.
+    for (i = 0; i < Constructions.Length; ++i)
+    {
+        Construction = Constructions[i];
+        ConstructionIndex = GetConstructionIndex(Construction.TeamIndex, Construction.ConstructionClass);
+
+        if (ConstructionIndex == -1)
+        {
+            // Add the construction, it doesn't yet exist.
+            ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+        }
+        else
+        {
+            // Update the construction, it already exists.
+            ConstructionsEvaluated[ConstructionIndex] = Construction;
+        }
+    }
 }
 
 function bool IsArtilleryInitiallyAvailable(int ArtilleryTypeIndex)
@@ -265,7 +396,7 @@ simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 
     if (LI == none)
     {
-        foreach Level.AllActors(class'DH_LevelInfo', LI)
+        foreach Level.AllActors(Class'DH_LevelInfo', LI)
         {
             break;
         }
@@ -280,16 +411,16 @@ defaultproperties
 
     AlliesToAxisRatio=0.5
     Texture=Texture'DHEngine_Tex.LevelInfo'
-    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
-    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
+    AlliesWinsMusic=Sound'DH_win.DH_AlliesGroup'
+    AxisWinsMusic=Sound'DH_win.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
-    GameTypeClass=class'DHGameType_Push'
+    GameTypeClass=Class'DHGameType_Push'
     InfantrySpawnVehicleDuration=60
 
     // TODO: delay, limit and request interval need to be gotten from elsewhere?
-    ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
-    ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+    ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=Class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+    ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=Class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
 
     BaseMunitionPercentages(0)=60.0
     BaseMunitionPercentages(1)=60.0

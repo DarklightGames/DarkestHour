@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGunOptics_ItalianPeriscopic extends DHGunOptics;
@@ -8,5 +8,5 @@ class DHGunOptics_ItalianPeriscopic extends DHGunOptics;
 defaultproperties
 {
     GunsightSize=0.4
-    GunsightOverlay=Texture'DH_Cannone4732_tex.Interface.cannone4732_sight'
+    GunsightOverlay=Texture'DH_Cannone4732_tex.cannone4732_sight'
 }

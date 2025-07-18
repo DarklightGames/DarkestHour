@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadioTouchMessage extends ROTouchMessagePlus
@@ -22,7 +22,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
+            return Class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
         case 1:
             return default.NotQualifiedMessage;
         case 2:

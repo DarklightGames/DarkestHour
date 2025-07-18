@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This weapon goes by many names:
 // - Wz. 35
@@ -30,25 +30,60 @@ simulated function ROIronSights()
     Deploy();
 }
 
-// Modified because bolt action class can't handle reloads for this type of
-// a weapon.
-// TODO: Add proper reload handling to the base class and remove this.
-simulated function PerfomReload()
+// HACK: Bypass special reload logic in `DHBoltActionWeapon` to fix the issues with reloading.
+function PerformReload(optional int Count)
 {
-    super(DHProjectileWeapon).PerformReload();
+    super(DHProjectileWeapon).PerformReload(Count);
 }
 
-simulated function bool AllowReload()
+simulated function ClientDoReload(optional byte NumRounds)
 {
-    return super(DHProjectileWeapon).AllowReload();
+    super(DHProjectileWeapon).ClientDoReload(NumRounds);
+}
+
+function ServerRequestReload()
+{
+    super(DHProjectileWeapon).ServerRequestReload();
+}
+
+simulated function byte GetRoundsToLoad()
+{
+    if (CurrentMagCount == 0)
+    {
+        return 0;
+    }
+
+    return GetMaxLoadedRounds();
+}
+
+simulated state WorkingBolt
+{
+    // Fire button does nothing while working the bolt.
+    simulated function Fire(float F);
+
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
+}
+
+simulated state ReloadingBipod
+{
+    // Modified to not do reload interrupting logic.
+    simulated function Fire(float F);
 }
 
 defaultproperties
 {
     ItemName="Fucile Controcarro 35(P)"
-    FireModeClass(0)=class'DH_Weapons.DH_Wz35Fire'
-    AttachmentClass=class'DH_Weapons.DH_Wz35Attachment'
-    PickupClass=class'DH_Weapons.DH_Wz35Pickup'
+    FireModeClass(0)=Class'DH_Wz35Fire'
+    AttachmentClass=Class'DH_Wz35Attachment'
+    PickupClass=Class'DH_Wz35Pickup'
 
     Mesh=SkeletalMesh'DH_Wz35_anm.wz35_1st'
     bUseHighDetailOverlayIndex=true
@@ -58,8 +93,9 @@ defaultproperties
     IronSightDisplayFOV=55
 
     bCanHaveInitialNumMagsChanged=false
-    MaxNumPrimaryMags=20
-    InitialNumPrimaryMags=20
+    bUsesMagazines=true
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
 
     bCanBipodDeploy=true
     bCanRestDeploy=false
@@ -78,4 +114,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
 
     bShouldZoomWhenBolting=true
+    bMustBeDeployedToBolt=true
+
+    StripperClipSize=4
 }

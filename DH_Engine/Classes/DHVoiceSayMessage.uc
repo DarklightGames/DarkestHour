@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoiceSayMessage extends DHLocalMessage
@@ -8,7 +8,7 @@ class DHVoiceSayMessage extends DHLocalMessage
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
-    local color ConsoleColor, NameColor;
+    local Color ConsoleColor, NameColor;
     local DHPlayerReplicationInfo MyPRI;
     local string SquadMemberID;
 
@@ -24,9 +24,9 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         MyPRI = DHPlayerReplicationInfo(myHUD.PlayerOwner.PlayerReplicationInfo);
     }
 
-    if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
+    if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
     {
-        NameColor = class'DHColor'.default.SquadColor;
+        NameColor = Class'DHColor'.default.SquadColor;
         SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
         if (SquadMemberID != "") SquadMemberID $= " ";
     }
@@ -36,10 +36,10 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     }
 
     return default.MessagePrefix @
-           class'GameInfo'.static.MakeColorCode(NameColor) $
+           Class'GameInfo'.static.MakeColorCode(NameColor) $
            SquadMemberID $
            RelatedPRI_1.PlayerName $
-           class'GameInfo'.static.MakeColorCode(ConsoleColor) @
+           Class'GameInfo'.static.MakeColorCode(ConsoleColor) @
            ":" @
            MessageString;
 }

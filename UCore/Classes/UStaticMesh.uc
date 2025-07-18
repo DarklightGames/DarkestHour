@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // https://wiki.beyondunreal.com/Legacy:Dynamicly_Accessing_Original_Static_Mesh_Textures
 //==============================================================================

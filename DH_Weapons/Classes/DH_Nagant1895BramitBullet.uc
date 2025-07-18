@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Nagant1895BramitBullet extends DHBullet;
@@ -11,6 +11,6 @@ defaultproperties
     BallisticCoefficient=0.17
     WhizType=2
     Damage=50.0
-    MyDamageType=class'DH_Weapons.DH_Nagant1895BramitDamType'
+    MyDamageType=Class'DH_Nagant1895BramitDamType'
 }
 

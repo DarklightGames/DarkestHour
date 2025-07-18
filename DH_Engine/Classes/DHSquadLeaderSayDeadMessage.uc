@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSquadLeaderSayDeadMessage extends DHLocalMessage
@@ -16,7 +16,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ MessageString;
 }
 
-static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
 {
     return default.DrawColor;
 }

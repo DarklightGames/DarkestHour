@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://comandosupremo.com/forums/index.php?threads/italian-armor-piercing-ammunition-perforanti-effetto-pronto-and-ep-speciale.52
 //==============================================================================
@@ -13,10 +13,12 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_turret'
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
-    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_barrel_collision',AttachBone="BARREL")
-    
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.cannone4732_turret_barrel_collision',AttachBone="BARREL")
+
+    WeaponFireAttachmentBone="muzzle"
+
     GunnerAttachmentBone="turret"
     
     ShootAnim="shoot"
@@ -31,9 +33,9 @@ defaultproperties
     CustomPitchDownLimit=62806  // -15 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_Cannone4732CannonShell'
+    SecondaryProjectileClass=Class'DH_Cannone4732CannonShellHE'
+    TertiaryProjectileClass=Class'DH_Cannone4732CannonShellHEAT'
 
     ProjectileDescriptions(0)="AP"
     ProjectileDescriptions(1)="HE"
@@ -57,13 +59,13 @@ defaultproperties
     AddedPitch=-15
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.57mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.57mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.57mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //3.5 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     ResupplyInterval=3.0
 
@@ -102,4 +104,6 @@ defaultproperties
     ShakeRotTime=7.0
 
     RotationsPerSecond=0.05
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }

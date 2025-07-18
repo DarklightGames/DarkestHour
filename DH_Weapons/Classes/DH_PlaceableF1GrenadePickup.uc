@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PlaceableF1GrenadePickup extends DHPlaceableWeaponPickup;
 
 defaultproperties
 {
-    WeaponType=class'DH_Weapons.DH_F1GrenadeWeapon'
-    InventoryType=class'DH_Weapons.DH_F1GrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    WeaponType=Class'DH_F1GrenadeWeapon'
+    InventoryType=Class'DH_F1GrenadeWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.F1Grenade'
 }

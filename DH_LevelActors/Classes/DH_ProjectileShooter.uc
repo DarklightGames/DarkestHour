@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ProjectileShooter extends DH_LevelActors
@@ -86,12 +86,11 @@ simulated event PostBeginPlay()
 
 simulated function FindTargetActors()
 {
-    local int i;
     local Actor TargetActor;
 
     super.PostBeginPlay();
 
-    foreach AllActors(class'Actor', TargetActor, TargetTag)
+    foreach AllActors(Class'Actor', TargetActor, TargetTag)
     {
         TargetActors[TargetActors.Length] = TargetActor;
     }
@@ -132,7 +131,6 @@ state Firing
 {
     function BeginState()
     {
-        local float FireTime;
         local float FireDelay;
 
         super.BeginState();
@@ -159,8 +157,6 @@ state Firing
 
     function Timer()
     {
-        local float FireTime;
-
         if (FireCount >= MaxProjectiles)
         {
             GotoState('');
@@ -219,12 +215,11 @@ simulated function Rotator GetProjectileRotation()
 
 simulated function Projectile SpawnProjectile()
 {
-    local Projectile Projectile;
     local Rotator ProjectileRotation;
     local Vector ProjectileLocation;
 
     ProjectileRotation = GetProjectileRotation();
-    ProjectileLocation = Location + vector(Rotation) * ProjectileOffset;
+    ProjectileLocation = Location + Vector(Rotation) * ProjectileOffset;
     
     return Spawn(GetProjectileClass(),,, Location, ProjectileRotation);
 }

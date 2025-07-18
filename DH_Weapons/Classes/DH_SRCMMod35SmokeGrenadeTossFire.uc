@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SRCMMod35SmokeGrenadeTossFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeAmmo'
+    ProjectileClass=Class'DH_SRCMMod35SmokeGrenadeProjectile'
+    AmmoClass=Class'DH_SRCMMod35SmokeGrenadeAmmo'
     AddedPitch=0
     MinimumThrowSpeed=100.0
     MaximumThrowSpeed=500.0

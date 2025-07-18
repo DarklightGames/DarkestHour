@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JacksonTank extends DHArmoredVehicle; // later version with HVAP instead of AP shot & with muzzle brake
@@ -15,15 +15,15 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_Body'
-    Skins(1)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
-    Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
-    Skins(4)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(5)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(0)=Texture'DH_VehiclesUS_tex3.M36_Body'
+    Skins(1)=Texture'DH_VehiclesUS_tex3.M36_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.M10_body_int'
+    Skins(3)=Texture'DH_VehiclesUS_tex.M10_body_int2'
+    Skins(4)=Texture'DH_VehiclesUS_tex.M10_treads'
+    Skins(5)=Texture'DH_VehiclesUS_tex.M10_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_JacksonCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="Jackson_body_ext",DrivePos=(X=-125.0,Y=-65.0,Z=115.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="Jackson_body_ext",DrivePos=(X=-185.0,Y=-35.0,Z=115.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Jackson_body_ext",DrivePos=(X=-185.0,Y=35.0,Z=115.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -74,7 +74,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=25.0,PointBone="Jackson_body_ext",PointOffset=(X=-20.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=65.0
     DamagedEffectOffset=(X=-126.0,Y=20.0,Z=105.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_Dest'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson_Dest'
 
     // Exit
     ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  // driver
@@ -85,13 +85,13 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.ShermanEngineLoop'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="Turret_placement"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=5
@@ -106,9 +106,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.M36_Body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M36_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M36_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.M36_Body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.M36_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.M36_turret_look'
     VehicleHudEngineX=0.50
     VehicleHudEngineY=0.675
     VehicleHudTreadsPosX(0)=0.37
@@ -125,7 +125,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.725
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m36_jackson'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.m36_jackson'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -160,7 +160,7 @@ defaultproperties
         BoneOffset=(X=10.0,Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -168,7 +168,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=10.0,Z=10.0)
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -177,7 +177,7 @@ defaultproperties
         BoneOffset=(X=-30.0,Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -185,7 +185,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=10.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -193,14 +193,14 @@ defaultproperties
         BoneOffset=(Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -221,5 +221,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_JacksonTank.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

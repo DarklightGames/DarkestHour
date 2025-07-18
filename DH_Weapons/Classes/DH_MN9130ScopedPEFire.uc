@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MN9130ScopedPEFire extends DH_MN9130Fire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MN9130ScopedBullet'
+    ProjectileClass=Class'DH_MN9130ScopedBullet'
     Spread=22.0
     PctRestDeployRecoil=0.25
     FireIronAnim="Scope_shoot"

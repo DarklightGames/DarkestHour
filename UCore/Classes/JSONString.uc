@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class JSONString extends JSONValue;
@@ -40,7 +40,7 @@ static function JSONString Create(coerce string Value)
 {
     local JSONString S;
 
-    S = new class'JSONString';
+    S = new Class'JSONString';
     S.String = Value;
 
     return S;

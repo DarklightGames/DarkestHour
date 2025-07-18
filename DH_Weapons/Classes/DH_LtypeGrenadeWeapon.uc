@@ -1,18 +1,19 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LTypeGrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="OTO bomba Tipo L" //placeholder until we figure the actual name for this thing
-    FireModeClass(0)=class'DH_Weapons.DH_LTypeGrenadeFire'
-    FireModeClass(1)=class'DH_Weapons.DH_LTypeGrenadeFire' // no toss fire because it would be utterly useless
-    AttachmentClass=class'DH_Weapons.DH_LTypeGrenadeAttachment'
-    PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
+    ItemName="O.T.O Tipo L Anti-Tank Grenade"
+    FireModeClass(0)=Class'DH_LTypeGrenadeFire'
+    FireModeClass(1)=Class'DH_LTypeGrenadeFire' // no toss fire because it would be utterly useless
+    AttachmentClass=Class'DH_LTypeGrenadeAttachment'
+    PickupClass=Class'DH_LTypeGrenadePickup'
     Mesh=SkeletalMesh'DH_Ltype_anm.Ltype_1st'
     GroupOffset=4
     DisplayFOV=80.0
+    bHasReleaseLever=true   // HACK: stops the grenade from automatically throwing after a certain amount of time.
 }

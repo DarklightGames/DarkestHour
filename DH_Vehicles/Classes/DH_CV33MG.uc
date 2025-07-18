@@ -1,9 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
-//==============================================================================
-// [ ] Fix muzzle emitter offset being a bit too far forward
-// [ ] Add correct projectile class
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CV33MG extends DHVehicleMG;
@@ -27,25 +24,25 @@ defaultproperties
     CustomPitchDownLimit=63352  // 12 degrees
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // replace: fiat 35 bullet & properties
+    ProjectileClass=Class'DH_Breda38Bullet'
     InitialPrimaryAmmo=150
     NumMGMags=5
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=class'DH_Weapons.DH_Breda30TracerBullet'
+    TracerProjectileClass=Class'DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
-    FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
+    FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     WeaponFireAttachmentBone="MUZZLE_L"
     WeaponFireOffset=0
 
     bHasMultipleBarrels=true
-    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
-    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleMGMultiBarrelEmitterController'
+    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=Class'DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
+    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=Class'DH_VehicleFiat1435MGEmitter')
+    AmbientEffectEmitterClass=Class'DH_VehicleMGMultiBarrelEmitterController'
 
     // Collision
     // NOTE: Normally on vehicle MGs, these values are not set, but the CV33 has a collision mesh
@@ -58,8 +55,8 @@ defaultproperties
     bBlockZeroExtentTraces=true
 
     // Collision Attachments
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_hatch_collision',AttachBone="hatch")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_pitch_collision',AttachBone="mg_pitch")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.cv33_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.cv33_turret_pitch_collision',AttachBone="mg_pitch")
 
     GunnerAttachmentBone="GUN"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_FindAndPassPawn extends DH_LevelActors
@@ -24,10 +24,10 @@ var     DH_CatchAndWatchPawn    CatchActorRef;
 function PostBeginPlay()
 {
     //can use dynamic actors?
-    foreach AllActors(class'DH_CatchAndWatchPawn', CatchActorRef, CatchActorTag)
+    foreach AllActors(Class'DH_CatchAndWatchPawn', CatchActorRef, CatchActorTag)
         break;
 
-    foreach AllActors(class'ROVehicleFactory', VehicleFactoryRef, VehicleFactoryTag)
+    foreach AllActors(Class'ROVehicleFactory', VehicleFactoryRef, VehicleFactoryTag)
         break;
 }
 

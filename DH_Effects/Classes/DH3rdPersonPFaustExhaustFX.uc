@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH3rdPersonPFaustExhaustFX extends Emitter;
@@ -42,7 +42,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.000000)
         InitialParticlesPerSecond=50000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         LifetimeRange=(Min=2.500000,Max=3.500000)
         StartVelocityRange=(X=(Min=-300.000000,Max=-1500.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-100.000000,Max=100.000000))
         VelocityLossRange=(X=(Min=1.000000,Max=5.000000),Y=(Min=1.000000,Max=5.000000),Z=(Min=1.000000,Max=5.000000))
@@ -78,7 +78,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
         InitialParticlesPerSecond=5000.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.200000,Max=0.300000)
@@ -104,7 +104,7 @@ defaultproperties
         MaxParticles=8
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=100.0,Max=200.000000),Y=(Min=100.0,Max=200.000000),Z=(Min=100.0,Max=200.000000))
-        Texture=Texture'DH_FX_Tex.Effects.Spotlight'
+        Texture=Texture'DH_FX_Tex.Spotlight'
         LifetimeRange=(Min=0.150000,Max=0.300000)
         StartVelocityRange=(X=(Min=-50.000000,Max=-50.000000))
     End Object

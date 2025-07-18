@@ -1,28 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// We changed the class hierarchy so that each nation gets its own
+// construction class, so this was made abstract. However, levelers had placed
+// place this in maps, so we have to keep it around until they are all removed.
+// This functionality of this class is now in `DHConstructionResupplyPlayers`.
 //==============================================================================
 
-class DHConstruction_Resupply_Players extends DHConstruction_Resupply;
-
-static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = Context.LevelInfo.GetTeamNationClass(Context.TeamIndex);
-
-    if (NationClass != none)
-    {
-        return NationClass.default.InfantryResupplyStaticMesh;
-    }
-    
-    return none;
-}
-
-defaultproperties
-{
-    ResupplyType=RT_Players
-    MenuName="Ammo Crate (Infantry)"
-    MenuDescription="Provides a resupply point for infantry."
-}
-
+class DHConstruction_Resupply_Players extends DHDeprecated;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHUnits extends Object
@@ -10,44 +10,47 @@ enum EDistanceUnit
 {
     DU_Unreal,
     DU_Meters,
+    DU_Yards,
 };
 
-var localized string UnrealDistanceSymbol;
-var localized string MetersSymbol;
-
-final static function string GetDistanceUnitString(EDistanceUnit Unit)
+struct DistanceUnit
 {
-    switch (Unit)
-    {
-        case DU_Unreal:
-            return default.UnrealDistanceSymbol;
-        case DU_Meters:
-            return default.MetersSymbol;
-    }
+    var localized string Name;
+    var localized string Symbol;
+    var float Conversion;           // Conversion factor to Unreal units.
+};
+
+var array<DistanceUnit> DistanceUnits;
+
+final static function float ConvertDistance(float Distance, EDistanceUnit FromUnit, EDistanceUnit ToUnit)
+{
+    // First convert to Unreal units, then convert to the desired unit.
+    return (Distance / default.DistanceUnits[int(FromUnit)].Conversion) * default.DistanceUnits[int(ToUnit)].Conversion;
+}
+
+final static function string GetDistanceUnitSymbol(EDistanceUnit Unit)
+{
+    return default.DistanceUnits[int(Unit)].Symbol;
+}
+
+final static function string GetDistanceUnitName(EDistanceUnit Unit)
+{
+    return default.DistanceUnits[int(Unit)].Name;
 }
 
 final static function float MetersToUnreal(coerce float Meters)
 {
-    return Meters * 60.352;
+    return ConvertDistance(Meters, DU_Meters, DU_Unreal);
 }
 
 final static function float UnrealToMeters(coerce float Unreal)
 {
-    return Unreal * 0.01656945917285259809119830328738;
-}
-
-final static function float MetersToInches(coerce float Meters)
-{
-    return Meters * 39.3701;
-}
-
-final static function float UnrealToInches(coerce float Unreal)
-{
-    return Unreal * 0.65234126458112407211028632025448;
+    return ConvertDistance(Unreal, DU_Unreal, DU_Meters);
 }
 
 defaultproperties
 {
-    UnrealDistanceSymbol="uu"
-    MetersSymbol="m"
+    DistanceUnits(0)=(Name="Unreal Units",Symbol="uu",Conversion=1.0)
+    DistanceUnits(1)=(Name="Meters",Symbol="m",Conversion=0.01656945917285259809119830328738)
+    DistanceUnits(2)=(Name="Yards",Symbol="yd",Conversion=0.01812058089769531724759219519617)
 }

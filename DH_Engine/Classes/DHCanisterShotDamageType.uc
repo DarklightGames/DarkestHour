@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCanisterShotDamageType extends DHLargeCaliberDamageType
@@ -8,9 +8,6 @@ class DHCanisterShotDamageType extends DHLargeCaliberDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
-    DeathString="%o was filled with holes by %k's canister shot."
-    MaleSuicide="%o was filled with holes by his own canister shot."
-    FemaleSuicide="%o was filled with holes by her own canister shot."
+    HUDIcon=Texture'DH_InterfaceArt_tex.canisterkill'
     KDamageImpulse=2250.0
 }

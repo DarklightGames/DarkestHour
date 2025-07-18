@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_ATGun extends DHCommandMenu
@@ -12,11 +12,12 @@ var localized string IsBeingRotatedText;
 var localized string OccupiedText;
 var localized string FatalText;
 var localized string CooldownText;
+var localized string BusyText;
 
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -73,15 +74,18 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (RotationError != ERROR_None)
     {
-        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoColor = Class'UColor'.default.Red;
     }
     else
     {
-        ORI.InfoColor = class'UColor'.default.White;
+        ORI.InfoColor = Class'UColor'.default.White;
     }
 
     switch (RotationError)
     {
+        case ERROR_Busy:
+            ORI.InfoText[0] = default.BusyText;
+            break;
         case ERROR_Occupied:
             ORI.InfoText[0] = default.OccupiedText;
             break;
@@ -97,13 +101,13 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoText[0] = default.CannotBeRotatedText;
             break;
         case ERROR_IsBeingRotated:
-            ORI.InfoText[0] = class'DHATCannonMessage'.default.GunIsRotating;
+            ORI.InfoText[0] = Class'DHATCannonMessage'.default.GunIsRotating;
             break;
         case ERROR_EnemyGun:
             ORI.InfoText[0] = default.EnemyGunText;
             break;
         case ERROR_NeedMorePlayers:
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
             ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
             break;
         default:
@@ -157,4 +161,5 @@ defaultproperties
     OccupiedText="Gun is occupied"
     FatalText="Rotation unavailable"
     CooldownText="Wait"
+    BusyText="Busy"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LocustTank extends DHArmoredVehicle;
@@ -85,10 +85,10 @@ defaultproperties
     Skins(3)=Texture'DH_Locust_tex.Locust_turret_ext'
     Skins(4)=Texture'DH_Locust_tex.Locust_treads'
     Skins(5)=Texture'DH_Locust_tex.Locust_treads'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DriverHatch_col',AttachBone="driver_hatch") // collision attachment for driver's hatch
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust_DriverHatch_col',AttachBone="driver_hatch") // collision attachment for driver's hatch
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_LocustCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_LocustCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-40.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-116.0,Y=0.0,Z=45.0),DriveRot=(Pitch=2000,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=46.0,Z=43.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -136,13 +136,13 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
     VehHitpoints(1)=(PointRadius=9.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=49.0
-    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_left'
-    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_right'
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc2.Locust_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc2.Locust_DamagedTrack_right'
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-60.0,Y=13.5,Z=30.0)
     FireAttachBone="body"
     FireEffectOffset=(X=60.0,Y=-30.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_dest' // TODO: get a proper destroyed mesh made & a new destroyed overlay texture shaped for the treads
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust_dest' // TODO: get a proper destroyed mesh made & a new destroyed overlay texture shaped for the treads
 
     // Exit
     ExitPositions(0)=(X=60.0,Y=-95.0,Z=50.0)   // driver
@@ -152,12 +152,12 @@ defaultproperties
     ExitPositions(4)=(X=-75.0,Y=110.0,Z=50.0)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart_inside_rumble'
     SoundPitch=32
 
     // Visual effects
@@ -172,9 +172,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_Locust_tex.HUD.locust_body'
-    VehicleHudTurret=TexRotator'DH_Locust_tex.HUD.locust_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Locust_tex.HUD.locust_turret_look'
+    VehicleHudImage=Texture'DH_Locust_tex.locust_body'
+    VehicleHudTurret=TexRotator'DH_Locust_tex.locust_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Locust_tex.locust_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.51
@@ -187,7 +187,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.72
     VehicleHudOccupantsY(3)=0.78
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=Material'DH_Locust_tex.HUD.locust'
+    SpawnOverlay(0)=Material'DH_Locust_tex.locust'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -216,7 +216,7 @@ defaultproperties
         WheelRadius=26.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_LocustTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
 
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
@@ -225,7 +225,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_LocustTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
 
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
@@ -235,7 +235,7 @@ defaultproperties
         WheelRadius=26.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_LocustTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
 
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
@@ -244,7 +244,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_LocustTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
 
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
@@ -253,7 +253,7 @@ defaultproperties
         WheelRadius=26.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_LocustTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
 
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
@@ -261,5 +261,5 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_LocustTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

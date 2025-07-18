@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MG42Weapon extends DHMGWeapon;
@@ -21,15 +21,15 @@ defaultproperties
     ItemName="MG 42"
     NativeItemName="Maschinengewehr 42"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_MG42Fire'
-    AttachmentClass=class'DH_Weapons.DH_MG42Attachment'
-    PickupClass=class'DH_Weapons.DH_MG42Pickup'
+    FireModeClass(0)=Class'DH_MG42Fire'
+    AttachmentClass=Class'DH_MG42Attachment'
+    PickupClass=Class'DH_MG42Pickup'
 
     Mesh=SkeletalMesh'DH_Mg42_1st.MG42_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.MG.MG42_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MG42_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandTex=Texture'Weapons1st_tex.hands_gergloves'
 
     DisplayFOV=85.0
     IronSightDisplayFOV=60.0
@@ -47,13 +47,13 @@ defaultproperties
     InitialNumPrimaryMags=2
 
     InitialBarrels=2
-    BarrelClass=class'DH_Weapons.DH_MG42Barrel'
+    BarrelClass=Class'DH_MG42Barrel'
     BarrelSteamBone="Barrel_Switch"
     BarrelChangeAnim="Bipod_Barrel_Change"
 
     PutDownAnim="putaway"
 
-    BeltBulletClass=class'ROInventory.MG42BeltRound'
+    BeltBulletClass=Class'MG42BeltRound'
     MGBeltBones(0)="Case09"
     MGBeltBones(1)="Case08"
     MGBeltBones(2)="Case07"

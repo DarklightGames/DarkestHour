@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGameFooterSP extends ButtonFooter;
@@ -38,7 +38,7 @@ defaultproperties
         bBoundToParent=true
         OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
     End Object
-    b_Primary=GUIButton'DH_Interface.DHGameFooterSP.GamePrimaryButton'
+    b_Primary=GUIButton'DH_Interface.GamePrimaryButton'
     Begin Object Class=GUIButton Name=GameBackButton
         Caption="Back"
         StyleName="DHSmallTextButtonStyle"
@@ -49,5 +49,5 @@ defaultproperties
         bBoundToParent=true
         OnKeyEvent=GameBackButton.InternalOnKeyEvent
     End Object
-    b_Back=GUIButton'DH_Interface.DHGameFooterSP.GameBackButton'
+    b_Back=GUIButton'DH_Interface.GameBackButton'
 }

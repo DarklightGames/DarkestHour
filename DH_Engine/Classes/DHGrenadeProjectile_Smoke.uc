@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGrenadeProjectile_Smoke extends DHGrenadeProjectile
@@ -30,7 +30,7 @@ function SpawnGasHurtRadius()
         return;
     }
 
-    HurtRadiusActor = Spawn(class'DHHurtRadius', self,, Location);
+    HurtRadiusActor = Spawn(Class'DHHurtRadius', self,, Location);
 
     if (HurtRadiusActor != none)
     {
@@ -63,6 +63,9 @@ state ReleasingSmoke
 
         super.BeginState();
 
+        // Do damage.
+        BlowUp(Location);
+
         bHasExploded = true;
 
         // Spawn smoke effect
@@ -70,6 +73,10 @@ state ReleasingSmoke
 
         if (SmokeType == ST_WhitePhosphorus)
         {
+            // Hide the grenade and stop it from moving.
+            bHidden = true;
+            SetPhysics(PHYS_None);
+
             SpawnGasHurtRadius();
         }
 
@@ -86,29 +93,17 @@ state ReleasingSmoke
         LifeSpan = SmokeAttachmentClass.default.SmokeSoundDuration + 10.0;
     }
 
-
-    simulated function Explode(vector HitLocation, vector HitNormal);
+    simulated function Explode(Vector HitLocation, Vector HitNormal);
 }
 
 // Modified to add smoke effects & to remove actor destruction on client
 // Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
         GotoState('ReleasingSmoke');
     }
-}
-
-// Modified to remove everything relating to explosion & damage, as not an exploding grenade
-function BlowUp(vector HitLocation)
-{
-    if (Role == ROLE_Authority)
-    {
-        MakeNoise(1.0);
-    }
-    
-    // TODO: add small WP explosion damage, if applicable
 }
 
 defaultproperties
@@ -119,10 +114,10 @@ defaultproperties
     DamageRadius=0.0
     SoundVolume=255
     SoundRadius=200.0
-    SmokeAttachmentClass=class'DH_Effects.DHSmokeEffectAttachment'
+    SmokeAttachmentClass=Class'DHSmokeEffectAttachment'
 
     WhitePhosphorusGasDamageAmount=5
-    WhitePhosphorusGasDamageClass=class'DHShellSmokeWPGasDamageType'
+    WhitePhosphorusGasDamageClass=Class'DHShellSmokeWPGasDamageType'
     WhitePhosphorusGasDamageLifeSpan=30.0
     WhitePhosphorusGasDamageRadius=180.0    // 3 meters
 

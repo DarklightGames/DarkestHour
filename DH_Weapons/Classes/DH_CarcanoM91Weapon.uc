@@ -1,21 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CarcanoM91Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano M91"
+    ItemName="Carcano Fucile mod. 91"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
-    FireModeClass(0)=class'DH_Weapons.DH_CarcanoM91Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_CarcanoM91MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_CarcanoM91Attachment'
-    PickupClass=class'DH_Weapons.DH_CarcanoM91Pickup'
+    FireModeClass(0)=Class'DH_CarcanoM91Fire'
+    FireModeClass(1)=Class'DH_CarcanoM91MeleeFire'
+    AttachmentClass=Class'DH_CarcanoM91Attachment'
+    PickupClass=Class'DH_CarcanoM91Pickup'
 
-    Mesh=SkeletalMesh'DH_Carcano_1st.CarcanoM91_1st'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 
     bUseHighDetailOverlayIndex=false
 
@@ -23,8 +23,8 @@ defaultproperties
     DisplayFOV=85.0
     ZoomOutTime=0.35
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
@@ -40,4 +40,6 @@ defaultproperties
     BoltIronLastAnim="iron_bolt_clipfall"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=1,BoneName="Hammer",Animation="Hammer")
+
+    StripperClipSize=6
 }

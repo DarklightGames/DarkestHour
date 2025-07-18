@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz105Transport extends DHVehicle;
@@ -10,7 +10,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", class'Class'));
+    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", Class'Class'));
 }
 
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
@@ -30,22 +30,22 @@ defaultproperties
     ReinforcementCost=2
     MaxDesireability=1.2
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_aa_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
-    Skins(2)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    Skins(3)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_meshpanels'
-    Skins(4)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
-    Skins(5)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
-    Skins(6)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
+    Skins(0)=Texture'DH_VehiclesGE_tex7.sdkfz10_5_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.SdKfz10_5_cabin'
+    Skins(2)=Texture'DH_Artillery_tex.Flak38_gun'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.SdKfz10_5_meshpanels'
+    Skins(4)=Texture'DH_VehiclesGE_tex7.SdKfz10_5_wheels'
+    Skins(5)=Texture'DH_VehiclesGE_tex7.SdKfz10_5_treads'
+    Skins(6)=Texture'DH_VehiclesGE_tex7.SdKfz10_5_treads'
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
     BeginningIdleAnim="Driver_idle_out"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz105PassengerPawn',WeaponBone="Body")
     PassengerWeapons(1)=(WeaponBone="Turret_placement") // cannon pawn class has to be set in PostBeginPlay() due to build order
     FirstRiderPositionIndex=0 // non-standard as passenger position comes before vehicle weapon position
 
@@ -88,7 +88,7 @@ defaultproperties
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5.sdkfz10_5_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.sdkfz10_5_dest'
 
     // Vehicle destruction
     ExplosionDamage=85.0
@@ -111,14 +111,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     LeftTrackSoundBone="Tread_drive_wheel_F_L"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L02'
     RightTrackSoundBone="Tread_drive_wheel_F_R"
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=5
@@ -131,9 +131,9 @@ defaultproperties
     SteerBoneName="Steering_wheel"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.sdkfz105_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.sdkfz105_turet_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.sdkfz105_turet_look'
     VehicleHudEngineY=0.2
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.62
@@ -145,7 +145,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.42
     VehicleHudOccupantsX(2)=0.5
     VehicleHudOccupantsY(2)=0.6
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sdkfz_105'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"
@@ -173,7 +173,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Wheel_F_L'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.Wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Wheel_F_R
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
@@ -182,7 +182,7 @@ defaultproperties
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Wheel_F_R'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.Wheel_F_R'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_L
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_F_L"
@@ -190,14 +190,14 @@ defaultproperties
         WheelRadius=25.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_F_L'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_R
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_F_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_F_R'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_F_R'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_L
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_R_L"
@@ -205,14 +205,14 @@ defaultproperties
         WheelRadius=25.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_R_L'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_R_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_R
         bPoweredWheel=true
         BoneName="Tread_drive_wheel_R_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_R_R'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Tread_drive_wheel_R_R'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -233,5 +233,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz105Transport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

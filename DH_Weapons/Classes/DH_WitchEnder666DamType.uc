@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WitchEnder666DamType extends DHMediumCaliberDamageType
@@ -8,10 +8,10 @@ class DH_WitchEnder666DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_WitchEnder666Weapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
+    WeaponClass=Class'DH_WitchEnder666Weapon'
+    HUDIcon=Texture'DH_InterfaceArt_tex.canisterkill'
     KDamageImpulse=2500.0
     GibModifier=4.0
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     
 }

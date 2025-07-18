@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBackAttachment extends BackAttachment;
@@ -9,13 +9,12 @@ class DHBackAttachment extends BackAttachment;
 function InitFor(Inventory I)
 {
     local int j;
-
     local class<DHWeaponAttachment> WA;
 
     super.InitFor(I);
 
-	if (I != none)
-	{
+    if (I != none)
+    {
         WA = class<DHWeaponAttachment>(I.AttachmentClass);
 
         if (WA != none)

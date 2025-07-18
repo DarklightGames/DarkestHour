@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SovietNavalCap_Baltic extends DH_SovietHeadgear;
@@ -8,5 +8,5 @@ class DH_SovietNavalCap_Baltic extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHgear_anm.sov_navalcap_Baltic'
-    Skins(0)=Texture'DHSovietCharactersTex.soviet_headgear.soviet_naval_cap'
+    Skins(0)=Texture'DHSovietCharactersTex.soviet_naval_cap'
 }

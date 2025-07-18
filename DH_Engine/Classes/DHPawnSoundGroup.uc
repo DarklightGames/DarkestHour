@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPawnSoundGroup extends ROPawnSoundGroup
@@ -47,7 +47,7 @@ static function Sound GetSound(ESoundType SoundType, optional int SurfaceID)
     }
 }
 
-static function sound GetHitSound(optional class<DamageType> DamageType)
+static function Sound GetHitSound(optional class<DamageType> DamageType)
 {
     // If they are taking damage because they fell, return a falling pain sound
     if (DamageType.Name == 'Fell')
@@ -71,8 +71,8 @@ static function sound GetHitSound(optional class<DamageType> DamageType)
 
 defaultproperties
 {
-    BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'
-    GaggingPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Gagging'
+    BurningPainSoundGroup=SoundGroup'DH_Inf_Player.Burning'
+    GaggingPainSoundGroup=SoundGroup'DH_Inf_Player.Gagging'
 
     CustomLandSounds(0)=Sound'Inf_Player.LandDirt'      // EST_Custom00 (No Effects)
     CustomLandSounds(1)=Sound'Inf_Player.LandDirt'      // EST_Custom01 (Sand)

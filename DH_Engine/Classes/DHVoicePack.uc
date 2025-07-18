@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoicePack extends ROVoicePack
@@ -18,7 +18,7 @@ static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNation
 
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
-    local vector MyLocation;
+    local Vector MyLocation;
     local Controller C;
 
     C = Controller(PackOwner);
@@ -139,7 +139,7 @@ function Timer()
 
         if (bUseLocationalVoice)
         {
-            SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+            SoundPlayer = Spawn(Class'ROVoiceMessageEffect',,, senderLoc);
 
             if (SoundPlayer != none)
             {

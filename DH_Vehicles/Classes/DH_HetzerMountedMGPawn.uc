@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
@@ -14,7 +14,7 @@ simulated function NextWeapon()
     }
     else if (IsHumanControlled())
     {
-        PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 1); // "MG is blocking the hatch - turn it sideways to open"
+        PlayerController(Controller).ReceiveLocalizedMessage(Class'DH_HetzerVehicleMessage', 1); // "MG is blocking the hatch - turn it sideways to open"
     }
 }
 
@@ -24,7 +24,7 @@ defaultproperties
      DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionUpAnim="MG_open",DriverTransitionAnim="VT60_com_close")
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionDownAnim="MG_close",DriverTransitionAnim="VT60_com_open")
      DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG')
-     GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
+     GunClass=Class'DH_HetzerMountedMG'
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      DriveAnim="VT60_com_idle_open"
 }

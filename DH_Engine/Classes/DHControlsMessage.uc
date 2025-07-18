@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHControlsMessage extends LocalMessage
@@ -21,12 +21,18 @@ var array<Control> Controls;
 
 // Override these functions to customize the message based on the context.
 static function string GetHeaderString(
-    optional PlayerReplicationInfo RelatedPRI_1, 
-    optional PlayerReplicationInfo RelatedPRI_2, 
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject
     )
 {
     return default.HeaderText;
+}
+
+// Override in subclasses to hide controls based on the context.
+static function bool ShouldShowControl(int Index, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    return true;
 }
 
 static function RenderComplexMessage(Canvas Canvas,
@@ -65,16 +71,21 @@ static function RenderComplexMessage(Canvas Canvas,
     // Draw the controls.
     for (i = 0; i < default.Controls.Length; ++i)
     {
+        if (!ShouldShowControl(i, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject))
+        {
+            continue;
+        }
+
         Keys.Length = 0;
 
         for (j = 0; j < default.Controls[i].Keys.Length; ++j)
         {
-            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(default.KeyColor) $
-                                "[" $ class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
-                                class'GameInfo'.static.MakeColorCode(class'UColor'.default.White);
+            Keys[Keys.Length] = Class'GameInfo'.static.MakeColorCode(default.KeyColor) $
+                                "[" $ Class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
+                                Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White);
         }
 
-        S = class'UString'.static.Join(" / ", Keys) @ default.Controls[i].Text;
+        S = Class'UString'.static.Join(" / ", Keys) @ default.Controls[i].Text;
 
         Canvas.TextSize(S, XL, YL);
         Canvas.SetDrawColor(255, 255, 255);

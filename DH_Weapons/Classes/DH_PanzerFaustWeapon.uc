@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
 
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     if (!HasAmmo())
     {
@@ -109,17 +109,17 @@ defaultproperties
 {
     ItemName="Panzerfaust 60"
     NativeItemName="Panzerfaust 60"
-    FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PanzerFaustMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
-    PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
+    FireModeClass(0)=Class'DH_PanzerFaustFire'
+    FireModeClass(1)=Class'DH_PanzerFaustMeleeFire'
+    AttachmentClass=Class'DH_PanzerFaustAttachment'
+    PickupClass=Class'DH_PanzerFaustPickup'
 
     Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
+    RocketAttachmentClass=Class'ROFPAmmoRound'
     MuzzleBone="Warhead"
     RocketBone="Warhead"
     MaxNumPrimaryMags=1
@@ -127,8 +127,9 @@ defaultproperties
     bCanBeResupplied=false
     bCanResupplyWhenEmpty=true
 
-    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
-    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
-    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")
+    RangeDistanceUnit=DU_Meters
+    RangeSettings(0)=(Range=30,FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
+    RangeSettings(1)=(Range=60,FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
+    RangeSettings(2)=(Range=80,FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")    // The text on the weapon says 80, but the range is actually 90?
     IdleAnim="idle2"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Third person model & animations
 //==============================================================================
@@ -10,15 +10,15 @@ class DH_BerettaM1934Weapon extends DHPistolWeapon;
 defaultproperties
 {
     TeamIndex=0
-    ItemName="Beretta M1934"
-    FireModeClass(0)=class'DH_Weapons.DH_BerettaM1934Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_BerettaM1934MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BerettaM1934Attachment'
-    PickupClass=class'DH_Weapons.DH_BerettaM1934Pickup'
+    ItemName="Beretta mod. 34"
+    FireModeClass(0)=Class'DH_BerettaM1934Fire'
+    FireModeClass(1)=Class'DH_BerettaM1934MeleeFire'
+    AttachmentClass=Class'DH_BerettaM1934Attachment'
+    PickupClass=Class'DH_BerettaM1934Pickup'
 
     Mesh=SkeletalMesh'DH_BerettaM1934_anm.Beretta_M1934_1st'
 
-    BeltBulletClass=class'DH_Weapons.DH_BerettaM1934FPAmmoRound'
+    BeltBulletClass=Class'DH_BerettaM1934FPAmmoRound'
     MGBeltBones(0)="MAGAZINE_BULLET_07"
     MGBeltBones(1)="MAGAZINE_BULLET_06"
     MGBeltBones(2)="MAGAZINE_BULLET_05"
@@ -30,8 +30,8 @@ defaultproperties
     DisplayFOV=90.0
     IronSightDisplayFOV=75.0
 
-    InitialNumPrimaryMags=5
-    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=3
+    MaxNumPrimaryMags=3
 
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload"

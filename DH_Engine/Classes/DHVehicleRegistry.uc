@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleRegistry extends Object
@@ -30,6 +30,11 @@ static function string GetClassNameFromVehicleName(string VehicleName, optional 
         {
             if (StrCmp(VehicleName, default.Records[i].VehicleNames[j]) == 0)
             {
+                if (StrCmp(VariantName, "random",, false) == 0)
+                {
+                    return default.Records[i].Variants[Rand(default.Records[i].Variants.Length)].ClassName;
+                }
+
                 for (k = 0; k < default.Records[i].Variants.Length; ++k)
                 {
                     if (StrCmp(default.Records[i].Variants[k].VariantName, VariantName) == 0)
@@ -72,11 +77,11 @@ static function DumpToLog(PlayerController PC)
             VariantNames[VariantNames.Length] = default.Records[i].Variants[j].VariantName;
         }
 
-        LogLine = class'UString'.static.Join(", ", default.Records[i].VehicleNames);
+        LogLine = Class'UString'.static.Join(", ", default.Records[i].VehicleNames);
 
         if (VariantNames.Length > 0)
         {
-            LogLine @= "-" @ "(" $ class'UString'.static.Join(", ", VariantNames) $ ")";
+            LogLine @= "-" @ "(" $ Class'UString'.static.Join(", ", VariantNames) $ ")";
         }
 
         PC.Log(LogLine);
@@ -234,13 +239,14 @@ defaultproperties
     Records(100)=(VehicleNames=("semo90","semovente90"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Camo",VariantName="camo")))
     Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert"),(ClassName="DH_Guns.DH_Cannone4732Gun_DesertCamo",VariantName="desertcamo"),(ClassName="DH_Guns.DH_Cannone4732Gun_Winter",VariantName="winter"),(ClassName="DH_Guns.DH_Cannone4732Gun_NoWheels",VariantName="static")))
     Records(102)=(VehicleNames=("fiat626"),Variants=((ClassName="DH_Vehicles.DH_Fiat626TruckTransport"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport",VariantName="logi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_Desert",VariantName="desertlogi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_DesertCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_DesertCamo",VariantName="camologi")))
-    Records(103)=(VehicleNames=("cv33","l3","l3/33"),Variants=((ClassName="DH_Vehicles.DH_CV33Tank"),(ClassName="DH_Vehicles.DH_CV33Tank_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo1",VariantName="camo1"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo2",VariantName="camo2")))
+    Records(103)=(VehicleNames=("cv33","l3","l3/33"),Variants=((ClassName="DH_Vehicles.DH_CV33Tank"),(ClassName="DH_Vehicles.DH_CV33Tank_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_CV33Tank_CamoOne",VariantName="camo1"),(ClassName="DH_Vehicles.DH_CV33Tank_CamoTwo",VariantName="camo2")))
     Records(104)=(VehicleNames=("ab41","autoblinda41"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda41ArmoredCar")))
-    Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
+    //Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
     Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
     Records(107)=(VehicleNames=("fiatl640","l640"),Variants=((ClassName="DH_Vehicles.DH_FiatL640Tank")))
     Records(108)=(VehicleNames=("semo47","semovente4732"),Variants=((ClassName="DH_Vehicles.DH_Semovente4732Destroyer")))
-    // Vehicles to be added in the near future:
-    // Semovente da 47/32 (https://en.wikipedia.org/wiki/Semovente_da_47/32)
-    // Semovente da 75/18 (https://en.wikipedia.org/wiki/Semovente_da_75/18)
+    Records(109)=(VehicleNames=("fiat508","fiat508cm"),Variants=((ClassName="DH_Vehicles.DH_Fiat508CMTransport_Green"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport_Camo",VariantName="camo")))
+    // Records(110)=(VehicleNames=("r35","renault"),Variants=((ClassName="DH_Vehicles.DH_R35Tank")))
+    Records(111)=(VehicleNames=("om36","om36p"),Variants=((ClassName="DH_Vehicles.DH_AutoCarrettaOMTransport"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportGrey",VariantName="grey"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportSnow",VariantName="snow")))
+    Records(112)=(VehicleNames=("om32"),Variants=((ClassName="DH_Vehicles.DH_AutoCarrettaOMSupport"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportGrey",VariantName="grey"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportSnow",VariantName="snow")))
 }

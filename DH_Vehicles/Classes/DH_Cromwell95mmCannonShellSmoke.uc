@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Cromwell95mmCannonShellSmoke extends DHCannonShellSmoke;
@@ -15,7 +15,7 @@ defaultproperties
 
     //Effects
     DrawScale=1.2
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
+    SmokeEmitterClass=Class'DHSmokeEffect_LargeShell'
 
     //Penetration
     DHPenetrationTable(0)=0.3

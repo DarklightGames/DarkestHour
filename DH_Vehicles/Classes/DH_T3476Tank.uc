@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3476Tank extends DHArmoredVehicle;
@@ -14,17 +14,17 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.T3476_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.T3476_treads'
-    Skins(3)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
+    Skins(0)=Texture'allies_vehicles_tex.T3476_ext'
+    Skins(1)=Texture'allies_vehicles_tex.T3476_treads'
+    Skins(2)=Texture'allies_vehicles_tex.T3476_treads'
+    Skins(3)=Texture'allies_vehicles_tex.T3476_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    HighDetailOverlay=Material'allies_vehicles_tex.t3476_int_s'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476CannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476MountedMGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_T3476CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_T3476MountedMGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-59.0,Y=-50.0,Z=53.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=-25.0,Z=105.5),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drum
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-135.0,Y=35.0,Z=51.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -36,7 +36,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true)
     DriveAnim="VT3476_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
+    HUDOverlayClass=Class'T3476DriverOverlay'
     HUDOverlayFOV=85.0
 
     // Hull armor
@@ -78,8 +78,8 @@ defaultproperties
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3476_Destroyed'
-    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
-    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.T3476_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.T3476_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=215.0,Y=-14.0,Z=50.0)  // driver
@@ -93,25 +93,25 @@ defaultproperties
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
     MaxPitchSpeed=50.0
-    IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    IdleSound=SoundGroup'Vehicle_Engines.t34_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t34_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t34_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=110.0
     WheelRotationScale=29250.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustEffectClass=Class'ExhaustDieselEffect'
+    ExhaustEffectLowClass=Class'ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-175,Y=30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-175,Y=-30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.t34_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.t34_76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.t34_76_turret_look'
     VehicleHudTreadsPosX(0)=0.36 // some positions adjusted from original
     VehicleHudTreadsScale=0.73
     VehicleHudOccupantsX(0)=0.465
@@ -126,7 +126,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.73
     VehicleHudOccupantsX(6)=0.58
     VehicleHudOccupantsY(6)=0.62
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.T34_76'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.T34_76'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -154,7 +154,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LF_Steering'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=true
         BoneOffset=(X=35.0,Y=10.0,Z=2.0)
@@ -163,7 +163,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.RF_Steering'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=-10.0,Z=2.0)
@@ -173,7 +173,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LR_Steering'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=10.0,Z=2.0)
@@ -182,7 +182,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.RR_Steering'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=10.0,Z=2.0)
@@ -191,7 +191,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.Left_Drive_Wheel'
+     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=-10.0,Z=2.0)
@@ -199,5 +199,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.Right_Drive_Wheel'
+     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

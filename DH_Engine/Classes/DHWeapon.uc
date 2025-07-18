@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeapon extends ROWeapon
     abstract;
 
-var     string  NativeItemName;                 // The designation name used by the nation that created it (not translated to English)
+var     localized string NativeItemName;        // The designation name used by the nation that created it (not translated to English)
 
 var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
                                                 // Default: 2 which is neutral and allows anyone to reupply it
@@ -57,7 +57,7 @@ simulated function float GetPlayerIronsightFOV()
     }
     else
     {
-        return class'DHPlayer'.default.DefaultFOV;
+        return Class'DHPlayer'.default.DefaultFOV;
     }
 }
 
@@ -118,10 +118,10 @@ function int GetNumberOfDroppedPickups()
 }
 
 // Modfied to add randomize to a drop and to be more modular (please try to avoid duplicating this function everywhere)
-function DropFrom(vector StartLocation)
+function DropFrom(Vector StartLocation)
 {
     local Pickup  Pickup;
-    local rotator R;
+    local Rotator R;
     local int     i;
 
     if (bCanThrow)
@@ -200,19 +200,27 @@ simulated function SetPlayerFOV(float PlayerFOV)
 // the currently held weapon.
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
-    local ROWeaponPickup Pick;
-    local int m;
-    local weapon w;
+    local ROWeaponPickup ROWP;
+    local DHWeaponPickup DHWP;
+    local int i;
+    local Weapon W;
     local bool bPossiblySwitch, bJustSpawned;
     local ROWeapon ROW;
 
     if (Pickup != none)
     {
-        Pick = ROWeaponPickup(Pickup);
+        ROWP = ROWeaponPickup(Pickup);
 
-        if (Pick != none)
+        if (ROWP != none)
         {
-            bBayonetMounted = Pick.bHasBayonetMounted;
+            bBayonetMounted = ROWP.bHasBayonetMounted;
+        }
+
+        DHWP = DHWeaponPickup(Pickup);
+
+        if (DHWP != none)
+        {
+            bWaitingToBolt = DHWP.bWaitingToBolt;
         }
     }
 
@@ -239,13 +247,13 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         bPossiblySwitch = true;
     }
 
-    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
-        if (FireMode[m] != none)
+        if (FireMode[i] != none)
         {
-            FireMode[m].Instigator = Instigator;
+            FireMode[i].Instigator = Instigator;
 
-            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+            W.GiveAmmo(i, WeaponPickup(Pickup), bJustSpawned);
         }
     }
 
@@ -266,9 +274,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
     if (!bJustSpawned)
     {
-        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
-            Ammo[m] = none;
+            Ammo[i] = none;
         }
 
         Destroy();
@@ -669,7 +677,7 @@ function SelfDestroy()
 // Then remove hack fix in MG weapon class, which stops the MG34 from bugging out as perma-busy when it's out of ammo, just because it has a non-melee FireMode[1]
 simulated function bool IsBusy()
 {
-    return !FireMode[1].AllowFire() && FireModeClass[1] != class'ROEmptyFireClass';
+    return !FireMode[1].AllowFire() && FireModeClass[1] != Class'ROEmptyFireClass';
 }
 
 // Modified to optimise, as gets called every PostNetReceive()
@@ -849,13 +857,13 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
 {
     local int i;
     local DHWeaponFire WF;
-    local vector V;
+    local Vector V;
 
     V.X = X;
     V.Y = Y;
     V.Z = Z;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         for (i = 0; i < arraycount(FireMode); ++i)
         {
@@ -891,7 +899,7 @@ exec function SetMuzzleFlashOffset(int X, int Y, int Z)
         return;
     }
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         MuzzleFlashOffset.X = X;
         MuzzleFlashOffset.Y = Y;
@@ -904,7 +912,7 @@ exec function SetMuzzleFlashOffset(int X, int Y, int Z)
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         if (default.HighDetailOverlay != none)
         {
@@ -1037,7 +1045,7 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 
 exec simulated function SetPlayerViewOffset(int X, int Y, int Z)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         default.PlayerViewOffset.X = X;
         default.PlayerViewOffset.Y = Y;
@@ -1079,7 +1087,7 @@ simulated function HandleSleeveSwapping()
     if (RI != none)
     {
         RoleSleeveTexture = RI.static.GetSleeveTexture();
-        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
+        RoleHandTexture = RI.GetHandTexture(Class'DH_LevelInfo'.static.GetInstance(Level));
     }
 
     if (RoleSleeveTexture != none && SleeveNum >= 0)
@@ -1121,8 +1129,8 @@ defaultproperties
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
     ScopeDetail=RO_TextureScope
-    FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    FireModeClass(0)=Class'ROEmptyFireclass'
+    FireModeClass(1)=Class'ROEmptyFireclass'
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
     CrawlForwardAnim="crawlF"

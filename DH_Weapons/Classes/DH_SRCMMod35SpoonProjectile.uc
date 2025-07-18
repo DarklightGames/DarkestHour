@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Client-side only "spoon" projectile for the SRCM. Spawned on the client when
 // a real SRCM projectile is created, inheriting the a portion of the velocity
@@ -21,7 +21,7 @@ defaultproperties
     Physics=PHYS_Falling
     DrawType=DT_StaticMesh
     bFixedRotationDir=true
-    StaticMesh=StaticMesh'DH_SRCMMod35_stc.world.srcm_spoon'
+    StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_spoon'
     RemoteRole=ROLE_None
     LifeSpan=10.0
     bBlockProjectiles=false

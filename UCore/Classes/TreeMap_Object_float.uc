@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class TreeMap_Object_float extends Object;
@@ -284,7 +284,7 @@ private static function TreeMapNode_Object_float PutStatic(TreeMap_Object_float 
 
     if (Node == none)
     {
-        Node = new class'TreeMapNode_Object_float';
+        Node = new Class'TreeMapNode_Object_float';
         Node.Key = D.RecursiveKey;
         Node.KeyString = D.RecursiveKeyString;
         Node.Value = D.RecursiveValue;

@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LTypeGrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_LTypeGrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_LTypeGrenadeAmmo'
+    ProjectileClass=Class'DH_LTypeGrenadeProjectile'
+    AmmoClass=Class'DH_LTypeGrenadeAmmo'
     MinHoldTime=1.0
     bSplashDamage=false
     bRecommendSplashDamage=false

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Actor that spawns a smoke emitter, plays the smoke sounds, and destroys
 // itself when the sound is over.
@@ -43,9 +43,9 @@ simulated function Timer()
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
-    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeEmitterClass=Class'DHSmokeEffect_Grenade'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smoke_loop'
     SmokeSoundDuration=33.0
     RemoteRole=ROLE_DumbProxy
     bHidden=true

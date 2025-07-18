@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarProjectile extends DHBallisticProjectile
     abstract;
 
-var     vector  HitLocation;
-var     vector  HitNormal;
+var     Vector  HitLocation;
+var     Vector  HitNormal;
 
 // Chance each shell is a dud & does not explode
 var     bool    bDud;
@@ -15,29 +15,31 @@ var     float   DudChance;
 
 // Effects for firing mortar & for shell descending just before it lands
 var     class<Emitter>  FireEmitterClass;
-var     sound   DescendingSound;
+var     Sound   DescendingSound;
 
-// Impact effects & sounds
+// Impact effects & sounds for a dud round
 var     class<Emitter>  HitDirtEmitterClass;
 var     class<Emitter>  HitSnowEmitterClass;
 var     class<Emitter>  HitWoodEmitterClass;
 var     class<Emitter>  HitRockEmitterClass;
 var     class<Emitter>  HitWaterEmitterClass;
 
-var     sound   HitDirtSound;
-var     sound   HitRockSound;
-var     sound   HitWaterSound;
-var     sound   HitWoodSound;
+var     Sound   HitDirtSound;
+var     Sound   HitRockSound;
+var     Sound   HitWaterSound;
+var     Sound   HitWoodSound;
 
 // Debug
-var     vector  DebugForward;
-var     vector  DebugRight;
-var     vector  DebugLocation;
+var     Vector  DebugForward;
+var     Vector  DebugRight;
+var     Vector  DebugLocation;
 var     bool    bDebug;
 
 var     Texture HudTexture;
 
 var     class<DHMapMarker_ArtilleryHit> HitMapMarkerClass;
+
+var     bool   bHitWater;
 
 replication
 {
@@ -53,7 +55,7 @@ simulated function PostBeginPlay()
     // Relevant stuff from the Super
     OrigLoc = Location;
     BCInverse = 1.0 / BallisticCoefficient;
-    Velocity = vector(Rotation) * Speed;
+    Velocity = Vector(Rotation) * Speed;
 
     if (Role == ROLE_Authority)
     {
@@ -116,15 +118,14 @@ simulated function Timer()
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
-    // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(Other) != none)
-    {
-        CheckForSplash(Location);
-    }
-
-    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) && !Other.IsA('FluidSurfaceInfo'))
     {
         return;
+    }
+
+    if (Other.IsA('FluidSurfaceInfo'))
+    {
+        bHitWater = true;
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
@@ -164,7 +165,7 @@ simulated singular function Touch(Actor Other)
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
 // Also to ignore collision with a player right in front of the mortar
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
     if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
     {
@@ -179,15 +180,29 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     self.HitNormal = Normal(HitLocation - Other.Location);
 
-    GotoState('Whistle');
+    MortarExplode();
+}
+
+simulated function MortarExplode()
+{
+    if (Velocity.Z < 0)
+    {
+        // If the mortar is descending, go to the whistle state.
+        GotoState('Whistle');
+    }
+    else
+    {
+        // Otherwise, explode immediately.
+        Explode(Location, HitNormal);
+    }
 }
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     self.HitNormal = HitNormal;
 
-    GotoState('Whistle');
+    MortarExplode();
 }
 
 // New state that is entered when shell lands - it just plays the DescendingSound & sets a timer to make the shell explode at the end of the sound
@@ -196,16 +211,17 @@ simulated state Whistle
 {
     simulated function BeginState()
     {
-        local float Pitch;
+        local float Pitch, Volume;
 
         SetPhysics(PHYS_None);
         Velocity = vect(0.0, 0.0, 0.0);
+
         SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            GetDescendingSoundPitch(Pitch, Location);
-            PlaySound(DescendingSound, SLOT_None, 8.0, false, 512.0, Pitch, true);
+            GetDescendingSoundPitchAndVolume(Pitch, Volume);
+            PlaySound(DescendingSound, SLOT_None, Volume, false, 512.0, Pitch, true);
         }
     }
 
@@ -218,7 +234,7 @@ simulated state Whistle
 // Modified to handle various effects when mortar hits something, & to set hit
 // location in team's artillery targets so it's marked on the map for artillery
 // crew. Also includes a debug option.
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
@@ -245,37 +261,40 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        Log(class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
+        Log(Class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ Class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
     }
 
     HandleDestruction(); // allows subclasses to handle destruction differently rather than always Destroy()
 }
 
 // Emptied out so we don't cause blast damage by default (add in subclass if required) & because we call MakeNoise() when shell lands, even if doesn't blow up
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
+    // TODO: add the calibration code back in here.
+    super.BlowUp(HitLocation);
 }
 
 // New function to spawn impact effects when the shell lands
-simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnImpactEffects(Vector HitLocation, Vector HitNormal)
 {
     local ESurfaceTypes  HitSurfaceType;
     local class<Emitter> HitEmitterClass;
-    local sound          HitSound;
+    local Sound          HitSound;
 
-    if (Level.NetMode != NM_DedicatedServer && !(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
+    if (Level.NetMode != NM_DedicatedServer)
     {
         GetHitSurfaceType(HitSurfaceType, HitNormal);
+
         GetHitSound(HitSound, HitSurfaceType);
         GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
 
         PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
-        Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
+        Spawn(HitEmitterClass,,, HitLocation, Rotator(HitNormal));
     }
 }
 
 // New function to spawn explosion effects - implement is subclasses as required
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
 }
 
@@ -304,7 +323,7 @@ simulated function SpawnFiringEffect()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
@@ -312,7 +331,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked, bAlreadyDead;
-    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local Vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
     local int           i;
 
@@ -328,7 +347,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
+    foreach CollidingActors(Class'Actor', Victim, DamageRadius, HitLocation)
     {
         if (!Victim.bBlockActors)
         {
@@ -488,7 +507,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius()
-function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local ROVehicleWeaponPawn WP;
     local int i;
@@ -511,11 +530,11 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle V, float DamageAmount, floa
 }
 
 // New function to handle blast damage to vehicle occupants
-function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, Vector HitLocation)
 {
     local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local Coords HeadBoneCoords;
+    local Vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
     local float  Distance, DamageScale;
 
     if (P != none)
@@ -524,7 +543,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
         HeadLocation = HeadBoneCoords.Origin + ((P.HeadHeight + (0.5 * P.HeadRadius)) * P.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
+        foreach TraceActors(Class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
             if (TraceHitActor.bBlockActors)
             {
@@ -554,44 +573,21 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        CheckForSplash(Location);
-        Explode(Location, vect(0.0, 0.0, 1.0));
-    }
-}
-
-// Added same as cannon shell to play a water splash effect
-simulated function CheckForSplash(vector SplashLocation)
-{
-    local Actor HitActor;
-
-    // No splash if detail settings are low, or if projectile is already in a water volume
-    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
-        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
-    {
-        bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)), SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
-        bTraceWater = false;
-
-        // We hit a water volume or a fluid surface, so play splash effects
-        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
-        {
-            if (HitWaterSound != none)
-            {
-                PlaySound(HitWaterSound);
-            }
-
-            if (HitWaterEmitterClass != none && EffectIsRelevant(HitLocation, false))
-            {
-                Spawn(HitWaterEmitterClass,,, HitLocation, rot(16384, 0, 0));
-            }
-        }
+        bHitWater = true;
+        MortarExplode();
     }
 }
 
 // New function to get the surface type the projectile has hit
-simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
+simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, Vector HitNormal)
 {
-    local material M;
+    local Material M;
+
+    if (bHitWater)
+    {
+        HitSurfaceType = EST_Water;
+        return;
+    }
 
     Trace(HitLocation, HitNormal, Location - (16.0 * HitNormal), Location, false,, M);
 
@@ -656,22 +652,38 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
     }
 }
 
-// New function to adjust pitch of shell's descent sound - rounds far away will seem to drone, while being close to the descent will make the sounds scream
-simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation)
+// Gets the pitch and volume of shell's descent sound.
+// Rounds far away will seem to drone, while being close to the descent will make the sounds scream.
+// When you're immediately under the shell, there is actually no sound at all, so fade out the sound the closer we are.
+simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float Volume)
 {
-    local Pawn   P;
-    local vector CameraLocation;
-    local float  ClampedDistance;
+    local float Distance;
 
-    Pitch = 0.875;
-    P = Level.GetLocalPlayerController().Pawn;
+    const PITCH_DISTANCE_METERS_MIN = 10;
+    const PITCH_DISTANCE_METERS_MAX = 50;
+    const PITCH_MIN = 0.875;
+    const PITCH_MAX = 1.125;
+    const VOLUME_DISTANCE_METERS_MIN = 10;
+    const VOLUME_DISTANCE_METERS_MAX = 20;
+    const VOLUME_MIN = 0.0;
+    const VOLUME_MAX = 1.0;
 
-    if (P != none)
-    {
-        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-        ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += ((5249.0 - ClampedDistance) / 5249.0) * 0.25;
-    }
+    Distance = Class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
+    
+    Pitch = Class'UInterp'.static.MapRangeClamped(
+        Distance,
+        PITCH_DISTANCE_METERS_MIN,
+        PITCH_DISTANCE_METERS_MAX,
+        PITCH_MAX,
+        PITCH_MIN
+    );
+    Volume = Class'UInterp'.static.MapRangeClamped(
+        Distance,
+        VOLUME_DISTANCE_METERS_MIN,
+        VOLUME_DISTANCE_METERS_MAX,
+        VOLUME_MIN,
+        VOLUME_MAX
+    );
 }
 
 // New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. undeployed mortar
@@ -683,51 +695,10 @@ simulated function UpdateInstigator()
     }
 }
 
-// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
-// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
-simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(Vector SpawnLocation, bool bForceDedicated)
 {
-    local PlayerController PC;
-
-    // Only relevant on a dedicated server if the bForceDedicated option has been passed
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        return bForceDedicated;
-    }
-
-    if (Role < ROLE_Authority)
-    {
-        // Always relevant for the owning net player, i.e. the player that fired the projectile
-        if (Instigator != none && Instigator.IsHumanControlled())
-        {
-            return true;
-        }
-
-        // Not relevant to other net clients if the projectile has not been drawn on their screen recently (within last 3 seconds)
-        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
-        {
-            return false;
-        }
-    }
-
-    PC = Level.GetLocalPlayerController();
-
-    if (PC == none || PC.ViewTarget == none)
-    {
-        return false;
-    }
-
-    // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
-    // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
-    // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
-    {
-        return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
-    }
-
-    // Effect relevance is based on normal distance check
-    return CheckMaxEffectDistance(PC, SpawnLocation);
+    // More effects should always be relevant as they are large and long-lasting.
+    return true;
 }
 
 defaultproperties
@@ -738,16 +709,16 @@ defaultproperties
     LifeSpan=60.0
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
-    FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
+    FireEmitterClass=Class'DHMortarFireEffect'
+    DescendingSound=SoundGroup'DH_MortarSounds.81mm_mortar_whistle'
 
-    HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
-    HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
-    HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
-    HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
-    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
-    HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-    HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-    HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-    HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    HitDirtEmitterClass=Class'TankAPHitDirtEffect'
+    HitRockEmitterClass=Class'TankAPHitRockEffect'
+    HitWoodEmitterClass=Class'TankAPHitWoodEffect'
+    HitSnowEmitterClass=Class'TankAPHitSnowEffect'
+    HitWaterEmitterClass=Class'DHShellSplashEffect'
+    HitDirtSound=SoundGroup'ProjectileSounds.AP_Impact_Dirt'
+    HitRockSound=SoundGroup'ProjectileSounds.AP_Impact_Rock'
+    HitWoodSound=SoundGroup'ProjectileSounds.AP_Impact_Wood'
+    HitWaterSound=SoundGroup'ProjectileSounds.AP_Impact_Water'
 }

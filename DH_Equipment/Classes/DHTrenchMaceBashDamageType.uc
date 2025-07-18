@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
@@ -8,6 +8,6 @@ class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Equipment.DHTrenchMaceItem'
+    WeaponClass=Class'DHTrenchMaceItem'
     bAlwaysSevers=true
 }

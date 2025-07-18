@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadioHQAttachment extends Actor;
@@ -9,7 +9,7 @@ var byte           TeamIndex;
 
 var DHRadio        Radio;
 var class<DHRadio> RadioClass;
-var vector         RadioOffset;
+var Vector         RadioOffset;
 
 simulated function MakeVisible();
 simulated function MakeInvisible() { GotoState('Invisible'); }
@@ -92,8 +92,8 @@ defaultproperties
     bPathColliding=true
     bWorldGeometry=true
 
-    StaticMesh=StaticMesh'DH_Construction_stc.Artillery.GER_Artillery_Radio'
+    StaticMesh=StaticMesh'DH_Construction_stc.GER_Artillery_Radio'
 
-    RadioClass=Class'DH_Engine.DHRadio'
+    RadioClass=Class'DHRadio'
     RadioOffset=(Y=-10,Z=64)
 }

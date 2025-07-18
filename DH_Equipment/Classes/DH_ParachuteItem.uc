@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ParachuteItem extends DHWeapon;
@@ -229,7 +229,7 @@ simulated function AnimEnd(int Channel)
 // Modified to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local rotator YawMod;
+    local Rotator YawMod;
 
     if (Instigator != none)
     {

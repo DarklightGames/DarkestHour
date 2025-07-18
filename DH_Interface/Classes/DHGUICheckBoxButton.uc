@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUICheckBoxButton extends GUICheckBoxButton;
@@ -54,7 +54,7 @@ function InternalOnRendered(Canvas C)
 
     if (CenterText != "")
     {
-        C.Font = class'ROHud'.static.LoadSmallFontStatic(7);
+        C.Font = Class'ROHud'.static.LoadSmallFontStatic(7);
         C.SetDrawColor(0, 0, 0);
         C.TextSize(CenterText, XL, YL);
         C.SetPos(ActualLeft() + (ActualWidth() / 2) - (XL / 2), ActualTop() + (ActualHeight() / 2) - (YL / 2));
@@ -75,7 +75,4 @@ defaultproperties
 {
     bCanClickUncheck=true
     OnRendered=InternalOnRendered
-    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
-    End Object
-    ToolTip=GUIButtonToolTip
 }

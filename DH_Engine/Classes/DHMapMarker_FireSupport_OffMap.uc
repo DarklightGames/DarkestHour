@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_FireSupport_OffMap extends DHMapMarker
@@ -44,7 +44,7 @@ static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker 
 defaultproperties
 {
     MarkerName="Long-Range Fire Support"
-    IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
+    IconMaterial=Material'InterfaceArt_tex.overheadmap_Icons'
     IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
     IconColor=(R=255,G=255,B=255,A=128)
     Type=MT_OffMapArtilleryRequest
@@ -52,7 +52,7 @@ defaultproperties
     OverwritingRule=UNIQUE
     GroupIndex=3
     Cooldown=3
-    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=class'DHFireSupportMessage',MessageIndex=2)
-    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=Class'DHFireSupportMessage',MessageIndex=2)
+    OnPlacedMessage=Class'DHFireSupportMessage'
     OnPlacedMessageIndex=0
 }

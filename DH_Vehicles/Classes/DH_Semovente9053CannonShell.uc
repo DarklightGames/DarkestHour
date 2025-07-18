@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://en.wikipedia.org/wiki/Cannone_da_90/53
 // [2] https://tanks-encyclopedia.com/semovente-m41m-da-90-53/
@@ -11,13 +11,13 @@ class DH_Semovente9053CannonShell extends DHItalianCannonShell;
 defaultproperties
 {
     Speed=45746.816     // 758m/s [2]
-    MaxSpeed=45746.816 
+    MaxSpeed=45746.816
     ShellDiameter=9.0   // 90mm [1]
-    BallisticCoefficient=3.2   // TODO: Find real value, currently using the flak88 as a basis 
+    BallisticCoefficient=3.2   // TODO: Find real value, currently using the flak88 as a basis
 
     //Damage
     ImpactDamage=2456 //347 gramms TNT filler, citation needed
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.7
     EngineFireChance=0.98
 

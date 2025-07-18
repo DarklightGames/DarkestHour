@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3485Cannon extends DHVehicleCannon;
@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34-85_turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3485_int'
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
+    Skins(0)=Texture'allies_vehicles_tex.T3485_ext'
+    Skins(1)=Texture'allies_vehicles_tex.T3485_int'
+    HighDetailOverlay=Shader'allies_vehicles_tex.T3485_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col')
@@ -38,9 +38,9 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
+    PrimaryProjectileClass=Class'DH_T3485CannonShell_Early'
+    SecondaryProjectileClass=Class'DH_T3485CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_T3485CannonShellHE'
 
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(1)="APCR"
@@ -60,32 +60,32 @@ defaultproperties
     TertiarySpread=0.002
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    AltFireProjectileClass=Class'DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireOffset=150.9
     AltFireOffset=(X=-41.0,Y=17.5,Z=0.0)
 
     // Sounds
-    CannonFireSound(0)=Sound'Vehicle_Weapons.T34_85.85mm_fire01'
-    CannonFireSound(1)=Sound'Vehicle_Weapons.T34_85.85mm_fire02'
-    CannonFireSound(2)=Sound'Vehicle_Weapons.T34_85.85mm_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.85mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.85mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.85mm_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.0)
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
+    AltFireEndSound=Sound'DH_WeaponSounds.dt_fire_end'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_04')
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty01_000',Duration=1.0)
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

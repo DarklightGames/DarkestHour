@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_SmallText extends ROSTY_TextLabel;
@@ -23,9 +23,9 @@ defaultproperties
     FontNames(12)="DHSmallFontDS"
     FontNames(13)="DHSmallFontDS"
     FontNames(14)="DHSmallFontDS"
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=Texture'InterfaceArt_tex.empty'
+    Images(1)=Texture'InterfaceArt_tex.empty'
+    Images(2)=Texture'InterfaceArt_tex.empty'
+    Images(3)=Texture'InterfaceArt_tex.empty'
+    Images(4)=Texture'InterfaceArt_tex.empty'
 }

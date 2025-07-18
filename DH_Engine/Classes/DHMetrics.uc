@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetrics extends Actor
@@ -14,7 +14,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    Players = class'Hashtable_string_Object'.static.Create(128);
+    Players = Class'Hashtable_string_Object'.static.Create(128);
 }
 
 // Called at the end to clean up all data (finalize sessions etc.)
@@ -33,7 +33,7 @@ function Finalize()
 
         if (MP != none && MP.Sessions[0].EndedAt == none)
         {
-            MP.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+            MP.Sessions[0].EndedAt = Class'DateTime'.static.Now(self);
         }
     }
 }
@@ -60,23 +60,23 @@ function WriteToFile()
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Rounds
-    Root = (new class'JSONObject')
-        .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
-        .Put("rounds", class'JSONArray'.static.FromSerializables(Rounds))
-        .Put("text_messages", class'JSONArray'.static.FromSerializables(TextMessages))
-        .PutString("version", class'DarkestHourGame'.default.Version.ToString())
-        .Put("server", (new class'JSONObject')
+    Root = (new Class'JSONObject')
+        .Put("players", Class'JSONArray'.static.FromSerializables(PlayersArray))
+        .Put("rounds", Class'JSONArray'.static.FromSerializables(Rounds))
+        .Put("text_messages", Class'JSONArray'.static.FromSerializables(TextMessages))
+        .PutString("version", Class'DHBuildManifest'.default.Version.ToString())
+        .Put("server", (new Class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
-        .Put("map", (new class'JSONObject')
-            .PutString("name", class'DHLib'.static.GetMapName(Level))
+        .Put("map", (new Class'JSONObject')
+            .PutString("name", Class'DHLib'.static.GetMapName(Level))
             .PutInteger("offset", GRI.OverheadOffset)
-            .Put("bounds", (new class'JSONObject')
+            .Put("bounds", (new Class'JSONObject')
                 .PutVector("ne", GRI.NorthEastBounds)
                 .PutVector("sw", GRI.SouthWestBounds)));
 
-    F = Spawn(class'FileLog');
-    F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "json");
-    class'UFileLog'.static.Logf(F, Root.Encode());
+    F = Spawn(Class'FileLog');
+    F.OpenLog(Class'DateTime'.static.Now(self).IsoFormat(), "json");
+    Class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
 }
@@ -85,8 +85,8 @@ function OnRoundBegin()
 {
     local DHMetricsRound Round;
 
-    Round = new class'DHMetricsRound';
-    Round.StartedAt = class'DateTime'.static.Now(Level);
+    Round = new Class'DHMetricsRound';
+    Round.StartedAt = Class'DateTime'.static.Now(Level);
     Rounds.Insert(0, 1);
     Rounds[0] = Round;
 }
@@ -98,7 +98,7 @@ function OnRoundEnd(int Winner)
         return;
     }
 
-    Rounds[0].EndedAt = class'DateTime'.static.Now(self);
+    Rounds[0].EndedAt = Class'DateTime'.static.Now(self);
     Rounds[0].Winner = Winner;
 
     // TODO: are all player sessions ended at the time we expect? do we need to
@@ -119,7 +119,7 @@ function OnPlayerClientGUIDReceived(PlayerController PC, GUID ClientGUID)
 
     P = DHMetricsPlayer(O);
 
-    class'UArray'.static.SAddUnique(P.ClientGUIDs, Caps(class'MD5Hash'.static.GetHashString(ClientGUID)));
+    Class'UArray'.static.SAddUnique(P.ClientGUIDs, Caps(Class'MD5Hash'.static.GetHashString(ClientGUID)));
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -129,7 +129,7 @@ function OnPlayerLogin(PlayerController PC)
 
     if (!Players.Get(PC.GetPlayerIDHash(), O))
     {
-        P = new class'DHMetricsPlayer';
+        P = new Class'DHMetricsPlayer';
         P.ID = PC.GetPlayerIDHash();
 
         Players.Put(P.ID, P);
@@ -149,14 +149,14 @@ function OnPlayerLogin(PlayerController PC)
     // Finalize existing sessions if they were for some reason not finalized to begin with.
     if (P.Sessions.Length > 0 && P.Sessions[0].EndedAt == none)
     {
-        P.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+        P.Sessions[0].EndedAt = Class'DateTime'.static.Now(self);
     }
 
     // Add a new session to the front of the sessions list.
     P.Sessions.Insert(0, 1);
-    P.Sessions[0] = new class'DHMetricsPlayerSession';
-    P.Sessions[0].StartedAt = class'DateTime'.static.Now(self);
-    P.Sessions[0].NetworkAddress = class'INet4Address'.static.TrimPort(PC.GetPlayerNetworkAddress());
+    P.Sessions[0] = new Class'DHMetricsPlayerSession';
+    P.Sessions[0].StartedAt = Class'DateTime'.static.Now(self);
+    P.Sessions[0].NetworkAddress = Class'INet4Address'.static.TrimPort(PC.GetPlayerNetworkAddress());
 }
 
 function OnPlayerLogout(DHPlayer PC)
@@ -176,7 +176,7 @@ function OnPlayerLogout(DHPlayer PC)
     if (P != none)
     {
         // Mark the end of the player's current session.
-        P.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+        P.Sessions[0].EndedAt = Class'DateTime'.static.Now(self);
     }
 }
 
@@ -223,11 +223,11 @@ function OnTextMessage(PlayerController PC, string Type, string Message)
         return;
     }
 
-    TextMessage = new class'DHMetricsTextMessage';
+    TextMessage = new Class'DHMetricsTextMessage';
     TextMessage.Type = Type;
     TextMessage.Message = Message;
     TextMessage.ROID = PC.GetPlayerIDHash();
-    TextMessage.SentAt = class'DateTime'.static.Now(self);
+    TextMessage.SentAt = Class'DateTime'.static.Now(self);
     TextMessage.TeamIndex = PC.GetTeamNum();
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -249,7 +249,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
         return;
     }
 
-    C = new class'DHMetricsConstruction';
+    C = new Class'DHMetricsConstruction';
     C.TeamIndex = Construction.InstigatorController.GetTeamNum();
     C.ConstructionClass = Construction.Class;
     C.Location = Construction.Location;
@@ -259,7 +259,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     Rounds[0].Constructions[Rounds[0].Constructions.Length] = C;
 }
 
-function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
+function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, Vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
     local DHVehicle KillerVehicle, VictimVehicle;
@@ -269,7 +269,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
         return;
     }
 
-    F = new class'DHMetricsFrag';
+    F = new Class'DHMetricsFrag';
     F.DamageType = DamageType;
     F.HitIndex  = HitIndex;
     F.RoundTime = RoundTime;
@@ -283,7 +283,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
         F.KillerLocation = Killer.Pawn.Location;
         F.KillerPawn = Killer.Pawn.Class;
 
-        KillerVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
+        KillerVehicle = Class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
 
         if (KillerVehicle != none)
         {
@@ -300,7 +300,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     {
         F.VictimPawn = Victim.Pawn.Class;
 
-        VictimVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Victim.Pawn);
+        VictimVehicle = Class'DHVehicle'.static.GetDrivenVehicleBase(Victim.Pawn);
 
         if (VictimVehicle != none)
         {
@@ -311,7 +311,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     Rounds[0].Frags[Rounds[0].Frags.Length] = F;
 }
 
-function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int RoundTime)
+function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, Vector HitLocation, int RoundTime)
 {
     local DHMetricsVehicleFrag F;
     local DHVehicle KillerVehicle;
@@ -321,7 +321,7 @@ function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<Dama
         return;
     }
 
-    F = new class'DHMetricsVehicleFrag';
+    F = new Class'DHMetricsVehicleFrag';
     F.DamageType = DamageType;
     F.RoundTime = RoundTime;
 
@@ -334,7 +334,7 @@ function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<Dama
         F.KillerLocation = Killer.Pawn.Location;
         F.KillerPawn = Killer.Pawn.Class;
 
-        KillerVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
+        KillerVehicle = Class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
 
         if (KillerVehicle != none)
         {
@@ -359,7 +359,7 @@ function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, a
         return;
     }
 
-    C = new class'DHMetricsCapture';
+    C = new Class'DHMetricsCapture';
     C.ObjectiveIndex = ObjectiveIndex;
     C.TeamIndex = TeamIndex;
     C.PlayerIDs = PlayerIDs;
@@ -377,12 +377,12 @@ function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
         return;
     }
 
-    MRP = new class'DHMetricsRallyPoint';
+    MRP = new Class'DHMetricsRallyPoint';
     MRP.TeamIndex = RP.GetTeamIndex();
     MRP.SquadIndex = RP.SquadIndex;
     MRP.PlayerID = RP.InstigatorController.ROIDHash;
     MRP.Location = RP.Location;
-    MRP.CreatedAt = class'DateTime'.static.Now(self);
+    MRP.CreatedAt = Class'DateTime'.static.Now(self);
 
     RP.MetricsObject = MRP;
 
@@ -397,7 +397,7 @@ function AddEvent(string Type, JSONObject Data)
         return;
     }
 
-    Rounds[0].Events[Rounds[0].Events.Length] = (new class'JSONObject')
+    Rounds[0].Events[Rounds[0].Events.Length] = (new Class'JSONObject')
         .PutString("type", Type)
         .Put("data", Data);
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_MainSP extends UT2K4Tab_MainSP;
@@ -10,13 +10,18 @@ var automated       DHmoComboBox            co_Difficulty;
 var array<float>    Difficulties;
 var bool            bHideDifficultyControl;
 
+var localized string MapCaptionText;
+var localized string MapAuthorText;
+var localized string MapPlayersText;
+var localized string MapPlayersRangeText;
+
 delegate OnChangeDifficulty(int index);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     if (lb_Maps != none)
     {
@@ -58,7 +63,7 @@ function InitGameType() // TODO: this is being called twice in single player (cu
     local array<CacheManager.GameRecord> Games;
     local bool bReloadMaps;
 
-    class'CacheManager'.static.GetGameTypeList(Games);
+    Class'CacheManager'.static.GetGameTypeList(Games);
 
     for (i = 0; i < Games.Length; ++i)
     {
@@ -117,7 +122,7 @@ function MapListChange(GUIComponent Sender)
             EnableComponent(p_Anchor.b_Secondary);
         }
 
-        class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
+        Class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
 
         LastSelectedMap = Item.FullURL;
         SaveConfig();
@@ -151,7 +156,7 @@ function InitDifficulty()
     local array<string> splits;
     local int           i, count;
 
-    props = class'DH_Engine.DarkestHourGame'.static.GetPropsExtra(0);
+    props = Class'DarkestHourGame'.static.GetPropsExtra(0);
     count = Split(props, ";", splits);
 
     if (count <= 0 || count % 2 != 0)
@@ -173,7 +178,7 @@ function UpdateCurrentGameDifficulty()
     local float currentDifficulty;
     local int   i;
 
-    currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
+    currentDifficulty = Class'DarkestHourGame'.default.GameDifficulty;
 
     for (i = 0; i < Difficulties.Length; ++i)
     {
@@ -192,8 +197,8 @@ function OnNewDifficultySelect(GUIComponent Sender)
 {
     if (Sender == co_Difficulty)
     {
-        class'DH_Engine.DarkestHourGame'.default.GameDifficulty = Difficulties[co_Difficulty.GetIndex()];
-        class'DH_Engine.DarkestHourGame'.static.StaticSaveConfig();
+        Class'DarkestHourGame'.default.GameDifficulty = Difficulties[co_Difficulty.GetIndex()];
+        Class'DarkestHourGame'.static.StaticSaveConfig();
         OnChangeDifficulty(co_Difficulty.GetIndex());
     }
 }
@@ -201,6 +206,73 @@ function OnNewDifficultySelect(GUIComponent Sender)
 function SilentSetDifficulty(int index)
 {
     co_Difficulty.SilentSetIndex(index);
+}
+
+// Modified to properly localize the author & player count.
+function ReadMapInfo(string MapName)
+{
+    local string mDesc;
+    local int Index;
+
+    if (MapName == "")
+    {
+        return;
+    }
+
+    if (!Controller.bCurMenuInitialized)
+    {
+        return;
+    }
+
+    Index = FindCacheRecordIndex(MapName);
+
+    if (CacheMaps[Index].FriendlyName != "")
+    {
+        asb_Scroll.Caption = CacheMaps[Index].FriendlyName;
+    }
+    else
+    {
+		asb_Scroll.Caption = MapName;
+    }
+
+	UpdateScreenshot(Index);
+
+	// Only show 1 number if min & max are the same
+	if (CacheMaps[Index].PlayerCountMin == CacheMaps[Index].PlayerCountMax)
+    {
+		l_MapPlayers.Caption = MapPlayersText;
+    }
+	else
+    {
+        l_MapPlayers.Caption = MapPlayersRangeText;
+    }
+
+    l_MapPlayers.Caption = Repl(l_MapPlayers.Caption, "{min}", CacheMaps[Index].PlayerCountMin);
+    l_MapPlayers.Caption = Repl(l_MapPlayers.Caption, "{max}", CacheMaps[Index].PlayerCountMax);
+
+	mDesc = li_Maps.GetExtra();
+
+    if (mDesc == "")
+    {
+        mDesc = MessageNoInfo;
+    }
+
+	lb_MapDesc.SetContent( mDesc );
+
+    if (CacheMaps[Index].Author != "" && !Class'CacheManager'.static.IsDefaultContent(CacheMaps[Index].MapName))
+    {
+        l_MapAuthor.Caption = Repl(MapAuthorText, "{author}", CacheMaps[Index].Author);
+    }
+    else
+    {
+        l_MapAuthor.Caption = "";
+    }
+}
+
+// Modified to properly localize this caption.
+function SetGameTypeCaption()
+{
+    sb_Selection.Caption = Repl(MapCaptionText, "{game}", CurrentGameType.GameName);
 }
 
 defaultproperties
@@ -214,7 +286,7 @@ defaultproperties
         WinHeight=0.325816
         OnPreDraw=OptionsContainer.InternalPreDraw
     End Object
-    sb_options2=DHGUISectionBackground'DH_Interface.DHTab_MainSP.OptionsContainer'
+    sb_options2=DHGUISectionBackground'DH_Interface.OptionsContainer'
 
     Begin Object Class=DHmoComboBox Name=DifficultyCombo
         bReadOnly=true
@@ -227,7 +299,7 @@ defaultproperties
         TabOrder=0
         OnChange=DHTab_MainSP.OnNewDifficultySelect
     End Object
-    co_Difficulty=DHmoComboBox'DH_Interface.DHTab_MainSP.DifficultyCombo'
+    co_Difficulty=DHmoComboBox'DH_Interface.DifficultyCombo'
 
     Begin Object Class=DHGUISectionBackground Name=SelectionGroup
         bFillClient=true
@@ -238,7 +310,7 @@ defaultproperties
         WinHeight=0.942417
         OnPreDraw=SelectionGroup.InternalPreDraw
     End Object
-    sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
+    sb_Selection=DHGUISectionBackground'DH_Interface.SelectionGroup'
 
     Begin Object Class=DHGUISectionBackground Name=PreviewGroup
         bFillClient=true
@@ -249,7 +321,7 @@ defaultproperties
         WinHeight=0.942417
         OnPreDraw=PreviewGroup.InternalPreDraw
     End Object
-    sb_Preview=DHGUISectionBackground'DH_Interface.DHTab_MainSP.PreviewGroup'
+    sb_Preview=DHGUISectionBackground'DH_Interface.PreviewGroup'
     sb_Options=none
 
     Begin Object Class=DHGUINoBackground Name=ScrollSection
@@ -261,7 +333,7 @@ defaultproperties
         WinHeight=0.412304
         OnPreDraw=ScrollSection.InternalPreDraw
     End Object
-    asb_Scroll=DHGUINoBackground'DH_Interface.DHTab_MainSP.ScrollSection'
+    asb_Scroll=DHGUINoBackground'DH_Interface.ScrollSection'
 
     Begin Object Class=DHGUIScrollTextBox Name=MapDescription
         bNoTeletype=true
@@ -277,7 +349,7 @@ defaultproperties
         bTabStop=false
         bNeverFocus=true
     End Object
-    lb_MapDesc=DHGUIScrollTextBox'DH_Interface.DHTab_MainSP.MapDescription'
+    lb_MapDesc=DHGUIScrollTextBox'DH_Interface.MapDescription'
 
     Begin Object Class=DHGUITreeListBox Name=AvailableMaps
         bVisibleWhenEmpty=true
@@ -289,7 +361,7 @@ defaultproperties
         TabOrder=0
         OnChange=DHTab_MainSP.MapListChange
     End Object
-    lb_Maps=DHGUITreeListBox'DH_Interface.DHTab_MainSP.AvailableMaps'
+    lb_Maps=DHGUITreeListBox'DH_Interface.AvailableMaps'
 
     Begin Object Class=DHmoButton Name=MaplistButton
         ButtonCaption="Maplist Configuration"
@@ -301,7 +373,7 @@ defaultproperties
         TabOrder=2
         OnChange=DHTab_MainSP.MaplistConfigClick
     End Object
-    b_Maplist=DHmoButton'DH_Interface.DHTab_MainSP.MaplistButton'
+    b_Maplist=DHmoButton'DH_Interface.MaplistButton'
     b_Tutorial=none
 
     Begin Object Class=GUILabel Name=MapAuthorLabel
@@ -314,7 +386,7 @@ defaultproperties
         WinHeight=0.032552
         RenderWeight=0.3
     End Object
-    l_MapAuthor=GUILabel'DH_Interface.DHTab_MainSP.MapAuthorLabel'
+    l_MapAuthor=GUILabel'DH_Interface.MapAuthorLabel'
 
     Begin Object Class=GUILabel Name=RecommendedPlayers
         Caption="Best for 4 to 8 players"
@@ -326,7 +398,7 @@ defaultproperties
         WinHeight=0.032552
         RenderWeight=0.3
     End Object
-    l_MapPlayers=GUILabel'DH_Interface.DHTab_MainSP.RecommendedPlayers'
+    l_MapPlayers=GUILabel'DH_Interface.RecommendedPlayers'
 
     Begin Object Class=GUILabel Name=NoPreview
         Caption="No Preview Available"
@@ -341,10 +413,15 @@ defaultproperties
         WinWidth=0.372002
         WinHeight=0.35748
     End Object
-    l_NoPreview=GUILabel'DH_Interface.DHTab_MainSP.NoPreview'
+    l_NoPreview=GUILabel'DH_Interface.NoPreview'
 
     LastSelectedMap="DH-Brecourt"
     ch_OfficialMapsOnly=none
 
     bHideDifficultyControl=true
+
+    MapPlayersText="{min} players"
+    MapPlayersRangeText="{min}-{max} players"
+    MapAuthorText="Author: {author}"
+    MapCaptionText="{game} Maps"
 }

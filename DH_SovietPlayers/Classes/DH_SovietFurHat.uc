@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SovietFurHat extends DH_SovietHeadgear;
@@ -8,5 +8,5 @@ class DH_SovietFurHat extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.rus_Ushanka'
-    Skins(0)=Texture'Gear_tex.Headgear.rus_headgear'
+    Skins(0)=Texture'Gear_tex.rus_headgear'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGameMessage extends ROGameMessage;
@@ -108,7 +108,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
             if (RI != none)
             {
                 S = default.RoleChangeMsg;
-                S = Repl(S, "{article}", RORoleInfo(OptionalObject).default.Article);
                 S = Repl(S, "{role}", RI.GetDisplayName());
                 return S;
             }
@@ -170,7 +169,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
             if (RI != none)
             {
                 S = Repl(default.RoleInvalidatedMessage, "{name}", RI.GetDisplayName());
-                S = Repl(S, "{article}", RI.Article);
                 return S;
             }
             break;
@@ -230,8 +228,8 @@ defaultproperties
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
     VehicleTeamKilledMessage="{0} killed a friendly {1}."
-    NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
-    RoleInvalidatedMessage="You are no longer qualified to be {article}{name}."
+    NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Command Post!"
+    RoleInvalidatedMessage="You are no longer qualified to be {name}."
 
     // These are Red Ochestra strings that needed to be overriden because they were sentence fragments.
     NewTeamMessageRussian="{name} has joined the Allied forces."
@@ -240,7 +238,7 @@ defaultproperties
     FFKillMessage="{name} killed a friendly soldier."
     VoteStarted="{name} started a vote."
     FFViolationMessage="Removing {name} due to a friendly fire violation."
-	RoleChangeMsg="You will attempt to respawn as {article}{role}."
+	RoleChangeMsg="You will attempt to respawn as {role}."
     MaxRoleMsg="Unable to change to {role}."
     HasForgivenMessage="{victim} has forgiven {killer}."
     EnteredMessage="{name} has entered the battlefield."

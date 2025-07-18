@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShovelItem extends DHWeapon
@@ -15,7 +15,7 @@ simulated function Fire(float F)
 {
     if (Instigator != none && Instigator.bIsCrawling)
     {
-        class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
+        Class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
     }
     else
     {
@@ -73,8 +73,8 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'
-    FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
+    FireModeClass(0)=Class'DHShovelBuildFireMode'
+    FireModeClass(1)=Class'DHShovelMeleeFire'
 
     ItemName="Shovel"
     InventoryGroup=7

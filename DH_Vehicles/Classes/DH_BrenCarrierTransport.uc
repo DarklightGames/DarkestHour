@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BrenCarrierTransport extends DHArmoredVehicle;
@@ -9,9 +9,9 @@ simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
 
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
     DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
     DestroyedSkin.FallbackMaterial = Skins[0];
     DestroyedSkin.CombineOperation = CO_Multiply;
     DestroyedMeshSkins[0] = DestroyedSkin;
@@ -32,24 +32,23 @@ defaultproperties
     MaxDesireability=1.2
     MinRunOverSpeed=350 //Lighter vehicle so slightly higher min speed than other APCs
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
-    HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    Skins(0)=Texture'DH_VehiclesUK_tex.BrenCarrier_body_ext'
+    Skins(1)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(2)=Texture'allies_vehicles_tex.T60_treads'
+    Skins(3)=Texture'allies_vehicles_tex2.Universal_Carrier_Int'
+    HighDetailOverlay=Shader'allies_vehicles_tex2.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BrenCarrierMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VUC_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_1",DriveAnim="VUC_rider1_idle")
@@ -61,7 +60,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverAttachmentBone="driver_player"
     DriveAnim="VUC_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
+    HUDOverlayClass=Class'UniCarrierDriverOverlay'
     HUDOverlayOffset=(X=0.0,Y=-0.8,Z=1.99)
     HUDOverlayFOV=81.0
 
@@ -94,11 +93,11 @@ defaultproperties
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier_destroyed'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="passenger_l_2"
     FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment
@@ -129,14 +128,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=125.0
-    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC_engine_loop'
+    StartUpSound=Sound'Vehicle_EnginesTwo.UC_engine_start'
+    ShutDownSound=Sound'Vehicle_EnginesTwo.UC_engine_stop'
     LeftTrackSoundBone="Wheel_T_L_3"
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
     RightTrackSoundBone="Wheel_T_R_3"
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -150,7 +149,7 @@ defaultproperties
     SteerBoneName="Steering"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.unicarrier_body'
     VehicleHudEngineY=0.75
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.66
@@ -168,7 +167,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsY(4)=0.5
     VehicleHudOccupantsY(5)=0.65
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.BrenCarrier'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"
@@ -192,7 +191,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -201,7 +200,7 @@ defaultproperties
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -211,7 +210,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -220,7 +219,7 @@ defaultproperties
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -241,5 +240,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_BrenCarrierTransport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

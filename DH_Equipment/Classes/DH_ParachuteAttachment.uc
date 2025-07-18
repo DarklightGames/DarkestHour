@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ParachuteAttachment extends DHWeaponAttachment;
@@ -13,9 +13,9 @@ simulated function PlayIdle()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Parachute_anm.Parachute3rd'
-    Skins(0)=Texture'DH_Sundries_Tex.Parachute.Parachute'
+    Skins(0)=Texture'DH_Sundries_Tex.Parachute'
     CullDistance=0.0 // no cull as it's too big
-    MenuImage=Texture'DH_Sundries_Tex.Parachute.ParachuteIcon'
+    MenuImage=Texture'DH_Sundries_Tex.ParachuteIcon'
     AttachmentBone="HIP"
 
     PA_MovementAnims(0)="stand_jogF_nade"

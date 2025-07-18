@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
@@ -17,16 +17,22 @@ var     int         RaisedPositionIndex;         // lowest position where comman
 // Camera & display
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
-var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
+var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
 var     Texture     PeriscopeOverlay;            // overlay for commander's periscope
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+
+// Projectile shell textures.
+// RO only allowed a single texture for all shells, but DH allows different textures for different shell types.
+// If any of these are set, they are used in place of the AmmoShellTexture.
+var     Texture     AmmoShellTextures[3];
+var     Texture     AmmoShellReloadTextures[3];
 
 // Gunsight overlay
 var     Texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
 var     float               RangePositionY;
-var     localized string    RangeText;                  // metres or yards
+var     DHUnits.EDistanceUnit   RangeUnit;
 var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
@@ -100,10 +106,10 @@ exec function SetCamPos(int X, int Y, int Z)
 
 // Modified so player's view turns with a turret, to properly handle vehicle roll, to handle dual-magnification optics,
 // to handle FPCamPos camera offset for any position (not just overlays), & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local rotator BaseRotation;
+    local Quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Rotator BaseRotation;
     local bool    bOnGunsight;
 
     ViewActor = self;
@@ -355,23 +361,26 @@ simulated function DrawGunsightOverlay(Canvas C)
 function DrawGunsightRangeSetting(Canvas C)
 {
     local float XL, YL, MapX, MapY;
-    local color SavedColor, WhiteColor;
+    local Color SavedColor, WhiteColor;
+    local string RangeUnitName;
 
     if (Cannon == none || Cannon.RangeSettings.Length <= 0)
     {
         return;
     }
 
+    RangeUnitName = Class'DHUnits'.static.GetDistanceUnitName(RangeUnit);
+
     C.Style = ERenderStyle.STY_Normal;
     SavedColor = C.DrawColor;
-    WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+    WhiteColor = Class'Canvas'.static.MakeColor(255, 255, 255, 175);
     C.DrawColor = WhiteColor;
     MapX = RangePositionX * C.ClipX;
     MapY = RangePositionY * C.ClipY;
     C.SetPos(MapX, MapY);
-    C.Font = class'DHHud'.static.GetSmallMenuFont(C);
-    C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-    C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+    C.Font = Class'DHHud'.static.GetSmallMenuFont(C);
+    C.StrLen(Cannon.GetRange() @ RangeUnitName, XL, YL);
+    C.DrawTextJustified(Cannon.GetRange() @ RangeUnitName, 2, MapX, MapY, MapX + XL, MapY + YL);
     C.DrawColor = SavedColor;
 }
 
@@ -529,10 +538,6 @@ simulated function bool HasPeriscopeCameraBone()
 
 simulated function bool CanFireFromPeriscope()
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(VehWep);
-    
     return HasPeriscopeCameraBone() || (Cannon != none && Cannon.ShootAnimBoneName != '');
 }
 
@@ -856,6 +861,8 @@ simulated function ClientKDriverLeave(PlayerController PC)
 // Modified to add extra material properties
 static function StaticPrecache(LevelInfo L)
 {
+    local int i;
+
     super.StaticPrecache(L);
 
     if (default.CannonScopeCenter != none)
@@ -883,6 +890,22 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.AmmoShellReloadTexture);
     }
 
+    for (i = 0; i < arraycount(default.AmmoShellTextures); i++)
+    {
+        if (default.AmmoShellTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(default.AmmoShellReloadTextures); i++)
+    {
+        if (default.AmmoShellReloadTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellReloadTextures[i]);
+        }
+    }
+
     if (default.AltAmmoReloadTexture != none)
     {
         L.AddPrecacheMaterial(default.AltAmmoReloadTexture);
@@ -892,12 +915,31 @@ static function StaticPrecache(LevelInfo L)
 // Modified to add extra material properties
 simulated function UpdatePrecacheMaterials()
 {
+    local int i;
+
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
     Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
+
+    for (i = 0; i < arraycount(AmmoShellTextures); i++)
+    {
+        if (AmmoShellTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(AmmoShellReloadTextures); i++)
+    {
+        if (AmmoShellReloadTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellReloadTextures[i]);
+        }
+    }
+
     Level.AddPrecacheMaterial(AmmoShellReloadTexture);
     Level.AddPrecacheMaterial(AltAmmoReloadTexture);
 }
@@ -1007,6 +1049,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
             ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
         {
             Cannon.UpdateGunWheels();
+            Cannon.UpdateAnimationDrivers();
         }
     }
 }
@@ -1046,7 +1089,7 @@ simulated function ClientDamageCannonOverlay()
 // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
 function float ModifyThreat(float Current, Pawn Threat)
 {
-    local vector to, t;
+    local Vector to, t;
     local float  r;
 
     if (Vehicle(Threat) != none)
@@ -1060,7 +1103,7 @@ function float ModifyThreat(float Current, Pawn Threat)
             // Big bonus points for perpendicular tank targets
             to = Normal(Threat.Location - Location);
             to.z = 0.0;
-            t = Normal(vector(Threat.Rotation));
+            t = Normal(Vector(Threat.Rotation));
             t.z = 0.0;
             r = to dot t;
 
@@ -1080,6 +1123,34 @@ function float ModifyThreat(float Current, Pawn Threat)
     }
 
     return Current;
+}
+
+simulated function Texture GetAmmoShellTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellTextures[AmmoIndex] != none)
+    {
+        return AmmoShellTextures[AmmoIndex];
+    }
+
+    return AmmoShellTexture;
+}
+
+simulated function Texture GetAmmoShellReloadTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellReloadTextures[AmmoIndex] != none)
+    {
+        return AmmoShellReloadTextures[AmmoIndex];
+    }
+
+    return AmmoShellReloadTexture;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1162,7 +1233,7 @@ exec function SetSLFireOffset(string NewX, string NewY, string NewZ)
 {
     if (IsDebugModeAllowed() && Cannon != none)
     {
-        class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ);
+        Class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ);
     }
 }
 
@@ -1181,15 +1252,15 @@ exec function ShellImpulse(string NewX, string NewY, string NewZ)
 {
     if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
     {
-        Log("DHAnimNotify_SpawnKActor: DebugImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugImpulse $ ")");
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.X = float(NewX);
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Y = float(NewY);
-        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Z = float(NewZ);
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+        Log("DHAnimNotify_SpawnKActor: DebugImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse $ ")");
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.X = float(NewX);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Y = float(NewY);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Z = float(NewZ);
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
     }
     else
     {
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
     }
 }
 
@@ -1197,15 +1268,15 @@ exec function ShellAngImpulse(string NewX, string NewY, string NewZ)
 {
     if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
     {
-        Log("DHAnimNotify_SpawnKActor: DebugAngularImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse $ ")");
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.X = float(NewX);
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Y = float(NewY);
-        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Z = float(NewZ);
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+        Log("DHAnimNotify_SpawnKActor: DebugAngularImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse $ ")");
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.X = float(NewX);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Y = float(NewY);
+        Class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Z = float(NewZ);
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
     }
     else
     {
-        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+        Class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
     }
 }
 
@@ -1240,7 +1311,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     {
         for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
         {
-            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Pitch = Class'UUnits'.static.MilsToUnreal(Mils);
             VehWep.CurrentAim.Yaw = 0;
 
             VehWep.CalcWeaponFire(false);
@@ -1248,10 +1319,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
             if (BP != none)
             {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
-                BP.StartLocation = BP.Location;
+                BP.CreateCalibrationInfo(VehWep, BP.Location, Mils, AU_Milliradians);
             }
         }
     }
@@ -1259,7 +1327,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
 exec function CorrectX(float NewValue)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         Log(Name @ "OverlayCorrectionX =" @ NewValue @ "(was" @ OverlayCorrectionX $ ")");
         OverlayCorrectionX = NewValue;
@@ -1268,7 +1336,7 @@ exec function CorrectX(float NewValue)
 
 exec function CorrectY(float NewValue)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
         OverlayCorrectionY = NewValue;
@@ -1289,7 +1357,7 @@ exec function SetPeriscopeSize(float NewValue)
     if (IsDebugModeAllowed())
     {
         Log(Tag @ "PeriscopeSize =" @ NewValue @ " (was" @ PeriscopeSize $ ")");
-        PeriscopeSize = NewValue;        
+        PeriscopeSize = NewValue;
     }
 }
 
@@ -1309,12 +1377,11 @@ defaultproperties
     // Camera & HUD
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
-    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="Cmdr"
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
 
     // Gunsight overlay
     GunsightSize=0.5
-    RangeText="metres"
+    RangeUnit=DU_Meters
     RangePositionX=0.16
     RangePositionY=0.2
 
@@ -1330,9 +1397,9 @@ defaultproperties
 
     // Movement sounds
     bSpecialRotateSounds=true
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    ManualRotateSound=Sound'Vehicle_Weapons.manual_turret_traverse2'
+    ManualPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_turret_traverse'
     SoundVolume=130
 
     // Weapon fire

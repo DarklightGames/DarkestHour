@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MG34AutoFire extends DHFastAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
+    ProjectileClass=Class'DH_MG34Bullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
+    AmmoClass=Class'MG50Rd792x57DrumAmmo'
     FireRate=0.08 // 862 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=7
     Spread=88.0
@@ -17,17 +17,17 @@ defaultproperties
     //PctHipMGPenalty=1.0
 
     // Recoil
-    PctBipodDeployRecoil=0.1 
+    PctBipodDeployRecoil=0.1
     
-    MaxVerticalRecoilAngle=485 
+    MaxVerticalRecoilAngle=485
     MaxHorizontalRecoilAngle=310
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=6.0,OutVal=1.2),(InVal=12.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=34.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Y=0.0,Z=-10.0)
     ShellRotOffsetIron=(Pitch=3000)
     FireEndAnim="Hip_Shoot_End"
