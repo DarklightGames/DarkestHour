@@ -18,6 +18,8 @@ defaultproperties
 
     bMustBeTankCommander=false
 
+    FPCamPos=(X=-3.2) // Modified to not clip the clip near plane.
+
     // Hull mesh
     Mesh=SkeletalMesh'DH_BA64_anm.BA64_body_ext'
     Skins(0)=Texture'allies_vehicles_tex.BA64_ext'
@@ -40,11 +42,6 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=Mesh'DH_BA64_anm.BA64_body_int',DriverTransitionAnim=VBA64_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bExposed=true)
     DriveAnim=VBA64_driver_idle_close
     BeginningIdleAnim=driver_hatch_idle_close
-
-    // Driver overlay
-    HUDOverlayClass=Class'BA64DriverOverlay'
-    HUDOverlayOffset=(X=2,Y=0,Z=0)
-    HUDOverlayFOV=85
 
     // Hull armor
     FrontArmor(0)=(Thickness=0.6,Slope=-30.0,MaxRelativeHeight=-13.0,LocationName="lower nose") // all height values are wrong and need to be changed
