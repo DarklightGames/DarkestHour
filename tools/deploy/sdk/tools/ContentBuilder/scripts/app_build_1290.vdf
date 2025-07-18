@@ -1,0 +1,13 @@
+"appbuild"
+{
+	"appid" "1290"
+	"buildoutput" "../output/"
+	"contentroot" "../content/"
+	"setlive" ""
+	"preview" "0"
+	"local" ""
+	"depots"
+	{
+		"1291" "depot_build_1291.vdf"
+	}
+}

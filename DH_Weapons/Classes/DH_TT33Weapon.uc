@@ -21,8 +21,8 @@ defaultproperties
     DisplayFOV=85.0
     IronSightDisplayFOV=75.0
 
-    InitialNumPrimaryMags=5
-    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=3
+    MaxNumPrimaryMags=3
 
     IdleEmptyAnim="idle-empty"
     IronIdleEmptyAnim="iron_idle_empty"

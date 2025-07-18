@@ -252,6 +252,11 @@ state SpeechMenuVisible
         {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
@@ -296,6 +301,11 @@ state SpeechMenuVisible
        {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
@@ -336,6 +346,11 @@ state SpeechMenuVisible
        {
             if (DHGRI.DHObjectives[i] != none)
             {
+                if (DHGRI.DHObjectives[i].bHideOnMap)
+                {
+                    continue;
+                }
+
                 SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                 SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
                 SMArraySize++;

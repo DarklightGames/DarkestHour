@@ -140,7 +140,7 @@ defaultproperties
         OnClick=DHCreditsPage.InternalOnClick
         OnKeyEvent=CloseButton.InternalOnKeyEvent
     End Object
-    b_Close=GUIButton'DH_Interface.CloseButton'
+    b_Close=CloseButton
     Begin Object Class=DHGUIScrollTextBox Name=CreditText
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
@@ -151,8 +151,9 @@ defaultproperties
         WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
+        TextAlign=TXTA_Center
     End Object
-    lb_Credits=DHGUIScrollTextBox'DH_Interface.CreditText'
+    lb_Credits=CreditText
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
@@ -167,7 +168,7 @@ defaultproperties
         OnMousePressed=DHCreditsPage.FloatingMousePressed
         OnMouseRelease=DHCreditsPage.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
+    t_WindowTitle=TitleBar
     WindowName="Credits"
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
         Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
@@ -180,9 +181,8 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
+    i_FrameBG=FloatingFrameBackground
 
-    // TODO: Build the credit lines from lists of a categorized list.
     ProjectLeads(0)="Colin Basnett"
     ProjectLeads(1)="dirtybirdy"
     ProjectLeads(2)="Matty"
@@ -306,6 +306,7 @@ defaultproperties
     LocalizationTeam(0)="-Red-(Rus)- (Russian)"
     LocalizationTeam(1)="dirtybirdy (Ukrainian)"
     LocalizationTeam(2)="MortarOperator (Russian/Ukrainian)"
+    LocalizationTeam(3)="Maciej 'Babi' Babiszewski (Polish)"
 
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"

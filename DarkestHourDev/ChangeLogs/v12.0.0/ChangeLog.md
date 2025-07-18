@@ -2,7 +2,7 @@
 
 At *long last* and after much anticipation, we are proud to announce the release of the Italy Expansion for Darkest Hour: Europe '44-'45!
 
-As the name implies, this expansion adds the Italian faction to the game, as well as a bevy of new vehicles, weapons, and maps.
+This expansion adds the Italian faction to the game, as well as a bevy of new vehicles, weapons, and maps.
 
 This has been a huge undertaking for our team, and speaking as the team lead, I'm very proud of everything that we've accomplished. We know that all the content we've created for this update is by far the best we've ever made, and think you'll agree.
 
@@ -10,7 +10,7 @@ This has been a huge undertaking for our team, and speaking as the team lead, I'
 
 ![Italian Soldiers](./Media/Meet%20the%20Italians.png)
 
-Coming out of the crucible of World War I, Italian did not fare very well. Although it had ostensibly been victorious, its ambitions of vast territorial expansion had been thwarted by post-war treaties, leaving the political landscape of Italy in turmoil.
+Coming out of the crucible of World War I, Italy did not fare very well. Although it had ostensibly been victorious, its ambitions of vast territorial expansion had been thwarted by post-war treaties, leaving the political landscape of Italy in turmoil.
 
 The rise of Benito Mussolini and the fascist party in the 1920s saw a renewed interest in military expansionism, culminating in the successful Italian invasions of Ethiopia and Albania in the 1930s in an attempt to restore the lost glory of the Roman Empire around the Mediterranean Sea (the "Mare Nostrum", lit. "Our Sea").
 
@@ -20,45 +20,13 @@ The war dragged on, and following the Axis' stunning defeat at Stalingrad in Feb
 
 It is amidst this backdrop that Operation Husky, the Allied invasion of Sicily, began in July 1943.
 
-## Interface
-
-## Localization
-
-The game has now been fully localized to **Russian** and **Ukrainian**. As a result, players are now able to type in Cyrillic characters in the game's chat.
-
-![title info](./Media/Localization%20Ukrainian.png)
-
-Historically, the game only had partial localization support for German. However, the localizations had never been updated after its initial release well over a decade ago.
-
-We have developed a system that will allow us to add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
-
-If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
-
-## Map Icon Overhaul
-
-The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the equipment that they represent.
-
-To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while occupied ones will be blue, or green if the occupant is a squadmate.
-
-Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
-
-The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
-
-## Font Overhaul
-
-To accommodate the localization efforts, all the game's fonts have been completely overhauled!
-
-We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
-
-In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
-
 ## Vehicles
 This update sees the addition of 9 brand new vehicles to the game; 8 of which are unique to the Italian faction.
 
 ### Autoblinda 41
-This Autoblinda 41 armored car is a fast and extremely maneuverable vehicle excellent for scouting and anti-infantry. Its 20mm cannon is capable of destroying light vehicles with ease, but will be dramatically less effective attempting to engage even lightly armored tanks head-on.
+The Autoblinda 41 armored car is a fast and extremely maneuverable vehicle that's excellent for scouting and anti-infantry. Its 20mm cannon is capable of destroying light vehicles with ease, but will be dramatically less effective attempting to engage even lightly armored tanks head-on.
 
-It is also unique in that it is the only vehicle in the game with a rear-facing machine-gun, allowing it to defend itself from enemy infantry tempting to flank it.
+It is also unique in that it is the only vehicle in the game with a rear-facing machine-gun, allowing it to defend itself from enemy infantry attempting to flank it.
 
 ![Autoblinda 41](./Media/Autoblinda%2041%20Front.png)
 
@@ -70,7 +38,7 @@ The Autocaretta OM 32 and 36P are light trucks used for both transporting troops
 ![OM 32](./Media/OM%2032.png)
 
 ### Carro Velocce 33 (CV-33, L3/33)
-One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored. It is armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
+One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored and armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
 
 ![Carro Velocce 33](./Media/CV33%20Front.png)
 
@@ -90,7 +58,7 @@ A light tank armed with a 20mm cannon and a 8mm machine-gun; the majority of the
 ![Fiat L6/40](./Media/Fiat%20L640%20Front.png)
 
 ### Semovente 47/32
-Ther most produced Italian self-propelled gun of the war, the Semovente 47/32 is armed with a 47mm cannon capable of penetrating most enemy tanks from the side and rear. It's low profile and good maneuverability make it an excellent ambush vehicle, but it's thin armor and an open-topped turret make it extremely vulnerable to enemy fire.
+The most produced Italian self-propelled gun of the war, the Semovente 47/32 is armed with a 47mm cannon capable of penetrating most enemy tanks from the side and rear. It's low profile and good maneuverability make it an excellent ambush vehicle, but thin armor and an open-topped turret make it extremely vulnerable to enemy fire.
 
 ![Semovente 47/32](./Media/Semovente%2047%20Front.png)
 
@@ -100,7 +68,7 @@ A self-propelled gun sporting a devastating 90mm cannon, the Semovente 90/53 is 
 ![Semovente 90/53](./Media/Semovente%2090%20Front.png)
 
 ### DUKW
-The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
+The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transport troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
 
 ![DUKW](./Media/DUKW.png)
 
@@ -128,12 +96,14 @@ There are many things that have been said about the Breda modello 30; most of th
 
 ![Breda mod. 30](./Media/Weapons/Breda%20mod%2030%20TP.png)
 
-### Carcano M91/38
-The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+### Carcano mod. 91 and 91/38
+The Carcano mod. 91 was the standard issue bolt-action rifle of the Italian army. It's 6.5mm cartridge is comparatively underpowered compared to the standard issue rifles of other nations, but it's light weight and good handling characteristics made it a popular choice for the Italian infantry.
+
+In addition, certain roles will have access to the Carcano mod. 91/38, a short barreled variant with a foldable bayonet.
 
 ![Carcano M91/38](./Media/Weapons/Carcano%20M9138%20TP.png)
 
-> Developer Highlight: When chambering the final round, you can hear the distinctive "ping" of the en-bloc clip being ejected from the bottom of the rifle.
+> Developer Highlight: When chambering the final round, you can hear the distinctive sound of the en-bloc clip being ejected from the bottom of the rifle.
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
@@ -141,11 +111,14 @@ Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bol
 ![Fucile Contracarro 35(P)](./Media/Weapons/Fucile%20Contracarro%2038P.png)
 
 ### MAB mod. 38-A
-The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
+This sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
 
 This weapon can be found exclusively in the hands of the Italian "Camicie Nere" (Blackshirts).
 
-![Beretta mod. 34](./Media/Weapons/MAB%2038%20TP.png)
+![MAB mod. 38-A](./Media/Weapons/MAB%2038%20TP.png)
+
+### MAB mod. 38-A/42
+Originally of Italian design, this later variant of the MAB can be found in the hands of late war German troops on the eastern front.
 
 ### OTO Tipo L (Anti-Tank Grenade)
 Continuing the theme of extremely dangerous impact fuzed grenades, the OTO Tipo L is a large anti-tank grenade with a powerful 1.5kg explosive charge useful for destroying or immobilizing vehicles. Since it's heavy and can't be thrown far, make sure to throw this from cover!
@@ -162,7 +135,7 @@ The SRCM Mod. 35 (Incendiary Smoke) is a variant of the standard hand grenade th
 
 The Italy expansion sees the addition of 5 brand new maps.
 
-The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
+The new maps in this first Italian expansion are focused on [Operation Husky](https://en.wikipedia.org/wiki/Allied_invasion_of_Sicily), the invasion of Sicily in 1943. They follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
 ### Gela (32-64 players)
 
@@ -179,7 +152,7 @@ The invaders will have to fight their way off the beaches, ascend through a dens
 
 Niscemi is a hilltop town that was used as a staging area for counterattacks against the invading Allies immediately following the invasion.
 
-The invading Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outkirts of the town.
+The Allies will have to fight an uphill battle against fixed Italian defensive positions to reach the outskirts of the town.
 
 |||
 |-|-|
@@ -189,6 +162,8 @@ The invading Allies will have to fight an uphill battle against fixed Italian de
 ### Ponte Olivo Airfield (32-64 players)
 Capturing the airfield at Ponte Olivo was critical to the success of the invasion of Sicily, both to deny the German and Italian forces the ability to use it, and to grant the Allies a staging ground for their own air operations further inland.
 
+This is the largest map in the update and features almost all of the new vehicles and equipment.
+
 |||
 |-|-|
 |![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2001.png)|![Ponte Olivo Airfield](./Media/Ponte%20Olivo%20Airfield/Ponte%20Olivo%20Airfield%2002.png)|
@@ -197,7 +172,7 @@ Capturing the airfield at Ponte Olivo was critical to the success of the invasio
 ### San Valentino (24-64 players)
 This popular map has been completely re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
-This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division back to more defensible positions once the Allies had established unassailable beachheads.
+This is a fictional scenario set during the full-scale retreat of the Italian Livorno Division to more defensible positions once the Allies had established unassailable beachheads.
 
 |||
 |-|-|
@@ -219,7 +194,45 @@ This map is a fictional representation of a palatial estate in the Sicilian coun
 * M1 Mortar (United States of America)
 * Ordnance ML 3-inch Mortar (Britain, Canada)
 
-# Changes
+# Changes & Additions
+
+## Localization
+
+The game has now been fully localized to the following languages:
+
+* Polski (Polish)
+* русский (Russian)
+* українська (Ukrainian)
+
+As a result, players are now able to type in Cyrillic and Polish characters in the game's chat.
+
+![title info](./Media/Localization%20Ukrainian.png)
+
+Historically, the game only had partial localization support for German. However, the localizations had never been updated after its initial release well over a decade ago.
+
+We have developed a system that will allow us to add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
+
+Please note that in order for the game to show up in these languages, your [Steam Interface Language](https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2) must be set to one of the supported languages. This is because the game's engine code predates Steam's ability to set languages on a per-game basis.
+
+If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
+
+## Map Icon Overhaul
+
+The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the equipment that they represent.
+
+To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while occupied ones will be blue, or green if the occupant is a squadmate.
+
+In addition, the icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
+
+Finally, all friendly vehicles will now be visible on the map at all times. We will monitor if this has a negative impact on the usability of the map, and will adjust as necessary.
+
+## Font Overhaul
+
+To accommodate the localization efforts, all the game's fonts have been completely overhauled!
+
+We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
+
+In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 ## Logistics
 * The Platoon HQ has been renamed to Command Post.
@@ -241,18 +254,12 @@ This map is a fictional representation of a palatial estate in the Sicilian coun
 ## Signalling
 Changes to the signalling (in-world fire, move, spotting markers) system:
 
-* The signal transparency is now smoothly modulated based on timing &
-  the viewing angle.
-* The duration of signals has been reduced from 15 seconds to 10
-  seconds.
-* Signals will now be fully transparent if the player's viewing angle is
-  within 2 degrees.
-* The signal recipient radius has been reduced from 50 meters to 25
-  meters.
+* The signal transparency is now smoothly modulated based on timing & the viewing angle.
+* The duration of signals has been reduced from 15 seconds to 10 seconds.
+* Signals will now be fully transparent if the player's viewing angle is within 2 degrees.
+* The signal recipient radius has been reduced from 50 meters to 25 meters.
 
-These changes should alleviate the exploitation of signals to accurately
-shoot through vegetation that they cannot see through either solo or
-with the help of others.
+These changes should alleviate the exploitation of signals to accurately shoot through vegetation that the gunner they cannot see through either solo or with the help of others.
 
 ## Vehicles
 * Vehicle passengers may no longer use vehicle voice commands intended for crew members only.
@@ -274,7 +281,7 @@ with the help of others.
 * Some scopes have had the reticle updated to be less chunky and view-obscuring.
 * Scoped weapons have been zeroed consistently for 100m.
 * FG42 now has slightly less recoil and a flatter recoil curve, making it more controllable.
-* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschrek, Bazooka)
+* Removed the requirement to be stationary in order to fire infantry anti-tank weapons (e.g., Panzerschreck, Bazooka)
 
 ## Miscellaneous
 * Removed additional patron voting power. This was disabled on all official servers already, but custom servers would have this on by default.
@@ -288,7 +295,10 @@ The following maps have been removed due to unpopularity or redundancy.
 
   * Armored Brenus Clash
   * Armored La Feuillie Advance
-  * Watrage Push
+  * Gorlitz Push
+  * Grain Elevator
+  * Nuenen Clash
+  * Watrange Push
 
 ### New Variant & Skin System
 Players can now select different variants and skins for guns placed in the world. 
@@ -298,23 +308,22 @@ For example, the Cannone 47/32 has two variants, one with wheels and one without
 Skins are also selectable, although winter skins will only be available on winter maps.
 
 ### Category & Limits Overhaul
-
 The construction loadouts system has been overhauled to allow for easier and more fine-grained control over what each team can build on a map.
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive ordeal that was prone to human error and oversight.
 
-Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
+Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict or add individual constructions on a per-level basis, depending on historical accuracy and balance considerations. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
 
 In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
 
 # Effects
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 * Grenades impacting surfaces now have unique sounds depending on the type of surface hit.
-* Mortar and grenade explosions now have new and unique explosion effects.
+* Mortar and grenades now have new and unique explosion effects.
 * Grenade scorch decal changed to be more realistic.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
+* Voice command audio sources will now be properly attached to the player pawn instead of the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
@@ -323,8 +332,8 @@ In addition, there are now hard limits on the amount of total constructions that
 * Vehicle friendly fire beeping sound no longer plays when no damage is done (i.e., meleeing a friendly truck)
 * Fixed a bug where the pitch of the mortar whistling sound would always be incorrect while spectating.
 * Fixed a bug where mortars that hit things on ascent (e.g., nearby trees) wouldn't explode immediately.
-* `ToggleSelectedArtilleryTarget` now has a default keybind set.
-* Fixed default settings being set incorrectly (they are set to "Highest" setting).
+* `ToggleSelectedArtilleryTarget` command now has a default keybind set.
+* Fixed an issues where the default graphics settings we set incorrectly (they are now set to "Highest" setting).
 * Fixed a bug where map marker cooldowns (e.g., mortar spotting marks) would be broken after the round was reset.
 * Fixed an issue on Freyneux & Lamormenil where tanks could drive through some buildings.
 * Fixed a bug where the gun rotation projector looked opaque on BSP surfaces.
@@ -346,3 +355,31 @@ In addition, there are now hard limits on the amount of total constructions that
 * New `PhaseEndEventName` added to `DHSetupPhaseManager` to call an event when the setup phase ends.
 * Added `StopArty` console command to stop all artillery spawners while debugging.
 * Added `DH_ModifyVehiclePool` actor that can be triggered to modify the properties of vehicle pools.
+
+# What's Next?
+
+With such an enormous project now in the rear view mirror, we are excited to switch back to the more incremental update release schedule that we are used to.
+
+We have a fairly large backlog of projects that are complete or nearly complete that we will be rolling out shortly after we make sure the release is stable and any salient bugs are dealt with.
+
+In the near future we plan to add:
+
+* Additional Italy maps
+* Sd.Kfz. 124 "Wespe"
+* PaK 36
+* Fiat-Revelli mod. 35
+* Breda 20/65 mod. 35
+* Remake of the Opel Blitz
+* Remake of *every* anti-tank gun
+* Remake of the M2 60mm mortar
+
+On a slightly longer time scale, we have started building the necessary groundwork for stationary machine-guns for every faction, remaking all of the Allied player models, specialized squad types and much more.
+
+# Support Us On Patreon!
+
+The Darkest Hour development team is made entirely of volunteers, and we recieve no compensation other than from our generous Patreon supporters, whose donations fund game server costs and development infrastructure.
+
+If you like what we're doing, please consider [joining our Patreon](https://www.patreon.com/darkesthourgame)!
+
+See you on the battlefield,
+Darklight Games 🕷️

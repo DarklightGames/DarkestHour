@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if [ $1 == "build" ]
+then
+source ./tools/make/make
+elif [ $1 == "clean" ]
+then
+source ./tools/make/clean
+fi

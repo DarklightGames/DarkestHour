@@ -42,10 +42,40 @@ function Initialize()
     OptionsText = Class'UString'.static.Join(" ", OptionStrings);
 }
 
+// The interaction system is doesn't actually properly flag state, so we have to
+// poll for focus directly.
+simulated function bool IsFocused()
+{
+    local int i;
+
+    if (ViewportOwner == none && ViewportOwner.Actor == none && ViewportOwner.Actor.Player == none)
+    {
+        return false;
+    }
+
+    // Find the first DHPromptInteraction and check if it's this interaction.
+    // If so, we're in focus.
+    for (i = 0; i < ViewportOwner.Actor.Player.LocalInteractions.Length; ++i)
+    {
+        if (ViewportOwner.Actor.Player.LocalInteractions[i].IsA('DHPromptInteraction'))
+        {
+            return ViewportOwner.Actor.Player.LocalInteractions[i] == self;
+        }
+    }
+
+    return false;
+}
+
 simulated function PostRender(Canvas C)
 {
     local string MyPromptText;
     local float X, Y, XL, YL;
+
+    if (!IsFocused())
+    {
+        // Don't display this prompt unless it's actually receiving input.
+        return;
+    }
 
     X = 8;
 

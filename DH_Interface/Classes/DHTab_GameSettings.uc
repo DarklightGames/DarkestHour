@@ -600,7 +600,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=NoGore
         Caption="No Gore"
-        Hint="Recommended to have this unchecked"
+        Hint="No dismemberment, decapition, or blood effects"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
