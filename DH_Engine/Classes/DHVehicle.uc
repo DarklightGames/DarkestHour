@@ -3260,7 +3260,7 @@ simulated function SpawnVehicleAttachments()
                     // Apply global skin override to the attachment if no per-attachment skin is specified.
                     for (j = 0; j < RandomAttachmentSkins.Length; ++j)
                     {
-                        if (VA.Skins[j] == none && RandomAttachmentSkins[j] != none)
+                        if (RandomAttachmentSkins[j] != none && (VA.Skins.Length < j || VA.Skins[j] == none))
                         {
                             VA.Skins[j] = RandomAttachmentSkins[j];
                         }
