@@ -10,4 +10,5 @@ defaultproperties
     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_berlin'
     CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_berlin'
     RandomAttachmentSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_berlin'
+    DestroyedMeshSkins(0)=Combiner'DH_Hetzer_tex.HETZER_BODY_EXT_BERLIN_DEST'
 }

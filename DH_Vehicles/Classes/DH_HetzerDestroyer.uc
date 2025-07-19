@@ -2,22 +2,22 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] top MG shells not ejected the right direction & don't collide with top of tank (done with an emitter)
+// [ ] DOUBLE CHECK ALL THE ARMOR VALUES
+// [ ] damaged effect
+// [ ] top MG shells not ejected the right direction & don't collide with top of
+//     tank (done with an emitter)
 // [ ] you can destroy the thing by penetrating the MG lol
 // [ ] add passengers in right spot
-// [ ] UI art (do against straight dunkelgelb)
 // [ ] fix rear cmd hatch collision
-// [ ] play a sound when the player tries to open the hatch when the MG is in the way (also the UI element that
-//     dirtybirdy made) [maybe steal part of the sound from the IS2 reload where he bangs on the hatch?]
-// [ ] destroyed mesh
-// [ ] destroyed textures (for statics)
+// [ ] play a sound when the player tries to open the hatch when the MG is in
+//     the way (also the UI element that dirtybirdy made) [maybe steal part of
+//     the sound from the IS2 reload where he bangs on the hatch?]
 // [ ] hatch opening/closing sounds in animations
-// [ ] add MG reloading sounds to the animation notifies
+// [ ] add MG reloading sounds to the animation notifies on the MG
 // [ ] re-import player anims
 // [ ] Lock camera during MG raise/lower anims
-// [ ] maybe add an intermediate position on the MG where you're just in the compartment and can look around
-// [ ] the gunner first person animations are disorienting
-// [ ] fix MG reloading desync
+// [ ] the gunner first person animations are disorienting (skip anims other than
+//     for raise/lower)
 // [ ] maybe make it so you need to explicitly press R to reload the MG?
 //==============================================================================
 
@@ -81,8 +81,19 @@ defaultproperties
     RightWheelBones(5)="Wheel_6_R"
     RightWheelBones(6)="Wheel_7_R"
     TreadHitMaxHeight=8.000000
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.hetzer_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.hetzer_turret_look'
+    VehicleHudImage=Texture'DH_Hetzer_tex.hetzer_body_icon'
+    VehicleHudTurret=TexRotator'DH_Hetzer_tex.hetzer_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Hetzer_tex.hetzer_turret_look'
+    VehicleHudOccupantsX(0)=0.440000
+    VehicleHudOccupantsX(1)=0.540000
+    VehicleHudOccupantsX(2)=0.440000
+    VehicleHudOccupantsX(3)=0.450000
+    VehicleHudOccupantsX(4)=0.560000
+    VehicleHudOccupantsY(0)=0.330000
+    VehicleHudOccupantsY(2)=0.500000
+    VehicleHudOccupantsY(3)=0.610000
+    VehicleHudOccupantsY(4)=0.610000
+    VehicleHudEngineY=0.610000
     VehicleHudTreadsPosX(0)=0.375000
     VehicleHudTreadsPosX(1)=0.625000
     VehicleHudTreadsPosY=0.54
@@ -99,22 +110,11 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'  //KV sound for pz38(t)?? this definitely needs to be changed
     StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc.Destroyed.Hetzer_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc.HETZER_DESTROYED_EARLY'
     DamagedEffectOffset=(X=-60.000000,Y=25.000000)
     BeginningIdleAnim="idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',ViewFOV=85,TransitionUpAnim="overlay_out",ViewPitchUpLimit=2048,ViewPitchDownLimit=63488,ViewPositiveYawLimit=2048,ViewNegativeYawLimit=-2048,bDrawOverlays=True)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',TransitionDownAnim="overlay_in",ViewPitchUpLimit=4096,ViewPitchDownLimit=59392,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-12228)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.hetzer_body'
-    VehicleHudOccupantsX(0)=0.440000
-    VehicleHudOccupantsX(1)=0.540000
-    VehicleHudOccupantsX(2)=0.440000
-    VehicleHudOccupantsX(3)=0.450000
-    VehicleHudOccupantsX(4)=0.560000
-    VehicleHudOccupantsY(0)=0.330000
-    VehicleHudOccupantsY(2)=0.500000
-    VehicleHudOccupantsY(3)=0.610000
-    VehicleHudOccupantsY(4)=0.610000
-    VehicleHudEngineY=0.610000
 
     DamagedTrackStaticMeshLeft=StaticMesh'DH_Hetzer_stc.HETZER_TRACK_L'
     DamagedTrackStaticMeshRight=StaticMesh'DH_Hetzer_stc.HETZER_TRACK_R'
@@ -199,7 +199,7 @@ defaultproperties
     ExitPositions(4)=(X=-191,Y=-29,Z=60)    // PASSENGER 2
     ExitPositions(5)=(X=-78.00,Y=-23.00,Z=174.00)
     VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
-    SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.hetzer'
+    SpawnOverlay(0)=Texture'DH_Hetzer_tex.hetzer_profile_icon'
 
     //Health cons: petrol fuel
     //4 men crew

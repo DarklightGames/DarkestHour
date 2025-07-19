@@ -10,6 +10,7 @@ class DH_HetzerDestroyer_CamoThree extends DH_HetzerDestroyer;
 
 defaultproperties
 {
-     CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo3'
-     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo3'
+    CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo3'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo3'
+    DestroyedMeshSkins(0)=Combiner'DH_Hetzer_tex.HETZER_BODY_EXT_CAMO3_DEST'
 }
