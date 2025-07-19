@@ -15,6 +15,7 @@ struct Patron
 
 var private array<string>           DeveloperIDs;
 var private array<Patron>           Patrons; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
+var private array<string>           ContributorIDs;
 var private array<string>           GloballyBannedIDs;
 
 function bool AdminLogin(PlayerController P, string Username, string Password)
@@ -118,6 +119,21 @@ static function bool IsDeveloper(string ROID)
     for (i = 0; i < default.DeveloperIDs.Length; ++i)
     {
         if (ROID ~= default.DeveloperIDs[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static function bool IsContributor(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < default.ContributorIDs.Length; ++i)
+    {
+        if (ROID ~= default.ContributorIDs[i])
         {
             return true;
         }
@@ -249,6 +265,9 @@ defaultproperties
     Patrons(4)=(ROID="76561197981301331",Tier="lead") // Monni
     Patrons(5)=(ROID="76561198256117403",Tier="lead") // Vic
     Patrons(6)=(ROID="76561198847955145",Tier="lead") // MaDeuce
+
+    ContributorIDs(0)="76561199161068046"   // Ramitos (Spanish Translation)
+    ContributorIDs(1)="76561197985634975"   // Karma (Polish Translation)
 
     // GLOBAL BANS
     // Double check that ID is correct before adding it to the list!

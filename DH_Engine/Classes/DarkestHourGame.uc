@@ -5329,6 +5329,7 @@ event PostLogin(PlayerController NewPlayer)
         }
 
         PRI.bIsDeveloper = Class'DHAccessControl'.static.IsDeveloper(ROIDHash);
+        PRI.bIsContributor = Class'DHAccessControl'.static.IsContributor(ROIDHash);
     }
 
     NewPlayer.bLockedBehindView = bSpectateLockedBehindView;

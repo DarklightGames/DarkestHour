@@ -31,6 +31,7 @@ enum ERoleSelector
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 var     bool                    bIsIncognito;
+var     bool                    bIsContributor;
 
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;

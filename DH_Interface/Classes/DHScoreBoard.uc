@@ -39,6 +39,7 @@ var Material PatronLeadMaterial,
              PatronSilverMaterial,
              PatronGoldMaterial;
 
+var Material ContributorMaterial;
 var Material DeveloperIconMaterial;
 
 enum EScoreboardColumnType
@@ -201,10 +202,6 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 if (PRI.bIsDeveloper)
                 {
                     CRI.Icon = default.DeveloperIconMaterial;
-                    CRI.U = 0;
-                    CRI.V = 0;
-                    CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
-                    CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
                 }
                 else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
                 {
@@ -223,7 +220,14 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                             CRI.Icon = default.PatronGoldMaterial;
                             break;
                     }
+                }
+                else if (PRI.bIsContributor)
+                {
+                    CRI.Icon = default.ContributorMaterial;
+                }
 
+                if (CRI.Icon != none)
+                {
                     CRI.U = 0;
                     CRI.V = 0;
                     CRI.UL = CRI.Icon.MaterialUSize() - 1;
@@ -1114,4 +1118,5 @@ defaultproperties
     PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Silver'
     PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.developer'
+    //ContributorMaterial=Texture'DH_InterfaceArt2_tex.contributor'
 }
