@@ -215,7 +215,7 @@ defaultproperties
 
     ShadowZOffset=40.0
 
-    VehicleAttachments(0)=(AttachClass=Class'DH_WespeIdentifierAttachment',AttachBone="BODY")
+    VehicleAttachments(0)=(AttachClass=Class'DH_WespeIdentifierAttachment',AttachBone="BODY",Skins=(Texture'DH_Wespe_tex.wespe_body_ext_camo',Texture'DH_Wespe_tex.wespe_body_ext_camo',Texture'DH_Wespe_tex.wespe_body_ext_camo',Texture'DH_Wespe_tex.wespe_body_ext_camo'))
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=STEER_WHEEL_F_L

@@ -9,4 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Wespe_tex.wespe_body_ext_camo2'
     CannonSkins(0)=Texture'DH_Wespe_tex.wespe_turret_ext_camo2'
+    VehicleAttachments(0)=(AttachClass=Class'DH_WespeIdentifierAttachment',AttachBone="BODY",Skins=(Texture'DH_Wespe_tex.wespe_body_ext_camo2',Texture'DH_Wespe_tex.wespe_body_ext_camo2',Texture'DH_Wespe_tex.wespe_body_ext_camo2',Texture'DH_Wespe_tex.wespe_body_ext_camo2'))
 }
