@@ -36,8 +36,7 @@ defaultproperties
     UnbuttonedPositionIndex=3 // can't unbutton, no proper exit hatch for driver (small opening hatch is just for vision)
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
-    HUDOverlayClass=Class'IS2DriverOverlay'
-    HUDOverlayFOV=85.0
+    FPCamPos=(X=-4)
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=-0.5,LocationName="lower")

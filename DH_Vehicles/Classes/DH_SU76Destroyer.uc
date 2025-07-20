@@ -50,7 +50,7 @@ defaultproperties
     DriveAnim=VSU76_driver_idle_close
     BeginningIdleAnim=driver_hatch_idle_close
     HUDOverlayClass=Class'SU76DriverOverlay'
-    HUDOverlayOffset=(X=0,Y=0,Z=0)
+    HUDOverlayOffset=(X=0.5)
     HUDOverlayFOV=85
 
     // Hull armor
