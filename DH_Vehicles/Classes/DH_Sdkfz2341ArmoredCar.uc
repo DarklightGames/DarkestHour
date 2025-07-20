@@ -8,7 +8,7 @@ class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.234/1 Armored Car"
+    VehicleNameString="Sd.Kfz. 234/1 Armored Car"
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false

@@ -8,7 +8,7 @@ class DH_Sdkfz251Transport extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.251 Halftrack"
+    VehicleNameString="Sd.Kfz. 251 Halftrack"
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
@@ -34,6 +34,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
     bUsesCodedDestroyedSkins=false
+    FPCamPos=(X=-4)
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz251MGPawn',WeaponBone="mg_base")
@@ -51,9 +52,6 @@ defaultproperties
     DriverAttachmentBone="driver_player"
     DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
-    HUDOverlayClass=Class'Sdkfz251DriverOverlay'
-    HUDOverlayOffset=(X=0.0,Y=0.0,Z=0.8)
-    HUDOverlayFOV=100.0
 
     // Movement & physics wheels properties
     GearRatios(0)=-0.3

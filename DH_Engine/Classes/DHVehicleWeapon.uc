@@ -404,6 +404,7 @@ simulated function PostNetReceive()
     }
     
     UpdateGunWheels();
+    UpdateAnimationDrivers();
 }
 
 // Implemented here to handle multi-stage reload
