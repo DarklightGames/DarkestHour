@@ -301,7 +301,7 @@ defaultproperties
     MapInfos(145)=(Name="DH-Fury_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(146)=(Name="DH-La_Feuillie_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(147)=(Name="DH-Armored_Vieux_Advance",AlliedNation=NATION_Britain,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
-    MapInfos(148)=(Name="DH-German_Village_Advance",AlliedNation=NATION_Britain,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Medium)
+    MapInfos(148)=(Name="DH-Renthem_Advance",AlliedNation=NATION_Britain,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Medium)
     MapInfos(149)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(150)=(Name="DH-Fury_Clash",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Clash',Size=SIZE_Large)
     MapInfos(151)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Medium)
