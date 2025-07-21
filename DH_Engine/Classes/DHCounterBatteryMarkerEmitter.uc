@@ -16,16 +16,17 @@ function EmitMarker()
     local Vector MarkerLocation;
     local float Deviation, Theta;
     
-    // Get a random range deviation (in future have this based on sound ranging factors)
-    Deviation = RandRange(DeviationRange.Min, DeviationRange.Max);
+    // Get a random range deviation using a uniform distribution so that
+    // 
+    Deviation = DeviationRange.Max * Sqrt(FRand());
     Deviation = class'DHUnits'.static.MetersToUnreal(Deviation);
 
     // Pick a random direction for the deviation.
     Theta = FRand() * Pi * 2;
 
     MarkerLocation = Location;
-    MarkerLocation.X = Cos(Theta) * Deviation;
-    MarkerLocation.Y = Sin(Theta) * Deviation;
+    MarkerLocation.X += Cos(Theta) * Deviation;
+    MarkerLocation.Y += Sin(Theta) * Deviation;
 
     // TODO: abstract this elsewhere so we can call it from game class, perhaps.
     for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -56,7 +57,7 @@ event Timer()
 
 defaultproperties
 {
-    DeviationRange=(Min=20,Max=50)
+    DeviationRange=(Min=25,Max=100)
     bHidden=true
     LifeSpan=30
 }
