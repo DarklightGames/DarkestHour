@@ -12,7 +12,7 @@
 
 class DH_WespeTank extends DHArmoredVehicle;
 
-public function SpawnVehicleAttachments()
+simulated function SpawnVehicleAttachments()
 {
     local int i;
     local DHIdentifierAttachment IdentifierAttachment;
