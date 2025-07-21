@@ -254,7 +254,8 @@ replication
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
         ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
-        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation;
+        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation,
+        ServerAddCounteryBatteryEmitter;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -6339,6 +6340,21 @@ function ServerDestroyAllAdminSpawns(byte TeamIndex)
         // Notify everyone and log the event
         Level.Game.BroadcastLocalizedMessage(Class'DHAdminMessage', Class'UInteger'.static.FromShorts(4, TeamIndex), PlayerReplicationInfo);
         Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has has destroyed all admin spawns on team" @ TeamIndex);
+    }
+}
+
+
+function ServerAddCounteryBatteryEmitter(Vector WorldLocation, int TeamIndex)
+{
+    local DHCounterBatteryMarkerEmitter Emitter;
+
+    WorldLocation.Z = 0.0;
+
+    Emitter = Spawn(Class'DHCounterBatteryMarkerEmitter',,, WorldLocation);
+
+    if (Emitter != none)
+    {
+        Emitter.TeamIndex = TeamIndex;
     }
 }
 
