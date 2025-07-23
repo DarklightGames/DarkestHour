@@ -11,35 +11,10 @@ var int     TeamIndex;
 
 function EmitMarker()
 {
-    local Controller C;
-    local DHPlayer PC;
-    local Vector MarkerLocation;
-    local float Deviation, Theta;
-    
-    // Get a random range deviation using a uniform distribution so that
-    // 
-    Deviation = DeviationRange.Max * Sqrt(FRand());
-    Deviation = class'DHUnits'.static.MetersToUnreal(Deviation);
-
-    // Pick a random direction for the deviation.
-    Theta = FRand() * Pi * 2;
-
-    MarkerLocation = Location;
-    MarkerLocation.X += Cos(Theta) * Deviation;
-    MarkerLocation.Y += Sin(Theta) * Deviation;
-
-    // TODO: abstract this elsewhere so we can call it from game class, perhaps.
-    for (C = Level.ControllerList; C != none; C = C.NextController)
-    {
-        PC = DHPlayer(C);
-
-        if (PC == none)
-        {
-            continue;
-        }
-
-        PC.ClientAddPersonalMapMarker(class'DHMapMarker_CounterBattery', MarkerLocation);
-    }
+    DarkestHourGame(Level.Game).OnArtilleryFired(
+        0,
+        Location
+    );
 }
 
 function PostBeginPlay()

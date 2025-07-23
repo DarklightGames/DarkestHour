@@ -563,6 +563,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Also added a fix for bug where listen server host watching another player fire didn't see the firing effects from any AmbientEffectEmitter
 function Fire(Controller C)
 {
+    local DarkestHourGame G;
+
     if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
     {
         SpawnProjectile(TracerProjectileClass, false);
@@ -570,6 +572,20 @@ function Fire(Controller C)
     else if (ProjectileClass != none)
     {
         SpawnProjectile(ProjectileClass, false);
+    }
+
+    if (bIsArtillery)
+    {
+        // Notify the game that artillery has been fired. This will be handled by the counter-battery system.
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            G.OnArtilleryFired(
+                WeaponPawn.VehicleBase.GetTeamNum(),
+                Location
+            );
+        }
     }
 
     if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
