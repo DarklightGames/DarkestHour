@@ -51,23 +51,25 @@ static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type,
     // TODO: this might be expensive so we want to avoid doing this every time.
     StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(AttachmentActor.StaticMesh);
 
+    // TODO: this causes issues on second runs basically stacking combiners ontop of each other.
+    //  ideally we can just draw from the original list.
+    for (j = 0; j < StaticMeshSkins.Length; ++j)
+    {
+        if (j < AttachmentActor.Skins.Length && AttachmentActor.Skins[j] != none)
+        {
+            StaticMeshSkins[j] = AttachmentActor.Skins[j];
+        }
+    }
+
+    // Set the skins to the original skins.
+    AttachmentActor.Skins = StaticMeshSkins;
+
     for (i = 0; i < default.Identifiers.Length; ++i)
     {
         if (default.Identifiers[i].Type != Type)
         {
             continue;
         }
-
-        for (j = 0; j < StaticMeshSkins.Length; ++j)
-        {
-            if (j < AttachmentActor.Skins.Length && AttachmentActor.Skins[j] != none)
-            {
-                StaticMeshSkins[j] = AttachmentActor.Skins[j];
-            }
-        }
-
-        // Set the skins to the original skins.
-        AttachmentActor.Skins = StaticMeshSkins;
 
         // Trim the string to the maximum length supported by the identifier.
         TrimmedString = Left(String, default.Identifiers[i].SkinIndices.Length);

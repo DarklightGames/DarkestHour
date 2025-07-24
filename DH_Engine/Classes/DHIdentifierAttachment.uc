@@ -8,6 +8,9 @@ class DHIdentifierAttachment extends DHDecoAttachment
 
 var() class<DHIdentifierInfo> IdentifierInfoClass;
 
+// This is needed in case we need to restore the original skins.
+var array<Material> OriginalSkins;
+
 function SetIdentiferByType(DHIdentifierInfo.EIdentifierType Type, string String)
 {
     if (IdentifierInfoClass == none)
