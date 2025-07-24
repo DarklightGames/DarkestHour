@@ -281,11 +281,13 @@ var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combine
 
 var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
 
+var     int         Identifier;                 // Number used for vehicle identifiers.
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        RandomAttachmentGroupOptions;
+        RandomAttachmentGroupOptions, Identifier;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
