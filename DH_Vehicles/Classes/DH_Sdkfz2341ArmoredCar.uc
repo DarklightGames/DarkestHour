@@ -31,6 +31,8 @@ defaultproperties
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
 
+    FPCamPos=(X=-1.0)   // TODO: probably?
+
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
