@@ -6139,7 +6139,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 {
     local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker PMM;
-    local int i;
+    local int i, Index;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -6189,9 +6189,23 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
         PMM.ExpiryTime = -1;
     }
 
-    PersonalMapMarkers.Insert(0, 1);
-    PersonalMapMarkers[0] = PMM;
-    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[0]);
+    // Find the index in which to insert the new marker.
+    // Look for any expired marker slots that we can take over.
+    // If none are expired, add to the end of the list.
+    Index = PersonalMapMarkers.Length;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.LifetimeSeconds != -1 &&
+            GRI.ElapsedTime > PersonalMapMarkers[i].ExpiryTime)
+        {
+            Index = i;
+            break;
+        }
+    }
+
+    PersonalMapMarkers[Index] = PMM;
+    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[Index]);
 }
 
 function RemovePersonalMarker(int Index)

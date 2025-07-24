@@ -49,9 +49,20 @@ struct WeaponAttachments
     var StaticMesh StaticMesh;
 };
 
+// A rough estimate of the gun's size.
+// Affects how easily counter-battery systems can triangulate the firing position.
+enum ECounterBatteryReport
+{
+    CBR_None,
+    CBR_Small,
+    CBR_Medium,
+    CBR_Large,
+};
+var ECounterBatteryReport CounterBatteryReport;
+
 // Weapon fire
-var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
-var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
+var     bool                    bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
+var     bool                    bIsArtillery;       // report our hits to be tracked on artillery targets
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 
 var     float       ResupplyInterval;
@@ -581,10 +592,7 @@ function Fire(Controller C)
 
         if (G != none)
         {
-            G.OnArtilleryFired(
-                WeaponPawn.VehicleBase.GetTeamNum(),
-                Location
-            );
+            G.OnArtilleryFired(WeaponPawn.VehicleBase.GetTeamNum(), Class, Location);
         }
     }
 

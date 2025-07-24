@@ -6,15 +6,11 @@
 class DHCounterBatteryMarkerEmitter extends Actor
     notplaceable;
 
-var Range   DeviationRange; // In meters.
 var int     TeamIndex;
 
 function EmitMarker()
 {
-    DarkestHourGame(Level.Game).OnArtilleryFired(
-        0,
-        Location
-    );
+    DarkestHourGame(Level.Game).OnArtilleryFired(TeamIndex, None, Location);
 }
 
 function PostBeginPlay()
@@ -32,7 +28,6 @@ event Timer()
 
 defaultproperties
 {
-    DeviationRange=(Min=25,Max=100)
     bHidden=true
     LifeSpan=30
 }

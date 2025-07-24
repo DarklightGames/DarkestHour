@@ -11,7 +11,7 @@ defaultproperties
     IconColor=(R=255,G=0,B=0,A=255)
     IconMaterial=MaterialSequence'DH_InterfaceArt2_tex.HitMarker'
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    GroupIndex=6
+    GroupIndex=7
     Type=MT_CounterBattery
     OverwritingRule=OFF
     Scope=PERSONAL
