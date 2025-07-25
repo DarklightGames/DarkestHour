@@ -29,6 +29,5 @@ defaultproperties
     DisintegrationEffectLowClass=Class'ROVehicleObliteratedEmitter_simple'
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
-    RandomAttachmentGroups(3)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS'))))
-    RandomAttachmentGroups(4)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER'))))
+    RandomAttachmentGroups(4)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
 }

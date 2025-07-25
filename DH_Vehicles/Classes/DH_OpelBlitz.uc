@@ -23,12 +23,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=Texture'DH_OpelBlitz_tex.OpelBlitz.Opel_Blitz_Exterior'
-    Skins(1)=Texture'DH_OpelBlitz_tex.OpelBlitz.Opel_Blitz_Interior'
-    Skins(2)=Texture'DH_OpelBlitz_tex.OpelBlitz.opel_blitz_canvas'
-    Skins(3)=FinalBlend'DH_OpelBlitz_tex.OpelBlitz.Opel_Blitz_Windows_FB'
+    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_DG'
+    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_DG'
+    Skins(2)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Canvas'
+    Skins(3)=FinalBlend'DH_OpelBlitz_tex.Opel_Blitz_Windows_FB'
     // This skin is not actually used on the mesh, but is here for convenience with the attachment skin mapping system.
-    Skins(4)=Texture'DH_OpelBlitz_tex.OpelBlitz.Opel_Blitz_Attachments'
+    Skins(4)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Attachments_DG'
 
 
     BeginningIdleAnim="idle"
@@ -135,6 +135,8 @@ defaultproperties
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_01',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0)))),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_02',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TOOLS'))))
     RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE'))))
+    RandomAttachmentGroups(3)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS',SkinIndexMap=((VehicleSkinIndex=2,AttachmentSkinIndex=0))))))
+    
 
     // HUD
     VehicleHudImage=Texture'DH_OpelBlitz_tex.interface.opelblitz_body'

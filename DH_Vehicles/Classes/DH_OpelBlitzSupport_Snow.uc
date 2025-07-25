@@ -7,6 +7,9 @@ class DH_OpelBlitzSupport_Snow extends DH_OpelBlitzSupport;
 
 defaultproperties
 {
-    RandomAttachmentGroups(4)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TRAILER'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_ENGINE_COVER'))))
+    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_Winter'
+    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_Grey'
+    Skins(2)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Canvas_Winter'
+    Skins(4)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Attachments_Winter'
+    RandomAttachmentGroups(5)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_ENGINE_COVER',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
 }
