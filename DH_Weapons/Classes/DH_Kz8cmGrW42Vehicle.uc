@@ -7,7 +7,7 @@ class DH_Kz8cmGrW42Vehicle extends DHMortarVehicle;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Weapons.DH_Kz8cmGrW42VehicleWeaponPawn',WeaponBone="Mortar_Attachment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Kz8cmGrW42VehicleWeaponPawn',WeaponBone="Mortar_Attachment")
     VehicleNameString="Kurz 8cm Granatwerfer 42"
-    VehicleHudImage=Texture'DH_Mortars_tex.HUD.8cm'
+    VehicleHudImage=Texture'DH_Mortars_tex.8cm'
 }

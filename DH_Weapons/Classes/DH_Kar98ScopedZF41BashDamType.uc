@@ -8,5 +8,5 @@ class DH_Kar98ScopedZF41BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Kar98ScopedZF41Weapon'
+    WeaponClass=Class'DH_Kar98ScopedZF41Weapon'
 }

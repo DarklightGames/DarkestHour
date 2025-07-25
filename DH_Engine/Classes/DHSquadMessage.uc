@@ -72,7 +72,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
     local DHSquadReplicationInfo SRI;
     local string SquadName;
 
-    class'UInteger'.static.ToShorts(S, S, ExtraValue);
+    Class'UInteger'.static.ToShorts(S, S, ExtraValue);
 
     switch (S)
     {
@@ -171,7 +171,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
         case 72:
             return Repl(default.NewAssistantMessage, "{0}", RelatedPRI_1.PlayerName);
         case 73:
-            return class'ROTeamGame'.static.ParseLoadingHintNoColor(default.NotInSquadMessage, PlayerController(OptionalObject));
+            return Class'ROTeamGame'.static.ParseLoadingHintNoColor(default.NotInSquadMessage, PlayerController(OptionalObject));
         case 74:
             SRI = DHSquadReplicationInfo(OptionalObject);
             if (SRI != none || RelatedPRI_1 != none || RelatedPRI_1.Team != none)

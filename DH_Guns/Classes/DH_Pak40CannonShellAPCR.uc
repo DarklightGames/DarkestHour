@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=490  //solid tungsten
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.3
     EngineFireChance=0.6
 

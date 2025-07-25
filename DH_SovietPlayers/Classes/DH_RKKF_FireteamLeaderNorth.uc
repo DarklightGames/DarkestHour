@@ -7,7 +7,7 @@ class DH_RKKF_FireteamLeaderNorth extends DHSOVCorporalRoles; //this role wears 
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietMarineBushlatPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietNavalCap_North'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.NavalSleeves2'
+    RolePawns(0)=(PawnClass=Class'DH_SovietMarineBushlatPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietNavalCap_North'
+    SleeveTexture=Texture'DHSovietCharactersTex.NavalSleeves2'
 }

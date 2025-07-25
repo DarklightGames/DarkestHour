@@ -10,7 +10,7 @@ defaultproperties
 {
     VehicleDamageModifier=0.0
     GibModifier=0.0
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROBloodPuff'
     KDamageImpulse=400.0
     HumanObliterationThreshhold=1000001
 }

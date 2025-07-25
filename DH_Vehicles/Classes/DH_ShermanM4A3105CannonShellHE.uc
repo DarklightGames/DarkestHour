@@ -16,24 +16,25 @@ defaultproperties
     ImpactDamage=2000  //2.2 KG TNT
     Damage=1000.0
     DamageRadius=1350.0
-    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
+    MyDamageType=Class'DHShellHE105mmDamageType'
     PenetrationMag=1000.0
     HullFireChance=1.0
     EngineFireChance=1.0
 
     //Effects
     DrawScale=1.5
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=Sound'Artillery.explo01'
+    ExplosionSound(1)=Sound'Artillery.explo02'
+    ExplosionSound(2)=Sound'Artillery.explo03'
+    ExplosionSound(3)=Sound'Artillery.explo04'
+    TransientSoundRadius=20000.0    // Match the transient sound radius of the 105mm off-map artillery shell
 
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
 
     //Penetration
     DHPenetrationTable(0)=8.0

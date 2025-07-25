@@ -7,7 +7,7 @@ class DH_SVT40ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'SVT40BashDamType'
+    DamageType=Class'SVT40BashDamType'
 
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"

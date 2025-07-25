@@ -259,7 +259,7 @@ simulated function EjectShell()
         EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
         EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
 
-        Shell.Velocity = Vector(EjectRot) * class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
+        Shell.Velocity = Vector(EjectRot) * Class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
     }
 }
 

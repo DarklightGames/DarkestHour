@@ -7,7 +7,7 @@ class DH_G43MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_G43BashDamType'
+    DamageType=Class'DH_G43BashDamType'
 
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"

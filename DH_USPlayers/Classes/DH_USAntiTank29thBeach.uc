@@ -7,6 +7,6 @@ class DH_USAntiTank29thBeach extends DH_USAntiTank29th;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_USBeach29thPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=Class'DH_USBeachVest29thPawn',Weight=1.0)
 }

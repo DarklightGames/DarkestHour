@@ -17,19 +17,19 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext'
-    Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
+    Skins(0)=Texture'DH_Model35Mortar_tex.Model35Mortar_ext'
 
     WeaponFireAttachmentBone="MUZZLE"
     GunnerAttachmentBone="YAW"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.model35mortar_tube_collision',AttachBone="PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
     GunWheels(1)=(RotationType=ROTATION_PITCH,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
-    AnimationDrivers(0)=(Channel=2,BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=30,RotationType=ROTATION_Pitch,bIsReversed=true)
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=30,RotationType=ROTATION_Pitch,bIsReversed=true)
 
     // Turret movement
     ManualRotationsPerSecond=0.0125
@@ -50,9 +50,9 @@ defaultproperties
     nProjectileDescriptions(1)="Bomba Fumogena"
     nProjectileDescriptions(2)="Bomba gr. c. da 81"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'
+    PrimaryProjectileClass=Class'DH_Model35MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_Model35MortarProjectileSmoke'
+    TertiaryProjectileClass=Class'DH_Model35MortarProjectileHEBig'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=2
@@ -69,12 +69,12 @@ defaultproperties
     AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
-    CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
-    CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_03'
 
     // TODO: figure out what to do with this.
-    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0
@@ -95,7 +95,7 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
 
-    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    EffectEmitterClass=Class'DHMortarFireEffect'
     // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
 

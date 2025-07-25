@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll')
+    Skins(0)=Texture'DH_VehiclesUS_tex4.Greyhound_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.Greyhound_body_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Greyhound_turret_coll')
     FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
 
@@ -31,9 +31,9 @@ defaultproperties
     CustomPitchDownLimit=63716
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
-    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+    PrimaryProjectileClass=Class'DH_GreyhoundCannonShell'
+    SecondaryProjectileClass=Class'DH_GreyhoundCannonShellHE'
+    TertiaryProjectileClass=Class'DHCannonShellCanister'
 
 
     ProjectileDescriptions(2)="Canister"
@@ -52,30 +52,30 @@ defaultproperties
     TertiarySpread=0.04
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    AltFireProjectileClass=Class'DH_30CalBullet'
     InitialAltAmmo=250
     NumMGMags=5
     AltFireInterval=0.12
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerProjectileClass=Class'DH_30CalTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
     WeaponFireOffset=10.0
     AddedPitch=26
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
+    EffectEmitterClass=Class'TankCannonFireEffectTypeC' // smaller muzzle flash effect
     AltFireOffset=(X=-82.0,Y=11.0,Z=0.0)
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)
     ShakeOffsetTime=6.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
-    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
-    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
-    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
+    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD_fire01'
+    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD_fire02'
+    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
+    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload01')
+    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload02')
+    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload03')
+    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.ShermanReload04')
 }

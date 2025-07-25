@@ -22,7 +22,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M7PriestCannon'
+    GunClass=Class'DH_M7PriestCannon'
     // gunsight
     DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     // spotting scope
@@ -44,12 +44,12 @@ defaultproperties
     bHasAltFire=false
     OverlayCorrectionY=0
     OverlayCorrectionX=0
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
     GunsightSize=0.40
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
-    ArtillerySpottingScopeClass=class'DH_Vehicles.DHArtillerySpottingScope_M7Priest'
+    ArtillerySpottingScopeClass=Class'DHArtillerySpottingScope_M7Priest'
 }
 

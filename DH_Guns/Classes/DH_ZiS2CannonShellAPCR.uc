@@ -15,14 +15,14 @@ defaultproperties
 
     //Damage
     ImpactDamage=420 // just a tungsten slug; no explosive filler
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    ShellImpactDamage=Class'DHShellSubCalibreImpactDamageType'
     HullFireChance=0.4
     EngineFireChance=0.7
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
+    CoronaClass=Class'DHShellTracer_Green'
+    ShellTrailClass=Class'DHShellTrail_Green'
+    ShellShatterEffectClass=Class'DHShellShatterEffect'
 
     //Penetration
     DHPenetrationTable(0)=19.0  // 100m

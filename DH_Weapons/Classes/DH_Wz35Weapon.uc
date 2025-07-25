@@ -56,17 +56,34 @@ simulated function byte GetRoundsToLoad()
     return GetMaxLoadedRounds();
 }
 
-simulated function int GetStripperClipSize()
+simulated state WorkingBolt
 {
-    return 4;
+    // Fire button does nothing while working the bolt.
+    simulated function Fire(float F);
+
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
+}
+
+simulated state ReloadingBipod
+{
+    // Modified to not do reload interrupting logic.
+    simulated function Fire(float F);
 }
 
 defaultproperties
 {
     ItemName="Fucile Controcarro 35(P)"
-    FireModeClass(0)=class'DH_Weapons.DH_Wz35Fire'
-    AttachmentClass=class'DH_Weapons.DH_Wz35Attachment'
-    PickupClass=class'DH_Weapons.DH_Wz35Pickup'
+    FireModeClass(0)=Class'DH_Wz35Fire'
+    AttachmentClass=Class'DH_Wz35Attachment'
+    PickupClass=Class'DH_Wz35Pickup'
 
     Mesh=SkeletalMesh'DH_Wz35_anm.wz35_1st'
     bUseHighDetailOverlayIndex=true
@@ -98,4 +115,6 @@ defaultproperties
 
     bShouldZoomWhenBolting=true
     bMustBeDeployedToBolt=true
+
+    StripperClipSize=4
 }

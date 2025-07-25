@@ -8,6 +8,6 @@ class DH_G41DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_G41Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_G41Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

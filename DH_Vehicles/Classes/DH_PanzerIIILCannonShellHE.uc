@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=545
     Damage=240.0  //~~180 gramms TNT
     DamageRadius=565.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
+    MyDamageType=Class'DHShellHE50mmDamageType'
     PenetrationMag=565.0
     HullFireChance=0.6
     EngineFireChance=0.60
@@ -26,11 +26,11 @@ defaultproperties
     //Effects
     bHasTracer=false
     bHasShellTrail=false
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+    ShellHitDirtEffectClass=Class'TankHEHitDirtEffect'
+    ShellHitSnowEffectClass=Class'TankHEHitSnowEffect'
+    ShellHitWoodEffectClass=Class'TankHEHitWoodEffect'
+    ShellHitRockEffectClass=Class'TankHEHitRockEffect'
+    ShellHitWaterEffectClass=Class'TankHEHitWaterEffect'
 
     //Penetration
     DHPenetrationTable(0)=2.7

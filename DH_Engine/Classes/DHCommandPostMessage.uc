@@ -19,7 +19,7 @@ static function string GetString(
     )
 {
     local string S;
-    local DHConstruction Construction;
+    local class<DHConstruction> ConstructionClass;
 
     switch (Switch)
     {
@@ -33,15 +33,15 @@ static function string GetString(
             S = default.DestroyedMessage;
             break;
         case 4:
-            S = Repl(default.ConstructedMessage, "{seconds}", class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
+            S = Repl(default.ConstructedMessage, "{seconds}", Class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
             break;
     }
 
-    Construction = DHConstruction(OptionalObject);
+    ConstructionClass = class<DHConstruction>(OptionalObject);
 
-    if (Construction != none)
+    if (ConstructionClass != none)
     {
-        S = Repl(S, "{name}", Construction.default.MenuName);
+        S = Repl(S, "{name}", ConstructionClass.default.MenuName);
     }
 
     return S;

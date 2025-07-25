@@ -14,7 +14,7 @@ var     name    SelectFireBipodIronAnim;
 var     name    SelectFireBipodIronEmptyAnim;
 
 // Sound effect for the fire selector switch (in case it's not handled by the animation).
-var     sound   SelectFireSound;
+var     Sound   SelectFireSound;
 var     float   SelectFireVolume;
 
 // Fire select switch

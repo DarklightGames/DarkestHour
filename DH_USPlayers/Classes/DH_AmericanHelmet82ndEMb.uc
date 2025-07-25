@@ -8,5 +8,5 @@ class DH_AmericanHelmet82ndEMb extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_Airborne_Helmet2'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.US_EM_headgear2'
+    Skins(0)=Texture'DHUSCharactersTex.US_EM_headgear2'
 }

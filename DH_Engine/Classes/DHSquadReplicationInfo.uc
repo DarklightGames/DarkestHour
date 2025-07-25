@@ -138,9 +138,9 @@ enum ERallyPointPlacementErrorType
     ERROR_None,
     ERROR_Fatal,
     ERROR_NotOnFoot/*=52*/,                             // PC.ReceiveLocalizedMessage(SquadMessageClass, 52); // "You must be on foot to create a rally point."
-    ERROR_TooCloseToOtherRallyPoint/*=45*/,             // PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, E.OptionalInt));
+    ERROR_TooCloseToOtherRallyPoint/*=45*/,             // PC.ReceiveLocalizedMessage(SquadMessageClass, Class'UInteger'.static.FromShorts(45, E.OptionalInt));
     ERROR_InUncontrolledObjective/*=78*/,               // PC.ReceiveLocalizedMessage(SquadMessageClass, 78);
-    ERROR_TooSoon/*=53*/,                               // PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(53, E.OptionalInt));
+    ERROR_TooSoon/*=53*/,                               // PC.ReceiveLocalizedMessage(SquadMessageClass, Class'UInteger'.static.FromShorts(53, E.OptionalInt));
     ERROR_MissingSquadmate/*=47*/,                      // PC.ReceiveLocalizedMessage(SquadMessageClass, 47);
     ERROR_BadLocation/*=56*/,
     ERROR_BehindEnemyLines/*=80*/,
@@ -187,7 +187,7 @@ simulated function PostBeginPlay()
         SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
         SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
 
-        foreach AllActors(class'DH_LevelInfo', LI)
+        foreach AllActors(Class'DH_LevelInfo', LI)
         {
             bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
             break;
@@ -295,7 +295,7 @@ private function UpdateSquadMemberLocations(DHPlayer PC)
             if (OtherController != none && OtherController.Pawn != none)
             {
                 GRI.GetMapCoords(OtherController.Pawn.Location, X, Y);
-                PC.SquadMemberLocations[i] = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
+                PC.SquadMemberLocations[i] = Class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
                 continue;
             }
         }
@@ -334,7 +334,7 @@ private function UpdateSquadLeaderLocations(DHPlayer PC)
         if (OtherController != none && OtherController.Pawn != none)
         {
             GRI.GetMapCoords(OtherController.Pawn.Location, X, Y);
-            PC.SquadLeaderLocations[i] = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
+            PC.SquadLeaderLocations[i] = Class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
         }
     }
 }
@@ -365,9 +365,9 @@ private function UpdateSquadRallyPoints()
 
             // Sort active rally point list by creation time, oldest first.
             ActiveSquadRallyPoints = GetActiveSquadRallyPoints(TeamIndex, SquadIndex);
-            Comparator = new class'UComparator';
+            Comparator = new Class'UComparator';
             Comparator.CompareFunction = RallyPointSortFunction;
-            class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
+            Class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
 
             // Check if this squad already has more than the maximum rally points.
             // If so, forcibly delete the oldest ones.
@@ -731,7 +731,7 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
 {
     local int T, U;
 
-    if (A == B || !class'DHPlayerReplicationInfo'.static.IsInSameSquad(A, B))
+    if (A == B || !Class'DHPlayerReplicationInfo'.static.IsInSameSquad(A, B))
     {
         return false;
     }
@@ -750,7 +750,7 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
     local DH_LevelInfo LI;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
     {
@@ -871,7 +871,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
-    if (PRI == NewSquadLeader || !class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
+    if (PRI == NewSquadLeader || !Class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
     {
         return false;
     }
@@ -894,10 +894,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     if (bRequestedByAdmin)
     {
-        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
                                                                     TeamIndex,
-                                                                    class'DHAdminMessage',
-                                                                    class'UInteger'.static.FromShorts(1, SquadIndex),
+                                                                    Class'DHAdminMessage',
+                                                                    Class'UInteger'.static.FromShorts(1, SquadIndex),
                                                                     Admin,
                                                                     NewSquadLeader,
                                                                     self);
@@ -1281,7 +1281,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         if (IsPlayerBannedFromSquad(PRI, TeamIndex, SquadIndex))
         {
             // "You are unable to join this squad as you have been banned."
-            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 62);
+            PC.ReceiveLocalizedMessage(Class'DHSquadMessage', 62);
             return -1;
         }
 
@@ -1341,10 +1341,10 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     {
         if (PRI.IsLoggedInAsAdmin())
         {
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
                                                                         TeamIndex,
-                                                                        class'DHAdminMessage',
-                                                                        class'UInteger'.static.FromShorts(0, SquadIndex),
+                                                                        Class'DHAdminMessage',
+                                                                        Class'UInteger'.static.FromShorts(0, SquadIndex),
                                                                         PRI,
                                                                         MemberToKick,
                                                                         self);
@@ -1863,7 +1863,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
     if (Name != "")
     {
         // Trim whitespace from the name.
-        Name = class'UString'.static.Trim(Name);
+        Name = Class'UString'.static.Trim(Name);
 
         if (Len(Name) > SQUAD_NAME_LENGTH_MAX)
         {
@@ -1934,9 +1934,9 @@ function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, 
         return;
     }
 
-    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);
+    Radius = Class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);
 
-    foreach Sender.Pawn.RadiusActors(class'Pawn', OtherPawn, Radius)
+    foreach Sender.Pawn.RadiusActors(Class'Pawn', OtherPawn, Radius)
     {
         Recipient = DHPlayer(OtherPawn.Controller);
 
@@ -2106,7 +2106,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Determine whether or not we are in the danger zone.
-    bIsInFriendlyZone = class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, class'UMath'.static.SwapFirstPair(PC.GetTeamNum()));
+    bIsInFriendlyZone = Class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, Class'UMath'.static.SwapFirstPair(PC.GetTeamNum()));
 
     if (bIsInFriendlyZone)
     {
@@ -2114,7 +2114,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
     else
     {
-        Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+        Result.bIsInDangerZone = Class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
 
         if (!bAllowRallyPointsBehindEnemyLines &&
             Result.bIsInDangerZone)
@@ -2133,7 +2133,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    ClosestBlockingRallyPointDistance = class'UFloat'.static.Infinity();
+    ClosestBlockingRallyPointDistance = Class'UFloat'.static.Infinity();
 
     // Cannot be too close to another rally point.
     for (i = 0; i < arraycount(RallyPoints); ++i)
@@ -2144,7 +2144,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         {
             D = VSize(RallyPoints[i].Location - P.Location);
 
-            if (D < class'DHUnits'.static.MetersToUnreal(RallyPointRadiusInMeters))
+            if (D < Class'DHUnits'.static.MetersToUnreal(RallyPointRadiusInMeters))
             {
                 if (D < ClosestBlockingRallyPointDistance)
                 {
@@ -2154,10 +2154,10 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         }
     }
 
-    if (ClosestBlockingRallyPointDistance != class'UFloat'.static.Infinity())
+    if (ClosestBlockingRallyPointDistance != Class'UFloat'.static.Infinity())
     {
         Result.Error.Type = ERROR_TooCloseToOtherRallyPoint;
-        Result.Error.OptionalInt = Max(1, RallyPointRadiusInMeters - class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance));
+        Result.Error.OptionalInt = Max(1, RallyPointRadiusInMeters - Class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance));
         return Result;
     }
 
@@ -2186,13 +2186,13 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     {
         // Must have a teammate nearby.
         // For single-player testing, we can ignore this check.
-        foreach P.RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RallyPointSquadmatePlacementRadiusInMeters))
+        foreach P.RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(RallyPointSquadmatePlacementRadiusInMeters))
         {
             if (OtherPawn != none && !OtherPawn.bDeleteMe && OtherPawn.Health > 0)
             {
                 OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
 
-                if (PRI != OtherPRI && class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+                if (PRI != OtherPRI && Class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
                 {
                     bIsNearSquadmate = true;
                 }
@@ -2208,7 +2208,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Must not be touching a restriction volume.
-    foreach P.TouchingActors(class'DHRestrictionVolume', RV)
+    foreach P.TouchingActors(Class'DHRestrictionVolume', RV)
     {
         if (RV != none && RV.bNoSquadRallyPoints)
         {
@@ -2227,13 +2227,13 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Make sure that we are on relatively flat ground
-    if (Acos(Result.HitNormal dot vect(0.0, 0.0, 1.0)) > class'UUnits'.static.DegreesToRadians(35))
+    if (Acos(Result.HitNormal dot vect(0.0, 0.0, 1.0)) > Class'UUnits'.static.DegreesToRadians(35))
     {
         Result.Error.Type = ERROR_BadLocation;
         return Result;
     }
 
-    foreach P.TouchingActors(class'DHMineVolume', MineVolume)
+    foreach P.TouchingActors(Class'DHMineVolume', MineVolume)
     {
         if (MineVolume != none && MineVolume.bActive && MineVolume.IsARelevantPawn(P))
         {
@@ -2243,7 +2243,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         }
     }
 
-    foreach P.TouchingActors(class'PhysicsVolume', PV)
+    foreach P.TouchingActors(Class'PhysicsVolume', PV)
     {
         if (PV != none && (PV.bWaterVolume || PV.bPainCausing))
         {
@@ -2254,7 +2254,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Must not be near a construction that blocks the creation of squad rally points.
-    CM = class'DHConstructionManager'.static.GetInstance(Level);
+    CM = Class'DHConstructionManager'.static.GetInstance(Level);
 
     if (CM != none)
     {
@@ -2264,7 +2264,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         {
             if (Constructions[i] != none && Constructions[i].bShouldBlockSquadRallyPoints)
             {
-                if (class'UCollision'.static.PointInCylinder(
+                if (Class'UCollision'.static.PointInCylinder(
                         Constructions[i].Location,
                         Constructions[i].default.CollisionRadius + P.CollisionRadius,
                         Constructions[i].default.CollisionHeight,
@@ -2283,9 +2283,9 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     // Finally, do an actual pawn spawn test to ensure that spawning here would
     // in fact work.
     L = Result.HitLocation;
-    L.Z += class'DHPawn'.default.CollisionHeight / 2;
+    L.Z += Class'DHPawn'.default.CollisionHeight / 2;
 
-    CT = Spawn(class'DHPawnCollisionTest',,, L);
+    CT = Spawn(Class'DHPawnCollisionTest',,, L);
 
     if (CT == none)
     {
@@ -2319,13 +2319,13 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
                 PC.ReceiveLocalizedMessage(SquadMessageClass, 52);
                 break;
             case ERROR_TooCloseToOtherRallyPoint:
-                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Result.Error.OptionalInt));
+                PC.ReceiveLocalizedMessage(SquadMessageClass, Class'UInteger'.static.FromShorts(45, Result.Error.OptionalInt));
                 break;
             case ERROR_InUncontrolledObjective:
                 PC.ReceiveLocalizedMessage(SquadMessageClass, 78);
                 break;
             case ERROR_TooSoon:
-                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(53, Result.Error.OptionalInt));
+                PC.ReceiveLocalizedMessage(SquadMessageClass, Class'UInteger'.static.FromShorts(53, Result.Error.OptionalInt));
                 break;
             case ERROR_MissingSquadmate:
                 PC.ReceiveLocalizedMessage(SquadMessageClass, 47);
@@ -2368,7 +2368,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     V = V cross Result.HitNormal;
 
     R = Rotator(V);
-    RP = Spawn(class'DHSpawnPoint_SquadRallyPoint', none,, Result.HitLocation, R);
+    RP = Spawn(Class'DHSpawnPoint_SquadRallyPoint', none,, Result.HitLocation, R);
 
     if (RP == none)
     {
@@ -2410,7 +2410,7 @@ function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
         return -1;
     }
 
-    bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, RP.Location.X, RP.Location.Y, RP.GetTeamIndex());
+    bIsInDangerZone = Class'DHDangerZone'.static.IsIn(GRI, RP.Location.X, RP.Location.Y, RP.GetTeamIndex());
 
     InitialSpawns = GetMemberCount(RP.GetTeamIndex(), RP.SquadIndex) * RallyPointInitialSpawnsMemberFactor;
 
@@ -2488,9 +2488,9 @@ function SwapRallyPoints(DHPlayerReplicationInfo PRI)
         if (ActiveSquadRallyPoints.Length > 1)
         {
             // Sort active squad rally points, oldest first.
-            Comparator = new class'UComparator';
+            Comparator = new Class'UComparator';
             Comparator.CompareFunction = RallyPointSortFunction;
-            class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
+            Class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
 
             // Set the oldest squad rally point to now be the newest (block status will be updated next Timer pop!)
             ActiveSquadRallyPoints[0].CreatedTimeSeconds = Level.TimeSeconds;
@@ -2513,7 +2513,7 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
         SRP.InstigatorController.GetTeamNum() == SRP.GetTeamIndex() &&
         SRP.InstigatorController.GetSquadIndex() == SRP.SquadIndex)
     {
-        SRP.InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablished'.static.Create());
+        SRP.InstigatorController.ReceiveScoreEvent(Class'DHScoreEvent_SquadRallyPointEstablished'.static.Create());
     }
 
     // "The squad has established a new rally point."
@@ -2642,14 +2642,14 @@ function VolunteerForSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int
     }
 
     // Add player to volunteer list.
-    class'UArray'.static.AddUnique(SquadLeaderVolunteers[i].Volunteers, PRI);
+    Class'UArray'.static.AddUnique(SquadLeaderVolunteers[i].Volunteers, PRI);
 
     PC = DHPlayer(PRI.Owner);
 
     if (PC != none)
     {
         // "You have volunteered to be the squad leader. The new squad leader will be selected shortly."
-        PC.ReceiveLocalizedMessage(class'DHSquadMessage', 65);
+        PC.ReceiveLocalizedMessage(Class'DHSquadMessage', 65);
     }
 }
 
@@ -2690,9 +2690,9 @@ function SelectNewSquadLeader(int TeamIndex, int SquadIndex, array<DHPlayerRepli
         return;
     }
 
-    ScoreComparator = new class'UComparator';
+    ScoreComparator = new Class'UComparator';
     ScoreComparator.CompareFunction = ScoreComparatorFunction;
-    class'USort'.static.Sort(Members, ScoreComparator);
+    Class'USort'.static.Sort(Members, ScoreComparator);
     CommandeerSquad(Members[0], TeamIndex, SquadIndex);
 }
 
@@ -2743,7 +2743,7 @@ function ClearSquadLeaderVolunteer(DHPlayerReplicationInfo PRI, int TeamIndex, i
 
     if (i != -1)
     {
-        class'UArray'.static.Erase(SquadLeaderVolunteers[i].Volunteers, PRI);
+        Class'UArray'.static.Erase(SquadLeaderVolunteers[i].Volunteers, PRI);
     }
 }
 
@@ -2839,7 +2839,7 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
         if (PC != none)
         {
             // "You are no longer the assistant squad leader."
-            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 71);
+            PC.ReceiveLocalizedMessage(Class'DHSquadMessage', 71);
 
             MaybeInvalidateRole(PC);
             MaybeLeaveCommandVoiceChannel(ASL);
@@ -2865,11 +2865,11 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
         if (PC != none)
         {
             // "You are now the assistant squad leader."
-            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 70);
+            PC.ReceiveLocalizedMessage(Class'DHSquadMessage', 70);
         }
 
         // "{0} is now the assistant squad leader."
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadMessage', 72, PRI);
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, Class'DHSquadMessage', 72, PRI);
     }
 }
 
@@ -2889,7 +2889,7 @@ function MaybeInvalidateRole(DHPlayer PC)
     if (PC.GetRoleEnabledResult(RI) != RER_Enabled)
     {
         // "You are no longer qualified to be {name}."
-        PC.ReceiveLocalizedMessage(class'DHGameMessage', 24,,, RI);
+        PC.ReceiveLocalizedMessage(Class'DHGameMessage', 24,,, RI);
 
         DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());
 
@@ -2983,7 +2983,7 @@ function MergeSquads(int TeamIndex, int SenderSquadIndex, int RecipientSquadInde
     }
 
     // "Your squad has been merged into {0} squad. Your squad leader is now {1}."
-    SwitchValue = class'UInteger'.static.FromShorts(74, SenderSquadIndex);
+    SwitchValue = Class'UInteger'.static.FromShorts(74, SenderSquadIndex);
     BroadcastSquadLocalizedMessage(TeamIndex, RecipientSquadIndex, SquadMessageClass, SwitchValue, GetSquadLeader(TeamIndex, SenderSquadIndex),, self);
 
     // "Another squad has been merged into your squad."
@@ -3119,7 +3119,7 @@ function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
             if (PC != none)
             {
                 // "Your squad merge request was denied by {0} squad."
-                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(76, SMR.RecipientSquadIndex), PRI,, self);
+                PC.ReceiveLocalizedMessage(SquadMessageClass, Class'UInteger'.static.FromShorts(76, SMR.RecipientSquadIndex), PRI,, self);
             }
         }
 
@@ -3407,7 +3407,7 @@ defaultproperties
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
     RallyPointRadiusInMeters=100.0
-    SquadMessageClass=class'DHSquadMessage'
+    SquadMessageClass=Class'DHSquadMessage'
     NextRallyPointInterval=45
     SquadLockMemberCountMin=2
     RallyPointSquadmatePlacementRadiusInMeters=25.0

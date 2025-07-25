@@ -31,11 +31,11 @@ event Notify(Actor Owner)
     }
     else
     {
-        Impulse = class'UVector'.static.RandomRange(ImpulseRange) >> Rotator(BoneCoords.XAxis);
-        AngularImpulse = class'UVector'.static.RandomRange(AngularImpulseRange) >> Rotator(BoneCoords.XAxis);
+        Impulse = Class'UVector'.static.RandomRange(ImpulseRange) >> Rotator(BoneCoords.XAxis);
+        AngularImpulse = Class'UVector'.static.RandomRange(AngularImpulseRange) >> Rotator(BoneCoords.XAxis);
     }
 
-    Shell = Owner.Spawn(class'DHKActor', Owner,, BoneCoords.Origin, Rotator(Vector(StartRotation) >> Rotator(BoneCoords.XAxis)));
+    Shell = Owner.Spawn(Class'DHKActor', Owner,, BoneCoords.Origin, Rotator(Vector(StartRotation) >> Rotator(BoneCoords.XAxis)));
 
     if (Shell != none)
     {

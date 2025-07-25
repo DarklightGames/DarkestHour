@@ -29,9 +29,9 @@ function bool InternalOnClick(GUIComponent Sender)
 function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
 {
     if (CurrentPanel == none ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageInternet' ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageLAN' ||
-        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageFavorites')
+        CurrentPanel != Class'DHBrowser_ServerListPageInternet' ||
+        CurrentPanel != Class'DHBrowser_ServerListPageLAN' ||
+        CurrentPanel != Class'DHBrowser_ServerListPageFavorites')
     {
         return;
     }
@@ -67,7 +67,7 @@ defaultproperties
         bScaleToParent=true
         bStandardized=false
     End Object
-    ch_Standard=DHmoCheckBox'DH_Interface.DHBrowser_Footer.OnlyStandardCheckBox'
+    ch_Standard=DHmoCheckBox'DH_Interface.OnlyStandardCheckBox'
 
     Begin Object Class=GUITitleBar Name=BrowserStatus   // TODO: fix font here.
         bUseTextHeight=false
@@ -81,7 +81,7 @@ defaultproperties
         bScaleToParent=true
         StyleName="DHSmallText"
     End Object
-    t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
+    t_StatusBar=GUITitleBar'DH_Interface.BrowserStatus'
 
     Begin Object Class=GUIButton Name=BrowserJoin
         Caption="Join"
@@ -96,7 +96,7 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserJoin.InternalOnKeyEvent
     End Object
-    b_Join=GUIButton'DH_Interface.DHBrowser_Footer.BrowserJoin'
+    b_Join=GUIButton'DH_Interface.BrowserJoin'
 
     Begin Object Class=GUIButton Name=BrowserSpec
         Caption="Spectate"
@@ -111,7 +111,7 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserSpec.InternalOnKeyEvent
     End Object
-    b_Spectate=GUIButton'DH_Interface.DHBrowser_Footer.BrowserSpec'
+    b_Spectate=GUIButton'DH_Interface.BrowserSpec'
 
     Begin Object class=GUIButton Name=BrowserMain
         Caption="Main"
@@ -124,7 +124,7 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserMain.InternalOnKeyEvent
     End Object
-    b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
+    b_Main=GUIButton'DH_Interface.BrowserMain'
 
     Begin Object Class=GUIButton Name=BrowserBack
         Caption="Back"
@@ -137,7 +137,7 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserBack.InternalOnKeyEvent
     End Object
-    b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
+    b_Back=GUIButton'DH_Interface.BrowserBack'
 
     Begin Object class=GUIButton Name=BrowserRefresh
         Caption="Refresh"
@@ -152,7 +152,7 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserRefresh.InternalOnKeyEvent
     End Object
-    b_Refresh=GUIButton'DH_Interface.DHBrowser_Footer.BrowserRefresh'
+    b_Refresh=GUIButton'DH_Interface.BrowserRefresh'
 
     Begin Object Class=GUIButton Name=BrowserFilter
         Caption="Filters"
@@ -166,5 +166,5 @@ defaultproperties
         OnClick=DHBrowser_Footer.InternalOnClick
         OnKeyEvent=BrowserFilter.InternalOnKeyEvent
     End Object
-    b_Filter=GUIButton'DH_Interface.DHBrowser_Footer.BrowserFilter'
+    b_Filter=GUIButton'DH_Interface.BrowserFilter'
 }

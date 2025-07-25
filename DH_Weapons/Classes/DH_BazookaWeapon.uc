@@ -10,9 +10,9 @@ defaultproperties
     ItemName="M1A1 Bazooka"
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m1a1'
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
-    AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'
-    PickupClass=class'DH_Weapons.DH_BazookaPickup'
+    FireModeClass(0)=Class'DH_BazookaFire'
+    AttachmentClass=Class'DH_BazookaAttachment'
+    PickupClass=Class'DH_BazookaPickup'
 
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true

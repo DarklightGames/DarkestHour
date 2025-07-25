@@ -8,6 +8,6 @@ class DH_AVT40DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_AVT40Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_AVT40Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
 }

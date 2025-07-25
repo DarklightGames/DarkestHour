@@ -7,5 +7,5 @@ class DH_LivornoRadioOperator extends DHITARadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianLivornoBackpackPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_ItalianLivornoBackpackPawn',Weight=1.0)
 }

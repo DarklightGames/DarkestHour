@@ -8,5 +8,5 @@ class DH_FiatL640CannonPawn extends DH_Autoblinda41CannonPawn;
 defaultproperties
 {
     UnbuttonedPositionIndex=2
-    GunClass=class'DH_Vehicles.DH_FiatL640Cannon'
+    GunClass=Class'DH_FiatL640Cannon'
 }

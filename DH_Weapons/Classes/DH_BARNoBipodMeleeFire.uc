@@ -7,5 +7,5 @@ class DH_BARNoBipodMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_BARNoBipodBashDamType'
+    DamageType=Class'DH_BARNoBipodBashDamType'
 }

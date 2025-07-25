@@ -8,7 +8,7 @@ class DHMapMarker_Enemy_Infantry extends DHMapMarker_Enemy
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.infantry'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.infantry'
     MarkerName="Enemy Infantry"
     LifetimeSeconds=120
     SpottingConsoleCommand="SPEECH ENEMY 0"

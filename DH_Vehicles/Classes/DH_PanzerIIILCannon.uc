@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3L_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.panzer3_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_turret_coll')
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.panzer3_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Alpha'
+    Skins(2)=Texture'axis_vehicles_tex.panzer3_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3L_turret_coll')
+    HighDetailOverlay=Shader'axis_vehicles_tex.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -37,9 +37,9 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShellHE'
+    PrimaryProjectileClass=Class'DH_PanzerIIILCannonShell'
+    SecondaryProjectileClass=Class'DH_PanzerIIILCannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_PanzerIIILCannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -58,11 +58,11 @@ defaultproperties
     TertiarySpread=0.0013
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=8
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -71,15 +71,15 @@ defaultproperties
     AltFireSpawnOffsetX=61.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
     AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

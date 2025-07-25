@@ -7,9 +7,9 @@ class DH_MG34SemiAutoFire extends DHLMGSingleFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
+    ProjectileClass=Class'DH_MG34Bullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
+    AmmoClass=Class'MG50Rd792x57DrumAmmo'
     FireRate=0.08
     TracerFrequency=7
     Spread=75.0
@@ -20,8 +20,8 @@ defaultproperties
     MaxVerticalRecoilAngle=250
     MaxHorizontalRecoilAngle=110
 
-    FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    FireSounds(0)=SoundGroup'Inf_Weapons.mg34_fire_single'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Y=0.0,Z=-10.0)
     ShellRotOffsetIron=(Pitch=3000)
 

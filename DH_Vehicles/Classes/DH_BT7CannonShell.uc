@@ -17,14 +17,14 @@ defaultproperties
     ImpactDamage=295 //30 gramms TNT filler
     Damage=700.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
     DamageRadius=150.0
-    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_StuartCannonShellDamageAP'
     HullFireChance=0.30
     EngineFireChance=0.55
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    CoronaClass=Class'DHShellTracer_Green'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=6.1  // 100m // TODO: confirm penetration

@@ -32,7 +32,7 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 
 defaultproperties
 {
-    DamageType=class'DH_Equipment.DHTrenchMaceBashDamageType'
+    DamageType=Class'DHTrenchMaceBashDamageType'
     DamageMin=70
     DamageMax=150
     TraceRange=120.0
@@ -41,8 +41,8 @@ defaultproperties
     BashHoldAnim="bash_hold"
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
-    TearDownSound=SoundGroup'DH_WeaponSounds.Shovel.shovel_hit'
+    TearDownSound=SoundGroup'DH_WeaponSounds.shovel_hit'
     // TODO: These sounds got lost in a merge & need to be added back.
-    // PlayerStabSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
-    // PlayerBashSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
+    // PlayerStabSound=SoundGroup'DH_WeaponSounds.ZombieBash'
+    // PlayerBashSound=SoundGroup'DH_WeaponSounds.ZombieBash'
 }

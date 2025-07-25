@@ -7,7 +7,7 @@ class DH_ML3InchCannonPawn extends DHMortarCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_ML3InchCannon'
+    GunClass=Class'DH_ML3InchCannon'
 
     // Spotting Scope
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
@@ -37,13 +37,13 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    AmmoShellTextures(0)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_HE_ICON'
-    AmmoShellTextures(1)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_SMOKE_ICON'
+    AmmoShellTextures(0)=Texture'DH_ML3InchMortar_tex.ML3INCH_HE_ICON'
+    AmmoShellTextures(1)=Texture'DH_ML3InchMortar_tex.ML3INCH_SMOKE_ICON'
 
-    AmmoShellReloadTextures(0)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_HE_ICON_RELOAD'
-    AmmoShellReloadTextures(1)=Texture'DH_ML3InchMortar_tex.interface.ML3INCH_SMOKE_ICON_RELOAD'
+    AmmoShellReloadTextures(0)=Texture'DH_ML3InchMortar_tex.ML3INCH_HE_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_ML3InchMortar_tex.ML3INCH_SMOKE_ICON_RELOAD'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
+    ArtillerySpottingScopeClass=Class'DH_Model35MortarArtillerySpottingScope'
 
     GunPitchOffset=8192 // +45 degrees  // TODO: this should be on the cannon class
 

@@ -33,7 +33,7 @@ defaultproperties
         TabOrder=1
         OnPreDraw=subcontainer.InternalPreDraw
     End Object
-    sb_container=ROGUIContainerNoSkinAlt'DH_Interface.DHMaplistEditor.subcontainer'
+    sb_container=ROGUIContainerNoSkinAlt'DH_Interface.subcontainer'
     Begin Object Class=DHGUITreeListBox Name=ActiveMaps
         bVisibleWhenEmpty=true
         OnCreateComponent=ActiveMaps.InternalOnCreateComponent
@@ -42,7 +42,7 @@ defaultproperties
         WinWidth=0.368359
         TabOrder=7
     End Object
-    lb_ActiveMaps=DHGUITreeListBox'DH_Interface.DHMaplistEditor.ActiveMaps'
+    lb_ActiveMaps=DHGUITreeListBox'DH_Interface.ActiveMaps'
     Begin Object Class=DHGUITreeListBox Name=InactiveMaps
         bVisibleWhenEmpty=true
         bSorted=true
@@ -53,7 +53,7 @@ defaultproperties
         WinHeight=0.662671
         TabOrder=4
     End Object
-    lb_AllMaps=DHGUITreeListBox'DH_Interface.DHMaplistEditor.InactiveMaps'
+    lb_AllMaps=DHGUITreeListBox'DH_Interface.InactiveMaps'
     Begin Object Class=GUIButton Name=AddButton
         Caption="Add"
         StyleName="DHMenuTextButtonStyle"
@@ -68,7 +68,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=AddButton.InternalOnKeyEvent
     End Object
-    b_Add=GUIButton'DH_Interface.DHMaplistEditor.AddButton'
+    b_Add=GUIButton'DH_Interface.AddButton'
     Begin Object Class=GUIButton Name=AddAllButton
         Caption="Add All"
         StyleName="DHMenuTextButtonStyle"
@@ -82,7 +82,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=AddAllButton.InternalOnKeyEvent
     End Object
-    b_AddAll=GUIButton'DH_Interface.DHMaplistEditor.AddAllButton'
+    b_AddAll=GUIButton'DH_Interface.AddAllButton'
     Begin Object Class=GUIButton Name=RemoveButton
         Caption="Remove"
         AutoSizePadding=(HorzPerc=0.5)
@@ -98,7 +98,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=RemoveButton.InternalOnKeyEvent
     End Object
-    b_Remove=GUIButton'DH_Interface.DHMaplistEditor.RemoveButton'
+    b_Remove=GUIButton'DH_Interface.RemoveButton'
     Begin Object Class=GUIButton Name=RemoveAllButton
         Caption="Remove All"
         StyleName="DHMenuTextButtonStyle"
@@ -112,7 +112,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=RemoveAllButton.InternalOnKeyEvent
     End Object
-    b_RemoveAll=GUIButton'DH_Interface.DHMaplistEditor.RemoveAllButton'
+    b_RemoveAll=GUIButton'DH_Interface.RemoveAllButton'
     Begin Object Class=GUIButton Name=MoveUpButton
         Caption="Move Up"
         StyleName="DHMenuTextButtonStyle"
@@ -127,7 +127,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=MoveUpButton.InternalOnKeyEvent
     End Object
-    b_MoveUp=GUIButton'DH_Interface.DHMaplistEditor.MoveUpButton'
+    b_MoveUp=GUIButton'DH_Interface.MoveUpButton'
     Begin Object Class=GUIButton Name=MoveDownButton
         Caption="Move Down"
         StyleName="DHMenuTextButtonStyle"
@@ -142,7 +142,7 @@ defaultproperties
         OnClick=DHMaplistEditor.ModifyMapList
         OnKeyEvent=MoveDownButton.InternalOnKeyEvent
     End Object
-    b_MoveDown=GUIButton'DH_Interface.DHMaplistEditor.MoveDownButton'
+    b_MoveDown=GUIButton'DH_Interface.MoveDownButton'
     Begin Object Class=GUIButton Name=NewMaplistButton
         Caption="New"
         StyleName="DHMenuTextButtonStyle"
@@ -153,7 +153,7 @@ defaultproperties
         OnClick=DHMaplistEditor.CustomMaplistClick
         OnKeyEvent=NewMaplistButton.InternalOnKeyEvent
     End Object
-    b_New=GUIButton'DH_Interface.DHMaplistEditor.NewMaplistButton'
+    b_New=GUIButton'DH_Interface.NewMaplistButton'
     Begin Object Class=GUIButton Name=DeleteMaplistButton
         Caption="Delete"
         StyleName="DHMenuTextButtonStyle"
@@ -165,7 +165,7 @@ defaultproperties
         OnClick=DHMaplistEditor.CustomMaplistClick
         OnKeyEvent=DeleteMaplistButton.InternalOnKeyEvent
     End Object
-    b_Delete=GUIButton'DH_Interface.DHMaplistEditor.DeleteMaplistButton'
+    b_Delete=GUIButton'DH_Interface.DeleteMaplistButton'
     Begin Object Class=GUIButton Name=RenameMaplistButton
         Caption="Rename"
         StyleName="DHMenuTextButtonStyle"
@@ -176,7 +176,7 @@ defaultproperties
         OnClick=DHMaplistEditor.CustomMaplistClick
         OnKeyEvent=RenameMaplistButton.InternalOnKeyEvent
     End Object
-    b_Rename=GUIButton'DH_Interface.DHMaplistEditor.RenameMaplistButton'
+    b_Rename=GUIButton'DH_Interface.RenameMaplistButton'
     Begin Object Class=DHGUIComboBox Name=SelectMaplistCombo
         bReadOnly=true
         WinWidth=0.55
@@ -185,7 +185,7 @@ defaultproperties
         OnChange=DHMaplistEditor.MaplistSelectChange
         OnKeyEvent=SelectMaplistCombo.InternalOnKeyEvent
     End Object
-    co_Maplist=DHGUIComboBox'DH_Interface.DHMaplistEditor.SelectMaplistCombo'
+    co_Maplist=DHGUIComboBox'DH_Interface.SelectMaplistCombo'
     Begin Object Class=DHGUISectionBackground Name=MapListSectionBackground
         Caption="Saved Map Lists"
         TopPadding=0.05
@@ -198,7 +198,7 @@ defaultproperties
         WinHeight=0.15
         OnPreDraw=MapListSectionBackground.InternalPreDraw
     End Object
-    sb_MapList=DHGUISectionBackground'DH_Interface.DHMaplistEditor.MapListSectionBackground'
+    sb_MapList=DHGUISectionBackground'DH_Interface.MapListSectionBackground'
     Begin Object Class=DHGUISectionBackground Name=AvailBackground
         bFillClient=true
         Caption="Available Maps"
@@ -214,7 +214,7 @@ defaultproperties
         bScaleToParent=true
         OnPreDraw=AvailBackground.InternalPreDraw
     End Object
-    sb_Avail=DHGUISectionBackground'DH_Interface.DHMaplistEditor.AvailBackground'
+    sb_Avail=DHGUISectionBackground'DH_Interface.AvailBackground'
     Begin Object Class=DHGUISectionBackground Name=ActiveBackground
         bFillClient=true
         Caption="Selected Maps"
@@ -230,7 +230,7 @@ defaultproperties
         bScaleToParent=true
         OnPreDraw=ActiveBackground.InternalPreDraw
     End Object
-    sb_Active=DHGUISectionBackground'DH_Interface.DHMaplistEditor.ActiveBackground'
+    sb_Active=DHGUISectionBackground'DH_Interface.ActiveBackground'
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
@@ -245,9 +245,9 @@ defaultproperties
         OnMousePressed=FloatingWindow.FloatingMousePressed
         OnMouseRelease=FloatingWindow.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHMaplistEditor.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -257,5 +257,5 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHMaplistEditor.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
 }

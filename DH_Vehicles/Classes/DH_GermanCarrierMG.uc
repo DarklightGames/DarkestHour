@@ -23,18 +23,18 @@ defaultproperties
     CustomPitchDownLimit=60000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    ProjectileClass=Class'DH_MG34Bullet'
     InitialPrimaryAmmo=50
     NumMGMags=15
     FireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    AmbientEffectEmitterClass=class'VehicleMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
+    AmbientEffectEmitterClass=Class'VehicleMGEmitter'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

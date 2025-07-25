@@ -162,14 +162,14 @@ function Destroyed()
 
         if (P != none)
         {
-            class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+            Class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
         }
 
         V = DHVehicle(TouchingPawns[i]);
 
         if (V != none)
         {
-            class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
+            Class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
         }
     }
 
@@ -190,7 +190,7 @@ function Destroyed()
 
 function bool IsTouchingActor(Actor A)
 {
-    return A != none && VSize(Location - A.Location) <= class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
+    return A != none && VSize(Location - A.Location) <= Class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
 }
 
 function Timer()
@@ -218,7 +218,7 @@ function Timer()
     NewTouchingPawns.Length = 0;
 
     // Gather all relevant pawns within the radius.
-    foreach CollidingActors(class'Pawn', Pawn, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
+    foreach CollidingActors(Class'Pawn', Pawn, Class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
     {
         if (Pawn != none && Pawn.GetTeamNum() == TeamIndex)
         {
@@ -228,7 +228,7 @@ function Timer()
 
     for (i = 0; i < NewTouchingPawns.Length; ++i)
     {
-        Index = class'UArray'.static.IndexOf(TouchingPawns, NewTouchingPawns[i]);
+        Index = Class'UArray'.static.IndexOf(TouchingPawns, NewTouchingPawns[i]);
 
         if (Index == -1)
         {
@@ -249,7 +249,7 @@ function Timer()
 
     for (i = 0; i < TouchingPawns.Length; ++i)
     {
-        Index = class'UArray'.static.IndexOf(NewTouchingPawns, TouchingPawns[i]);
+        Index = Class'UArray'.static.IndexOf(NewTouchingPawns, TouchingPawns[i]);
 
         if (Index == -1)
         {
@@ -260,11 +260,11 @@ function Timer()
 
             if (P != none)
             {
-                class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+                Class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
             }
             else if (V != none)
             {
-                class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
+                Class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
             }
         }
     }

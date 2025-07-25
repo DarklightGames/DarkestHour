@@ -7,9 +7,9 @@ class DH_GermanSnowGreatCoatPawn extends DH_GermanGreatCoatPawn_Winter;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Heer.WH_SnowCoat3'
+    Skins(0)=Texture'DHGermanCharactersTex.WH_SnowCoat3'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_SnowCoat3'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_SnowCoat3'
-    BodySkins(2)=Texture'DHGermanCharactersTex.Heer.WH_SnowCoat3'
+    BodySkins(0)=Texture'DHGermanCharactersTex.WH_SnowCoat3'
+    BodySkins(1)=Texture'DHGermanCharactersTex.WH_SnowCoat3'
+    BodySkins(2)=Texture'DHGermanCharactersTex.WH_SnowCoat3'
 }

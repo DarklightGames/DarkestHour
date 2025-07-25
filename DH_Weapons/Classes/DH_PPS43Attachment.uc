@@ -8,11 +8,11 @@ class DH_PPS43Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.pps43'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.pps43_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.pps43_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject762x25mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_PPS43Bullet'
+    ClientProjectileClass=Class'DH_PPS43Bullet'
 
     WA_Idle="idle_pps43"
     WA_IdleEmpty="idle_pps43"

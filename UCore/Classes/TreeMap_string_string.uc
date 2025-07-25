@@ -278,7 +278,7 @@ private static function TreeMapNode_string_string PutStatic(TreeMap_string_strin
 
     if (Node == none)
     {
-        Node = new class'TreeMapNode_string_string';
+        Node = new Class'TreeMapNode_string_string';
         Node.Key = D.RecursiveKey;
         Node.Value = D.RecursiveValue;
 

@@ -81,7 +81,7 @@ function Timer()
             bIsEstablished = true;
 
             // "A Command Post has been established."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 0,,, Construction);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 0,,, Construction.Class);
         }
     }
 
@@ -119,7 +119,7 @@ defaultproperties
     SpawnRadius=60.0
     bCombatSpawn=true
     EstablishmentCounterThreshold=60
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_PlatoonHQ'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_SpawnPoint_PlatoonHQ'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50

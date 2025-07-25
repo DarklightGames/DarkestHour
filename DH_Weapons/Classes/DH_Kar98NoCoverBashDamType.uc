@@ -8,5 +8,5 @@ class DH_Kar98NoCoverBashDamType extends DH_Kar98BashDamType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Kar98NoCoverWeapon'
+    WeaponClass=Class'DH_Kar98NoCoverWeapon'
 }

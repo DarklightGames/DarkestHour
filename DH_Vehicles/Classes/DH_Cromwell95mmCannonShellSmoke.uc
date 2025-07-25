@@ -15,7 +15,7 @@ defaultproperties
 
     //Effects
     DrawScale=1.2
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
+    SmokeEmitterClass=Class'DHSmokeEffect_LargeShell'
 
     //Penetration
     DHPenetrationTable(0)=0.3

@@ -66,7 +66,7 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Reloading
 struct ReloadStage
 {
-    var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+    var     Sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
     var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
     var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
@@ -194,7 +194,7 @@ simulated function SpawnVehicleAttachments()
         
         if (VA.AttachClass == none)
         {
-            VA.AttachClass = class'DHDecoAttachment';
+            VA.AttachClass = Class'DHDecoAttachment';
         }
 
         VA.Actor = Spawn(VA.AttachClass, self);
@@ -206,7 +206,7 @@ simulated function SpawnVehicleAttachments()
         }
 
         // Assign the radio to the correct team if we are attaching a radio.
-        if (VA.AttachClass == class'DHRadio')
+        if (VA.AttachClass == Class'DHRadio')
         {
             Radio = DHRadio(VA.Actor);
             Radio.TeamIndex = NEUTRAL_TEAM_INDEX;
@@ -214,12 +214,12 @@ simulated function SpawnVehicleAttachments()
 
             if (VA.RadioCollisionRadius == 0.0)
             {
-                VA.RadioCollisionRadius = class'DHRadio'.default.CollisionRadius;
+                VA.RadioCollisionRadius = Class'DHRadio'.default.CollisionRadius;
             }
 
             if (VA.RadioCollisionHeight == 0.0)
             {
-                VA.RadioCollisionHeight = class'DHRadio'.default.CollisionHeight;
+                VA.RadioCollisionHeight = Class'DHRadio'.default.CollisionHeight;
             }
             
             Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
@@ -282,7 +282,7 @@ simulated function SpawnWeaponAttachments()
             {
                 if (VA.AttachClass == none)
                 {
-                    VA.AttachClass = class'DHDecoAttachment';
+                    VA.AttachClass = Class'DHDecoAttachment';
                 }
 
                 Attachment = V.SpawnAttachment(VA.AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation, self);
@@ -345,7 +345,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
 
         if (CMA != none)
         {
@@ -404,6 +404,7 @@ simulated function PostNetReceive()
     }
     
     UpdateGunWheels();
+    UpdateAnimationDrivers();
 }
 
 // Implemented here to handle multi-stage reload
@@ -901,7 +902,7 @@ simulated function Sound GetFireSound()
 simulated function DryFireEffects(optional bool bAltFire)
 {
     ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1530,7 +1531,7 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i, CurrentPitch, Frame;
+    local int i, CurrentPitch;
     local float Theta;
 
     for (i = 0;  i < AnimationDrivers.Length; ++i)
@@ -1539,7 +1540,7 @@ simulated function UpdateAnimationDrivers()
         {
             case ROTATION_Yaw:
                 // Get the yaw min->max range.
-                Theta = class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                Theta = Class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
                 break;
             case ROTATION_Pitch:
                 if (CurrentAim.Pitch > 32768)
@@ -1551,7 +1552,7 @@ simulated function UpdateAnimationDrivers()
                     CurrentPitch = CurrentAim.Pitch;
                 }
 
-                Theta = class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                Theta = Class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
                 break;
         }
 
@@ -1612,7 +1613,7 @@ defaultproperties
     PitchUpLimit=15000
     PitchDownLimit=45000
     SoundRadius=272.7
-    FireEffectClass=class'DH_Effects.DHTurretFireEffect'
+    FireEffectClass=Class'DHTurretFireEffect'
     FireEffectScale=1.0
     bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
     bAutoTraceNotify=true

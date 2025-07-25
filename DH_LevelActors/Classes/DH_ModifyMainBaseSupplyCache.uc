@@ -22,7 +22,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    foreach AllActors(class'DHMainBaseSupplyCache', MainBaseSupplyCache, MainBaseSupplyCacheTag)
+    foreach AllActors(Class'DHMainBaseSupplyCache', MainBaseSupplyCache, MainBaseSupplyCacheTag)
     {
         break;
     }

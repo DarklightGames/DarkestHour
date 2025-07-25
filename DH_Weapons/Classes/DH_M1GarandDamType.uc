@@ -8,6 +8,6 @@ class DH_M1GarandDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_M1GarandWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

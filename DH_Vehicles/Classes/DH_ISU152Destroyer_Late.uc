@@ -7,5 +7,5 @@ class DH_ISU152Destroyer_Late extends DH_ISU152Destroyer; // late war vehicle wi
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ISU152CannonPawn_Late')
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ISU152CannonPawn_Late')
 }

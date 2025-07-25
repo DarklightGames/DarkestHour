@@ -13,6 +13,7 @@ from iso639 import LanguageNotFoundError, Language
 from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
+import subprocess
 from typing import List, Optional, Tuple
 from unt import iso639_to_language_extension, unt_from_key_value_pairs
 import yaml
@@ -333,7 +334,7 @@ def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
 
     # Make sure the configuration file exists.
     if not localization_config_path.is_file():
-        raise FileNotFoundError(f'Configuration file {localization_config_path} not found')
+        raise FileNotFoundError(f'Configuration file "{localization_config_path.resolve().absolute()}" not found')
 
     # Load the YAML configuration file.
     with open(str(localization_config_path), 'r') as file:
@@ -344,7 +345,11 @@ def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
 
 def command_export(args):
     root_path = Path(args.path).absolute().resolve()
-    localization_data = read_localization_config(root_path, args.mod)
+
+    try:
+        localization_data = read_localization_config(root_path, args.mod)
+    except FileNotFoundError as e:
+        print(f'{Fore.RED}{e}')
 
     input_patterns = localization_data['export']['input_patterns']
 
@@ -429,8 +434,14 @@ def sync(args):
     start_time = time.time()
 
     root_path = Path(args.path).absolute().resolve()
-    localization_data = read_localization_config(root_path, args.mod)
+    try:
+        localization_data = read_localization_config(root_path, args.mod)
+    except FileNotFoundError as e:
+        print(f'{Fore.RED}{e}')
     repository_path = root_path / localization_data['repository']['path']
+
+    # Do a submodule update to get the latest changes from the repository.
+    subprocess.run(["git", "-C", root_path, "submodule", "update", "--remote"])
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
     pattern = str(repository_path / '**' / '*.po')

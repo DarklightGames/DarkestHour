@@ -8,7 +8,7 @@ class DHRocketExhaustDamageType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.backblastkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.backblastkill'
     GibModifier=0.0
     KDeathVel=20.0
     bCauseViewJarring=true

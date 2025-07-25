@@ -109,7 +109,7 @@ defaultproperties
     ImpactWorldDamageMult=1.0
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.OpelBlitz_dest'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -123,9 +123,9 @@ defaultproperties
     ExitPositions(1)=(X=45,Y=100,Z=60)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-172.7,Y=-37.0,Z=33.0),ExhaustRotation=(Pitch=36000,Yaw=5000))

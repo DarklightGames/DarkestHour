@@ -16,7 +16,7 @@ static function Period FromSeconds(int Seconds)
 {
     local Period P;
 
-    P = new class'Period';
+    P = new Class'Period';
 
     P.Years = Seconds / 31536000;
     Seconds = Seconds % 31536000;

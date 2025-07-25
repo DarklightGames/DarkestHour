@@ -226,12 +226,12 @@ simulated function SpawnHitEffect()
     {
         if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
         {
-            VehEffect = Spawn(class'DHVehicleHitEffect',,, mHitLocation, Rotator(-mHitNormal));
+            VehEffect = Spawn(Class'DHVehicleHitEffect',,, mHitLocation, Rotator(-mHitNormal));
             VehEffect.InitHitEffects(mHitLocation, mHitNormal);
         }
         else
         {
-            Spawn(class'DHBullet'.default.ImpactEffect,,, mHitLocation, Rotator(-mHitNormal));
+            Spawn(Class'DHBullet'.default.ImpactEffect,,, mHitLocation, Rotator(-mHitNormal));
             CheckForSplash();
         }
     }
@@ -255,7 +255,7 @@ simulated function CheckForSplash()
         // We hit a water volume or a fluid surface, so play splash effects
         if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
-            PlaySound(class'DHBullet'.default.WaterHitSound);
+            PlaySound(Class'DHBullet'.default.WaterHitSound);
 
             if (SplashEffect != none && EffectIsRelevant(HitLocation, false))
             {
@@ -324,7 +324,7 @@ simulated function GetHitInfo()
     }
 
     // Debug option - draws a line representing the trace
-    if (class'DHBullet'.default.bDebugROBallistics)
+    if (Class'DHBullet'.default.bDebugROBallistics)
     {
         Log(Tag $ ".GetHitInfo: traced mHitActor =" @ mHitActor);
         ClearStayingDebugLines();
@@ -608,8 +608,8 @@ defaultproperties
     CullDistance=8192.0 // 136m - was originally 4000 UU (approx 66m), but when the 3rd person weapon attachment gets culled, player's can't see a muzzle flash, which is important
     bNetNotify=true
     bSpawnShellsOutBottom=false
-    ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
-    SplashEffect=class'DHBulletHitWaterEffect'
+    ROMGSteamEmitterClass=Class'DHMGSteam'
+    SplashEffect=Class'DHBulletHitWaterEffect'
 
     // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
     // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")

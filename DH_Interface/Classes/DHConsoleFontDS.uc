@@ -8,7 +8,7 @@ class DHConsoleFontDS extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(Controller.ResX, Controller.ResY);
+    return Class'DHFonts'.static.GetDHConsoleFontDSByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

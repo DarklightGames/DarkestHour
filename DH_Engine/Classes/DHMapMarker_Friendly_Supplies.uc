@@ -13,7 +13,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.supply_cache'
     MarkerName="Request Supplies"
     LifetimeSeconds=300
 }

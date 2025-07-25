@@ -18,7 +18,7 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_ZiS5V_anm.ZiS5V_ext'
     Skins(0)=Texture'MilitaryAlliesSMT.Vehicles.Zis-5v'
-    Skins(1)=FinalBlend'DH_VehiclesSOV_tex.ext_vehicles.ZiS5V_ForGlass_FB' // cab window glass
+    Skins(1)=FinalBlend'DH_VehiclesSOV_tex.ZiS5V_ForGlass_FB' // cab window glass
     Skins(2)=Texture'MilitaryAlliesSMT.Vehicles.Zis-5v' // rear bench seats (separate material slot so can be hidden in support truck to make room for supplies)
     BeginningIdleAnim="" // override unwanted inherited value as has no animations
 
@@ -66,7 +66,7 @@ defaultproperties
     ImpactWorldDamageMult=1.0
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=105.0,Y=0.0,Z=20.0)
-    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ZiS5.ZiS5V_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ZiS5V_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -80,22 +80,22 @@ defaultproperties
     ExitPositions(1)=(X=40.0,Y=100.0,Z=25.0)  // front passenger
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=0.0,Y=40.0,Z=-20.0),ExhaustRotation=(Pitch=-2000,Yaw=25000))
     SteerBoneName="Steering_wheel"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.ZiS5V_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.ZiS5V_body'
     VehicleHudEngineY=0.19
     VehicleHudOccupantsX(0)=0.44
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.zis5v'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.zis5v'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=Wheel_FrontL
@@ -108,7 +108,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_FrontL'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
         SteerType=VST_Steered
         BoneName="Wheel_FR"
@@ -118,7 +118,7 @@ defaultproperties
         SupportBoneName="Axle_FL"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_FrontR'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.Wheel_FrontR'
     Begin Object Class=SVehicleWheel Name=Wheel_BackL
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -128,7 +128,7 @@ defaultproperties
         SupportBoneName="Axle_BR"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_BackL'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.Wheel_BackL'
     Begin Object Class=SVehicleWheel Name=Wheel_BackR
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -139,7 +139,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_BackR'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.Wheel_BackR'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -159,5 +159,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_ZiS5vTruck.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

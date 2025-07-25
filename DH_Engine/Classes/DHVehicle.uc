@@ -110,7 +110,7 @@ var     bool        bRequiresDriverLicense;      // Vehicle requires player to h
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var()   name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
-var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
 var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
 var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
@@ -125,10 +125,10 @@ var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle ca
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var     float       DirectHEImpactDamageMult;    // damage multiplier for direct HE impact (direct hits with HE rounds) defaults: 1.0
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
-var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
-var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
-var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
-var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
+var     Sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
+var     Sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
+var     Sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
+var     Sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
@@ -146,11 +146,11 @@ var     float       EngineRestartFailChance;     // chance of engine failing to 
 // Driving effects
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       MaxPitchSpeed;               // used to set movement sounds volume, based on vehicle's speed
-var     sound       RumbleSound;                 // interior rumble sound
+var     Sound       RumbleSound;                 // interior rumble sound
 var     name        RumbleSoundBone;             // attachment bone for rumble sound attachment
 var     Actor       RumbleSoundAttach;           // reference to rumble sound attachment actor
 var     float       RumbleSoundVolumeModifier;   // allows adjustment of interior rumble sound volume
-var     sound       EngineSound;                 // engine sound - rarely used as sound is already played using IdleSound, with its pitch related to speed by native code,
+var     Sound       EngineSound;                 // engine sound - rarely used as sound is already played using IdleSound, with its pitch related to speed by native code,
 var     name        EngineSoundBone;             // but EngineSound is overlaid on IdleSound, so can give greater depth of sound & serves some purpose, although not much
 var     Actor       EngineSoundAttach;
 var     float       LastImpactSound;             // last time an impact damage sound was played (used to limit constant sounds as vehicle 'bottoms out' on ground)
@@ -161,7 +161,7 @@ var     int                 LeftTreadIndex, RightTreadIndex;   // index position
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner; // texture panners used to make it look like the treads are moving
 var     float               TreadVelocityScale;                // allows adjustment of treads rotation speed for each vehicle
 var     Rotator             LeftTreadPanDirection, RightTreadPanDirection; // make sure the treads move the correct way!
-var     sound               LeftTreadSound, RightTreadSound;               // tread movement sound
+var     Sound               LeftTreadSound, RightTreadSound;               // tread movement sound
 var     name                LeftTrackSoundBone, RightTrackSoundBone;       // attachment bone names for tread sound attachments
 var     Actor               LeftTreadSoundAttach, RightTreadSoundAttach;   // references to sound attachments used to make tread sounds
 var     array<name>         LeftWheelBones, RightWheelBones;               // bone names for track wheels on each side, used to animate wheels (visual only)
@@ -173,7 +173,7 @@ var     float               TreadHitMaxHeight;     // height (in UU) of top of t
 var     float               TreadDamageThreshold;  // minimum TreadDamageModifier in DamageType to possibly break treads
 var     bool                bLeftTrackDamaged;     // the left track has been damaged
 var     bool                bRightTrackDamaged;    // the left track has been damaged
-var     sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
+var     Sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
 var     Material            DamagedTreadPanner;    // replacement skin used for a damaged tread
 var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // static meshes to use for damaged left & right tracks
 var     Actor               DamagedTrackLeft, DamagedTrackRight; // static mesh attachment to show damaged track, e.g. broken track links (clientside only)
@@ -316,7 +316,7 @@ function SpawnVehicleComponentControllers()
 
     for (i = 0; i < VehicleComponentControllers.Length; ++i)
     {
-        ComponentController = Spawn(class'DHVehicleComponentController', self);
+        ComponentController = Spawn(Class'DHVehicleComponentController', self);
         ComponentController.SetBase(self);
 
         if (ComponentController != none)
@@ -366,7 +366,7 @@ simulated function PostBeginPlay()
         for (i = 0; i < PassengerPawns.Length; ++i)
         {
             Index = StartIndex + i;
-            PassengerWeapons[Index].WeaponPawnClass = class'DHPassengerPawn'.default.PassengerClasses[Index];
+            PassengerWeapons[Index].WeaponPawnClass = Class'DHPassengerPawn'.default.PassengerClasses[Index];
             PassengerWeapons[Index].WeaponBone = PassengerPawns[i].AttachBone;
         }
     }
@@ -461,7 +461,7 @@ function KilledBy(Pawn EventInstigator)
 
     if (LastHitByDamageType == none || EventInstigator == self)
     {
-        DT = class'Suicided';
+        DT = Class'Suicided';
     }
     else
     {
@@ -494,7 +494,7 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
         !Level.bLevelChange &&
         !bVehicleDestroyed &&
         !Level.Game.PreventDeath(self, Killer, damageType, HitLocation) &&
-        DamageType != class'Suicided')
+        DamageType != Class'Suicided')
     {
         RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
         DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
@@ -529,7 +529,7 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     // If is not a team kill and the vehicle is NOT spawn protected, then +score for killer
     if (DHKiller.GetTeamNum() != GetTeamNum() && !IsSpawnProtected())
     {
-        DHG.SendScoreEvent(DHKiller, class'DHScoreEvent_VehicleKill'.static.Create(Class));
+        DHG.SendScoreEvent(DHKiller, Class'DHScoreEvent_VehicleKill'.static.Create(Class));
     }
 
     // If killed by a friendly
@@ -538,15 +538,15 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
         if (DHKiller.PlayerReplicationInfo != none)
         {
             // Broadcast a message to all players
-            Level.Game.BroadcastLocalizedMessage(class'DHGameMessage', 23, DHKiller.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
+            Level.Game.BroadcastLocalizedMessage(Class'DHGameMessage', 23, DHKiller.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
 
             // Death message icon
-            Level.Game.BroadcastDeathMessage(DHKiller, DHKiller, class'DHVehicleTeamKillDamageType');
+            Level.Game.BroadcastDeathMessage(DHKiller, DHKiller, Class'DHVehicleTeamKillDamageType');
 
             // Lock weapons
             DHKiller.WeaponLockViolations++;
             DHKiller.LockWeapons(WeaponLockTimeForTK);
-            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+            DHKiller.ReceiveLocalizedMessage(Class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
 
             // Prevent team change
             DHKiller.NextChangeTeamTime = GRI.ElapsedTime + PreventTeamChangeForTK;
@@ -751,7 +751,7 @@ simulated function Tick(float DeltaTime)
 
         if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachment != none)
         {
-            PlayerController(Controller).ReceiveLocalizedMessage(class'DHSupplyVehicleMessage',, Controller.PlayerReplicationInfo,, self);
+            PlayerController(Controller).ReceiveLocalizedMessage(Class'DHSupplyVehicleMessage',, Controller.PlayerReplicationInfo,, self);
         }
     }
 
@@ -1063,7 +1063,7 @@ simulated function float GetViewFOV(int PositionIndex)
         return PlayerController(Controller).DefaultFOV;
     }
 
-    return class'DHPlayer'.default.DefaultFOV;
+    return Class'DHPlayer'.default.DefaultFOV;
 }
 
 simulated function SetViewFOV(int PositionIndex, optional PlayerController PC)
@@ -1101,12 +1101,12 @@ function Vehicle FindEntryVehicle(Pawn P)
     }
 
     bAreCrewPositionsLockedForPlayer = AreCrewPositionsLockedForPlayer(P);
-    bIsPlayerLicensedToDrive = class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller));
+    bIsPlayerLicensedToDrive = Class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller));
 
     if (P.IsHumanControlled())
     {
         // Check & save whether player is a tank crewman and, if so, whether he can enter tank crew positions (i.e. vehicle's crew haven't locked him out)
-        if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P))
+        if (Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P))
         {
             bPlayerIsTankCrew = true;
             bCanEnterTankCrewPositions = !bAreCrewPositionsLockedForPlayer;
@@ -1274,7 +1274,7 @@ function bool TryToDrive(Pawn P)
     if (bMustBeTankCommander)
     {
         // Deny entry to a tank crew position if player isn't a tank crew role
-        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
+        if (!Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
             return false;
@@ -1288,7 +1288,7 @@ function bool TryToDrive(Pawn P)
         }
     }
 
-    if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)) && P.IsHumanControlled())
+    if (default.bRequiresDriverLicense && !Class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)) && P.IsHumanControlled())
     {
         DisplayVehicleMessage(0, P); // not qualified to operate vehicle
         return false;
@@ -1726,7 +1726,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         if (VWP.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(VWP).bMustBeTankCrew)
         {
             // Can't switch if player has selected a tank crew position but isn't a tank crew role
-            if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
+            if (!Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
             {
                 DisplayVehicleMessage(0); // not qualified to operate vehicle
                 return false;
@@ -2152,7 +2152,7 @@ simulated function StartEmitters()
             }
 
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = Spawn(class'DHVehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i] = Spawn(Class'DHVehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
             Dust[i].CullDistance = 12000; // ~200m
 
             if (bLowDetail)
@@ -2241,9 +2241,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
     local bool       bIsFriendlyFire;
 
     // Suicide/self-destruction
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
+    if (DamageType == Class'Suicided' || DamageType == Class'ROSuicided')
     {
-        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, Class'ROSuicided');
 
         return;
     }
@@ -2443,7 +2443,7 @@ function CheckTreadDamage(Vector HitLocation, Vector Momentum)
     // Calculate the angle direction of hit relative to vehicle's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
     // Convert hit offset to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
-    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
+    HitDirectionDegrees = Class'UUnits'.static.UnrealToDegrees(Rotator(HitLocationRelativeOffset).Yaw);
 
     if (HitDirectionDegrees < 0.0)
     {
@@ -2472,7 +2472,7 @@ function CheckTreadDamage(Vector HitLocation, Vector Momentum)
     // Calculate incoming angle of the shot, relative to a perpendicular line from the side we think we hit
     // If the angle is too high it's impossible, so we do a crude fix by switching the hit to the opposite
     GetAxes(Rotation, X, RightSidePerp, Z);
-    InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot RightSidePerp));
+    InAngleDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot RightSidePerp));
 
     if (HitSide == "Left")
     {
@@ -2481,7 +2481,7 @@ function CheckTreadDamage(Vector HitLocation, Vector Momentum)
 
     if (InAngleDegrees > 120.0)
     {
-        if (bDebuggingText || class'DH_LevelInfo'.static.DHDebugMode())
+        if (bDebuggingText || Class'DH_LevelInfo'.static.DHDebugMode())
         {
             Log("Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
         }
@@ -2508,12 +2508,12 @@ event TakeImpactDamage(float AccelMag)
     local int Damage;
 
     Damage = int(AccelMag * ImpactDamageModifier());
-    TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+    TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), Class'DHVehicleCollisionDamageType');
 
     // Handle damage to engine if impact damage is past threshold & the vehicle bCanCrash
     if (bCanCrash && Damage > ImpactDamageThreshold)
     {
-        DamageEngine(Damage * ImpactWorldDamageMult, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+        DamageEngine(Damage * ImpactWorldDamageMult, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), Class'DHVehicleCollisionDamageType');
     }
 
     // Play impact sound (often vehicle 'bottoming out' on ground)
@@ -3093,13 +3093,13 @@ simulated function SpawnVehicleAttachments()
 
         if (EngineSound != none && EngineSoundBone != '' && EngineSoundAttach == none)
         {
-            EngineSoundAttach = SpawnAttachment(class'ROSoundAttachment', EngineSoundBone);
+            EngineSoundAttach = SpawnAttachment(Class'ROSoundAttachment', EngineSoundBone);
             EngineSoundAttach.AmbientSound = EngineSound;
         }
 
         if (RumbleSound != none && RumbleSoundBone != '' && RumbleSoundAttach == none)
         {
-            RumbleSoundAttach = SpawnAttachment(class'ROSoundAttachment', RumbleSoundBone);
+            RumbleSoundAttach = SpawnAttachment(Class'ROSoundAttachment', RumbleSoundBone);
             RumbleSoundAttach.AmbientSound = RumbleSound;
         }
     }
@@ -3295,7 +3295,7 @@ simulated function SpawnVehicleAttachments()
             }
             else
             {
-                AttachClass = class'DHDecoAttachment';
+                AttachClass = Class'DHDecoAttachment';
             }
 
             A = SpawnAttachment(AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation);
@@ -3328,7 +3328,7 @@ simulated function SpawnVehicleAttachments()
     // Spawn any collision static mesh attachments
     for (i = 0; i < CollisionAttachments.Length; ++i)
     {
-        CollisionAttachments[i].Actor = class'DHCollisionMeshActor'.static.AttachCollisionMesh
+        CollisionAttachments[i].Actor = Class'DHCollisionMeshActor'.static.AttachCollisionMesh
             (self, CollisionAttachments[i].StaticMesh, CollisionAttachments[i].AttachBone, CollisionAttachments[i].Offset, class<DHCollisionMeshActor>(CollisionAttachments[i].AttachClass));
     }
 }
@@ -3475,7 +3475,7 @@ function SetTeamNum(byte NewTeam)
 // Also made tread sounds have same sound radius as engine, so we can actually hear that sound - makes tanks seem more "in the same world"
 simulated function SetupTreads()
 {
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(Class'VariableTexPanner'));
 
     if (LeftTreadPanner != none)
     {
@@ -3485,7 +3485,7 @@ simulated function SetupTreads()
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
 
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(Class'VariableTexPanner'));
 
     if (RightTreadPanner != none)
     {
@@ -3497,7 +3497,7 @@ simulated function SetupTreads()
 
     if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
     {
-        LeftTreadSoundAttach = SpawnAttachment(class'ROSoundAttachment', LeftTrackSoundBone);
+        LeftTreadSoundAttach = SpawnAttachment(Class'ROSoundAttachment', LeftTrackSoundBone);
         LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
         LeftTreadSoundAttach.SoundRadius = SoundRadius;
         LeftTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
@@ -3505,7 +3505,7 @@ simulated function SetupTreads()
 
     if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
     {
-        RightTreadSoundAttach = SpawnAttachment(class'ROSoundAttachment', RightTrackSoundBone);
+        RightTreadSoundAttach = SpawnAttachment(Class'ROSoundAttachment', RightTrackSoundBone);
         RightTreadSoundAttach.AmbientSound = RightTreadSound;
         RightTreadSoundAttach.SoundRadius = SoundRadius;
         RightTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
@@ -3571,7 +3571,7 @@ simulated function SetDamagedTracks()
         // Added support for spawning damaged track model as decorative static mesh
         if (DamagedTrackStaticMeshLeft != none && DamagedTrackLeft == none)
         {
-            DamagedTrackLeft = SpawnAttachment(class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshLeft);
+            DamagedTrackLeft = SpawnAttachment(Class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshLeft);
             DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
         }
     }
@@ -3587,7 +3587,7 @@ simulated function SetDamagedTracks()
 
         if (DamagedTrackStaticMeshRight != none && DamagedTrackRight == none)
         {
-            DamagedTrackRight = SpawnAttachment(class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshRight);
+            DamagedTrackRight = SpawnAttachment(Class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshRight);
             DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
         }
     }
@@ -3605,7 +3605,7 @@ simulated function UpdateShadow()
 
     if (Level.NetMode != NM_DedicatedServer && bVehicleShadows && bDrawVehicleShadow)
     {
-        VehicleShadow = Spawn(class'DHShadowProjector', self, '', Location);
+        VehicleShadow = Spawn(Class'DHShadowProjector', self, '', Location);
 
         if (VehicleShadow != none)
         {
@@ -3649,10 +3649,10 @@ simulated event DestroyAppearance()
 
     if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
     {
-        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
         DestroyedSkin.Material1 = Skins[0];
         // TODO: use a different overlay depending on the aspect ratio.
-        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+        DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
         DestroyedSkin.FallbackMaterial = Skins[0];
         DestroyedSkin.CombineOperation = CO_Multiply;
 
@@ -3802,14 +3802,14 @@ simulated function UnloadSupplies()
     if (!SupplyAttachment.HasSupplies())
     {
         // "The vehicle's supply cache is empty."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 4);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 4);
         return;
     }
 
     if (TouchingSupplyCount == -1)
     {
         // "There are no nearby supply caches."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 3);
         return;
     }
 
@@ -3836,21 +3836,21 @@ simulated function LoadSupplies()
     if (TouchingSupplyCount == -1)
     {
         // "There are no nearby supply caches."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 3);
         return;
     }
 
     if (TouchingSupplyCount == 0)
     {
         // "The nearby supply cache is empty."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 5);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 5);
         return;
     }
 
     if (SupplyAttachment.IsFull())
     {
         // "The vehicle's supply cache is full."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 2);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 2);
         return;
     }
 
@@ -3902,7 +3902,7 @@ function ServerUnloadSupplies()
             PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
 
             // "250 supplies have been unloaded from the vehicle to a nearby Supply Cache"
-            PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
+            PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', Class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
 
             return;
         }
@@ -3912,7 +3912,7 @@ function ServerUnloadSupplies()
     if (bDidFindFullCache)
     {
         // "The nearby supply cache is full."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 6);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 6);
     }
 }
 
@@ -3934,7 +3934,7 @@ function ServerLoadSupplies()
     if (SupplyAttachment.IsFull())
     {
         // "The vehicle's supply cache is full."
-        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 2);
+        PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 2);
         return;
     }
 
@@ -3959,14 +3959,14 @@ function ServerLoadSupplies()
             PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
 
             // "250 supplies have been loaded into the vehicle from a nearby Supply Cache"
-            PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(1, SupplyLoadCount),,, CSA);
+            PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', Class'UInteger'.static.FromShorts(1, SupplyLoadCount),,, CSA);
 
             return;
         }
     }
 
     // "There are no nearby supply caches."
-    PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
+    PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 3);
 }
 
 // Modified to include any SupplyAttachment
@@ -4122,7 +4122,7 @@ event CheckReset()
         {
             // Found friendly player who could use this vehicle, so now do distance check
             if (C != Controller && C.GetTeamNum() == GetTeamNum() && C.Pawn != none && C.Pawn.Health > 0
-                && (!bMustBeTankCommander || class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(C.Pawn)))
+                && (!bMustBeTankCommander || Class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(C.Pawn)))
             {
                 Distance = VSize(C.Pawn.Location - Location);
 
@@ -4245,11 +4245,11 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 
     if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
     {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
+        P.ReceiveLocalizedMessage(Class'DHVehicleMessage', MessageNumber,,, Controller);
     }
     else
     {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
+        P.ReceiveLocalizedMessage(Class'DHVehicleMessage', MessageNumber);
     }
 }
 
@@ -4424,7 +4424,7 @@ exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "acces
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
@@ -4494,7 +4494,7 @@ exec function DamageVehicle(optional bool bDestroyVehicle)
     {
         if (bDestroyVehicle)
         {
-            super(Vehicle).TakeDamage(99999, none, Location, vect(10000.0,0.0,0.0), class'DHShellImpactDamageType');
+            super(Vehicle).TakeDamage(99999, none, Location, vect(10000.0,0.0,0.0), Class'DHShellImpactDamageType');
         }
         else
         {
@@ -4576,7 +4576,7 @@ function CreateSpawnPointAttachment(bool bIsTemporary)
         SpawnPointAttachment.Destroy();
     }
 
-    SpawnPointAttachment = DHSpawnPoint_Vehicle(SpawnAttachment(class'DHSpawnPoint_Vehicle'));
+    SpawnPointAttachment = DHSpawnPoint_Vehicle(SpawnAttachment(Class'DHSpawnPoint_Vehicle'));
 
     if (SpawnPointAttachment == none)
     {
@@ -4609,8 +4609,8 @@ defaultproperties
     CollisionRadius=175.0
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"
-    TouchMessageClass=class'DHVehicleTouchControlsMessage'
-    ResupplyAttachmentClass=class'DHResupplyAttachment_Vehicle'
+    TouchMessageClass=Class'DHVehicleTouchControlsMessage'
+    ResupplyAttachmentClass=Class'DHResupplyAttachment_Vehicle'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
     MinRunOverSpeed=586.75 // increased from 0 to 35km/h so players don't get run over so easily by vehicles
@@ -4659,7 +4659,7 @@ defaultproperties
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
     DriverDamageMult=1.0
-    DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.Alpha'
 
     // Smoking/burning engine effect
     HeavyEngineDamageThreshold=0.5
@@ -4669,10 +4669,10 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.15
 
     // Vehicle destruction
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestructionEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DestructionEffectLowClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=Class'ROVehicleDestroyedEmitter'
+    DisintegrationEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     DisintegrationHealth=-10000.0 // very high default value so subclasses have to enable disintegration
     ExplosionDamage=150.0
     ExplosionRadius=400.0
@@ -4688,17 +4688,17 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=150.0
     RumbleSoundVolumeModifier=2.5
-    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
-    DamagedShutDownSound=Sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
-    VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds.engine_start_damaged'
+    DamagedShutDownSound=Sound'DH_AlliedVehicleSounds.engine_stop_damaged'
+    VehicleBurningSound=Sound'Amb_Destruction.Krasnyi_Fire_House02'
+    DestroyedBurningSound=Sound'Amb_Destruction.Kessel_Fire_Small_Barrel'
     RumbleSoundBone="body"
     IdleRPM=500.0 // determines engine sound at idle, relative to EngineRPMSoundRange (note that behind the scenes the native EngineRPM will actually be zero at idle)
     EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)
 
     // Visual effects
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
     SteeringScaleFactor=4.0
     ShadowZOffset=5.0 // the literal value used in the ShadowProjector class
@@ -4776,6 +4776,6 @@ defaultproperties
 
     bDoRandomAttachments=true
 
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconAttachmentClass=Class'DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 }

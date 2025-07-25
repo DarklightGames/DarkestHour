@@ -7,6 +7,6 @@ class DH_ShermanCannonPawn_M4A3E8_ZombieSlayer extends DH_ShermanCannonPawn_M4A3
 
 defaultproperties
 {
-    GunClass=class'DH_ShermanCannon_M4A3E8_ZombieSlayer'
+    GunClass=Class'DH_ShermanCannon_M4A3E8_ZombieSlayer'
 }
 

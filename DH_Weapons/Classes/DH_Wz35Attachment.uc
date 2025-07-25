@@ -10,10 +10,10 @@ class DH_Wz35Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Wz35_anm.wz35_3rd'
-    MenuImage=Texture'DH_Wz35_tex.Interface.wz35_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
+    MenuImage=Texture'DH_Wz35_tex.wz35_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPTRD'
     MuzzleBoneName="MUZZLE"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
+    ROShellCaseClass=Class'RO3rdShellEject14mm'
     bRapidFire=false
 
     ShellEjectionBoneName=""        // No shell ejection bone?
@@ -113,9 +113,9 @@ defaultproperties
     PA_IdleDeployedAnim="stand_idleiron_wz35"
     PA_IdleDeployedProneAnim="prone_idle_wz35"
     PA_IdleDeployedCrouchAnim="crouch_idleiron_wz35"
-    PA_ReloadAnim="stand_reload_wz35"
+    PA_ReloadAnim="stand_reload_wz35"   // TODO: this animation doesn'rt exist???
     PA_ProneReloadAnim="prone_reload_wz35"
-    PA_ReloadEmptyAnim="stand_reload_wz35"
+    PA_ReloadEmptyAnim="stand_reload_wz35"     // TODO: this animation doesn'rt exist??? use the ptrd one?
     PA_ProneReloadEmptyAnim="prone_reload_wz35"
     PA_ProneIdleRestAnim="prone_idle_wz35"
     PA_StandWeaponDeployAnim="stand_idleiron_wz35"

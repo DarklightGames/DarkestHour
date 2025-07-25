@@ -8,5 +8,5 @@ class DH_VG15BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_VG15Weapon'
+    WeaponClass=Class'DH_VG15Weapon'
 }

@@ -114,13 +114,13 @@ if %no_build% neq 0 goto :run
 echo Starting a build...
 cd "%~dp0"
 echo 1280 > ..\System\steam_appid.txt
-python ..\tools\make\make.py%make_args% -mod DarkestHourDev ..
+call python ..\tools\make\make.py%make_args% -mod DarkestHourDev ..
 if %ERRORLEVEL% neq 0 goto :error_exit
 
 :run
 if %no_run% neq 0 goto :eof
 echo Starting the server on map '%map%'...
-python ..\tools\test_multiplayer.py%arg_tail% DarkestHourDev %map%?Game=DH_Engine.DarkestHourGame
+call python ..\tools\test_multiplayer.py%arg_tail% DarkestHourDev %map%?Game=DH_Engine.DarkestHourGame
 if %ERRORLEVEL% neq 0 goto:error_exit
 goto :eof
 

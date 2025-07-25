@@ -25,8 +25,8 @@ defaultproperties
     ResupplyAttachmentBone="supply"
     VehHitpoints(5)=(PointRadius=40.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DisintegrationEffectClass=Class'ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=Class'ROVehicleObliteratedEmitter_simple'
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
     RandomAttachmentGroups(3)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS'))))

@@ -18,7 +18,7 @@ var     byte                InitialAmmo;                  // the initial & maxim
 var     byte                ProjectilesPerFire;           // no. of projectiles launched each time fire button is pressed (external launchers are often paired)
 var     array<Rotator>      FireRotation;                 // the firing rotation to launch the projectile(s), relative to vehicle - may be multiple for external launchers
 var     float               Spread;                       // random spread of launched projectiles
-var     sound               FireSound;                    // firing sound
+var     Sound               FireSound;                    // firing sound
 var     bool                bCanBeReloaded;               // whether smoke launcher can be reloaded after firing (not for external launch tubes)
 var     array<DHVehicleWeapon.ReloadStage>  ReloadStages; // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
 var     Material            HUDAmmoIcon;                  // ammo icon for the HUD display
@@ -136,7 +136,7 @@ defaultproperties
     Spread=0.03
     bShowHUDInfo=true
     bCanBeReloaded=true
-    ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // TODO: get some suitable stage reload sounds to replace these placeholders
-    ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03,HUDProportion=0.7)
-    ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07,HUDProportion=0.4)
+    ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload01_000',Duration=1.24) // TODO: get some suitable stage reload sounds to replace these placeholders
+    ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload02_039',Duration=2.03,HUDProportion=0.7)
+    ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload03_104',Duration=2.07,HUDProportion=0.4)
 }

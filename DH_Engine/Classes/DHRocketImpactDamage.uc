@@ -8,6 +8,6 @@ class DHRocketImpactDamage extends RORocketImpactDamage
 
 defaultproperties
 {
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
+    DeathOverlayMaterial=Combiner'Effects_Tex.PlayerDeathOverlay'
     DeathOverlayTime=999.0
 }

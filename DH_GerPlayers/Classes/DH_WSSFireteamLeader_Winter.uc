@@ -8,13 +8,13 @@ class DH_WSSFireteamLeader_Winter extends DHGECorporalRoles;
 defaultproperties
 {
     AltName="Rottenführer"
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowSSPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueSSPawn',Weight=1.0)
-    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnow'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M712Weapon')
+    RolePawns(0)=(PawnClass=Class'DH_GermanParkaSnowSSPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=Class'DH_GermanSmockToqueSSPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.RussianSnow_Sleeves'
+    Headgear(0)=Class'DH_HeerHelmetCover'
+    Headgear(1)=Class'DH_HeerHelmetSnow'
+    PrimaryWeapons(0)=(Item=Class'DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_G43Weapon',AssociatedAttachment=Class'ROInventory.ROG43AmmoPouch')
+    PrimaryWeapons(2)=(Item=Class'DH_M712Weapon')
     HandType=Hand_Gloved
 }

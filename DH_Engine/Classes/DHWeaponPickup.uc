@@ -25,6 +25,8 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     StaticMesh              EmptyStaticMesh;
 
+var    bool                     bWaitingToBolt;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -97,7 +99,7 @@ function bool ArePlayersNearby()
 {
     local DHPawn    DHP;
 
-    foreach RadiusActors(class'DHPawn', DHP, PlayerNearbyRadius)
+    foreach RadiusActors(Class'DHPawn', DHP, PlayerNearbyRadius)
     {
         return true;
     }
@@ -118,6 +120,7 @@ function InitDroppedPickupFor(Inventory Inv)
         AmmoAmount[0] = W.AmmoAmount(0);
         AmmoAmount[1] = W.AmmoAmount(1);
         bHasBayonetMounted = W.bBayonetMounted;
+        bWaitingToBolt = W.bWaitingToBolt;
     }
 
     SetPhysics(PHYS_Falling);
@@ -223,8 +226,8 @@ defaultproperties
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
-    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
-    TouchMessageClass=class'DHWeaponPickupTouchMessage'
+    BarrelSteamEmitterClass=Class'DHMGSteam'
+    TouchMessageClass=Class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
     PlayerNearbyRadius=256
     PlayerNearbyRetryTime=10

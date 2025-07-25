@@ -10,17 +10,17 @@ defaultproperties
     ItemName="G 41(W)"
     NativeItemName="Gewehr 41(W)"
     SwayModifyFactor=0.83 // +0.13 because it was a heavy, disbalanced and awkward rifle
-    FireModeClass(0)=class'DH_Weapons.DH_G41Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_G41MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_G41Attachment'
-    PickupClass=class'DH_Weapons.DH_G41Pickup'
+    FireModeClass(0)=Class'DH_G41Fire'
+    FireModeClass(1)=Class'DH_G41MeleeFire'
+    AttachmentClass=Class'DH_G41Attachment'
+    PickupClass=Class'DH_G41Pickup'
 
     Mesh=SkeletalMesh'DH_G41_1st.G41_mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex2.Rifles.G41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex2.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
+    Skins(4)=Shader'Weapons1st_tex.KarBayonet_S'
 
     IronSightDisplayFOV=53.0
     DisplayFOV=82.0

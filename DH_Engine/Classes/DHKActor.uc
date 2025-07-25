@@ -9,7 +9,7 @@ class DHKActor extends KActor
 defaultproperties
 {
     bNoDelete=false
-    StaticMesh=StaticMesh'DH_Artillery_stc.M5.M5_shell_case'
+    StaticMesh=StaticMesh'DH_Artillery_stc.M5_shell_case'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KLinearDamping=0.1

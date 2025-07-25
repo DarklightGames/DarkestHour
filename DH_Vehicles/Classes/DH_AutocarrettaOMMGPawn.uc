@@ -7,7 +7,7 @@ class DH_AutocarrettaOMMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_AutocarrettaOMMG'
+    GunClass=Class'DH_AutocarrettaOMMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true

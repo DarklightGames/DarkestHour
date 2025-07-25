@@ -8,5 +8,5 @@ class DH_VK98DamType extends DH_Kar98DamType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_VK98Weapon'
+    WeaponClass=Class'DH_VK98Weapon'
 }

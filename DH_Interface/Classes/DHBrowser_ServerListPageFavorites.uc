@@ -9,11 +9,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
-    class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
+    Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
 }
 
 defaultproperties
@@ -29,7 +29,7 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageFavorites.InternalOnLoadINI
     End Object
-    sp_Main=DHGUISplitter'DH_Interface.DHBrowser_ServerListPageFavorites.HorzSplitter'
+    sp_Main=DHGUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
@@ -39,7 +39,7 @@ defaultproperties
         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
     End Object
-    ContextMenu=DHGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    ContextMenu=DHGUIContextMenu'DH_Interface.FavoritesContextMenu'
 
     bStandardized=true
     StandardHeight=0.8

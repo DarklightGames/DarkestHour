@@ -31,11 +31,11 @@ defaultproperties
 	FontColors(3)=(R=255,G=255,B=255,A=255)
 	FontColors(4)=(R=255,G=255,B=255,A=255)
 
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(0)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(1)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(2)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(3)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(4)=Texture'DH_GUI_Tex.DHSmallBox'
 
 	ImgColors(0)=(R=255,G=255,B=255,A=255)
 	ImgColors(1)=(R=255,G=255,B=255,A=255)

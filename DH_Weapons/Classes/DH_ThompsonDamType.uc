@@ -8,8 +8,8 @@ class DH_ThompsonDamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_ThompsonWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0
     KDeathUpKick=0.0

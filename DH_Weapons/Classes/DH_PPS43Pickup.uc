@@ -7,6 +7,6 @@ class DH_PPS43Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_PPS43Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.pps43'
+    InventoryType=Class'DH_PPS43Weapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.pps43'
 }

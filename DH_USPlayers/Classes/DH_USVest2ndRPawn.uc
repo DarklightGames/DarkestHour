@@ -7,8 +7,8 @@ class DH_USVest2ndRPawn extends DH_USVestPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHUSCharactersTex.2ndRangers.US_2ndRangers_AssaultVest'
+    Skins(1)=Texture'DHUSCharactersTex.US_2ndRangers_AssaultVest'
 
-    BodySkins(0)=Texture'DHUSCharactersTex.2ndRangers.US_2ndRangers_AssaultVest'
-    BodySkins(1)=Texture'DHUSCharactersTex.2ndRangers.US_2ndRangers_AssaultVest'
+    BodySkins(0)=Texture'DHUSCharactersTex.US_2ndRangers_AssaultVest'
+    BodySkins(1)=Texture'DHUSCharactersTex.US_2ndRangers_AssaultVest'
 }

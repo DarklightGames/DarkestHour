@@ -35,11 +35,35 @@ function Initialize()
 
     for (i = 0; i < Options.Length; ++i)
     {
-        OptionStrings[OptionStrings.Length] = class'GameInfo'.static.MakeColorCode(KeyTextColor) $
-        "[" $ GetFriendlyName(Options[i].Key) $ "]" $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) @ Options[i].Text;
+        OptionStrings[OptionStrings.Length] = Class'GameInfo'.static.MakeColorCode(KeyTextColor) $
+        "[" $ GetFriendlyName(Options[i].Key) $ "]" $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White) @ Options[i].Text;
     }
 
-    OptionsText = class'UString'.static.Join(" ", OptionStrings);
+    OptionsText = Class'UString'.static.Join(" ", OptionStrings);
+}
+
+// The interaction system is doesn't actually properly flag state, so we have to
+// poll for focus directly.
+simulated function bool IsFocused()
+{
+    local int i;
+
+    if (ViewportOwner == none && ViewportOwner.Actor == none && ViewportOwner.Actor.Player == none)
+    {
+        return false;
+    }
+
+    // Find the first DHPromptInteraction and check if it's this interaction.
+    // If so, we're in focus.
+    for (i = 0; i < ViewportOwner.Actor.Player.LocalInteractions.Length; ++i)
+    {
+        if (ViewportOwner.Actor.Player.LocalInteractions[i].IsA('DHPromptInteraction'))
+        {
+            return ViewportOwner.Actor.Player.LocalInteractions[i] == self;
+        }
+    }
+
+    return false;
 }
 
 simulated function PostRender(Canvas C)
@@ -47,12 +71,18 @@ simulated function PostRender(Canvas C)
     local string MyPromptText;
     local float X, Y, XL, YL;
 
+    if (!IsFocused())
+    {
+        // Don't display this prompt unless it's actually receiving input.
+        return;
+    }
+
     X = 8;
 
     super.PostRender(C);
 
-    C.DrawColor = class'UColor'.default.White;
-    C.Font = class'DHHud'.static.GetConsoleFont(C);
+    C.DrawColor = Class'UColor'.default.White;
+    C.Font = Class'DHHud'.static.GetConsoleFont(C);
 
     // Prompt Text
     MyPromptText = GetPromptText();

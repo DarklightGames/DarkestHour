@@ -201,7 +201,7 @@ simulated function PostBeginPlay()
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
     {
-        foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
+        foreach AllActors(Class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
             break;
@@ -212,7 +212,7 @@ simulated function PostBeginPlay()
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this objective
     if (NoArtyVolumeProtectionTag != '')
     {
-        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        foreach AllActors(Class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
         {
             NAV.AssociatedActor = self;
             break;
@@ -255,7 +255,7 @@ simulated function PostBeginPlay()
 
             G.DHObjectives[ObjNum] = self;
 
-            foreach AllActors(class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
+            foreach AllActors(Class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
             {
                 if (ObjectiveGroup != none)
                 {
@@ -641,7 +641,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
     for (i = 0; i < CapturingControllers.Length; ++i)
     {
-        DarkestHourGame(Level.Game).SendScoreEvent(CapturingControllers[i], class'DHScoreEvent_ObjectiveCapture'.static.Create());
+        DarkestHourGame(Level.Game).SendScoreEvent(CapturingControllers[i], Class'DHScoreEvent_ObjectiveCapture'.static.Create());
 
         if (PlayerController(CapturingControllers[i]) != none)
         {
@@ -677,13 +677,13 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 if (AxisAwardedReinforcements >= 0)
                 {
                     G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
+                    Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, Class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
                 }
                 else
                 {
                     AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
                     G.ModifyReinforcements(AXIS_TEAM_INDEX, AwardedReinf);
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
+                    Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, Class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -738,13 +738,13 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 if (AlliedAwardedReinforcements >= 0)
                 {
                     G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
+                    Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, Class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
                 }
                 else
                 {
                     AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
                     G.ModifyReinforcements(ALLIES_TEAM_INDEX, AwardedReinf);
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
+                    Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, Class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -793,7 +793,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         {
             // If enemies are present in a clear objective, it will still be active, so broadcast capture
             // If the obj is set to disable when a team clears it, then check to make sure its not the opposite team
-            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+            BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(1, Team), none, none, self);
         }
         else if (!HasEnemiesPresent())
         {
@@ -803,7 +803,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
             if (bActive && !HandleClearedLogic(NumForCheck))
             {
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+                BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(1, Team), none, none, self);
             }
         }
         // Otherwise don't inform that it was captured, as timer will handle notification from here
@@ -812,15 +812,15 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     {
         if (bActive && IsNeutral())
         {
-            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+            BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(0, Team), none, none, self);
         }
         else if (bActive)
         {
-            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+            BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(1, Team), none, none, self);
         }
         else
         {
-            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, Team), none, none, self);
+            BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(2, Team), none, none, self);
         }
     }
 }
@@ -957,7 +957,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 CurrentCapProgress = 0.0;
                 SetActive(false);
                 DisableCapBarsForThisObj();
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+                BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
 
                 // Award time as the objective was cleared and objective is inactive
                 if (MinutesAwarded != 0)
@@ -973,7 +973,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 SetActive(false);
                 SetTimer(0.0, false); // Disable the objective (not just set inactive, it is not meant to be enabled again until reset)
                 DisableCapBarsForThisObj();
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+                BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
 
                 // Award time as the objective was cleared and objective is disabled
                 if (MinutesAwarded != 0)
@@ -986,7 +986,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
             else if (!bRecaptureable)
             {
                 SetTimer(0.0, false);
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+                BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
                 return true;
             }
         }
@@ -1346,10 +1346,10 @@ function ObjectiveNeutralized(int Team)
     ROTeamGame(Level.Game).NotifyObjStateChanged();
 
     // Notify players
-    BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+    BroadcastLocalizedMessage(Class'DHObjectiveMessage', Class'UInteger'.static.FromShorts(0, Team), none, none, self);
 
     GetCapturingControllers(Team, CapturingControllers);
-    ScoreEvent = class'DHScoreEvent_ObjectiveNeutralize'.static.Create();
+    ScoreEvent = Class'DHScoreEvent_ObjectiveNeutralize'.static.Create();
 
     G = DarkestHourGame(Level.Game);
 

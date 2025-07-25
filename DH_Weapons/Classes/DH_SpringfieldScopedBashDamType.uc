@@ -8,5 +8,5 @@ class DH_SpringfieldScopedBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SpringfieldScopedWeapon'
+    WeaponClass=Class'DH_SpringfieldScopedWeapon'
 }

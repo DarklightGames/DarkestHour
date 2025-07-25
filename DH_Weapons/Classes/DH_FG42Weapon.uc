@@ -70,13 +70,13 @@ defaultproperties
     ItemName="FG 42"
     NativeItemName="Fallschirmjägergewehr 42"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_FG42Attachment'
-    PickupClass=class'DH_Weapons.DH_FG42Pickup'
+    FireModeClass(0)=Class'DH_FG42Fire'
+    FireModeClass(1)=Class'DH_FG42MeleeFire'
+    AttachmentClass=Class'DH_FG42Attachment'
+    PickupClass=Class'DH_FG42Pickup'
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_FG42Barrel'
+    BarrelClass=Class'DH_FG42Barrel'
     BarrelSteamBone="Muzzle"
 
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42_1st'

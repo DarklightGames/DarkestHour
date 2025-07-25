@@ -7,5 +7,5 @@ class DH_MN9130ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_MN9130ScopedBashDamType'
+    DamageType=Class'DH_MN9130ScopedBashDamType'
 }

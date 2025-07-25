@@ -17,7 +17,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     PC = PlayerController(OptionalObject);
 
-    S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.Messages[Switch], PC);
+    S = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.Messages[Switch], PC);
 
     if (RelatedPRI_1 != none)
     {

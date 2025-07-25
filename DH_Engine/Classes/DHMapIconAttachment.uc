@@ -245,7 +245,7 @@ final simulated function Vector GetWorldCoords(DHGameReplicationInfo GRI)
     }
     else if (GRI != none)
     {
-        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose, X, Y);
+        Class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose, X, Y);
         L = GRI.GetWorldCoords(x, Y);
     }
 
@@ -262,7 +262,7 @@ final simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
     }
     else
     {
-        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose,,, WorldYaw);
+        Class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose,,, WorldYaw);
     }
 
     if (GRI != none)
@@ -281,7 +281,7 @@ final function UpdateQuantized2DPose()
     if (GRI != none && AttachedTo != none)
     {
         GRI.GetMapCoords(AttachedTo.Location, X, Y);
-        Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);
+        Quantized2DPose = Class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);
     }
 }
 
@@ -327,18 +327,18 @@ simulated function Color GetIconColor(DHPlayer PC)
 
         if (PlayerTeamIndex > 1)
         {
-            if (TeamIndex < arraycount(class'DHColor'.default.TeamColors))
+            if (TeamIndex < arraycount(Class'DHColor'.default.TeamColors))
             {
-                return class'DHColor'.default.TeamColors[TeamIndex];
+                return Class'DHColor'.default.TeamColors[TeamIndex];
             }
         }
         else if (PlayerTeamIndex != TeamIndex && TeamIndex < 2)
         {
-            return class'UColor'.default.Red;
+            return Class'UColor'.default.Red;
         }
     }
 
-    return class'DHColor'.default.FriendlyColor;
+    return Class'DHColor'.default.FriendlyColor;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)

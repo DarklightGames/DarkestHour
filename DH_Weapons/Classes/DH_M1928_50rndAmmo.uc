@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=50
     InitialAmount=50
-    IconMaterial=Material'InterfaceArt_tex.HUD.ppsh_ammo'
+    IconMaterial=Material'InterfaceArt_tex.ppsh_ammo'
 }

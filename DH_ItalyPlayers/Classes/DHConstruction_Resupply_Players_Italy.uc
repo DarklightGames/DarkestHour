@@ -7,5 +7,5 @@ class DHConstruction_Resupply_Players_Italy extends DHConstructionResupplyPlayer
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.ITA_ammo_box'
+    StaticMesh=StaticMesh'DH_Construction_stc.ITA_ammo_box'
 }

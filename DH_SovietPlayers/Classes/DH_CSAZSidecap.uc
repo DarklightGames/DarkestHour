@@ -8,5 +8,5 @@ class DH_CSAZSidecap extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHgear_anm.cs_cap'
-    Skins(0)=Texture'DHSovietCharactersTex.soviet_gear.CS_gear'
+    Skins(0)=Texture'DHSovietCharactersTex.CS_gear'
 }

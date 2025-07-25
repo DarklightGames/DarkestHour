@@ -10,18 +10,18 @@ var DHProjectileCalibrationInfo DebugCalibrationInfo;
 
 function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon VehicleWeapon, Vector StartLocation, float DebugAngleValue, UUnits.EAngleUnit DebugAngleUnit)
 {
-    DebugCalibrationInfo = new class'DHProjectileCalibrationInfo';
+    DebugCalibrationInfo = new Class'DHProjectileCalibrationInfo';
     DebugCalibrationInfo.VehicleWeapon = VehicleWeapon;
     DebugCalibrationInfo.StartLocation = StartLocation;
     DebugCalibrationInfo.DebugAngleValue = DebugAngleValue;
     DebugCalibrationInfo.DebugAngleUnit = DebugAngleUnit;
+    return DebugCalibrationInfo;
 }
 
 function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
     local DHPlayer PC, SpotterPC;
     local DHGameReplicationInfo GRI;
-    local Vector MapLocation;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local int i;
     local float Distance, Threshold;
@@ -37,7 +37,6 @@ function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker
     }
 
     // Gather a list of artillery markers within the distance threshold of the hit location.
-    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
     for (i = 0; i < MapMarkers.Length; ++i)
@@ -46,7 +45,7 @@ function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker
         RequestLocation.Z = 0.0;
         HitLocation.Z = 0.0;
         Distance = VSize(RequestLocation - HitLocation);
-        Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
+        Threshold = Class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
 
         if (Distance < Threshold)
         {

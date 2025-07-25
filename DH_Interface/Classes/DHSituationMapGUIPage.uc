@@ -7,9 +7,12 @@ class DHSituationMapGUIPage extends GUIPage;
 
 var automated   ROGUIProportionalContainer  c_MapRoot;
 var automated   DHGUIMapContainer           c_Map;
+var automated   GUILabel                    l_PromptLabel;
 
 var string                                  HideExecs[2];
 var array<int>                              HideKeys;
+
+var localized string                        EnableMouseControlPrompt;
 
 var int     SavedZoomLevel;
 var Vector  SavedOrigin;
@@ -49,6 +52,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
             Origin.Y = 1 - Origin.Y;
             c_Map.p_Map.SetViewport(default.SavedOrigin, default.SavedZoomLevel);
         }
+
+        PC.bHideMapActivateMousePrompt = false;
     }
 }
 
@@ -88,6 +93,7 @@ function Timer()
 
 function bool MapContainerPreDraw(Canvas C)
 {
+    local DHPlayer PC;
     local float Offset;
 
     Offset = (c_MapRoot.ActualWidth() - c_MapRoot.ActualHeight()) / 2.0;
@@ -98,6 +104,18 @@ function bool MapContainerPreDraw(Canvas C)
                       c_MapRoot.ActualHeight(),
                       c_MapRoot.ActualHeight(),
                       true);
+
+    // Set the correct prompt label based on the state of the HUD.    
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none && PC.bHideMapActivateMousePrompt)
+    {
+        l_PromptLabel.Caption = "";
+    }
+    else
+    {
+        l_PromptLabel.Caption = Class'DarkestHourGame'.static.ParseLoadingHintNoColor(EnableMouseControlPrompt, PC);
+    }
 
     return true;
 }
@@ -224,6 +242,18 @@ defaultproperties
         //OnZoomLevelChanged=OnZoomLevelChanged
     End Object
     c_Map=MapContainerObject
+
+    EnableMouseControlPrompt="Press [%JUMP%] to activate mouse"
+
+    Begin Object Class=GUILabel Name=PromptLabel
+        WinWidth=0.68
+        WinHeight=0.05
+        WinLeft=0.3
+        WinTop=0.93
+        TextAlign=TXTA_Center
+        StyleName="DHSmallText"
+    End Object
+    l_PromptLabel=PromptLabel
 
     MouseCursorIndex=2
 

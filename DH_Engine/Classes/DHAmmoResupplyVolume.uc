@@ -28,7 +28,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    ResupplyStrategy = new class'DHResupplyStrategy';
+    ResupplyStrategy = new Class'DHResupplyStrategy';
 
     UpdateTime = default.UpdateTime; // force UpdateTime to be default (no overriding it in the editor)
 
@@ -61,7 +61,7 @@ function Timer()
         return;
     }
 
-    foreach TouchingActors(class'Pawn', P)
+    foreach TouchingActors(Class'Pawn', P)
     {
         if ((Team != OWNER_Neutral && P.GetTeamNum() != Team) || Level.TimeSeconds - P.LastResupplyTime < UpdateTime)
         {

@@ -9,7 +9,7 @@ static function DHScoreEvent_Kill Create()
 {
     local DHScoreEvent_Kill ScoreEvent;
 
-    ScoreEvent = new class'DHScoreEvent_Kill';
+    ScoreEvent = new Class'DHScoreEvent_Kill';
 
     return ScoreEvent;
 }
@@ -18,6 +18,6 @@ defaultproperties
 {
     HumanReadableName="Kill"
     Value=100
-    CategoryClass=class'DHScoreCategory_Combat'
+    CategoryClass=Class'DHScoreCategory_Combat'
 }
 

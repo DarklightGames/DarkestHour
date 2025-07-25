@@ -36,7 +36,7 @@ static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker 
     else
     {
         T = (T - 0.25) * 2.0;
-        C.A = class'UInterp'.static.Linear(T, 1.0, 0.25) * 255;
+        C.A = Class'UInterp'.static.Linear(T, 1.0, 0.25) * 255;
     }
 
     return C;

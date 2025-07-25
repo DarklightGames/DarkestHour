@@ -24,7 +24,7 @@ function PostBeginPlay()
 
     for (i = 0; i < MaterialsToTrigger.Length; ++i)
     {
-        ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);
+        ReplicatedMaterialTriggers[i] = Spawn(Class'DH_MaterialTriggerReplicationInfo', self);
 
         if (ReplicatedMaterialTriggers[i] != none)
         {

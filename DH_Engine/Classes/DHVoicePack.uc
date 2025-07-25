@@ -139,7 +139,7 @@ function Timer()
 
         if (bUseLocationalVoice)
         {
-            SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+            SoundPlayer = Spawn(Class'ROVoiceMessageEffect',,, senderLoc);
 
             if (SoundPlayer != none)
             {

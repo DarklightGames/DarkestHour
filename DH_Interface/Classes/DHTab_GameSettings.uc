@@ -57,7 +57,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     ed_PlayerName.MyEditBox.MaxWidth = 32; // compared to RO, this allows longer player name & no longer converts spaces
 
-    for (ViewFOVSetting = class'DHPlayer'.default.ViewFOVMin; ViewFOVSetting <= class'DHPlayer'.default.ViewFOVMax; ViewFOVSetting += 5)
+    for (ViewFOVSetting = Class'DHPlayer'.default.ViewFOVMin; ViewFOVSetting <= Class'DHPlayer'.default.ViewFOVMax; ViewFOVSetting += 5)
     {
         co_ViewFOV.AddItem(string(ViewFOVSetting) @ DegreesText);
     }
@@ -114,7 +114,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'GameInfo'.default.GoreLevel == 0;
+                bOptionEnabled = Class'GameInfo'.default.GoreLevel == 0;
             }
 
             ch_NoGore.Checked(bOptionEnabled);
@@ -137,7 +137,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'DHPlayer'.default.bIsIncognito;
+                bOptionEnabled = Class'DHPlayer'.default.bIsIncognito;
             }
 
             ch_Incognito.Checked(bOptionEnabled);
@@ -152,7 +152,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'DHPlayer'.default.bInterpolatedTankThrottle;
+                bOptionEnabled = Class'DHPlayer'.default.bInterpolatedTankThrottle;
             }
 
             ch_TankThrottle.Checked(bOptionEnabled);
@@ -165,7 +165,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'DHPlayer'.default.bInterpolatedVehicleThrottle;
+                bOptionEnabled = Class'DHPlayer'.default.bInterpolatedVehicleThrottle;
             }
 
             ch_VehicleThrottle.Checked(bOptionEnabled);
@@ -178,7 +178,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'DHPlayer'.default.bManualTankShellReloading;
+                bOptionEnabled = Class'DHPlayer'.default.bManualTankShellReloading;
             }
 
             ch_ManualReloading.Checked(bOptionEnabled);
@@ -191,7 +191,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bOptionEnabled = class'DHPlayer'.default.bLockTankOnEntry;
+                bOptionEnabled = Class'DHPlayer'.default.bLockTankOnEntry;
             }
 
             ch_LockTankOnEntry.Checked(bOptionEnabled);
@@ -227,7 +227,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                i = class'Player'.default.ConfiguredInternetSpeed;
+                i = Class'Player'.default.ConfiguredInternetSpeed;
             }
 
             // Remove the NetSpeed User Defined value (last value), we will add it back only if it is actually defined by the user
@@ -313,9 +313,9 @@ function SaveSettings()
     // View FOV
     ViewFOV = float(Repl(co_ViewFOV.GetText(), " " $ DegreesText, "")); // gets text value for list's current index position, then strips the degrees text & converts to number
 
-    if (ViewFOV != class'DHPlayer'.default.ConfigViewFOV)
+    if (ViewFOV != Class'DHPlayer'.default.ConfigViewFOV)
     {
-        class'DHPlayer'.static.SetDefaultViewFOV(ViewFOV);
+        Class'DHPlayer'.static.SetDefaultViewFOV(ViewFOV);
         PC.FixFOV(); // switches player to new default FOV setting
     }
 
@@ -333,10 +333,10 @@ function SaveSettings()
             PC.Level.Game.SaveConfig();
         }
     }
-    else if (class'GameInfo'.default.GoreLevel != GoreLevel)
+    else if (Class'GameInfo'.default.GoreLevel != GoreLevel)
     {
-        class'GameInfo'.default.GoreLevel = GoreLevel;
-        class'GameInfo'.static.StaticSaveConfig();
+        Class'GameInfo'.default.GoreLevel = GoreLevel;
+        Class'GameInfo'.static.StaticSaveConfig();
     }
 
     // Spawn with bayonet
@@ -400,45 +400,45 @@ function SaveSettings()
     }
     else
     {
-        if (class'DHPlayer'.default.bInterpolatedTankThrottle != bTankThrottle)
+        if (Class'DHPlayer'.default.bInterpolatedTankThrottle != bTankThrottle)
         {
-            class'DHPlayer'.default.bInterpolatedTankThrottle = bTankThrottle;
+            Class'DHPlayer'.default.bInterpolatedTankThrottle = bTankThrottle;
             bStaticSaveConfig = true;
         }
 
-        if (class'DHPlayer'.default.bInterpolatedVehicleThrottle != bVehicleThrottle)
+        if (Class'DHPlayer'.default.bInterpolatedVehicleThrottle != bVehicleThrottle)
         {
-            class'DHPlayer'.default.bInterpolatedVehicleThrottle = bVehicleThrottle;
+            Class'DHPlayer'.default.bInterpolatedVehicleThrottle = bVehicleThrottle;
             bStaticSaveConfig = true;
         }
 
-        if (class'DHPlayer'.default.bManualTankShellReloading != bManualReloading)
+        if (Class'DHPlayer'.default.bManualTankShellReloading != bManualReloading)
         {
-            class'DHPlayer'.default.bManualTankShellReloading = bManualReloading;
+            Class'DHPlayer'.default.bManualTankShellReloading = bManualReloading;
             bStaticSaveConfig = true;
         }
 
-        if (class'DHPlayer'.default.bLockTankOnEntry != bLockTankOnEntry)
+        if (Class'DHPlayer'.default.bLockTankOnEntry != bLockTankOnEntry)
         {
-            class'DHPlayer'.default.bLockTankOnEntry = bLockTankOnEntry;
+            Class'DHPlayer'.default.bLockTankOnEntry = bLockTankOnEntry;
             bStaticSaveConfig = true;
         }
         
-        if (class'DHPlayer'.default.AutomaticVehicleAlerts != AutomaticVehicleAlerts)
+        if (Class'DHPlayer'.default.AutomaticVehicleAlerts != AutomaticVehicleAlerts)
         {
-            class'DHPlayer'.default.AutomaticVehicleAlerts = AutomaticVehicleAlerts;
+            Class'DHPlayer'.default.AutomaticVehicleAlerts = AutomaticVehicleAlerts;
             bStaticSaveConfig = true;
         }
 
-        if (class'DHPlayer'.default.bIsIncognito != bIncognito)
+        if (Class'DHPlayer'.default.bIsIncognito != bIncognito)
         {
-            class'DHPlayer'.default.bIsIncognito = bIncognito;
+            Class'DHPlayer'.default.bIsIncognito = bIncognito;
             bStaticSaveConfig = true;
         }
 
         if (bStaticSaveConfig)
         {
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -452,7 +452,7 @@ function SaveSettings()
         bSaveConfig = true;
     }
 
-    if (NetSpeed != OriginalNetSpeed || class'Player'.default.ConfiguredInternetSpeed == 9636)
+    if (NetSpeed != OriginalNetSpeed || Class'Player'.default.ConfiguredInternetSpeed == 9636)
     {
         if (PC.Player != none)
         {
@@ -462,8 +462,8 @@ function SaveSettings()
         }
         else
         {
-            class'Player'.default.ConfiguredInternetSpeed = NetSpeedValues[NetSpeed];
-            class'Player'.static.StaticSaveConfig();
+            Class'Player'.default.ConfiguredInternetSpeed = NetSpeedValues[NetSpeed];
+            Class'Player'.static.StaticSaveConfig();
         }
     }
 
@@ -489,17 +489,17 @@ function ResetClicked()
     local DHPlayer DHP;
     local int      i;
 
-    class'DHPlayer'.static.ResetConfig("ConfigViewFOV");
-    class'GameInfo'.static.ResetConfig("GoreLevel");
-    class'DHPlayer'.static.ResetConfig("bSpawnWithBayonet");
-    class'DHPlayer'.static.ResetConfig("AutomaticVehicleAlerts");
-    class'DHPlayer'.static.ResetConfig("bInterpolatedTankThrottle");
-    class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
-    class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
-    class'DHPlayer'.static.ResetConfig("bLockTankOnEntry");
-    class'DHPlayer'.static.ResetConfig("bIsIncognito");
-    class'PlayerController'.static.ResetConfig("bDynamicNetSpeed");
-    class'Player'.static.ResetConfig("ConfiguredInternetSpeed");
+    Class'DHPlayer'.static.ResetConfig("ConfigViewFOV");
+    Class'GameInfo'.static.ResetConfig("GoreLevel");
+    Class'DHPlayer'.static.ResetConfig("bSpawnWithBayonet");
+    Class'DHPlayer'.static.ResetConfig("AutomaticVehicleAlerts");
+    Class'DHPlayer'.static.ResetConfig("bInterpolatedTankThrottle");
+    Class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
+    Class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
+    Class'DHPlayer'.static.ResetConfig("bLockTankOnEntry");
+    Class'DHPlayer'.static.ResetConfig("bIsIncognito");
+    Class'PlayerController'.static.ResetConfig("bDynamicNetSpeed");
+    Class'Player'.static.ResetConfig("ConfiguredInternetSpeed");
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[0]);
 
     DHP = DHPlayer(PlayerOwner());
@@ -508,12 +508,12 @@ function ResetClicked()
     // Before they didn't take effect until the player had exited the game
     if (DHP != none)
     {
-        DHP.bInterpolatedTankThrottle = class'DHPlayer'.default.bInterpolatedTankThrottle;
-        DHP.bInterpolatedVehicleThrottle = class'DHPlayer'.default.bInterpolatedVehicleThrottle;
-        DHP.bManualTankShellReloading = class'DHPlayer'.default.bManualTankShellReloading;
-        DHP.bLockTankOnEntry = class'DHPlayer'.default.bLockTankOnEntry;
-        DHP.AutomaticVehicleAlerts = class'DHPlayer'.default.AutomaticVehicleAlerts;
-        DHP.bIsIncognito = class'DHPlayer'.default.bIsIncognito;
+        DHP.bInterpolatedTankThrottle = Class'DHPlayer'.default.bInterpolatedTankThrottle;
+        DHP.bInterpolatedVehicleThrottle = Class'DHPlayer'.default.bInterpolatedVehicleThrottle;
+        DHP.bManualTankShellReloading = Class'DHPlayer'.default.bManualTankShellReloading;
+        DHP.bLockTankOnEntry = Class'DHPlayer'.default.bLockTankOnEntry;
+        DHP.AutomaticVehicleAlerts = Class'DHPlayer'.default.AutomaticVehicleAlerts;
+        DHP.bIsIncognito = Class'DHPlayer'.default.bIsIncognito;
     }
 
     for (i = 0; i < Components.Length; ++i)
@@ -600,7 +600,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=NoGore
         Caption="No Gore"
-        Hint="Recommended to have this unchecked"
+        Hint="No dismemberment, decapition, or blood effects"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"

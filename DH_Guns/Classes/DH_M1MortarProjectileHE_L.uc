@@ -7,5 +7,5 @@ class DH_M1MortarProjectileHE_L extends DH_Model35MortarProjectileHEBig;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.US_HE_M56'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.US_HE_M56'
 }

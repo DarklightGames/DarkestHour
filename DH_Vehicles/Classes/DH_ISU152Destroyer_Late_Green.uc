@@ -7,5 +7,5 @@ class DH_ISU152Destroyer_Late_Green extends DH_ISU152Destroyer_Late;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu_green_ext'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.isu_green_ext'
 }

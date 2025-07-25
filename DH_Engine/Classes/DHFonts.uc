@@ -29,7 +29,7 @@ var FontStyleItem DHTinyFontItems[3];
 
 static function Font GetFontByIndex(int i) {
     if (default.Fonts[i] == none) {
-        default.Fonts[i] = Font(DynamicLoadObject(default.FontNames[i], class'Font'));
+        default.Fonts[i] = Font(DynamicLoadObject(default.FontNames[i], Class'Font'));
         if (default.Fonts[i] == none) {
             Warn("Could not dynamically load" @ default.FontNames[i]);
         }
