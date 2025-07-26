@@ -2,7 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] destroyed meshes
+// [ ] destroyed mesh
+// [ ] factory classes for variants
+// [ ] vehicle registry entries
+// [ ] re-import with fixed mirroring
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
