@@ -2,10 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] destroyed mesh
 // [ ] factory classes for variants
 // [ ] vehicle registry entries
-// [ ] re-import with fixed mirroring
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -24,13 +22,16 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_DG'
-    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_DG'
+    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_Early_W'
+    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_Grey'
     Skins(2)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Canvas'
     Skins(3)=FinalBlend'DH_OpelBlitz_tex.Opel_Blitz_Windows_FB'
     // This skin is not actually used on the mesh, but is here for convenience with the attachment skin mapping system.
-    Skins(4)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Attachments_DG'
+    Skins(4)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Attachments_Grey'
 
+    DestroyedMeshSkins(0)=Combiner'DH_OpelBlitz_tex.Opel_Blitz_Exterior_Early_W_Destroyed'
+    DestroyedMeshSkins(1)=Combiner'DH_OpelBlitz_tex.Opel_Blitz_Interior_Grey_Destroyed'
+    DestroyedMeshSkins(2)=Combiner'DH_OpelBlitz_tex.Opel_Blitz_Canvas_Destroyed'
 
     BeginningIdleAnim="idle"
 
@@ -135,10 +136,9 @@ defaultproperties
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_01',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0)))),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_02',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TOOLS',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
-    RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
-    RandomAttachmentGroups(3)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS',SkinIndexMap=((VehicleSkinIndex=2,AttachmentSkinIndex=0))))))
+    RandomAttachmentGroups(2)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
+    RandomAttachmentGroups(3)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS',SkinIndexMap=((VehicleSkinIndex=2,AttachmentSkinIndex=0))))))
     
-
     // HUD
     VehicleHudImage=Texture'DH_OpelBlitz_tex.interface.opelblitz_body'
     VehicleHudEngineY=0.125

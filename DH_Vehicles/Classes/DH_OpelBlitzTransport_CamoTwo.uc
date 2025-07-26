@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_OpelBlitzSupport_CamoTwo extends DH_OpelBlitzSupport;
+class DH_OpelBlitzTransport_CamoTwo extends DH_OpelBlitzTransport;
 
 defaultproperties
 {

@@ -8,7 +8,4 @@ class DH_OpelBlitzTransport_EarlyEast extends DH_OpelBlitzTransport;
 defaultproperties
 {
     Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_Early_E'
-    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_Grey'
-    Skins(2)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Canvas'
-    Skins(4)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Attachments_Grey'
 }
