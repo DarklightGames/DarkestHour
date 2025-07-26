@@ -2,9 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] finalize textures
 // [ ] destroyed meshes
-// [ ] set up the variants correctly
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -133,8 +131,8 @@ defaultproperties
     SteerBoneAxis=AXIS_Y
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_01',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0)))),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_LIGHTS_02',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
-    RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TOOLS'))))
-    RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE'))))
+    RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_TOOLS',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
+    RandomAttachmentGroups(2)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_PLATE',SkinIndexMap=((VehicleSkinIndex=4,AttachmentSkinIndex=0))))))
     RandomAttachmentGroups(3)=(Options=((Probability=0.8,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_OpelBlitz_stc.OPELBLITZ_ATTACHMENT_CANVAS',SkinIndexMap=((VehicleSkinIndex=2,AttachmentSkinIndex=0))))))
     
 
