@@ -111,6 +111,15 @@
             }
         },
         {
+            "label": "Search for Class in Maps",
+            "command": "grep -Rl . -e ${input:className} . | sort | uniq",
+            "type": "shell",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/DarkestHourDev/Maps"
+            }
+        },
+        {
             "label": "Build and Run",
             "dependsOrder": "sequence",
             "dependsOn": [
@@ -142,13 +151,19 @@
                 "isDefault": true
             },
             "problemMatcher": []
-        }
+        },
     ],
     "inputs": [
         {
             "type": "promptString",
             "id": "buildArgs",
             "description": "Optional: Type-in extra build parameters",
+            "default": ""
+        },
+        {
+            "type": "promptString",
+            "id": "className",
+            "description": "Name of the class to search for",
             "default": ""
         },
         {
