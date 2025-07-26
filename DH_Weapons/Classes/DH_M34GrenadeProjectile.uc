@@ -5,9 +5,6 @@
 
 class DH_M34GrenadeProjectile extends DHGrenadeProjectile;
 
-// Extends a HEAT projectile to make use of the impact fuze.
-// This is NOT an anti-tank grenade, so penetration values are small.
-
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.m34_throw'
