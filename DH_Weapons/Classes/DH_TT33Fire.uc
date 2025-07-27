@@ -14,6 +14,7 @@ defaultproperties
     Spread=210
     MaxVerticalRecoilAngle=500
     MaxHorizontalRecoilAngle=300
+    FireRate=0.22
 
     FireSounds(0)=Sound'Inf_Weapons.tt33_fire01'
     FireSounds(1)=Sound'Inf_Weapons.tt33_fire02'
