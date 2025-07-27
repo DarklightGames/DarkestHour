@@ -9,7 +9,6 @@ defaultproperties
 {
     ProjectileClass=Class'DH_TT33Bullet'
     AmmoClass=Class'TT33Ammo'
-    FireRate=0.2
 
     Spread=210
     MaxVerticalRecoilAngle=500
