@@ -159,7 +159,7 @@ defaultproperties
     MapInfos(3)=(Name="DH-Brecourt_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_Small)
     MapInfos(4)=(Name="DH-Bridgehead_Advance",AlliedNation=NATION_Canada,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(5)=(Name="DH-Caen_Advance",AlliedNation=NATION_Canada,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
-    MapInfos(6)=(Name="DH-Carentan_Causeway_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_Medium)
+    MapInfos(6)=(Name="DH-Carentan_Causeway_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_Small)
     MapInfos(7)=(Name="DH-Carentan_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_ExtraSmall)
     MapInfos(8)=(Name="DH-Carpiquet_Airfield_Advance",AlliedNation=NATION_Canada,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(9)=(Name="DH-Cheneux_Push",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Push',Size=SIZE_Medium)

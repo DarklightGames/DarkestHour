@@ -83,6 +83,8 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Wespe_stc.wespe_turret_pitch_collision',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Wespe_stc.wespe_turret_yaw_collision',AttachBone="GUN_YAW")
 
+    AnimationDrivers(0)=(Channel=2,BoneName="EQUILIBRATOR_ROOT",AnimationName="WESPE_EQUILIBRATOR_DRIVER",AnimationFrameCount=46,RotationType=ROTATION_Pitch)
+
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=4.0
