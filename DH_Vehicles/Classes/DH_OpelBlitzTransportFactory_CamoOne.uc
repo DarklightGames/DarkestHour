@@ -3,10 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_OpelBlitzSupportFactory_Snow extends DH_OpelBlitzSupportFactory;
+class DH_OpelBlitzTransportFactory_CamoOne extends DH_OpelBlitzTransportFactory;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_OpelBlitzSupport_Snow'
-    Skins(0)=Texture'DH_VehiclesGE_tex3.OpelBlitz_body_snow'
+    VehicleClass=Class'DH_OpelBlitzTransport_CamoOne'
+    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_Camo1'
+    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_DG'
 }
