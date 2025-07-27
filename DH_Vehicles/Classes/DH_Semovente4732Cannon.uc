@@ -47,7 +47,7 @@ defaultproperties
 
     nProjectileDescriptions(0)="Granata Perforante da 47"
     nProjectileDescriptions(1)="Granata da 47"
-    nProjectileDescriptions(2)="Effeto Pronto da 47"
+    nProjectileDescriptions(2)="Effetto Pronto da 47"
 
     // Source [1] indicates that there was an even split of ammo types & that the maximum loadout of each gun was 60 rounds.
     InitialPrimaryAmmo=20
