@@ -9,6 +9,6 @@ defaultproperties
 {
     Speed=37418.24              // 620m/s (https://en.wikipedia.org/wiki/Breda_30)
     BallisticCoefficient=0.276  // https://www.topgun.es/punta-65-carcano-160gr-hornady.html
-    Damage=100.0                // Intermediate cartridge, lower damage than other rifles.
+    Damage=107.0                // Intermediate cartridge, lower damage than other rifles.
     MyDamageType=Class'DH_Breda30DamType'
 }
