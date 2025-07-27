@@ -3,7 +3,6 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] factory classes for variants
-// [ ] vehicle registry entries
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
@@ -111,7 +110,7 @@ defaultproperties
     ImpactWorldDamageMult=1.0
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.OpelBlitz_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_OpelBlitz_stc.OPEL_BLITZ_DESTROYED'
 
     // Vehicle destruction
     ExplosionDamage=50.0
