@@ -4145,7 +4145,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconLargeScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale, PRI.GetNamePrefix());
         }
     }
 }
