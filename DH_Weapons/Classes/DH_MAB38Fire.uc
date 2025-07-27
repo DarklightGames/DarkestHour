@@ -21,7 +21,7 @@ defaultproperties
     RecoilRate=0.04285
     MaxVerticalRecoilAngle=230
     MaxHorizontalRecoilAngle=66
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=8.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=8.0,OutVal=1.1),(InVal=11.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=13.0
 
     FlashEmitterClass=Class'MuzzleFlash1stMP'
