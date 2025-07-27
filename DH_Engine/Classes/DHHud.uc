@@ -1080,21 +1080,6 @@ function DrawHudPassC(Canvas C)
         {
             VCR = DHVoiceChatRoom(PlayerOwner.VoiceReplicationInfo.GetChannelAt(PortraitPRI.ActiveChannel));
 
-            // Draw first line of text
-            if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
-            {
-                if (VCR != none && VCR.IsSquadChannel())
-                {
-                    PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.SquadColor;
-                }
-
-                PortraitText[0].Text = "[" $ DHPlayerReplicationInfo(PortraitPRI).GetNamePrefix() $ "]" @ PortraitPRI.PlayerName;
-            }
-            else
-            {
-                PortraitText[0].Text = PortraitPRI.PlayerName;
-            }
-
             if (PortraitPRI.Team != none)
             {
                 if (PortraitPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
@@ -1112,6 +1097,21 @@ function DrawHudPassC(Canvas C)
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
                 }
+            }
+
+            // Draw first line of text
+            if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+            {
+                if (VCR != none && VCR.IsSquadChannel())
+                {
+                    PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.SquadColor;
+                }
+
+                PortraitText[0].Text = "[" $ DHPlayerReplicationInfo(PortraitPRI).GetNamePrefix() $ "]" @ PortraitPRI.PlayerName;
+            }
+            else
+            {
+                PortraitText[0].Text = PortraitPRI.PlayerName;
             }
 
             // PortraitX goes from 0 to 1 -- we'll use that as alpha
