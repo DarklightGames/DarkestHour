@@ -166,7 +166,7 @@ function SendStandardHeaders(optional string ContentType, optional bool bCache)
         HTTPResponse("HTTP/1.1 200 OK");
     }
 
-    HTTPHeader("Server: dhserver "$DarkestHourGame(Connection.Level.Game).Version.ToString());
+    HTTPHeader("Server: dhserver" @ Class'DHBuildManifest'.default.Version.ToShortString());
 
     // Add Content-Type when the response has a body or when type is explicitly
     // defined.
