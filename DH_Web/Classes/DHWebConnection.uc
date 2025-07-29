@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWebConnection extends WebConnection;
@@ -134,8 +134,8 @@ function ProcessPost(string S)
 
 function CreateResponseObject()
 {
-    Request = new(none) class'DHWebRequest';
+    Request = new(none) Class'DHWebRequest';
 
-    Response = new(none) class'DHWebResponse';
+    Response = new(none) Class'DHWebResponse';
     Response.Connection = self;
 }

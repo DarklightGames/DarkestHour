@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWebServer extends WebServer;
@@ -8,5 +8,5 @@ class DHWebServer extends WebServer;
 defaultproperties
 {
     ListenPort=8077
-    AcceptClass=class'DH_Web.DHWebConnection'
+    AcceptClass=Class'DH_Web.DHWebConnection'
 }

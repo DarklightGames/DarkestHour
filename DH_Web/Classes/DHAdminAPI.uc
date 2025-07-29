@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAdminAPI extends WebApplication;
@@ -205,7 +205,7 @@ function HandleServer(DHWebRequest Request, DHWebResponse Response)
                 return;
             }
 
-            Payload = (new class'JSONObject')
+            Payload = (new Class'JSONObject')
                       .PutString("server_name", GRI.ServerName)
                       .PutInteger("max_players", GRI.MaxPlayers)
                       .PutInteger("players", GRI.PRIArray.Length)
@@ -245,7 +245,7 @@ function HandleGame(DHWebRequest Request, DHWebResponse Response)
                 return;
             }
 
-            Payload = (new class'JSONObject')
+            Payload = (new Class'JSONObject')
                       .PutString("map", Level.GetURLMap())
                       .PutString("game_type", GRI.GameType.default.GameTypeName)
                       .PutInteger("time_elapsed", GRI.ElapsedTime - GRI.RoundStartTime)
@@ -291,7 +291,7 @@ function JSONObject SerializePlayers()
     local DHPlayer PC;
     local Controller C;
 
-    JSONData = class'JSONArray'.static.Create();
+    JSONData = Class'JSONArray'.static.Create();
 
     for (C = Level.ControllerList; C != none; C = C.nextController)
     {
@@ -302,14 +302,14 @@ function JSONObject SerializePlayers()
             continue;
         }
 
-        JSONData.Add((new class'JSONObject')
+        JSONData.Add((new Class'JSONObject')
                      .PutString("roid", PC.GetPlayerIDHash())
-                     .PutString("guid", Caps(class'MD5Hash'.static.GetHashString(PC.ClientGUID)))
+                     .PutString("guid", Caps(Class'MD5Hash'.static.GetHashString(PC.ClientGUID)))
                      .PutString("name", PC.PlayerReplicationInfo.PlayerName)
                      .PutString("addr", PC.GetPlayerNetworkAddress()));
     }
 
-    return (new class'JSONObject').Put("players", JSONData);
+    return (new Class'JSONObject').Put("players", JSONData);
 }
 
 // CONSOLE
