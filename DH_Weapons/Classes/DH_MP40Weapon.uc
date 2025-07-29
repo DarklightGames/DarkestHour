@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
@@ -9,13 +9,13 @@ defaultproperties
 {
     ItemName="MP 40"
     NativeItemName="Maschinenpistole 40"
-    FireModeClass(0)=class'DH_Weapons.DH_MP40Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP40MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MP40Attachment'
-    PickupClass=class'DH_Weapons.DH_MP40Pickup'
+    FireModeClass(0)=Class'DH_MP40Fire'
+    FireModeClass(1)=Class'DH_MP40MeleeFire'
+    AttachmentClass=Class'DH_MP40Attachment'
+    PickupClass=Class'DH_MP40Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -49,6 +49,6 @@ defaultproperties
     PutDownEmptyAnim="put_away_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 }

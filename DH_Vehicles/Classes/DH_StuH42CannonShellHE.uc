@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuH42CannonShellHE extends DHCannonShellHE;
@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=650  //1.75 KG TNT
     Damage=700.0
     DamageRadius=1250.0
-    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
+    MyDamageType=Class'DHShellHE105mmDamageType'
     PenetrationMag=1000.0
     HullFireChance=1.0
     EngineFireChance=1.0
@@ -25,18 +25,18 @@ defaultproperties
     DrawScale=1.5
     bHasTracer=false
     bHasShellTrail=false
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=Class'ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=Class'ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=Class'ROArtilleryWaterEmitter'
 
     //Sound
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=SoundGroup'Artillery.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explo04'
 
     bDebugInImperial=false
 

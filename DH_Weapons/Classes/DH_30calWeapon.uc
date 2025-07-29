@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_30calWeapon extends DHMGWeapon;
@@ -9,9 +9,9 @@ defaultproperties
 {
     ItemName="M1919A6 Browning Machine Gun"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_30calFire'
-    AttachmentClass=class'DH_Weapons.DH_30calAttachment'
-    PickupClass=class'DH_Weapons.DH_30calPickup'
+    FireModeClass(0)=Class'DH_30calFire'
+    AttachmentClass=Class'DH_30calAttachment'
+    PickupClass=Class'DH_30calPickup'
 
     Mesh=SkeletalMesh'DH_M1919_anm.M1919A6_1st'
 
@@ -23,14 +23,14 @@ defaultproperties
     InitialNumPrimaryMags=2
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_30CalBarrel'
+    BarrelClass=Class'DH_30CalBarrel'
     BarrelSteamBone="MUZZLE_A6"
 
     PutDownAnim="putaway"
     BipodMagEmptyReloadAnim="reload_empty"
     BipodMagPartialReloadAnim="reload_half"
 
-    BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
+    BeltBulletClass=Class'DH_30calBeltRound'
     MGBeltBones(0)="BELT_01"
     MGBeltBones(1)="BELT_02"
     MGBeltBones(2)="BELT_03"

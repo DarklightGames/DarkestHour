@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShovelBuildFireMode extends DHWeaponFire;
@@ -14,7 +14,7 @@ var     float           TraceDistanceInMeters; // player has to be within this d
 simulated function bool AllowFire()
 {
     local Actor  HitActor;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local DHPawn Pawn;
 
     if (Weapon == none ||
@@ -28,9 +28,9 @@ simulated function bool AllowFire()
     }
 
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Instigator.GetViewRotation()));
+    TraceEnd = TraceStart + (Class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * Vector(Instigator.GetViewRotation()));
 
-    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
+    foreach Weapon.TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
         if (HitActor != none &&
             HitActor.bStatic &&
@@ -67,7 +67,7 @@ event ModeDoFire()
     {
         GotoState('Building');
     }
-    else 
+    else
     {
         Weapon.StopFire(ThisModeNum);
     }
@@ -137,8 +137,8 @@ defaultproperties
     FireAnim="dig"
     FireAnimRate=1.0
     FireTweenTime=0.25
-    FireSounds(0)=Sound'DH_WeaponSounds.Shovel.shovel_1'
-    FireSounds(1)=Sound'DH_WeaponSounds.Shovel.shovel_3'
-    FireSounds(2)=Sound'DH_WeaponSounds.Shovel.shovel_4'
+    FireSounds(0)=Sound'DH_WeaponSounds.shovel_1'
+    FireSounds(1)=Sound'DH_WeaponSounds.shovel_3'
+    FireSounds(2)=Sound'DH_WeaponSounds.shovel_4'
     bIgnoresWeaponLock=true
 }

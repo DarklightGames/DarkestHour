@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WolverineCannonPawn_Early extends DH_WolverineCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_WolverineCannon_Early'
+    GunClass=Class'DH_WolverineCannon_Early'
 }

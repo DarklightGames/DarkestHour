@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ChurchillMkVIITank extends DHArmoredVehicle;
@@ -12,7 +12,7 @@ exec function HideGuards() // TEMPDEBUG - exec to hide the track guards, so can 
 {
     if (IsDebugModeAllowed())
     {
-        if (Skins[6] == default.Skins[6]) Skins[6] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+        if (Skins[6] == default.Skins[6]) Skins[6] = Texture'DH_VehiclesGE_tex2.Alpha';
         else Skins[6] = default.Skins[6];
     }
 }
@@ -21,15 +21,15 @@ exec function ToggleTreads() // TEMPDEBUG - exec to toggle between normal & dest
 {
     if (IsDebugModeAllowed())
     {
-        if (LeftTreadPanner.Material == Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest')
+        if (LeftTreadPanner.Material == Combiner'DH_Churchill_tex.churchill_treads_dest')
         {
-            LeftTreadPanner.Material = Texture'DH_Churchill_tex.churchill.churchill_treads';
-            RightTreadPanner.Material = Texture'DH_Churchill_tex.churchill.churchill_treads';
+            LeftTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
+            RightTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
         }
         else
         {
-            LeftTreadPanner.Material = Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest';
-            RightTreadPanner.Material = Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest';
+            LeftTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
+            RightTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
         }
 
         Skins[LeftTreadIndex] = LeftTreadPanner;
@@ -47,19 +47,19 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_ext'
-    Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVII_body_ext'
-    Skins(1)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
-//  Skins(2)=Texture'DH_Churchill_tex.churchill.churchill_treads' // TODO: tread texture doesn't have wrap continuity from top edge to bottom edge, which needs fixing
-//  Skins(3)=Texture'DH_Churchill_tex.churchill.churchill_treads'
-    Skins(2)=Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest' // TODO: temporary use of destroyed treads as the darkened, messed up overlay actually makes these treads look better
-    Skins(3)=Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest'
-    Skins(4)=Texture'DH_Churchill_tex.churchill.churchill_interior'
-    Skins(5)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
-    Skins(6)=Texture'DH_Churchill_tex.churchill.ChurchillMkVII_body_ext' // track guards separate so can easily be split later (random bits missing, similar to panther schurzen)
+    Skins(0)=Texture'DH_Churchill_tex.ChurchillMkVII_body_ext'
+    Skins(1)=Texture'DH_Churchill_tex.ChurchillMkVIIl_turret'
+//  Skins(2)=Texture'DH_Churchill_tex.churchill_treads' // TODO: tread texture doesn't have wrap continuity from top edge to bottom edge, which needs fixing
+//  Skins(3)=Texture'DH_Churchill_tex.churchill_treads'
+    Skins(2)=Combiner'DH_Churchill_tex.churchill_treads_dest' // TODO: temporary use of destroyed treads as the darkened, messed up overlay actually makes these treads look better
+    Skins(3)=Combiner'DH_Churchill_tex.churchill_treads_dest'
+    Skins(4)=Texture'DH_Churchill_tex.churchill_interior'
+    Skins(5)=Texture'DH_VehiclesUK_tex.Cromwell_body_int'
+    Skins(6)=Texture'DH_Churchill_tex.ChurchillMkVII_body_ext' // track guards separate so can easily be split later (random bits missing, similar to panther schurzen)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMkVIICannonPawn',WeaponBone="turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ChurchillMkVIICannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-85,Y=-101.0,Z=104.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-152.0,Y=-82.0,Z=109.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-152.0,Y=82.0,Z=109.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
@@ -90,7 +90,6 @@ defaultproperties
     RearLeftAngle=203.0
 
     // Movement
-    MaxCriticalSpeed=587.0 // 35 kph
     TransRatio=0.078 // gives top speed on the flat of 15 mph (approx 24 kph) // TODO: may need to reduce this slightly for the Mk.VII as think it was a little slower
 
     // Damage
@@ -103,9 +102,9 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Y=0.0,Z=65.0))
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
-    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
+    VehHitpoints(2)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
     NewVehHitpoints(0)=(PointRadius=15.0,PointBone="Turret",PointOffset=(X=48.0,Y=0.0,Z=19.0),NewHitPointType=NHP_GunPitch)
     TreadHitMaxHeight=37.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_Churchill_stc.Churchill_DamagedTrack_left'
@@ -126,12 +125,12 @@ defaultproperties
     ExitPositions(6)=(X=-85.0,Y=140.0,Z=75.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    IdleSound=SoundGroup'Vehicle_Engines.KV1s_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.KV1s_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=2
@@ -146,9 +145,9 @@ defaultproperties
     ShadowZOffset=55.0
 
     // HUD
-    VehicleHudImage=Texture'DH_Churchill_tex.hud.churchill_body'
-    VehicleHudTurret=TexRotator'DH_Churchill_tex.hud.churchill_mkvii_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Churchill_tex.hud.churchill_mkvii_turret_look'
+    VehicleHudImage=Texture'DH_Churchill_tex.churchill_body'
+    VehicleHudTurret=TexRotator'DH_Churchill_tex.churchill_mkvii_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Churchill_tex.churchill_mkvii_turret_look'
     VehicleHudEngineX=0.505
     VehicleHudEngineY=0.76
     VehicleHudTreadsPosX(0)=0.36
@@ -166,7 +165,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.82
     VehicleHudOccupantsX(6)=0.69
     VehicleHudOccupantsY(6)=0.67
-    SpawnOverlay(0)=Material'DH_Churchill_tex.HUD.churchill_mkvii'
+    SpawnOverlay(0)=Material'DH_Churchill_tex.churchill_mkvii'
 
     // Visible wheels
     LeftWheelBones(0)="wheel_L_1"

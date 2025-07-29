@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MillsBombDamType extends DHThrowableExplosiveDamageType
@@ -8,6 +8,6 @@ class DH_MillsBombDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MillsBombWeapon'
-    HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
+    WeaponClass=Class'DH_MillsBombWeapon'
+    HUDIcon=Texture'DH_InterfaceArt_tex.usgrenade'
 }

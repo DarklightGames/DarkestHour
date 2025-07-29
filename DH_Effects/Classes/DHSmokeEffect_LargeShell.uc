@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSmokeEffect_LargeShell extends DHSmokeEffectBase;
@@ -17,8 +17,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=10.0,Y=10.0)
-        ColorScale(0)=(color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.6
         FadeOutStartTime=2.56
         FadeInEndTime=0.48
@@ -29,7 +29,7 @@ defaultproperties
         StartSizeRange=(Z=(Min=100.0,Max=100.0))
         InitialParticlesPerSecond=4.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=3.0)
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=15.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
@@ -46,8 +46,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(Z=-0.2)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.8
         FadeOutStartTime=35.0
         FadeInEndTime=10.0
@@ -61,7 +61,7 @@ defaultproperties
         StartSizeRange=(X=(Min=800.0,Max=1100.0),Y=(Min=800.0,Max=1100.0),Z=(Min=400.0,Max=500.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=45.0,Max=50.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -79,8 +79,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(Z=-0.2)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.8
         FadeOutStartTime=52.0
         FadeInEndTime=8.0
@@ -93,7 +93,7 @@ defaultproperties
         StartSizeRange=(X=(Min=800.0,Max=1100.0),Y=(Min=800.0,Max=1100.0),Z=(Min=400.0,Max=500.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.grenadesmoke'
         LifetimeRange=(Min=55.0,Max=60.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -111,8 +111,8 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=1.0,Y=1.0)
-        ColorScale(0)=(color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.0,color=(B=128,G=128,R=128,A=255))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=128,G=128,R=128,A=255))
         Opacity=0.9
         FadeOutStartTime=6.0
         FadeInEndTime=2.0
@@ -124,7 +124,7 @@ defaultproperties
         StartSizeRange=(Z=(Min=100.0))
         InitialParticlesPerSecond=1.5
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke_fill'
+        Texture=Texture'Effects_Tex.grenadesmoke_fill'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=8.0,Max=9.0)
         InitialDelayRange=(Min=0.75,Max=0.75)

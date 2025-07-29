@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIMultiColumnListBox extends GUIMultiColumnListBox;
@@ -11,11 +11,11 @@ defaultproperties
         BarStyleName="DHMultiColBar"
         StyleName="DHMultiColBar"
     End Object
-    Header=GUIMultiColumnListHeader'DH_Interface.DHGUIMultiColumnListBox.MyHeader'
+    Header=MyHeader
     DefaultListClass="DH_Interface.DHGUIMultiColumnList"
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHGUIMultiColumnListBox.TheScrollbar'
+    MyScrollBar=TheScrollbar
 }

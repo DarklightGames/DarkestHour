@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpottingMarker extends Actor;
@@ -15,7 +15,7 @@ simulated function PostBeginPlay()
     LoopAnim('Point');
 }
 
-simulated function SetColor(color C)
+simulated function SetColor(Color C)
 {
     FC.Color1 = C;
     FC.Color1.A = 64;
@@ -28,15 +28,15 @@ function CreateMaterial()
 {
     local FinalBlend FB;
 
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.Red;
+    FC = new Class'FadeColor';
+    FC.Color1 = Class'UColor'.default.Red;
     FC.Color1.A = 64;
-    FC.Color2 = class'UColor'.default.Red;
+    FC.Color2 = Class'UColor'.default.Red;
     FC.Color2.A = 128;
     FC.FadePeriod = 0.25;
     FC.ColorFadeType = FC_Sinusoidal;
 
-    FB = new class'FinalBlend';
+    FB = new Class'FinalBlend';
     FB.FrameBufferBlending = FB_AlphaBlend;
     FB.ZWrite = true;
     FB.ZTest = true;

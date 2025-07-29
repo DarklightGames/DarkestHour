@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz251_22Cannon extends DH_Pak40Cannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Don't have a bone for the Pak40 attachment, so this offsets from the hull's 'body' bone to fit correctly onto the pedestal mount
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
     WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
-    Skins(0)=Texture'DH_Artillery_Tex.Pak40.Pak40_camo'
+    Skins(0)=Texture'DH_Artillery_Tex.Pak40_camo'
     InitialPrimaryAmmo=12
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=12

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment extends Actor
@@ -233,9 +233,9 @@ final simulated function byte GetTeamIndex()
     return TeamIndex;
 }
 
-final simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
+final simulated function Vector GetWorldCoords(DHGameReplicationInfo GRI)
 {
-    local vector L;
+    local Vector L;
     local float X, Y;
 
     if (AttachedTo != none)
@@ -245,7 +245,7 @@ final simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
     }
     else if (GRI != none)
     {
-        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose, X, Y);
+        Class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose, X, Y);
         L = GRI.GetWorldCoords(x, Y);
     }
 
@@ -262,7 +262,7 @@ final simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
     }
     else
     {
-        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose,,, WorldYaw);
+        Class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose,,, WorldYaw);
     }
 
     if (GRI != none)
@@ -281,7 +281,7 @@ final function UpdateQuantized2DPose()
     if (GRI != none && AttachedTo != none)
     {
         GRI.GetMapCoords(AttachedTo.Location, X, Y);
-        Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);
+        Quantized2DPose = Class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);
     }
 }
 
@@ -297,7 +297,7 @@ static function OnError(EMapIconAttachmentError Error)
 delegate bool IsInDangerZone()
 {
     local DHGameReplicationInfo GRI;
-    local vector L;
+    local Vector L;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -317,7 +317,7 @@ function EVisibleFor GetVisibilityInDangerZone();
 // ICON APPEARANCE
 //==============================================================================
 
-simulated function color GetIconColor(DHPlayer PC)
+simulated function Color GetIconColor(DHPlayer PC)
 {
     local byte PlayerTeamIndex;
 
@@ -327,18 +327,18 @@ simulated function color GetIconColor(DHPlayer PC)
 
         if (PlayerTeamIndex > 1)
         {
-            if (TeamIndex < arraycount(class'DHColor'.default.TeamColors))
+            if (TeamIndex < arraycount(Class'DHColor'.default.TeamColors))
             {
-                return class'DHColor'.default.TeamColors[TeamIndex];
+                return Class'DHColor'.default.TeamColors[TeamIndex];
             }
         }
         else if (PlayerTeamIndex != TeamIndex && TeamIndex < 2)
         {
-            return class'UColor'.default.Red;
+            return Class'UColor'.default.Red;
         }
     }
 
-    return class'DHColor'.default.FriendlyColor;
+    return Class'DHColor'.default.FriendlyColor;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCannonShellCanister extends DHBullet;
@@ -14,5 +14,5 @@ defaultproperties
     BallisticCoefficient=4.0
     Speed=45988.0
     Damage=120.0
-    MyDamageType=class'DH_Engine.DHCanisterShotDamageType'
+    MyDamageType=Class'DHCanisterShotDamageType'
 }

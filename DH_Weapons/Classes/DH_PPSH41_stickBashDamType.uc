@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PPSH41_stickBashDamType extends DHWeaponBashDamageType
@@ -8,5 +8,5 @@ class DH_PPSH41_stickBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PPSH41_stickWeapon'
+    WeaponClass=Class'DH_PPSH41_stickWeapon'
 }

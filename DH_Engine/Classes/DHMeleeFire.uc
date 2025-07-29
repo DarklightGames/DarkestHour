@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMeleeFire extends DHWeaponFire
@@ -24,10 +24,10 @@ var     float           MomentumTransfer;   // how much momentum to pass onto wh
 var     float           MinHoldTime;        // held for this time or less will do minimum damage/force
 var     float           FullHeldTime;       // held for this long will do max damage
 var     float           MeleeAttackSpread;  // how "large" the impact area of the bayonet strike is - the larger this is, the easier it is to hit, but the less precise the strike is
-var     sound           GroundStabSound;    // sound of stabbing the ground with the bayonet
-var     sound           GroundBashSound;    // sound of bashing the ground with the rifle butt
-var     sound           PlayerStabSound;    // sound of stabbing the player with the bayonet
-var     sound           PlayerBashSound;    // sound of bashing the player with the rifle butt
+var     Sound           GroundStabSound;    // sound of stabbing the ground with the bayonet
+var     Sound           GroundBashSound;    // sound of bashing the ground with the rifle butt
+var     Sound           PlayerStabSound;    // sound of stabbing the player with the bayonet
+var     Sound           PlayerBashSound;    // sound of bashing the player with the rifle butt
 
 var         name        BayoBackEmptyAnim;
 var         name        BayoStabEmptyAnim;
@@ -35,13 +35,13 @@ var         name        BayoFinishEmptyAnim;
 
 // Modified to stop trying to make the weapon attachment play visual hit effects - they don't play & we don't want them anyway; it just creates pointless replication to all clients
 // Also to increase damage if striking a player from behind, & to generally optimised
-function DoTrace(vector Start, rotator Dir)
+function DoTrace(Vector Start, Rotator Dir)
 {
     local ROPawn            HitPawn;
     local Actor             Other;
     local class<DamageType> ThisDamageType;
-    local vector            End, HitLocation, HitNormal, TempVec, X, Y, Z;
-    local rotator           RotationDifference;
+    local Vector            End, HitLocation, HitNormal, TempVec, X, Y, Z;
+    local Rotator           RotationDifference;
     local float             Damage, Scale;
     local array<int>        HitPoints;
     local array<int>        DamageHitPoint;
@@ -391,8 +391,8 @@ function PlayFiring()
 
 function DoFireEffect()
 {
-    local vector  StartTrace;
-    local rotator Aim;
+    local Vector  StartTrace;
+    local Rotator Aim;
 
     if (Instigator != none)
     {
@@ -400,7 +400,7 @@ function DoFireEffect()
 
         StartTrace = Instigator.Location + Instigator.EyePosition(); // the to-hit trace starts right in front of player's eye
         Aim = AdjustAim(StartTrace, AimError);
-        Aim = rotator(vector(Aim) + (VRand() * FRand() * Spread));
+        Aim = Rotator(Vector(Aim) + (VRand() * FRand() * Spread));
         DoTrace(StartTrace, Aim);
     }
 }
@@ -487,10 +487,10 @@ defaultproperties
     BayonetDamageMax=85
     VulnerableDamageFactor=3.0
 
-    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
-    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
-    GroundStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit'
+    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.butt_hit_ground'
+    GroundStabSound=SoundGroup'Inf_Weapons_Foley.bayo_hit_ground'
 
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"

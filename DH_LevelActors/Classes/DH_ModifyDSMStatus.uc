@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyDSMStatus extends DH_ModifyActors;
@@ -29,7 +29,7 @@ function PostBeginPlay()
 
     if (DSMToModify != '')
     {
-        foreach DynamicActors(class'DHDestroyableSM', DSMReference, DSMToModify)
+        foreach DynamicActors(Class'DHDestroyableSM', DSMReference, DSMToModify)
         {
             break;
         }

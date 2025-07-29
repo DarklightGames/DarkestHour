@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBot extends ROBot;
@@ -219,14 +219,14 @@ function SetPawnClass(string inClass, string inCharacter)
 {
     local class<DHPawn> pClass;
 
-    pClass = class<DHPawn>(DynamicLoadObject(inClass, class'class'));
+    pClass = class<DHPawn>(DynamicLoadObject(inClass, Class'class'));
 
     if (pClass != none)
     {
         PawnClass = pClass;
     }
 
-    PawnSetupRecord = class'xUtil'.static.FindPlayerRecord(inCharacter);
+    PawnSetupRecord = Class'xUtil'.static.FindPlayerRecord(inCharacter);
     PlayerReplicationInfo.SetCharacterName(PawnSetupRecord.DefaultName);
 }
 
@@ -255,7 +255,7 @@ function FightEnemy(bool bCanCharge, float EnemyStrength)
 {
     local float  EnemyDistance, AdjustedCombatStyle;
     local bool   bOldForcedCharge, bFarAway;
-    local vector X, Y, Z;
+    local Vector X, Y, Z;
 
     if (Squad == none || Enemy == none || Pawn == none)
     {
@@ -463,7 +463,7 @@ function SetAttractionState()
 // Modified so entering a shallow water volume doesn't send bot into swimming state (also stripped out some redundancy)
 function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    local vector JumpDir;
+    local Vector JumpDir;
 
     if (Pawn == none || Pawn.IsA('Vehicle'))
     {
@@ -496,6 +496,6 @@ function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
 
 defaultproperties
 {
-    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-    PawnClass=class'DH_Engine.DHPawn'
+    PlayerReplicationInfoClass=Class'DHPlayerReplicationInfo'
+    PawnClass=Class'DHPawn'
 }

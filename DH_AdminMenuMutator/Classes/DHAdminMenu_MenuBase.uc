@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // The base for all admin menu local interactions (these are the menus that only exist clientside, not on the server)
@@ -35,7 +35,7 @@ var  localized string  Label_PageNumber, Label_PreviousMenu, Label_PreviousPage,
 
 // Config variables that can be set (or overridden) in any player's DarkestHour.ini file
 var  config  string    AdminName, AdminPassword;    // local player's own admin account details - if added to their config file, menu automatically logs them in & out
-var  config  color     MenuColour;                  // a default is set but can be overridden in config
+var  config  Color    MenuColour;                  // a default is set but can be overridden in config
 var  config  float     MenuPosX, MenuPosY;          // top left positioning of menus on the screen, ranging from 0 to 1 (a default is set but can be overridden in config)
 var  config  bool      bDebug;                      // if true, various events will be logged
 
@@ -298,7 +298,7 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
             // Note: would like to check here if admin login was successful, but bIsAdmin won't have had time to replicate
             if (AdminName != "" && AdminPassword != "")
             {
-                PC.AdminLoginSilent(class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
+                PC.AdminLoginSilent(Class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
                 bMenuDidAdminLogin = true;
             }
             else
@@ -397,7 +397,7 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 {
     if (MessageNumber > 0)
     {
-        PC.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+        PC.ClientMessage(Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
     }
 }
 
@@ -438,7 +438,7 @@ function BuildMutateCommand(string CommandString, optional int MessageNumber)
 
     if (MessageNumber > 0) // display the relevant prompt/confirmation message across the admin's screen
     {
-        PC.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_AdminMessages', MessageNumber);
+        PC.ReceiveLocalizedMessage(Class'DHAdminMenu_AdminMessages', MessageNumber);
     }
 }
 

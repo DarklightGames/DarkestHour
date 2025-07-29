@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdpanzerIVL70CannonShellAPCR extends DHGermanCannonShell;
@@ -16,14 +16,14 @@ defaultproperties
 
     //Damage
     ImpactDamage=540
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.34
     EngineFireChance=0.65
 
     //Effects
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=25.3

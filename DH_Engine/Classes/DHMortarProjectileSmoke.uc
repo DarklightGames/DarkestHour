@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarProjectileSmoke extends DHMortarProjectile
     abstract;
 
 var     class<Emitter>  SmokeEmitterClass;  // class to spawn for smoke emitter
-var     sound           SmokeIgniteSound;   // initial sound when smoke begins emitting
-var     sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
+var     Sound           SmokeIgniteSound;   // initial sound when smoke begins emitting
+var     Sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
 var     float           SmokeSoundDuration; // duration until smoke sound stops playing as smoke clears, used to make projectile persist to keep playing SmokeLoopSound
 
 // Modified to delay destroying projectile until the end of the SmokeSoundDuration (unless shell was a dud)
@@ -28,13 +28,13 @@ simulated function HandleDestruction()
 }
 
 // Implemented to spawn a smoke emitter & play smoke sound (if shell isn't a dud)
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
     super.SpawnExplosionEffects(HitLocation, HitNormal);
 
     if (Level.NetMode != NM_DedicatedServer && !bDud)
     {
-        Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
+        Spawn(SmokeEmitterClass, self,, HitLocation, Rotator(vect(0.0, 0.0, 1.0)));
         PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
         AmbientSound = SmokeLoopSound;
     }
@@ -42,11 +42,11 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
-    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeEmitterClass=Class'DHSmokeEffect_Grenade'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smoke_loop'
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_Smoke'
 }

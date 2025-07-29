@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCreditsPage extends LargeWindow;
@@ -16,12 +16,29 @@ var array<string> TextureArtists;
 var array<string> Artists;
 var array<string> LevelDesigners;
 var array<string> SoundArtists;
+var array<string> VoiceActors;
+var array<string> LocalizationTeam;
 var array<string> CommunityAdmins;
 var array<string> PastPatreonSupporters;
 var array<string> OtherContributors;
 var array<string> SpecialThanks;
 
 var array<string> CreditLines;
+
+var localized string ProjectLeadsText;
+var localized string ProgrammersText;
+var localized string AnimatorsText;
+var localized string ModelersText;
+var localized string TextureArtistsText;
+var localized string ArtistsText;
+var localized string LevelDesignersText;
+var localized string SoundArtistsText;
+var localized string VoiceActorsText;
+var localized string LocalizationTeamText;
+var localized string CommunityAdminsText;
+var localized string PastPatreonSupportersText;
+var localized string OtherContributorsText;
+var localized string SpecialThanksText;
 
 function AddSystemMenu(){}
 
@@ -36,119 +53,40 @@ function AddHeader(string Header)
     AddCreditLine("");
 }
 
-function BuildCreditLines()
+function AddSection(string Header, array<string> Lines)
 {
     local int i;
 
+    AddHeader("====" @ Header @ "====");
+
+    for (i = 0; i < Lines.Length; ++i)
+    {
+        AddCreditLine(Lines[i]);
+    }
+
+    AddCreditLine("");
+}
+
+function BuildCreditLines()
+{
     CreditLines.Length = 0;
 
     AddHeader("DARKEST HOUR: EUROPE '44-'45");
 
-    AddHeader("Project Leads:");
-
-    for (i = 0; i < ProjectLeads.Length; ++i)
-    {
-        AddCreditLine(ProjectLeads[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Programmers:");
-
-    for (i = 0; i < Programmers.Length; ++i)
-    {
-        AddCreditLine(Programmers[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Animators:");
-
-    for (i = 0; i < Animators.Length; ++i)
-    {
-        AddCreditLine(Animators[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Modelers:");
-
-    for (i = 0; i < Modelers.Length; ++i)
-    {
-        AddCreditLine(Modelers[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Texture Artists:");
-
-    for (i = 0; i < TextureArtists.Length; ++i)
-    {
-        AddCreditLine(TextureArtists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Artists:");
-
-    for (i = 0; i < Artists.Length; ++i)
-    {
-        AddCreditLine(Artists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Level Designers:");
-
-    for (i = 0; i < LevelDesigners.Length; ++i)
-    {
-        AddCreditLine(LevelDesigners[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Sound Artists:");
-
-    for (i = 0; i < SoundArtists.Length; ++i)
-    {
-        AddCreditLine(SoundArtists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Community Admins:");
-
-    for (i = 0; i < CommunityAdmins.Length; ++i)
-    {
-        AddCreditLine(CommunityAdmins[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Past Patreon Supporters:");
-
-    for (i = 0; i < PastPatreonSupporters.Length; ++i)
-    {
-        AddCreditLine(PastPatreonSupporters[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Other Contributors:");
-
-    for (i = 0; i < OtherContributors.Length; ++i)
-    {
-        AddCreditLine(OtherContributors[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Special Thanks:");
-
-    for (i = 0; i < SpecialThanks.Length; ++i)
-    {
-        AddCreditLine(SpecialThanks[i]);
-    }
+    AddSection(ProjectLeadsText, ProjectLeads);
+    AddSection(ProgrammersText, Programmers);
+    AddSection(AnimatorsText, Animators);
+    AddSection(ModelersText, Modelers);
+    AddSection(TextureArtistsText, TextureArtists);
+    AddSection(ArtistsText, Artists);
+    AddSection(LevelDesignersText, LevelDesigners);
+    AddSection(VoiceActorsText, VoiceActors);
+    AddSection(SoundArtistsText, SoundArtists);
+    AddSection(LocalizationTeamText, LocalizationTeam);
+    AddSection(CommunityAdminsText, CommunityAdmins);
+    AddSection(PastPatreonSupportersText, PastPatreonSupporters);
+    AddSection(OtherContributorsText, OtherContributors);
+    AddSection(SpecialThanksText, SpecialThanks);
 }
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -158,7 +96,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     BuildCreditLines();
 
@@ -202,7 +140,7 @@ defaultproperties
         OnClick=DHCreditsPage.InternalOnClick
         OnKeyEvent=CloseButton.InternalOnKeyEvent
     End Object
-    b_Close=GUIButton'DH_Interface.DHCreditsPage.CloseButton'
+    b_Close=CloseButton
     Begin Object Class=DHGUIScrollTextBox Name=CreditText
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
@@ -213,8 +151,9 @@ defaultproperties
         WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
+        TextAlign=TXTA_Center
     End Object
-    lb_Credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
+    lb_Credits=CreditText
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
@@ -229,10 +168,10 @@ defaultproperties
         OnMousePressed=DHCreditsPage.FloatingMousePressed
         OnMouseRelease=DHCreditsPage.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHCreditsPage.TitleBar'
+    t_WindowTitle=TitleBar
     WindowName="Credits"
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -242,9 +181,8 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
+    i_FrameBG=FloatingFrameBackground
 
-    // TODO: Build the credit lines from lists of a categorized list.
     ProjectLeads(0)="Colin Basnett"
     ProjectLeads(1)="dirtybirdy"
     ProjectLeads(2)="Matty"
@@ -288,6 +226,7 @@ defaultproperties
     Modelers(22)="Napoleon Blownapart"
     Modelers(23)="Pvt.Winter"
     Modelers(24)="Emercom Camper"
+    Modelers(25)="-Red-(Rus)-"
 
     TextureArtists(0)="Protector"
     TextureArtists(1)="Aeneas2020"
@@ -300,6 +239,8 @@ defaultproperties
     TextureArtists(8)="Theel"
     TextureArtists(9)="Groundwaffe"
     TextureArtists(10)="Matty"
+    TextureArtists(11)="Napoleon Blownapart"
+    TextureArtists(12)="-Red-(Rus)-"
 
     Artists(0)="Der Landser"
     Artists(1)="Protector"
@@ -307,6 +248,7 @@ defaultproperties
     Artists(3)="Fennich_FJR6"
     Artists(4)="Patison"
     Artists(5)="Seven"
+    Artists(6)="Napoleon Blownapart"
     
     Animators(0)="Exocet"
     Animators(1)="Mike Munk (TWI)"
@@ -340,6 +282,11 @@ defaultproperties
     LevelDesigners(19)="Cpt.Caverne"
     LevelDesigners(20)="Mad.Death.Hound"
     LevelDesigners(21)="John Davidson"
+    LevelDesigners(22)="Soul$eek"
+
+    VoiceActors(0)="Logan Laidlaw (American & Canadian)"
+    VoiceActors(1)="602RAF_Puff (British)"
+    VoiceActors(2)="Ettore Fulvio (Italian)"
 
     SoundArtists(0)="Fennich_FJR6"
     SoundArtists(1)="Blitzkreig"
@@ -348,13 +295,19 @@ defaultproperties
     SoundArtists(4)="Demonizer"
     SoundArtists(5)="PsYcH0_Ch!cKeN"
     SoundArtists(6)="Shurek"
-    SoundArtists(7)="602RAF_Puff"
-    SoundArtists(8)="engineer"
-    SoundArtists(9)="pillam"
-    SoundArtists(10)="Logan Laidlaw"
-    SoundArtists(11)="jmoney"
-    SoundArtists(12)="Nathan B. Lewis"
-    SoundArtists(13)="AAZ"
+    SoundArtists(7)="engineer"
+    SoundArtists(8)="pillam"
+    SoundArtists(9)="Logan Laidlaw"
+    SoundArtists(10)="jmoney"
+    SoundArtists(11)="Nathan B. Lewis"
+    SoundArtists(12)="AAZ"
+    SoundArtists(13)="Ariel Hansen"
+
+    LocalizationTeam(0)="-Red-(Rus)- (Russian)"
+    LocalizationTeam(1)="dirtybirdy (Ukrainian)"
+    LocalizationTeam(2)="MortarOperator (Russian/Ukrainian)"
+    LocalizationTeam(3)="Maciej 'Babi' Babiszewski (Polish)"
+    LocalizationTeam(4)="Ramitos (Spanish)"
 
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"
@@ -419,4 +372,19 @@ defaultproperties
     WinLeft=0.1
     WinWidth=0.8
     WinHeight=0.8
+
+    ProjectLeadsText="Project Leads"
+    ProgrammersText="Programmers"
+    AnimatorsText="Animators"
+    ModelersText="Modelers"
+    TextureArtistsText="Texture Artists"
+    ArtistsText="Artists"
+    LevelDesignersText="Level Designers"
+    SoundArtistsText="Sound Artists"
+    VoiceActorsText="Voice Actors"
+    LocalizationTeamText="Localization Team"
+    CommunityAdminsText="Community Admins"
+    PastPatreonSupportersText="Past Patreon Supporters"
+    OtherContributorsText="Other Contributors"
+    SpecialThanksText="Special Thanks"
 }

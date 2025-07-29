@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_G98Weapon extends DHBoltActionWeapon;  //original model creator: Coin-goD
@@ -11,10 +11,10 @@ defaultproperties
     NativeItemName="Gewehr 98"
     SwayModifyFactor=0.64 // +0.04
     SwayBayonetModifier=1.25
-    FireModeClass(0)=class'DH_Weapons.DH_G98Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_G98MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_G98Attachment'
-    PickupClass=class'DH_Weapons.DH_G98Pickup'
+    FireModeClass(0)=Class'DH_G98Fire'
+    FireModeClass(1)=Class'DH_G98MeleeFire'
+    AttachmentClass=Class'DH_G98Attachment'
+    PickupClass=Class'DH_G98Pickup'
     MuzzleBone="MuzzleG98"
     Mesh=SkeletalMesh'DH_Kar98_1st.G98_mesh'
     bUseHighDetailOverlayIndex=false
@@ -23,7 +23,7 @@ defaultproperties
     DisplayFOV=85.0
 
     MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8 
+    InitialNumPrimaryMags=8
 
     bHasBayonet=true
     BayonetBoneName="bayonet"

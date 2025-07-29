@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class UInteger extends Object;
@@ -10,7 +10,7 @@ final static function UInteger Create(optional int Value)
 {
     local UInteger I;
 
-    I = new class'UInteger';
+    I = new Class'UInteger';
     I.Value = Value;
 
     return I;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHContextMenu_SquadMembers extends DHContextMenu;
@@ -170,7 +170,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
     local DHGUISquadComponent SquadComponent;
     local DHPlayerReplicationInfo PRI, SelectedPRI;
     local DHPlayer PC;
-    local vector ParadropLocation;
+    local Vector ParadropLocation;
 
     PC = GetComponentController(Component);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);

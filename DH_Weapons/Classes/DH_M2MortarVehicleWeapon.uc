@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M2MortarVehicleWeapon extends DHMortarVehicleWeapon;
@@ -18,14 +18,14 @@ simulated event ShowShell()
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
-    PrimaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileSmoke'
+    ProjectileClass=Class'DH_M2MortarProjectileHE'
+    PrimaryProjectileClass=Class'DH_M2MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=24
     InitialSecondaryAmmo=4
     PlayerResupplyAmounts(0)=6
     PlayerResupplyAmounts(1)=1
-    FireSoundClass=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.6cmFireSG'
     RotationsPerSecond=0.005
     MaxPositiveYaw=1274
     MaxNegativeYaw=-1274

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIListBox extends ROGUIListBoxPlus;
@@ -23,7 +23,7 @@ defaultproperties
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHGUIListBox.TheScrollbar'
+    MyScrollBar=TheScrollbar
 
     DefaultListClass="DH_Interface.DHGUIList"
 }

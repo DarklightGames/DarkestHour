@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_TigerFactory_Butcher extends DH_TigerFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_TigerTank_Butcher'
-    Skins(0)=Texture'DHEventVehiclesTex.Butcher.Tiger_body_camo1_TheButcher'
+    VehicleClass=Class'DH_TigerTank_Butcher'
+    Skins(0)=Texture'DHEventVehiclesTex.Tiger_body_camo1_TheButcher'
 }

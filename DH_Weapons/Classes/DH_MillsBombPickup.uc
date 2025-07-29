@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MillsBombPickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_MillsBombWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.MillsBomb'
+    InventoryType=Class'DH_MillsBombWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.MillsBomb'
 }

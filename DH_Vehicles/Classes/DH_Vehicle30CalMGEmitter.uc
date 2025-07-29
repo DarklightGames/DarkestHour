@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Vehicle30CalMGEmitter extends WeaponAmbientEmitter;
@@ -32,7 +32,7 @@ simulated function SetEmitterStatus(bool bEnabled)
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_M1919_stc.1st.m1919_link_1st'
+        StaticMesh=StaticMesh'DH_M1919_stc.m1919_link_1st'
         UseCollision=true
         RespawnDeadParticles=false
         SpawnOnlyInDirectionOfNormal=true
@@ -50,7 +50,7 @@ defaultproperties
         StartVelocityRadialRange=(Min=-250.0,Max=250.0)
         MeshScaleRange=(X=(Min=2,Max=2),Y=(Min=2,Max=2),Z=(Min=2,Max=2))
     End Object
-    Emitters(0)=MeshEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.MeshEmitter0'
+    Emitters(0)=MeshEmitter'DH_Vehicles.MeshEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         RespawnDeadParticles=false
@@ -72,12 +72,12 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.0)
         StartSizeRange=(X=(Min=4.0,Max=5.0))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+        Texture=Texture'Effects_Tex.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.1)
     End Object
-    Emitters(1)=SpriteEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'DH_Vehicles.SpriteEmitter1'
 
     CullDistance=4000.0
     bNoDelete=false

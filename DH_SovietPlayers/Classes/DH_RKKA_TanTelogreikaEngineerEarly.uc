@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_TanTelogreikaEngineerEarly extends DHSOVEngineerRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloEarlyPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    RolePawns(0)=(PawnClass=Class'DH_SovietTanTeloEarlyPawn',Weight=1.0)
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_tan'
+    Headgear(0)=Class'DH_SovietHelmet'
     HeadgearProbabilities(0)=1
 
 }

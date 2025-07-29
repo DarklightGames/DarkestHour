@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHLargeCaliberDamageType extends DHWeaponProjectileDamageType
@@ -8,6 +8,6 @@ class DHLargeCaliberDamageType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     bAlwaysSevers=true // so limbs & head are severed by a hit from such a powerful bullet
 }

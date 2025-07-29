@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBulletSnap extends ROBulletWhiz;
@@ -14,5 +14,5 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    WhizSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Snap'
+    WhizSound=SoundGroup'DH_ProjectileSounds.Bullet_Snap'
 }

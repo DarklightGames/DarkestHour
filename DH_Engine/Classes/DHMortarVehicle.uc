@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarVehicle extends DHVehicle
@@ -35,28 +35,6 @@ function ServerDestroyMortar()
     Destroy();
 }
 
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (NotifyParameters != none)
-    {
-        NotifyParameters.Clear();
-    }
-}
-
-// Modified to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
-    }
-}
-
 // Modified to handle special requirements to use mortar, with custom messages
 function bool TryToDrive(Pawn P)
 {
@@ -76,7 +54,7 @@ function bool TryToDrive(Pawn P)
     // Deny entry to enemy mortar
     if (DHP.GetTeamNum() != VehicleTeam)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 10); // can't use enemy mortar
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 10); // can't use enemy mortar
 
         return false;
     }
@@ -86,7 +64,7 @@ function bool TryToDrive(Pawn P)
 
     if (RI == none || !RI.bCanUseMortars)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 8); // not qualified to operate mortar
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 8); // not qualified to operate mortar
 
         return false;
     }
@@ -94,7 +72,7 @@ function bool TryToDrive(Pawn P)
     // Deny entry to mortar that's already manned
     if (WeaponPawns[0].Driver != none)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 9); // mortar already being used
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 9); // mortar already being used
 
         return false;
     }
@@ -139,7 +117,7 @@ function KDriverEnter(Pawn P)
 }
 
 // No possibility of damage to mortar base
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 }
 
@@ -154,7 +132,6 @@ simulated function int GetTeamNum()
     return VehicleTeam;
 }
 
-// Modified to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
     local DHPawn P;
@@ -170,13 +147,12 @@ simulated event NotifySelected(Pawn User)
         if (P.GetRoleInfo() != none &&
             P.GetRoleInfo().bCanUseMortars)
         {
-            NotifyParameters.Put("Controller", User.Controller);
-            User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
+            User.ReceiveLocalizedMessage(TouchMessageClass, 0, User.PlayerReplicationInfo,, self);
             LastNotifyTime = Level.TimeSeconds;
         }
         else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && OwningPawn != P)
         {
-            User.ReceiveLocalizedMessage(class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
+            User.ReceiveLocalizedMessage(Class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
             LastNotifyTime = Level.TimeSeconds;
         }
     }
@@ -195,7 +171,7 @@ function DriverDied();
 function DriverLeft();
 function bool PlaceExitingDriver() { return false; }
 simulated function SetPlayerPosition();
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
 simulated function int LimitYaw(int yaw) { return yaw; }
@@ -210,7 +186,6 @@ defaultproperties
     ExplosionDamage=0.0
     ExplosionRadius=0.0
     ExplosionMomentum=0.0
-    TouchMessageClass=class'DHVehicleTouchMessage'
     MaxDesireability=0.0
     GroundSpeed=0.0
     bOwnerNoSee=false
@@ -233,4 +208,6 @@ defaultproperties
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 }

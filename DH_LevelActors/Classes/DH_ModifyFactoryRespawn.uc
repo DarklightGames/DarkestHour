@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyFactoryRespawn extends DH_ModifyActors;
@@ -23,7 +23,7 @@ function PostBeginPlay()
     //Factories are dynamic so use dynamic actor list
     for (i = 0; i < FactoryToModify.Length; ++i)
     {
-        foreach DynamicActors(class'ROVehicleFactory', ROVF, FactoryToModify[i])
+        foreach DynamicActors(Class'ROVehicleFactory', ROVF, FactoryToModify[i])
         {
             FactoryReference.Insert(0, 1); //Adds a new spot at index for the attached factory
             FactoryReference[0] = ROVF; //Sets the attached factory in the reference array

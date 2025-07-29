@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerFaustImpactDamType extends DHRocketImpactDamage
@@ -8,6 +8,6 @@ class DH_PanzerFaustImpactDamType extends DHRocketImpactDamage
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
-    HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'
+    WeaponClass=Class'DH_PanzerFaustWeapon'
+    HUDIcon=Texture'InterfaceArt2_tex.faustkill'
 }

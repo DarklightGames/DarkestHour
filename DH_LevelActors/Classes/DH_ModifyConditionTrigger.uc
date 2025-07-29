@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ModifyConditionTrigger extends DH_ModifyActors;
@@ -19,14 +19,14 @@ function PostBeginPlay()
     //Check to make sure name was set
     if (ConditionToModifytrue != '')
     {   //TriggeredConditions are dynamic so use dynamic actor list
-        foreach DynamicActors(class'TriggeredCondition', ConditiontrueRef, ConditionToModifytrue)
+        foreach DynamicActors(Class'TriggeredCondition', ConditiontrueRef, ConditionToModifytrue)
         {
             break;
         }
     }
     if (ConditionToModifyfalse != '')
     {
-        foreach DynamicActors(class'TriggeredCondition', ConditionfalseRef, ConditionToModifyfalse)
+        foreach DynamicActors(Class'TriggeredCondition', ConditionfalseRef, ConditionToModifyfalse)
         {
             break;
         }

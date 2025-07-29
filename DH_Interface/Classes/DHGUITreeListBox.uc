@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUITreeListBox extends GUITreeListBox;
@@ -12,6 +12,6 @@ defaultproperties
         bVisible=false
         OnPreDraw=DHTreeScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUITreeScrollBar'DH_Interface.DHGUITreeListBox.DHTreeScrollbar'
+    MyScrollBar=DHGUITreeScrollBar'DH_Interface.DHTreeScrollbar'
     StyleName="DHSmallText"
 }

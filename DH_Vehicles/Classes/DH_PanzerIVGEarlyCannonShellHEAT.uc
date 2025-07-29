@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVGEarlyCannonShellHEAT extends DHCannonShellHEAT;
@@ -18,8 +18,8 @@ defaultproperties
     DamageRadius=700.0
 
     //Effects
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    StaticMesh=StaticMesh'DH_Tracers.German_shell'
+    CoronaClass=Class'DHShellTracer_Orange'
 
     //Penetration
     DHPenetrationTable(0)=8.7

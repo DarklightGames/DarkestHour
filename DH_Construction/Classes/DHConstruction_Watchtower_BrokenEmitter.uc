@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Watchtower_BrokenEmitter extends Emitter;
@@ -8,7 +8,7 @@ class DHConstruction_Watchtower_BrokenEmitter extends Emitter;
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_Construction_stc.Constructions.plank_destro_01'
+        StaticMesh=StaticMesh'DH_Construction_stc.plank_destro_01'
         UseCollision=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -32,7 +32,7 @@ defaultproperties
     Emitters(0)=MeshEmitter0
 
     Begin Object Class=MeshEmitter Name=MeshEmitter1
-        StaticMesh=StaticMesh'DH_Construction_stc.Constructions.plank_destro_02'
+        StaticMesh=StaticMesh'DH_Construction_stc.plank_destro_02'
         UseCollision=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -56,7 +56,7 @@ defaultproperties
     Emitters(1)=MeshEmitter1
 
     Begin Object Class=MeshEmitter Name=MeshEmitter2
-        StaticMesh=StaticMesh'DH_Construction_stc.Constructions.plank_destro_03'
+        StaticMesh=StaticMesh'DH_Construction_stc.plank_destro_03'
         UseCollision=true
         RespawnDeadParticles=false
         SpinParticles=true

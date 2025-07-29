@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRotatingActor extends Actor;
@@ -26,7 +26,7 @@ simulated event PostBeginPlay()
 
     InitalRotation = Rotation;
 
-    ControlRadius = class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
+    ControlRadius = Class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
 }
 
 event PostNetBeginPlay()

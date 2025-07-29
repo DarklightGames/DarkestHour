@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PPSh41_stickBullet extends DHBullet;
@@ -11,5 +11,5 @@ defaultproperties
     BallisticCoefficient=0.15
     WhizType=2
     Damage=61.0
-    MyDamageType=class'DH_Weapons.DH_PPSH41_stickDamType'
+    MyDamageType=Class'DH_PPSH41_stickDamType'
 }

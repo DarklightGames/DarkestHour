@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
@@ -18,6 +18,8 @@ var automated moSlider          sl_CorpseStayTime;
 var int                         CorpseStayNum;
 
 var bool                        bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
+
+var localized string            NoneText;
 
 function SetupPositions()
 {
@@ -84,6 +86,21 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
     {
         GetComboOptions(Combo, Options);
     }
+
+    // Multi-sampling and aniostropy options hard-coded the "None" option so that it was not localizable.
+    // This replaces the hard-coded "None" with the localized "None" text.
+    switch (Combo)
+    {
+        case co_MultiSamples:
+        case co_Anisotropy:
+            if (Options[0].Item == "None")
+            {
+                Options[0].Item = NoneText;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -97,13 +114,13 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     switch (Sender)
     {
         case co_GlobalDetails:
-            iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
+            iGlobalDetails = Class'ROPlayer'.default.GlobalDetailLevel;
             iGlobalDetailsD = iGlobalDetails;
             co_GlobalDetails.SilentSetIndex(iGlobalDetails);
             break;
 
         case co_ScopeDetail:
-            switch (class'DHWeapon'.default.ScopeDetail)
+            switch (Class'DHWeapon'.default.ScopeDetail)
             {
                 case RO_ModelScope:
                     iScopeDetail = 0;
@@ -195,7 +212,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case sl_CorpseStayTime:
-            CorpseStayNum = class'DHPlayer'.default.CorpseStayTime;
+            CorpseStayNum = Class'DHPlayer'.default.CorpseStayTime;
             sl_CorpseStayTime.SetComponentValue(CorpseStayNum, true);
             break;
 
@@ -217,7 +234,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     switch (Sender)
     {
         case co_Decal:
-            switch (class'LevelInfo'.default.DecalStayScale)
+            switch (Class'LevelInfo'.default.DecalStayScale)
             {
                 case 0.0:
                     iDecal = 0;
@@ -675,7 +692,7 @@ function SaveSettings()
 
     if (bMotionBlur != bMotionBlurD)
     {
-        class'ROEngine.ROPlayer'.default.bUseBlurEffect = bMotionBlur;
+        Class'ROPlayer'.default.bUseBlurEffect = bMotionBlur;
         bSavePlayerConfig = true;
 
         if (ROPlayer(PC) != none)
@@ -700,19 +717,19 @@ function SaveSettings()
 
     if (iGlobalDetails != iGlobalDetailsD)
     {
-        class'ROEngine.ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
+        Class'ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
         bSavePlayerConfig = true;
         iGlobalDetailsD = iGlobalDetails;
     }
 
     if (iScopeDetail != iScopeDetailD)
     {
-        class'DH_Engine.DHWeapon'.default.ScopeDetail = ScopeDetailSettings(iScopeDetail);
-        class'DH_Engine.DHWeapon'.static.StaticSaveConfig();
+        Class'DHWeapon'.default.ScopeDetail = ScopeDetailSettings(iScopeDetail);
+        Class'DHWeapon'.static.StaticSaveConfig();
 
         if (PC.Pawn != none && PC.Pawn.Weapon != none && DHWeapon(PC.Pawn.Weapon) != none)
         {
-            DHWeapon(PC.Pawn.Weapon).ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
+            DHWeapon(PC.Pawn.Weapon).ScopeDetail = Class'DHWeapon'.default.ScopeDetail;
             DHWeapon(PC.Pawn.Weapon).AdjustIngameScope();
         }
 
@@ -727,8 +744,8 @@ function SaveSettings()
             ROPawn(PC.Pawn).bPlayerShadows = iShadow > 0;
         }
 
-        class'ROPawn'.default.bBlobShadow = iShadow == 1;
-        class'ROPawn'.default.bPlayerShadows = iShadow > 0;
+        Class'ROPawn'.default.bBlobShadow = iShadow == 1;
+        Class'ROPawn'.default.bPlayerShadows = iShadow > 0;
         iShadowD = iShadow;
 
         if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
@@ -737,16 +754,16 @@ function SaveSettings()
         }
         else
         {
-            class'ROPawn'.static.StaticSaveConfig();
+            Class'ROPawn'.static.StaticSaveConfig();
         }
 
         UpdateShadows(iShadow == 1, iShadow > 0);
     }
 
-    if (class'Vehicle'.default.bVehicleShadows != iShadow > 0)
+    if (Class'Vehicle'.default.bVehicleShadows != iShadow > 0)
     {
-        class'Vehicle'.default.bVehicleShadows = iShadow > 0;
-        class'Vehicle'.static.StaticSaveConfig();
+        Class'Vehicle'.default.bVehicleShadows = iShadow > 0;
+        Class'Vehicle'.static.StaticSaveConfig();
         UpdateVehicleShadows(iShadow > 0);
     }
 
@@ -788,7 +805,7 @@ function SaveSettings()
 
     if (bSavePlayerConfig)
     {
-       class'ROEngine.ROPlayer'.static.StaticSaveConfig();
+       Class'ROPlayer'.static.StaticSaveConfig();
     }
 }
 
@@ -813,14 +830,18 @@ function bool RenderDeviceClick(byte Btn)
 
 defaultproperties
 {
+    PerformanceWarningMenu="DH_Interface.DHPerformanceWarning"
+    DisplayPromptMenu="DH_Interface.DHVideoChangePrompt"
+
+    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
+    NoneText="None"
+
     RenderModeText(0)="Direct3D 9.0 (Recommended)"
     RenderModeText(1)="Direct3D 8.0 (Rendering Issues)"
     RenderModeText(2)="OpenGL (Unstable)"
     RenderMode(0)="D3D9Drv.D3D9RenderDevice"
     RenderMode(1)="D3DDrv.D3DRenderDevice"
     RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
-
-    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
 
     DisplayModes(0)=(Width=1024,Height=768)
     DisplayModes(1)=(Width=1280,Height=800)
@@ -849,7 +870,7 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
-    sb_Section1=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection1'
+    sb_Section1=DHGUISectionBackground'DH_Interface.sbSection1'
 
     // Background for right side "Game Details"
     Begin Object Class=DHGUISectionBackground Name=sbSection2
@@ -861,7 +882,7 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
-    sb_Section2=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection2'
+    sb_Section2=DHGUISectionBackground'DH_Interface.sbSection2'
 
     // Background for left side 2 "Gamma Test"
     Begin Object Class=DHGUISectionBackground Name=sbSection3
@@ -875,16 +896,16 @@ defaultproperties
         RenderWeight=0.01
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
-    sb_Section3=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection3'
+    sb_Section3=DHGUISectionBackground'DH_Interface.sbSection3'
 
     // Gamma Test Image
     Begin Object Class=GUIImage Name=GammaBar
-        Image=Texture'DH_GUI_Tex.Menu.DHGammaSet'
+        Image=Texture'DH_GUI_Tex.DHGammaSet'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Normal
         OnChange=DHTab_DetailSettings.InternalOnChange
     End Object
-    i_GammaBar=GUIImage'DH_Interface.DHTab_DetailSettings.GammaBar'
+    i_GammaBar=GUIImage'DH_Interface.GammaBar'
 
 
 // ======================================================
@@ -902,7 +923,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_RenderDevice=DHmoComboBox'DH_Interface.DHTab_DetailSettings.RenderDeviceCombo'
+    co_RenderDevice=DHmoComboBox'DH_Interface.RenderDeviceCombo'
 
     Begin Object Class=DHmoComboBox Name=VideoResolution
         bReadOnly=true
@@ -910,12 +931,12 @@ defaultproperties
         Caption="Resolution"
         OnCreateComponent=VideoResolution.InternalOnCreateComponent
         IniOption="@INTERNAL"
-        IniDefault="640x480"
+        IniDefault="1600x900"
         TabOrder=1
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Resolution=DHmoComboBox'DH_Interface.DHTab_DetailSettings.VideoResolution'
+    co_Resolution=DHmoComboBox'DH_Interface.VideoResolution'
 
     Begin Object Class=DHmoComboBox Name=VideoColorDepth
         CaptionWidth=0.55
@@ -927,7 +948,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_ColorDepth=DHmoComboBox'DH_Interface.DHTab_DetailSettings.VideoColorDepth'
+    co_ColorDepth=DHmoComboBox'DH_Interface.VideoColorDepth'
 
     Begin Object Class=DHmoComboBox Name=GlobalDetails
         ComponentJustification=TXTA_Left
@@ -935,12 +956,12 @@ defaultproperties
         Caption="Game details"
         OnCreateComponent=GlobalDetails.InternalOnCreateComponent
         IniOption="@Internal"
-        IniDefault="Higher"
+        IniDefault="Highest"
         TabOrder=3
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_GlobalDetails=DHmoComboBox'DH_Interface.DHTab_DetailSettings.GlobalDetails'
+    co_GlobalDetails=DHmoComboBox'DH_Interface.GlobalDetails'
 
     Begin Object Class=DHmoCheckBox Name=VideoFullScreen
         ComponentJustification=TXTA_Left
@@ -953,14 +974,14 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_FullScreen=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.VideoFullScreen'
+    ch_FullScreen=DHmoCheckBox'DH_Interface.VideoFullScreen'
 
     Begin Object Class=moSlider Name=BrightnessSlider
         MaxValue=1.0
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Brightness"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=BrightnessSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -968,15 +989,15 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Brightness=moSlider'DH_Interface.DHTab_DetailSettings.BrightnessSlider'
+    sl_Brightness=moSlider'DH_Interface.BrightnessSlider'
 
     Begin Object Class=moSlider Name=GammaSlider
         MaxValue=2.5
         MinValue=0.5
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Gamma"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=GammaSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -984,14 +1005,14 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Gamma=moSlider'DH_Interface.DHTab_DetailSettings.GammaSlider'
+    sl_Gamma=moSlider'DH_Interface.GammaSlider'
 
     Begin Object Class=moSlider Name=ContrastSlider
         MaxValue=1.0
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.55
         Caption="Contrast"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=ContrastSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.8"
@@ -999,7 +1020,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_Contrast=moSlider'DH_Interface.DHTab_DetailSettings.ContrastSlider'
+    sl_Contrast=moSlider'DH_Interface.ContrastSlider'
 
     Begin Object Class=DHmoCheckBox Name=UseVSyncCheckBox
         ComponentJustification=TXTA_Left
@@ -1030,7 +1051,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Texture=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailTextureDetail'
+    co_Texture=DHmoComboBox'DH_Interface.DetailTextureDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailCharacterDetail
         ComponentJustification=TXTA_Left
@@ -1043,7 +1064,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Char=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailCharacterDetail'
+    co_Char=DHmoComboBox'DH_Interface.DetailCharacterDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailWorldDetail
         ComponentJustification=TXTA_Left
@@ -1056,7 +1077,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_World=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailWorldDetail'
+    co_World=DHmoComboBox'DH_Interface.DetailWorldDetail'
 
     Begin Object Class=DHmoComboBox Name=DetailPhysics
         ComponentJustification=TXTA_Left
@@ -1069,7 +1090,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Physics=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailPhysics'
+    co_Physics=DHmoComboBox'DH_Interface.DetailPhysics'
 
     Begin Object Class=DHmoComboBox Name=MeshLOD
         ComponentJustification=TXTA_Left
@@ -1081,7 +1102,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_MeshLOD=DHmoComboBox'DH_Interface.DHTab_DetailSettings.MeshLOD'
+    co_MeshLOD=DHmoComboBox'DH_Interface.MeshLOD'
 
     Begin Object Class=DHmoComboBox Name=DetailDecalStay
         ComponentJustification=TXTA_Left
@@ -1094,7 +1115,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Decal=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailDecalStay'
+    co_Decal=DHmoComboBox'DH_Interface.DetailDecalStay'
 
     Begin Object Class=DHmoComboBox Name=DetailAntialiasing
         ComponentJustification=TXTA_Left
@@ -1106,7 +1127,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_MultiSamples=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailAntialiasing'
+    co_MultiSamples=DHmoComboBox'DH_Interface.DetailAntialiasing'
 
     Begin Object Class=DHmoComboBox Name=DetailAnisotropy
         ComponentJustification=TXTA_Left
@@ -1118,7 +1139,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Anisotropy=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailAnisotropy'
+    co_Anisotropy=DHmoComboBox'DH_Interface.DetailAnisotropy'
 
     Begin Object Class=DHmoComboBox Name=DetailCharacterShadows
         ComponentJustification=TXTA_Left
@@ -1130,7 +1151,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_Shadows=DHmoComboBox'DH_Interface.DHTab_DetailSettings.DetailCharacterShadows'
+    co_Shadows=DHmoComboBox'DH_Interface.DetailCharacterShadows'
 
     Begin Object Class=DHmoComboBox Name=ScopeDetail
         ComponentJustification=TXTA_Left
@@ -1143,7 +1164,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    co_ScopeDetail=DHmoComboBox'DH_Interface.DHTab_DetailSettings.ScopeDetail'
+    co_ScopeDetail=DHmoComboBox'DH_Interface.ScopeDetail'
 
     Begin Object Class=DHmoCheckBox Name=DetailForceFSAASS
         ComponentJustification=TXTA_Left
@@ -1156,7 +1177,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_ForceFSAAScreenshotSupport=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailForceFSAASS'
+    ch_ForceFSAAScreenshotSupport=DHmoCheckBox'DH_Interface.DetailForceFSAASS'
 
     Begin Object Class=DHmoCheckBox Name=MotionBlur
         ComponentJustification=TXTA_Left
@@ -1169,7 +1190,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_MotionBlur=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.MotionBlur'
+    ch_MotionBlur=DHmoCheckBox'DH_Interface.MotionBlur'
 
     Begin Object Class=DHmoCheckBox Name=HDRCheckbox
         ComponentJustification=TXTA_Left
@@ -1182,7 +1203,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_HDR=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.HDRCheckbox'
+    ch_HDR=DHmoCheckBox'DH_Interface.HDRCheckbox'
 
     Begin Object Class=DHmoCheckBox Name=DetailDecals
         ComponentJustification=TXTA_Left
@@ -1195,7 +1216,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Decals=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDecals'
+    ch_Decals=DHmoCheckBox'DH_Interface.DetailDecals'
 
     Begin Object Class=DHmoCheckBox Name=DetailDynamicLighting
         ComponentJustification=TXTA_Left
@@ -1208,7 +1229,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_DynLight=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDynamicLighting'
+    ch_DynLight=DHmoCheckBox'DH_Interface.DetailDynamicLighting'
 
     Begin Object Class=DHmoCheckBox Name=DetailDetailTextures
         ComponentJustification=TXTA_Left
@@ -1221,7 +1242,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Textures=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDetailTextures'
+    ch_Textures=DHmoCheckBox'DH_Interface.DetailDetailTextures'
 
     Begin Object Class=DHmoCheckBox Name=DetailCoronas
         ComponentJustification=TXTA_Left
@@ -1234,7 +1255,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Coronas=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailCoronas'
+    ch_Coronas=DHmoCheckBox'DH_Interface.DetailCoronas'
 
     Begin Object Class=DHmoCheckBox Name=DetailTrilinear
         ComponentJustification=TXTA_Left
@@ -1247,7 +1268,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Trilinear=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailTrilinear'
+    ch_Trilinear=DHmoCheckBox'DH_Interface.DetailTrilinear'
 
     Begin Object Class=DHmoCheckBox Name=DetailProjectors
         ComponentJustification=TXTA_Left
@@ -1260,7 +1281,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Projectors=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailProjectors'
+    ch_Projectors=DHmoCheckBox'DH_Interface.DetailProjectors'
 
     Begin Object Class=DHmoCheckBox Name=WeatherEffects
         ComponentJustification=TXTA_Left
@@ -1273,7 +1294,7 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_Weather=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.WeatherEffects'
+    ch_Weather=DHmoCheckBox'DH_Interface.WeatherEffects'
 
     Begin Object Class=DHmoCheckBox Name=DetailDecoLayers
         ComponentJustification=TXTA_Left
@@ -1286,13 +1307,13 @@ defaultproperties
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    ch_DecoLayers=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.DetailDecoLayers'
+    ch_DecoLayers=DHmoCheckBox'DH_Interface.DetailDecoLayers'
 
     Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Dynamic Fog Distance (Recommended)"
-        Hint="Keeps FPS as high as possible by adjusting the fog distance automatically based on FPS"
+        Caption="Dynamic View Distance"
+        Hint="Keeps FPS as high as possible by adjusting the view distance automatically based on performance"
         OnCreateComponent=DynamicFogRatioCH.InternalOnCreateComponent
         IniDefault="false"
         TabOrder=41
@@ -1303,14 +1324,14 @@ defaultproperties
     ch_DynamicFogRatio=DynamicFogRatioCH
 
     Begin Object class=DHmoNumericEdit Name=MinDesiredFPS_NU
-        Caption="Min Desired FPS"
+        Caption="Dynamic View Distance FPS Threshold"
         CaptionWidth=0.85
         OnCreateComponent=MinDesiredFPS_NU.InternalOnCreateComponent
         MinValue=20
         MaxValue=300
         Step=10
         ComponentJustification=TXTA_Left
-        Hint="Used by Dynamic Fog Distance to determine when to start lowing fog distance"
+        Hint="Used by Dynamic View Distance to determine when to start lowering view distance to improve FPS"
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
         INIOption="@Internal"
@@ -1322,27 +1343,28 @@ defaultproperties
     Begin Object Class=moSlider Name=DistanceLODSlider
         MaxValue=1.0
         Value=0.5
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.65
-        Caption="Fog Distance"
-        LabelStyleName="DHLargeText"
+        Caption="View Distance"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
         TabOrder=43
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
-    sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
+    sl_DistanceLOD=moSlider'DH_Interface.DistanceLODSlider'
 
+    // TODO: this should be a combo box with sensible defaults (5 (Short), 30 (Moderate), 60 (Long))
     Begin Object Class=moSlider Name=CorpseStayTime
         Value=15.0
         MinValue=5.0
         MaxValue=60.0
         bIntSlider=true
-        SliderCaptionStyleName="DHLargeText"
+        SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.65
         Caption="Corpse Stay Time (Seconds)"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
         TabOrder=44

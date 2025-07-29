@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHNetworkStatusMessage extends GUIPage;
@@ -45,7 +45,7 @@ defaultproperties
 {
     bIgnoreEsc=true
     bRequire640x480=false
-    OpenSound=Sound'ROMenuSounds.Generic.msfxEdit'
+    OpenSound=Sound'ROMenuSounds.msfxEdit'
 
     Begin Object Class=GUIButton Name=NetStatBackground
         StyleName="SquareBar"
@@ -55,11 +55,10 @@ defaultproperties
         bNeverFocus=true
         OnKeyEvent=NetStatBackground.InternalOnKeyEvent
     End Object
-    Controls(0)=GUIButton'DH_Interface.DHNetworkStatusMessage.NetStatBackground'
+    Controls(0)=GUIButton'DH_Interface.NetStatBackground'
 
     Begin Object Class=GUIButton Name=NetStatOk
         Caption="OK"
-        StyleName="MidGameButton"
         WinTop=0.675
         WinLeft=0.375
         WinWidth=0.25
@@ -68,18 +67,18 @@ defaultproperties
         OnClick=DHNetworkStatusMessage.InternalOnClick
         OnKeyEvent=NetStatOk.InternalOnKeyEvent
     End Object
-    Controls(1)=GUIButton'DH_Interface.DHNetworkStatusMessage.NetStatOk'
+    Controls(1)=GUIButton'DH_Interface.NetStatOk'
 
     Begin Object Class=GUILabel Name=NetStatLabel
         TextAlign=TXTA_Center
         TextColor=(B=255,G=255,R=255)
-        TextFont="UT2HeaderFont"
+        TextFont="DHLargeFont"
         bMultiLine=true
         WinTop=0.125
         WinHeight=0.5
         bBoundToParent=true
     End Object
-    Controls(2)=GUILabel'DH_Interface.DHNetworkStatusMessage.NetStatLabel'
+    Controls(2)=GUILabel'DH_Interface.NetStatLabel'
 
     WinTop=0.375
     WinHeight=0.25

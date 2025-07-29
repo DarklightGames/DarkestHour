@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
@@ -29,7 +29,7 @@ simulated state LeavingViewTransition
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
+    GunClass=Class'DH_Marder3MMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
@@ -43,7 +43,7 @@ defaultproperties
     BinocsDrivePos=(X=5.0,Y=2.0,Z=-39.0)
     DriveAnim="VHalftrack_com_idle"
     CameraBone="loader_cam"
-    HUDOverlayClass=class'DH_Vehicles.DH_MG34_VehHUDOverlay'
+    HUDOverlayClass=Class'DH_MG34_VehHUDOverlay'
     HUDOverlayFOV=45.0
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonGunShakeScale=2.0

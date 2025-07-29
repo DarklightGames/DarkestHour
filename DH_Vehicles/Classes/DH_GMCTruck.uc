@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GMCTruck extends DHVehicle
@@ -14,12 +14,12 @@ defaultproperties
     VehicleMass=5.0 //2.5
     ReinforcementCost=2
     MaxDesireability=0.12
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GMCTruck_anm.gmc_body'
-    Skins(0)=Texture'DH_GMC_tex.GMC.GMC_USOD'
-    Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas'
+    Skins(0)=Texture'DH_GMC_tex.GMC_USOD'
+    Skins(1)=Texture'DH_GMC_tex.GMC_Canvas'
     BeginningIdleAnim="" // override unwanted inherited value, as GMC has no animations
 
     // Passengers
@@ -76,7 +76,6 @@ defaultproperties
     //MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
     MaxBrakeTorque=20.0 //10.0
     bHasHandbrake=true
-    MaxCriticalSpeed=1077.0 // 64 kph
 
     // Physics wheels properties
     //WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -88,19 +87,19 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(4)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(5)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(6)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=24.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=12.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(4)=(PointRadius=12.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(5)=(PointRadius=12.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(6)=(PointRadius=12.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.GMC_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -116,9 +115,9 @@ defaultproperties
     // Sounds
     SoundPitch=32.0
     MaxPitchSpeed=10.0 //150.0
-    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmctruck_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
     RumbleSoundBone="body"
 
@@ -130,13 +129,13 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.GMC_body'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.gmc'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -147,7 +146,7 @@ defaultproperties
         SupportBoneName="susp.F.R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
 
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
@@ -158,7 +157,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
 
     Begin Object Class=SVehicleWheel Name=MRWheel
         bPoweredWheel=true
@@ -168,7 +167,7 @@ defaultproperties
         SupportBoneName="susp.M.R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.MRWheel'
 
     Begin Object Class=SVehicleWheel Name=MLWheel
         bPoweredWheel=true
@@ -179,7 +178,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MLWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.MLWheel'
 
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
@@ -190,7 +189,7 @@ defaultproperties
         SupportBoneName="susp.B.R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.RRWheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.RRWheel'
 
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
@@ -202,7 +201,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LRWheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.LRWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -222,5 +221,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_GMCTruck.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

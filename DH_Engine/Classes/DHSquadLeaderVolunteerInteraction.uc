@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSquadLeaderVolunteerInteraction extends DHPromptInteraction;
@@ -56,7 +56,7 @@ function string GetPromptText()
 
     if (PC != none)
     {
-        return Repl(PromptText, "{time}", class'TimeSpan'.static.ToString(ExpirationTime - PC.GameReplicationInfo.ElapsedTime));
+        return Repl(PromptText, "{time}", Class'TimeSpan'.static.ToString(ExpirationTime - PC.GameReplicationInfo.ElapsedTime));
     }
 
     return super.GetPromptText();

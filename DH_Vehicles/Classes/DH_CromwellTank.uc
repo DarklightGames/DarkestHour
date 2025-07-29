@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CromwellTank extends DHArmoredVehicle;
@@ -25,16 +25,16 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
-    Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
-    Skins(3)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(4)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    Skins(5)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
+    Skins(0)=Texture'DH_VehiclesUK_tex.Cromwell_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.Cromwell_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUK_tex.Cromwell_body_int'
+    Skins(3)=Texture'DH_VehiclesUK_tex.Cromwell_body_int2'
+    Skins(4)=Texture'DH_VehiclesUK_tex.Cromwell_treads'
+    Skins(5)=Texture'DH_VehiclesUK_tex.Cromwell_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="MG_attachment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_CromwellCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_CromwellMountedMGPawn',WeaponBone="MG_attachment")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-151.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
@@ -65,7 +65,6 @@ defaultproperties
     RearRightAngle=153.0
 
     // Movement
-    MaxCriticalSpeed=948.0 // 57 kph
     GearRatios(3)=0.6
     GearRatios(4)=0.8
     TransRatio=0.14
@@ -80,15 +79,15 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-95.0,Z=2.0)) // engine
-    VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=58.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=85.0)
     FireAttachBone="Body"
     FireEffectOffset=(X=110.0,Y=35.0,Z=25.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Crommy_wrecked'
 
     // Exit
     ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)   // driver
@@ -100,12 +99,12 @@ defaultproperties
     ExitPositions(5)=(X=-77.0,Y=160.0,Z=75.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    IdleSound=SoundGroup'Vehicle_Engines.t34_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t34_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t34_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02'
 
     // Visual effects
     LeftTreadIndex=4
@@ -121,9 +120,9 @@ defaultproperties
     SteeringScaleFactor=1.0
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.cromwell_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Cromwell_Turret_Rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Cromwell_Turret_Look'
     VehicleHudEngineX=0.505
     VehicleHudEngineY=0.76
     VehicleHudTreadsPosX(0)=0.36
@@ -143,7 +142,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.83
     VehicleHudOccupantsX(6)=0.60
     VehicleHudOccupantsY(6)=0.73
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.cromwell'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -171,7 +170,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -180,7 +179,7 @@ defaultproperties
         BoneOffset=(X=35.0,Y=10.0,Z=2.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -190,7 +189,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -199,7 +198,7 @@ defaultproperties
         BoneOffset=(X=-12.0,Y=10.0,Z=2.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="Drive_wheel_L"
@@ -208,7 +207,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="Drive_wheel_R"
@@ -216,7 +215,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,Z=2.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -237,5 +236,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_CromwellTank.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

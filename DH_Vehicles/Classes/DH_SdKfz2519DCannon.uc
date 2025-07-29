@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz2519DCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
     Mesh=SkeletalMesh'DH_Stummel.stummel_ext'
     // WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
-    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.stummel_ext'
 
     bHasTurret=false
     ManualRotationsPerSecond=0.025
@@ -30,9 +30,9 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_PanzerIIINCannonShellHE'
+    SecondaryProjectileClass=Class'DH_SdKfz2519CannonShellHEAT'
+    TertiaryProjectileClass=Class'DH_SdKfz2519CannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
@@ -55,13 +55,13 @@ defaultproperties
     TertiarySpread=0.001
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_S_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_S_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_S_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
 
     ShootLoweredAnim="fire_close"
     ShootRaisedAnim="fire_open"

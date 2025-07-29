@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JacksonCannonShellAP extends DHCannonShellAP;
@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=625  //m77 solid shot i assume?
-    ShellImpactDamage=class'DH_Vehicles.DH_JacksonCannonShellDamageAPShot'
+    ShellImpactDamage=Class'DH_JacksonCannonShellDamageAPShot'
     HullFireChance=0.29
     EngineFireChance=0.55
 

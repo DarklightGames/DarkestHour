@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUIMapContainer extends GUIPanel;
@@ -33,7 +33,7 @@ function bool InternalOnPostDraw(Canvas C)
 
     const GRID_COUNT = 9;
 
-    C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+    C.Font = Class'DHHud'.static.GetSmallerMenuFont(C);
     C.SetDrawColor(255, 255, 255, 255);
 
     // Draw horizontal grid lines
@@ -115,7 +115,7 @@ defaultproperties
         WinTop=0.0
         bNeverFocus=true
         ImageStyle=ISTY_Scaled
-        Image=Material'DH_GUI_tex.DeployMenu.map_border'
+        Image=Material'DH_GUI_tex.map_border'
     End Object
     i_Border=BorderImageObject
 

@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SVT38Fire extends DHSemiAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_SVT38Bullet'
-    AmmoClass=class'DH_Weapons.DH_SVT38Ammo'
+    ProjectileClass=Class'DH_SVT38Bullet'
+    AmmoClass=Class'DH_SVT38Ammo'
     Spread=55.0
     MaxVerticalRecoilAngle=510
     MaxHorizontalRecoilAngle=190
@@ -20,10 +20,10 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 
-    FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
-    FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
-    FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    FireSounds(0)=Sound'DH_WeaponSounds.svtfire1'
+    FireSounds(1)=Sound'DH_WeaponSounds.svtfire2'
+    FireSounds(2)=Sound'DH_WeaponSounds.svtfire3'
+    ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)
 

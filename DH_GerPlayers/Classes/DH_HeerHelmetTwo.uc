@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HeerHelmetTwo extends DHHeadgear;
@@ -8,5 +8,5 @@ class DH_HeerHelmetTwo extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_Helmet_alt'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.WH_HG_2'
+    Skins(0)=Texture'DHGermanCharactersTex.WH_HG_2'
 }

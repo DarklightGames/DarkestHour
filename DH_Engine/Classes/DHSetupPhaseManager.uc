@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSetupPhaseManager extends Actor
@@ -14,6 +14,7 @@ struct TeamReinf
 
 var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
+var() int               TeamAddSpawningEnabledTime[2];      // Additional time to add for spawning to enable for each team (can be negative)
 
 var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
@@ -24,17 +25,20 @@ var() bool              bResetRoundTimer;                   // If true will rese
 
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
 
+var() name              PhaseEndEventName;                  // Event to call when the phase ends
+
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
-var int                 SpawningEnabledTimeActual;
+var int                 SpawningEnabledTimeActual[2];
 
 function ModifySetupPhaseDuration(int Seconds, optional bool bSetToValue);
 
 event PreBeginPlay()
 {
     local DarkestHourGame G;
+    local int i;
 
     G = DarkestHourGame(Level.Game);
 
@@ -51,7 +55,11 @@ event PreBeginPlay()
 
     // Handle more detailed timer
     SetupPhaseDurationActual = SetupPhaseDuration + 5;
-    SpawningEnabledTimeActual = SpawningEnabledTime + 5;
+
+    for (i = 0; i < 2; ++i)
+    {
+        SpawningEnabledTimeActual[i] = SpawningEnabledTime + TeamAddSpawningEnabledTime[i] + 5;
+    }
 
     super.PreBeginPlay();
 }
@@ -84,7 +92,8 @@ auto state Timing
         Level.Game.bAllowWeaponThrowing = false;
 
         // Set the time at which spawning is allowed
-        GRI.SpawningEnableTime = SpawningEnabledTimeActual;
+        GRI.SpawningEnableTimes[0] = SpawningEnabledTimeActual[0];
+        GRI.SpawningEnableTimes[1] = SpawningEnabledTimeActual[1];
 
         // Tell GRI that we are in setup phase (to prevent player mantling)
         GRI.bIsInSetupPhase = true;
@@ -115,7 +124,7 @@ auto state Timing
 
                     if (PC != none)
                     {
-                        PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
+                        PC.ReceiveLocalizedMessage(Class'DHSetupPhaseMessage', Class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
                     }
                 }
             }
@@ -162,7 +171,7 @@ auto state Timing
         // Disable phase minefields (volumes are static, so use AllActors)
         if (PhaseMineFieldTag != '')
         {
-            foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
+            foreach AllActors(Class'ROMineVolume', V, PhaseMineFieldTag)
             {
                 V.Deactivate();
             }
@@ -171,7 +180,7 @@ auto state Timing
         if (PhaseBoundaryTag != '')
         {
             // Remove boundary (DSMs are dynamic)
-            foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
+            foreach DynamicActors(Class'DHDestroyableSM', DSM, PhaseBoundaryTag)
             {
                 DSM.DestroyDSM(none);
             }
@@ -242,7 +251,7 @@ auto state Timing
         }
 
         // Announce the end of the phase
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         TeamRoundStartSounds[AXIS_TEAM_INDEX] = LI.GetTeamNationClass(AXIS_TEAM_INDEX).default.RoundStartSound;
         TeamRoundStartSounds[ALLIES_TEAM_INDEX] = LI.GetTeamNationClass(ALLIES_TEAM_INDEX).default.RoundStartSound;
@@ -253,13 +262,19 @@ auto state Timing
 
             if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
-                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', 1);
+                PC.ReceiveLocalizedMessage(Class'DHSetupPhaseMessage', 1);
                 PC.PlayAnnouncement(TeamRoundStartSounds[PC.GetTeamNum()], 1, true);
             }
         }
 
         // Tell GRI that we are no longer in setup phase (to allow player mantling)
         GRI.bIsInSetupPhase = false;
+
+        // Call the event
+        if (PhaseEndEventName != '')
+        {
+            TriggerEvent(PhaseEndEventName, self, none);
+        }
 
         GotoState('Done');
     }

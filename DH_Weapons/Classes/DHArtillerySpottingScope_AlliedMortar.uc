@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Springfield_Scope_Overlay'
 
     // to do: confirm those values are correct!
     RangeTable(0)=(Range=125,Pitch=84.0)

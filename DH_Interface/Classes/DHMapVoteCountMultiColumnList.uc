@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
@@ -63,7 +63,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetHumanReadableMapName(MapName), FontScale);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetHumanReadableMapName(MapName), FontScale);
 
     // Vote Count
     GetCellLeftWidth(1, CellLeft, CellWidth);
@@ -75,7 +75,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         GetCellLeftWidth(2, CellLeft, CellWidth);
         OldDrawStyle = DrawStyle;
 
-        class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+        Class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
         // Do a check if the current player count is in bounds of recommended range
         if (!GRI.IsPlayerCountInRange(Min, Max))
@@ -83,7 +83,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             DrawStyle = RedListStyle;
         }
 
-        DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
+        DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
         DrawStyle = OldDrawStyle;
     }
 }
@@ -101,9 +101,9 @@ function string GetSortString(int i)
     switch (SortColumn)
     {
         case 0: // Map name
-            return Locs(class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName));
+            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName));
         case 1: // Votes
-            return class'UString'.static.ZFill(string(VRI.MapVoteCount[i].VoteCount), 4);
+            return Class'UString'.static.ZFill(string(VRI.MapVoteCount[i].VoteCount), 4);
         case 2: // Size
             if (bHasMapInfo)
             {

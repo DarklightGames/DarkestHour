@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShovelItem extends DHWeapon
@@ -9,6 +9,7 @@ class DHShovelItem extends DHWeapon
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
 exec simulated function ROManualReload() { return; }
+simulated function bool ShouldUseFreeAim() { return true; }
 
 simulated function Fire(float F)
 {
@@ -19,13 +20,13 @@ simulated function Fire(float F)
     if (P != none && !P.CanBuildWithShovel())
     {
         // "You must have another squadmate nearby to use your shovel to build!"
-        P.ReceiveLocalizedMessage(class'DHShovelWarningMessage', 1);
+        P.ReceiveLocalizedMessage(Class'DHShovelWarningMessage', 1);
         return;
     }
 
     if (Instigator != none && Instigator.bIsCrawling)
     {
-        class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
+        Class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
     }
     else
     {
@@ -83,8 +84,8 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'
-    FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
+    FireModeClass(0)=Class'DHShovelBuildFireMode'
+    FireModeClass(1)=Class'DHShovelMeleeFire'
 
     ItemName="Shovel"
     InventoryGroup=7
@@ -94,10 +95,18 @@ defaultproperties
 
     DisplayFOV=80.0
     bCanSway=false
+    bCanResupplyWhenEmpty=false
 
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
 
     AIRating=0.0
     CurrentRating=0.0
+
+    SprintStartAnimRate=1
+    SprintEndAnimRate=1
+    SprintLoopAnimRate=1
+
+    bUsesFreeAim=true
+    FreeAimRotationSpeed=2.0
 }

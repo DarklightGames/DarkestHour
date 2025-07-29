@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RDG1SmokeGrenadeProjectile extends DHGrenadeProjectile_Smoke;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
-    bIsStickGrenade=true
-    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
+    StaticMesh=StaticMesh'WeaponPickupSM.RGD1_throw'
+    SpinType=ST_Tumble
+    MyDamageType=Class'DH_RDG1SmokeGrenadeDamType'
 }

@@ -1,24 +1,24 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSandEffect extends emitter;
+class DHBulletHitSandEffect extends Emitter;
 
-var texture Impacts[4];
+var Texture Impacts[4];
 
 simulated function PostBeginPlay()
 {
     Emitters[0].Texture = Impacts[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties
 {
-    Impacts(0)=Texture'DH_FX_Tex.Effects.MudImpact01'
-    Impacts(1)=Texture'DH_FX_Tex.Effects.MudImpact02'
-    Impacts(2)=Texture'DH_FX_Tex.Effects.MudImpact03'
-    Impacts(3)=Texture'DH_FX_Tex.Effects.MudImpact04'
+    Impacts(0)=Texture'DH_FX_Tex.MudImpact01'
+    Impacts(1)=Texture'DH_FX_Tex.MudImpact02'
+    Impacts(2)=Texture'DH_FX_Tex.MudImpact03'
+    Impacts(3)=Texture'DH_FX_Tex.MudImpact04'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter4
         FadeOut=true
@@ -73,7 +73,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=12.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.300000)
         StartVelocityRange=(Y=(Min=-10.000000,Max=12.000000),Z=(Min=-10.000000,Max=12.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -112,7 +112,7 @@ defaultproperties
         StartSizeRange=(X=(Min=25.000000,Max=35.000000),Y=(Min=25.000000,Max=35.000000),Z=(Min=75.000000,Max=150.000000))
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         LifetimeRange=(Min=1.000000,Max=1.500000)
         StartVelocityRange=(X=(Min=25.000000,Max=50.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-20.0,Max=20.000000))
     End Object
@@ -144,7 +144,7 @@ defaultproperties
         StartSizeRange=(X=(Min=20.000000,Max=35.000000))
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.510000,Max=1.000000)
         StartVelocityRange=(X=(Min=150.000000,Max=425.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -180,7 +180,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=55.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.510000,Max=1.000000)
         StartVelocityRange=(X=(Min=100.000000,Max=350.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -217,7 +217,7 @@ defaultproperties
         StartSizeRange=(X=(Min=5.000000,Max=12.000000))
         InitialParticlesPerSecond=600.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.debris.chunksparselite'
+        Texture=Texture'DH_FX_Tex.chunksparselite'
         InitialDelayRange=(Min=0.10000,Max=0.150000)
         LifetimeRange=(Min=0.450000,Max=0.75000)
         StartVelocityRange=(X=(Min=250.000000,Max=350.000000),Y=(Min=-100.000000,Max=75.000000),Z=(Min=-80.000000,Max=125.000000))
@@ -252,7 +252,7 @@ defaultproperties
         StartSizeRange=(X=(Min=8.000000,Max=10.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal'
+        Texture=Texture'Effects_Tex.snowfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.3500000)

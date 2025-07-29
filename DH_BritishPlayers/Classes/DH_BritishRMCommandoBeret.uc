@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BritishRMCommandoBeret extends DHHeadgear;
@@ -9,6 +9,6 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.Brit_Beret'
-    Skins(0)=Texture'DHBritishCharactersTex.Headgear.Brit_Commando_beret'
-    Skins(1)=Texture'DHBritishCharactersTex.Headgear.RMCommando_Badge'
+    Skins(0)=Texture'DHBritishCharactersTex.Brit_Commando_beret'
+    Skins(1)=Texture'DHBritishCharactersTex.RMCommando_Badge'
 }

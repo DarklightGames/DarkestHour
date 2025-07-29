@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleDestroyedEmitter extends Emitter;
@@ -17,7 +17,7 @@ defaultproperties
     bHardAttach=true
     LifeSpan = 8
 
-    AmbientSound=Sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
+    AmbientSound=Sound'DH_Ambience.Vehicle_cookoff2'
     SoundRadius=750.0 //experiment
     SoundVolume=255
     bFullVolume=true
@@ -49,7 +49,7 @@ defaultproperties
         ParticlesPerSecond=3.000000
         InitialParticlesPerSecond=3.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke3'
+        Texture=Texture'Effects_Tex.LSmoke3'
         LifetimeRange=(Min=16.000000,Max=16.000000)
         StartVelocityRange=(X=(Min=50.000000,Max=100.000000),Y=(Min=50.000000,Max=100.000000),Z=(Max=20.000000))
     End Object
@@ -81,7 +81,7 @@ defaultproperties
         ParticlesPerSecond=5.000000
         InitialParticlesPerSecond=3.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.fire_16frame'
+        Texture=Texture'Effects_Tex.fire_16frame'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=1.000000,Max=1.000000)
@@ -116,7 +116,7 @@ defaultproperties
         ParticlesPerSecond=2.000000
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.750000,Max=0.750000)
@@ -137,7 +137,7 @@ defaultproperties
         MaxParticles=60
         StartLocationOffset=(Z=75.000000)
         InitialParticlesPerSecond=25.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=3.000000)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=100.000000,Max=500.000000))
     End Object
@@ -154,7 +154,7 @@ defaultproperties
         MaxParticles=60
 
         InitialParticlesPerSecond=20.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         StartVelocityRange=(X=(Min=-600.000000,Max=600.000000),Y=(Min=-600.000000,Max=600.000000),Z=(Min=50.000000,Max=800.000000))
     End Object
     Emitters(4)=SparkEmitter'SparkEmitter1'
@@ -173,7 +173,7 @@ defaultproperties
 
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=5.000000)
-        Texture=Texture'SpecialEffects.Coronas.Corona2'
+        Texture=Texture'SpecialEffects.Corona2'
         LifetimeRange=(Min=0.050000,Max=0.100000)
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter11'

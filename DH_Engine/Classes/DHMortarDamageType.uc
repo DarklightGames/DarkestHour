@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarDamageType extends DHShellImpactDamageType
@@ -9,14 +9,11 @@ class DHMortarDamageType extends DHShellImpactDamageType
 defaultproperties
 {
     bIsArtilleryImpact=true
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=Texture'InterfaceArt_tex.artkill'
     TankDamageModifier=0.125
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.8
-    DeathString="%o was blown up by %k's mortar shell."
-    MaleSuicide="%o was blown up by his own mortar shell."
-    FemaleSuicide="%o was blown up by her own mortar shell."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true
@@ -24,7 +21,7 @@ defaultproperties
     bExtraMomentumZ=true
     bFlaming=true
     GibModifier=4.0
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
+    DeathOverlayMaterial=Combiner'Effects_Tex.PlayerDeathOverlay'
     DeathOverlayTime=999.0
     GibPerterbation=0.15
     KDamageImpulse=4000.000000

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GeratPAttachment extends DHWeaponAttachment;
@@ -8,9 +8,9 @@ class DH_GeratPAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.GeratP_3rd'
-    MenuImage=Texture'DH_Sten_tex.interface.stenmk2'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    MenuImage=Texture'DH_Sten_tex.stenmk2'
+    mMuzFlashClass=Class'MuzzleFlash3rdPPSH'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
 
     MuzzleBoneName="tipnew"
     ShellEjectionBoneName="weapon_ejectnew"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPistolFire extends DHProjectileFire
@@ -21,12 +21,12 @@ event ModeDoFire()
 defaultproperties
 {
     bWaitForRelease=true
-    FireRate=0.25
+    FireRate=0.20
     FAProjSpawnOffset=(X=-15.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
-    SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stPistol'
+    SmokeEmitterClass=Class'ROPistolMuzzleSmoke'
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=0.0)
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_pistol'
 
     Spread=350.0
     MaxVerticalRecoilAngle=600

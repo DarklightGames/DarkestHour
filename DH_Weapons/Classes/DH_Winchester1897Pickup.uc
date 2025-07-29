@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Winchester1897Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_Winchester1897Weapon'
-    StaticMesh=StaticMesh'DH_Winchester1897_stc.Pickup.Winchester1897'
+    InventoryType=Class'DH_Winchester1897Weapon'
+    StaticMesh=StaticMesh'DH_Winchester1897_stc.Winchester1897'
 }

@@ -1,18 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCannonShellSmoke extends DHCannonShellHE
     abstract;
 
 var  class<Emitter> SmokeEmitterClass;
-var  sound          SmokeIgniteSound;
-var  sound          SmokeLoopSound;
+var  Sound          SmokeIgniteSound;
+var  Sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
 // Modified to add smoke effects
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -20,7 +20,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
+            Spawn(SmokeEmitterClass, self,, HitLocation, Rotator(-HitNormal));
             PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
             AmbientSound = SmokeLoopSound;
             AmbientVolumeScale = 1.0; // overriding defaults for shells, which are intended for their in-flight 'whistle' - this (& radius) match smoke grenade sounds
@@ -53,16 +53,16 @@ defaultproperties
 {
     RoundType=RT_Smoke
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Shell'
-    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeEmitterClass=Class'DHSmokeEffect_Shell'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smoke_loop'
     SmokeSoundDuration=33.0
     ImpactDamage=125
     BallisticCoefficient=0.6
     MaxSpeed=500.0
     Damage=75.0
     DamageRadius=50.0
-    MyDamageType=class'DH_Engine.DHShellSmokeDamageType'
+    MyDamageType=Class'DHShellSmokeDamageType'
     LifeSpan=12.0
     AmbientGlow=50
 //  SoundVolume=175 // removed as affects shell's flight 'whistle' & smoke sounds (i.e. AmbientSound), not the explosion sound volume (same with radius below)

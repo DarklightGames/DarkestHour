@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GreyhoundArmoredCar extends DHArmoredVehicle;
@@ -18,12 +18,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
+    Skins(0)=Texture'DH_VehiclesUS_tex4.Greyhound_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.Greyhound_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex4.Greyhound_wheels'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-70.0,Z=105.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -50,7 +50,6 @@ defaultproperties
     RearLeftAngle=208.0
 
     // Movement
-    MaxCriticalSpeed=1077.0 // 64 kph
     GearRatios(3)=0.6
     GearRatios(4)=0.75
     WheelPenScale=1.2
@@ -84,7 +83,7 @@ defaultproperties
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.M8_Destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Destroyed'
 
     // Exit
     ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)  // driver
@@ -95,9 +94,9 @@ defaultproperties
     ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-180.0,Y=42.0,Z=54.0),ExhaustRotation=(Pitch=63000,Yaw=32768))
@@ -105,9 +104,9 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.greyhound_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Greyhound_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Greyhound_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.35
@@ -119,7 +118,9 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.m8_greyhound'
+
+    ShadowZOffset=30.0
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -130,7 +131,7 @@ defaultproperties
         SupportBoneName="axel_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -140,7 +141,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=MRWheel
         bPoweredWheel=true
         BoneName="wheel_MR"
@@ -149,7 +150,7 @@ defaultproperties
         SupportBoneName="axel_M_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.MRWheel'
     Begin Object Class=SVehicleWheel Name=MLWheel
         bPoweredWheel=true
         BoneName="wheel_ML"
@@ -159,7 +160,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MLWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.MLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         BoneName="wheel_RR"
@@ -168,7 +169,7 @@ defaultproperties
         SupportBoneName="axel_R_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.RRWheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.RRWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         BoneName="wheel_LR"
@@ -178,7 +179,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.LRWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -198,5 +199,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_GreyhoundArmoredCar.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

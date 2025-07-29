@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSPECIES_Human extends ROSPECIES_Human
@@ -14,8 +14,11 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {
     local ROPawn                  ROP;
     local ROPlayerReplicationInfo PRI;
-    local mesh                    NewMesh;
-    local class<VoicePack>        VoiceClass;
+    local Mesh                    NewMesh;
+    local Class<VoicePack>        VoiceClass;
+    local Class<DHVoicePack>      DHVC;
+    local DH_LevelInfo            LI;
+    local int                     EnemyTeamIndex;
 
     ROP = ROPawn(P);
 
@@ -29,7 +32,7 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
     // Legacy model setup from PlayerRecord - in DH an empty PlayerRecord will now be passed, so the DHPawn class handles the model setup
     if (Rec.MeshName != "")
     {
-        NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
+        NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, Class'Mesh'));
 
         if (NewMesh != none)
         {
@@ -40,12 +43,12 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
     if (Rec.BodySkinName != "")
     {
-        ROP.Skins[0] = material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
+        ROP.Skins[0] = Material(DynamicLoadObject(Rec.BodySkinName, Class'Material'));
     }
 
     if (Rec.FaceSkinName != "")
     {
-        ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
+        ROP.Skins[1] = Material(DynamicLoadObject(Rec.FaceSkinName, Class'Material'));
     }
 
     // Fix to get PRI if player is in a vehicle when his DHPawn spawns on a net client (the vehicle, not the DHPawn, now holds the PRI reference)
@@ -60,7 +63,7 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
     }
 
     // Set voice classes
-    ROP.SoundGroupClass = class<ROPawnSoundGroup>(DynamicLoadObject(default.MaleSoundGroup, class'Class'));
+    ROP.SoundGroupClass = class<ROPawnSoundGroup>(DynamicLoadObject(default.MaleSoundGroup, Class'Class'));
 
     if (PRI != none && PRI.RoleInfo != none)
     {
@@ -68,7 +71,16 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
         if (ROP.VoiceType != "")
         {
-            VoiceClass = class<VoicePack>(DynamicLoadObject(ROP.VoiceType, class'Class'));
+            VoiceClass = class<VoicePack>(DynamicLoadObject(ROP.VoiceType, Class'Class'));
+        }
+
+        DHVC = class<DHVoicePack>(VoiceClass);
+
+        if (DHVC != none)
+        {
+            LI = Class'DH_LevelInfo'.static.GetInstance(P.Level);
+            EnemyTeamIndex = int(!bool(P.GetTeamNum()));
+            VoiceClass = DHVC.static.GetVoicePackClass(LI.GetTeamNationClass(EnemyTeamIndex));
         }
 
         PRI.VoiceType = VoiceClass;
@@ -88,44 +100,44 @@ static function LoadResources(xUtil.PlayerRecord Rec, LevelInfo Level, PlayerRep
 
     if (Rec.MeshName != "")
     {
-        DynamicLoadObject(Rec.MeshName, class'Mesh');
+        DynamicLoadObject(Rec.MeshName, Class'Mesh');
     }
 
     if (Rec.Skeleton != "")
     {
-        CustomSkeleton = mesh(DynamicLoadObject(Rec.Skeleton, class'Mesh'));
+        CustomSkeleton = mesh(DynamicLoadObject(Rec.Skeleton, Class'Mesh'));
     }
 
     if (CustomSkeleton == none && default.MaleSkeleton != "")
     {
-        DynamicLoadObject(default.MaleSkeleton, class'Mesh');
+        DynamicLoadObject(default.MaleSkeleton, Class'Mesh');
     }
 
     if (default.MaleSoundGroup != "")
     {
-        DynamicLoadObject(default.MaleSoundGroup, class'Class');
+        DynamicLoadObject(default.MaleSoundGroup, Class'Class');
     }
 
     if (Rec.VoiceClassName != "" && !Level.bLowSoundDetail)
     {
-        VoiceClass = class<VoicePack>(DynamicLoadObject(Rec.VoiceClassName, class'Class'));
+        VoiceClass = class<VoicePack>(DynamicLoadObject(Rec.VoiceClassName, Class'Class'));
     }
 
     if (VoiceClass == none && default.MaleVoice != "")
     {
-        class<VoicePack>(DynamicLoadObject(default.MaleVoice, class'Class'));
+        class<VoicePack>(DynamicLoadObject(default.MaleVoice, Class'Class'));
     }
 
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (Rec.BodySkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.BodySkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.BodySkinName, Class'Material')));
         }
 
         if (Rec.FaceSkinName != "")
         {
-            Level.AddPrecacheMaterial(material(DynamicLoadObject(Rec.FaceSkinName, class'Material')));
+            Level.AddPrecacheMaterial(Material(DynamicLoadObject(Rec.FaceSkinName, Class'Material')));
         }
 
         if (Rec.Portrait != none)
@@ -133,7 +145,7 @@ static function LoadResources(xUtil.PlayerRecord Rec, LevelInfo Level, PlayerRep
             Level.AddPrecacheMaterial(Rec.Portrait);
         }
 
-        class'DHPawn'.static.StaticPrecache(Level); // pre-cache the pawn's content
+        Class'DHPawn'.static.StaticPrecache(Level); // pre-cache the pawn's content
     }
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPlaceableWeaponPickup extends DHWeaponPickup
@@ -201,5 +201,5 @@ defaultproperties
     bIgnoreEncroachers=false
     bAlwaysRelevant=false
     NetUpdateFrequency=8.0
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on InventoryType
+    StaticMesh=StaticMesh'WeaponPickupSM.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on InventoryType
 }

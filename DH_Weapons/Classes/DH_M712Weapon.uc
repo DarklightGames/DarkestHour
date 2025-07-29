@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M712Weapon extends DHFastAutoWeapon;
@@ -37,17 +37,17 @@ simulated function bool StartFire(int Mode)
 defaultproperties
 {
     ItemName="Mauser M712 'Schnellfeuer'"
-    FireModeClass(0)=class'DH_Weapons.DH_M712Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M712MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M712Attachment'
-    PickupClass=class'DH_Weapons.DH_M712Pickup'
+    FireModeClass(0)=Class'DH_M712Fire'
+    FireModeClass(1)=Class'DH_M712MeleeFire'
+    AttachmentClass=Class'DH_M712Attachment'
+    PickupClass=Class'DH_M712Pickup'
 
     Mesh=SkeletalMesh'DH_C96_1st.M712_mesh'
 
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(1)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
+    Skins(1)=Texture'Weapons1st_tex.Mauser_c96'
+    HighDetailOverlay=Shader'Weapons1st_tex.c96_S'
     handnum=0
     sleevenum=2
 

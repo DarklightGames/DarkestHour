@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVGLateCannon extends DHVehicleCannon;
@@ -9,11 +9,11 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=Texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
-    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    Skins(0)=Texture'axis_vehicles_tex.Panzer4F2_ext'
+    Skins(1)=Texture'axis_vehicles_tex2.Panzer4H_Armor'
+    Skins(2)=Texture'axis_vehicles_tex.Panzer4F2_int'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4_turret_coll')
+    HighDetailOverlay=Shader'axis_vehicles_tex.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -40,9 +40,9 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_PanzerIVCannonShell'
+    SecondaryProjectileClass=Class'DH_PanzerIVCannonShellHE'
+    TertiaryProjectileClass=Class'DH_PanzerIVGEarlyCannonShellHEAT'
 
     ProjectileDescriptions(2)="HEAT"
 
@@ -61,11 +61,11 @@ defaultproperties
     TertiarySpread=0.00357
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    AltFireProjectileClass=Class'DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=5
     AltFireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=Class'DH_MG34TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -74,15 +74,15 @@ defaultproperties
     AltFireSpawnOffsetX=26.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
+    AltFireSoundClass=Sound'Inf_Weapons.mg34_p_fire_loop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

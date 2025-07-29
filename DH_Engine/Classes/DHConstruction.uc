@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -23,11 +23,11 @@ enum EConstructionErrorType
     ERROR_NearSpawnPoint,           // Cannot be so close to a spawn point (or location hint)
     ERROR_Indoors,                  // Cannot be placed indoors
     ERROR_InObjective,              // Cannot be placed inside an objective area
-    ERROR_TeamLimit,                // Limit reached for this type of construction
+    ERROR_MaxActive,                // Max active limit reached
     ERROR_NoSupplies,               // Not within range of any supply caches
     ERROR_InsufficientSupply,       // Not enough supplies to build this construction
     ERROR_BadSurface,               // Cannot construct on this surface type
-    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
+    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!0
     ERROR_RestrictedType,           // Restricted construction type (can't build on this map!)
     ERROR_SquadTooSmall,            // Not enough players in the squad!
     ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
@@ -36,6 +36,7 @@ enum EConstructionErrorType
     ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
     ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
+    ERROR_SocketOccupied,           // The construction socket is already occupied.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -63,7 +64,6 @@ var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience on
 var bool bIsNeutral;            // If true, this construction is neutral (can be built by either team)
 var private int OldTeamIndex;   // Used by the client to fire off an event when the team index changes.
 var private int TeamIndex;
-var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
 // Manager
 var     DHConstructionManager       Manager;
@@ -80,8 +80,8 @@ var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     bool    bSnapRotation;
 var     int     RotationSnapAngle;
-var     rotator StartRotationMin;
-var     rotator StartRotationMax;
+var     Rotator StartRotationMin;
+var     Rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
@@ -90,7 +90,6 @@ var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in m
 var     float   ObjectiveDistanceMinMeters;             // The minimum distance, in meters, that this construction must be placed away from all objectives.
 var     float   EnemyObjectiveDistanceMinMeters;        // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
 var     bool    bShouldSwitchToLastWeaponOnPlacement;
-var     bool    bCanBePlacedWithControlPoints;
 var     bool    bCanBePlacedInDangerZone;
 
 struct ProximityRequirement
@@ -100,11 +99,6 @@ struct ProximityRequirement
 };
 
 var     array<ProximityRequirement> ProximityRequirements;
-
-var struct SControlPointParameters
-{
-    var float SpacingDistanceMeters;
-} ControlPointParameters;
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
@@ -116,8 +110,8 @@ var     float   TerrainScaleMax;                // The maximum terrain scale all
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
-var private vector      PlacementOffset;        // 3D offset in the proxy's local-space during placement
-var     sound           PlacementSound;         // Sound to play when construction is first placed down
+var private Vector      PlacementOffset;        // 3D offset in the proxy's local-space during placement
+var     Sound           PlacementSound;         // Sound to play when construction is first placed down
 var     float           PlacementSoundRadius;
 var     float           PlacementSoundVolume;
 var     class<Emitter>  PlacementEmitterClass;  // Emitter to spawn when the construction is first placed down
@@ -126,7 +120,7 @@ var     float   FloatToleranceInMeters;             // The distance the construc
 var     float   DuplicateFriendlyDistanceInMeters;  // The distance required between identical constructions of the same type for FRIENDLY constructions.
 var     float   DuplicateEnemyDistanceInMeters;     // The distance required between identical constructions of the same type for ENEMY constructions.
 
-var     vector  ExplosionDamageTraceOffset;         // Optimal location for tracing this actor when dealing explosive damage (relative to origin)
+var     Vector  ExplosionDamageTraceOffset;         // Optimal location for tracing this actor when dealing explosive damage (relative to origin)
 
 // Construction
 var private int SupplyCost;                     // The amount of supply points this construction costs
@@ -184,7 +178,7 @@ var StaticMesh                  TatteredStaticMesh;
 // Cut
 var float                       CutDuration;                // Cut duration
 var StaticMesh                  CutStaticMesh;              // Static mesh to display when cut
-var sound                       CutSound;
+var Sound                       CutSound;
 var float                       CutSoundVolume;
 var float                       CutSoundRadius;
 
@@ -205,7 +199,7 @@ struct Stage
 {
     var int Progress;           // The progress level at which this stage is used.
     var StaticMesh StaticMesh;  // This can be overridden in GetStaticMesh
-    var sound Sound;
+    var Sound Sound;
     var Emitter Emitter;
 };
 
@@ -239,12 +233,57 @@ var int CompletionPointValue;
 // Artillery
 var bool bIsArtillery;
 
+// Construction Sockets
+struct SConstructionSocket
+{
+    var Vector Location;
+    var Rotator Rotation;
+    var bool bLimitLocalRotation;
+    var Range LocalRotationYawRange;
+    var array<class<DHConstruction> > IncludeClasses;
+    var array<class<DHConstruction> > ExcludeClasses;
+    var DHConstructionSocket SocketActor;
+};
+var array<SConstructionSocket> ConstructionSockets;
+
+// Cached values that are calculated only when needed (e.g., when any of the user-editable properties change such as variant or skin)
+struct RuntimeData
+{
+    var string  MenuName;           // The name to display on the interface.
+    var bool    bHasVariants;       // If true, this construction has variants (e.g., an AT gun with a different mount)
+    var bool    bHasSkins;          // If true, this construction has skins for the selected variant.
+};
+
+// Variant & Skin Index
+var int VariantIndex;
+var int SkinIndex;
+
+// When true, this construction is "active" and counts towards the owning team's active limit.
+var bool bIsActive;
+
+// Debugging
+var bool bSinglePlayerOnly;  // If true, this construction can only be placed in single player mode.
+                             // Used to prevent players from placing constructions that are not yet ready for multiplayer.
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
 }
 
+// Modify this to have this construction be a proxy for another construction
+// based on the context (e.g., the player's faction)
+static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
+{
+    return default.Class;
+}
+
+static function bool IsProxyClass(DHActorProxy.Context Context)
+{
+    return GetConstructionClass(Context) != default.Class;
+}
+
+simulated function OnPlaced();
 simulated function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 simulated function OnTeamIndexChanged();
@@ -256,6 +295,7 @@ simulated function bool IsConstructed() { return false; }
 simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
 simulated function bool CanBeCut() { return false; }
+simulated function bool IsDummy() { return false; }
 
 final simulated function int GetTeamIndex()
 {
@@ -271,7 +311,7 @@ final function SetTeamIndex(int TeamIndex)
 
 // Return a reliable location for tracing this actor by explosives, as tracing
 // origin can fail unexpectedly (for example, if it's sunk under the terrain)
-simulated function vector GetExplosiveDamageTraceLocation()
+simulated function Vector GetExplosiveDamageTraceLocation()
 {
     return Location + (ExplosionDamageTraceOffset >> Rotation);
 }
@@ -290,15 +330,14 @@ simulated function PostBeginPlay()
 
     Disable('Tick');
 
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
+    Manager = Class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Role == ROLE_Authority)
     {
         SetTeamIndex(int(TeamOwner));
         Health = HealthMax;
     }
-
-    Manager = class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Manager != none)
     {
@@ -310,35 +349,151 @@ simulated function PostBeginPlay()
     }
 }
 
-// Called when this construction is spawned by a player
-function OnSpawnedByPlayer()
+simulated function SpawnConstructionSockets()
 {
-    local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LI;
     local int i;
+    local DHConstructionSocket Socket;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none || LI == none)
+    if (Role != ROLE_Authority)
     {
         return;
     }
 
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+    for (i = 0; i < ConstructionSockets.Length; ++i)
     {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
+        if (ConstructionSockets[i].SocketActor != none)
         {
-            break;
+            // Socket actor is already spawned.
+            continue;
         }
 
-        if (GRI.TeamConstructions[i].ConstructionClass == Class &&
-            GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
+        Socket = Spawn(Class'DHConstructionSocket', self);
+
+        if (Socket == none)
         {
-            GRI.TeamConstructions[i].Remaining = Max(0, GRI.TeamConstructions[i].Remaining - 1);
-            break;
+            Warn("Failed to spawn construction socket" @ i @ "for" @ self);
+            continue;
+        }
+
+        Socket.bLimitLocalRotation = ConstructionSockets[i].bLimitLocalRotation;
+        Socket.LocalRotationYawRange = ConstructionSockets[i].LocalRotationYawRange;
+        Socket.IncludeClasses = ConstructionSockets[i].IncludeClasses;
+        Socket.ExcludeClasses = ConstructionSockets[i].ExcludeClasses;
+        Socket.SetBase(self);
+        Socket.SetRelativeLocation(ConstructionSockets[i].Location);
+        Socket.SetRelativeRotation(ConstructionSockets[i].Rotation);
+        ConstructionSockets[i].SocketActor = Socket;
+    }
+}
+
+simulated function DestroyConstructionSockets()
+{
+    local int i;
+
+    for (i = 0; i < ConstructionSockets.Length; ++i)
+    {
+        if (ConstructionSockets[i].SocketActor != none)
+        {
+            ConstructionSockets[i].SocketActor.Destroy();
         }
     }
+}
+
+// Called when this construction is placed by a player to update the active and remaining counts.
+function Activate(int InstigatorTeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local int ConstructionIndex;
+
+    if (bIsActive)
+    {
+        return;
+    }
+
+    if (!IsPlacedByPlayer())
+    {
+        Warn("Activate call was attempted on a non-player placed construction!");
+        return;
+    }
+    
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
+
+    if (ConstructionIndex != -1)
+    {
+        // Decrement the remaining count of this construction type.
+        GRI.Constructions[ConstructionIndex].Remaining = Max(0, int(GRI.Constructions[ConstructionIndex].Remaining) - 1);
+        GRI.Constructions[ConstructionIndex].Active += 1;
+    }
+
+    bIsActive = true;
+}
+
+// Called when this construction is torn down, broken or destroyed.
+// `bInstigatorIsFriendly` indicates if this deactivation was caused by friendly action,
+// used to determine if the Remaining count should be incremented.
+function Deactivate(optional bool bInstigatorIsFriendly)
+{
+    local DHGameReplicationInfo GRI;
+    local int ConstructionIndex;
+
+    if (Role != ROLE_Authority)
+    {
+        // Only the server can deactivate constructions.
+        return;
+    }
+
+    if (!bIsActive)
+    {
+        // We are not active, so we can't deactivate.
+        return;
+    }
+
+    if (!IsPlacedByPlayer())
+    {
+        // We don't care about non-player placed constructions.
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    ConstructionIndex = GRI.GetTeamConstructionIndex(TeamIndex, Class);
+
+    if (ConstructionIndex != -1)
+    {
+        // Increment the remaining count of this construction type.
+        GRI.Constructions[ConstructionIndex].Active = Max(0, int(GRI.Constructions[ConstructionIndex].Active) - 1);
+
+        if (bInstigatorIsFriendly)
+        {
+            // Instigator is friendly, so increment the remaining count (i.e., put it back in the pool).
+            GRI.Constructions[ConstructionIndex].Remaining += 1;
+        }
+    }
+
+    bIsActive = false;
+}
+
+// Called when this construction is spawned by a player
+function OnSpawnedByPlayer(DHPlayer PC)
+{
+    if (PC == none)
+    {
+        return;
+    }
+    
+    Activate(PC.GetTeamNum());
 }
 
 // Terrain poking is wacky. Here's a few things you should know before using
@@ -353,7 +508,7 @@ function OnSpawnedByPlayer()
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart, MyPlacementOffset;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart, MyPlacementOffset;
 
     MyPlacementOffset = GetPlacementOffset(GetContext());
 
@@ -364,7 +519,7 @@ simulated function PokeTerrain(float Radius, float Depth)
     TraceEnd = Location - MyPlacementOffset;
     TraceEnd.Z -= 1000.0;
 
-    foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (TI != none)
         {
@@ -387,8 +542,20 @@ simulated function PokeTerrain(float Radius, float Depth)
 // govern the lifetime of this actor, for example.
 simulated state Dummy
 {
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        DestroyConstructionSockets();
+    }
+
+    simulated function bool IsDummy()
+    {
+        return true;
+    }
+
     // Take no damage.
-    function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
+    function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex);
 
 Begin:
     if (Role == ROLE_Authority)
@@ -418,6 +585,10 @@ simulated event Destroyed()
         PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
     }
 
+    DestroyConstructionSockets();
+
+    Deactivate(false);
+
     super.Destroyed();
 }
 
@@ -426,7 +597,7 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
-    foreach AllActors(class'DHConstructionSupplyAttachment', Attachment)
+    foreach AllActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
         if (Attachment.IsTouchingActor(self))
         {
@@ -437,7 +608,8 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     return Attachments;
 }
 
-function RefundSupplies(int InstigatorTeamIndex)
+// Returns the number of supply points that were refunded.
+function int RefundSupplies(Pawn Instigator)
 {
     local int i;
     local int MySupplyCost;
@@ -447,18 +619,13 @@ function RefundSupplies(int InstigatorTeamIndex)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
-    if (!WasCreatedByPlayer())
-    {
-        return;
-    }
-
-    if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
+    if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
         Attachments = GetTouchingSupplyAttachments();
-        AttachmentComparator = new class'UComparator';
-        AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-        class'USort'.static.Sort(Attachments, AttachmentComparator);
+        AttachmentComparator = new Class'UComparator';
+        AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
+        Class'USort'.static.Sort(Attachments, AttachmentComparator);
 
         // Refund supplies to the touching supply attachments.
         for (i = 0; i < Attachments.Length && MySupplyCost > 0; ++i)
@@ -469,45 +636,33 @@ function RefundSupplies(int InstigatorTeamIndex)
             MySupplyCost -= SuppliesToRefund;
         }
     }
+
+    return SuppliesRefunded;
 }
 
-function TearDown(int InstigatorTeamIndex)
+function TearDown(Pawn Instigator)
 {
-    local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LI;
-    local int i;
+    local int SuppliesRefunded;
 
     if (bShouldRefundSuppliesOnTearDown)
     {
-        RefundSupplies(InstigatorTeamIndex);
-    }
+        SuppliesRefunded = RefundSupplies(Instigator);
 
-    // Update the construction counts remaining in the GRI
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (GRI == none || LI == none)
-    {
-        return;
-    }
-
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
-    {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
+        if (SuppliesRefunded > 0)
         {
-            break;
-        }
-
-        if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
-            GRI.TeamConstructions[i].ConstructionClass == Class)
-        {
-            GRI.TeamConstructions[i].Remaining = Min(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
-            break;
+            // Send a message to the instigating player about the amount of supplies that were refunded.
+            Instigator.ReceiveLocalizedMessage(Class'DHsupplyMessage', Class'UInteger'.static.FromShorts(7, SuppliesRefunded));
         }
     }
 
     if (IsPlacedByPlayer())
     {
+        if (Instigator.GetTeamNum() == TeamIndex)
+        {
+            // Deactivate with friendly instigator (i.e., put the construction back in the remaining pool).
+            Deactivate(true);
+        }
+
         Destroy();
     }
     else
@@ -556,7 +711,7 @@ auto simulated state Constructing
         local DH_LevelInfo LI;
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (bCanDieOfStagnation)
         {
@@ -565,7 +720,7 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            TearDown(InstigatedBy.GetTeamNum());
+            TearDown(InstigatedBy);
         }
         else if (Progress >= ProgressMax)
         {
@@ -626,6 +781,9 @@ Begin:
 
 simulated function bool IsPlacedByPlayer()
 {
+    // Dynamically placed actors are owned by the LevelInfo. If it was placed
+    // in-editor, it will not have an owner. This is a nice implicit way of
+    // knowing if something was created in-editor or not.
     return Owner != none;
 }
 
@@ -651,8 +809,10 @@ simulated state Constructed
 
                 if (InstigatorController != none)
                 {
-                    InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
+                    InstigatorController.ReceiveScoreEvent(Class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
                 }
+
+                SpawnConstructionSockets();
 
                 bHasBeenConstructed = true;
             }
@@ -686,7 +846,7 @@ simulated state Constructed
         OnConstructed();
     }
 
-    function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
+    function KImpact(Actor Other, Vector Pos, Vector ImpactVel, Vector ImpactNorm)
     {
         local float Momentum;
         local int Damage;
@@ -834,10 +994,15 @@ simulated state Broken
             }
         }
 
+        if (Role == ROLE_Authority)
+        {
+            Deactivate(false);
+        }
+
         OnBroken();
     }
 
-    event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    event TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         // Do nothing, since we're broken already!
     }
@@ -914,12 +1079,12 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     return none;
 }
 
-function static string GetMenuName(DHActorProxy.Context Context)
+static function string GetMenuName(DHActorProxy.Context Context)
 {
     return default.MenuName;
 }
 
-function static Material GetMenuIcon(DHActorProxy.Context Context)
+static function Material GetMenuIcon(DHActorProxy.Context Context)
 {
     return default.MenuIcon;
 }
@@ -929,17 +1094,22 @@ simulated static function int GetSupplyCost(DHActorProxy.Context Context)
     return default.SupplyCost;
 }
 
-function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;
 }
 
-function static bool ShouldShowOnMenu(DHActorProxy.Context Context)
+static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
+
+    if (default.bSinglePlayerOnly && (Context.LevelInfo != none && Context.LevelInfo.Level.NetMode != NM_Standalone))
+    {
+        return false;
+    }
 
     // Only show constructions the player is allowed to place
     if (PRI != none)
@@ -960,7 +1130,7 @@ static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
+static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHPawn P;
     local DHConstructionManager CM;
@@ -968,6 +1138,7 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     local DHSquadReplicationInfo SRI;
     local ConstructionError E;
     local DHGameReplicationInfo GRI;
+    local int MaxActive;
 
     if (Context.PlayerController == none)
     {
@@ -995,18 +1166,11 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    CM = class'DHConstructionManager'.static.GetInstance(P.Level);
+    CM = Class'DHConstructionManager'.static.GetInstance(P.Level);
 
     if (CM == none)
     {
         E.Type = ERROR_Fatal;
-        return E;
-    }
-
-    if (default.TeamLimit > 0 && CM.CountOf(P.GetTeamNum(), default.Class) >= default.TeamLimit)
-    {
-        E.Type = ERROR_TeamLimit;
-        E.OptionalInteger = default.TeamLimit;
         return E;
     }
 
@@ -1020,6 +1184,15 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
+    MaxActive = Context.LevelInfo.GetConstructionMaxActive(Context.TeamIndex, default.Class);
+
+    if (MaxActive >= 0 && GRI.GetTeamConstructionActive(Context.TeamIndex, default.Class) >= MaxActive)
+    {
+        E.Type = ERROR_MaxActive;
+        E.OptionalInteger = MaxActive;
+        return E;
+    }
+
     if (P.Level.NetMode != NM_Standalone && !PRI.bAdmin && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
         E.Type = ERROR_SquadTooSmall;
@@ -1027,16 +1200,15 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (GRI.GetTeamConstructionRemaining(Context.TeamIndex, default.Class) == 0)
-    {
-        E.Type = ERROR_Exhausted;
-        E.OptionalInteger = GRI.GetTeamConstructionNextIncrementTimeSeconds(Context.TeamIndex, default.Class);
-        return E;
-    }
-
     if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
     {
         E.Type = ERROR_InsufficientSupply;
+        return E;
+    }
+
+    if (!GRI.HasTeamConstructionRemaining(P.GetTeamNum(), default.Class))
+    {
+        E.Type = ERROR_Exhausted;
         return E;
     }
 
@@ -1062,7 +1234,7 @@ simulated function Reset()
 
 // Override to set a new proxy appearance if you require something more
 // complex than a simple static mesh.
-function static UpdateProxy(DHActorProxy CP)
+static function UpdateProxy(DHActorProxy CP)
 {
     local int i;
     local array<Material> StaticMeshSkins;
@@ -1070,7 +1242,7 @@ function static UpdateProxy(DHActorProxy CP)
     CP.SetDrawType(DT_StaticMesh);
     CP.SetStaticMesh(GetProxyStaticMesh(CP.GetContext()));
 
-    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
+    StaticMeshSkins = (new Class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
 
     for (i = 0; i < StaticMeshSkins.Length; ++i)
     {
@@ -1078,12 +1250,25 @@ function static UpdateProxy(DHActorProxy CP)
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
+// Override to output if the construction class has variants or skins.
+static function RuntimeData CreateProxyRuntimeData(DHConstructionProxy CP)
+{
+    local RuntimeData RuntimeData;
+
+    RuntimeData.MenuName = GetMenuName(CP.GetContext());
+
+    return RuntimeData;
+}
+
+// Override to return the default skin index for the selected variant.
+static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, int VariantIndex);
+
+static function StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
 {
     return static.GetConstructedStaticMesh(Context);
 }
 
-function static vector GetPlacementOffset(DHActorProxy.Context Context)
+static function Vector GetPlacementOffset(DHActorProxy.Context Context)
 {
     return default.PlacementOffset;
 }
@@ -1121,11 +1306,11 @@ function CutConstruction(Pawn InstigatedBy);
 
 function TakeTearDownDamage(Pawn InstigatedBy);
 
-function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<DamageType> TearDownDamageType;
 
-    TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
+    TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", Class'class'));
 
     if (DamageType != none && DamageType.static.ClassIsChildOf(DamageType, TearDownDamageType) && CanTakeTearDownDamageFromPawn(InstigatedBy, true))
     {
@@ -1199,15 +1384,7 @@ function BreakMe()
 
 simulated function bool ShouldDestroyOnReset()
 {
-    return WasCreatedByPlayer();
-}
-
-simulated function bool WasCreatedByPlayer()
-{
-    // Dynamically placed actors are owned by the LevelInfo. If it was placed
-    // in-editor, it will not have an owner. This is a nice implicit way of
-    // knowing if something was created in-editor or not.
-    return Owner != none;
+    return IsPlacedByPlayer();
 }
 
 simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
@@ -1223,6 +1400,8 @@ simulated function DHActorProxy.Context GetContext()
     Context.TeamIndex = GetTeamIndex();
     Context.LevelInfo = LevelInfo;
     Context.GroundActor = Owner;
+    Context.VariantIndex = VariantIndex;
+    Context.SkinIndex = SkinIndex;
 
     return Context;
 }
@@ -1234,7 +1413,7 @@ static function DHActorProxy.Context ContextFromPlayerController(DHPlayer PC)
     if (PC != none)
     {
         Context.TeamIndex = PC.GetTeamNum();
-        Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+        Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PC.Level);
         Context.PlayerController = PC;
     }
 
@@ -1250,11 +1429,6 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     return E;
 }
 
-static function float GetPlacementDiameter()
-{
-    return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
-}
-
 static function bool IsArtillery()
 {
     return default.bIsArtillery;
@@ -1267,7 +1441,7 @@ defaultproperties
     TeamIndex=2     // NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_DumbProxy
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
+    StaticMesh=StaticMesh'DH_Construction_stc.hedgehog_01'
     HealthMax=100
     Health=1
     ProxyTraceDepthMeters=5.0
@@ -1326,8 +1500,8 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact'
-    PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
+    PlacementSound=Sound'Inf_Player.Gibimpact'
+    PlacementEmitterClass=Class'DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
     IndoorsCeilingHeightInMeters=25.0
@@ -1355,17 +1529,17 @@ defaultproperties
     // Damage
     TatteredHealthThreshold=-1
     MinDamagetoHurt=100
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE Splash
-    HarmfulDamageTypes(2)=class'DHShellHEImpactDamageType'          // HE Impact
-    HarmfulDamageTypes(3)=class'DHShellAPImpactDamageType'          // AP Impact
-    HarmfulDamageTypes(4)=class'DHRocketImpactDamage'               // AT Rocket Impact
-    HarmfulDamageTypes(5)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
-    HarmfulDamageTypes(6)=class'DHMortarDamageType'                 // Mortar
+    HarmfulDamageTypes(0)=Class'DHArtilleryDamageType'              // Artillery
+    HarmfulDamageTypes(1)=Class'ROTankShellExplosionDamage'         // HE Splash
+    HarmfulDamageTypes(2)=Class'DHShellHEImpactDamageType'          // HE Impact
+    HarmfulDamageTypes(3)=Class'DHShellAPImpactDamageType'          // AP Impact
+    HarmfulDamageTypes(4)=Class'DHRocketImpactDamage'               // AT Rocket Impact
+    HarmfulDamageTypes(5)=Class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(6)=Class'DHMortarDamageType'                 // Mortar
 
     // Impact
     bCanTakeImpactDamage=false
-    ImpactDamageType=class'Crushed'
+    ImpactDamageType=Class'Crushed'
     ImpactDamageModifier=0.1
 
     SquadMemberCountMinimum=2

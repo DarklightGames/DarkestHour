@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanM4A3105CannonShellSmoke extends DH_ShermanCannonShellSmoke;
@@ -15,7 +15,7 @@ defaultproperties
     BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
 
     //Effects
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShellWP'
+    SmokeEmitterClass=Class'DHSmokeEffect_LargeShellWP'
 
     GasRadius=1100.0
 }

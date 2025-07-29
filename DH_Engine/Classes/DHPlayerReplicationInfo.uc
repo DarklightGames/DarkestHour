@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
@@ -48,7 +48,6 @@ var     int                     CategoryScores[2];
 var     localized string        SquadLeaderAbbreviation;
 var     localized string        AssistantAbbreviation;
 
-var     int                     CountryIndex;
 var     int                     PlayerIQ;
 
 var     int                     NoRallyPointsTime; // Time when SL lost all rally points
@@ -58,7 +57,7 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores, CountryIndex, PlayerIQ, NoRallyPointsTime, bIsIncognito;
+        TotalScore, CategoryScores, PlayerIQ, NoRallyPointsTime, bIsIncognito;
 }
 
 simulated function string GetNamePrefix()
@@ -265,5 +264,4 @@ defaultproperties
     SquadMemberIndex=-1
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
-    CountryIndex=-1
 }

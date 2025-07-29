@@ -1,6 +1,6 @@
 //===================================================================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //===================================================================================================================
 
 class DHClientResetGame extends Actor;
@@ -29,7 +29,7 @@ simulated function PostBeginPlay()
     if (Role < ROLE_Authority)
     {
         // Find all non-replicated actors existing independently on client & call Reset() on them
-        foreach AllActors(class'Actor', A)
+        foreach AllActors(Class'Actor', A)
         {
             if (A.Role == ROLE_Authority)
             {

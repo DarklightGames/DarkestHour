@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak43ATGun extends DHATGun;
@@ -8,23 +8,22 @@ class DH_Pak43ATGun extends DHATGun;
 defaultproperties
 {
     VehicleNameString="8.8 cm Pak43/41 AT gun"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak43CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak43CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    Skins(1)=Texture'DH_Artillery_Tex.Pak43.Pak43_wheel'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    Skins(0)=Texture'DH_Artillery_Tex.pak43_nocamo_ext'
+    Skins(1)=Texture'DH_Artillery_Tex.Pak43_wheel'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43_dest'
+    VehicleHudImage=Texture'DH_Artillery_Tex.pak43_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak43_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak43_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
-    SupplyCost=2000
     bCanBeRotated=true
     PlayersNeededToRotate=2
     RotationsPerSecond=0.05
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -44,5 +43,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak43ATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
 }

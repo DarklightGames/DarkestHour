@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponFire extends ROWeaponFire;
@@ -23,7 +23,7 @@ var array<ShellEjector> ShellEjectors;
 
 var bool bIgnoresWeaponLock;
 
-var vector MuzzleOffset;
+var Vector MuzzleOffset;
 
 simulated function PostBeginPlay()
 {
@@ -67,7 +67,7 @@ simulated function InitEffects()
     {
         SmokeEmitter = Weapon.Spawn(SmokeEmitterClass, Instigator);
 
-        if (SmokeEmitter != None && MuzzleBone != '')
+        if (SmokeEmitter != none && MuzzleBone != '')
         {
             Weapon.AttachToBone(SmokeEmitter, MuzzleBone);
             SmokeEmitter.SetRelativeLocation(MuzzleOffset);
@@ -132,7 +132,7 @@ event ModeDoFire()
         }
         else
         {
-            SetTimer(DelayedRecoilTime, False);
+            SetTimer(DelayedRecoilTime, false);
         }
 
         ShakeView();
@@ -249,11 +249,17 @@ simulated function EjectShell()
             EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
+        if (Shell == none)
+        {
+            // Failed to spawn the shell, so skip this ejector.
+            continue;
+        }
+
         EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
         EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
         EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
 
-        Shell.Velocity = Vector(EjectRot) * class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
+        Shell.Velocity = Vector(EjectRot) * Class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
     }
 }
 

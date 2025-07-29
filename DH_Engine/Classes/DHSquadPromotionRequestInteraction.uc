@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSquadPromotionRequestInteraction extends DHPromptInteraction;
@@ -14,9 +14,9 @@ function Initialized()
     super.Initialized();
 
     PromptText = Repl(PromptText, "{0}", default.SenderPlayerName);
-    PromptText = Repl(PromptText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $
+    PromptText = Repl(PromptText, "{1}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $
                                          default.SenderSquadName $
-                                         class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+                                         Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
 }
 
 function OnOptionSelected(int Index)

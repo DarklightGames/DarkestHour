@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M3Halftrack extends DHArmoredVehicle
@@ -17,17 +17,17 @@ defaultproperties
     MaxDesireability=1.2
     MinRunOverSpeed=300
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
 
     // Hull mesh
-    Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
-    Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'
-    Skins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
+    Skins(0)=Texture'DH_M3Halftrack_tex.Halftrack'
+    Skins(1)=Texture'DH_M3Halftrack_tex.Halftrack_2'
+    Skins(2)=Texture'DH_M3Halftrack_tex.Halfrack_tracks'
+    Skins(3)=Texture'DH_M3Halftrack_tex.Halfrack_tracks'
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
     bUsesCodedDestroyedSkins=false
 
@@ -40,7 +40,6 @@ defaultproperties
     DriveAnim="VUC_driver_idle_close"
 
     // Movement
-    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5
@@ -70,10 +69,10 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.1
     EngineHealth=150.0
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-   VehHitpoints(3)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
-    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
+    VehHitpoints(4)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
     DamagedWheelSpeedFactor=0.4
     EngineDamageFromGrenadeModifier=0.05
     DirectHEImpactDamageMult=4.0
@@ -81,10 +80,10 @@ defaultproperties
     TreadHitMaxHeight=64.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=0.0,Z=68.0)
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=Class'DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="body"
     FireEffectOffset=(X=-35.0,Y=30.0,Z=85.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.05 //Unlikely for a fire to spread
@@ -119,14 +118,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     LeftTrackSoundBone="steer_wheel_L_F"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L02'
     RightTrackSoundBone="steer_wheel_R_F"
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=2
@@ -138,13 +137,12 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-90.0,Y=50.0,Z=20.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
-    RandomAttachment=(AttachBone="body",bHasCollision=true)
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
-    ShadowZOffset=32.0
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_02',bHasCollision=true))))
+
+    FPCamPos=(X=-3)
 
     // HUD
-    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.m3a1_body'
     VehicleHudEngineY=0.25
     VehicleHudTreadsPosX(0)=0.39
     VehicleHudTreadsPosX(1)=0.61
@@ -179,7 +177,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         BoneOffset=(Y=22.0,Z=-5.0)
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
@@ -190,7 +188,7 @@ defaultproperties
         BoneOffset=(Y=-22.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
@@ -199,7 +197,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FLeft_Drive_Wheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
@@ -207,7 +205,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=15.0,Z=-5.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FRight_Drive_Wheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
@@ -216,7 +214,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RLeft_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
@@ -224,7 +222,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=-15.0,Z=-5.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RRight_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -244,5 +242,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3Halftrack.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

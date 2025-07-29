@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_AmericanWinterWoolHat extends DHHeadgear;
@@ -9,5 +9,5 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.USWinterWoolly_hat'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.Woolcap'
+    Skins(0)=Texture'DHUSCharactersTex.Woolcap'
 }

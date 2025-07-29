@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSettingsPage extends UT2K4SettingsPage;
@@ -8,7 +8,7 @@ class DHSettingsPage extends UT2K4SettingsPage;
 // Modified to avoid "failed to load NULL" log errors
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local rotator PlayerRot;
+    local Rotator PlayerRot;
     local int     i;
 
     super(UT2K4MainPage).InitComponent(MyController, MyOwner); // skip over Super in UT2K4SettingsPage as we're re-stating it here
@@ -55,7 +55,7 @@ function BackButtonClicked()
 
 defaultproperties
 {
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=Texture'DH_GUI_Tex.Setupmenu'
 
     PanelCaption(0)="Game"
     PanelCaption(1)="Display"
@@ -93,7 +93,7 @@ defaultproperties
         OnActivate=SettingTabs.InternalOnActivate
         OnChange=DHSettingsPage.InternalOnChange
     End Object
-    c_Tabs=DHGUITabControl'DH_Interface.DHSettingsPage.SettingTabs'
+    c_Tabs=DHGUITabControl'DH_Interface.SettingTabs'
 
     Begin Object Class=DHGUIHeader Name=SettingHeader
         Caption="Settings"
@@ -101,7 +101,7 @@ defaultproperties
         WinHeight=32.0
         RenderWeight=0.3
     End Object
-    t_Header=DHGUIHeader'DH_Interface.DHSettingsPage.SettingHeader'
+    t_Header=DHGUIHeader'DH_Interface.SettingHeader'
 
     Begin Object Class=DHSettings_Footer Name=SettingFooter
         Spacer=0.01
@@ -110,5 +110,5 @@ defaultproperties
         TabOrder=4
         OnPreDraw=SettingFooter.InternalOnPreDraw
     End Object
-    t_Footer=DHSettings_Footer'DH_Interface.DHSettingsPage.SettingFooter'
+    t_Footer=DHSettings_Footer'DH_Interface.SettingFooter'
 }

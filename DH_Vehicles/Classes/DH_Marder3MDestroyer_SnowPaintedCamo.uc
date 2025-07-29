@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Marder3MDestroyer_SnowPaintedCamo extends DH_Marder3MDestroyer;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_SnowPaintedCamo'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_SnowPaintedCamo'
-    Skins(2)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads_snow'
-    Skins(3)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads_snow'
-    CannonSkins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_SnowPaintedCamo'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.marder_turret_SnowPaintedCamo'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.marder_body_SnowPaintedCamo'
+    Skins(2)=Texture'DH_VehiclesGE_tex7.marder_treads_snow'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.marder_treads_snow'
+    CannonSkins(0)=Texture'DH_VehiclesGE_tex7.marder_turret_SnowPaintedCamo'
 }

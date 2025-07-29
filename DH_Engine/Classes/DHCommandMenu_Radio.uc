@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_Radio extends DHCommandMenu
@@ -25,7 +25,7 @@ function Setup()
 
     PC = GetPlayerController();
     Radio = DHRadio(MenuObject);
-    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
+    LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
 
     if (PC == none || Radio == none || LevelInfo == none)
     {
@@ -64,30 +64,30 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (Error == ERROR_None)
     {
-        ORI.InfoColor = class'UColor'.default.White;
+        ORI.InfoColor = Class'UColor'.default.White;
         ORI.InfoText[0] = default.AvailableText @ "(" $ Interaction.GRI.ArtilleryTypeInfos[Index].Limit - Interaction.GRI.ArtilleryTypeInfos[Index].UsedCount $ ")";
     }
     else if (Error == ERROR_Cancellable)
     {
-        ORI.InfoColor = class'UColor'.default.Yellow;
+        ORI.InfoColor = Class'UColor'.default.Yellow;
         ORI.InfoText[0] = default.CancelText;
     }
     else
     {
-        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoColor = Class'UColor'.default.Red;
 
         switch (Error)
         {
             case ERROR_Exhausted:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.ExhaustedText;
                 break;
             case ERROR_Unqualified:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnqualifiedText;
                 break;
             case ERROR_NotEnoughSquadMembers:
-                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
 
                 if (LevelInfo != none && PC != none && PC.SquadReplicationInfo != none)
                 {
@@ -105,16 +105,16 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText[0] = "?/?";
                 break;
             case ERROR_Cooldown:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
+                ORI.InfoIcon = Texture'DH_GUI_tex.StopWatch';
                 CooldownTimeSeconds = Interaction.GRI.ArtilleryTypeInfos[Index].NextConfirmElapsedTime - Interaction.GRI.ElapsedTime;
-                ORI.InfoText[0] = class'TimeSpan'.static.ToString(CooldownTimeSeconds);
+                ORI.InfoText[0] = Class'TimeSpan'.static.ToString(CooldownTimeSeconds);
                 break;
             case ERROR_Ongoing:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
+                ORI.InfoIcon = Texture'DH_GUI_tex.StopWatch';
                 ORI.InfoText[0] = default.OngoingText;
                 break;
             default:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnavailableText;
                 break;
         }
@@ -132,7 +132,7 @@ function OnActive()
     }
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local int Index;
@@ -179,7 +179,7 @@ function bool ShouldHideMenu()
 defaultproperties
 {
     SlotCountOverride=4
-    OnActiveSound=Sound'DH_SundrySounds.Radio.RadioClick'
+    OnActiveSound=Sound'DH_SundrySounds.RadioClick'
 
     UnavailableText="Unavailable"
     ExhaustedText="Exhausted"

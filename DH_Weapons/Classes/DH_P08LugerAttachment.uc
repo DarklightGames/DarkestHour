@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_P08LugerAttachment extends DHWeaponAttachment;
@@ -8,9 +8,9 @@ class DH_P08LugerAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.luger'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    MenuImage=Texture'InterfaceArt_tex.luger'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
+    ROShellCaseClass=Class'RO3rdShellEject9x19mm'
     bRapidFire=false
 
     WA_Idle="idle_luger"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BT7Tank extends DHArmoredVehicle;
@@ -15,20 +15,20 @@ defaultproperties
 
     // Hull mesh
     Mesh=Mesh'DH_BT7_anm.bt7_body_ext'
-    Skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
-    Skins(1)=Texture'allies_ahz_vehicles_tex.Treads.bt7_treads'
-    Skins(2)=Texture'allies_ahz_vehicles_tex.Treads.bt7_treads'
-    Skins(3)=Texture'allies_ahz_vehicles_tex.int_vehicles.BT7_int'
+    Skins(0)=Texture'allies_ahz_vehicles_tex.BT7_ext'
+    Skins(1)=Texture'allies_ahz_vehicles_tex.bt7_treads'
+    Skins(2)=Texture'allies_ahz_vehicles_tex.bt7_treads'
+    Skins(3)=Texture'allies_ahz_vehicles_tex.BT7_int'
 
-    HighDetailOverlay=Material'allies_ahz_vehicles_tex.int_vehicles.BT7_Int'
+    HighDetailOverlay=Material'allies_ahz_vehicles_tex.BT7_Int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
     // Collision
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BT7CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_BT7CannonPawn',WeaponBone="Turret_Placement")
 
     PassengerPawns(0)=(AttachBone=passenger_01,DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone=passenger_02,DriveAnim="VHalftrack_Rider1_idle")
@@ -47,7 +47,7 @@ defaultproperties
     DrivePos=(X=35,Y=0,Z=-5)
 
     //Driver's hatch overlay
-    HUDOverlayClass=none //class'ROVehicles.KV1DriverOverlay'
+    HUDOverlayClass=none //Class'KV1DriverOverlay'
     //HUDOverlayOffset=(X=2.0)
     //HUDOverlayFOV=90.0
 
@@ -68,7 +68,6 @@ defaultproperties
     RearLeftAngle=205.0
 
     // Movement
-    MaxCriticalSpeed=1200.0 // very approximate, not sure about it
     GearRatios(3)=0.67
     GearRatios(4)=0.80
     GearRatios(0)=-0.25
@@ -87,9 +86,9 @@ defaultproperties
     DisintegrationHealth=-800.0 //petrol
     TurretDetonationThreshold=3000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=28.0,PointOffset=(X=-73.0,Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=30,Y=0,Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=28,Y=-45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=28,Y=45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=30,Y=0,Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointBone="body",PointOffset=(X=28,Y=-45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=10.0,PointBone="body",PointOffset=(X=28,Y=45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-3.25
     TreadDamageThreshold=0.15
     DamagedEffectOffset=(X=-78.0,Y=0.0,Z=25.0)
@@ -98,7 +97,7 @@ defaultproperties
     // Destroyed mesh
     bUsesCodedDestroyedSkins=false
     DestroyedVehicleMesh=StaticMesh'allies_ahz_vehicles_stc.BT7_destroyed'
-    DestroyedMeshSkins(0)=Texture'allies_ahz_destroyed_vehicles_tex.BT7.destroyed_texture'
+    DestroyedMeshSkins(0)=Texture'allies_ahz_destroyed_vehicles_tex.destroyed_texture'
 
     // Exit positions
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
@@ -112,25 +111,25 @@ defaultproperties
     // Sounds
     //SoundPitch=32 // half normal pitch = 1 octave lower
     MaxPitchSpeed=350
-    IdleSound=SoundGroup'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_loop'
-    StartUpSound=Sound'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_start'
-    ShutDownSound=Sound'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    IdleSound=SoundGroup'DH_CC_Vehicle_Sounds.BT7_petrol_loop'
+    StartUpSound=Sound'DH_CC_Vehicle_Sounds.BT7_petrol_start'
+    ShutDownSound=Sound'DH_CC_Vehicle_Sounds.BT7_petrol_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=250.0
     WheelRotationScale=100000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-185,Y=23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-185,Y=-23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=Class'ExhaustPetrolEffect'
+    ExhaustEffectLowClass=Class'ExhaustPetrolEffect_simple'
 
     // HUD
     VehicleHudImage=Texture 'DH_InterfaceArt_tex.Tank_Hud.BT7_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BT7_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BT7_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.BT7_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.BT7_turret_look'
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.52
@@ -150,7 +149,7 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.36    //0.65    //horizontal, passenger four
     VehicleHudOccupantsY(5)=0.65    //0.75    //vertical, passenger four
 
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.bt7'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.bt7'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -176,7 +175,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.LF_Steering'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=True
@@ -186,7 +185,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.RF_Steering'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=True
@@ -196,7 +195,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.LR_Steering'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=True
@@ -206,7 +205,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.RR_Steering'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
      // End Steering Wheels
 
      //-------------------------------------------------------------------------
@@ -219,7 +218,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.Left_Drive_Wheel'
+     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=True
@@ -228,5 +227,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.Right_Drive_Wheel'
+     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
 }

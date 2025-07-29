@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
@@ -8,7 +8,7 @@ class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.234/1 Armored Car"
+    VehicleNameString="Sd.Kfz. 234/1 Armored Car"
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false
@@ -17,19 +17,21 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_dunk'
-    Skins(2)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-    Skins(3)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
-    Skins(4)=Texture'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.sdkfz2341_body_dunk'
+    Skins(1)=Texture'DH_VehiclesGE_tex6.sdkfz2341_wheels_dunk'
+    Skins(2)=Texture'DH_VehiclesGE_tex6.sdkfz2341_extras_dunk'
+    Skins(3)=Texture'DH_VehiclesGE_tex6.sdkfz2341_accessories'
+    Skins(4)=Texture'DH_VehiclesGE_tex6.sdkfz2341_body_int'
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2341CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz2341CannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=80.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+
+    FPCamPos=(X=-1.0)   // TODO: probably?
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
@@ -58,7 +60,6 @@ defaultproperties
     RearLeftAngle=202.0
 
     // Movement
-    MaxCriticalSpeed=1039.0 // 62 kph
     GearRatios(0)=-0.35
     GearRatios(3)=0.6
     GearRatios(4)=0.75
@@ -89,14 +90,14 @@ defaultproperties
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-150.0,Y=0.0,Z=65.0)
     DriverKillChance=900.0
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234_dest'
 
     // Exit
     ExitPositions(0)=(X=-92.0,Y=4.0,Z=150.0)
@@ -107,9 +108,9 @@ defaultproperties
     ExitPositions(5)=(X=-300.0,Y=0.0,Z=35.0)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=-68.0,Z=45.0),ExhaustRotation=(Pitch=36000))
@@ -118,9 +119,9 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.234_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.2341_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.2341_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.48
     VehicleHudOccupantsY(0)=0.32
@@ -134,7 +135,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.75
     VehicleHudOccupantsX(5)=0.5
     VehicleHudOccupantsY(5)=0.8
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sdkfz_234_1'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -146,7 +147,7 @@ defaultproperties
         SupportBoneName="Axel_RF"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -157,7 +158,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
     Begin Object Class=SVehicleWheel Name=MFRWheel
         bPoweredWheel=true
         BoneName="Wheel_R_1"
@@ -167,7 +168,7 @@ defaultproperties
         SupportBoneName="Axel_R_1"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.MFRWheel'
     Begin Object Class=SVehicleWheel Name=MFLWheel
         bPoweredWheel=true
         BoneName="Wheel_L_1"
@@ -178,7 +179,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFLWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.MFLWheel'
     Begin Object Class=SVehicleWheel Name=MRRWheel
         bPoweredWheel=true
         BoneName="Wheel_R_2"
@@ -188,7 +189,7 @@ defaultproperties
         SupportBoneName="Axel_R_2"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRRWheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.MRRWheel'
     Begin Object Class=SVehicleWheel Name=MRLWheel
         bPoweredWheel=true
         BoneName="Wheel_L_2"
@@ -199,7 +200,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRLWheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.MRLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         BoneName="wheel_RR"
@@ -209,7 +210,7 @@ defaultproperties
         SupportBoneName="Axel_RR"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(6)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RRWheel'
+    Wheels(6)=SVehicleWheel'DH_Vehicles.RRWheel'
     Begin Object Class=SVehicleWheel Name=RLWheel
         bPoweredWheel=true
         BoneName="Wheel_RL"
@@ -220,7 +221,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(7)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RLWheel'
+    Wheels(7)=SVehicleWheel'DH_Vehicles.RLWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -240,5 +241,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz2341ArmoredCar.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

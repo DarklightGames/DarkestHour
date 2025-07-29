@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFilterEdit extends LargeWindow;
@@ -64,7 +64,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
 
     sb_Mutators.ManageComponent(lb_Mutators);
 
-    class'CacheManager'.static.GetMutatorList(MutRecords);
+    Class'CacheManager'.static.GetMutatorList(MutRecords);
 
     for (i = 0; i < MutRecords.Length; ++i)
     {
@@ -320,7 +320,7 @@ defaultproperties
         WinHeight=0.375823
         OnPreDraw=sbOptions.InternalPreDraw
     End Object
-    sb_Options=DHGUISectionBackground'DH_Interface.DHFilterEdit.sbOptions'
+    sb_Options=DHGUISectionBackground'DH_Interface.sbOptions'
     Begin Object Class=DHGUISectionBackground Name=sbMutators
         bFillClient=true
         Caption="Custom Mutator Config"
@@ -337,7 +337,7 @@ defaultproperties
         WinHeight=0.453948
         OnPreDraw=sbMutators.InternalPreDraw
     End Object
-    sb_Mutators=DHGUISectionBackground'DH_Interface.DHFilterEdit.sbMutators'
+    sb_Mutators=DHGUISectionBackground'DH_Interface.sbMutators'
     Begin Object Class=DHmoEditBox Name=ebName
         ComponentWidth=0.7
         Caption="Filter Name:"
@@ -348,7 +348,7 @@ defaultproperties
         TabOrder=0
         OnPreDraw=DHFilterEdit.ebPreDraw
     End Object
-    eb_Name=DHmoEditBox'DH_Interface.DHFilterEdit.ebName'
+    eb_Name=DHmoEditBox'DH_Interface.ebName'
     Begin Object Class=DHmoComboBox Name=cbStats
         bReadOnly=true
         ComponentWidth=0.55
@@ -358,7 +358,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=5
     End Object
-    cb_Stats=DHmoComboBox'DH_Interface.DHFilterEdit.cbStats'
+    cb_Stats=DHmoComboBox'DH_Interface.cbStats'
     Begin Object Class=DHmoComboBox Name=cbWeaponStay
         bReadOnly=true
         ComponentWidth=0.55
@@ -368,7 +368,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=6
     End Object
-    cb_WeaponStay=DHmoComboBox'DH_Interface.DHFilterEdit.cbWeaponStay'
+    cb_WeaponStay=DHmoComboBox'DH_Interface.cbWeaponStay'
     Begin Object Class=DHmoComboBox Name=cbTranslocator
         bReadOnly=true
         ComponentWidth=0.55
@@ -378,7 +378,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=7
     End Object
-    cb_Translocator=DHmoComboBox'DH_Interface.DHFilterEdit.cbTranslocator'
+    cb_Translocator=DHmoComboBox'DH_Interface.cbTranslocator'
     Begin Object Class=DHmoComboBox Name=cbMutators
         bReadOnly=true
         ComponentWidth=0.55
@@ -388,7 +388,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=8
     End Object
-    cb_Mutators=DHmoComboBox'DH_Interface.DHFilterEdit.cbMutators'
+    cb_Mutators=DHmoComboBox'DH_Interface.cbMutators'
     Begin Object Class=DHmoCheckBox Name=ckVACOnly
         ComponentWidth=0.1
         Caption="Valve Anti-Cheat Protected Only"
@@ -397,7 +397,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=1
     End Object
-    ck_VACOnly=DHmoCheckBox'DH_Interface.DHFilterEdit.ckVACOnly'
+    ck_VACOnly=DHmoCheckBox'DH_Interface.ckVACOnly'
     Begin Object Class=DHmoCheckBox Name=ckFull
         ComponentWidth=0.1
         Caption="No Full Servers"
@@ -406,7 +406,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=1
     End Object
-    ck_Full=DHmoCheckBox'DH_Interface.DHFilterEdit.ckFull'
+    ck_Full=DHmoCheckBox'DH_Interface.ckFull'
     Begin Object Class=DHmoCheckBox Name=ckBots
         ComponentWidth=0.1
         Caption="No Bots"
@@ -415,7 +415,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=2
     End Object
-    ck_Bots=DHmoCheckBox'DH_Interface.DHFilterEdit.ckBots'
+    ck_Bots=DHmoCheckBox'DH_Interface.ckBots'
     Begin Object Class=DHmoCheckBox Name=ckEmpty
         ComponentWidth=0.1
         Caption="No Empty Servers"
@@ -424,7 +424,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=3
     End Object
-    ck_Empty=DHmoCheckBox'DH_Interface.DHFilterEdit.ckEmpty'
+    ck_Empty=DHmoCheckBox'DH_Interface.ckEmpty'
     Begin Object Class=DHmoCheckBox Name=ckPassworded
         ComponentWidth=0.1
         Caption="No Passworded Servers"
@@ -433,7 +433,7 @@ defaultproperties
         WinLeft=0.25
         TabOrder=4
     End Object
-    ck_Passworded=DHmoCheckBox'DH_Interface.DHFilterEdit.ckPassworded'
+    ck_Passworded=DHmoCheckBox'DH_Interface.ckPassworded'
     Begin Object Class=GUIButton Name=bOk
         Caption="OK"
         StyleName="DHMenuTextButtonStyle"
@@ -444,7 +444,7 @@ defaultproperties
         OnClick=DHFilterEdit.OkClick
         OnKeyEvent=bOk.InternalOnKeyEvent
     End Object
-    b_OK=GUIButton'DH_Interface.DHFilterEdit.bOk'
+    b_OK=GUIButton'DH_Interface.bOk'
     Begin Object Class=GUIButton Name=bCancel
         Caption="Cancel"
         StyleName="DHMenuTextButtonStyle"
@@ -455,7 +455,7 @@ defaultproperties
         OnClick=DHFilterEdit.CancelClick
         OnKeyEvent=bCancel.InternalOnKeyEvent
     End Object
-    b_Cancel=GUIButton'DH_Interface.DHFilterEdit.bCancel'
+    b_Cancel=GUIButton'DH_Interface.bCancel'
     Begin Object Class=DHGUIMultiOptionListBox Name=lbMutators
         OnCreateComponent=lbMutators.InternalOnCreateComponent
         WinTop=0.103281
@@ -464,7 +464,7 @@ defaultproperties
         WinHeight=0.766448
         TabOrder=9
     End Object
-    lb_Mutators=DHGUIMultiOptionListBox'DH_Interface.DHFilterEdit.lbMutators'
+    lb_Mutators=DHGUIMultiOptionListBox'DH_Interface.lbMutators'
     ComboOpts(0)="Does Not Matter"
     ComboOpts(1)="Must Be On"
     ComboOpts(2)="Must Be Off"
@@ -485,10 +485,10 @@ defaultproperties
         OnMousePressed=FloatingWindow.FloatingMousePressed
         OnMouseRelease=FloatingWindow.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHFilterEdit.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
     WindowName="Edit Filter Rules..."
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -498,7 +498,7 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHFilterEdit.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
     WinTop=0.0
     WinLeft=0.0
     WinWidth=1.0

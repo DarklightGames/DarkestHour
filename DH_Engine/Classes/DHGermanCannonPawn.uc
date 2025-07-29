@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGermanCannonPawn extends DHVehicleCannonPawn
@@ -61,5 +61,5 @@ defaultproperties
 {
     RangePositionX=0.02
     RangeRingScale=0.67
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.German_sight_background'
 }
