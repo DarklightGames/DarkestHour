@@ -9,12 +9,12 @@ class DHScoreEvent_SquadRallyPointEstablishedAssist extends DHScoreEvent;
 
 static function DHScoreEvent_SquadRallyPointEstablishedAssist Create()
 {
-    return new class'DHScoreEvent_SquadRallyPointEstablishedAssist';
+    return new Class'DHScoreEvent_SquadRallyPointEstablishedAssist';
 }
 
 defaultproperties
 {
     HumanReadableName="Squad Rally Point Established (Assist)"
-    CategoryClass=class'DHScoreCategory_Support'
+    CategoryClass=Class'DHScoreCategory_Support'
     Value=250
 }

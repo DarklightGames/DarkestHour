@@ -10,7 +10,7 @@ defaultproperties
 {
     RemoteRole=ROLE_None
     bExactProjectileCollision=false
-    StaticMesh=StaticMesh'MilitarySM.sandbag.sandbag02'
+    StaticMesh=StaticMesh'MilitarySM.sandbag02'
     bUseDynamicLights=false
     bStatic=false
     bWorldGeometry=false

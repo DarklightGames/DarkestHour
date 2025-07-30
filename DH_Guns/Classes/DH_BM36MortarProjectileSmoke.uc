@@ -7,5 +7,5 @@ class DH_BM36MortarProjectileSmoke extends DH_Model35MortarProjectileSmoke;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.RU_SMOKE_57D832'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.RU_SMOKE_57D832'
 }

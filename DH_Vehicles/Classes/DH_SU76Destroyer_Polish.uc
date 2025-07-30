@@ -7,6 +7,6 @@ class DH_SU76Destroyer_Polish extends DH_SU76Destroyer;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesPOL_tex.ext_vehicles.SU76_ext_Polish'
+    Skins(0)=Texture'DH_VehiclesPOL_tex.SU76_ext_Polish'
     bUsesCodedDestroyedSkins=true
 }

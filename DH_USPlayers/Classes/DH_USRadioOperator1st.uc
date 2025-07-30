@@ -7,12 +7,12 @@ class DH_USRadioOperator1st extends DHUSRadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadio1stPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_USRadio1stPawn',Weight=1.0)
     
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(3)=class'DH_USPlayers.DH_AmericanHelmetNet'
+    Headgear(0)=Class'DH_AmericanHelmet1stEMa'
+    Headgear(1)=Class'DH_AmericanHelmet1stEMb'
+    Headgear(2)=Class'DH_AmericanHelmet'
+    Headgear(3)=Class'DH_AmericanHelmetNet'
 
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.4

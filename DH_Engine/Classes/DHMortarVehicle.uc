@@ -54,7 +54,7 @@ function bool TryToDrive(Pawn P)
     // Deny entry to enemy mortar
     if (DHP.GetTeamNum() != VehicleTeam)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 10); // can't use enemy mortar
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 10); // can't use enemy mortar
 
         return false;
     }
@@ -64,7 +64,7 @@ function bool TryToDrive(Pawn P)
 
     if (RI == none || !RI.bCanUseMortars)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 8); // not qualified to operate mortar
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 8); // not qualified to operate mortar
 
         return false;
     }
@@ -72,7 +72,7 @@ function bool TryToDrive(Pawn P)
     // Deny entry to mortar that's already manned
     if (WeaponPawns[0].Driver != none)
     {
-        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 9); // mortar already being used
+        DHP.ReceiveLocalizedMessage(Class'DHMortarMessage', 9); // mortar already being used
 
         return false;
     }
@@ -152,7 +152,7 @@ simulated event NotifySelected(Pawn User)
         }
         else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && OwningPawn != P)
         {
-            User.ReceiveLocalizedMessage(class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
+            User.ReceiveLocalizedMessage(Class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
             LastNotifyTime = Level.TimeSeconds;
         }
     }
@@ -208,4 +208,6 @@ defaultproperties
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 }

@@ -10,5 +10,5 @@ defaultproperties
     BallisticCoefficient=0.41
     Speed=49670.0
     Damage=120.0
-    MyDamageType=class'DH_Vehicles.DH_BesaDamType'
+    MyDamageType=Class'DH_BesaDamType'
 }

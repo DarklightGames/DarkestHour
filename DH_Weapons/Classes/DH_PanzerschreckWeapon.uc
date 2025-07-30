@@ -7,12 +7,12 @@ class DH_PanzerschreckWeapon extends DHRocketWeapon;
 
 defaultproperties
 {
-    ItemName="RPzB 54 'Panzerschrek'"
-    NativeItemName="Raketenpanzerbüchse 54 'Panzerschrek'"
+    ItemName="RPzB 54 'Panzerschreck'"
+    NativeItemName="Raketenpanzerbüchse 54 'Panzerschreck'"
     TeamIndex=0
-    FireModeClass(0)=class'DH_Weapons.DH_PanzerschreckFire'
-    AttachmentClass=class'DH_Weapons.DH_PanzerschreckAttachment'
-    PickupClass=class'DH_Weapons.DH_PanzerschreckPickup'
+    FireModeClass(0)=Class'DH_PanzerschreckFire'
+    AttachmentClass=Class'DH_PanzerschreckAttachment'
+    PickupClass=Class'DH_PanzerschreckPickup'
 
     Mesh=SkeletalMesh'DH_Panzerschreck_anm.Panzerschreck_1st'
 

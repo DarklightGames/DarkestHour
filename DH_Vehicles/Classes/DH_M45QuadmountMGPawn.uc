@@ -130,7 +130,7 @@ function bool CanFire()
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_M45QuadmountMG'
+    GunClass=Class'DH_M45QuadmountMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -144,9 +144,9 @@ defaultproperties
     DrivePos=(X=-10.0,Y=0.0,Z=-37.0)
     DriveAnim="VSU76_driver_idle_close"
     CameraBone="Camera_com"
-    VehicleMGReloadTexture=Texture'DH_Artillery_tex.ATGun_Hud.m45_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_Artillery_tex.m45_ammo_reload'
     bSpecialRotateSounds=true
-    RotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    PitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
+    RotateSound=Sound'Vehicle_Weapons.electric_turret_traverse'
+    PitchSound=Sound'Vehicle_Weapons.electric_turret_traverse'
+    RotateAndPitchSound=Sound'Vehicle_Weapons.electric_turret_traverse'
 }

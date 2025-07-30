@@ -11,5 +11,5 @@ class DHSmokeEffectAttachment_WP extends DHSmokeEffectAttachment
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Phosphorus'
+    SmokeEmitterClass=Class'DHSmokeEffect_Phosphorus'
 }

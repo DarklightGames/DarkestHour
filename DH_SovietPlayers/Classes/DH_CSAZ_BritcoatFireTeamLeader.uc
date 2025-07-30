@@ -7,11 +7,11 @@ class DH_CSAZ_BritcoatFireTeamLeader extends DHCSCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_CSAZbritcoatSLPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_CSAZSidecap'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
+    RolePawns(0)=(PawnClass=Class'DH_CSAZbritcoatSLPawn',Weight=1.0)
+    Headgear(0)=Class'DH_CSAZSidecap'
+    Headgear(1)=Class'DH_BritishTommyHelmet'
+    Headgear(2)=Class'DH_SovietHelmet'
+    SleeveTexture=Texture'DHBritishCharactersTex.Brit_Coat_Sleeves'
     
     HeadgearProbabilities(0)=0.8
     HeadgearProbabilities(1)=0.1

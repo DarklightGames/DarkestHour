@@ -8,15 +8,15 @@ class DH_BHPWeapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Browning High-Power"
-    FireModeClass(0)=class'DH_Weapons.DH_BHPFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BHPMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BHPAttachment'
-    PickupClass=class'DH_Weapons.DH_BHPPickup'
+    FireModeClass(0)=Class'DH_BHPFire'
+    FireModeClass(1)=Class'DH_BHPMeleeFire'
+    AttachmentClass=Class'DH_BHPAttachment'
+    PickupClass=Class'DH_BHPPickup'
 
     Mesh=SkeletalMesh'DH_BHP_1st.BHP-Mesh'
     bUseHighDetailOverlayIndex=false
 
-    Skins(0)=Texture'DH_BHP_tex.BHP.BHP'
+    Skins(0)=Texture'DH_BHP_tex.BHP'
 
     HandNum=1
     SleeveNum=2
@@ -25,8 +25,8 @@ defaultproperties
     IronSightDisplayFOV=80.0
     ZoomOutTime=0.4
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"

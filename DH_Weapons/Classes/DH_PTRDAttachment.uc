@@ -8,9 +8,9 @@ class DH_PTRDAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.prtd_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPTRD'
+    ROShellCaseClass=Class'RO3rdShellEject14mm'
     bRapidFire=false
 
     WA_Idle="idle_ptrd"

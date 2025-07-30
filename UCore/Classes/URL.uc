@@ -66,7 +66,7 @@ final static function string RawUrlDecode(string S, optional bool bIgnorePlus)
     while (i >= 0)
     {
         Char = Mid(S, i + 1, 2);
-        Char = Chr(class'UInteger'.static.FromHex(Char));
+        Char = Chr(Class'UInteger'.static.FromHex(Char));
 
         if (Char == "%")
         {
@@ -100,7 +100,7 @@ final static function URL FromString(string S)
     local URL URL;
     local int i, j;
 
-    URL = new class'URL';
+    URL = new Class'URL';
 
     i = InStr(S, TOKEN_PROTOCOL);
 

@@ -62,7 +62,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowIndicators = class'DHHud'.default.bShowIndicators;
+                bShowIndicators = Class'DHHud'.default.bShowIndicators;
             }
             ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
             break;
@@ -73,7 +73,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bSimpleColours = class'DHHud'.default.bSimpleColours;
+                bSimpleColours = Class'DHHud'.default.bSimpleColours;
             }
             ch_SimpleColours.SetComponentValue(bSimpleColours, true);
             break;
@@ -84,12 +84,12 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowChatMessages = bool(class'DHHud'.default.ConsoleMessageCount);
+                bShowChatMessages = bool(Class'DHHud'.default.ConsoleMessageCount);
             }
             ch_ShowChatMessages.SetComponentValue(bShowChatMessages,true);
             break;
         case ch_ShowDeathMessages:
-             bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
+             bShowDeathMessages = Class'DHHud'.default.bShowDeathMessages;
              ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
              break;
         case ch_UseNativeRoleNames:
@@ -99,7 +99,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseNativeRoleNames = class'DHPlayer'.default.bUseNativeRoleNames;
+                bUseNativeRoleNames = Class'DHPlayer'.default.bUseNativeRoleNames;
             }
             bUseNativeRoleNamesD = bUseNativeRoleNames;
             ch_UseNativeRoleNames.SetComponentValue(bUseNativeRoleNames,true);
@@ -111,7 +111,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseTechnicalAmmoNames = class'DHHud'.default.bUseTechnicalAmmoNames;
+                bUseTechnicalAmmoNames = Class'DHHud'.default.bUseTechnicalAmmoNames;
             }
             ch_UseTechnicalAmmoNames.SetComponentValue(bUseTechnicalAmmoNames,true);
             break;
@@ -123,7 +123,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bUseNativeItemNames = class'DHPlayer'.default.bUseNativeItemNames;
+                bUseNativeItemNames = Class'DHPlayer'.default.bUseNativeItemNames;
             }
             ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
             break;
@@ -134,7 +134,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowMapOnFirstSpawn = class'DHPlayer'.default.bShowMapOnFirstSpawn;
+                bShowMapOnFirstSpawn = Class'DHPlayer'.default.bShowMapOnFirstSpawn;
             }
             bShowMapOnFirstSpawnD=bShowMapOnFirstSpawn;
             ch_ShowMapFirstSpawn.SetComponentValue(bShowMapOnFirstSpawn,true);
@@ -146,7 +146,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowCompass = class'ROHud'.default.bShowCompass;
+                bShowCompass = Class'ROHud'.default.bShowCompass;
             }
             ch_ShowCompass.SetComponentValue(bShowCompass,true);
             break;
@@ -157,7 +157,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowRallyPoint = class'DHHud'.default.bShowRallyPoint;
+                bShowRallyPoint = Class'DHHud'.default.bShowRallyPoint;
             }
             ch_ShowRallyPoint.SetComponentValue(bShowRallyPoint, true);
             break;
@@ -179,7 +179,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                if (class'DHPlayer'.default.bShowHints)
+                if (Class'DHPlayer'.default.bShowHints)
                     HintLevel = 1;
                 else
                     HintLevel = 2;
@@ -194,7 +194,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else
             {
-                bShowVehicleVisionCone = class'DHHud'.default.bShowVehicleVisionCone;
+                bShowVehicleVisionCone = Class'DHHud'.default.bShowVehicleVisionCone;
             }
             ch_ShowVehicleVisionCone.SetComponentValue(bShowVehicleVisionCone, true);
             break;
@@ -224,8 +224,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -239,8 +239,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -254,8 +254,8 @@ function SaveSettings()
         }
         else
         {
-            class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
-            class'DHPlayer'.static.StaticSaveConfig();
+            Class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 
@@ -281,9 +281,9 @@ function SaveSettings()
             }
             else
             {
-                class'DHHintManager'.static.StaticReset();
-                class'DHPlayer'.default.bShowHints = true;
-                class'DHPlayer'.static.StaticSaveConfig();
+                Class'DHHintManager'.static.StaticReset();
+                Class'DHPlayer'.default.bShowHints = true;
+                Class'DHPlayer'.static.StaticSaveConfig();
             }
         }
         else
@@ -297,8 +297,8 @@ function SaveSettings()
             }
             else
             {
-                class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
-                class'DHPlayer'.static.StaticSaveConfig();
+                Class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
+                Class'DHPlayer'.static.StaticSaveConfig();
             }
         }
     }
@@ -368,14 +368,14 @@ function SaveSettings()
     }
     else
     {
-        class'DHHud'.default.bShowCompass = bShowCompass;
-        class'DHHud'.default.bShowIndicators = bShowIndicators;
-        class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
-        class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
-        class'DHHud'.default.bSimpleColours = bSimpleColours;
-        class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-        class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
-        class'DHHud'.static.StaticSaveConfig();
+        Class'DHHud'.default.bShowCompass = bShowCompass;
+        Class'DHHud'.default.bShowIndicators = bShowIndicators;
+        Class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
+        Class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
+        Class'DHHud'.default.bSimpleColours = bSimpleColours;
+        Class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+        Class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
+        Class'DHHud'.static.StaticSaveConfig();
     }
 }
 
@@ -398,7 +398,7 @@ function InternalOnChange(GUIComponent Sender)
             }
             else if (nu_MsgCount.GetValue() == 0)
             {
-                nu_MsgCount.SetValue(class'DHHud'.default.ConsoleMessageCount);
+                nu_MsgCount.SetValue(Class'DHHud'.default.ConsoleMessageCount);
             }
             break;
         case nu_MsgCount:
@@ -443,7 +443,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_SimpleColours=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudSimpleColours'
+    ch_SimpleColours=DHmoCheckBox'DH_Interface.GameHudSimpleColours'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowVehicleVisionCone
         ComponentJustification=TXTA_Left
@@ -459,7 +459,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowVehicleVisionCone=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowVehicleVisionCone'
+    ch_ShowVehicleVisionCone=DHmoCheckBox'DH_Interface.GameHudShowVehicleVisionCone'
 
     Begin Object Class=DHmoCheckBox Name=ShowChatMessages
         ComponentJustification=TXTA_Left
@@ -475,7 +475,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowChatMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowChatMessages'
+    ch_ShowChatMessages=DHmoCheckBox'DH_Interface.ShowChatMessages'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowDeathMessages
         ComponentJustification=TXTA_Left
@@ -491,7 +491,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowDeathMessages'
+    ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.GameHudShowDeathMessages'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowIndicators
         ComponentJustification=TXTA_Left
@@ -507,7 +507,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowIndicators=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowIndicators'
+    ch_ShowIndicators=DHmoCheckBox'DH_Interface.GameHudShowIndicators'
 
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left
@@ -522,7 +522,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowCompass=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowCompass'
+    ch_ShowCompass=DHmoCheckBox'DH_Interface.ShowCompass'
 
     Begin Object Class=DHmoCheckBox Name=ShowRallyPoint
         ComponentJustification=TXTA_Left
@@ -537,7 +537,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowRallyPoint'
+    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.ShowRallyPoint'
 
     Begin Object Class=DHmoCheckBox Name=ShowMapFirstSpawn
         ComponentJustification=TXTA_Left
@@ -552,7 +552,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowMapFirstSpawn=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowMapFirstSpawn'
+    ch_ShowMapFirstSpawn=DHmoCheckBox'DH_Interface.ShowMapFirstSpawn'
 
     Begin Object Class=DHmoCheckBox Name=UseNativeRoleNames
         ComponentJustification=TXTA_Left
@@ -568,7 +568,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeRoleNames'
+    ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.UseNativeRoleNames'
 
     Begin Object Class=DHmoCheckBox Name=UseTechnicalAmmoNames
         ComponentJustification=TXTA_Left
@@ -584,7 +584,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_UseTechnicalAmmoNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseTechnicalAmmoNames'
+    ch_UseTechnicalAmmoNames=DHmoCheckBox'DH_Interface.UseTechnicalAmmoNames'
 
     Begin Object Class=DHmoCheckBox Name=UseNativeItemNames
         ComponentJustification=TXTA_Left
@@ -600,7 +600,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_UseNativeItemNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeItemNames'
+    ch_UseNativeItemNames=DHmoCheckBox'DH_Interface.UseNativeItemNames'
 
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left
@@ -617,7 +617,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    co_Hints=DHmoComboBox'DH_Interface.DHTab_Hud.HintsCombo'
+    co_Hints=DHmoComboBox'DH_Interface.HintsCombo'
 
     Begin Object Class=DHGUISectionBackground Name=GameBK
         Caption="Options"
@@ -628,7 +628,7 @@ defaultproperties
         RenderWeight=0.001
         OnPreDraw=GameBK.InternalPreDraw
     End Object
-    i_BG1=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK'
+    i_BG1=DHGUISectionBackground'DH_Interface.GameBK'
 
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Style"
@@ -639,13 +639,13 @@ defaultproperties
         RenderWeight=0.001
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
-    i_BG2=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK1'
+    i_BG2=DHGUISectionBackground'DH_Interface.GameBK1'
 
     Begin Object Class=moSlider Name=myHudScale
         MaxValue=100.0
         MinValue=50.0
         Caption="HUD Scaling"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=myHudScale.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.5"
@@ -656,13 +656,13 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    sl_Scale=moSlider'DH_Interface.DHTab_Hud.myHudScale'
+    sl_Scale=moSlider'DH_Interface.myHudScale'
 
     Begin Object Class=moSlider Name=myGameHudOpacity
         MaxValue=100.0
         MinValue=51.0
         Caption="HUD Opacity"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=myGameHudOpacity.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.5"
@@ -673,7 +673,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    sl_Opacity=moSlider'DH_Interface.DHTab_Hud.myGameHudOpacity'
+    sl_Opacity=moSlider'DH_Interface.myGameHudOpacity'
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageCount
         MinValue=0
@@ -690,7 +690,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    nu_MsgCount=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageCount'
+    nu_MsgCount=DHmoNumericEdit'DH_Interface.GameHudMessageCount'
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageScale
         MinValue=0
@@ -707,7 +707,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    nu_MsgScale=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageScale'
+    nu_MsgScale=DHmoNumericEdit'DH_Interface.GameHudMessageScale'
 
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageOffset
         MinValue=0
@@ -724,7 +724,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    nu_MsgOffset=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageOffset'
+    nu_MsgOffset=DHmoNumericEdit'DH_Interface.GameHudMessageOffset'
 
     Begin Object Class=DHmoCheckBox Name=GameHudVisible
         ComponentJustification=TXTA_Left
@@ -739,7 +739,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_Visible=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudVisible'
+    ch_Visible=DHmoCheckBox'DH_Interface.GameHudVisible'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowWeaponInfo
         ComponentJustification=TXTA_Left
@@ -754,7 +754,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_Weapons=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowWeaponInfo'
+    ch_Weapons=DHmoCheckBox'DH_Interface.GameHudShowWeaponInfo'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowPersonalInfo
         ComponentJustification=TXTA_Left
@@ -769,5 +769,5 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_Personal=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowPersonalInfo'
+    ch_Personal=DHmoCheckBox'DH_Interface.GameHudShowPersonalInfo'
 }

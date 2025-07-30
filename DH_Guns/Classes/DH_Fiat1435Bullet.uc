@@ -10,5 +10,5 @@ defaultproperties
     Speed=39832 // 660 m/s
     BallisticCoefficient=0.276  // https://www.topgun.es/punta-65-carcano-160gr-hornady.html
     Damage=110.0
-    MyDamageType=class'DH_Weapons.DH_Fiat1435DamageType'
+    MyDamageType=Class'DH_Fiat1435DamageType'
 }

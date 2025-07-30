@@ -10,9 +10,9 @@ final static function Vector RandomRange(RangeVector Range)
 {
     local Vector V;
 
-    V.X = class'UFloat'.static.RandomRange(Range.X.Min, Range.X.Max);
-    V.Y = class'UFloat'.static.RandomRange(Range.Y.Min, Range.Y.Max);
-    V.Z = class'UFloat'.static.RandomRange(Range.Z.Min, Range.Z.Max);
+    V.X = Class'UFloat'.static.RandomRange(Range.X.Min, Range.X.Max);
+    V.Y = Class'UFloat'.static.RandomRange(Range.Y.Min, Range.Y.Max);
+    V.Z = Class'UFloat'.static.RandomRange(Range.Z.Min, Range.Z.Max);
 
     return V;
 }
@@ -61,5 +61,5 @@ final static function float SignedAngle(Vector From, Vector To, Vector PlaneNorm
 
 static function float InverseSquareLaw(Vector PointA, Vector PointB)
 {
-    return 1.0 / FMax(VSizeSquared(PointA - PointB), class'UFloat'.static.Epsilon());
+    return 1.0 / FMax(VSizeSquared(PointA - PointB), Class'UFloat'.static.Epsilon());
 }

@@ -7,7 +7,7 @@ class DH_RKKA_GreenTelogreikaSquadLeader extends DHSOVSergeantRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_green'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    RolePawns(0)=(PawnClass=Class'DH_SovietGreenTeloPawn',Weight=1.0)
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves_green'
+    Headgear(0)=Class'DH_SovietHelmet'
 }

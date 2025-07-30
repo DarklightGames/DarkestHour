@@ -16,18 +16,18 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_ext'
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.KV1_body_ext'
+    Skins(1)=Texture'allies_vehicles_tex.kv1_treads'
+    Skins(2)=Texture'allies_vehicles_tex.kv1_treads'
 
     // Collision
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Soviet_vehicles_stc.Kv1s.kv1b_visor_coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Soviet_vehicles_stc.kv1b_visor_coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     bUseHighDetailOverlayIndex=false
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1CannonPawn',WeaponBone="Turret_Placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1MGPawn',WeaponBone="MG_Placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_KV1CannonPawn',WeaponBone="Turret_Placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_KV1MGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -72,15 +72,15 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=25.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=26.0
     DamagedEffectOffset=(X=-90.0,Y=0.0,Z=40.0)
-    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.Kv1.KV1_Dest'
-    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.KV1_body_dest'  //needs non-E variant texture
-    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
-    DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.KV1_Dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.KV1_body_dest'  //needs non-E variant texture
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.kv1_treads_dest'
+    DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.kv1_treads_dest'
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.KV-1S_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_look'
+    VehicleHudTurret=TexRotator'InterfaceArt_tex.kv1s_turret_rot'
+    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.kv1s_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsScale=0.73
@@ -97,6 +97,6 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.84
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.KV1'
 }
 */

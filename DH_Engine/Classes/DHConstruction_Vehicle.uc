@@ -132,7 +132,7 @@ function static UpdateProxy(DHActorProxy AP)
 
     for (i = 0; i < VehicleClass.default.PassengerWeapons.Length; ++i)
     {
-        APA = AP.Spawn(class'DHActorProxyAttachment', AP);
+        APA = AP.Spawn(Class'DHActorProxyAttachment', AP);
 
         if (APA != none)
         {
@@ -247,7 +247,7 @@ function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadi
 // Used to provide a more season-specific variant if one is available.
 static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, int VariantIndex)
 {
-    local int i, j, k, DefaultIndex;
+    local int i, j;
     local array<int> Indices;
 
     Indices = GetAvailableIndicesForVariant(Context, VariantIndex);
@@ -303,7 +303,7 @@ static function array<int> GetAvailableVariantIndices(DHActorProxy.Context Conte
     {
         if (IsEntryAvailable(Context, i))
         {
-            class'UArray'.static.IAddUnique(Indices, default.VehicleClasses[i].VariantIndex);
+            Class'UArray'.static.IAddUnique(Indices, default.VehicleClasses[i].VariantIndex);
         }
     }
 
@@ -326,7 +326,7 @@ static function array<int> GetAvailableIndicesForVariant(DHActorProxy.Context Co
     {
         if (default.VehicleClasses[i].VariantIndex == VariantIndex && IsEntryAvailable(Context, i))
         {
-            class'UArray'.static.IAddUnique(Indices, i);
+            Class'UArray'.static.IAddUnique(Indices, i);
         }
     }
 
@@ -337,7 +337,6 @@ static function array<int> GetAvailableIndicesForVariant(DHActorProxy.Context Co
 static function class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     local array<int> Indices;
-    local int i;
 
     // Count the number of variants.
     Indices = GetAvailableVariantIndices(Context);
@@ -446,11 +445,11 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
+    StaticMesh=StaticMesh'DH_Construction_stc.barricade_wire_02'
     bDestroyOnConstruction=false
     BrokenLifespan=0.0
     ConstructionVerb="emplace"
-    GroupClass=class'DHConstructionGroup_Guns'
+    GroupClass=Class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
     CompletionPointValue=100
     bCanOnlyPlaceOnTerrain=false

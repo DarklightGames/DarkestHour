@@ -60,7 +60,7 @@ simulated function Tick(float DeltaTime)
                 }
 
                 AttachChute(Instigator);
-                Instigator.PlaySound(Sound'DH_SundrySounds.Parachute.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
+                Instigator.PlaySound(Sound'DH_SundrySounds.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
                 Instigator.AirControl = 1.0;
                 Instigator.AccelRate = 60.0;
                 Instigator.Velocity.Z = -400.0;
@@ -87,7 +87,7 @@ simulated function Tick(float DeltaTime)
                 }
                 else
                 {
-                    Instigator.PlaySound(SoundGroup'Inf_Player.footsteps.LandGrass', SLOT_Misc, 512.0, true, 128.0); // fallback
+                    Instigator.PlaySound(SoundGroup'Inf_Player.LandGrass', SLOT_Misc, 512.0, true, 128.0); // fallback
                 }
 
                 RemoveChute(Instigator);
@@ -237,8 +237,8 @@ simulated function bool WeaponAllowSprint()
 defaultproperties
 {
     ItemName="Staticline"
-    AttachmentClass=class'DH_Equipment.DH_ParachuteAttachment'
-    FireModeClass(0)=class'ROInventory.ROEmptyFireclass' // prevents "accessed none" log errors
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    AttachmentClass=Class'DH_ParachuteAttachment'
+    FireModeClass(0)=Class'ROEmptyFireclass' // prevents "accessed none" log errors
+    FireModeClass(1)=Class'ROEmptyFireclass'
     InventoryGroup=11
 }

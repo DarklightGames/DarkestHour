@@ -8,7 +8,7 @@ class DHConstruction_Sandbags_BrokenEmitter extends Emitter;
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_single_01'
+        StaticMesh=StaticMesh'DH_Construction_stc.sandbags_single_01'
         UseCollision=true
         RespawnDeadParticles=false
         SpinParticles=true

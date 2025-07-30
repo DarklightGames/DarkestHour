@@ -71,8 +71,8 @@ static function Sound GetHitSound(optional class<DamageType> DamageType)
 
 defaultproperties
 {
-    BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'
-    GaggingPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Gagging'
+    BurningPainSoundGroup=SoundGroup'DH_Inf_Player.Burning'
+    GaggingPainSoundGroup=SoundGroup'DH_Inf_Player.Gagging'
 
     CustomLandSounds(0)=Sound'Inf_Player.LandDirt'      // EST_Custom00 (No Effects)
     CustomLandSounds(1)=Sound'Inf_Player.LandDirt'      // EST_Custom01 (Sand)

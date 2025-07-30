@@ -7,6 +7,6 @@ class DH_WillysJeepFactory_Roof extends DH_WillysJeepFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_WillysJeep_Roof'
+    VehicleClass=Class'DH_WillysJeep_Roof'
 }
 

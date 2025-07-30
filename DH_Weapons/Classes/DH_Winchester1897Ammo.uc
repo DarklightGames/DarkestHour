@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=6
     InitialAmount=6
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.Winchester1897_ammo'
 }

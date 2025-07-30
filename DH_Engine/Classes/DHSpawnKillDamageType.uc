@@ -8,5 +8,5 @@ class DHSpawnKillDamageType extends DHInstantObituaryDamageTypes
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.spawnkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.spawnkill'
 }

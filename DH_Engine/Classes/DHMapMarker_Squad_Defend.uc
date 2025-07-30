@@ -8,7 +8,7 @@ class DHMapMarker_Squad_Defend extends DHMapMarker_Squad
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.defend'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.defend'
     IconColor=(R=4,G=80,B=255,A=255)
     MarkerName="Squad Defend"
     bShouldDrawBeeLine=true

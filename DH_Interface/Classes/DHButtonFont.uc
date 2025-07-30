@@ -8,7 +8,7 @@ class DHButtonFont extends GUIFont;
 
 event Font GetFont(int ResX)
 {
-    return class'DHFonts'.static.GetDHButtonFontByResolution(Controller.ResX, Controller.ResY);
+    return Class'DHFonts'.static.GetDHButtonFontByResolution(Controller.ResX, Controller.ResY);
 }
 
 defaultproperties

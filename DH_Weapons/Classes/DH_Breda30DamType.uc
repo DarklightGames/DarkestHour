@@ -8,6 +8,6 @@ class DH_Breda30DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Breda30Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_Breda30Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
 }

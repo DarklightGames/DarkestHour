@@ -17,10 +17,10 @@ simulated function int GetMaxLoadedRounds()
 defaultproperties
 {
     ItemName="Winchester Model 1897"
-    FireModeClass(0)=class'DH_Weapons.DH_Winchester1897Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_Winchester1897MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Winchester1897Attachment'
-    PickupClass=class'DH_Weapons.DH_Winchester1897Pickup'
+    FireModeClass(0)=Class'DH_Winchester1897Fire'
+    FireModeClass(1)=Class'DH_Winchester1897MeleeFire'
+    AttachmentClass=Class'DH_Winchester1897Attachment'
+    PickupClass=Class'DH_Winchester1897Pickup'
 
     Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_1st'
 

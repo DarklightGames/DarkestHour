@@ -7,5 +7,5 @@ class DH_T3485CannonPawn_Berlin extends DH_T3485CannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3485Cannon_Berlin'
+    GunClass=Class'DH_T3485Cannon_Berlin'
 }

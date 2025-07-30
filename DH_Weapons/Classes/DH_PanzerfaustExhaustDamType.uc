@@ -8,5 +8,5 @@ class DH_PanzerfaustExhaustDamType extends DHRocketExhaustDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
+    WeaponClass=Class'DH_PanzerFaustWeapon'
 }

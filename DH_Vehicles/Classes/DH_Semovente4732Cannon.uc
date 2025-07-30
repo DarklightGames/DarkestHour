@@ -16,7 +16,7 @@ defaultproperties
     GunMantletArmorFactor=5.0
     GunMantletSlope=0.0
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_barrel_collision',AttachBone="BARREL")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.semovente4732_barrel_collision',AttachBone="BARREL")
 
     GunnerAttachmentBone="TURRET"
     
@@ -37,9 +37,9 @@ defaultproperties
     CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShellHEAT'
+    PrimaryProjectileClass=Class'DH_Cannone4732CannonShell'
+    SecondaryProjectileClass=Class'DH_Cannone4732CannonShellHE'
+    TertiaryProjectileClass=Class'DH_Cannone4732CannonShellHEAT'
 
     ProjectileDescriptions(0)="AP"
     ProjectileDescriptions(1)="HE"
@@ -47,7 +47,7 @@ defaultproperties
 
     nProjectileDescriptions(0)="Granata Perforante da 47"
     nProjectileDescriptions(1)="Granata da 47"
-    nProjectileDescriptions(2)="Effeto Pronto da 47"
+    nProjectileDescriptions(2)="Effetto Pronto da 47"
 
     // Source [1] indicates that there was an even split of ammo types & that the maximum loadout of each gun was 60 rounds.
     InitialPrimaryAmmo=20
@@ -64,13 +64,13 @@ defaultproperties
 
     // Sounds
     // TODO: replace these with unique sounds!
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.57mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.57mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.57mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //3.5 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     ResupplyInterval=3.0
 

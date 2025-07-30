@@ -19,7 +19,7 @@ defaultproperties
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT'
@@ -95,10 +95,10 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
-    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_loop01'
+    StartUpSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_start'
+    ShutDownSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-18.147,Y=-8.59515,Z=30.609),ExhaustRotation=(Pitch=-16384,Yaw=-20000))
@@ -106,7 +106,7 @@ defaultproperties
     SteerBoneAxis=AXIS_Y
 
     // HUD
-    VehicleHudImage=Texture'DH_Fiat508CM_tex.interface.fiat508cm_icon'
+    VehicleHudImage=Texture'DH_Fiat508CM_tex.fiat508cm_icon'
     VehicleHudEngineY=0.28
     VehicleHudOccupantsX(0)=0.56125
     VehicleHudOccupantsY(0)=0.51250

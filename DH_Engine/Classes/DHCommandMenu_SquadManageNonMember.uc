@@ -120,12 +120,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         if (OtherPRI.IsInSquad())
         {
             ORI.InfoText[0] = default.AlreadyInASquadText;
-            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoColor = Class'UColor'.default.Red;
         }
         else if (PC != none && PC.SquadReplicationInfo != none && PC.SquadReplicationInfo.IsSquadFull(PC.GetTeamNum(), PC.GetSquadIndex()))
         {
             ORI.InfoText[0] = default.SquadIsFullText;
-            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoColor = Class'UColor'.default.Red;
         }
     }
 }
@@ -134,7 +134,7 @@ defaultproperties
 {
     AlreadyInASquadText="Already in a squad"
     SquadIsFullText="Squad is full"
-    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_invite')
+    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.squad_invite')
     SlotCountOverride=4
 }
 

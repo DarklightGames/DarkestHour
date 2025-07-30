@@ -8,5 +8,5 @@ class DH_ViSBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_ViSWeapon'
+    WeaponClass=Class'DH_ViSWeapon'
 }

@@ -66,7 +66,7 @@ function static string ToString(int TotalSeconds)
         S $= Hours $ ":";
     }
 
-    S $= class'UString'.static.ZFill(Minutes, 2) $ ":" $ class'UString'.static.ZFill(Seconds, 2);
+    S $= Class'UString'.static.ZFill(Minutes, 2) $ ":" $ Class'UString'.static.ZFill(Seconds, 2);
 
     return S;
 }

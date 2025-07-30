@@ -7,7 +7,7 @@ class DHShovelItem_Italian extends DHShovelItem;
 
 defaultproperties
 {
-    AttachmentClass=class'DHShovelAttachment_German'
+    AttachmentClass=Class'DHShovelAttachment_German'
     Mesh=SkeletalMesh'DH_Shovel_1st.shovel_italian_1st'
     NativeItemName="Pala Vanghetta"
     DisplayFOV=90.0

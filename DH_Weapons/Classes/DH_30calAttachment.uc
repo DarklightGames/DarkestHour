@@ -10,17 +10,17 @@ class DH_30calAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_M1919_anm.M1919A6_world'
-    MenuImage=Texture'DH_M1919_tex.interface.m1919a6_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_M1919_tex.m1919a6_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdMG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector2"
     bStaticReload=true
 
-    ClientProjectileClass=class'DH_Weapons.DH_30calBullet'
+    ClientProjectileClass=Class'DH_30calBullet'
     bUsesTracers=true
     TracerFrequency=5
-    ClientTracerClass=class'DH_Weapons.DH_30calTracerBullet'
+    ClientTracerClass=Class'DH_30calTracerBullet'
 
     WA_Idle="idle_m1919"
     WA_IdleEmpty="idle_m1919"

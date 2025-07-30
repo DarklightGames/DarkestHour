@@ -87,7 +87,7 @@ final static function INet4Address FromString(string S)
         }
     }
 
-    Address = new class'INet4Address';
+    Address = new Class'INet4Address';
     Address.Addresses[0] = k[0];
     Address.Addresses[1] = k[1];
     Address.Addresses[2] = k[2];

@@ -8,5 +8,5 @@ class DH_KriegsmarineHelmet extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.ger_helmet'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.WK_HG_1'
+    Skins(0)=Texture'DHGermanCharactersTex.WK_HG_1'
 }

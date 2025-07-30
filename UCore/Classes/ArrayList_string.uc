@@ -145,6 +145,6 @@ private function int QuickSortPartition(int Lo, int Hi)
             return j;
         }
 
-        class'UCore'.static.SSwap(Items[i], Items[j]);
+        Class'UCore'.static.SSwap(Items[i], Items[j]);
     }
 }

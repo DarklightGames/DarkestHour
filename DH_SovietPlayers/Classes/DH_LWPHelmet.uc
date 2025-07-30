@@ -9,5 +9,5 @@ defaultproperties
 {
     bIsHelmet=true
     Mesh=SkeletalMesh'dhgear_anm.lwp_helmet'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
+    Skins(0)=Texture'DHSovietCharactersTex.DH_rus_headgear'
 }

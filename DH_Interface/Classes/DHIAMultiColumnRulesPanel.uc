@@ -168,7 +168,7 @@ defaultproperties
         WinHeight=0.9
         OnPreDraw=myBackgroundGroup.InternalPreDraw
     End Object
-    sb_Background=DHGUIProportionalContainer'DH_Interface.DHIAMultiColumnRulesPanel.myBackgroundGroup'
+    sb_Background=DHGUIProportionalContainer'DH_Interface.myBackgroundGroup'
     Begin Object Class=DHmoCheckBox Name=AdvancedButton
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
@@ -182,7 +182,7 @@ defaultproperties
         bScaleToParent=true
         OnChange=DHIAMultiColumnRulesPanel.InternalOnChange
     End Object
-    ch_Advanced=DHmoCheckBox'DH_Interface.DHIAMultiColumnRulesPanel.AdvancedButton'
+    ch_Advanced=DHmoCheckBox'DH_Interface.AdvancedButton'
     i_bk=none
     Begin Object Class=DHGUIMultiOptionListBox Name=RuleListBox
         SelectedStyleName="DHListSelectionStyle"
@@ -196,5 +196,5 @@ defaultproperties
         bScaleToParent=true
         OnChange=UT2K4PlayInfoPanel.InternalOnChange
     End Object
-    lb_Rules=DHGUIMultiOptionListBox'DH_Interface.DHIAMultiColumnRulesPanel.RuleListBox'
+    lb_Rules=DHGUIMultiOptionListBox'DH_Interface.RuleListBox'
 }

@@ -2,15 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// We changed the class hierarchy so that each nation gets its own
+// construction class, so this was made abstract. However, levelers had placed
+// place this in maps, so we have to keep it around until they are all removed.
+// This functionality of this class is now in `DHConstructionResupplyVehicles`.
+//==============================================================================
 
-class DHConstruction_Resupply_Vehicles extends DHConstruction_Resupply
-    abstract;
-
-defaultproperties
-{
-    ResupplyType=RT_Vehicles
-    ResupplyAttachmentCollisionRadius=600.0
-    MenuName="Ammo Crate (Vehicles)"
-    MenuDescription="Provides a resupply point for vehicles and guns."
-    ResupplyCount=25
-}
+class DHConstruction_Resupply_Vehicles extends DHDeprecated;

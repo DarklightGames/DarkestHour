@@ -67,10 +67,10 @@ static function Color GetColor(optional int Switch, optional PlayerReplicationIn
 {
     if (Switch == 0 || Switch == 1)
     {
-        return class'UColor'.default.Red;
+        return Class'UColor'.default.Red;
     }
 
-    return class'UColor'.default.White;
+    return Class'UColor'.default.White;
 }
 
 defaultproperties

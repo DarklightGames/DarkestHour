@@ -7,6 +7,6 @@ class DH_RDG1SmokeGrenadePickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1'
+    InventoryType=Class'DH_RDG1SmokeGrenadeWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.RGD1'
 }

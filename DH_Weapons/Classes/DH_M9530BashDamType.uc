@@ -8,6 +8,6 @@ class DH_M9530BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M9530Weapon'
+    WeaponClass=Class'DH_M9530Weapon'
 }
 

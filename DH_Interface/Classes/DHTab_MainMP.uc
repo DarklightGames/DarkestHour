@@ -16,5 +16,5 @@ defaultproperties
         WinHeight=0.325816
         OnPreDraw=ButtonBackground2.InternalPreDraw
     End Object
-    sb_ButtonBackground2=DHGUIPlainBackground'DH_Interface.DHTab_MainMP.ButtonBackground2'
+    sb_ButtonBackground2=DHGUIPlainBackground'DH_Interface.ButtonBackground2'
 }

@@ -250,13 +250,14 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
     V = PC.Pawn.Location - Marker.WorldLocation;
     V.Z = 0.0;
 
-    Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
+    Distance = Class'DHUnits'.static.UnrealToMeters(VSize(V));
 
-    return (Distance / 5) * 5 $ class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
+    return (Distance / 5) * 5 $ Class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
 }
 
 defaultproperties
 {
+    IconColor=(R=255,G=255,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=-1
     GroupIndex=-1

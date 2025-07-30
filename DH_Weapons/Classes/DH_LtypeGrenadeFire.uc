@@ -7,8 +7,8 @@ class DH_LTypeGrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_LTypeGrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_LTypeGrenadeAmmo'
+    ProjectileClass=Class'DH_LTypeGrenadeProjectile'
+    AmmoClass=Class'DH_LTypeGrenadeAmmo'
     MinHoldTime=1.0
     bSplashDamage=false
     bRecommendSplashDamage=false

@@ -7,5 +7,5 @@ class DHSmokeEffectAttachment_Red extends DHSmokeEffectAttachment;
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Red'
+    SmokeEmitterClass=Class'DHSmokeEffect_Red'
 }

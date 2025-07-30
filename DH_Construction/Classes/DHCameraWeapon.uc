@@ -55,7 +55,7 @@ simulated event WeaponTick(float DeltaTime)
 {
     FovAngleTarget += DeltaTime * FovZoomDirection * FovZoomSpeed;
     FovAngleTarget = FClamp(FovAngleTarget, 10.0, 120.0);
-    FovAngle = class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
+    FovAngle = Class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
 
     Instigator.Controller.FovAngle = FovAngle;
 }

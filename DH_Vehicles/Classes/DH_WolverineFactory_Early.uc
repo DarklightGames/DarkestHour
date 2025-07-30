@@ -7,5 +7,5 @@ class DH_WolverineFactory_Early extends DH_WolverineFactory; // earlier version 
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_WolverineTank_Early'
+    VehicleClass=Class'DH_WolverineTank_Early'
 }

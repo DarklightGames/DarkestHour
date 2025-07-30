@@ -11,6 +11,6 @@ defaultproperties
     BallisticCoefficient=0.17
     WhizType=2
     Damage=50.0
-    MyDamageType=class'DH_Weapons.DH_Nagant1895DamType'
+    MyDamageType=Class'DH_Nagant1895DamType'
 }
 

@@ -24,13 +24,13 @@ function bool CanDeadThrow()
 defaultproperties
 {
     ItemName="M16 Signal Grenade"
-    FireModeClass(0)=class'DH_Equipment.DH_RedSmokeFire'
-    FireModeClass(1)=class'DH_Equipment.DH_RedSmokeTossFire'
-    AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
-    PickupClass=class'DH_Equipment.DH_RedSmokePickup'
+    FireModeClass(0)=Class'DH_RedSmokeFire'
+    FireModeClass(1)=Class'DH_RedSmokeTossFire'
+    AttachmentClass=Class'DH_RedSmokeAttachment'
+    PickupClass=Class'DH_RedSmokePickup'
 
     Mesh=SkeletalMesh'DH_M8Grenade_1st.M8'
-    Skins(1)=Texture'DH_M8Grenade_tex.m16.M16red'
+    Skins(1)=Texture'DH_M8Grenade_tex.M16red'
 
     HandNum=0
     SleeveNum=2
@@ -40,7 +40,7 @@ defaultproperties
     Priority=1
 
     bHasReleaseLever=true
-    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
     DisplayFOV=80.0

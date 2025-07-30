@@ -14,5 +14,5 @@ defaultproperties
     BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
     ImpactDamage=175 // 75mm smoke shells are 125, so increased as this is a larger, heavier shell
 
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
+    SmokeEmitterClass=Class'DHSmokeEffect_LargeShell'
 }

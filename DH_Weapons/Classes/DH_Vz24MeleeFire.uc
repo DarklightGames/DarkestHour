@@ -7,8 +7,8 @@ class DH_Vz24MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_Vz24BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_Vz24BayonetDamType'
+    DamageType=Class'DH_Vz24BashDamType'
+    BayonetDamageType=Class'DH_Vz24BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

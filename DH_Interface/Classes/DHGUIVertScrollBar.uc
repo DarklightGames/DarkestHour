@@ -12,23 +12,23 @@ defaultproperties
         StyleName="DHEditBox"
         OnClick=ScrollZone.InternalOnClick
     End Object
-    MyScrollZone=GUIVertScrollZone'DH_Interface.DHGUIVertScrollBar.ScrollZone'
+    MyScrollZone=GUIVertScrollZone'DH_Interface.ScrollZone'
     Begin Object Class=DHGUIVertScrollButton Name=DownBut
         bIncreaseButton=true
         OnClick=GUIVertScrollBar.IncreaseClick
         OnKeyEvent=DownBut.InternalOnKeyEvent
     End Object
-    MyIncreaseButton=DHGUIVertScrollButton'DH_Interface.DHGUIVertScrollBar.DownBut'
+    MyIncreaseButton=DHGUIVertScrollButton'DH_Interface.DownBut'
     Begin Object Class=DHGUIVertScrollButton Name=UpBut
         OnClick=GUIVertScrollBar.DecreaseClick
         OnKeyEvent=UpBut.InternalOnKeyEvent
     End Object
-    MyDecreaseButton=DHGUIVertScrollButton'DH_Interface.DHGUIVertScrollBar.UpBut'
+    MyDecreaseButton=DHGUIVertScrollButton'DH_Interface.UpBut'
     Begin Object Class=GUIVertGripButton Name=Grip
         StyleName="DHGripButton"
         OnMousePressed=GUIVertScrollBar.GripPressed
         OnKeyEvent=Grip.InternalOnKeyEvent
     End Object
-    MyGripButton=GUIVertGripButton'DH_Interface.DHGUIVertScrollBar.Grip'
+    MyGripButton=GUIVertGripButton'DH_Interface.Grip'
     OnPreDraw=DHGUIVertScrollBar.GripPreDraw
 }

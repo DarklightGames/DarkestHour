@@ -8,6 +8,6 @@ class DHLargeCaliberDamageType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    PawnDamageEmitter=Class'DHBloodPuffLargeCaliber'
     bAlwaysSevers=true // so limbs & head are severed by a hit from such a powerful bullet
 }

@@ -8,6 +8,6 @@ class DH_PanzerFaustImpactDamType extends DHRocketImpactDamage
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
-    HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'
+    WeaponClass=Class'DH_PanzerFaustWeapon'
+    HUDIcon=Texture'InterfaceArt2_tex.faustkill'
 }

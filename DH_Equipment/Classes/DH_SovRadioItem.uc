@@ -7,6 +7,6 @@ class DH_SovRadioItem extends DHRadioItem;
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Equipment.DHSovRadioAttachment'
+    AttachmentClass=Class'DHSovRadioAttachment'
     AttachBoneName="Bip01_Spine1"
 }

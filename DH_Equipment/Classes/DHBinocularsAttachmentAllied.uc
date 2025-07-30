@@ -7,5 +7,5 @@ class DHBinocularsAttachmentAllied extends DHBinocularsAttachment;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_Equipment_tex.Binocs.Binoc_world_usa'
+    Skins(0)=Texture'DH_Equipment_tex.Binoc_world_usa'
 }

@@ -7,5 +7,5 @@ class DH_USTanker743rd extends DHUSTankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USTankerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=Class'DH_USTankerPawn',Weight=1.0)
 }

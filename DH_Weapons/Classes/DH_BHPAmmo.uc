@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=14
     InitialAmount=13
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.Colt45_ammo'
 }

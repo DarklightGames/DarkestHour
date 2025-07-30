@@ -40,7 +40,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 {
     local int ExtraValue;
 
-    class'UInteger'.static.ToShorts(S, S, ExtraValue);
+    Class'UInteger'.static.ToShorts(S, S, ExtraValue);
 
     switch (S)
     {

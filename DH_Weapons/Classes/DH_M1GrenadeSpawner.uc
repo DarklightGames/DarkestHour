@@ -8,8 +8,8 @@ class DH_M1GrenadeSpawner extends DHInventorySpawner;
 defaultproperties
 {
     Mesh=Mesh'DH_Construction_anm.USA_grenade_crate'
-    Skins(0)=Material'DH_Construction_tex.Ammo.USA_grenade_box'
-    WeaponClass=class'DH_M1GrenadeWeapon'
+    Skins(0)=Material'DH_Construction_tex.USA_grenade_box'
+    WeaponClass=Class'DH_M1GrenadeWeapon'
     PickupCount=15
     PickupsMax=15
     PickupBoneNames(0)="grenade.000"

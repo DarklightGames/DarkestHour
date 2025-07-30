@@ -8,13 +8,13 @@ class DH_SovietMadManRoles extends DHAlliedRiflemanRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Equipment.DHBrokenBottleItem')
+    PrimaryWeapons(0)=(Item=Class'DHBrokenBottleItem')
 
     HeadgearProbabilities(0)=1
-    Headgear(0)=class'DH_SovietPlayers.DH_MadTopHat'
+    Headgear(0)=Class'DH_MadTopHat'
 
-    SleeveTexture=Texture'DHSovietCharactersTex.Sleeves.NavalSleeves2'
-    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    SleeveTexture=Texture'DHSovietCharactersTex.NavalSleeves2'
+    GlovedHandTexture=Texture'DHUSCharactersTex.hands_USgloves'
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
    

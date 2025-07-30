@@ -148,7 +148,7 @@ final static function string GetDurationString(int Seconds, string Format)
 
         if (!bIsOptional || N > 0)
         {
-            S $= class'UString'.static.ZFill(N, Precision);
+            S $= Class'UString'.static.ZFill(N, Precision);
         }
     }
 

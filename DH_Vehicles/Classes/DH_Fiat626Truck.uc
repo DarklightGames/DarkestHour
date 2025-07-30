@@ -21,10 +21,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat626_anm.fiat626_body_ext'
-    Skins(0)=Texture'DH_Fiat626_tex.fiat626.fiat626_exterior_green'
-    Skins(1)=Texture'DH_Fiat626_tex.fiat626.fiat626_interior_green'
-    Skins(2)=Texture'DH_Fiat626_tex.fiat626.fiat626_canvas'
-    Skins(3)=FinalBlend'DH_Fiat626_tex.fiat626.fiat626_windows_fb'
+    Skins(0)=Texture'DH_Fiat626_tex.fiat626_exterior_green'
+    Skins(1)=Texture'DH_Fiat626_tex.fiat626_interior_green'
+    Skins(2)=Texture'DH_Fiat626_tex.fiat626_canvas'
+    Skins(3)=FinalBlend'DH_Fiat626_tex.fiat626_windows_fb'
     BeginningIdleAnim="" // override unwanted inherited value, as GMC has no animations
 
     // Passengers
@@ -104,7 +104,7 @@ defaultproperties
     // Effects
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_Fiat626_stc.Destroyed.fiat626_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Fiat626_stc.fiat626_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -122,9 +122,9 @@ defaultproperties
     // Sounds
     SoundPitch=32.0
     MaxPitchSpeed=10.0 //150.0
-    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmctruck_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251_engine_stop'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
     RumbleSoundBone="body"
 
@@ -138,13 +138,13 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_Fiat626_tex.interface.fiat626_body_icon'
+    VehicleHudImage=Texture'DH_Fiat626_tex.fiat626_body_icon'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.55
     VehicleHudOccupantsY(0)=0.25
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.25
-    SpawnOverlay(0)=Material'DH_Fiat626_tex.interface.fiat626_profile_icon'
+    SpawnOverlay(0)=Material'DH_Fiat626_tex.fiat626_profile_icon'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -155,7 +155,7 @@ defaultproperties
         SupportBoneName="SUSPENSION_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Fiat626Truck.RFWheel'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
 
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
@@ -166,7 +166,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Fiat626Truck.LFWheel'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
 
     Begin Object Class=SVehicleWheel Name=BRWheel
         bPoweredWheel=true
@@ -177,7 +177,7 @@ defaultproperties
         SupportBoneName="SUSPENSION_B_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Fiat626Truck.BRWheel'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.BRWheel'
 
     Begin Object Class=SVehicleWheel Name=BLWheel
         bPoweredWheel=true
@@ -189,7 +189,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Fiat626Truck.BLWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.BLWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -209,5 +209,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Fiat626Truck.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
 }

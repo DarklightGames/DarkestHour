@@ -8,8 +8,8 @@ class DH_Nagant1895Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    MenuImage=Texture'DH_InterfaceArt_tex.m1895_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdPistol'
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
 

@@ -7,13 +7,13 @@ class DHScoreEvent_TeamKill extends DHScoreEvent;
 
 static function DHScoreEvent_TeamKill Create()
 {
-    return new class'DHScoreEvent_TeamKill';
+    return new Class'DHScoreEvent_TeamKill';
 }
 
 defaultproperties
 {
     HumanReadableName="Team Kill"
-    CategoryClass=class'DHScoreCategory_Combat'
+    CategoryClass=Class'DHScoreCategory_Combat'
     Value=-250
 }
 

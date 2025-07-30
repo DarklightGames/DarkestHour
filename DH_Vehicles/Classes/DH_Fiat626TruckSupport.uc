@@ -8,7 +8,7 @@ class DH_Fiat626TruckSupport extends DH_Fiat626Truck;
 defaultproperties
 {
     VehicleNameString="Fiat 626 (Logistics)"
-    MapIconMaterial=Texture'DH_GUI_tex.GUI.supply_point'
+    MapIconMaterial=Texture'DH_GUI_tex.supply_point'
 
     // Passengers
     PassengerPawns(1)=(AttachBone="passenger_06",DriveAnim="fiat626_passenger_bl",DrivePos=(Z=58),DriveRot=(Yaw=-16384))
@@ -20,10 +20,10 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.825
 
     // Logistics
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
     SupplyAttachmentOffset=(X=-38.7437,Y=0.0,Z=62.7177)
-    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.ITA_Supply_cache_full'
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.ITA_Supply_cache_full'
     ResupplyAttachmentBone="body"   // TODO: set these up
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters

@@ -34,31 +34,31 @@ static function JSONValue GetDestroyedReasonValue(EDestroyedReason DestroyedReas
     switch (DestroyedReason)
     {
         case REASON_Overrun:
-            return class'JSONString'.static.Create("overrun");
+            return Class'JSONString'.static.Create("overrun");
         case REASON_Exhausted:
-            return class'JSONString'.static.Create("exhausted");
+            return Class'JSONString'.static.Create("exhausted");
         case REASON_Damaged:
-            return class'JSONString'.static.Create("damaged");
+            return Class'JSONString'.static.Create("damaged");
         case REASON_Deleted:
-            return class'JSONString'.static.Create("deleted");
+            return Class'JSONString'.static.Create("deleted");
         case REASON_Replaced:
-            return class'JSONString'.static.Create("replaced");
+            return Class'JSONString'.static.Create("replaced");
         case REASON_SpawnKill:
-            return class'JSONString'.static.Create("spawn_kill");
+            return Class'JSONString'.static.Create("spawn_kill");
         case REASON_Abandoned:
-            return class'JSONString'.static.Create("abandoned");
+            return Class'JSONString'.static.Create("abandoned");
         case REASON_Encroached:
-            return class'JSONString'.static.Create("encroached");
+            return Class'JSONString'.static.Create("encroached");
     }
 
-    return class'JSONLiteral'.static.CreateNull();
+    return Class'JSONLiteral'.static.CreateNull();
 }
 
 function JSONValue ToJSON()
 {
     local JSONObject JSON;
 
-    JSON = (new class'JSONObject')
+    JSON = (new Class'JSONObject')
         .PutInteger("team_index", TeamIndex)
         .PutInteger("squad_index", SquadIndex)
         .PutString("player_id", PlayerID)

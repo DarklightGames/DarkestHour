@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=4
     InitialAmount=4
-    IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
+    IconMaterial=Material'DH_InterfaceArt_tex.kar98Sniper_ammo'
 }

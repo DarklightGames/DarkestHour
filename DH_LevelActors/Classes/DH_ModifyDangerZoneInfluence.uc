@@ -32,7 +32,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     for (i = 0; i < DangerZoneInfluences.Length; ++i)
     {
-        foreach AllActors(class'DHObjective', Objective, DangerZoneInfluences[i].ObjectiveTag)
+        foreach AllActors(Class'DHObjective', Objective, DangerZoneInfluences[i].ObjectiveTag)
         {
             switch (DangerZoneInfluences[i].Type)
             {

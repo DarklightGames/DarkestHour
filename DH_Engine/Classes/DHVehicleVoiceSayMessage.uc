@@ -22,14 +22,14 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
 
     if (MyPRI != none && OtherPRI != none && MyPRI.SquadIndex != -1 && MyPRI.SquadIndex == OtherPRI.SquadIndex)
     {
-        NameColor = class'DHColor'.default.SquadColor;
+        NameColor = Class'DHColor'.default.SquadColor;
     }
     else
     {
         NameColor = ConsoleColor;
     }
 
-    return default.MessagePrefix @ class'GameInfo'.static.MakeColorCode(NameColor) $ RelatedPRI_1.PlayerName $ class'GameInfo'.static.MakeColorCode(ConsoleColor) @ ":" @ MessageString;
+    return default.MessagePrefix @ Class'GameInfo'.static.MakeColorCode(NameColor) $ RelatedPRI_1.PlayerName $ Class'GameInfo'.static.MakeColorCode(ConsoleColor) @ ":" @ MessageString;
 }
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)

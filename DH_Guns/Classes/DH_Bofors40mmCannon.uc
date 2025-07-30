@@ -31,7 +31,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Bofors_anm.Bofors40mm_gun'
     Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
-    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(1)=Texture'Weapons1st_tex.Bullet_Shell_Rifle'
 
     // Turret movement
     RotationsPerSecond=0.138888 // 50 degrees per sec
@@ -42,13 +42,13 @@ defaultproperties
     ElevationControlBone="elevation_control"
 
     // Sounds (HUDProportion overrides to better suit magazine reload)
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire03'
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
+    PrimaryProjectileClass=Class'DH_Bofors40mmCannonShellHE'
+    SecondaryProjectileClass=Class'DH_Bofors40mmCannonShell'
 
     ProjectileDescriptions(0)="HE-T"
     ProjectileDescriptions(1)="AP"

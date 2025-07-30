@@ -12,7 +12,7 @@ var localized string    ChangedText;
 var localized string    RoundTimeModifiedText;
 
 //The sound to play when this actor is triggered.
-var sound               Sound;
+var Sound               Sound;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -45,7 +45,7 @@ simulated static function ClientReceive(PlayerController P, optional int Switch,
 
 defaultproperties
 {
-    Sound=Sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.notify_drum'
     IncreasedText="increased"
     DecreasedText="decreased"
     ChangedText="changed"

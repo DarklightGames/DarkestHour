@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Smock_mix'
 
-    Skins(2)=Texture'DHGermanCharactersTex.WSS.WSSSmockSpringOak2' //shirt
+    Skins(2)=Texture'DHGermanCharactersTex.WSSSmockSpringOak2' //shirt
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.WSSSmockSpringOak2'  //pants
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSSmockSpringPlanetree1'
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSSSmockSpringOak2'  //pants
+    BodySkins(1)=Texture'DHGermanCharactersTex.WSSSmockSpringPlanetree1'
 }

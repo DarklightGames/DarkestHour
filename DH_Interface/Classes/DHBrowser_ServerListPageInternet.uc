@@ -10,7 +10,7 @@ var array<string>   ServerWhitelist;    // Show only servers in this list if the
 
 function InitServerList()
 {
-    li_Server = new(none) class'DH_Interface.DHBrowser_ServersList';
+    li_Server = new(none) Class'DHBrowser_ServersList';
 
     lb_Server.InitBaseList(li_Server);
 
@@ -79,12 +79,14 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageInternet.InternalOnLoadINI
     End Object
-    sp_Main=GUISplitter'DH_Interface.DHBrowser_ServerListPageInternet.HorzSplitter'
+    sp_Main=GUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
     bStandardized=true
     StandardHeight=0.8
+
+    bDisableWhitelist=true
 
     ServerWhitelist(0)="104.243.41.183"     // Official US
     ServerWhitelist(1)="185.206.148.38"     // Official EU

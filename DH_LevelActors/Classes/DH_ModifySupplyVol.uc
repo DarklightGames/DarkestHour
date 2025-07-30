@@ -17,7 +17,7 @@ function PostBeginPlay()
 
     if (SupplyVolumeToModify != '')
     {
-        foreach AllActors(class'ROAmmoResupplyVolume', SupplyVolumeReference, SupplyVolumeToModify) // volumes are static so have to use the all actor list
+        foreach AllActors(Class'ROAmmoResupplyVolume', SupplyVolumeReference, SupplyVolumeToModify) // volumes are static so have to use the all actor list
         {
             break;
         }

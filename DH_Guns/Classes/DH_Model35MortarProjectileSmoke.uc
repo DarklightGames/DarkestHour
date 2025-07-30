@@ -9,5 +9,5 @@ defaultproperties
 {
     Speed=6500
     MaxSpeed=6500
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_3360'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.IT_SMOKE_M110_3360'
 }

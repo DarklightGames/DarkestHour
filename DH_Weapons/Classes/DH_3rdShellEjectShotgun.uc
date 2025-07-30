@@ -7,5 +7,5 @@ class DH_3rdShellEjectShotgun extends RO3rdShellEject;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Winchester1897ShellCase'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Winchester1897ShellCase'
 }
