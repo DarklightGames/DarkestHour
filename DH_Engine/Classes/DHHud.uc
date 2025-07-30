@@ -214,16 +214,20 @@ function DrawDebugInformation(Canvas C)
     C.Font = GetConsoleFont(C);
     C.DrawColor = WhiteColor;
 
-    S = default.PrereleaseDisclaimerText;
-    C.TextSize(S, StrX, StrY);
-    X = C.ClipX - StrX - MARGIN;
     Y = MARGIN;
-    C.SetPos(X, Y);
-    C.DrawTextClipped(S);
+
+    if (Class'DHBuildManifest'.default.Version.IsPrerelease())
+    {
+        S = default.PrereleaseDisclaimerText;
+        C.TextSize(S, StrX, StrY);
+        X = C.ClipX - StrX - MARGIN;
+        C.SetPos(X, Y);
+        C.DrawTextClipped(S);
+        Y += StrY;
+    }
 
     S = Class'DHBuildManifest'.default.Version.ToString() @ "(" $ Class'DHBuildManifest'.default.GitBranch $ ")";
     C.TextSize(S, StrX, StrY);
-    Y += StrY;
     X = C.ClipX - StrX - MARGIN;
     C.SetPos(X, Y);
     C.DrawTextClipped(S);

@@ -5,11 +5,6 @@
 
 class DH_SVT38Weapon extends DHBoltActionWeapon;
 
-simulated function int GetStripperClipSize() //modified from 5
-{
-    return 10;   // TODO: make it a normal property
-}
-
 defaultproperties
 {
     ItemName="SVT-38"
@@ -65,4 +60,6 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    StripperClipSize=10
 }

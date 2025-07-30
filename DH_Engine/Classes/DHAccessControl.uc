@@ -237,6 +237,8 @@ defaultproperties
     DeveloperIDs(8)="76561198176185585" // Backis
     DeveloperIDs(9)="76561198144056227" // Mechanic
     DeveloperIDs(10)="76561197981578171"// Enfield
+    DeveloperIDs(11)="76561198124713411" // Red
+    DeveloperIDs(12)="76561198023805987" // SoulSeek
 
     // Mac clients are unable to determine their patron status
     // normally, so we hard-code these
@@ -267,30 +269,39 @@ defaultproperties
     GloballyBannedIDs(12)="76561199574520909"
     GloballyBannedIDs(13)="76561199634932689"
     GloballyBannedIDs(14)="76561199640196259"
+    GloballyBannedIDs(15)="76561199759839346"
+    GloballyBannedIDs(16)="76561199823207968"
+    GloballyBannedIDs(17)="76561199862639607"
 
     // 76561198202576201 alts
-    GloballyBannedIDs(15)="76561198202576201"
-    GloballyBannedIDs(16)="76561199385553208"
-    GloballyBannedIDs(17)="76561199474852956"
-    GloballyBannedIDs(18)="76561199488873541"
-    GloballyBannedIDs(19)="76561199563295062"
-    GloballyBannedIDs(20)="76561199645254168"
+    GloballyBannedIDs(18)="76561198202576201"
+    GloballyBannedIDs(19)="76561199385553208"
+    GloballyBannedIDs(20)="76561199474852956"
+    GloballyBannedIDs(21)="76561199488873541"
+    GloballyBannedIDs(22)="76561199563295062"
+    GloballyBannedIDs(23)="76561199645254168"
+    GloballyBannedIDs(24)="76561199724224338"
+    GloballyBannedIDs(25)="76561199730646665"
+    GloballyBannedIDs(26)="76561199871780849"
+    GloballyBannedIDs(27)="76561199872678109"
+    GloballyBannedIDs(28)="76561199877209438"
 
     // 76561197995652829 alts
-    GloballyBannedIDs(21)="76561197995652829"
-    GloballyBannedIDs(22)="76561198201322109"
+    GloballyBannedIDs(29)="76561197995652829"
+    GloballyBannedIDs(30)="76561198201322109"
 
     // 76561197970785714 alts
-    GloballyBannedIDs(23)="76561197970785714"
-    GloballyBannedIDs(24)="76561198136036249"
-    GloballyBannedIDs(25)="76561198137426794"
-    GloballyBannedIDs(26)="76561198938103072"
-    GloballyBannedIDs(27)="76561198962691652"
-    GloballyBannedIDs(28)="76561198968258660"
-    GloballyBannedIDs(29)="76561198982958390"
-    GloballyBannedIDs(30)="76561199011959093"
-    GloballyBannedIDs(31)="76561199027036100"
-    GloballyBannedIDs(32)="76561199043242733"
-    GloballyBannedIDs(33)="76561199070325442"
-    GloballyBannedIDs(34)="76561199072481619"
+    GloballyBannedIDs(31)="76561197970785714"
+    GloballyBannedIDs(32)="76561198136036249"
+    GloballyBannedIDs(33)="76561198137426794"
+    GloballyBannedIDs(34)="76561198938103072"
+    GloballyBannedIDs(35)="76561198962691652"
+    GloballyBannedIDs(36)="76561198968258660"
+    GloballyBannedIDs(37)="76561198982958390"
+    GloballyBannedIDs(38)="76561199011959093"
+    GloballyBannedIDs(39)="76561199027036100"
+    GloballyBannedIDs(40)="76561199043242733"
+    GloballyBannedIDs(41)="76561199070325442"
+    GloballyBannedIDs(42)="76561199072481619"
+    GloballyBannedIDs(43)="76561199707205805"
 }

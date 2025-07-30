@@ -517,10 +517,9 @@ def main():
 
 
 class BuildManifest:
-    def __init__(self, version: (int, int, int), commit: str, branch: str = 'main', prerelease: Optional[str] = None, tag: Optional[str] = None):
+    def __init__(self, version: (int, int, int), commit: str, branch: str = 'main', prerelease: Optional[str] = None):
         self.version = version
         self.prerelease = prerelease
-        self.tag = tag
         self.branch = branch
         self.commit = commit
 
@@ -534,7 +533,6 @@ class BuildManifest:
                '\n'\
                'var UVersion Version;\n'\
                'var string GitCommit;\n'\
-               'var string GitTag;\n'\
                'var string GitBranch;\n'\
                '\n'\
                'defaultproperties\n'\
@@ -548,7 +546,6 @@ class BuildManifest:
                f'    End Object\n'\
                f'    Version=VersionObject\n'\
                f'    GitCommit="{self.commit}"\n'\
-               f'    GitTag="{self.tag}"\n'\
                f'    GitBranch="{self.branch}"\n'\
                '}\n'
 
@@ -571,18 +568,9 @@ class BuildManifest:
         else:
             branch = branch.decode().strip()
 
-        p = subprocess.Popen(['git', 'describe', '--tags', '--abbrev=0'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        tag, _ = p.communicate()
-        if p.returncode != 0:
-            print('Unable to get git tag')
-            tag = None
-        else:
-            tag = tag.decode().strip()
-
         return BuildManifest(version=version,
                              prerelease=prerelease,
                              commit=commit,
-                             tag=tag,
                              branch=branch)
 
 

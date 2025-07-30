@@ -214,6 +214,9 @@ var     bool                    bIQManaged;
 var globalconfig GUID           ClientGUID;
 var     float                   LastListClientGUIDTime;
 
+// I'd love to put this elsewhere, but I can't seem to poll any relevant state in the HUD.
+var     bool                    bHideMapActivateMousePrompt;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -7224,6 +7227,8 @@ function bool TryToActivateSituationMap()
         HUD.MouseInterfaceStartCapturing();
         HUD.bShowObjectives = true;
         bShouldSkipResetInput = true;
+
+        bHideMapActivateMousePrompt = true;
 
         GUIController.MouseX = GUIController.ResX / 2;
         GUIController.MouseY = GUIController.ResY / 2;

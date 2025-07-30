@@ -19,7 +19,7 @@ defaultproperties
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT'

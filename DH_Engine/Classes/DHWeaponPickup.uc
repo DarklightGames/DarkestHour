@@ -25,6 +25,8 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     StaticMesh              EmptyStaticMesh;
 
+var    bool                     bWaitingToBolt;
+
 // This is a bit of a hack; the stationary weapons will be forced to be brought up as soon
 // as they are added to the inventory. However, if the player is busy (reloading, etc) then
 // the weapon will not be brought up. In future, replace this with a more elegant solution.
@@ -145,6 +147,7 @@ function InitDroppedPickupFor(Inventory Inv)
         AmmoAmount[0] = W.AmmoAmount(0);
         AmmoAmount[1] = W.AmmoAmount(1);
         bHasBayonetMounted = W.bBayonetMounted;
+        bWaitingToBolt = W.bWaitingToBolt;
     }
 
     SetPhysics(PHYS_Falling);

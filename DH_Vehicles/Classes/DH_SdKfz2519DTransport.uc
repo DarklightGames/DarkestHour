@@ -23,7 +23,7 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    VehicleNameString="Sd.Kfz.251/9 Ausf.D Stummel"
+    VehicleNameString="Sd.Kfz. 251/9 Ausf.D Stummel"
     ReinforcementCost=4
     VehicleMass=10.0
     bIsApc=false

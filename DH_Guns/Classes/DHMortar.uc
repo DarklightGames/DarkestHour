@@ -6,6 +6,22 @@
 class DHMortar extends DHATGun
     abstract;
 
+state Rotating
+{
+    function EndState()
+    {
+        local Rotator NewRotation;
+
+        super.EndState();
+
+        // For now, neutralize the roll of a mortar so that we don't have to
+        // counteract aiming errors introduced by the uneven surfaces.
+        NewRotation = Rotation;
+        NewRotation.Roll = 0;
+        SetRotation(NewRotation);
+    }
+}
+
 defaultproperties
 {
     bCanBeRotated=true

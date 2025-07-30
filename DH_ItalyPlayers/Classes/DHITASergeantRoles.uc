@@ -10,8 +10,8 @@ defaultproperties
 {
     AltName="Sergente"
 
-    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM91Weapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
-    // TODO: Add Carcano Carbine as an option.
+    PrimaryWeapons(0)=(Item=Class'DH_CarcanoM9138CarbineWeapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_CarcanoM91Weapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
 
     SecondaryWeapons(0)=(Item=Class'DH_BerettaM1934Weapon',AssociatedAttachment=Class'DH_BerettaM1934AmmoPouch')
 
@@ -28,9 +28,9 @@ defaultproperties
     Headgear(1)=Class'DH_ItalianHelmet_Livorno'
     Headgear(2)=Class'DH_ItalianCapNCO'
     
-    HeadgearProbabilities(0)=0.4
-    HeadgearProbabilities(1)=0.4
-    HeadgearProbabilities(2)=0.2
+    HeadgearProbabilities(0)=0.1
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.8
 
     DetachedArmClass=Class'DHSeveredArm_ItalianLivorno'
     DetachedLegClass=Class'DHSeveredLeg_ItalianLivorno'

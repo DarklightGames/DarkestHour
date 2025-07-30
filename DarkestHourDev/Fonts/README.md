@@ -12,30 +12,34 @@ Once the font had been generated, there were competing and incompatible systems 
 
 This new system is designed to be as automated and easy to modify as possible, with a unified system for referencing the generated fonts in the game code.
 
+## Font Installation
+Before running the font generation script, ensure that all of the requisite fonts are installed on the machine. This is required because the SDK can only retrieve the fonts that are installed on the machine.
+
+On Linux, the "Arial" font does not come pre-installed on many distros, so you will need to install it manually. On Arch Linux, it can be installed by installing the [ttf-ms-win11-auto](https://aur.archlinux.org/packages/ttf-ms-win11-auto) package.
+
 ## Font Generation
 
 The batch file for generating fonts is found in the `tools\localization\generate_fonts.bat` file.
 
-Executing this batch file will generate a text file full of commands that can be executed within the SDK using the following command:
+Executing this batch file will generate a text file full of commands that can be executed within the SDK using the following command, as well as printing out the command to be pasted into the SDK later. For example:
 
 ```
 EXEC "C:\Program Files (x86)\Steam\steamapps\common\Red Orchestra\DarkestHourDev\Fonts\ImportFonts.exec.txt"
 ```
 
-> Note that the directory may be different on your system depending on where Red Orchestra is installed.
->
-> Also note that all the fonts to be generated must be installed on the machine prior to executing the script within the SDK. This is because the SDK can only retrieve the fonts that are installed on the machine.
-
-To execute the script file, press the "Show Full Log Window" button at the bottom left of the screen (to the right of the command prompt input) and copy-paste the command into the console and press enter.
-
-This will generate the font atlases and data structures in the package specified in the `fonts.yml` file (`package_name` field).
+> Note that the above path may be different on your system depending on where Red Orchestra is installed!
 
 It will also generate the UnrealScript classes for the fonts in the directory specified in `unrealscript.gui_fonts.directory` and `unrealscript.fonts.directory` in the `fonts.yml` file. 
 
+To execute the script file within the SDK, press the **Show Full Log Window** button at the bottom left of the screen (to the right of the command prompt input) and copy-paste the command into the console and press enter.
+
+This will generate the font atlases and data structures in the package specified in the `fonts.yml` file (`package_name` field).
+
+## Using Fonts in UnrealScript
 The main way for accessing fonts is though the generated fonts class.  In Darkest Hour, this is the `DHFonts` class. A number of functions are generated for accessing the font styles in various ways. For example:
 
 ```unrealscript
-class'DHFonts'.static.GetDHConsoleFontByResolution(Resolution);
+Class'DHFonts'.static.GetDHConsoleFontByResolution(ResX, ResY);
 ```
 
-This call will return a `Font` for the style `DHConsoleFont` that is appropriate for the resolution specified in the `Resolution` parameter (note that this is the `Y` (height) resolution).
+This call will return a `Font` for the style `DHConsoleFont` that is appropriate for the resolution specified.

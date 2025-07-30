@@ -84,7 +84,7 @@ simulated function OnConstructed()
         if (SpawnPoint != none)
         {
             // "A Command Post has been constructed and will be established in N seconds."
-            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, Class);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -159,7 +159,7 @@ simulated state Broken
         if (SpawnPoint != none)
         {
             // "A Command Post has been destroyed."
-            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, Class);
         }
 
         DestroyAttachments();

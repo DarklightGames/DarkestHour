@@ -8,7 +8,7 @@ class DHSOVSergeantRoles extends DHAlliedSergeantRoles
 
 defaultproperties
 {
-    MyName="Squad leader"
+    MyName="Squad Leader"
     AltName="Komandir otdeleniya"
     PrimaryWeapons(0)=(Item=Class'DH_PPD40Weapon',AssociatedAttachment=Class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=Class'DH_MN9130Weapon',AssociatedAttachment=Class'ROInventory.ROMN9130AmmoPouch')

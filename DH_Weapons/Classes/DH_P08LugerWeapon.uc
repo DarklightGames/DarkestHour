@@ -22,8 +22,8 @@ defaultproperties
     IronSightDisplayFOV=75.0
     ZoomOutTime=0.3
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

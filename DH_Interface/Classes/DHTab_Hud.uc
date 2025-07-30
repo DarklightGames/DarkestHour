@@ -604,7 +604,7 @@ defaultproperties
         MaxValue=100.0
         MinValue=50.0
         Caption="HUD Scaling"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=myHudScale.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.5"
@@ -621,7 +621,7 @@ defaultproperties
         MaxValue=100.0
         MinValue=51.0
         Caption="HUD Opacity"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=myGameHudOpacity.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.5"

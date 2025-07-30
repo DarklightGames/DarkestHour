@@ -8,6 +8,6 @@ class DHmoCheckBox extends moCheckBox;
 defaultproperties
 {
     ComponentClassName="DH_Interface.DHGUICheckBoxButton"
-    LabelStyleName="DHLargeText"
+    LabelStyleName="DHSmallText"
     StyleName="DHSmallText"
 }
