@@ -139,9 +139,9 @@ struct SAnimationDriver
 
 var() array<SAnimationDriver> AnimationDrivers;
 
-var     float           MuzzleObstructionTraceLength;   // The length of the static geometry trace to ensures that barrel is not obstructed by solid geometry.
-                                                        // Some problematic players were exploting the fact that guns could be placed behind solid geometry
-                                                        // while the barrel stuck though the wall, making them essentually unkillable but still able to fire.
+var() float           MuzzleObstructionTraceLength; // The length of the static geometry trace to ensures that barrel is not obstructed by solid geometry.
+                                                    // Some problematic players were exploting the fact that guns could be placed behind solid geometry
+                                                    // while the barrel stuck though the wall, making them essentually unkillable but still able to fire.
 
 
 replication
