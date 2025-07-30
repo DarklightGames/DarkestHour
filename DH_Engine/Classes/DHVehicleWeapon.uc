@@ -139,6 +139,11 @@ struct SAnimationDriver
 
 var() array<SAnimationDriver> AnimationDrivers;
 
+var     float           MuzzleObstructionTraceLength;   // The length of the static geometry trace to ensures that barrel is not obstructed by solid geometry.
+                                                        // Some problematic players were exploting the fact that guns could be placed behind solid geometry
+                                                        // while the barrel stuck though the wall, making them essentually unkillable but still able to fire.
+
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -499,6 +504,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
     // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
 
+    if (!bAltFire && IsMuzzleObstructed(bAltFire))
+    {
+        return false;
+    }
+
     if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
         WeaponFireRotation = AdjustAim(bAltFire);
@@ -697,6 +707,24 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     return WeaponFireRotation;
 }
 
+// Returns whether the barrel is obstructed by solid geometry.
+simulated function bool IsMuzzleObstructed(bool bAltFire)
+{
+    if (MuzzleObstructionTraceLength == 0.0)
+    {
+        return false;
+    }
+
+    CalcWeaponFire(bAltFire);
+
+    if (!FastTrace(WeaponFireLocation, WeaponFireLocation + -Vector(WeaponFireRotation) * Abs(MuzzleObstructionTraceLength)))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
 simulated function ClientStartFire(Controller C, bool bAltFire)
 {
@@ -707,6 +735,13 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 
     if (FireCountdown > 0.0 && (bUsesMags || bAltFire)) // automatic weapon can't fire unless fire interval has elapsed between shots
     {
+        return;
+    }
+
+    // Ensure that the muzzle is not obstructed by solid geometry.
+    if (!bAltFire && IsMuzzleObstructed(bAltFire))
+    {
+        // TODO: Send a message to the client that the barrel is obstructed.
         return;
     }
 
