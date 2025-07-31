@@ -257,6 +257,7 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
 
 defaultproperties
 {
+    IconColor=(R=255,G=255,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=-1
     GroupIndex=-1

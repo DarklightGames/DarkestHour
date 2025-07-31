@@ -212,16 +212,20 @@ function DrawDebugInformation(Canvas C)
     C.Font = GetConsoleFont(C);
     C.DrawColor = WhiteColor;
 
-    S = default.PrereleaseDisclaimerText;
-    C.TextSize(S, StrX, StrY);
-    X = C.ClipX - StrX - MARGIN;
     Y = MARGIN;
-    C.SetPos(X, Y);
-    C.DrawTextClipped(S);
+
+    if (Class'DHBuildManifest'.default.Version.IsPrerelease())
+    {
+        S = default.PrereleaseDisclaimerText;
+        C.TextSize(S, StrX, StrY);
+        X = C.ClipX - StrX - MARGIN;
+        C.SetPos(X, Y);
+        C.DrawTextClipped(S);
+        Y += StrY;
+    }
 
     S = Class'DHBuildManifest'.default.Version.ToString() @ "(" $ Class'DHBuildManifest'.default.GitBranch $ ")";
     C.TextSize(S, StrX, StrY);
-    Y += StrY;
     X = C.ClipX - StrX - MARGIN;
     C.SetPos(X, Y);
     C.DrawTextClipped(S);
@@ -1090,13 +1094,21 @@ function DrawHudPassC(Canvas C)
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
                 }
+            }
 
-                if (VCR != none &&
-                    VCR.IsSquadChannel() &&
-                    Class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+            // Draw first line of text
+            if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+            {
+                if (VCR != none && VCR.IsSquadChannel())
                 {
                     PortraitText[0].Tints[TeamIndex] = Class'DHColor'.default.SquadColor;
                 }
+
+                PortraitText[0].Text = "[" $ DHPlayerReplicationInfo(PortraitPRI).GetNamePrefix() $ "]" @ PortraitPRI.PlayerName;
+            }
+            else
+            {
+                PortraitText[0].Text = PortraitPRI.PlayerName;
             }
 
             // PortraitX goes from 0 to 1 -- we'll use that as alpha
@@ -1106,9 +1118,7 @@ function DrawHudPassC(Canvas C)
             XL = 0.0;
             DrawSpriteWidgetClipped(C, PortraitIcon, Coords, true, XL, YL, false, true);
 
-            // Draw first line of text
             PortraitText[0].OffsetX = PortraitIcon.OffsetX * PortraitIcon.TextureScale + XL * 1.1;
-            PortraitText[0].Text = PortraitPRI.PlayerName;
             C.Font = GetFontSizeIndex(C, -2);
             DrawTextWidgetClipped(C, PortraitText[0], Coords);
 

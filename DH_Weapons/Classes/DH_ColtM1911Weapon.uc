@@ -25,8 +25,8 @@ defaultproperties
     DisplayFOV=85.0
     IronSightDisplayFOV=75.0
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     SelectEmptyAnim="Draw_empty"
     PutDownAnim="put_away"

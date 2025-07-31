@@ -8,7 +8,7 @@ class DH_Sdkfz251Transport extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.251 Halftrack"
+    VehicleNameString="Sd.Kfz. 251 Halftrack"
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
@@ -34,6 +34,7 @@ defaultproperties
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
     bUsesCodedDestroyedSkins=false
+    FPCamPos=(X=-4)
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Sdkfz251MGPawn',WeaponBone="mg_base")
@@ -45,15 +46,12 @@ defaultproperties
     PassengerPawns(5)=(AttachBone="passenger_r_3",DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverAttachmentBone="driver_player"
     DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
-    HUDOverlayClass=Class'Sdkfz251DriverOverlay'
-    HUDOverlayOffset=(X=0.0,Y=0.0,Z=0.8)
-    HUDOverlayFOV=100.0
 
     // Movement & physics wheels properties
     GearRatios(0)=-0.3

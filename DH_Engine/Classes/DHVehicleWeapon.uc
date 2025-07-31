@@ -139,6 +139,7 @@ struct SAnimationDriver
 
 var() array<SAnimationDriver> AnimationDrivers;
 
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -404,6 +405,7 @@ simulated function PostNetReceive()
     }
     
     UpdateGunWheels();
+    UpdateAnimationDrivers();
 }
 
 function OnReloadFinished(int AmmoIndex);
@@ -506,6 +508,12 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
     // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
+
+    // TODO: might be a bit heavy for the heavy MGs.
+    if (!bAltFire && IsMuzzleObstructed())
+    {
+        return false;
+    }
 
     if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
@@ -705,6 +713,35 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     return WeaponFireRotation;
 }
 
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function GetMuzzleObstructionTrace(out Vector TraceStart, out Vector TraceEnd)
+{
+    local Vector YawBoneLocation, MuzzleDirection;
+    local float TraceLength;
+
+    MuzzleDirection = Vector(WeaponFireRotation);
+    TraceLength = MuzzleDirection Dot (WeaponFireLocation - Location);
+
+    TraceStart = WeaponFireLocation;
+    TraceEnd = WeaponFireLocation - (MuzzleDirection * Abs(TraceLength));
+}
+
+// Returns whether the barrel is obstructed by solid geometry.
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function bool IsMuzzleObstructed()
+{
+    local Vector TraceStart, TraceEnd;
+
+    GetMuzzleObstructionTrace(TraceStart, TraceEnd);
+
+    if (!FastTrace(TraceStart, TraceEnd))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
 simulated function ClientStartFire(Controller C, bool bAltFire)
 {
@@ -716,6 +753,18 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
     if (FireCountdown > 0.0 && (bUsesMags || bAltFire)) // automatic weapon can't fire unless fire interval has elapsed between shots
     {
         return;
+    }
+
+    // Ensure that
+    if (!bAltFire)
+    {
+        CalcWeaponFire(bAltFire);
+
+        if (IsMuzzleObstructed())
+        {
+            WeaponPawn.DisplayVehicleMessage(31);
+            return;
+        }
     }
 
     bIsAltFire = bAltFire;

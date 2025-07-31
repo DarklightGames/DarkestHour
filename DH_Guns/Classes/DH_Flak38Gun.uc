@@ -16,7 +16,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Artillery_tex.flak38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.flak38_turret_look'
     ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.aa_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

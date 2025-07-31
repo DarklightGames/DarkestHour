@@ -30,8 +30,8 @@ defaultproperties
     DisplayFOV=90.0
     IronSightDisplayFOV=75.0
 
-    InitialNumPrimaryMags=5
-    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=3
+    MaxNumPrimaryMags=3
 
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload"

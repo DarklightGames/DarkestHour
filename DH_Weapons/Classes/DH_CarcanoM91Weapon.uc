@@ -7,7 +7,7 @@ class DH_CarcanoM91Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Carcano mod. 91"
+    ItemName="Carcano Fucile mod. 91"
     SwayModifyFactor=0.63 // +0.03
     SwayBayonetModifier=1.28
     FireModeClass(0)=Class'DH_CarcanoM91Fire'
@@ -23,8 +23,8 @@ defaultproperties
     DisplayFOV=85.0
     ZoomOutTime=0.35
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
@@ -40,4 +40,6 @@ defaultproperties
     BoltIronLastAnim="iron_bolt_clipfall"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=1,BoneName="Hammer",Animation="Hammer")
+
+    StripperClipSize=6
 }

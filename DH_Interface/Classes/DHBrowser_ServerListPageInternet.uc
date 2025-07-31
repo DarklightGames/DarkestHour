@@ -86,6 +86,8 @@ defaultproperties
     bStandardized=true
     StandardHeight=0.8
 
+    bDisableWhitelist=true
+
     ServerWhitelist(0)="104.243.41.183"     // Official US
     ServerWhitelist(1)="185.206.148.38"     // Official EU
     ServerWhitelist(2)="45.76.59.241"       // Amish USA

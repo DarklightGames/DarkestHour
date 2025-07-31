@@ -17,5 +17,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.flakv38_turret_look'
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.aa_topdown'
 }

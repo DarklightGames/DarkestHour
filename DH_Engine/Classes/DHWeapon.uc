@@ -200,19 +200,27 @@ simulated function SetPlayerFOV(float PlayerFOV)
 // the currently held weapon.
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
-    local ROWeaponPickup Pick;
-    local int m;
-    local weapon w;
+    local ROWeaponPickup ROWP;
+    local DHWeaponPickup DHWP;
+    local int i;
+    local Weapon W;
     local bool bPossiblySwitch, bJustSpawned;
     local ROWeapon ROW;
 
     if (Pickup != none)
     {
-        Pick = ROWeaponPickup(Pickup);
+        ROWP = ROWeaponPickup(Pickup);
 
-        if (Pick != none)
+        if (ROWP != none)
         {
-            bBayonetMounted = Pick.bHasBayonetMounted;
+            bBayonetMounted = ROWP.bHasBayonetMounted;
+        }
+
+        DHWP = DHWeaponPickup(Pickup);
+
+        if (DHWP != none)
+        {
+            bWaitingToBolt = DHWP.bWaitingToBolt;
         }
     }
 
@@ -239,13 +247,13 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         bPossiblySwitch = true;
     }
 
-    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
-        if (FireMode[m] != none)
+        if (FireMode[i] != none)
         {
-            FireMode[m].Instigator = Instigator;
+            FireMode[i].Instigator = Instigator;
 
-            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+            W.GiveAmmo(i, WeaponPickup(Pickup), bJustSpawned);
         }
     }
 
@@ -266,9 +274,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
     if (!bJustSpawned)
     {
-        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
-            Ammo[m] = none;
+            Ammo[i] = none;
         }
 
         Destroy();

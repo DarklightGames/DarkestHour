@@ -2632,6 +2632,20 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ, optional float NewScale)
     }
 }
 
+// Displays a trace of the barrel obstruction trace.
+exec function DebugBarrelTrace()
+{
+    local Vector TraceStart, TraceEnd;
+
+    if (IsDebugModeAllowed() && VehWep != none)
+    {
+        VehWep.GetMuzzleObstructionTrace(TraceStart, TraceEnd);
+
+        ClearStayingDebugLines();
+        DrawStayingDebugLine(TraceStart, TraceEnd, 255, 255, 0);
+    }
+}
+
 // New debug exec to adjust size of gunsight overlay
 exec function SetSightSize(float NewValue)
 {
