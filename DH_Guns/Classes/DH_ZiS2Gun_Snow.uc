@@ -7,7 +7,8 @@ class DH_ZiS2Gun_Snow extends DH_ZiS2Gun;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun_winter'
-    CannonSkins(0)=Texture'DH_Artillery_tex.ZiS3Gun_winter'
-    DestroyedMeshSkins(0)=Combiner'DH_Artillery_tex.ZiS3Gun_winter_dest'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT_WINTER'
+    CannonSkins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT_WINTER'
+    CannonSkins(1)=Texture'DH_ZiS_tex.ZIS_TURRET_EXT_WINTER'
+    //DestroyedMeshSkins(0)=Combiner'DH_Artillery_tex.ZiS3Gun_winter_dest'
 }

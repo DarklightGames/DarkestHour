@@ -2,15 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Investigate issue where gunsight pitch is way off.
-// [ ] Fix camera transition animations not playing.
-// [ ] Textures
-// [ ] Variants
+// [ ] Investigate issue where gunsight pitch is way off (i think this is an issue with the anims somehow)
+// [ ] Fix camera transition animations not playing (probably just not linked)
 // [ ] Destroyed mesh
 // [ ] Any construction loadout changes that need to be made.
 // [ ] Third person animations.
-// [ ] Possibly redo interface art.
-// [ ] Fix geo misalignment from yaw driver.
+// [ ] Redo interface art.
+// [ ] Fix geo misalignment from yaw driver (what is this?)
 //==============================================================================
 
 class DH_ZiS2Gun extends DHATGun;
@@ -21,7 +19,7 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS2CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS_BODY_EXT'
-    //Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
     //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS2_destroyed'
     VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'

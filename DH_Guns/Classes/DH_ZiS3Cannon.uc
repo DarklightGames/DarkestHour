@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS3_TURRET_EXT'
-    //Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
-    //Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
+    Skins(1)=Texture'DH_ZiS_tex.ZIS_TURRET_EXT'
 
     AnimationDrivers(0)=(Channel=2,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
     AnimationDrivers(1)=(Channel=3,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
