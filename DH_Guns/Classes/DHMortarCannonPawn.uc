@@ -233,6 +233,18 @@ simulated function Fire(optional float F)
         return;
     }
 
+    if (VehWep != none)
+    {
+        VehWep.CalcWeaponFire(false);
+        
+        if (VehWep.IsMuzzleObstructed())
+        {
+            // Send a message to the user that the gun is obstructed.
+            DisplayVehicleMessage(31);
+            return;
+        }
+    }
+
     GotoState('Firing');
 }
 
