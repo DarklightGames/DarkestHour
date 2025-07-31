@@ -2,10 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Investigate issue where gunsight pitch is way off (i think this is an issue with the anims somehow)
-// [ ] Fix camera transition animations not playing (probably just not linked)
-// [ ] Destroyed mesh
+// [ ] Investigate issue where gunsight pitch is way off on ZiS3 (i think this is an issue with the anims somehow)
+// [ ] Fix camera transition animations not playing (probably just not linked, or drivers overriding)
 // [ ] Any construction loadout changes that need to be made.
+// [ ] Destroyed mesh
+// [ ] Destroyed textures
 // [ ] Third person animations.
 // [ ] Redo interface art.
 // [ ] Fix geo misalignment from yaw driver (what is this?)
