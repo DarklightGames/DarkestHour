@@ -139,10 +139,6 @@ struct SAnimationDriver
 
 var() array<SAnimationDriver> AnimationDrivers;
 
-var() float           MuzzleObstructionTraceLength; // The length of the static geometry trace to ensures that barrel is not obstructed by solid geometry.
-                                                    // Some problematic players were exploting the fact that guns could be placed behind solid geometry
-                                                    // while the barrel stuck though the wall, making them essentually unkillable but still able to fire.
-
 
 replication
 {
@@ -504,7 +500,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
     // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
 
-    if (!bAltFire && IsMuzzleObstructed(bAltFire))
+    // TODO: might be a bit heavy for the heavy MGs.
+    if (!bAltFire && IsMuzzleObstructed())
     {
         return false;
     }
@@ -707,17 +704,28 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     return WeaponFireRotation;
 }
 
-// Returns whether the barrel is obstructed by solid geometry.
-simulated function bool IsMuzzleObstructed(bool bAltFire)
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function GetMuzzleObstructionTrace(out Vector TraceStart, out Vector TraceEnd)
 {
-    if (MuzzleObstructionTraceLength == 0.0)
-    {
-        return false;
-    }
+    local Vector YawBoneLocation, MuzzleDirection;
+    local float TraceLength;
 
-    CalcWeaponFire(bAltFire);
+    MuzzleDirection = Vector(WeaponFireRotation);
+    TraceLength = MuzzleDirection Dot (WeaponFireLocation - Location);
 
-    if (!FastTrace(WeaponFireLocation, WeaponFireLocation + -Vector(WeaponFireRotation) * Abs(MuzzleObstructionTraceLength)))
+    TraceStart = WeaponFireLocation;
+    TraceEnd = WeaponFireLocation - (MuzzleDirection * Abs(TraceLength));
+}
+
+// Returns whether the barrel is obstructed by solid geometry.
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function bool IsMuzzleObstructed()
+{
+    local Vector TraceStart, TraceEnd;
+
+    GetMuzzleObstructionTrace(TraceStart, TraceEnd);
+
+    if (!FastTrace(TraceStart, TraceEnd))
     {
         return true;
     }
@@ -738,11 +746,16 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
         return;
     }
 
-    // Ensure that the muzzle is not obstructed by solid geometry.
-    if (!bAltFire && IsMuzzleObstructed(bAltFire))
+    // Ensure that
+    if (!bAltFire)
     {
-        // TODO: Send a message to the client that the barrel is obstructed.
-        return;
+        CalcWeaponFire(bAltFire);
+
+        if (IsMuzzleObstructed())
+        {
+            WeaponPawn.DisplayVehicleMessage(31);
+            return;
+        }
     }
 
     bIsAltFire = bAltFire;
