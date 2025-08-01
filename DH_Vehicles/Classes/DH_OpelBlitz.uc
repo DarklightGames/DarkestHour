@@ -203,7 +203,7 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
-        KCOMOffset=(Z=0.73)
+        KCOMOffset=(Z=0.70)
     End Object
     KParams=KParams0
 }
