@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Fix geo misalignment from yaw driver (what is this?)
-//==============================================================================
 
 class DH_ZiS2Gun extends DHATGun;
 
