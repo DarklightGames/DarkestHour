@@ -33,10 +33,10 @@ defaultproperties
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
     MaxNegativeYaw=-4915
-    YawStartConstraint=-5500.0
-    YawEndConstraint=5500.0
-    CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64100
+    YawStartConstraint=-4915.0
+    YawEndConstraint=4915.0
+    CustomPitchUpLimit=5460     // +30 degrees
+    CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_ZiS3CannonShell'
@@ -94,4 +94,11 @@ defaultproperties
     ResupplyInterval=7.5
 
     ProjectileRotationMode=PRM_MuzzleBone
+
+    ShakeOffsetMag=(X=12.0,Y=4.0,Z=20.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=8.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=6.0
 }

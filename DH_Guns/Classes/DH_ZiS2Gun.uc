@@ -2,13 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Investigate issue where gunsight pitch is way off on ZiS3 (i think this
-//     is an issue with the anims somehow)
-// [ ] Fix camera transition animations not playing (probably just not linked,
-//     or drivers overriding)
-// [ ] Any construction loadout changes that need to be made.
-// [ ] Destroyed mesh
-// [ ] Third person animations.
 // [ ] Fix geo misalignment from yaw driver (what is this?)
 //==============================================================================
 
@@ -21,9 +14,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS2CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS_BODY_EXT'
     Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
+    DestroyedVehicleMesh=StaticMesh'DH_ZiS_stc.ZIS2_DESTROYED'
     DestroyedMeshSkins(0)=Combiner'DH_ZiS_tex.ZIS_BODY_EXT_DESTROYED'
     DestroyedMeshSkins(1)=Combiner'DH_ZiS_tex.ZIS_TURRET_EXT_DESTROYED'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS2_destroyed'
     VehicleHudImage=Texture'DH_ZiS_tex.ZIS_BODY_ICON'
     VehicleHudTurret=TexRotator'DH_ZiS_tex.ZIS2_TURRET_ICON_ROT'
     VehicleHudTurretLook=TexRotator'DH_ZiS_tex.ZIS2_TURRET_ICON_LOOK'

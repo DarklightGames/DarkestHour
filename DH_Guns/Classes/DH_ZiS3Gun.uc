@@ -12,7 +12,7 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS3CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_ZiS_anm.ZIS_BODY_EXT'
     Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_ZiS_stc.ZIS3_DESTROYED'
     DestroyedMeshSkins(0)=Combiner'DH_ZiS_tex.ZIS_BODY_EXT_DESTROYED'
     DestroyedMeshSkins(1)=Combiner'DH_ZiS_tex.ZIS_TURRET_EXT_DESTROYED'
     VehicleHudImage=Texture'DH_ZiS_tex.ZIS_BODY_ICON'
