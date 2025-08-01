@@ -20,6 +20,12 @@ struct PassengerPawn
     var Rotator InitialViewRotationOffset;
 };
 
+struct SkinIndexMap
+{
+    var int VehicleSkinIndex;
+    var int AttachmentSkinIndex;
+};
+
 struct VehicleAttachment
 {
     var class<Actor>    AttachClass;
@@ -33,6 +39,9 @@ struct VehicleAttachment
     var float           CullDistance;
     var bool            bAttachToWeapon;
     var int             WeaponAttachIndex;
+    // Maps the vehicle skin to the attachment skin.
+    // Used so that attachments on skin variants automatically use the correct textures.
+    var array<SkinIndexMap> SkinIndexMap;
 };
 
 // A static mesh and probability weight for random attachment options.
@@ -3071,7 +3080,7 @@ simulated function SpawnVehicleAttachments()
     local class<Actor>      AttachClass;
     local Actor             A;
     local float             RandomNumber, ProbabilitySum;
-    local int               i, j, DependenciesMet;
+    local int               i, j, k, DependenciesMet;
     local bool              bDidMeetDependencies;
 
     // Treads & movement sound attachments
@@ -3250,6 +3259,11 @@ simulated function SpawnVehicleAttachments()
             if (RandomAttachmentGroupOptions[i] >= 0 && RandomAttachmentGroupOptions[i] < RandomAttachmentGroups[i].Options.Length)
             {
                 VA = RandomAttachmentGroups[i].Options[RandomAttachmentGroupOptions[i]].Attachment;
+
+                for (k = 0; k < VA.SkinIndexMap.Length; ++k)
+                {
+                    VA.Skins[VA.SkinIndexMap[k].AttachmentSkinIndex] = Skins[VA.SkinIndexMap[k].VehicleSkinIndex];
+                }
 
                 if (VA.StaticMesh != none)
                 {
