@@ -35,6 +35,7 @@ defaultproperties
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
