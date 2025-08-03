@@ -12,7 +12,7 @@
 
 class DH_WespeTank extends DHArmoredVehicle;
 
-public function SpawnVehicleAttachments()
+simulated function SpawnVehicleAttachments()
 {
     local int i;
     local DHIdentifierAttachment IdentifierAttachment;
@@ -273,7 +273,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.7) // default is -0.5
+        KCOMOffset=(Z=0.3)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

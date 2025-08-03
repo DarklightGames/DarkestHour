@@ -17,6 +17,10 @@ defaultproperties
     HitMapMarkerClass=class'DHMapMarker_ArtilleryHit_HE'
     ShellImpactDamage=class'DHShellHEImpactDamageType_Artillery'
 
+    //Effects
+    bHasTracer=false
+    bHasShellTrail=false
+
     // Speed=28486.0
     // MaxSpeed=28486.0
     ShellDiameter=10.5

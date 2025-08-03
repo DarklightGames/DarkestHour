@@ -10,10 +10,10 @@ defaultproperties
     GunClass=class'DH_WespeCannon'
     
     DriverPositions(0)=(TransitionUpAnim="gunsight_out",ViewFOV=40.0,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(DriverTransitionAnim="wespe_gunner_lower",TransitionDownAnim="gunsight_in",TransitionUpAnim="stand",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
-    DriverPositions(2)=(DriverTransitionAnim="wespe_gunner_raise",TransitionDownAnim="sit",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(1)=(DriverTransitionAnim="wespe_gunner_lower",TransitionDownAnim="gunsight_in",TransitionUpAnim="raise",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(2)=(DriverTransitionAnim="wespe_gunner_raise",TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="wespe_gunner_binocs",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
-
+    
     GunsightPositions=-1    // This has no "gunsight" position.
     UnbuttonedPositionIndex=0
     SpottingScopePositionIndex=0
