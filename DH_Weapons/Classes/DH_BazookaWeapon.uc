@@ -29,8 +29,8 @@ defaultproperties
     MagPartialReloadAnims(0)="reload_empty"
 
     RangeDistanceUnit=DU_Yards
-    RangeSettings(0)=(Range=50,FirePitch=165,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
-    RangeSettings(1)=(Range=100,FirePitch=1200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
-    RangeSettings(2)=(Range=150,FirePitch=3000,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
-}
+    RangeSettings(0)=(Range=100,FirePitch=165,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
+    RangeSettings(1)=(Range=200,FirePitch=1200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
+    RangeSettings(2)=(Range=300,FirePitch=3000,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
+}D
 
