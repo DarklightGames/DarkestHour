@@ -5964,7 +5964,7 @@ function DHDrawTypingPrompt(Canvas C)
 
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 
-    // Draw the prompt for cycling chat modes; otherwise
+    // Draw the button prompt for cycling chat modes.
     PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
     YPos += YL;
     C.SetPos(XPos, YPos);
