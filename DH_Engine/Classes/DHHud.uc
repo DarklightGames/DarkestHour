@@ -128,6 +128,7 @@ var     localized string    BlackoutText;
 var     localized string    PlaceRallyPointText;
 var     localized string    SayTypeConsoleText;
 var     localized string    SayTypeAllText;
+var     localized string    TypingPromptText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -5924,7 +5925,7 @@ function DHDrawTypingPrompt(Canvas C)
     local float XL, YL;
     local DHConsole Console;
     local Color SayTypeColor;
-    local string SayTypeText;
+    local string SayTypeText, PromptText;
     local class<DHLocalMessage> SayTypeMessageClass;
 
     Console = DHConsole(PlayerConsole);
@@ -5962,6 +5963,13 @@ function DHDrawTypingPrompt(Canvas C)
     SayTypeText = Class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ Class'GameInfo'.static.MakeColorCode(WhiteColor);
 
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
+
+    // Draw the prompt for cycling chat modes; otherwise
+    PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+    YPos += YL;
+    C.SetPos(XPos, YPos);
+    C.DrawColor.A = 128;
+    C.DrawTextClipped(PromptText, true);
 }
 
 // Modified from ROHud to pass the right name of the weapon and fix the font.
@@ -6060,6 +6068,7 @@ defaultproperties
     SpawnNoRoleText="Press [ESC] to select a role"
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
+    TypingPromptText="Press [{0}] to change chat channel"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture
