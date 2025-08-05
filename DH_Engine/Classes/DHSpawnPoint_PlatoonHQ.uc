@@ -103,7 +103,7 @@ function Timer()
     // Danger Zone
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
     {
-        BlockReason = SPBR_EnemiesNearby;
+        Construction.Destroy();
     }
 }
 
