@@ -85,7 +85,7 @@ simulated function OnPlaced()
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
             SpawnPoint.BlockReason = SPBR_Constructing;
-            // SpawnPoint.ResetEstablishmentTimer();
+            SpawnPoint.ResetEstablishmentTimer();
         }
     }
 }
@@ -113,10 +113,6 @@ simulated function OnConstructed()
                 Warn("Hey yo something done fucked up, bad spawn locations afoot");
                 Destroy();
             }
-
-            SpawnPoint.SetTeamIndex(GetTeamIndex());
-            SpawnPoint.SetIsActive(true);
-            SpawnPoint.ResetEstablishmentTimer();
         }
 
         if (Radio == none)
