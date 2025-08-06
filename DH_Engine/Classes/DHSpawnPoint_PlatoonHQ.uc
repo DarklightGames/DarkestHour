@@ -103,6 +103,7 @@ function Timer()
     // Danger Zone
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()) && Construction != none)
     {
+        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 5,,, Class);
         Construction.BreakMe();
     }
 }
