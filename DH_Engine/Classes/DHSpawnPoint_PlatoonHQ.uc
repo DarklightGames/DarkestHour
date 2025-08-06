@@ -103,7 +103,7 @@ function Timer()
     // Danger Zone
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()) && Construction != none)
     {
-        Construction.Destroy();
+        Construction.BreakMe();
     }
 }
 
