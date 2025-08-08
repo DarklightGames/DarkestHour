@@ -166,7 +166,7 @@ simulated state Broken
     {
         super.BeginState();
 
-        if (SpawnPoint != none)
+        if (SpawnPoint != none && SpawnPoint.BlockReason != SPBR_InDangerZone)
         {
             // "A Command Post has been destroyed."
             Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, Class);
