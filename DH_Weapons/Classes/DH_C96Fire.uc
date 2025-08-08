@@ -15,6 +15,7 @@ defaultproperties
     Spread=200.0
     MaxVerticalRecoilAngle=870
     MaxHorizontalRecoilAngle=350
+    FireRate=0.22
 
     ShellEjectClass=Class'ShellEject1st9x19mm'
     ShellHipOffset=(X=0.0,Y=0.0,Z=0.0)

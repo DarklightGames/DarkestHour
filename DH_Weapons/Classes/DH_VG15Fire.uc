@@ -12,7 +12,7 @@ defaultproperties
     Spread=85.0
     MaxVerticalRecoilAngle=340
     MaxHorizontalRecoilAngle=150
-    FireRate=0.21
+    FireRate=0.20
 
     FireSounds(0)=SoundGroup'DH_old_inf_Weapons.vg15shot1'
     FireSounds(1)=SoundGroup'DH_old_inf_Weapons.vg15shot2'
