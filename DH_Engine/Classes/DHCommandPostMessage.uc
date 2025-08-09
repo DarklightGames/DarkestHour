@@ -10,6 +10,7 @@ var localized string ActivatedMessage;
 var localized string OverrunMessage;
 var localized string DestroyedMessage;
 var localized string ConstructedMessage;
+var localized string DestroyedDangerZoneMessage;
 
 static function string GetString(
     optional int Switch,
@@ -35,6 +36,9 @@ static function string GetString(
         case 4:
             S = Repl(default.ConstructedMessage, "{seconds}", Class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
             break;
+        case 5:
+            S = default.DestroyedDangerZoneMessage;
+            break;
     }
 
     ConstructionClass = class<DHConstruction>(OptionalObject);
@@ -54,5 +58,6 @@ defaultproperties
     OverrunMessage="A {name} has been overrun by the enemy."
     DestroyedMessage="A {name} has been destroyed."
     ConstructedMessage="A {name} has been constructed and will be established in {seconds} seconds."
+    DestroyedDangerZoneMessage="A {name} has been lost to captured territory."
 }
 
