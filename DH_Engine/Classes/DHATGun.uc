@@ -39,9 +39,10 @@ var float             RotationsPerSecond;
 var String            SentinelString;
 var Rotator           OldRotator;
 var bool              bOldIsRotating;
+var float             RotationGunWeight;
 
 var Material          RotationProjectionTexture;
-var DynamicProjector    RotationProjector;
+var DynamicProjector  RotationProjector;
 
 
 replication
@@ -346,7 +347,7 @@ function ServerEnterRotation(DHPawn Instigator)
         return;
     }
 
-    Instigator.GunToRotate =self;
+    Instigator.GunToRotate =  self;
     RotateControllerPawn = Instigator;
     GotoState('Rotating');
 }
@@ -365,14 +366,55 @@ function ServerRotate(byte InputRotationFactor)
 
     if (InputRotationFactor > 127)
     {
-        F = InputRotationFactor - 256;
+        F = InputRotationFactor - 256;// GetRotationStrength(InputRotationFactor - 256);
     }
     else
     {
-        F = InputRotationFactor;
+        F = InputRotationFactor; // GetRotationStrength(InputRotationFactor);
+    }
+    HandleRotate(F);
+}
+
+function float GetRotationStrength()
+{
+    local Pawn P;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local float Factor;
+    local int PlayersNearby;
+    local float MaxPlayers;
+
+    Log("RotationGunWeight: " @ RotationGunWeight);
+
+    PlayersNearby = 1;
+    MaxPlayers = 6.0;
+
+    if (RotateControllerPawn != none)
+    {
+        PRI = DHPlayerReplicationInfo(RotateControllerPawn.PlayerReplicationInfo);
+
+        if (PRI != none)
+        {
+            foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(10))
+            {
+                OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+                if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+                {
+                    PlayersNearby++;
+                }
+            }
+        }
+        Log("PlayersNearby: " @ PlayersNearby);
     }
 
-    HandleRotate(F);
+    //Math is hard mkay, need a proper algorithm here
+    Factor = RotationGunWeight / FClamp(PlayersNearby, 1, 6);
+    Log("Rotation Weight: " @ RotationGunWeight);
+    Log("PlayersNearby: " @ FClamp(PlayersNearby, 1, 6));
+    Log("Factor: " @ Factor);
+    Log("Rotation Result: " @ 3000 - Factor);
+
+    return 3200 - Factor;
 }
 
 // HACK - This will only make sure the gun visibly rotates on the client
@@ -380,7 +422,6 @@ function ServerRotate(byte InputRotationFactor)
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientEnterRotation()
 {
-
     local Vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
@@ -508,6 +549,7 @@ state Rotating
 
     function HandleRotate(int RotationFactor)
     {
+        RotatingActor.RotationRate.Yaw = GetRotationStrength();
         RotatingActor.SetRotationFactor(RotationFactor);
 
         if (RotateSoundAttachment != none)
@@ -746,6 +788,7 @@ defaultproperties
     bReplicateMovement=true
     bSkipActorPropertyReplication=false
     OldBase=none
+    RotationGunWeight=700
     RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
 
     // Karma properties
