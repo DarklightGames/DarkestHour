@@ -7403,70 +7403,9 @@ simulated function bool IsLoggedInAsAdmin()
 function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
                                       PlayerReplicationInfo Recipient,
                                       name messagetype, byte messageID,
-                                      optional Pawn senderPawn, optional Vector senderLocation)
+                                      optional Pawn senderPawn, optional vector senderLocation)
 {
-    local VoicePack Voice;
-    local ROVoicePack V;
-    local bool bIsTeamVoice;
-    local class<ROVoicePack> ROV;
-    local class<DHVoicePack> DHV;
-    local ROPlayerReplicationInfo PRI;
-    local DH_LevelInfo LI;
-
-    if (Sender == none || Sender.VoiceType == none || Sender.Team == none ||
-        Player == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
-    {
-        return;
-    }
-
-    PRI = ROPlayerReplicationInfo(Sender);
-    bIsTeamVoice = Level.GetLocalPlayerController().PlayerReplicationInfo.Team != none && Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex;
-
-    if (PRI != none && PRI.RoleInfo != none)
-    {
-        ROV = Class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, Class'Class'));
-        DHV = Class<DHVoicePack>(ROV);
-
-        if (DHV != none)
-        {
-            LI = Class'DH_LevelInfo'.static.GetInstance(Level);
-            ROV = DHV.static.GetVoicePackClass(LI.GetTeamNationClass(int(!bool(Sender.Team.TeamIndex))));
-        }
-
-        V = Spawn(ROV, self);
-
-        if (V != none)
-        {
-            V.bUseLocationalVoice = true;
-            V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
-
-            if (bIsTeamVoice)
-            {
-                if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
-                {
-                    VehicleVoiceMessage(Sender, V.getClientParsedMessage());
-                }
-                else if (MessageType == 'TAUNT')
-                {
-                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
-                }
-                else
-                {
-                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
-                }
-            }
-        }
-    }
-    else
-    {
-        Voice = Spawn(Sender.VoiceType, self);
-
-        if (Voice != none)
-        {
-            Log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
-            Voice.ClientInitialize(Sender, Recipient, MessageType, MessageID);
-        }
-    }
+    SendVoiceMessage(Sender, Recipient, MessageType, MessageID, messagetype, SenderPawn, SenderLocation);
 }
 
 function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
@@ -7492,118 +7431,105 @@ static function bool IsDHValidDistanceForMessageType(name MessageType, float Dis
 
     if (MessageType == 'ORDER' || MessageType == 'SUPPORT' || MessageType == 'ACK' || MessageType == 'ENEMY' || MessageType == 'ALERT' || MessageType == 'TAUNT')
     {
-
-        return class'DHUnits'.static.UnrealToMeters(Distance) < 50;
+        //Can barely hear at 70 meters
+        return class'DHUnits'.static.UnrealToMeters(Distance) < 70;
     }
     return true;
-
 }
 
-function TeamClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
+function RecieveInfantryVoice(PlayerReplicationInfo Sender,
                                       PlayerReplicationInfo Recipient,
-                                      name messagetype, byte messageID, float DistanceToOther,
-                                      optional Pawn senderPawn, optional vector senderLocation)
-{
-    local VoicePack voice;
-    local ROVoicePack V;
-    local bool isTeamVoice;
-    local class<ROVoicePack> rov;
-    local ROPlayerReplicationInfo playerRepInfo;
-
-    if ((Sender == None) || (Sender.voicetype == None) || (Player.Console == None))
-        return;
-
-    playerRepInfo = ROPlayerReplicationInfo(Sender);
-    if (playerRepInfo != none && playerRepInfo.RoleInfo != none)
-    {
-        rov = class<ROVoicePack>(DynamicLoadObject(playerRepInfo.RoleInfo.AltVoiceType, class'Class'));
-        V = Spawn(rov, self);
-
-        if (V != none && IsDHValidDistanceForMessageType(MessageType, DistanceToOther))
-        {
-            V.ClientInitializeLocational(Sender, Recipient, messagetype, messageID, senderPawn, senderLocation);
-
-            if (MessageType == 'TAUNT')
-                TeamMessage(Sender, V.getClientParsedMessage(),'SAY');
-            else
-                TeamMessage(Sender, V.getClientParsedMessage(),'TEAMSAY');
-        }
-    }
-    else
-    {
-       voice = Spawn(Sender.voicetype, self);
-       if (voice != None )
-       {
-          log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
-          voice.ClientInitialize(Sender, Recipient, messagetype, messageID);
-       }
-    }
-}
-
-function SendVoiceMessage(PlayerReplicationInfo Sender,
-                          PlayerReplicationInfo Recipient,
-                          name MessageType,
-                          byte MessageID,
-                          name BroadcastType,
-                          optional Pawn SoundSender,
-                          optional Vector SenderLocation)
+                                      name messagetype, byte messageID,
+                                      optional Pawn SenderPawn, optional Vector senderLocation)
 {
     local Controller P;
-    local ROPlayer ROP;
     local DHPlayer DHP;
-    local ROBot ROB;
+    local ROPlayerReplicationInfo playerRepInfo;
+    local class<ROVoicePack> ROV;
+    local class<DHVoicePack> DHV;
+    local ROVoicePack V;
+    local DH_LevelInfo LI;
     local float DistanceToOther;
-    local array<Controller> VehicleOccupants;
-    local int i;
 
-    if (!AllowVoiceMessage(MessageType))
+    if (Pawn != none)
     {
-        return;
-    }
+        playerRepInfo = ROPlayerReplicationInfo(Sender);
 
-    if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
-    {
-        SendVehicleVoiceMessage(Sender, Recipient, MessageType, MessageID, BroadcastType);
-        return;
-    }
-
-    for (P = Level.ControllerList; P != none; P = P.NextController)
-    {
-        DHP = DHPlayer(P);
-
-        if (DHP != none)
+        if (playerRepInfo == none)
         {
-            // Sender is banned by recipient
-            if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
+            return;
+        }
+        
+        ROV = Class<ROVoicePack>(DynamicLoadObject(playerRepInfo.RoleInfo.VoiceType, Class'Class'));
+        DHV = Class<DHVoicePack>(ROV);
+        if (DHV != none)
+        {
+            LI = Class'DH_LevelInfo'.static.GetInstance(Level);
+            ROV = DHV.static.GetVoicePackClass(LI.GetTeamNationClass(int(!bool(Sender.Team.TeamIndex))));
+        }
+
+
+        V = Spawn(ROV, self);
+
+        if (V != none)
+        {
+            V.bUseLocationalVoice = true;
+            V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
+        }
+
+        for (P = Level.ControllerList; P != none; P = P.NextController)
+        {
+            DHP = DHPlayer(P);
+
+            if (Pawn == none || DHP == none || DHP.PlayerReplicationInfo == none)
             {
                 continue;
             }
 
-            if (Pawn != none)
+            // Sender is banned by recipient
+            if (DHP.ChatManager != none && !DHP.ChatManager.AcceptSpeech(Sender))
+            {
+                continue;
+            }
+
+            if (V != none)
             {
                 // do we want people who are dead to hear voice commands? - Antarian
                 if (DHP.Pawn != none && Pawn != DHP.Pawn)
                 {
+
                     if (DHP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
                     {
+
                         DistanceToOther = VSize(Pawn.Location - DHP.Pawn.Location);
-                        DHP.TeamClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, DistanceToOther, none, SenderLocation);
+                        DHP.ClientLocationalVoiceMessageTeam(Sender, MessageType, MessageID, DistanceToOther, V);
                     }
                     else
                     {
-                        DHP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                        //Enemy, they don't see our text chat
+                        //DHP.ClientLocationalVoiceMessageEnemy(Sender, Recipient, MessageType, MessageID);
                     }
                 }
                 else
                 {
                     // Sending to self
-                    DHP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                    DHP.ClientLocationalVoiceMessageSelf(Sender, MessageType, MessageID, V);
                 }
+            }
+            else
+            {
+                ClientVoiceFallBack(Sender, Recipient, MessageType, MessageID);
             }
         }
     }
+}
 
-    // Add to 'help request' array if needed
+function ClientLocationalVoiceMessageTeam(PlayerReplicationInfo Sender, name Messagetype, byte MessageID, float DistanceToOther, ROVoicePack V)
+{
+    if (IsDHValidDistanceForMessageType(Messagetype, DistanceToOther))
+        TeamMessage(Sender, V.getClientParsedMessage(),'TEAMSAY');
+
+        // Add to 'help request' array if needed
     if (MessageType == 'ATTACK')
     {
         AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 1, GetObjectiveLocation(MessageID)); // Send locations all the time (easier on hud drawing code)
@@ -7632,11 +7558,81 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
     }
 }
 
+function ClientLocationalVoiceMessageSelf(PlayerReplicationInfo Sender, name Messagetype, float DistanceToOther, ROVoicePack V)
+{
+    if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+    {
+        VehicleVoiceMessage(Sender, V.getClientParsedMessage());
+    }
+    else if (MessageType == 'TAUNT')
+    {
+        TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+    }
+    else
+    {
+        TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+    }
+}
+
+function ClientLocationalVoiceMessageEnemy(PlayerReplicationInfo Sender, name Messagetype, float DistanceToOther, ROVoicePack V)
+{
+    if (MessageType == 'TAUNT')
+    {
+        TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+    }
+    else
+    {
+        TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+    }
+}
+
+function ClientVoiceFallBack(PlayerReplicationInfo Sender, PlayerReplicationInfo Recipient,
+                                      name messagetype, byte messageID)
+{
+    local VoicePack Voice;
+
+    Voice = Spawn(Sender.VoiceType, self);
+
+    if (Voice != none)
+    {
+        Log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
+        Voice.ClientInitialize(Sender, Recipient, MessageType, MessageID);
+    }
+}
+
+
+function SendVoiceMessage(PlayerReplicationInfo Sender,
+                          PlayerReplicationInfo Recipient,
+                          name MessageType,
+                          byte MessageID,
+                          name broadcasttype,
+                          optional Pawn SoundSender,
+                          optional Vector SenderLocation
+                          )
+{
+    Log("SendVoiceMessage: " @ MessageType);
+
+    if (!AllowVoiceMessage(MessageType))
+    {
+        Log("SendVoiceMessage: AllowVoiceMessage returned false for MessageType: " @ MessageType);
+        return;
+    }
+
+    if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+    {
+        SendVehicleVoiceMessage(Sender, Recipient, MessageType, MessageID, broadcasttype);
+        return;
+    }
+
+    RecieveInfantryVoice(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+}
+
 function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
                                  PlayerReplicationInfo Recipient,
                                  name MessageType,
                                  byte MessageID,
-                                 name BroadcastType)
+                                 name broadcasttype
+                                 )
 {
     local ROPlayer ROP,P;
     local int i;
@@ -7647,7 +7643,7 @@ function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
 
     for (i = 0; i < VehicleOccupants.Length; ++i)
     {
-        ROP =  ROPlayer(VehicleOccupants[i]);
+        ROP = ROPlayer(VehicleOccupants[i]);
 
         // Sender is banned by recipient
         if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
