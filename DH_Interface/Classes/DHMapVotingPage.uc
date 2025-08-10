@@ -11,6 +11,13 @@ var localized string                            NoChangeMapPrivilegeText;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
+var automated GUILabel  l_MapPreviewName;
+var automated GUIImage  i_MapPreviewImage;
+
+var automated GUIScrollTextBox lb_MapPreviewDesc;
+
+var CacheManager.MapRecord mapRecord;
+
 
 function InternalOnOpen()
 {
@@ -30,6 +37,40 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
+function UpdatePreview(GUIComponent Sender)
+{
+    local int MapIndex;
+    local string MapName;
+    local string MapDesc;
+
+    if (Sender == lb_VoteCountListBox.List)
+    {
+        MapIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedMapIndex();
+    }
+    else
+    {
+        MapIndex = MapVoteMultiColumnList(lb_MapListBox.List).GetSelectedMapIndex();
+    }
+
+    if (MapIndex > -1)
+    {
+
+        MapName = class'DHMapDatabase'.static.GetMapNameForCache(MVRI.MapList[MapIndex].MapName);
+        mapRecord = class'CacheManager'.static.GetMapRecord(MapName); //DH-Armored_La_Fueille_Advance
+
+        l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
+        i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
+        MapDesc = mapRecord.Description;
+
+        if (MapDesc != "")
+        {
+            lb_MapPreviewDesc.SetContent(MapDesc);
+        }
+        else
+        {
+            lb_MapPreviewDesc.SetContent("No description available.");
+
+        }
 function ForceMapVote(GUIComponent Sender)
 {
     local int MapIndex, GameConfigIndex;
@@ -95,7 +136,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex, GameConfigIndex);
             }
             else
             {
@@ -113,7 +154,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex, GameConfigIndex);
             }
             else
             {
@@ -139,6 +180,10 @@ function bool InternalOnClick(GUIComponent Sender)
     {
         OnFilterClear();
         return true;
+    }
+    else if (Sender == lb_MapListBox)
+    {
+        UpdatePreview(Sender);
     }
 }
 
@@ -169,11 +214,10 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
-
     lmsgMode(0)="Majority Wins"
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
-        WinWidth=0.96
+        WinWidth=0.5
         WinHeight=0.50
         WinLeft=0.02
         WinTop=0.371020
@@ -182,28 +226,30 @@ defaultproperties
         bScaleToParent=true
         bBoundToParent=true
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.40 // Map Name
-        HeaderColumnPerc(1)=0.15 // Allied Country
-        HeaderColumnPerc(2)=0.15 // Axis Country
+        HeaderColumnPerc(0)=0.40 // Name
+        HeaderColumnPerc(1)=0.15 // Allies
+        HeaderColumnPerc(2)=0.15 // Axis
         HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.15 // Player Range
+        HeaderColumnPerc(4)=0.15 // Size
+        OnChange=UpdatePreview
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.MapListBox'
 
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
         HeaderColumnPerc(1)=0.3 // Votes
-        HeaderColumnPerc(2)=0.3 // Player Range
+        HeaderColumnPerc(2)=0.3 // Size
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
         bVisibleWhenEmpty=true
         OnCreateComponent=VoteCountListBox.InternalOnCreateComponent
         StyleName="ServerBrowserGrid"
         WinTop=0.077369
         WinLeft=0.02
-        WinWidth=0.96
+        WinWidth=0.5
         WinHeight=0.26752
         bBoundToParent=true
         bScaleToParent=true
+        OnChange=UpdatePreview
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.VoteCountListBox'
@@ -225,8 +271,9 @@ defaultproperties
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.MapCountListBackground'
 
+
     Begin Object class=moEditBox Name=FilterEditbox
-        WinWidth=0.86
+        WinWidth=0.41
         WinHeight=0.12
         WinLeft=0.02
         WinTop=0.90
@@ -242,7 +289,7 @@ defaultproperties
     Begin Object Class=GUIButton Name=FilterClearButton
         WinWidth=0.08
         WinHeight=0.04
-        WinLeft=0.90
+        WinLeft=0.44
         WinTop=0.894
         Caption="Clear"
         FontScale=FNS_Small
@@ -253,6 +300,46 @@ defaultproperties
         bScaleToParent=true
     End Object
     b_FilterClear=FilterClearButton
+
+    Begin Object Class=GUILabel Name=MapPreviewName
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.125
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+        Caption="Map Preview"
+    End Object
+    l_MapPreviewName=MapPreviewName
+
+    Begin Object Class=GUIImage Name=MapPreviewImage
+		WinWidth=0.352002
+		WinHeight=0.337480
+		WinLeft=0.53
+		WinTop=0.2
+        ImageColor=(R=255,G=255,B=255,A=255)
+        ImageStyle=ISTY_Scaled
+        ImageRenderStyle=MSTY_Normal
+        RenderWeight=0.2
+    End Object
+    i_MapPreviewImage=MapPreviewImage
+
+    Begin Object Class=DHGUIScrollTextBox Name=MapPreviewDesc
+        bNoTeletype=true
+        CharDelay=0.0025
+        EOLDelay=0.5
+        OnCreateComponent=MapPreviewDesc.InternalOnCreateComponent
+        FontScale=FNS_Small
+        StyleName="DHLargeText"
+        WinWidth=0.358001
+        WinHeight=0.31
+        WinLeft=0.525
+        WinTop=0.545
+        bTabStop=false
+        bNeverFocus=true
+    End Object
+    lb_MapPreviewDesc=MapPreviewDesc
 
     f_Chat=none
 

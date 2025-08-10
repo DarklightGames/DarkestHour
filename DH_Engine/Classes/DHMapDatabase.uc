@@ -144,6 +144,10 @@ static function string GetHumanReadableMapName(string MapName)
     return Repl(Repl(Repl(MapName, "_", " "), ".rom", ""), "DH-", "");
 }
 
+static function string GetMapNameForCache(string MapName)
+{
+    return Repl(MapName, ".rom", "");
+}
 
 defaultproperties
 {
