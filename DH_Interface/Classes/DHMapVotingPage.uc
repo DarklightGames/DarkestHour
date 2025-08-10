@@ -71,6 +71,9 @@ function UpdatePreview(GUIComponent Sender)
             lb_MapPreviewDesc.SetContent("No description available.");
 
         }
+    }
+}
+
 function ForceMapVote(GUIComponent Sender)
 {
     local int MapIndex, GameConfigIndex;
