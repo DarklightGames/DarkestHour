@@ -22,6 +22,7 @@ var localized string BusyText;
 var localized string ExhaustedText;
 var localized string RemainingText;
 var localized string MaxActiveText;
+var localized string NoSquadMembersNearbyText;
 var localized string MoreText;
 
 var class<DHConstructionGroup> GroupClass;
@@ -243,6 +244,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoIcon = default.SquadIcon;
             ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
             break;
+        case ERROR_SLCantBuildAlone:
+            ORI.InfoIcon = default.SquadIcon;
+            ORI.InfoText[0] = default.NoSquadMembersNearbyText;
+            break;
         default:
             ORI.InfoIcon = SuppliesIcon;
             ORI.InfoText[0] = string(ConstructionClass.static.GetSupplyCost(Context));
@@ -293,6 +298,7 @@ defaultproperties
     ExhaustedText="Exhausted"
     RemainingText="{0} Remaining"
     MaxActiveText="{0}/{1} Active"
+    NoSquadMembersNearbyText="Squad absent"
     BusyText="Busy"
     MoreText="More"
     SlotCountOverride=8

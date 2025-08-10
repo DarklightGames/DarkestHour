@@ -38,7 +38,8 @@ enum EConstructionErrorType
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
     ERROR_SocketOccupied,           // The construction socket is already occupied.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
-    ERROR_Other
+    ERROR_Other,
+    ERROR_SLCantBuildAlone,         // There are no squad members within 50 meters
 };
 
 var struct ConstructionError
@@ -1202,6 +1203,12 @@ static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
+    }
+    
+    if (!P.CanSquadPlaceConstruction())
+    {
+        E.Type = ERROR_SLCantBuildAlone;
         return E;
     }
 
