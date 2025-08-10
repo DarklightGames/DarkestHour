@@ -21,6 +21,7 @@ defaultproperties
     ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
     bCanBeRotated=true
+    RotationGunWeight=780
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     ShadowZOffset=20.0
     bIsArtilleryVehicle=true
