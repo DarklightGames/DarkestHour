@@ -70,8 +70,8 @@ function Timer()
     {
         BlockReason = SPBR_InDangerZone;
 
-        // "A Command Post has been lost to captured territory."
-        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 5,,, Construction.Class);
+        // "A Command Post has been overrun by the enemy."
+        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 2,,, Construction.Class);
         Construction.BreakMe();
         return;
     }
