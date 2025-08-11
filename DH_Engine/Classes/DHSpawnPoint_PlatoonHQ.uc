@@ -70,8 +70,12 @@ function Timer()
     {
         BlockReason = SPBR_InDangerZone;
 
-        // "A Command Post has been overrun by the enemy."
-        Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 2,,, Construction.Class);
+        if (bIsEstablished)
+        {
+            // "A Command Post has been overrun by the enemy."
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 2,,, Construction.Class);
+        }
+
         Construction.BreakMe();
         return;
     }
