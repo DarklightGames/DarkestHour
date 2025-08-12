@@ -8,6 +8,7 @@ class DHMapVotingPage extends MapVotingPage;
 var localized string                            lmsgMapOutOfBounds;
 var localized string                            NoRestartMapPrivilegeText;
 var localized string                            NoChangeMapPrivilegeText;
+var localized string                            NoDescriptionAvailable;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
@@ -16,7 +17,7 @@ var automated GUIImage  i_MapPreviewImage;
 
 var automated GUIScrollTextBox lb_MapPreviewDesc;
 
-var CacheManager.MapRecord mapRecord;
+var CacheManager.MapRecord MapRecord;
 
 
 function InternalOnOpen()
@@ -56,11 +57,11 @@ function UpdatePreview(GUIComponent Sender)
     {
 
         MapName = class'DHMapDatabase'.static.GetMapNameForCache(MVRI.MapList[MapIndex].MapName);
-        mapRecord = class'CacheManager'.static.GetMapRecord(MapName); //DH-Armored_La_Fueille_Advance
+        MapRecord = class'CacheManager'.static.GetMapRecord(MapName); //DH-Armored_La_Fueille_Advance
 
         l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
-        i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
-        MapDesc = mapRecord.Description;
+        i_MapPreviewImage.Image = Material(DynamicLoadObject(MapRecord.ScreenshotRef, class'Material'));
+        MapDesc = MapRecord.Description;
 
         if (MapDesc != "")
         {
@@ -68,7 +69,7 @@ function UpdatePreview(GUIComponent Sender)
         }
         else
         {
-            lb_MapPreviewDesc.SetContent("No description available.");
+            lb_MapPreviewDesc.SetContent(NoDescriptionAvailable);
 
         }
     }
@@ -334,7 +335,7 @@ defaultproperties
         EOLDelay=0.5
         OnCreateComponent=MapPreviewDesc.InternalOnCreateComponent
         FontScale=FNS_Small
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinWidth=0.358001
         WinHeight=0.31
         WinLeft=0.525
@@ -350,4 +351,5 @@ defaultproperties
 
     NoRestartMapPrivilegeText="You don't have sufficient admin privileges to restart a map!"
     NoChangeMapPrivilegeText="You don't have sufficient admin privileges to change a map!"
+    NoDescriptionAvailable="No description available."
 }

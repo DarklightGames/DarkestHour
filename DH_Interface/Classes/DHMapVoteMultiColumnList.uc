@@ -253,7 +253,7 @@ defaultproperties
 {
     // Map Name | Allied Nation | Axis Nation | Game Type | Map Size
     ColumnHeadings(0)="Name"
-    ColumnHeadings(1)="Allied"
+    ColumnHeadings(1)="Allies"
     ColumnHeadings(2)="Axis"
     ColumnHeadings(3)="Type"
     ColumnHeadings(4)="Size"
@@ -265,7 +265,7 @@ defaultproperties
     InitColumnPerc(4)=0.15
 
     ColumnHeadingHints(0)="The map's name."
-    ColumnHeadingHints(1)="The Allied country for the map."
+    ColumnHeadingHints(1)="The Allies country for the map."
     ColumnHeadingHints(2)="The Axis country for the map."
     ColumnHeadingHints(3)="What type of game or battle for the map."
     ColumnHeadingHints(4)="Recommended players for the map."
