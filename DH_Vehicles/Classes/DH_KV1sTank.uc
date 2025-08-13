@@ -41,8 +41,8 @@ defaultproperties
 
     // Driver overlay
     HUDOverlayClass=Class'KV1DriverOverlay'
-    HUDOverlayOffset=(X=0,Y=0,Z=0)
-    HUDOverlayFOV=85
+    HUDOverlayOffset=(X=2,Y=0,Z=0)
+    HUDOverlayFOV=70
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.0,Slope=-25.0,MaxRelativeHeight=6.5,LocationName="lower")
