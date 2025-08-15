@@ -136,9 +136,7 @@ var     globalconfig bool   bShowDeathMessages;     // whether or not to show th
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
-var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
 var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
-var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -996,12 +994,6 @@ function DrawHudPassC(Canvas C)
                 MyWeapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
             }
         }
-    }
-
-    // Draw indicators
-    if (bShowIndicators)
-    {
-        DrawIndicators(C);
     }
 
     // Objective capture bar
@@ -4463,41 +4455,6 @@ function DisplayMessages(Canvas C)
     }
 }
 
-function DrawIndicators(Canvas Canvas)
-{
-    if (PlayerOwner == none || PawnOwnerPRI == none)
-    {
-        return;
-    }
-
-    if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 12)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Red;
-        PacketLossIndicator.Tints[0].A = 255;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 8)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.OrangeRed;
-        PacketLossIndicator.Tints[0].A = 210;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 4)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Orange;
-        PacketLossIndicator.Tints[0].A = 180;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Yellow;
-        PacketLossIndicator.Tints[0].A = 150;
-    }
-    else
-    {
-        return;
-    }
-
-    DrawSpriteWidget(Canvas, PacketLossIndicator);
-}
-
 function DrawCaptureBar(Canvas Canvas)
 {
     local DHObjective           Objective;
@@ -6026,8 +5983,6 @@ defaultproperties
     ConsoleMessageCount=8
     ConsoleFontSize=6
     MessageFontOffset=0
-    bShowIndicators=true
-    MinPromptPacketLoss=10
 
     bShowVehicleVisionCone=true
 

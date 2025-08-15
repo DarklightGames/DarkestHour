@@ -8,7 +8,6 @@ class DHTab_Hud extends ROTab_Hud;
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
-var automated moCheckBox    ch_ShowIndicators;
 var automated moCheckBox    ch_ShowVehicleVisionCone;
 var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
@@ -17,7 +16,6 @@ var automated moCheckBox    ch_UseNativeItemNames;
 var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
-var bool bShowIndicators;
 var bool bShowVehicleVisionCone;
 var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
@@ -34,7 +32,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
-    i_BG1.ManageComponent(ch_ShowIndicators);
     i_BG1.ManageComponent(ch_ShowVehicleVisionCone);
     i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
     i_BG1.ManageComponent(ch_UseNativeItemNames);
@@ -55,17 +52,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     switch (Sender)
     {
-        case ch_ShowIndicators:
-            if (H != none)
-            {
-                bShowIndicators = H.bShowIndicators;
-            }
-            else
-            {
-                bShowIndicators = Class'DHHud'.default.bShowIndicators;
-            }
-            ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
-            break;
         case ch_SimpleColours:
             if (H != none)
             {
@@ -305,13 +291,6 @@ function SaveSettings()
 
     if (H != none)
     {
-        if (H.bShowIndicators != bShowIndicators)
-        {
-            H.bShowIndicators = bShowIndicators;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowIndicators" @ string(bShowIndicators));
-            bSave = true;
-        }
-
         if (H.bShowVehicleVisionCone != bShowVehicleVisionCone)
         {
             H.bShowVehicleVisionCone = bShowVehicleVisionCone;
@@ -369,7 +348,6 @@ function SaveSettings()
     else
     {
         Class'DHHud'.default.bShowCompass = bShowCompass;
-        Class'DHHud'.default.bShowIndicators = bShowIndicators;
         Class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
         Class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         Class'DHHud'.default.bSimpleColours = bSimpleColours;
@@ -383,9 +361,6 @@ function InternalOnChange(GUIComponent Sender)
 {
     switch (Sender)
     {
-        case ch_ShowIndicators:
-            bShowIndicators = ch_ShowIndicators.IsChecked();
-            break;
         case ch_ShowVehicleVisionCone:
             bShowVehicleVisionCone = ch_ShowVehicleVisionCone.IsChecked();
             break;
@@ -492,22 +467,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.GameHudShowDeathMessages'
-
-    Begin Object Class=DHmoCheckBox Name=GameHudShowIndicators
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Packet Loss Indicator"
-        OnCreateComponent=GameHudShowIndicators.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.373749
-        WinHeight=0.034156
-        TabOrder=29
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowIndicators=DHmoCheckBox'DH_Interface.GameHudShowIndicators'
 
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left
