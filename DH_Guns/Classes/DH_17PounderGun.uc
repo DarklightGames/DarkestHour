@@ -21,7 +21,8 @@ defaultproperties
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     VehicleMass=11.0
     bCanBeRotated=true
-    PlayersNeededToRotate=2
+    RotationGunWeight=3000
+    PlayersNeededToRotate=1
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

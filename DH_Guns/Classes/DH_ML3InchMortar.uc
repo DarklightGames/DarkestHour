@@ -12,6 +12,7 @@ defaultproperties
     VehicleNameString="Ordnance ML 3-inch Mortar"
     VehicleTeam=1
     Mesh=SkeletalMesh'DH_ML3InchMortar_anm.ml3inch_body_ext'
+    RotationGunWeight=50
     //Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ML3InchCannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0

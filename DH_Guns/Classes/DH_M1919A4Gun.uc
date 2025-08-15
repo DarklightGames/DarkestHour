@@ -13,6 +13,7 @@ defaultproperties
     VehicleNameString="M1919A4 Browning Machine Gun"
     Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M2_BODY_EXT'
     bCanBeRotated=true
+    RotationGunWeight=20
     CollisionRadius=36.0
     CollisionHeight=36.0
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4MGPawn',WeaponBone="turret_placement")
