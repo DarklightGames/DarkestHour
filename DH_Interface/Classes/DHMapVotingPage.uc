@@ -335,10 +335,10 @@ defaultproperties
         EOLDelay=0.5
         OnCreateComponent=MapPreviewDesc.InternalOnCreateComponent
         FontScale=FNS_Small
-        StyleName="DHSmallText"
-        WinWidth=0.358001
+        StyleName="DHListSelectionGreyStyle"
+        WinWidth=0.352002
         WinHeight=0.31
-        WinLeft=0.525
+        WinLeft=0.53
         WinTop=0.545
         bTabStop=false
         bNeverFocus=true

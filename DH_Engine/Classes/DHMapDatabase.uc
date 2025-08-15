@@ -142,6 +142,7 @@ function bool GetMapInfo(string MapName, out SMapInfo MI)
 static function string GetHumanReadableMapName(string MapName)
 {
     return Repl(Repl(Repl(MapName, "_", " "), ".rom", ""), "DH-", "");
+}
 
 static function string GetHumanReadableMapNameWithoutType(string MapName)
 {
