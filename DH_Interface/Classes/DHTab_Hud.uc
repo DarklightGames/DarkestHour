@@ -24,7 +24,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     i_BG1.UnmanageComponent(ch_ShowMapUpdatedText);
+    i_BG1.UnmanageComponent(ch_ShowMapFirstSpawn);
+
     RemoveComponent(ch_ShowMapUpdatedText);
+    RemoveComponent(ch_ShowMapFirstSpawn);
 
     i_BG1.ManageComponent(ch_ShowRallyPoint);
     i_BG2.ManageComponent(ch_SimpleColours);
@@ -109,18 +112,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bUseNativeItemNames = Class'DHPlayer'.default.bUseNativeItemNames;
             }
             ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
-            break;
-        case ch_ShowMapFirstSpawn:
-            if (DHP != none)
-            {
-                bShowMapOnFirstSpawn = DHP.bShowMapOnFirstSpawn;
-            }
-            else
-            {
-                bShowMapOnFirstSpawn = Class'DHPlayer'.default.bShowMapOnFirstSpawn;
-            }
-            bShowMapOnFirstSpawnD=bShowMapOnFirstSpawn;
-            ch_ShowMapFirstSpawn.SetComponentValue(bShowMapOnFirstSpawn,true);
             break;
         case ch_ShowCompass:
             if (ROH != none)
@@ -212,21 +203,6 @@ function SaveSettings()
         else
         {
             Class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
-            Class'DHPlayer'.static.StaticSaveConfig();
-        }
-    }
-
-    if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
-    {
-        if (PC != none)
-        {
-            PC.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
-            PC.ConsoleCommand("set DH_Engine.DHPlayer bShowMapOnFirstSpawn" @ string(bShowMapOnFirstSpawn));
-            PC.SaveConfig();
-        }
-        else
-        {
-            Class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
             Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
