@@ -47,14 +47,11 @@ if not ucc_path.is_file():
     sys.exit(1)
 
 def run_packageflag(input_package: str, output_package: str = '\"\"', flag_line: str = '', mod: str = '') -> subprocess.Popen:
-    args = [
-        str(ucc_path),
-        'packageflag',
-        input_package,
-        output_package,
-    ]
+    args = [str(ucc_path), 'packageflag', input_package, output_package]
+
     if flag_line:
         args.append(flag_line)
+    
     if mod:
         args.append(f'-mod={mod}')
 
