@@ -165,7 +165,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     // Begin Drawing!
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName), FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetHumanReadableMapNameWithoutType(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName), FontScale);
 
     if (MapDatabase != none && MapDatabase.GetMapInfo(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, MI))
     {
@@ -221,7 +221,7 @@ function string GetSortString(int i)
     switch (SortColumn)
     {
         case 0: // Map name
-            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
+            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapNameWithoutType(VRI.MapList[i].MapName));
         case 1: // Allied country
             if (bHasMapInfo)
             {

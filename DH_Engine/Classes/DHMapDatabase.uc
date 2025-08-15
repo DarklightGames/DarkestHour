@@ -142,6 +142,10 @@ function bool GetMapInfo(string MapName, out SMapInfo MI)
 static function string GetHumanReadableMapName(string MapName)
 {
     return Repl(Repl(Repl(MapName, "_", " "), ".rom", ""), "DH-", "");
+
+static function string GetHumanReadableMapNameWithoutType(string MapName)
+{
+    return Repl(Repl(Repl(Repl(Repl(Repl(GetHumanReadableMapName(MapName), "Advance", ""), "Push", ""), "Clash", ""), "Stalemate", ""), "Defence", ""), "Domination", "");
 }
 
 static function string GetMapNameForCache(string MapName)
