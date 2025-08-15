@@ -36,21 +36,32 @@ flags:
 '''.format(packages='\n  '.join(Flag.names()))
 
 
-ro_path = Path(os.getenv('RODIR'))
-ucc_path = ro_path.joinpath('System\\UCC.exe')
+
+ro_path = Path(os.path.dirname(__file__)) / '..' / '..'
+ucc_path = ro_path / 'System' / 'UCC.exe'
+ucc_path = ucc_path.resolve()
+ucc_path = ucc_path.relative_to(Path.cwd())
 
 if not ucc_path.is_file():
     print('UCC.exe not found')
     sys.exit(1)
 
-
 def run_packageflag(input_package: str, output_package: str = '\"\"', flag_line: str = '', mod: str = '') -> subprocess.Popen:
-    cmd = 'ucc packageflag {input} {output}{flag_line}{mod}'.format(input=input_package,
-                                                                    output=output_package,
-                                                                    flag_line=f' {flag_line}' if flag_line else '',
-                                                                    mod=f' -mod={mod}' if mod else '')
-    # print('Running: ' + cmd)
-    return subprocess.Popen(cmd, executable=ucc_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    args = [
+        str(ucc_path),
+        'packageflag',
+        input_package,
+        output_package,
+    ]
+    if flag_line:
+        args.append(flag_line)
+    if mod:
+        args.append(f'-mod={mod}')
+
+    if sys.platform == 'linux':
+        args  = ['wine', 'cmd', '/c'] + args
+        
+    return subprocess.Popen(args)
 
 
 def read_stdout(process: subprocess.Popen) -> Iterable[str]:
