@@ -8,14 +8,12 @@ class DHTab_Hud extends ROTab_Hud;
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
-var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
 var automated moCheckBox    ch_UseNativeItemNames;
 
 var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
-var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
 var bool bUseNativeItemNames, bUseNativeItemNamesD;
 
@@ -29,7 +27,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     RemoveComponent(ch_ShowMapUpdatedText);
     RemoveComponent(ch_ShowMapFirstSpawn);
 
-    i_BG1.ManageComponent(ch_ShowRallyPoint);
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
@@ -123,17 +120,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bShowCompass = Class'ROHud'.default.bShowCompass;
             }
             ch_ShowCompass.SetComponentValue(bShowCompass,true);
-            break;
-        case ch_ShowRallyPoint:
-            if (ROH != none)
-            {
-                bShowRallyPoint = H.bShowRallyPoint;
-            }
-            else
-            {
-                bShowRallyPoint = Class'DHHud'.default.bShowRallyPoint;
-            }
-            ch_ShowRallyPoint.SetComponentValue(bShowRallyPoint, true);
             break;
         case sl_Opacity:
             fOpacity = (PlayerOwner().myHUD.HudOpacity / 255) * 100;
@@ -260,13 +246,6 @@ function SaveSettings()
             bSave = true;
         }
 
-        if (H.bShowRallyPoint != bShowRallyPoint)
-        {
-            H.bShowRallyPoint = bShowRallyPoint;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowRallyPoint" @ string(bShowRallyPoint));
-            bSave = true;
-        }
-
         if (H.bSimpleColours != bSimpleColours)
         {
             H.bSimpleColours = bSimpleColours;
@@ -303,7 +282,6 @@ function SaveSettings()
     else
     {
         Class'DHHud'.default.bShowCompass = bShowCompass;
-        Class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         Class'DHHud'.default.bSimpleColours = bSimpleColours;
         Class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
         Class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
@@ -336,9 +314,6 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_ShowDeathMessages:
             bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
-            break;
-        case ch_ShowRallyPoint:
-            bShowRallyPoint = ch_ShowRallyPoint.IsChecked();
             break;
         case ch_UseTechnicalAmmoNames:
             bUseTechnicalAmmoNames = ch_UseTechnicalAmmoNames.IsChecked();
@@ -417,21 +392,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowCompass=DHmoCheckBox'DH_Interface.ShowCompass'
-
-    Begin Object Class=DHmoCheckBox Name=ShowRallyPoint
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Squad Rally Point Status"
-        OnCreateComponent=ShowRallyPoint.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.481406
-        WinLeft=0.555313
-        WinWidth=0.373749
-        TabOrder=28
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.ShowRallyPoint'
 
     Begin Object Class=DHmoCheckBox Name=ShowMapFirstSpawn
         ComponentJustification=TXTA_Left

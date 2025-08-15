@@ -158,7 +158,6 @@ var     bool                bDebugCamera;           // in behind view, draws a r
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
 // Squad Rally Point
-var     globalconfig bool   bShowRallyPoint;
 var     SpriteWidget        RallyPointWidget;
 var     SpriteWidget        RallyPointGlowWidget;
 var     SpriteWidget        RallyPointAlertWidget;
@@ -1005,10 +1004,7 @@ function DrawHudPassC(Canvas C)
     }
 
     // Rally Point Status
-    if (bShowRallyPoint)
-    {
-        DrawRallyPointStatus(C);
-    }
+    DrawRallyPointStatus(C);
 
     // Rally
 
@@ -5451,25 +5447,6 @@ function DisplayVoiceGain(Canvas C)
     C.DrawColor = SavedColor;
 }
 
-function bool ShouldShowRallyPointIndicator()
-{
-    local DHPlayer PC;
-
-    if (!bShowRallyPoint)
-    {
-        return false;
-    }
-
-    PC = DHPlayer(PlayerOwner);
-
-    if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
-    {
-        return false;
-    }
-
-    return PC.SquadReplicationInfo.bAreRallyPointsEnabled;
-}
-
 function DrawIQWidget(Canvas C)
 {
     local DHPlayer PC;
@@ -6143,7 +6120,6 @@ defaultproperties
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),OffsetX=16,OffsetY=24)
 
     // Rally Point
-    bShowRallyPoint=true
     RallyPointWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     RallyPointGlowWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_glow',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     RallyPointAlertWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_icon_alert',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.25,DrawPivot=DP_UpperRight,PosX=0.85,PosY=0.15,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
