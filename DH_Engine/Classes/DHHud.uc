@@ -136,7 +136,6 @@ var     globalconfig bool   bShowDeathMessages;     // whether or not to show th
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
-var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -1434,7 +1433,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && Passenger == none)
+                if (Passenger == none)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
@@ -1489,7 +1488,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+                if (WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -5983,8 +5982,6 @@ defaultproperties
     ConsoleMessageCount=8
     ConsoleFontSize=6
     MessageFontOffset=0
-
-    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true
