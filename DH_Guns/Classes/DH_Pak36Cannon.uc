@@ -35,12 +35,9 @@ simulated function SetAttachmentsHidden(bool bNewHidden)
 
 function OnReloadFinished(int AmmoIndex)
 {
-    if (AmmoIndex == 2)
-    {
-        bIsHEATLoaded = true;
-    }
+    bIsHEATLoaded = AmmoIndex == 2;
     
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode == NM_Standalone)
     {
         SetAttachmentsHidden(!bIsHEATLoaded);
     }
