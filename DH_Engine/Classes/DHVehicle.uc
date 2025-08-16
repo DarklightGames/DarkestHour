@@ -346,6 +346,11 @@ simulated function PostBeginPlay()
 
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
+    // We set the static mesh here so that the client & the server already have the static mesh reference set.
+    // When the vehicle actually gets destroyed, we only need to set the draw type.
+    // This ensures that we can set the package that contains the destroyed static as ServerSideOnly.
+    SetStaticMesh(DestroyedVehicleMesh);
+
     // Play neutral idle animation
     if (HasAnim(GetIdleAnim()))
     {
@@ -3641,7 +3646,84 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
     }
 }
 
-// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+// Re-stated version of the RO destroy appearance, the only difference being that
+// we aren't calling SetStaticMesh, since we now set the static mesh in PostBeginPlay.
+simulated function RODestroyAppearance()
+{
+	local int i;
+	local KarmaParams KP;
+
+	// For replication
+	bDestroyAppearance = true;
+
+	// Put brakes on
+    Throttle = 0;
+    Steering = 0;
+	Rise = 0;
+
+    // Destroy the weapons
+    if (Role == ROLE_Authority)
+    {
+        for (i = 0; i < Weapons.Length; i++)
+		{
+			if (Weapons[i] != none)
+            {
+				Weapons[i].Destroy();
+            }
+		}
+
+		for (i = 0; i < WeaponPawns.Length; i++)
+        {
+            WeaponPawns[i].Destroy();
+        }
+    }
+
+    Weapons.Length = 0;
+    WeaponPawns.Length = 0;
+
+    // Destroy the effects
+	if(Level.NetMode != NM_DedicatedServer)
+	{
+		bNoTeamBeacon = true;
+
+		for(i = 0; i < HeadlightCorona.Length; i++)
+        {
+			HeadlightCorona[i].Destroy();
+        }
+
+		HeadlightCorona.Length = 0;
+
+		if (HeadlightProjector != none)
+        {
+			HeadlightProjector.Destroy();
+        }
+	}
+
+    // Copy linear velocity from actor so it doesn't just stop.
+    KP = KarmaParams(KParams);
+
+    if (KP != none)
+    {
+        KP.KStartLinVel = Velocity;
+    }
+
+    if (DamagedEffect != none)
+    {
+    	DamagedEffect.Kill();
+    }
+
+    // Become the dead vehicle mesh.
+    SetPhysics(PHYS_None);
+    KSetBlockKarma(false);
+    SetDrawType(DT_StaticMesh);
+    KSetBlockKarma(true);
+    SetPhysics(PHYS_Karma);
+    Skins.Length = 0;
+	NetPriority = 2;
+}
+
+// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo
+// variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
@@ -3659,7 +3741,7 @@ simulated event DestroyAppearance()
         DestroyedMeshSkins[0] = DestroyedSkin;
     }
 
-    super.DestroyAppearance();
+    RODestroyAppearance();
 
     if (Level.NetMode != NM_DedicatedServer)
     {

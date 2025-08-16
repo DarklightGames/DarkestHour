@@ -7604,6 +7604,7 @@ simulated function bool CanBuildWithShovel()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     return Level.NetMode == NM_Standalone ||
+           PRI.bAdmin || PRI.bSilentAdmin ||
            IsDebugModeAllowed() ||
            !PRI.IsSquadLeader() ||
            HasSquadmatesWithinDistance(50.0); // TODO: This shouldn't be a literal!
