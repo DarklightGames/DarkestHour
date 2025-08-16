@@ -102,6 +102,8 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
 // Override to remove any prefix from lists and handle new features
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
+    local Material Flag;
+    local float FlagWidth, FlagHeight, FlagY;
     local float CellLeft, CellWidth;
     local eMenuState MState;
     local GUIStyles DrawStyle, OldDrawStyle;
@@ -175,11 +177,36 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
         // Allied Side
         GetCellLeftWidth(2, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
+        Flag = Class'DHMapDatabase'.static.GetAlliedNationFlag(MI.AlliedNation);
+        FlagHeight = H *1.0; // 0.8;
+        FlagWidth = FlagHeight * 1.6; // Assuming flag aspect ratio is 16:10
 
+        if (Flag != none)
+        {
+            FlagY = Y + (H - FlagHeight) * 0.5;
+
+            Canvas.SetPos(CellLeft, FlagY);
+            Canvas.DrawTile(Flag, FlagWidth, FlagHeight, 0, 0, Flag.MaterialUSize(), Flag.MaterialVSize());
+        }
+        else
+        {
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
+        }
         // Axis Side
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation), FontScale);
+        Flag = Class'DHMapDatabase'.static.GetAxisNationFlag(MI.AxisNation);
+
+        if (Flag != none)
+        {
+            FlagY = Y + (H - FlagHeight) * 0.5;
+
+            Canvas.SetPos(CellLeft, FlagY);
+            Canvas.DrawTile(Flag, FlagWidth, FlagHeight, 0, 0, Flag.MaterialUSize(), Flag.MaterialVSize());
+        }
+        else
+        {
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation), FontScale);
+        }
 
         // Map Size
         GetCellLeftWidth(4, CellLeft, CellWidth);

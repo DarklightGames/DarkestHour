@@ -71,6 +71,36 @@ static function string GetAlliedNationString(DH_LevelInfo.EAlliedNation AlliedNa
     }
 }
 
+static function Material GetAlliedNationIcon(DH_LevelInfo.EAlliedNation AlliedNation)
+{
+    switch (AlliedNation)
+    {
+        case NATION_USA:
+            return Material'DH_GUI_tex.flag_usa';
+        case NATION_Britain:
+            return Material'DH_GUI_tex.flag_uk';
+        case NATION_Canada:
+            return Material'DH_GUI_tex.flag_canada';
+        case NATION_USSR:
+            return Material'DH_GUI_tex.flag_ussr';
+        case NATION_Poland:
+            return Material'DH_GUI_tex.flag_poland';
+        case NATION_Czechoslovakia:
+            return Material'DH_GUI_tex.flag_czechoslovakia';
+    }
+}
+
+static function Material GetAxisNationIcon(DH_LevelInfo.EAxisNation AxisNation)
+{
+    switch (AxisNation)
+    {
+        case NATION_Germany:
+            return Material'DH_GUI_tex.flag_germany';
+        case NATION_Italy:
+            return Material'DH_GUI_tex.flag_italy';
+    }
+}
+
 static function string GetAxisNationString(DH_LevelInfo.EAxisNation AxisNation)
 {
     switch (AxisNation)
