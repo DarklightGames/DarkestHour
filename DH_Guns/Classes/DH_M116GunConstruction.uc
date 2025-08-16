@@ -12,5 +12,4 @@ defaultproperties
     VehicleClasses(1)=(VehicleClass=Class'DH_M116Gun_Winter',SeasonFilters=((Seasons=(SEASON_Winter))))
     SupplyCost=1500
     ProgressMax=9
-    ConstructionBaseMesh=Mesh'DH_M116_anm.m116_base'
 }

@@ -6966,7 +6966,7 @@ exec function GimmeSupplies()
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function SpawnVehicle(string VehicleName, optional string VariantName)
+exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantName)
 {
     local class<Vehicle>    VehicleClass;
     local Vehicle           V;
@@ -7002,8 +7002,12 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
             S = Repl(S, "{name}", GetHumanReadableName());
             S = Repl(S, "{vehicle}", V.GetHumanReadableName());
             Level.Game.Broadcast(self, S);
+
+            return V;
         }
     }
+
+    return none;
 }
 
 // New debug exec to make player's current weapon fire dummy AP shells, which is very useful for checking vehicle armour is set up correctly

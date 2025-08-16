@@ -169,7 +169,7 @@ defaultproperties
          WheelRadius=44.0
          bLeftTrack=true
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+     Wheels(0)=LF_Steering
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=true
          SteerType=VST_Steered
@@ -178,7 +178,7 @@ defaultproperties
          BoneOffset=(X=10.0,Y=10.0,Z=13.0)
          WheelRadius=44.0
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+     Wheels(1)=RF_Steering
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=true
          SteerType=VST_Inverted
@@ -188,7 +188,7 @@ defaultproperties
          WheelRadius=41.0
          bLeftTrack=true
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+     Wheels(2)=LR_Steering
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=true
          SteerType=VST_Inverted
@@ -197,7 +197,7 @@ defaultproperties
          BoneOffset=(X=-12.0,Y=10.0,Z=13.0)
          WheelRadius=41.0
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+     Wheels(3)=RR_Steering
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
          bPoweredWheel=true
          BoneName="Drive_Wheel_L"
@@ -206,7 +206,7 @@ defaultproperties
          WheelRadius=41.0
          bLeftTrack=true
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+     Wheels(4)=Left_Drive_Wheel
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=true
          BoneName="Drive_Wheel_R"
@@ -214,7 +214,7 @@ defaultproperties
          BoneOffset=(X=0.0,Y=10.0,Z=13.0)
          WheelRadius=41.0
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+     Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -235,5 +235,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

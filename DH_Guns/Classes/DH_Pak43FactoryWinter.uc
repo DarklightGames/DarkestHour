@@ -3,12 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40CannonLate extends DH_Pak40Cannon;
+class DH_Pak43FactoryWinter extends DH_Pak43Factory;
 
 defaultproperties
 {
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=3
-    InitialTertiaryAmmo=0
-    MaxTertiaryAmmo=2
+    VehicleClass=Class'DH_Pak43ATGun_Winter'
+    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_winter'
 }

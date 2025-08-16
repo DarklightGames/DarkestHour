@@ -2549,7 +2549,7 @@ defaultproperties
         KImpactThreshold=700.0
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
+    KParams=KParams0
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
     bDebuggingText=false

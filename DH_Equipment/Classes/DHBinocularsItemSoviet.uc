@@ -5,8 +5,6 @@
 
 class DHBinocularsItemSoviet extends DHBinocularsItem;
 
-#exec OBJ LOAD FILE=DH_VehicleOptics_tex.utx
-
 defaultproperties
 {
     ItemName="BPP Optik 6x30"

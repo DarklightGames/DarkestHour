@@ -5,8 +5,6 @@
 
 class DHBulletSnap extends ROBulletWhiz;
 
-#exec OBJ LOAD FILE=DH_ProjectileSounds.uax
-
 simulated function PostBeginPlay()
 {
     PlayOwnedSound(WhizSound, SLOT_None, 30.0, false, 500.0, 1.0, true);

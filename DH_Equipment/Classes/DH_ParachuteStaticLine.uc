@@ -5,10 +5,8 @@
 
 class DH_ParachuteStaticLine extends Weapon;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_SundrySounds.uax
-#exec OBJ LOAD FILE=..\Sounds\Inf_Player.uax
-
-var     bool    bChuteDeployed;
+var bool    bChuteDeployed;
+var Sound   DeploySound;
 
 // Functions emptied out or returning false, as parachute isn't a real weapon
 simulated function Fire(float F) {return;}
@@ -60,7 +58,7 @@ simulated function Tick(float DeltaTime)
                 }
 
                 AttachChute(Instigator);
-                Instigator.PlaySound(Sound'DH_SundrySounds.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
+                Instigator.PlaySound(DeploySound, SLOT_Misc, 512.0, true, 128.0);
                 Instigator.AirControl = 1.0;
                 Instigator.AccelRate = 60.0;
                 Instigator.Velocity.Z = -400.0;
@@ -84,10 +82,6 @@ simulated function Tick(float DeltaTime)
                 if (ROPawn(Instigator) != none)
                 {
                     Instigator.PlaySound(ROPawn(Instigator).GetSound(EST_Land), SLOT_Misc, 512.0, true, 128.0);
-                }
-                else
-                {
-                    Instigator.PlaySound(SoundGroup'Inf_Player.LandGrass', SLOT_Misc, 512.0, true, 128.0); // fallback
                 }
 
                 RemoveChute(Instigator);
@@ -241,4 +235,5 @@ defaultproperties
     FireModeClass(0)=Class'ROEmptyFireclass' // prevents "accessed none" log errors
     FireModeClass(1)=Class'ROEmptyFireclass'
     InventoryGroup=11
+    DeploySound=Sound'DH_SundrySounds.ParachuteDeploy'
 }

@@ -10,8 +10,8 @@ defaultproperties
 {
     LifeSpan=0.15
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 
     bDynamicLight=true
     bMovable=true

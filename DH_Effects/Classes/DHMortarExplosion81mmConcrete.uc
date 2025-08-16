@@ -20,7 +20,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=84,G=96,R=101,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
         MaxParticles=2
-        name="main_flash"
+        Name="main_flash"
         StartLocationOffset=(Z=15.000000)
         StartLocationRange=(X=(Min=-15.000000,Max=15.000000),Y=(Min=-15.000000,Max=15.000000),Z=(Min=0.000000,Max=50.000000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -49,7 +49,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=128,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=128,A=255))
         MaxParticles=50
-        name="side_sparks"
+        Name="side_sparks"
         StartLocationOffset=(Z=10.000000)
         InitialParticlesPerSecond=500.000000
         Texture=Texture'Effects_Tex.fire_quad'
@@ -77,7 +77,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
         ColorScaleRepeats=4.000000
         MaxParticles=50
-        name="floating_sparks"
+        Name="floating_sparks"
         StartLocationOffset=(Z=40.000000)
         AddLocationFromOtherEmitter=1
         SphereRadiusRange=(Min=20.000000,Max=50.000000)
@@ -108,7 +108,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=128,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=128,A=255))
         MaxParticles=15
-        name="upward_sparks"
+        Name="upward_sparks"
         StartSizeRange=(X=(Min=80.000000),Y=(Min=80.000000),Z=(Min=80.000000))
         InitialParticlesPerSecond=500.000000
         Texture=Texture'Effects_Tex.fire_quad'
@@ -130,7 +130,7 @@ defaultproperties
         ColorScale(0)=(Color=(G=128,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=213,G=234,R=255,A=255))
         MaxParticles=1
-        name="flash_halo"
+        Name="flash_halo"
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=1.00000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=4.000000)
@@ -156,7 +156,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=96,G=111,R=115,A=255))
         ColorScaleRepeats=4.000000
         MaxParticles=30
-        name="large_chunks"
+        Name="large_chunks"
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.750000))
         StartSpinRange=(X=(Max=0.500000))
         StartSizeRange=(X=(Min=5.000000,Max=18.000000),Y=(Min=5.000000,Max=18.000000),Z=(Min=5.000000,Max=18.000000))
@@ -188,7 +188,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         FadeInEndTime=0.200000
         MaxParticles=2
-        name="base_smoke"
+        Name="base_smoke"
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
         SpinCCWorCW=(X=1.000000)
         SpinsPerSecondRange=(X=(Min=-0.100000,Max=0.100000))
@@ -224,7 +224,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.700000
         MaxParticles=4
-        name="base_light"
+        Name="base_light"
         StartLocationRange=(X=(Min=-150.000000,Max=125.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=25.000000,Max=25.000000))
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -254,7 +254,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=192,G=192,R=192,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         MaxParticles=9
-        name="light_gravel"
+        Name="light_gravel"
         StartLocationRange=(X=(Min=-35.000000,Max=35.000000),Y=(Min=-35.000000,Max=35.000000))
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.10000))
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -282,7 +282,7 @@ defaultproperties
         Opacity=0.500000
         FadeOutStartTime=0.870000
         MaxParticles=4
-        name="light_spikes"
+        Name="light_spikes"
         StartLocationOffset=(Z=-50.000000)
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -313,7 +313,7 @@ defaultproperties
         FadeOutStartTime=0.870000
         FadeInEndTime=0.210000
         MaxParticles=2
-        name="dark_spikes"
+        Name="dark_spikes"
         StartLocationOffset=(Z=-50.000000)
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=0.500000,RelativeSize=1.500000)

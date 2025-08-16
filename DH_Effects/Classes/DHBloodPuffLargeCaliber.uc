@@ -20,7 +20,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=239,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=2
-        name="blood_impact"
+        Name="blood_impact"
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=0.250000,RelativeSize=1.000000)
@@ -42,7 +42,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=6.000000,Max=10.000000))
@@ -70,7 +70,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=136,G=136,R=255,A=255))
         Opacity=0.6
         MaxParticles=1
-        name="large_exit"
+        Name="large_exit"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
@@ -99,7 +99,7 @@ defaultproperties
         Opacity=0.800000
         FadeOutStartTime=0.200000
         MaxParticles=2
-        name="small_exits"
+        Name="small_exits"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
@@ -131,7 +131,7 @@ defaultproperties
         Opacity=0.800000
         FadeOutStartTime=0.350000
         MaxParticles=3
-        name="dust_puffs"
+        Name="dust_puffs"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
         StartSpinRange=(X=(Min=0.025000,Max=0.750000))
@@ -168,7 +168,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=150
-        name="blood_spray"
+        Name="blood_spray"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -207,7 +207,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         FadeInEndTime=0.200000
         MaxParticles=3
-        name="blood_puffs"
+        Name="blood_puffs"
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
         UseRotationFrom=PTRS_Actor
         SpinCCWorCW=(X=1.000000)
@@ -239,7 +239,7 @@ defaultproperties
         DampingFactorRange=(X=(Min=0.200000,Max=0.500000),Y=(Min=0.200000,Max=0.500000),Z=(Min=0.200000,Max=0.500000))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        name="chunks"
+        Name="chunks"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=10.000000,Max=20.000000)
         UseRotationFrom=PTRS_Actor
