@@ -7597,13 +7597,13 @@ exec function BigHead(float V)
     SetHeadScale(V);
 }
 
-simulated function bool CanBuildWithShovel()
+simulated function bool CanSquadPlaceConstruction()
 {
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    return Level.NetMode == NM_Standalone ||
+    return Level != none && Level.NetMode == NM_Standalone ||
            IsDebugModeAllowed() ||
            !PRI.IsSquadLeader() ||
            HasSquadmatesWithinDistance(50.0); // TODO: This shouldn't be a literal!

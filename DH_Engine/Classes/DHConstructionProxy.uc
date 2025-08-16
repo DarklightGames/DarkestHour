@@ -438,7 +438,7 @@ function DHConstruction.ConstructionError GetPositionError()
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
-    if (Level.NetMode != NM_DedicatedServer && !bHidden)
+    if (Level != none && Level.NetMode != NM_DedicatedServer && !bHidden)
     {
         foreach TouchingActors(Class'DHConstructionProxy', CP)
         {
