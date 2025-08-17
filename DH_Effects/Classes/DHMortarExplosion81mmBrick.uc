@@ -129,7 +129,7 @@ defaultproperties
         ColorScale(0)=(Color=(G=128,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(G=128,R=255,A=255))
         MaxParticles=1
-        name="shockwave"
+        Name="shockwave"
         StartLocationOffset=(Z=-50.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -158,7 +158,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=96,G=111,R=115,A=255))
         ColorScaleRepeats=2.000000
         MaxParticles=16
-        name="large_chunks"
+        Name="large_chunks"
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.750000))
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=5.000000,Max=15.000000))

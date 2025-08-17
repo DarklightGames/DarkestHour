@@ -71,7 +71,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-   VehHitpoints(3)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
+    VehHitpoints(3)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
     VehHitpoints(4)=(PointRadius=30.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
     DamagedWheelSpeedFactor=0.4
     EngineDamageFromGrenadeModifier=0.05
@@ -139,6 +139,8 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3_bumper_02',bHasCollision=true))))
 
+    FPCamPos=(X=-3)
+
     // HUD
     VehicleHudImage=Texture'DH_M3Halftrack_tex.m3a1_body'
     VehicleHudEngineY=0.25
@@ -175,7 +177,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         BoneOffset=(Y=22.0,Z=-5.0)
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
+    Wheels(0)=RFWheel
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
@@ -186,7 +188,7 @@ defaultproperties
         BoneOffset=(Y=-22.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
+    Wheels(1)=LFWheel
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
@@ -195,7 +197,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
+    Wheels(2)=FLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
@@ -203,7 +205,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=15.0,Z=-5.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
+    Wheels(3)=FRight_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
@@ -212,7 +214,7 @@ defaultproperties
         BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
+    Wheels(4)=RLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
@@ -220,7 +222,7 @@ defaultproperties
         WheelRadius=27.0
         BoneOffset=(Y=10.0,X=-15.0,Z=-5.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
+    Wheels(5)=RRight_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -240,5 +242,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

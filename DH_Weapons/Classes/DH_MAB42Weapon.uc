@@ -20,8 +20,8 @@ defaultproperties
     HighDetailOverlayIndex=2
     Skins(0)=Texture'DH_MAB38_tex.MAB42'
 
-    handnum=0
-    sleevenum=1
+    HandNum=0
+    SleeveNum=1
 
     DisplayFOV=85.0
     PlayerIronsightFOV=65.0

@@ -22,7 +22,6 @@ function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker
 {
     local DHPlayer PC, SpotterPC;
     local DHGameReplicationInfo GRI;
-    local Vector MapLocation;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local int i;
     local float Distance, Threshold;
@@ -38,7 +37,6 @@ function SaveHitPosition(Vector HitLocation, Vector HitNormal, class<DHMapMarker
     }
 
     // Gather a list of artillery markers within the distance threshold of the hit location.
-    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
     for (i = 0; i < MapMarkers.Length; ++i)

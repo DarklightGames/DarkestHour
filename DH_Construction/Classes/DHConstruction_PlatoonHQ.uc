@@ -68,6 +68,29 @@ simulated state Constructed
     }
 }
 
+simulated function OnPlaced()
+{
+    local Vector HitLocation;
+    super.OnPlaced();
+
+    if (Role == ROLE_Authority)
+    {
+        if (SpawnPoint == none)
+        {
+            HitLocation = Location;
+            HitLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
+            SpawnPoint = Spawn(SpawnPointClass, self);
+            SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
+            SpawnPoint.SetLocation(HitLocation);
+            SpawnPoint.SetTeamIndex(GetTeamIndex());
+            SpawnPoint.SetIsActive(true);
+            SpawnPoint.BlockReason = SPBR_Constructing;
+            SpawnPoint.ResetEstablishmentTimer();
+        }
+    }
+}
+
+
 simulated function OnConstructed()
 {
     local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
@@ -76,15 +99,10 @@ simulated function OnConstructed()
 
     if (Role == ROLE_Authority)
     {
-        if (SpawnPoint == none)
-        {
-            SpawnPoint = Spawn(SpawnPointClass, self);
-        }
-
         if (SpawnPoint != none)
         {
             // "A Command Post has been constructed and will be established in N seconds."
-            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, Class);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -95,14 +113,6 @@ simulated function OnConstructed()
                 Warn("Hey yo something done fucked up, bad spawn locations afoot");
                 Destroy();
             }
-
-            HitLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
-
-            SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
-            SpawnPoint.SetLocation(HitLocation);
-            SpawnPoint.SetTeamIndex(GetTeamIndex());
-            SpawnPoint.SetIsActive(true);
-            SpawnPoint.ResetEstablishmentTimer();
         }
 
         if (Radio == none)
@@ -156,10 +166,10 @@ simulated state Broken
     {
         super.BeginState();
 
-        if (SpawnPoint != none)
+        if (SpawnPoint != none && SpawnPoint.BlockReason != SPBR_InDangerZone)
         {
             // "A Command Post has been destroyed."
-            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, self);
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, Class);
         }
 
         DestroyAttachments();

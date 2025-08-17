@@ -19,8 +19,8 @@ defaultproperties
     HighDetailOverlay=Shader'DH_Springfield_tex.Springfield_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    sleevenum=1
-    handnum=2
+    SleeveNum=1
+    HandNum=2
 
     IronSightDisplayFOV=45.0
     DisplayFOV=85.0

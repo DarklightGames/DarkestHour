@@ -7,8 +7,8 @@ class DH_Flak38Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="2cm FlaK 38 gun"
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Flak38CannonPawn',WeaponBone="turret_placement")
+    VehicleNameString="2,0cm FlaK 38"
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Flak38CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_static'
     Skins(0)=Texture'DH_Artillery_tex.Flak38_gun'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38_static_dest'
@@ -16,7 +16,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Artillery_tex.flak38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.flak38_turret_look'
     ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.aa_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -36,5 +36,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

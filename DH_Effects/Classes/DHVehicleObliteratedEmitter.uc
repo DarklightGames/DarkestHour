@@ -323,7 +323,7 @@ defaultproperties
         FadeOutStartTime=2.7
         FadeInEndTime=0.200000
         MaxParticles=12
-        name="rising_embers"
+        Name="rising_embers"
         SpinParticles=true
         StartLocationShape=PTLS_Box
         CoordinateSystem=PTCS_Independent

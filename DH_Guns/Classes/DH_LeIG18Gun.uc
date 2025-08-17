@@ -7,7 +7,7 @@ class DH_LeIG18Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"
+    VehicleNameString="7,5cm le.IG 18"
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
@@ -47,5 +47,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

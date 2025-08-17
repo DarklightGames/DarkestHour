@@ -11,6 +11,7 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M116CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M116_anm.m116_body'
+    ConstructionBaseMesh=Mesh'DH_M116_anm.m116_base'
     Skins(0)=Texture'DH_M116_tex.M116_body'
     DestroyedVehicleMesh=StaticMesh'DH_M116_stc.m116_destroyed'
     DestroyedMeshSkins(0)=Material'DH_M116_tex.M116_body_destroyed_fb'
@@ -24,7 +25,6 @@ defaultproperties
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     ShadowZOffset=10.0
     RotateCooldown=2
-    ConstructionBaseMesh=Mesh'DH_M116_anm.m116_base'
     bIsArtilleryVehicle=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -45,6 +45,6 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }
 

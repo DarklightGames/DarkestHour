@@ -19,8 +19,8 @@ defaultproperties
     HighDetailOverlayIndex=0
     Skins(0)=Texture'Weapons1st_tex.Mauser_c96'
     HighDetailOverlay=Shader'Weapons1st_tex.c96_S'
-    handnum=2
-    sleevenum=1
+    HandNum=2
+    SleeveNum=1
 
     SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
 

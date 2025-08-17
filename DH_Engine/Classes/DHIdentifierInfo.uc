@@ -58,6 +58,14 @@ static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type,
             continue;
         }
 
+        for (j = 0; j < StaticMeshSkins.Length; ++j)
+        {
+            if (j < AttachmentActor.Skins.Length && AttachmentActor.Skins[j] != none)
+            {
+                StaticMeshSkins[j] = AttachmentActor.Skins[j];
+            }
+        }
+
         // Set the skins to the original skins.
         AttachmentActor.Skins = StaticMeshSkins;
 
