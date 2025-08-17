@@ -13,6 +13,7 @@ defaultproperties
     Spread=250.0
     MaxVerticalRecoilAngle=650
     MaxHorizontalRecoilAngle=100
+    FireRate=0.25
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo2_Fire01'
     FireLastAnim="shoot"
