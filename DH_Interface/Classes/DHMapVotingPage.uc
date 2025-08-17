@@ -219,6 +219,7 @@ defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
     lmsgMode(0)="Majority Wins"
+    WinWidth=0.8
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.5
@@ -231,10 +232,10 @@ defaultproperties
         bBoundToParent=true
         FontScale=FNS_Small
         HeaderColumnPerc(0)=0.40 // Name
-        HeaderColumnPerc(1)=0.15 // Allies
-        HeaderColumnPerc(2)=0.15 // Axis
-        HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.15 // Size
+        HeaderColumnPerc(1)=0.20 // Type
+        HeaderColumnPerc(2)=0.10 // Allies
+        HeaderColumnPerc(3)=0.10 // Axis
+        HeaderColumnPerc(4)=0.20 // Size
         OnChange=UpdatePreview
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.MapListBox'

@@ -177,8 +177,8 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
         // Allied Side
         GetCellLeftWidth(2, CellLeft, CellWidth);
-        Flag = Class'DHMapDatabase'.static.GetAlliedNationFlag(MI.AlliedNation);
-        FlagHeight = H *1.0; // 0.8;
+        Flag = Class'DHMapDatabase'.static.GetAlliedNationIcon(MI.AlliedNation);
+        FlagHeight = H *1.2; // 0.8;
         FlagWidth = FlagHeight * 1.6; // Assuming flag aspect ratio is 16:10
 
         if (Flag != none)
@@ -192,9 +192,10 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         {
             DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
         }
+
         // Axis Side
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        Flag = Class'DHMapDatabase'.static.GetAxisNationFlag(MI.AxisNation);
+        Flag = Class'DHMapDatabase'.static.GetAxisNationIcon(MI.AxisNation);
 
         if (Flag != none)
         {
@@ -285,11 +286,11 @@ defaultproperties
     ColumnHeadings(3)="Axis"
     ColumnHeadings(4)="Size"
 
-    InitColumnPerc(0)=0.40
-    InitColumnPerc(1)=0.20
+    InitColumnPerc(0)=0.50
+    InitColumnPerc(1)=0.10
     InitColumnPerc(2)=0.10
     InitColumnPerc(3)=0.10
-    InitColumnPerc(4)=0.2
+    InitColumnPerc(4)=0.20
 
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="What type of game or battle for the map."
