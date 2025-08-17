@@ -3,7 +3,7 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// Stielgranate 41 for PaK 36
+// Stielgranate 41 for Pak 36
 // [1] https://en.wikipedia.org/wiki/Stielgranate_41
 //==============================================================================
 
