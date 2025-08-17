@@ -14,8 +14,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Granatwerfer34_anm.grw34_body_ext'
     Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
     CannonSkins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
-
-    RotationGunWeight=62
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Granatwerfer34CannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0

@@ -31,7 +31,6 @@ var float             RotateSoundVolume;
 var bool              bIsBeingRotated;
 var bool              bCanBeRotated;
 var int               NextRotationTime;
-var int               PlayersNeededToRotate;
 var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
@@ -39,7 +38,9 @@ var float             RotationsPerSecond;
 var String            SentinelString;
 var Rotator           OldRotator;
 var bool              bOldIsRotating;
-var float             RotationGunWeight;
+var float             RotationBaseYaw;
+var int               RotationMaxPlayers;
+
 
 var Material          RotationProjectionTexture;
 var DynamicProjector  RotationProjector;
@@ -295,16 +296,6 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-    if (PlayersNeededToRotate > 1)
-    {
-        TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
-
-        if (TeammatesInRadiusCount < PlayersNeededToRotate)
-        {
-            return ERROR_NeedMorePlayers;
-        }
-    }
-
     return ERROR_None;
 }
 
@@ -383,38 +374,25 @@ function float GetRotationStrength()
     local int PlayersNearby;
     local float MaxPlayers;
 
-    Log("RotationGunWeight: " @ RotationGunWeight);
+    Log("RotationBaseYaw: " @ RotationBaseYaw);
 
     PlayersNearby = 1;
-    MaxPlayers = 6.0;
 
-    if (RotateControllerPawn != none)
+    if (RotationMaxPlayers <= 1)
     {
-        PRI = DHPlayerReplicationInfo(RotateControllerPawn.PlayerReplicationInfo);
-
-        if (PRI != none)
-        {
-            foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(10))
-            {
-                OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-                if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
-                {
-                    PlayersNearby++;
-                }
-            }
-        }
+        PlayersNearby = 1;
+    }
+    else if (RotateControllerPawn != none)
+    {
+        PlayersNearby = GetTeammatesInRadiusCount(RotateControllerPawn);
         Log("PlayersNearby: " @ PlayersNearby);
     }
 
-    //Math is hard mkay, need a proper algorithm here
-    Factor = RotationGunWeight / FClamp(PlayersNearby, 1, 6);
-    Log("Rotation Weight: " @ RotationGunWeight);
-    Log("PlayersNearby: " @ FClamp(PlayersNearby, 1, 6));
-    Log("Factor: " @ Factor);
-    Log("Rotation Result: " @ 3000 - Factor);
-
-    return 3200 - Factor;
+    PlayersNearby = FClamp(PlayersNearby, 1, RotationMaxPlayers);
+    
+    // lerp from R_LIGHT (fast) to R_HEAVY (slow)
+    Log("PlayersNearby: " @ PlayersNearby);
+    return RotationBaseYaw * PlayersNearby;
 }
 
 // HACK - This will only make sure the gun visibly rotates on the client
@@ -774,7 +752,6 @@ defaultproperties
     ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
 
     // Rotation
-    PlayersNeededToRotate=1
     RotationsPerSecond=0.1
     bFixedRotationDir=false
     RotateCooldown=5
@@ -788,7 +765,8 @@ defaultproperties
     bReplicateMovement=true
     bSkipActorPropertyReplication=false
     OldBase=none
-    RotationGunWeight=700
+    RotationBaseYaw=700
+    RotationMaxPlayers=3
     RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
 
     // Karma properties

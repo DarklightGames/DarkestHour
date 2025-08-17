@@ -14,7 +14,7 @@ defaultproperties
     VehicleHudImage=Texture'DH_Artillery_tex.flak38_body_trailer'
     ExitPositions(1)=(X=-30.0,Y=85.0,Z=50.0)
     bCanBeRotated=true
-    RotationGunWeight=420
+    RotationBaseYaw=420
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

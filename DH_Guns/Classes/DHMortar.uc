@@ -24,6 +24,8 @@ state Rotating
 
 defaultproperties
 {
+    RotationMaxPlayers=1
+    RotationBaseYaw=1400
     bCanBeRotated=true
     bIsArtilleryVehicle=true
     bTeamLocked=false

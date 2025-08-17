@@ -29,7 +29,7 @@ defaultproperties
     ExitPositions(2)=(X=-200,Y=0,Z=50)
     VehicleMass=3.0
     bCanBeRotated=true
-    RotationGunWeight=277
+    RotationBaseYaw=1000
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
     ShadowZOffset=10.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

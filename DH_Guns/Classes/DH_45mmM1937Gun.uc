@@ -23,6 +23,6 @@ defaultproperties
     ExitPositions(1)=(X=-88.0,Y=-8.0,Z=25.0)
     VehicleMass=8.0
     bCanBeRotated=true
-    RotationGunWeight=560
+    RotationBaseYaw=700
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 }

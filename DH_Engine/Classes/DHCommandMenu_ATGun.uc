@@ -106,10 +106,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case ERROR_EnemyGun:
             ORI.InfoText[0] = default.EnemyGunText;
             break;
-        case ERROR_NeedMorePlayers:
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
-            ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
-            break;
         default:
             break;
     }

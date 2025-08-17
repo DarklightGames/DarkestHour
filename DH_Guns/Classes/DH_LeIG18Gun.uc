@@ -7,7 +7,7 @@ class DH_LeIG18Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"
+    VehicleNameString="7.5 cm leichtes Infanteriegeschï¿½tz 18"
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
@@ -24,7 +24,7 @@ defaultproperties
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
     bCanBeRotated=true
-    RotationGunWeight=400
+    RotationBaseYaw=400
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     RotateCooldown=2
     ShadowZOffset=10
