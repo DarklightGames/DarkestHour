@@ -11,6 +11,7 @@ defaultproperties
     VehicleTeam=0
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35Mortar_ext'
+    RotationGunWeight=60
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0
