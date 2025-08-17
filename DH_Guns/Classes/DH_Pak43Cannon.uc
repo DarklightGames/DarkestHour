@@ -8,19 +8,34 @@ class DH_Pak43Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret'
-    Skins(0)=Texture'DH_Artillery_Tex.pak43_nocamo_ext'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak43_turret_coll')
-    GunnerAttachmentBone="com_player"
+    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret_ext'
+    Skins(0)=Texture'DH_Pak43_tex.pak43_ext_yellow'
+
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=64,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=64,RotationAxis=AXIS_Y)
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_BARREL',AttachBone="BARREL")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_PITCH',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_YAW',AttachBone="GUN_YAW")
+
+    AnimationDrivers(0)=(Channel=2,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=22,RotationType=ROTATION_Pitch)
+
+    GunnerAttachmentBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    YawBone="GUN_YAW"
+    WeaponFireAttachmentBone="MUZZLE"
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
 
     // Turret movement
     RotationsPerSecond=0.017
     MaxPositiveYaw=5097
     MaxNegativeYaw=-5097
-    YawStartConstraint=-6000.0
-    YawEndConstraint=6000.0
-    CustomPitchUpLimit=6918
-    CustomPitchDownLimit=64350
+    YawStartConstraint=-5097
+    YawEndConstraint=5097
+    CustomPitchUpLimit=6916
+    CustomPitchDownLimit=64626
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_Pak43CannonShell'
@@ -75,4 +90,11 @@ defaultproperties
     RangeSettings(25)=3000
 
     ResupplyInterval=12.0
+
+    ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=7.0
 }

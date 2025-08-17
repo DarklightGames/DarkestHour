@@ -304,23 +304,12 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    local int GunPitchMin;
-
     if (VehWep == none)
     {
         return 65535;
     }
-    
-    if (VehWep.CustomPitchDownLimit >= 32768)
-    {
-        GunPitchMin = VehWep.CustomPitchDownLimit - 65535;
-    }
-    else
-    {
-        GunPitchMin = VehWep.CustomPitchDownLimit;
-    }
 
-    return GunPitchMin + GunPitchOffset;
+    return VehWep.GetGunPitchMin() + GunPitchOffset;
 }
 
 simulated function int GetGunPitchMax()
@@ -2640,6 +2629,20 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ, optional float NewScale)
         }
 
         VehWep.StartHatchFire();
+    }
+}
+
+// Displays a trace of the barrel obstruction trace.
+exec function DebugBarrelTrace()
+{
+    local Vector TraceStart, TraceEnd;
+
+    if (IsDebugModeAllowed() && VehWep != none)
+    {
+        VehWep.GetMuzzleObstructionTrace(TraceStart, TraceEnd);
+
+        ClearStayingDebugLines();
+        DrawStayingDebugLine(TraceStart, TraceEnd, 255, 255, 0);
     }
 }
 

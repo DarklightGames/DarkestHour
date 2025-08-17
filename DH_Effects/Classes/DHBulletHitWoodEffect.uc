@@ -16,7 +16,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=8.000000))
@@ -41,7 +41,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=12
-        name="chips_up"
+        Name="chips_up"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
@@ -71,7 +71,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=81,G=117,R=134,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=3
-        name="main_impact"
+        Name="main_impact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=35.000000))
@@ -95,7 +95,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=120,G=167,R=175,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=8
-        name="wood_dust"
+        Name="wood_dust"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -126,7 +126,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.25
         MaxParticles=12
-        name="chips_out"
+        Name="chips_out"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
@@ -153,7 +153,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=4
-        name="bullet_hole"
+        Name="bullet_hole"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
@@ -165,6 +165,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter14'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

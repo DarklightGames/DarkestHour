@@ -3,4 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_OpelBlitzFactory_Snow extends DHDeprecated;
+class DH_ZiS2Factory_SnowCamo extends DH_ZiS2Factory;
+
+defaultproperties
+{
+    VehicleClass=Class'DH_ZiS2Gun_SnowCamo'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT_WINTER_CAMO'
+}

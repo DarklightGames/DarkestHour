@@ -65,6 +65,21 @@ simulated function int GetSpawnTimePenalty()
 
 function Timer()
 {
+    // Danger Zone
+    if (Construction != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
+    {
+        BlockReason = SPBR_InDangerZone;
+
+        if (bIsEstablished)
+        {
+            // "A Command Post has been overrun by the enemy."
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 2,,, Construction.Class);
+        }
+
+        Construction.BreakMe();
+        return;
+    }
+
     super.Timer();
 
     // Establishment
@@ -97,12 +112,6 @@ function Timer()
     if (CapturingEnemiesCount >= 1)
     {
         // If any enemies are capturing, spawning must be disabled.
-        BlockReason = SPBR_EnemiesNearby;
-    }
-
-    // Danger Zone
-    if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
-    {
         BlockReason = SPBR_EnemiesNearby;
     }
 }

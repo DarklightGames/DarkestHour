@@ -6,8 +6,6 @@
 class DHHitEffect extends Effects
     abstract;
 
-#exec OBJ LOAD FILE=..\Sounds\ProjectileSounds.uax
-
 //Merging modifications from 'old' DHBulletHitEffect into this new parent class to
 //support additional material surface types and new funtionality for a variety
 //of DH projectile classes (bullets, rockets, mortars, tank shells, etc.) if we want.

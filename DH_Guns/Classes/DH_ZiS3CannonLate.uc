@@ -2,8 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// Has APCR round.
+//==============================================================================
 
-class DH_ZiS3CannonLate extends DH_ZiS3Cannon; //added APCR
+
+class DH_ZiS3CannonLate extends DH_ZiS3Cannon;
 
 defaultproperties
 {
@@ -13,5 +16,4 @@ defaultproperties
 
     InitialTertiaryAmmo=2
     MaxTertiaryAmmo=4
-
 }

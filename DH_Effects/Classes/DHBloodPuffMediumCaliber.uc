@@ -16,7 +16,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=8.000000))
@@ -42,7 +42,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=239,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=1
-        name="initial_spray"
+        Name="initial_spray"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -70,7 +70,7 @@ defaultproperties
         Opacity=0.85
         FadeOutStartTime=0.100000
         MaxParticles=2
-        name="2nd_spray"
+        Name="2nd_spray"
         UseRotationFrom=PTRS_Actor
         //StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -104,7 +104,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=8 // 25
-        name="bloody_chunks"
+        Name="bloody_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -140,7 +140,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=109,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=3
-        name="impact_spikes"
+        Name="impact_spikes"
         StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
@@ -171,7 +171,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=109,A=255))
         FadeOutStartTime=0.250000
         MaxParticles=1
-        name="blood_puff"
+        Name="blood_puff"
         StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -210,7 +210,7 @@ defaultproperties
         Opacity=0.350000
         FadeOutStartTime=0.350000
         MaxParticles=3
-        name="dust_light"
+        Name="dust_light"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
         StartSpinRange=(X=(Min=0.025000,Max=0.750000))

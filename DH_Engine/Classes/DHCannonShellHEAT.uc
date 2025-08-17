@@ -17,7 +17,6 @@ var bool  bDidPenetrationExplosionFX; // already did the penetration explosion e
 var bool  bHitWorldObject;            // flags that shell has hit a world object & should run a world penetration check (reversing original bHitWorldObject, as this way seems more logical)
 
 var globalconfig float PenetrationScale; // global penetration depth scale factor
-var globalconfig float DistortionScale;  // global distortion scale factor
 
 // Modified to handle world object penetration
 simulated function HitWall(Vector HitNormal, Actor Wall)
@@ -315,7 +314,6 @@ defaultproperties
     EnergyFactor=1000.0
     PeneExploWallOut=75.0
     PenetrationScale=0.08
-    DistortionScale=0.4
     ShakeRotMag=(Y=0.0)
     ShakeRotRate=(Z=2500.0)
     BlurTime=6.0

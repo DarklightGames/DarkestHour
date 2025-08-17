@@ -124,7 +124,7 @@ defaultproperties
         BoneOffset=(X=12.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+    Wheels(0)=LF_Steering
 
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=True
@@ -134,7 +134,7 @@ defaultproperties
         BoneOffset=(X=12.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+    Wheels(1)=RF_Steering
 
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=True
@@ -144,7 +144,7 @@ defaultproperties
         BoneOffset=(X=-18.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+    Wheels(2)=LR_Steering
 
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=True
@@ -154,7 +154,7 @@ defaultproperties
         BoneOffset=(X=-18.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+    Wheels(3)=RR_Steering
 
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=True
@@ -163,7 +163,7 @@ defaultproperties
         BoneOffset=(X=-3.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
 
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=True
@@ -172,7 +172,7 @@ defaultproperties
         BoneOffset=(X=-3.000000)
         WheelRadius=30.000000
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     VehicleMass=11.000000
     bDrawDriverInTP=False
@@ -219,5 +219,5 @@ defaultproperties
         KFriction=0.500000
         KImpactThreshold=700.000000
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

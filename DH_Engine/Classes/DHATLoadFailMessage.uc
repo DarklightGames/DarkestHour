@@ -18,6 +18,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
     }
+    else
+    {
+        S = Repl(S, "{0}", class'GameInfo'.default.DefaultPlayerName);
+    }
 
     return S;
 }

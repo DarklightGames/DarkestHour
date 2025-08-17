@@ -23,7 +23,6 @@ var     string                  MOTDURL;
 var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
-var     string                  PatreonURL;
 var     string                  DiscordURL;
 var     string                  ResetINIGuideURL;
 
@@ -57,7 +56,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_Facebook);
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
-    sb_Social.ManageComponent(b_Patreon);
     sb_Social.ManageComponent(b_Discord);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
@@ -268,10 +266,6 @@ function bool ButtonClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
 
-       case b_Patreon:
-            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
-            break;
-
         case b_Discord:
             PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
             break;
@@ -281,7 +275,7 @@ function bool ButtonClick(GUIComponent Sender)
             break;
 
         case i_Announcement:
-            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+            PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             HideAnnouncement();
             break;
     }
@@ -715,21 +709,6 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
-    Begin Object Class=GUIGFXButton Name=PatreonButton
-        WinWidth=0.04
-        WinHeight=0.075
-        WinLeft=0.875
-        WinTop=0.925
-        OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.patreon'
-        bTabStop=true
-        Position=ICP_Center
-        Hint="Support us on Patreon!"
-        bRepeatClick=false
-        StyleName="TextLabel"
-    End Object
-    b_Patreon=PatreonButton
-
     Begin Object Class=GUIGFXButton Name=DiscordButton
         WinWidth=0.04
         WinHeight=0.075
@@ -830,7 +809,6 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
-    PatreonURL="http://www.patreon.com/darkesthourgame"
     DiscordURL="http://discord.gg/EEwFhtk"
     ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"

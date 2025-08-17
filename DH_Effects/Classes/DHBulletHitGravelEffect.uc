@@ -16,7 +16,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=6.000000,Max=10.000000))
@@ -47,7 +47,7 @@ defaultproperties
         FadeOutStartTime=0.2500000
         FadeInEndTime=0.1
         MaxParticles=4
-        name="dustcloud"
+        Name="dustcloud"
         StartLocationOffset=(Z=-25.000000)
         UseRotationFrom=PTRS_Actor
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
@@ -82,7 +82,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
         FadeOutStartTime=0.25
         MaxParticles=50
-        name="spray"
+        Name="spray"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -112,7 +112,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.50
         MaxParticles=2
-        name="mainimpact"
+        Name="mainimpact"
         StartLocationRange=(X=(Min=-5.000000,Max=-10.000000))
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=35.000000,Max=75.000000))
@@ -141,7 +141,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=12
-        name="lingeringchunks"
+        Name="lingeringchunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -176,7 +176,7 @@ defaultproperties
         FadeOutStartTime=0.20
         FadeInEndTime=0.1
         MaxParticles=2
-        name="lightdust"
+        Name="lightdust"
         StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=1.000000)
@@ -190,6 +190,6 @@ defaultproperties
     End Object
     Emitters(5)=BeamEmitter'BeamEmitter7'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

@@ -3,12 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40CannonLate extends DH_Pak40Cannon;
+class DH_OpelBlitzSupportFactory_Dunkelgelb extends DH_OpelBlitzSupportFactory;
 
 defaultproperties
 {
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=3
-    InitialTertiaryAmmo=0
-    MaxTertiaryAmmo=2
+    VehicleClass=Class'DH_OpelBlitzSupport_Dunkelgelb'
+    Skins(0)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Exterior_DG'
+    Skins(1)=Texture'DH_OpelBlitz_tex.Opel_Blitz_Interior_DG'
 }

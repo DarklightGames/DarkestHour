@@ -17,6 +17,7 @@ enum ESpawnPointBlockReason
     SPBR_MissingRequirement,
     SPBR_NotInSafeZone,
     SPBR_Waiting,
+    SPBR_InDangerZone,
 };
 
 var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently
