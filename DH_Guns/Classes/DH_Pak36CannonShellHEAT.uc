@@ -1,4 +1,3 @@
-
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
@@ -15,7 +14,7 @@ defaultproperties
     MaxSpeed=6639
     DrawScale=1.0
     ImpactDamage=455
-    
+
     Damage=600
     DamageRadius=600
     EngineFireChance=0.85  //more powerful HEAT round than most
