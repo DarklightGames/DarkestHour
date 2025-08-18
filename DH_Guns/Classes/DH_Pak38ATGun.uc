@@ -21,7 +21,7 @@ defaultproperties
     VehicleMass=11.0
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
-
+    ShadowZOffset=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
