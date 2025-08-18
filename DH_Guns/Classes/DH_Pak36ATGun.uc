@@ -10,7 +10,7 @@ class DH_Pak36ATGun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="3,7cm PaK 36"
+    VehicleNameString="3,7cm Pak 36"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Pak36CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak36_anm.pak36_body_ext'
     Skins(0)=Texture'DH_Pak36_tex.pak36_ext_gray'

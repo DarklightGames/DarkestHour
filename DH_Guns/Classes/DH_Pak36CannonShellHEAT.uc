@@ -1,9 +1,8 @@
-
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// Stielgranate 41 for PaK 36
+// Stielgranate 41 for Pak 36
 // [1] https://en.wikipedia.org/wiki/Stielgranate_41
 //==============================================================================
 
@@ -15,7 +14,7 @@ defaultproperties
     MaxSpeed=6639
     DrawScale=1.0
     ImpactDamage=455
-    
+
     Damage=600
     DamageRadius=600
     EngineFireChance=0.85  //more powerful HEAT round than most
