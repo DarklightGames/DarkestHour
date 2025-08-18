@@ -157,6 +157,8 @@ simulated function DestroyAttachments()
 
 simulated function Destroyed()
 {
+    super.Destroyed();
+
     DestroyAttachments();
 }
 
