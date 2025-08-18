@@ -19,7 +19,7 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_PITCH',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak43_stc.PAK43_TURRET_COLLISION_YAW',AttachBone="GUN_YAW")
 
-    AnimationDrivers(0)=(Channel=2,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=22,RotationType=ROTATION_Pitch)
+    AnimationDrivers(0)=(Channel=2,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=21,RotationType=ROTATION_Pitch)
 
     GunnerAttachmentBone="GUN_YAW"
     PitchBone="GUN_PITCH"
