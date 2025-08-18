@@ -3665,7 +3665,7 @@ simulated event DestroyAppearance()
         DestroyedMeshSkins[0] = DestroyedSkin;
     }
 
-    RODestroyAppearance();
+    super.DestroyAppearance();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
