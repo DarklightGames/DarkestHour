@@ -10,7 +10,7 @@ simulated function InitializeVehicleBase()
 {
     if (DHVehicle(Base) != none)
     {
-        DHVehicle(Base).CannonSkins[0] = Base.Skins[2]; // match to the texture of the FlaK 38 gun mount on the hull
+        DHVehicle(Base).CannonSkins[0] = Base.Skins[2]; // match to the texture of the Flak 38 gun mount on the hull
     }
 
     super.InitializeVehicleBase();

@@ -346,6 +346,11 @@ simulated function PostBeginPlay()
 
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
+    // We set the static mesh here so that the client & the server already have the static mesh reference set.
+    // When the vehicle actually gets destroyed, we only need to set the draw type.
+    // This ensures that we can set the package that contains the destroyed static as ServerSideOnly.
+    SetStaticMesh(DestroyedVehicleMesh);
+
     // Play neutral idle animation
     if (HasAnim(GetIdleAnim()))
     {
@@ -3641,7 +3646,8 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
     }
 }
 
-// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo
+// variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;

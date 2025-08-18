@@ -5,8 +5,6 @@
 
 class DHBulletHitWaterEffectLarge extends Emitter;
 
-#exec OBJ LOAD FILE=..\Textures\DH_FX_Tex.utx
-
 //particles:
 
 defaultproperties
@@ -293,6 +291,6 @@ defaultproperties
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter7'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

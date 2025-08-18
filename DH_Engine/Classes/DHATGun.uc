@@ -36,20 +36,22 @@ var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
 
-var String            SentinelString;
+var string            SentinelString;
 var Rotator           OldRotator;
 var bool              bOldIsRotating;
 
 var Material          RotationProjectionTexture;
 var DynamicProjector    RotationProjector;
 
+var float               CrushMomentumThreshold;
+
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bIsBeingRotated;
 
-    reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
+    reliable if (bNetDirty && Role == ROLE_Authority && !IsInState('Rotating'))
         NextRotationTime;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -609,6 +611,13 @@ simulated event PostNetReceive()
     {
         SetBase(RotatingActor);
     }
+
+    if (StaticMesh == none)
+    {
+        // Without this, if the package that contains the destroyed vehicle mesh is marked as ServerSideOnly,
+        // the StaticMesh property will be replicated as `None`. If this happens, we need to swoop in and change it.
+        SetStaticMesh(DestroyedVehicleMesh);
+    }
 }
 
 // Overriden to suppress the touch message when the gun is being rotated
@@ -638,6 +647,31 @@ function PrependFactoryExitPositions()
             AbsoluteExitPositions[0].Location = LocationHint.Location;
             AbsoluteExitPositions[0].Rotation = LocationHint.Rotation;
         }
+    }
+}
+
+// Overridden to allow vehicles to destroy AT guns by running them over.
+event KImpact(Actor Other, Vector Pos, Vector ImpactVel, Vector ImpactNorm)
+{
+    local Vehicle V;
+    local float Momentum;
+
+    V = Vehicle(Other);
+
+    super.KImpact(Other, Pos, ImpactVel, ImpactNorm);
+
+    if (V == none || V.GetTeamNum() == GetTeamNum())
+    {
+        // Don't destroy the gun if it's a friendly vehicle that has hit us.
+        return;
+    }
+
+    Momentum = VSize(ImpactVel) * V.KGetMass();
+
+    if (Momentum >= CrushMomentumThreshold)
+    {
+        LastHitByDamageType = RanOverDamageType;
+        KilledBy(V.Driver);
     }
 }
 
@@ -767,7 +801,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
+    KParams=KParams0
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false

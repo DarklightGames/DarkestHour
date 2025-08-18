@@ -7,28 +7,30 @@ class DH_ZiS3Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="ZiS-3 76mm divisional gun"
+    VehicleNameString="ZiS-3 76mm"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS3CannonPawn',WeaponBone="Gun_attachment")
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3_destroyed'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ZiS3_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ZiS3_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ZiS3_turret_look'
-    VehicleHudOccupantsX(1)=0.44
-    VehicleHudOccupantsY(1)=0.65
-    ExitPositions(1)=(X=-120.00,Y=-38.00,Z=30.00)
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ZiS3CannonPawn',WeaponBone="turret_placement")
+    Mesh=SkeletalMesh'DH_ZiS_anm.ZIS_BODY_EXT'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
+    DestroyedVehicleMesh=StaticMesh'DH_ZiS_stc.ZIS3_DESTROYED'
+    DestroyedMeshSkins(0)=Combiner'DH_ZiS_tex.ZIS_BODY_EXT_DESTROYED'
+    DestroyedMeshSkins(1)=Combiner'DH_ZiS_tex.ZIS_TURRET_EXT_DESTROYED'
+    VehicleHudImage=Texture'DH_ZiS_tex.ZIS_BODY_ICON'
+    VehicleHudTurret=TexRotator'DH_ZiS_tex.ZIS3_TURRET_ICON_ROT'
+    VehicleHudTurretLook=TexRotator'DH_ZiS_tex.ZIS3_TURRET_ICON_LOOK'
+    ExitPositions(1)=(X=-100.00,Y=-30.00,Z=30.00)
     VehicleMass=11.0
     bCanBeRotated=true
     PlayersNeededToRotate=1
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
+    ShadowZOffset=40.0
+
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-1.0,Y=0.0,Z=-0.45) // default is zero
+        KCOMOffset=(X=0,Y=0,Z=0.25)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -42,5 +44,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

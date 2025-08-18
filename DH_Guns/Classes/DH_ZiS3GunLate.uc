@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ZiS3GunLate extends DH_ZiS3Gun; //added APCR
+class DH_ZiS3GunLate extends DH_ZiS3Gun;
 
 defaultproperties
 {

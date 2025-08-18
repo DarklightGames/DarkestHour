@@ -3,9 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40ATGunLate extends DH_Pak40ATGun; // late war version with much less ammo
+class DH_Pak40ATGun_Winter extends DH_Pak40ATGun;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak40CannonPawnLate')
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_winter'
+    CannonSkins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_winter'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak40_tex.pak40_ext_winter_destroyed'
 }

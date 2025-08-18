@@ -57,7 +57,7 @@ var array<SBackpack> Backpacks;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bIsLocked;
 }
 

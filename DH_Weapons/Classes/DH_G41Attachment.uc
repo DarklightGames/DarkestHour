@@ -5,8 +5,6 @@
 
 class DH_G41Attachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=InterfaceArt2_tex.utx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g41_3rd'

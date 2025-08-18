@@ -22,7 +22,7 @@ defaultproperties
 {
     GunClass=Class'DH_CV33MG'
     PositionInArray=0
-    bMustBeTankCrew=false
+    bMustBeTankCrew=true
     bKeepDriverAuxCollision=true
     bMultiPosition=true
     // Because of the way that explosives work, we must say that the driver is not exposed so that
