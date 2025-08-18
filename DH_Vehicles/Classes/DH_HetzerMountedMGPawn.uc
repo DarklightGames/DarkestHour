@@ -35,6 +35,11 @@ simulated function NextWeapon()
         return;
     }
 
+    if (VehWep != none && VehWep.IsInState('Reloading'))
+    {
+        return;
+    }
+
     super.NextWeapon();
 }
 
