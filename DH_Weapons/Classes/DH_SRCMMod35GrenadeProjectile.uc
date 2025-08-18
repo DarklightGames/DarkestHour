@@ -7,8 +7,7 @@ class DH_SRCMMod35GrenadeProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
-    // TODO: this is a tiny boy, so the damage probably needs to be reduced
-    Damage=150.0 //43 grams
+    Damage=120.0 //43 grams
     DamageRadius=700.0 //Blast radius 12m according to page 60 of `Armi Della Fanteria Italiana Nella Seconda Guerra Mondiale`
     MyDamageType=Class'DH_SRCMMod35GrenadeDamageType'
     StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_frag_projectile'
