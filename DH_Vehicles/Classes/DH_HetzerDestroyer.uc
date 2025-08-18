@@ -3,6 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] DOUBLE CHECK ALL THE ARMOR VALUES
+// [ ] extend view limits on MG
+// [ ] mg binocs anim missing
 // [ ] damaged effect
 // [ ] top MG shells not ejected the right direction & don't collide with top of
 //     tank (done with an emitter)
@@ -14,7 +16,6 @@
 //     the sound from the IS2 reload where he bangs on the hatch?]
 // [ ] hatch opening/closing sounds in animations
 // [ ] add MG reloading sounds to the animation notifies on the MG
-// [ ] re-import player anims
 // [ ] Lock camera during MG raise/lower anims
 // [ ] the gunner first person animations are disorienting (skip anims other than
 //     for raise/lower)
