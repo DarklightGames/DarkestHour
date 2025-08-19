@@ -4,7 +4,6 @@
 //==============================================================================
 // [ ] DOUBLE CHECK ALL THE ARMOR VALUES
 // [ ] extend view limits on MG
-// [ ] mg binocs anim missing
 // [ ] damaged effect
 // [ ] top MG shells not ejected the right direction & don't collide with top of
 //     tank (done with an emitter)
@@ -15,11 +14,9 @@
 //     the way (also the UI element that dirtybirdy made) [maybe steal part of
 //     the sound from the IS2 reload where he bangs on the hatch?]
 // [ ] hatch opening/closing sounds in animations
-// [ ] add MG reloading sounds to the animation notifies on the MG
 // [ ] Lock camera during MG raise/lower anims
 // [ ] the gunner first person animations are disorienting (skip anims other than
 //     for raise/lower)
-// [ ] maybe make it so you need to explicitly press R to reload the MG?
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
