@@ -59,4 +59,7 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload02_039',Duration=2.03)
     ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload03_104',Duration=2.07)
     ReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.mg34_reload04_170',Duration=1.34)
+
+    // The only part that's exposed is the gunner's shield which should never transfer damage to the base if penetrated.
+    bShouldBaseTakeDamage=false
 }

@@ -3,20 +3,19 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] DOUBLE CHECK ALL THE ARMOR VALUES
-// [ ] extend view limits on MG
 // [ ] damaged effect
 // [ ] top MG shells not ejected the right direction & don't collide with top of
 //     tank (done with an emitter)
-// [ ] you can destroy the thing by penetrating the MG lol
 // [ ] add passengers in right spot
 // [ ] fix rear cmd hatch collision
 // [ ] play a sound when the player tries to open the hatch when the MG is in
 //     the way (also the UI element that dirtybirdy made) [maybe steal part of
 //     the sound from the IS2 reload where he bangs on the hatch?]
-// [ ] hatch opening/closing sounds in animations
 // [ ] Lock camera during MG raise/lower anims
 // [ ] the gunner first person animations are disorienting (skip anims other than
 //     for raise/lower)
+// [ ] raise periscope slightly so it doesn't obscure the camera
+// [ ] make sure it all works in MP!
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;

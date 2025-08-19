@@ -21,6 +21,8 @@ var bool            bHasMultipleBarrels;
 var byte            FiringBarrelIndex;        // barrel index that is due to fire next, so SpawnProjectile() can get location of barrel bone
 var array<DHBarrel> Barrels;
 
+var bool            bShouldBaseTakeDamage;       // When true, damage will not be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
+
 // Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
 {
@@ -250,7 +252,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
 {
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
-    if (Base != none)
+    if (Base != none && bShouldBaseTakeDamage)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
@@ -299,4 +301,6 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
+
+    bShouldBaseTakeDamage=true
 }
