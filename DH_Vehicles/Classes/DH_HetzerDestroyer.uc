@@ -77,24 +77,27 @@ defaultproperties
     RightWheelBones(4)="Wheel_5_R"
     RightWheelBones(5)="Wheel_6_R"
     RightWheelBones(6)="Wheel_7_R"
-    TreadHitMaxHeight=8.000000
+    TreadHitMaxHeight=70
     VehicleHudImage=Texture'DH_Hetzer_tex.hetzer_body_icon'
     VehicleHudTurret=TexRotator'DH_Hetzer_tex.hetzer_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Hetzer_tex.hetzer_turret_look'
-    VehicleHudOccupantsX(0)=0.440000
-    VehicleHudOccupantsX(1)=0.540000
-    VehicleHudOccupantsX(2)=0.440000
-    VehicleHudOccupantsX(3)=0.450000
-    VehicleHudOccupantsX(4)=0.560000
-    VehicleHudOccupantsY(0)=0.330000
-    VehicleHudOccupantsY(2)=0.500000
-    VehicleHudOccupantsY(3)=0.610000
-    VehicleHudOccupantsY(4)=0.610000
-    VehicleHudEngineY=0.610000
-    VehicleHudTreadsPosX(0)=0.375000
-    VehicleHudTreadsPosX(1)=0.625000
-    VehicleHudTreadsPosY=0.54
-    VehicleHudTreadsScale=0.575
+    
+    VehicleHudOccupantsX(0)=0.425
+    VehicleHudOccupantsY(0)=0.325
+    VehicleHudOccupantsX(1)=0.575
+    VehicleHudOccupantsY(1)=0.55
+    VehicleHudOccupantsX(2)=0.425
+    VehicleHudOccupantsY(2)=0.55
+    VehicleHudOccupantsX(3)=0.4125
+    VehicleHudOccupantsY(3)=0.725
+    VehicleHudOccupantsX(4)=0.5875
+    VehicleHudOccupantsY(4)=0.725
+    VehicleHudEngineX=0.5
+    VehicleHudEngineY=0.75
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
+    VehicleHudTreadsPosY=0.5
+    VehicleHudTreadsScale=0.65
     GearRatios(4)=0.720000
     TransRatio=0.100000
     LeftLeverBoneName="lever_L"
@@ -193,8 +196,8 @@ defaultproperties
     ExitPositions(0)=(X=-78.00,Y=23.00,Z=174.00)
     ExitPositions(1)=(X=-46,Y=124,Z=60)     // COMMANDER
     ExitPositions(2)=(X=-46,Y=-124,Z=60)    // MACHINE GUNNER
-    ExitPositions(3)=(X=-191,Y=29,Z=60)     // PASSENGER 1
-    ExitPositions(4)=(X=-191,Y=-29,Z=60)    // PASSENGER 2
+    ExitPositions(3)=(X=-191,Y=-29,Z=60)    // PASSENGER L
+    ExitPositions(4)=(X=-191,Y=29,Z=60)     // PASSENGER R
     ExitPositions(5)=(X=-78.00,Y=-23.00,Z=174.00)
     VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
     SpawnOverlay(0)=Texture'DH_Hetzer_tex.hetzer_profile_icon'
