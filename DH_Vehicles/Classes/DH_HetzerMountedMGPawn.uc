@@ -53,7 +53,7 @@ defaultproperties
     HatchClearRange=(Min=-24500,Max=-18200)
     BinocsDrivePos=(X=0,Y=0,Z=0)
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',TransitionUpAnim="raise",DriverTransitionAnim="hetzer_mg_lower")
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',TransitionDownAnim="lower",DriverTransitionAnim="hetzer_mg_raise")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',TransitionDownAnim="lower",DriverTransitionAnim="hetzer_mg_raise",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',DriverTransitionAnim="hetzer_mg_binocs")
     GunClass=Class'DH_HetzerMountedMG'
     DrivePos=(X=-1.08303,Y=-13.4031,Z=58)

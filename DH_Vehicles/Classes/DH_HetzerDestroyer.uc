@@ -2,20 +2,23 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] DOUBLE CHECK ALL THE ARMOR VALUES
-// [ ] damaged effect
+// [ ] damaged effect positioning
+// [ ] fix rear cmd hatch collision (doesn't block bullets fsr?)
+// [ ] the gunner first person animations are disorienting (skip anims other than
+//     for raise/lower)
+// [ ] make sure it all works in MP!
+//==============================================================================
+// MINOR BUGS
+//==============================================================================
 // [ ] top MG shells not ejected the right direction & don't collide with top of
 //     tank (done with an emitter)
-// [ ] add passengers in right spot
-// [ ] fix rear cmd hatch collision
+//==============================================================================
+// NICE TO HAVE
+//==============================================================================
+// [ ] Lock camera during MG raise/lower anims [REQUIRES NEW SYSTEM]
 // [ ] play a sound when the player tries to open the hatch when the MG is in
 //     the way (also the UI element that dirtybirdy made) [maybe steal part of
 //     the sound from the IS2 reload where he bangs on the hatch?]
-// [ ] Lock camera during MG raise/lower anims
-// [ ] the gunner first person animations are disorienting (skip anims other than
-//     for raise/lower)
-// [ ] raise periscope slightly so it doesn't obscure the camera
-// [ ] make sure it all works in MP!
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
@@ -45,14 +48,11 @@ defaultproperties
     RearArmor(0)=(Thickness=2.000000,Slope=15.000000,MaxRelativeHeight=78.5234,LocationName="lower")
     RearArmor(1)=(Thickness=0.800000,Slope=70.000000,LocationName="upper")
 
-    NewVehHitpoints(0)=(PointRadius=2.000000,PointBone="body",PointOffset=(X=32.000000,Y=-9.800000,Z=64.699997),NewHitPointType=NHP_GunOptics)
-    NewVehHitpoints(1)=(PointRadius=15.000000,PointBone="Turret",PointOffset=(X=-12.000000),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=15.000000,PointBone="Turret",PointOffset=(X=-12.000000),NewHitPointType=NHP_GunPitch)
     GunOpticsHitPointIndex=0
     FireAttachBone="body"
     FireEffectOffset=(X=103.000000,Y=-35.000000,Z=30.000000)
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-70.000000,Y=-25.000000,Z=110.000000),DriveRot=(Pitch=3850),DriveAnim="crouch_idle_binoc")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-80.000000,Y=45.000000,Z=105.000000),DriveRot=(Pitch=4400,Yaw=-3100,Roll=-1700),DriveAnim="prone_idle_nade")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.977,Y=-73.517,Z=126.567),DriveAnim="hetzer_passenger_l")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-68.107,Y=64.323,Z=126.567),DriveAnim="hetzer_passenger_r")
     FrontLeftAngle=340.000000
     FrontRightAngle=35.000000
     RearRightAngle=145.000000
@@ -118,12 +118,13 @@ defaultproperties
 
     ShadowZOffset=40
 
-    VehHitpoints(0)=(PointRadius=30.000000,PointOffset=(X=-60.000000))
-    VehHitpoints(1)=(PointRadius=18.000000,PointBone="body",PointOffset=(Y=-28.299999,Z=-5.500000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=74.000000,Y=26.700001,Z=-9.400000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=29.000000,Y=26.700001,Z=-9.400000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=38.500000,Y=35.299999,Z=37.299999),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(5)=(PointRadius=14.000000,PointBone="body",PointOffset=(X=1.000000,Y=35.299999,Z=37.299999),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=34,PointBone="BODY",PointOffset=(X=-68,Z=64),HitPointType=HP_Engine)
+    VehHitpoints(1)=(PointRadius=24,PointBone="BODY",PointOffset=(X=1,Y=-36,Z=54),DamageMultiplier=5,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=24,PointBone="BODY",PointOffset=(X=-9,Y=50,Z=89),DamageMultiplier=5,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20,PointBone="BODY",PointOffset=(X=55,Y=22,Z=46),DamageMultiplier=5,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=4,PointBone="GUNSIGHT_CAMERA",NewHitPointType=NHP_GunOptics,bIsGun=true)
+    NewVehHitpoints(1)=(PointRadius=12,PointBone="BODY",PointOffset=(X=55,Y=2,Z=80),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=8,PointBone="BODY",PointOffset=(X=55,Y=2,Z=104),NewHitPointType=NHP_GunPitch)
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_1',AttachBone="body"))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_2',AttachBone="body"))))

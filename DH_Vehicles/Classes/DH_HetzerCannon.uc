@@ -14,6 +14,7 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_PITCH',AttachBone="PITCH")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_B',AttachBone="HATCH_B")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_F',AttachBone="HATCH_F")
+    CollisionStaticMeshes(3)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_YAW',AttachBone="YAW")
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
 
     GunMantletArmorFactor=6.000000

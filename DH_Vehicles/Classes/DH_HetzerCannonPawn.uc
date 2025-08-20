@@ -17,7 +17,7 @@ defaultproperties
     // gunsight
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_INT',ViewFOV=15.0,bDrawOverlays=true,TransitionUpAnim="overlay_in")
     // periscope
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_INT',ViewFOV=30.0,TransitionUpAnim="raise",TransitionDownAnim="overlay_out",DriverTransitionAnim="hetzer_gunner_lower",ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_INT',ViewFOV=30.0,TransitionUpAnim="raise",TransitionDownAnim="overlay_out",DriverTransitionAnim="hetzer_gunner_lower",ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,ViewLocation=(Z=8))
     // exposed
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_INT',TransitionDownAnim="lower",DriverTransitionAnim="hetzer_gunner_raise",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
     // binoculars
