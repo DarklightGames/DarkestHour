@@ -12,7 +12,9 @@ defaultproperties
     BeginningIdleAnim="idle"
 
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_PITCH',AttachBone="PITCH")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_B',AttachBone="HATCH_B")
+    // NOTE: The code that tries to space-switch the model to the attached bone is completely fucked if the orientations do not match.
+    // Therefore, I exported the back hatch in bone-space. I've added the TransformSpace option to hack in this fix.
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_B',AttachBone="HATCH_B",TransformSpace=TS_Bone)
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_F',AttachBone="HATCH_F")
     CollisionStaticMeshes(3)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_YAW',AttachBone="YAW")
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)

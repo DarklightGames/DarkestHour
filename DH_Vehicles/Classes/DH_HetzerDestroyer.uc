@@ -2,8 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] bug when first entering the cannon if the gun is elevated; the gun's
+//     rotation is incorrect until you traverse or elevate the cannon; the
+//     bone's elevation is being reset fsr
 // [ ] damaged effect positioning
-// [ ] fix rear cmd hatch collision (doesn't block bullets fsr?)
 // [ ] the gunner first person animations are disorienting (skip anims other than
 //     for raise/lower)
 // [ ] make sure it all works in MP!

@@ -22,6 +22,7 @@ struct SCollisionStaticMesh
     var name AttachBone;    // If '', use YawBone.
     var bool bWontStopBullet;
     var bool bWontStopBlastDamage;
+    var DHCollisionMeshActor.ETransformSpace TransformSpace;
 };
 
 var     array<SCollisionStaticMesh> CollisionStaticMeshes;
@@ -347,7 +348,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone,,,CollisionStaticMeshes[i].TransformSpace);
 
         if (CMA != none)
         {
