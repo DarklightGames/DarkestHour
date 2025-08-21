@@ -153,7 +153,11 @@ replication
         ClientSetReloadState;
 }
 
-simulated function OnSwitchMesh();
+simulated function OnSwitchMesh()
+{
+    UpdateGunWheels();
+    UpdateAnimationDrivers();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
@@ -1636,6 +1640,8 @@ simulated function UpdateGunWheels()
     local int i;
     local Rotator BoneRotation;
     local int Value;
+
+    Log("UpdateGunWheels" @ CurrentAim);
 
     for (i = 0; i < GunWheels.Length; ++i)
     {
