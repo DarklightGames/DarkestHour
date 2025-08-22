@@ -1641,8 +1641,6 @@ simulated function UpdateGunWheels()
     local Rotator BoneRotation;
     local int Value;
 
-    Log("UpdateGunWheels" @ CurrentAim);
-
     for (i = 0; i < GunWheels.Length; ++i)
     {
         BoneRotation = rot(0, 0, 0);

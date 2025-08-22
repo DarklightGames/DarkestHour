@@ -5,7 +5,6 @@
 // [ ] damaged effect positioning
 // [ ] the gunner first person animations are disorienting (skip anims other than
 //     for raise/lower)
-// [ ] make sure it all works in MP!
 //==============================================================================
 // MINOR BUGS
 //==============================================================================

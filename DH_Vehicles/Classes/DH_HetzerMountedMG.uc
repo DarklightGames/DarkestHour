@@ -11,6 +11,15 @@ var name GunReloadAnim;
 var name GunReloadRootBone;
 var name DriverReloadAnim;
 
+var bool bNetIsReloading;
+var bool bOldNetIsReloading;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bNetIsReloading;
+}
+
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -18,26 +27,60 @@ simulated function PostBeginPlay()
     AnimBlendParams(GunReloadChannel, 1.0,,, default.YawBone);
 }
 
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bNetIsReloading != bOldNetIsReloading)
+    {
+        if (bNetIsReloading)
+        {
+            PlayReloadAnimations();
+        }
+        else
+        {
+            StopReloadAnimations();
+        }
+
+        bOldNetIsReloading = bNetIsReloading;
+    }
+}
+
+simulated function PlayReloadAnimations()
+{
+    GotoState('Reloading');
+}
+
+simulated function StopReloadAnimations()
+{
+    GotoState('');
+}
+
 // Modified to put us into the reloading state.
 simulated function StartReload(optional bool bResumingPausedReload)
 {
     // We never resume from a paused reload on the Hetzer.
     super.StartReload(false);
-
-    GotoState('Reloading');
+    
+    PlayReloadAnimations();
 }
 
 simulated function PauseReload()
 {
     super.PauseReload();
-
-    GotoState('');
+    
+    StopReloadAnimations();
 }
 
 simulated state Reloading
 {
     simulated function BeginState()
     {
+        if (Role == ROLE_Authority)
+        {
+            bNetIsReloading = true;
+        }
+
         PitchBone = '';
         YawBone = '';
 
@@ -54,6 +97,11 @@ simulated state Reloading
 
     simulated function EndState()
     {
+        if (Role == ROLE_Authority)
+        {
+            bNetIsReloading = false;
+        }
+
         // Restore the pitch and yaw bone references.
         PitchBone = default.PitchBone;
         YawBone = default.YawBone;
