@@ -69,7 +69,7 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
-    FireEffectOffset=(X=5.000000)
+    FireEffectOffset=(X=20,Y=0,Z=30)
     YawStartConstraint=-2000.000000
     YawEndConstraint=3000.000000
     PitchBone="PITCH"

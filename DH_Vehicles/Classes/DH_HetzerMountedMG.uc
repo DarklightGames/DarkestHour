@@ -123,7 +123,8 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_MG_COLLISION_HATCH_L',AttachBone="HATCH_L")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_MG_COLLISION_HATCH_R',AttachBone="HATCH_R")
     WeaponFireAttachmentBone="MUZZLE"
-    FireEffectOffset=(X=-4.0)
+    FireAttachBone="ROOT"
+    FireEffectOffset=(X=-25)
     AmbientEffectEmitterClass=Class'DH_HetzerVehicleMGEmitter'
     CustomPitchUpLimit=1092         // + 6 degrees
     CustomPitchDownLimit=63716      // -10 degrees

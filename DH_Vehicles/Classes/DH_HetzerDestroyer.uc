@@ -2,17 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] damaged effect positioning
-// [ ] the gunner first person animations are disorienting (skip anims other than
-//     for raise/lower)
-//==============================================================================
-// MINOR BUGS
-//==============================================================================
-// [ ] top MG shells not ejected the right direction & don't collide with top of
-//     tank (done with an emitter)
+// [ ] mark all packages with ServerSideOnly
 //==============================================================================
 // NICE TO HAVE
 //==============================================================================
+// [ ] top MG shells not ejected the right direction & don't collide with top of
+//     tank (done with an emitter)
 // [ ] Lock camera during MG raise/lower anims [REQUIRES NEW SYSTEM]
 // [ ] play a sound when the player tries to open the hatch when the MG is in
 //     the way (also the UI element that dirtybirdy made) [maybe steal part of
@@ -36,19 +31,16 @@ defaultproperties
 
     FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=61.624,LocationName="lower")
     FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")
-
     RightArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=73.6533,LocationName="lower")
     RightArmor(1)=(Thickness=2.000000,Slope=40.000000,LocationName="upper")
-
     LeftArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=73.6533,LocationName="lower")
     LeftArmor(1)=(Thickness=2.000000,Slope=40.000000,LocationName="upper")
-
     RearArmor(0)=(Thickness=2.000000,Slope=15.000000,MaxRelativeHeight=78.5234,LocationName="lower")
     RearArmor(1)=(Thickness=0.800000,Slope=70.000000,LocationName="upper")
 
     GunOpticsHitPointIndex=0
     FireAttachBone="body"
-    FireEffectOffset=(X=103.000000,Y=-35.000000,Z=30.000000)
+    FireEffectOffset=(X=80,Y=20,Z=80)
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.977,Y=-73.517,Z=126.567),DriveAnim="hetzer_passenger_l")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-68.107,Y=64.323,Z=126.567),DriveAnim="hetzer_passenger_r")
     FrontLeftAngle=340.000000
@@ -109,7 +101,7 @@ defaultproperties
     StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc.HETZER_DESTROYED_EARLY'
-    DamagedEffectOffset=(X=-60.000000,Y=25.000000)
+    DamagedEffectOffset=(X=-110,y=0,Z=80)
     BeginningIdleAnim="idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',ViewFOV=85,TransitionUpAnim="overlay_out",ViewPitchUpLimit=2048,ViewPitchDownLimit=63488,ViewPositiveYawLimit=2048,ViewNegativeYawLimit=-2048,bDrawOverlays=True)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',TransitionDownAnim="overlay_in",ViewPitchUpLimit=4096,ViewPitchDownLimit=59392,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-12228)
@@ -145,6 +137,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         WheelRadius=32
+        bLeftTrack=true
     End Object
     Wheels(0)=LF_Steering
 
@@ -163,6 +156,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         WheelRadius=32
+        bLeftTrack=true
     End Object
     Wheels(2)=LR_Steering
 
@@ -180,6 +174,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=32
+        bLeftTrack=true
     End Object
     Wheels(4)=Left_Drive_Wheel
 
