@@ -177,11 +177,21 @@ var     TextWidget          IQTextWidget;
 
 var localized string        PrereleaseDisclaimerText;
 
+var     UComparator         MapIconAttachmentDrawOrderComparator;
+
+function bool MapIconAttachmentDrawOrderCompareFunction(Object A, Object B)
+{
+    return DHMapIconAttachment(A).DrawOrder > DHMapIconAttachment(B).DrawOrder;
+}
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
 {
     super(HudBase).PostBeginPlay();
+
+    MapIconAttachmentDrawOrderComparator = new class'UComparator';
+    MapIconAttachmentDrawOrderComparator.CompareFunction = MapIconAttachmentDrawOrderCompareFunction;
 }
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
@@ -3764,6 +3774,8 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 {
     local DHPlayer PC;
     local DHMapIconAttachment MIA;
+    local array<DHMapIconAttachment> MapIconAttachments;
+    local int i;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3780,17 +3792,26 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 
         if (MIA.GetVisibilityIndex() == PC.GetTeamNum() || MIA.GetVisibilityIndex() == NEUTRAL_TEAM_INDEX)
         {
-            MapIconAttachmentIcon.WidgetTexture = MIA.GetIconMaterial(PC);
-            MapIconAttachmentIcon.TextureCoords = MIA.GetIconCoords(PC);
-            MapIconAttachmentIcon.TextureScale = MIA.GetIconScale(PC);
-            MapIconAttachmentIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
-
-            DHDrawIconOnMap(C, SubCoords, MapIconAttachmentIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
-            // HACK: This stops the engine from "instancing" the texture,
-            // resulting in the bizarre bug where all the icons share the same
-            // rotation.
-            C.DrawVertical(0.0, 0.0);
+            MapIconAttachments[MapIconAttachments.Length] = MIA;
         }
+    }
+
+    class'USort'.static.Sort(MapIconAttachments, MapIconAttachmentDrawOrderComparator);
+
+    for (i = 0; i < MapIconAttachments.Length; ++i)
+    {
+        MIA = MapIconAttachments[i];
+
+        MapIconAttachmentIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+        MapIconAttachmentIcon.TextureCoords = MIA.GetIconCoords(PC);
+        MapIconAttachmentIcon.TextureScale = MIA.GetIconScale(PC);
+        MapIconAttachmentIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+
+        DHDrawIconOnMap(C, SubCoords, MapIconAttachmentIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+        // HACK: This stops the engine from "instancing" the texture,
+        // resulting in the bizarre bug where all the icons share the same
+        // rotation.
+        C.DrawVertical(0.0, 0.0);
     }
 }
 

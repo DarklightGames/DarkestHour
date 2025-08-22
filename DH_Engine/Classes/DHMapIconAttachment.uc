@@ -43,6 +43,8 @@ var           bool bTrackDangerZone;
 var           bool bInDangerZone;
 var private   bool bOldInDangerZone;
 
+var           byte DrawOrder;
+
 replication
 {
     reliable if (bNetInitial && Role == ROLE_Authority)
