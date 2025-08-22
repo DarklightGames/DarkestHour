@@ -3259,16 +3259,7 @@ function DrawVehiclePointSphere()
                     continue;
                 }
 
-                if (AV.Cannon != none && AV.NewVehHitpoints[i].PointBone == AV.Cannon.YawBone)
-                {
-                    HitPointCoords = AV.Cannon.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
-                }
-                else
-                {
-                    HitPointCoords = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
-                }
-
-                HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> Rotator(HitPointCoords.XAxis));
+                HitPointLocation = AV.GetNewHitPointLocation(i);
 
                 if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                 {

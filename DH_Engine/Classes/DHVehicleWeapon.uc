@@ -22,6 +22,7 @@ struct SCollisionStaticMesh
     var name AttachBone;    // If '', use YawBone.
     var bool bWontStopBullet;
     var bool bWontStopBlastDamage;
+    var DHCollisionMeshActor.ETransformSpace TransformSpace;
 };
 
 var     array<SCollisionStaticMesh> CollisionStaticMeshes;
@@ -53,6 +54,7 @@ struct WeaponAttachments
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
+var     Sound               DryFireSound;
 
 var     float       ResupplyInterval;
 var     int         LastResupplyTimestamp;
@@ -151,7 +153,11 @@ replication
         ClientSetReloadState;
 }
 
-simulated function OnSwitchMesh();
+simulated function OnSwitchMesh()
+{
+    UpdateGunWheels();
+    UpdateAnimationDrivers();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
@@ -177,7 +183,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Spawns the vehicle attachments. This is only run for the client.
+// Spawns the vehicle attachments.
 simulated function SpawnVehicleAttachments()
 {
     local int i;
@@ -346,7 +352,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone,,,CollisionStaticMeshes[i].TransformSpace);
 
         if (CMA != none)
         {
@@ -958,8 +964,7 @@ simulated function Sound GetFireSound()
 // New function to play dry-fire effects if trying to fire weapon when empty
 simulated function DryFireEffects(optional bool bAltFire)
 {
-    ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(DryFireSound, SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1689,4 +1694,6 @@ defaultproperties
     bInheritVelocity=false
 
     ResupplyInterval=2.5
+    
+    DryFireSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
 }

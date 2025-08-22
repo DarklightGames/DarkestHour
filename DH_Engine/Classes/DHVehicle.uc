@@ -37,8 +37,8 @@ struct VehicleAttachment
     var array<Material> Skins;
     var bool            bHasCollision;
     var float           CullDistance;
-    var bool            bAttachToWeapon;
-    var int             WeaponAttachIndex;
+    var bool            bAttachToWeapon;    // When true, attach this to a weapon instead of the base vehicle.
+    var int             WeaponAttachIndex;  // When bAttachToWeapon is true, the index of the weapon to attach to.
     // Maps the vehicle skin to the attachment skin.
     // Used so that attachments on skin variants automatically use the correct textures.
     var array<SkinIndexMap> SkinIndexMap;
@@ -77,6 +77,10 @@ var() array<RandomAttachmentGroup> RandomAttachmentGroups;
 
 const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
 var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
+
+// Use this to set the skins of all random attachments at once.
+// These skins will be applied before individual skins (from VehicleAttachment) are applied.
+var array<Material> RandomAttachmentSkins;
 
 struct VehicleComponentController
 {
@@ -606,6 +610,13 @@ simulated function PostNetReceive()
     {
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
+    }
+
+    if (StaticMesh == none)
+    {
+        // Without this, if the package that contains the destroyed vehicle mesh is marked as ServerSideOnly,
+        // the StaticMesh property will be replicated as `None`. If this happens, we need to swoop in and change it.
+        SetStaticMesh(DestroyedVehicleMesh);
     }
 }
 
@@ -3272,6 +3283,15 @@ simulated function SpawnVehicleAttachments()
 
                 if (VA.StaticMesh != none)
                 {
+                    // Apply global skin override to the attachment if no per-attachment skin is specified.
+                    for (j = 0; j < RandomAttachmentSkins.Length; ++j)
+                    {
+                        if (RandomAttachmentSkins[j] != none && (VA.Skins.Length < j || VA.Skins[j] == none))
+                        {
+                            VA.Skins[j] = RandomAttachmentSkins[j];
+                        }
+                    }
+
                     VehicleAttachments[VehicleAttachments.Length] = VA;
                 }
             }
@@ -3338,7 +3358,6 @@ simulated function SpawnVehicleAttachments()
     }
 }
 
-// New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation, optional Actor AttachTarget)
 {
