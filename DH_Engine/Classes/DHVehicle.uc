@@ -611,6 +611,13 @@ simulated function PostNetReceive()
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
     }
+
+    if (StaticMesh == none)
+    {
+        // Without this, if the package that contains the destroyed vehicle mesh is marked as ServerSideOnly,
+        // the StaticMesh property will be replicated as `None`. If this happens, we need to swoop in and change it.
+        SetStaticMesh(DestroyedVehicleMesh);
+    }
 }
 
 // Modified to handle treads (including damaged treads), engine & interior rumble sounds, & MaxCriticalSpeed,
