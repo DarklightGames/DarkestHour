@@ -602,7 +602,7 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
-    foreach AllActors(Class'DHConstructionSupplyAttachment', Attachment)
+    foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
         if (Attachment.IsTouchingActor(self))
         {

@@ -3771,8 +3771,7 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     {
         return;
     }
-
-    foreach AllActors(Class'DHMapIconAttachment', MIA)
+    foreach DynamicActors(Class'DHMapIconAttachment', MIA)
     {
         if (MIA == none || MIA.GetVisibilityIndex() == 255)
         {

@@ -2101,7 +2101,7 @@ function UpdateMapIconAttachments()
 {
     local DHMapIconAttachment MIA;
 
-    foreach AllActors(Class'DHMapIconAttachment', MIA)
+    foreach DynamicActors(Class'DHMapIconAttachment', MIA)
     {
         if (MIA != none && !MIA.bIgnoreGRIUpdates)
         {
