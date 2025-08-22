@@ -3,12 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40Factory extends DHATGunFactory;
+class DH_Pak38FactoryGray extends DHATGunFactory;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_Pak40ATGun'
-    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak40'
+    VehicleClass=Class'DH_Pak38ATGunGray'
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_gray'
     TeamNum=AXIS
 }

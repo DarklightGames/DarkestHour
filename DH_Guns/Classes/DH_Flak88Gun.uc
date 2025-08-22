@@ -7,7 +7,7 @@ class DH_Flak88Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="8,8cm FlaK 36"
+    VehicleNameString="8,8cm Flak 36"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Flak88CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_base'
     Skins(0)=Texture'MilitaryAxisSMT.flak_88'

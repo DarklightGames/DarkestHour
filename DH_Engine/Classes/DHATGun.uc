@@ -48,10 +48,10 @@ var float               CrushMomentumThreshold;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bIsBeingRotated;
 
-    reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
+    reliable if (bNetDirty && Role == ROLE_Authority && !IsInState('Rotating'))
         NextRotationTime;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -610,6 +610,13 @@ simulated event PostNetReceive()
     if (RotatingActor != Base)
     {
         SetBase(RotatingActor);
+    }
+
+    if (StaticMesh == none)
+    {
+        // Without this, if the package that contains the destroyed vehicle mesh is marked as ServerSideOnly,
+        // the StaticMesh property will be replicated as `None`. If this happens, we need to swoop in and change it.
+        SetStaticMesh(DestroyedVehicleMesh);
     }
 }
 

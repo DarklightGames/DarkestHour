@@ -47,7 +47,7 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerPlayThirdPersonFiringAnim;
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         PlayerFireCount, FiringProjectileMesh;
 }
 

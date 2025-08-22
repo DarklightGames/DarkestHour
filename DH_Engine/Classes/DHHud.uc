@@ -23,8 +23,6 @@ struct DHObituary
     var bool                bShowInstantly;
 };
 
-const   MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
-
 var DHGameReplicationInfo   DHGRI;
 
 // Map icons/legends

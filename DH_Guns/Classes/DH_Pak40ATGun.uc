@@ -9,7 +9,7 @@ class DH_Pak40ATGun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="7,5cm PaK 40"
+    VehicleNameString="7,5cm Pak 40"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Pak40CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
     Skins(0)=Texture'DH_Pak40_tex.Pak40.pak40_ext_gray'
@@ -24,7 +24,7 @@ defaultproperties
     VehicleMass=11.0
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
-
+    ShadowZOffset=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
