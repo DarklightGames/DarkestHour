@@ -137,6 +137,8 @@ defaultproperties
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
 
+    HeadBone="PLAYER_CAMERA"
+
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=True
         SteerType=VST_Steered
@@ -214,7 +216,7 @@ defaultproperties
         KInertiaTensor(0)=1.000000
         KInertiaTensor(3)=3.000000
         KInertiaTensor(5)=3.000000
-        KCOMOffset=(X=0.040000,Y=0.440000,Z=-1.000000)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.75)
         KLinearDamping=0.050000
         KAngularDamping=0.050000
         KStartEnabled=True
