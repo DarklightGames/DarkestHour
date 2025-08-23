@@ -73,6 +73,18 @@
         {
             "label": "Run",
             "command": "./RedOrchestraLargeAddressAware.exe -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run with Parameters",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:buildArgs} -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- ${input:buildArgs} -mod=DarkestHourDev" },
             "type": "shell",
             "group": "test",
             "problemMatcher": [],
@@ -83,16 +95,7 @@
         {
             "label": "Run Map",
             "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceFolder}/System"
-            }
-        },
-        {
-            "label": "Run Map",
-            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- ${input:pickMap}?quickstart=true -mod=DarkestHourDev" },
             "type": "shell",
             "group": "test",
             "problemMatcher": [],
@@ -103,6 +106,41 @@
         {
             "label": "Run Default Map",
             "command": "./RedOrchestraLargeAddressAware.exe DH-Target_Range.rom?quickstart=true -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- DH-Target_Range.rom?quickstart=true -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Connect",
+            "command": "./RedOrchestraLargeAddressAware.exe 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            // TODO: Add support for Windows
+            "label": "Connect Multiple Clients",
+            "command": "echo Not supported on Windows. Use dhdev_server_with_clients.bat script instead.; echo",
+            "linux": { "command": "steam -applaunch 1280 -- 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev --multi" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Server",
+            "command": "./UCC.exe server ${input:pickMap}?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator -log=DHServerLog.log -mod=DarkestHourDev -ini=DarkestHourDev.ini",
+            "linux": { "command": "wine UCC.exe server ${input:pickMap}?game=DH_Engine.DarkestHourGame?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator -log=DHServerLog.log -mod=DarkestHourDev -ini=DarkestHourDev.ini"},
             "type": "shell",
             "group": "test",
             "problemMatcher": [],
@@ -152,8 +190,24 @@
             },
             "problemMatcher": []
         },
+        {
+            "label": "Build and Run Server",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run Server"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
     ],
     "inputs": [
+        {
+            "type": "promptString",
+            "id": "runArgs",
+            "description": "Optional: Type-in extra client launch parameters",
+            "default": ""
+        },
         {
             "type": "promptString",
             "id": "buildArgs",
