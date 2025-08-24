@@ -28,6 +28,8 @@ defaultproperties
     IronSightDisplayFOV=60.0
     ZoomOutTime=0.1
     FreeAimRotationSpeed=7.0
+    
+    SwayModifyFactor=0.62 // -0.08, almost 1kg lighter than mab38
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8

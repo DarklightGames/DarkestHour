@@ -10,15 +10,16 @@ defaultproperties
     ProjectileClass=Class'DH_MAB42Bullet'
     AmmoClass=Class'DH_MAB42Ammo'
     FAProjSpawnOffset=(X=-28.0)
-    FireRate=0.1 //600 per minute
+    FireRate=0.125 // ~532 rpm (value had to be found experimentally due to an engine bug)
+    
 
-    Spread=180.0    // shorter barrel than the MAB38
+    Spread=140.0    // shorter barrel than the MAB38; late-war lower quality
 
     // Recoil
     RecoilRate=0.04285
-    MaxVerticalRecoilAngle=230
-    MaxHorizontalRecoilAngle=66
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=8.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=250  //slightly worse than mab38
+    MaxHorizontalRecoilAngle=70
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=7.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=13.0
 
     FlashEmitterClass=Class'MuzzleFlash1stMP'
