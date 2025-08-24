@@ -43,12 +43,12 @@ defaultproperties
     nProjectileDescriptions(1)="M48 HE-T"
     nProjectileDescriptions(2)="M64 WP"
 
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=25
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=30
     InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=35
-    MaxSecondaryAmmo=50
-    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+    MaxPrimaryAmmo=42
+    MaxSecondaryAmmo=52
+    MaxTertiaryAmmo=10
 
     SecondarySpread=0.00175
     TertiarySpread=0.0036
