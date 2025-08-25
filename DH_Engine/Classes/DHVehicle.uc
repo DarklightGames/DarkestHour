@@ -101,7 +101,7 @@ var     bool        bRequiresDriverLicense;      // Vehicle requires player to h
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var()   name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
-var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
 var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
 var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
@@ -4275,7 +4275,19 @@ simulated function bool IsDisabled()
 // New function to get the location of the Engine VehHitPoint
 function Vector GetEngineLocation()
 {
-    return GetBoneCoords(VehHitPoints[0].PointBone).Origin;
+    local Coords EngineCoords;
+    local vector EngineLocation;
+
+    EngineCoords = GetBoneCoords(VehHitpoints[0].PointBone);
+
+    EngineLocation = EngineCoords.Origin;
+
+    if (VehHitpoints[0].PointOffset != vect(0.0, 0.0, 0.0))
+    {
+        EngineLocation += VehHitpoints[0].PointOffset >> Rotator(EngineCoords.XAxis);
+    }
+    
+    return EngineLocation;
 }
 
 // New helper function to check whether vehicle is burning
