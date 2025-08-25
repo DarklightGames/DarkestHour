@@ -7,5 +7,6 @@ class DH_HetzerDestroyer_CamoOne_Bushes extends DH_HetzerDestroyer_CamoOne;
 
 defaultproperties
 {
-     Skins(3)=Texture'VegetationSMT.WildBush_A'
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_BODY_ATTACHMENT_BUSHES',AttachBone="BODY",Skins=(Texture'DH_Vegetation_tex.HedgerowLeaves'))
+    VehicleAttachments(1)=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_TURRET_ATTACHMENT_BUSHES',AttachBone="PITCH",bAttachToWeapon=true,Skins=(Texture'DH_Vegetation_tex.HedgerowLeaves'))
 }

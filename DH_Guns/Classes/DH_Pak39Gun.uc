@@ -7,7 +7,7 @@ class DH_Pak39Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="5.0cm KwK 39 gun"
+    VehicleNameString="5,0cm KwK 39"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak39CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_body'
     Skins(0)=Texture'DH_Pak39_tex.pak39_body'
@@ -36,5 +36,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

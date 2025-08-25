@@ -17,7 +17,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=3
-        name="base_puff"
+        Name="base_puff"
         StartLocationRange=(X=(Min=1.000000,Max=5.00000))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -49,7 +49,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         Opacity=0.5
         MaxParticles=3
-        name="dust_base"
+        Name="dust_base"
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.250000))
@@ -81,7 +81,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=147,G=147,R=147,A=255))
         Opacity=0.75
         MaxParticles=2
-        name="fabric_smoke"
+        Name="fabric_smoke"
         UseRotationFrom=PTRS_Actor
         //SpinsPerSecondRange=(X=(Min=0.15000,Max=0.2500000))
         //StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -109,7 +109,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=147,G=147,R=147,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=147,G=147,R=147,A=255))
         MaxParticles=10
-        name="fabric_chunks"
+        Name="fabric_chunks"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=35.000000)
         UseRotationFrom=PTRS_Actor
@@ -140,7 +140,7 @@ defaultproperties
         FadeOutStartTime=0.15
         Opacity=0.3
         MaxParticles=1
-        name="main_impact"
+        Name="main_impact"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=20.000000))
         SizeScale(0)=(RelativeSize=0.100000)
@@ -165,7 +165,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=121,G=157,R=174,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=121,G=157,R=174,A=255))
         MaxParticles=4
-        name="bullet_hole"
+        Name="bullet_hole"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
@@ -178,6 +178,6 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter14'
 
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

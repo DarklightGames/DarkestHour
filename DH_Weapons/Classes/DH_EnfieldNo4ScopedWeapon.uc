@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Enfield No.4 Mk.I (T) (No.32)"
     SwayModifyFactor=0.65 // +0.05
-    FireModeClass(0)=class'DH_EnfieldNo4ScopedFire'
-    FireModeClass(1)=class'DH_EnfieldNo4ScopedMeleeFire'
-    AttachmentClass=class'DH_EnfieldNo4ScopedAttachment'
-    PickupClass=class'DH_EnfieldNo4ScopedPickup'
+    FireModeClass(0)=Class'DH_EnfieldNo4ScopedFire'
+    FireModeClass(1)=Class'DH_EnfieldNo4ScopedMeleeFire'
+    AttachmentClass=Class'DH_EnfieldNo4ScopedAttachment'
+    PickupClass=Class'DH_EnfieldNo4ScopedPickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_Scoped_1st'
 

@@ -7,7 +7,6 @@ class DHHud extends ROHud
     dependson(DHSquadReplicationInfo);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
@@ -23,10 +22,6 @@ struct DHObituary
     var float               EndOfLife;
     var bool                bShowInstantly;
 };
-
-const   MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
-
-const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking player at which we will show a voice icon
 
 var DHGameReplicationInfo   DHGRI;
 
@@ -128,6 +123,7 @@ var     localized string    BlackoutText;
 var     localized string    PlaceRallyPointText;
 var     localized string    SayTypeConsoleText;
 var     localized string    SayTypeAllText;
+var     localized string    TypingPromptText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -135,9 +131,6 @@ var     globalconfig bool   bShowDeathMessages;     // whether or not to show th
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
-var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
-var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
-var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -160,7 +153,6 @@ var     bool                bDebugCamera;           // in behind view, draws a r
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
 // Squad Rally Point
-var     globalconfig bool   bShowRallyPoint;
 var     SpriteWidget        RallyPointWidget;
 var     SpriteWidget        RallyPointGlowWidget;
 var     SpriteWidget        RallyPointAlertWidget;
@@ -185,11 +177,21 @@ var     TextWidget          IQTextWidget;
 
 var localized string        PrereleaseDisclaimerText;
 
+var     UComparator         MapIconAttachmentDrawOrderComparator;
+
+function bool MapIconAttachmentDrawOrderCompareFunction(Object A, Object B)
+{
+    return DHMapIconAttachment(A).DrawOrder > DHMapIconAttachment(B).DrawOrder;
+}
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
 {
     super(HudBase).PostBeginPlay();
+
+    MapIconAttachmentDrawOrderComparator = new class'UComparator';
+    MapIconAttachmentDrawOrderComparator.CompareFunction = MapIconAttachmentDrawOrderCompareFunction;
 }
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
@@ -997,12 +999,6 @@ function DrawHudPassC(Canvas C)
         }
     }
 
-    // Draw indicators
-    if (bShowIndicators)
-    {
-        DrawIndicators(C);
-    }
-
     // Objective capture bar
     DrawCaptureBar(C);
 
@@ -1013,10 +1009,7 @@ function DrawHudPassC(Canvas C)
     }
 
     // Rally Point Status
-    if (bShowRallyPoint)
-    {
-        DrawRallyPointStatus(C);
-    }
+    DrawRallyPointStatus(C);
 
     // Rally
 
@@ -1441,7 +1434,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && Passenger == none)
+                if (Passenger == none)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
@@ -1496,7 +1489,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
                 DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-                if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+                if (WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
                 {
                     VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
                     VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -3276,16 +3269,7 @@ function DrawVehiclePointSphere()
                     continue;
                 }
 
-                if (AV.Cannon != none && AV.NewVehHitpoints[i].PointBone == AV.Cannon.YawBone)
-                {
-                    HitPointCoords = AV.Cannon.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
-                }
-                else
-                {
-                    HitPointCoords = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
-                }
-
-                HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> Rotator(HitPointCoords.XAxis));
+                HitPointLocation = AV.GetNewHitPointLocation(i);
 
                 if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                 {
@@ -3790,6 +3774,8 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 {
     local DHPlayer PC;
     local DHMapIconAttachment MIA;
+    local array<DHMapIconAttachment> MapIconAttachments;
+    local int i;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3797,8 +3783,7 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     {
         return;
     }
-
-    foreach AllActors(Class'DHMapIconAttachment', MIA)
+    foreach DynamicActors(Class'DHMapIconAttachment', MIA)
     {
         if (MIA == none || MIA.GetVisibilityIndex() == 255)
         {
@@ -3807,17 +3792,26 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 
         if (MIA.GetVisibilityIndex() == PC.GetTeamNum() || MIA.GetVisibilityIndex() == NEUTRAL_TEAM_INDEX)
         {
-            MapIconAttachmentIcon.WidgetTexture = MIA.GetIconMaterial(PC);
-            MapIconAttachmentIcon.TextureCoords = MIA.GetIconCoords(PC);
-            MapIconAttachmentIcon.TextureScale = MIA.GetIconScale(PC);
-            MapIconAttachmentIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
-
-            DHDrawIconOnMap(C, SubCoords, MapIconAttachmentIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
-            // HACK: This stops the engine from "instancing" the texture,
-            // resulting in the bizarre bug where all the icons share the same
-            // rotation.
-            C.DrawVertical(0.0, 0.0);
+            MapIconAttachments[MapIconAttachments.Length] = MIA;
         }
+    }
+
+    class'USort'.static.Sort(MapIconAttachments, MapIconAttachmentDrawOrderComparator);
+
+    for (i = 0; i < MapIconAttachments.Length; ++i)
+    {
+        MIA = MapIconAttachments[i];
+
+        MapIconAttachmentIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+        MapIconAttachmentIcon.TextureCoords = MIA.GetIconCoords(PC);
+        MapIconAttachmentIcon.TextureScale = MIA.GetIconScale(PC);
+        MapIconAttachmentIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+
+        DHDrawIconOnMap(C, SubCoords, MapIconAttachmentIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+        // HACK: This stops the engine from "instancing" the texture,
+        // resulting in the bizarre bug where all the icons share the same
+        // rotation.
+        C.DrawVertical(0.0, 0.0);
     }
 }
 
@@ -4145,7 +4139,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconLargeScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale, PRI.GetNamePrefix());
         }
     }
 }
@@ -4460,41 +4454,6 @@ function DisplayMessages(Canvas C)
 
         Y += 44.0 * Scale;
     }
-}
-
-function DrawIndicators(Canvas Canvas)
-{
-    if (PlayerOwner == none || PawnOwnerPRI == none)
-    {
-        return;
-    }
-
-    if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 12)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Red;
-        PacketLossIndicator.Tints[0].A = 255;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 8)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.OrangeRed;
-        PacketLossIndicator.Tints[0].A = 210;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 4)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Orange;
-        PacketLossIndicator.Tints[0].A = 180;
-    }
-    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss)
-    {
-        PacketLossIndicator.Tints[0] = Class'UColor'.default.Yellow;
-        PacketLossIndicator.Tints[0].A = 150;
-    }
-    else
-    {
-        return;
-    }
-
-    DrawSpriteWidget(Canvas, PacketLossIndicator);
 }
 
 function DrawCaptureBar(Canvas Canvas)
@@ -5494,25 +5453,6 @@ function DisplayVoiceGain(Canvas C)
     C.DrawColor = SavedColor;
 }
 
-function bool ShouldShowRallyPointIndicator()
-{
-    local DHPlayer PC;
-
-    if (!bShowRallyPoint)
-    {
-        return false;
-    }
-
-    PC = DHPlayer(PlayerOwner);
-
-    if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
-    {
-        return false;
-    }
-
-    return PC.SquadReplicationInfo.bAreRallyPointsEnabled;
-}
-
 function DrawIQWidget(Canvas C)
 {
     local DHPlayer PC;
@@ -5924,7 +5864,7 @@ function DHDrawTypingPrompt(Canvas C)
     local float XL, YL;
     local DHConsole Console;
     local Color SayTypeColor;
-    local string SayTypeText;
+    local string SayTypeText, PromptText;
     local class<DHLocalMessage> SayTypeMessageClass;
 
     Console = DHConsole(PlayerConsole);
@@ -5962,6 +5902,13 @@ function DHDrawTypingPrompt(Canvas C)
     SayTypeText = Class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ Class'GameInfo'.static.MakeColorCode(WhiteColor);
 
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
+
+    // Draw the button prompt for cycling chat modes.
+    PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+    YPos += YL;
+    C.SetPos(XPos, YPos);
+    C.DrawColor.A = 128;
+    C.DrawTextClipped(PromptText, true);
 }
 
 // Modified from ROHud to pass the right name of the weapon and fix the font.
@@ -6018,10 +5965,6 @@ defaultproperties
     ConsoleMessageCount=8
     ConsoleFontSize=6
     MessageFontOffset=0
-    bShowIndicators=true
-    MinPromptPacketLoss=10
-
-    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true
@@ -6060,6 +6003,7 @@ defaultproperties
     SpawnNoRoleText="Press [ESC] to select a role"
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
+    TypingPromptText="Press [{0}] to change chat channel"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture
@@ -6182,7 +6126,6 @@ defaultproperties
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),OffsetX=16,OffsetY=24)
 
     // Rally Point
-    bShowRallyPoint=true
     RallyPointWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     RallyPointGlowWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_glow',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     RallyPointAlertWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.rp_icon_alert',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.25,DrawPivot=DP_UpperRight,PosX=0.85,PosY=0.15,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

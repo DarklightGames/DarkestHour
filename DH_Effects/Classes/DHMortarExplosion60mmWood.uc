@@ -75,7 +75,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
         ColorScaleRepeats=4.000000
         MaxParticles=20
-        name="chips_out"
+        Name="chips_out"
         StartLocationOffset=(Z=20.000000)
         AddLocationFromOtherEmitter=1
         SphereRadiusRange=(Min=20.000000,Max=50.000000)

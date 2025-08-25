@@ -8,7 +8,7 @@ class DH_ZiS2Factory extends DHATGunFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_ZiS2Gun'
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
+    Mesh=SkeletalMesh'DH_Zis_anm.ZiS_body_ext'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
     TeamNum=ALLIES
 }

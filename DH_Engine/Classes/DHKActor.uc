@@ -25,6 +25,6 @@ defaultproperties
         KImpactThreshold=700.0
         KMass=0.1
     End Object
-    KParams=KarmaParamsRBFull'DHKActor.KParams0'
+    KParams=KParams0
 }
 

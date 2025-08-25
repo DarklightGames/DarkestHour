@@ -259,7 +259,7 @@ var int VariantIndex;
 var int SkinIndex;
 
 // When true, this construction is "active" and counts towards the owning team's active limit.
-var bool bIsActive;
+var private bool bIsActive;
 
 // Debugging
 var bool bSinglePlayerOnly;  // If true, this construction can only be placed in single player mode.
@@ -397,6 +397,11 @@ simulated function DestroyConstructionSockets()
             ConstructionSockets[i].SocketActor.Destroy();
         }
     }
+}
+
+function bool IsActive()
+{
+    return bIsActive;
 }
 
 // Called when this construction is placed by a player to update the active and remaining counts.
@@ -597,7 +602,7 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
-    foreach AllActors(Class'DHConstructionSupplyAttachment', Attachment)
+    foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
         if (Attachment.IsTouchingActor(self))
         {

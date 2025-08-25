@@ -8,18 +8,35 @@ class DH_ZiS3Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.76mmShellCase2_Shine'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3_gun_collision')
+    Mesh=SkeletalMesh'DH_ZiS_anm.ZIS3_TURRET_EXT'
+
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
+    Skins(1)=Texture'DH_ZiS_tex.ZIS_TURRET_EXT'
+
+    AnimationDrivers(0)=(Channel=2,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
+    AnimationDrivers(1)=(Channel=3,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+    AnimationDrivers(2)=(Channel=4,AnimationName="YAW_DRIVER",BoneName="YAW_WHEEL",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS3_TURRET_YAW_COLLISION',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS3_BARREL_COLLISION',AttachBone="BARREL")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS_PITCH_COLLISION',AttachBone="GUN_PITCH")
+
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE_ZIS3"
+    GunnerAttachmentBone="GUN_YAW"
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
     MaxNegativeYaw=-4915
-    YawStartConstraint=-5500.0
-    YawEndConstraint=5500.0
-    CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64100
+    YawStartConstraint=-4915.0
+    YawEndConstraint=4915.0
+    CustomPitchUpLimit=5460     // +30 degrees
+    CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_ZiS3CannonShell'
@@ -75,4 +92,13 @@ defaultproperties
     RangeSettings(20)=4000
 
     ResupplyInterval=7.5
+
+    ProjectileRotationMode=PRM_MuzzleBone
+
+    ShakeOffsetMag=(X=12.0,Y=4.0,Z=20.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=8.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=6.0
 }
