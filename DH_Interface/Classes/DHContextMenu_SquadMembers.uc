@@ -33,10 +33,7 @@ protected function AssembleMenu(GUIComponent Component)
     SelectedPRI = GetSelectedPRI(Component);
     SquadComponent = DHGUISquadComponent(Component);
 
-    if (PC == none ||
-        SRI == none ||
-        SelectedPRI == none ||
-        SquadComponent == none)
+    if (PC == none || SRI == none || SelectedPRI == none || SquadComponent == none)
     {
         return;
     }

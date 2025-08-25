@@ -2035,6 +2035,24 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int T
     return SquadRallyPoints;
 }
 
+simulated function int GetActiveSquadRallyPointCount(int TeamIndex, int SquadIndex)
+{
+    local int i, Count;
+
+    for (i = 0; i < arraycount(RallyPoints); ++i)
+    {
+        if (RallyPoints[i] != none &&
+            RallyPoints[i].GetTeamIndex() == TeamIndex &&
+            RallyPoints[i].SquadIndex == SquadIndex &&
+            RallyPoints[i].IsActive())
+        {
+            Count += 1;
+        }
+    }
+
+    return Count;
+}
+
 simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
     local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;

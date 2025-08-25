@@ -15,7 +15,6 @@ var             DHGameReplicationInfo       GRI;
 var             DHPlayer                    PC;
 var             DHPlayerReplicationInfo     PRI;
 
-var             GUIContextMenu              SquadRallyPointContextMenu;
 var             Material                    SpawnPointBlockedOverlay;
 
 var             Vector                      MapClickLocation;
@@ -41,8 +40,6 @@ var             Range                       ZoomScaleInterpRange;
 var             bool                        bIsPanning;
 var             bool                        bIsViewportInterpolating;
 
-var localized string        SquadRallyPointDestroyText;
-var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
 var localized string        ActiveTargetSelectText;
 var localized string        ActiveTargetDeselectText;
@@ -54,9 +51,14 @@ var localized string        AdminDestroyAxisSpawnsText;
 var localized string        AdminDestroySpawnText;
 var localized string        AdminTeleportText;
 
-var             bool                        bSelectArtilleryTarget;
-var             bool                        bDeselectArtilleryTarget;
-var             int                         TargetSquadIndex;
+var             bool        bSelectArtilleryTarget;
+var             bool        bDeselectArtilleryTarget;
+var             int         TargetSquadIndex;
+
+var DHContextMenu_SquadRallyPoint   SquadRallyPointContextMenu;
+
+//var DHContextMenu_AdminSpawn        AdminSpawnContextMenu;
+//var DHContextMenu_CommandPost       CommandPostContextMenu;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 delegate OnZoomLevelChanged(int ZoomLevel);
@@ -71,9 +73,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         b_SpawnPoints[i].Tag = i;
         b_SpawnPoints[i].ContextMenu.Tag = i;
-        b_SpawnPoints[i].ContextMenu.OnOpen = MyContextOpen;
-        b_SpawnPoints[i].ContextMenu.OnClose = MyContextClose;
-        b_SpawnPoints[i].ContextMenu.OnSelect = MyContextSelect;
+        b_SpawnPoints[i].ContextMenu.OnOpen = SquadRallyPointContextMenuOnOpen;
+        b_SpawnPoints[i].ContextMenu.OnClose = SquadRallyPointContextMenuOnClose;
+        b_SpawnPoints[i].ContextMenu.OnSelect = SquadRallyPointContextMenuOnSelect;
     }
 
     PC = DHPlayer(PlayerOwner());
@@ -290,11 +292,10 @@ function bool OnDblClick(GUIComponent Sender)
     return false;
 }
 
+// todo: CURRENTLY UNUSED
 function bool MyContextOpen(GUIContextMenu Sender)
 {
-    local DHSpawnPoint_SquadRallyPoint SRP;
     local DHSpawnPoint_Admin AdminSpawn;
-    local array<DHSpawnPoint_SquadRallyPoint> RallyPoints;
 
     if (Sender == none || PRI == none || GRI == none)
     {
@@ -314,32 +315,6 @@ function bool MyContextOpen(GUIContextMenu Sender)
             return true;
         }
     }
-
-    // RALLY POINT MENU
-    if (PC == none || PC.SquadReplicationInfo == none || !PRI.IsSquadLeader())
-    {
-        return false;
-    }
-
-    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
-
-    if (SRP == none || SRP.GetTeamIndex() != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
-    {
-        return false;
-    }
-
-    Sender.ContextItems.Length = 0;
-    Sender.AddItem(default.SquadRallyPointDestroyText);
-
-    RallyPoints = PC.SquadReplicationInfo.GetActiveSquadRallyPoints(SRP.GetTeamIndex(), SRP.SquadIndex);
-
-    if (RallyPoints.Length > 1)
-    {
-        Sender.AddItem("-");
-        Sender.AddItem(default.SquadRallyPointSetAsSecondaryText);
-    }
-
-    return true;
 }
 
 function bool MyContextClose(GUIContextMenu Sender)
@@ -349,7 +324,6 @@ function bool MyContextClose(GUIContextMenu Sender)
 
 function MyContextSelect(GUIContextMenu Sender, int Index)
 {
-    local DHSpawnPoint_SquadRallyPoint SRP;
     local DHSpawnPoint_Admin AdminSpawn;
 
     if (PRI == none || GRI == none || PC == none)
@@ -367,24 +341,6 @@ function MyContextSelect(GUIContextMenu Sender, int Index)
             PC.ServerDestroyAdminSpawn(AdminSpawn);
             return;
         }
-    }
-
-    // RALLY POINT MENU
-    if (!PRI.IsSquadLeader())
-    {
-        return;
-    }
-
-    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
-
-    switch (Index)
-    {
-        case 0:  // Destroy
-            PC.ServerSquadDestroyRallyPoint(SRP);
-            break;
-        case 2:  // Set as secondary
-            PC.ServerSquadSwapRallyPoints();
-            break;
     }
 }
 
@@ -859,13 +815,27 @@ function bool InternalOnHover(GUIComponent Sender)
     return false;
 }
 
+function bool SquadRallyPointContextMenuOnOpen(GUIContextMenu Sender)
+{
+    Sender.ContextItems.Length = 0;
+    return SquadRallyPointContextMenu.OnOpen(Sender, b_SpawnPoints[Sender.Tag]);
+}
+
+function bool SquadRallyPointContextMenuOnClose(GUIContextMenu Sender)
+{
+    return true;
+}
+
+function SquadRallyPointContextMenuOnSelect(GUIContextMenu Sender, int ClickIndex)
+{
+    SquadRallyPointContextMenu.OnClick(Sender, b_SpawnPoints[Sender.Tag], ClickIndex);
+}
+
 defaultproperties
 {
     bAcceptsInput=true
     bCaptureMouse=true
 
-    SquadRallyPointDestroyText="Destroy Rally"
-    SquadRallyPointSetAsSecondaryText="Set as Secondary"
     AdminPlaceAlliedSpawnText="ADMIN: Place ALLIED spawn"
     AdminPlaceAxisSpawnText="ADMIN: Place AXIS spawn"
     AdminDestroyAlliedSpawnsText="ADMIN: Destroy ALLIED admin spawns"
@@ -887,11 +857,14 @@ defaultproperties
 
     OnDraw=InternalOnDraw
 
-    Begin Object Class=DHGUIContextMenu Name=SPContextMenu
-        OnOpen=DHGUIMapComponent.MyContextOpen
-        OnClose=DHGUIMapComponent.MyContextClose
-        OnSelect=DHGUIMapComponent.MyContextSelect
+    Begin Object Class=DHGUIContextMenu Name=SRPCMGUI
+        OnOpen=SquadRallyPointContextMenuOnOpen
+        OnClose=SquadRallyPointContextMenuOnClose
+        OnSelect=SquadRallyPointContextMenuOnSelect
     End Object
+    Begin Object Class=DHContextMenu_SquadRallyPoint Name=CMSRP
+    End Object
+    SquadRallyPointContextMenu=CMSRP
 
     // Spawn points
     Begin Object Class=DHGUICheckBoxButton Name=SpawnPointButton
@@ -909,7 +882,7 @@ defaultproperties
         CheckedOverlay(4)=Material'DH_GUI_Tex.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
         bCanClickUncheck=false
-        ContextMenu=SPContextMenu
+        ContextMenu=SRPCMGUI
         GetOverlayMaterial=MyGetOverlayMaterial
     End Object
 

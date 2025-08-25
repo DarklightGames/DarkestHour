@@ -35,7 +35,12 @@ final protected function InsertEntry(int CaptionIndex, int Index)
 
 protected function string GetEntryString(int EntryIndex, GUIComponent Component)
 {
-    return "(No string for entry " @ EntryIndex $ ")";
+    if (EntryIndex < 0 || EntryIndex >= default.EntryTexts.Length)
+    {
+        return "(No string for entry " @ EntryIndex $ ")";
+    }
+
+    return default.EntryTexts[EntryIndex];
 }
 
 final function DHPlayer GetComponentController(GUIComponent Component)
