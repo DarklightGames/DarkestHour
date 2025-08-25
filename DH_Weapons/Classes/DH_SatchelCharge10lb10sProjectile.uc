@@ -84,7 +84,7 @@ function HandleVehicles(Vector HitLocation)
     local Vector        HitLoc, HitNorm;
     local DHVehicle     Veh;
     local int           TrackNum;
-    local float         Distance, DistanceFactor, EngineDamage;
+    local float         Distance, DistanceFactor;
     local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
 
     // Find out if we are on a vehicle
@@ -121,10 +121,7 @@ function HandleVehicles(Vector HitLocation)
                 }
                 else // Otherwise do minor damage to the engine
                 {
-                    Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
-
-                    EngineDamage=EngineDamageMax * (Distance / EngineDamageRadius);
-                    
+                    Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);                    
                 }
             }
 
