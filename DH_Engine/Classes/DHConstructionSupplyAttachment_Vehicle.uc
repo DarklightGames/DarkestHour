@@ -49,4 +49,6 @@ defaultproperties
     SupplyCountMax=2000
     bCanBeResupplied=true
     MapIconAttachmentClass=None
+    // We want vehicle supply caches to be drawn from later than static ones.
+    SortOrder=1
 }

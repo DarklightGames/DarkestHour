@@ -597,20 +597,30 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
+private function AddMainSupplyAttachments(int TeamIndex, out array<DHConstructionSupplyAttachment> Attachments)
 {
-    local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
     foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
-        if (Attachment.IsTouchingActor(self))
+        if (Attachment.bIsMainSupplyCache && Attachment.GetTeamIndex() == TeamIndex)
         {
             Attachments[Attachments.Length] = Attachment;
         }
     }
+}
 
-    return Attachments;
+private function AddTouchingSupplyAttachments(int TeamIndex, out array<DHConstructionSupplyAttachment> Attachments)
+{
+    local DHConstructionSupplyAttachment Attachment;
+
+    foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
+    {
+        if (Attachment.GetTeamIndex() == TeamIndex && Attachment.IsTouchingActor(self))
+        {
+            Attachments[Attachments.Length] = Attachment;
+        }
+    }
 }
 
 // Returns the number of supply points that were refunded.
@@ -621,18 +631,29 @@ function int RefundSupplies(Pawn Instigator)
     local int SuppliesToRefund, SuppliesRefunded;
     local array<DHConstructionSupplyAttachment> Attachments;
     local UComparator AttachmentComparator;
+    local DHGameReplicationInfo GRI;
 
     MySupplyCost = GetSupplyCost(GetContext());
 
     if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
+        AddTouchingSupplyAttachments(TeamIndex, Attachments);
+
         // Sort the supply attachments by priority.
-        Attachments = GetTouchingSupplyAttachments();
         AttachmentComparator = new Class'UComparator';
         AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
         Class'USort'.static.Sort(Attachments, AttachmentComparator);
 
-        // Refund supplies to the touching supply attachments.
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        // If we are in friendly territory and still have supplies that can be resupplied,
+        // deposit the remaining supples into any available main caches.
+        if (GRI.IsInFriendlyZone(Location.X, Location.Y, Instigator.GetTeamNum()))
+        {
+            AddMainSupplyAttachments(TeamIndex, Attachments);
+        }
+
+        // Refund supplies to relevant supply attachments.
         for (i = 0; i < Attachments.Length && MySupplyCost > 0; ++i)
         {
             SuppliesToRefund = Min(MySupplyCost, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
@@ -656,7 +677,7 @@ function TearDown(Pawn Instigator)
         if (SuppliesRefunded > 0)
         {
             // Send a message to the instigating player about the amount of supplies that were refunded.
-            Instigator.ReceiveLocalizedMessage(Class'DHsupplyMessage', Class'UInteger'.static.FromShorts(7, SuppliesRefunded));
+            Instigator.ReceiveLocalizedMessage(Class'DHSupplyMessage', Class'UInteger'.static.FromShorts(7, SuppliesRefunded));
         }
     }
 

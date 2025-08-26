@@ -26,8 +26,8 @@ var bool                bAreSuppliesTransactable;
 
 // Used to resolve the order in which supplies will be drawn from in the case
 // where the the player is near multiple supply attachments when placing
-// constructions. A higher value means it will be drawn from first.
-var int                 SortPriority;
+// constructions. A higher value means it will be drawn from later.
+var int                 SortOrder;
 
 var array<Pawn>         TouchingPawns;
 
@@ -358,7 +358,7 @@ simulated function string GetHumanReadableName()
 
 static function bool CompareFunction(Object LHS, Object RHS)
 {
-    return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
+    return DHConstructionSupplyAttachment(LHS).SortOrder > DHConstructionSupplyAttachment(RHS).SortOrder;
 }
 
 // TODO: logic for getting this resupplied; some sort of hook that things can
