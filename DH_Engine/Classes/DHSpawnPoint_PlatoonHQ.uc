@@ -16,6 +16,16 @@ var int     CapturingEnemiesCount;
 var float   CaptureRadiusInMeters;
 var int     EnemiesNeededToDeconstruct;
 
+// The last time a player used this as a spawn, relative to GRI.ElapsedTime.
+// This should also include any Vehicle HQs since those are dependent on the HQ itself.
+var int     StaleTime;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        StaleTime;
+}
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -119,6 +129,22 @@ function Timer()
 simulated function int GetDesirability()
 {
     return 3;
+}
+
+function OnPawnSpawned(Pawn P)
+{
+    super.OnPawnSpawned(P);
+    
+    // Update the new stale time.
+    const ABANDONED_THRESHOLD_SECONDS = 300;    // 5 minutes.
+
+    StaleTime = Level.Game.GameReplicationInfo.ElapsedTime + 300;
+}
+
+// Returns true if the Command Post is stale (i.e. has not been used recently).
+simulated function bool IsStale(DHGameReplicationInfo GRI)
+{
+    return GRI != none && GRI.ElapsedTime >= StaleTime;
 }
 
 defaultproperties

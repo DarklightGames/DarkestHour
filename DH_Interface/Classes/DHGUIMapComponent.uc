@@ -55,7 +55,7 @@ var             bool        bSelectArtilleryTarget;
 var             bool        bDeselectArtilleryTarget;
 var             int         TargetSquadIndex;
 
-var DHContextMenu_SquadRallyPoint   SquadRallyPointContextMenu;
+var DHContextMenu           SpawnPointContextMenu;
 
 //var DHContextMenu_AdminSpawn        AdminSpawnContextMenu;
 //var DHContextMenu_CommandPost       CommandPostContextMenu;
@@ -817,8 +817,30 @@ function bool InternalOnHover(GUIComponent Sender)
 
 function bool SquadRallyPointContextMenuOnOpen(GUIContextMenu Sender)
 {
+    local DHSpawnPointBase SP;
+    local class<DHContextMenu> ContextMenuClass;
+
+    SP = GRI.SpawnPoints[Sender.Tag];
+
     Sender.ContextItems.Length = 0;
-    return SquadRallyPointContextMenu.OnOpen(Sender, b_SpawnPoints[Sender.Tag]);
+
+    // TODO: make this returned by the spawn point class itself based on context (pass through the PC, probably).
+    if (SP.IsA('DHSpawnPoint_SquadRallyPoint'))
+    {
+        ContextMenuClass = Class'DHContextMenu_SquadRallyPoint';
+    }
+    else if (SP.IsA('DHSpawnPoint_PlatoonHQ'))
+    {
+        ContextMenuClass = Class'DHContextMenu_CommandPost';
+    }
+    else
+    {
+        return false;
+    }
+
+    SpawnPointContextMenu = new ContextMenuClass;
+
+    return SpawnPointContextMenu.OnOpen(Sender, b_SpawnPoints[Sender.Tag]);
 }
 
 function bool SquadRallyPointContextMenuOnClose(GUIContextMenu Sender)
@@ -828,7 +850,7 @@ function bool SquadRallyPointContextMenuOnClose(GUIContextMenu Sender)
 
 function SquadRallyPointContextMenuOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    SquadRallyPointContextMenu.OnClick(Sender, b_SpawnPoints[Sender.Tag], ClickIndex);
+    SpawnPointContextMenu.OnClick(Sender, b_SpawnPoints[Sender.Tag], ClickIndex);
 }
 
 defaultproperties
@@ -862,9 +884,6 @@ defaultproperties
         OnClose=SquadRallyPointContextMenuOnClose
         OnSelect=SquadRallyPointContextMenuOnSelect
     End Object
-    Begin Object Class=DHContextMenu_SquadRallyPoint Name=CMSRP
-    End Object
-    SquadRallyPointContextMenu=CMSRP
 
     // Spawn points
     Begin Object Class=DHGUICheckBoxButton Name=SpawnPointButton
