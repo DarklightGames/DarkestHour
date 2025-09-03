@@ -31,6 +31,7 @@ enum ERoleSelector
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 var     bool                    bIsIncognito;
+var     bool                    bIsPossesingPawn;
 
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
@@ -57,7 +58,7 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores, PlayerIQ, NoRallyPointsTime, bIsIncognito;
+        TotalScore, CategoryScores, PlayerIQ, NoRallyPointsTime, bIsIncognito, bIsPossesingPawn;
 }
 
 simulated function string GetNamePrefix()
