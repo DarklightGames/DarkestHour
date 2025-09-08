@@ -21,4 +21,5 @@ defaultproperties
     VehicleMass=8.0
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
+    ShadowZOffset=40
 }

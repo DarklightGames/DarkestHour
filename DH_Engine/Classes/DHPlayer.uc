@@ -5828,15 +5828,20 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
+    else if (ChannelTitle ~= VRI.CommandChannelName)
     {
-        if (ChatRoomMessageClass != none)
+        if (!PRI.CanAccessCommandChannel())
         {
-            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            if (ChatRoomMessageClass != none)
+            {
+                ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            }
+            
+            // If we are trying to speak in command but we aren't a SL, then return out
+            return;
         }
 
-        // If we are trying to speak in command but we aren't a SL, then return out
-        return;
+        VCR = VRI.GetCommandChannel(GetTeamNum());
     }
     else
     {

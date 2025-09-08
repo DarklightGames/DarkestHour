@@ -3,12 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40Factory extends DHATGunFactory;
+class DH_HetzerCannonLate extends DH_HetzerCannon;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_Pak40ATGun'
-    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak40'
-    TeamNum=AXIS
+    Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_LATE_EXT'
 }

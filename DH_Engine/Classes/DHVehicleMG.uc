@@ -33,6 +33,8 @@ var bool            bHasMultipleBarrels;
 var byte            FiringBarrelIndex;        // Barrel index that is due to fire next.
 var array<SBarrel>  Barrels;
 
+var bool            bShouldBaseTakeDamage;       // When true, damage will not be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
+
 const BARRELS_MAX = 4;
 var SBarrelState    BarrelStates[BARRELS_MAX];
 
@@ -341,7 +343,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
 {
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
-    if (Base != none)
+    if (Base != none && bShouldBaseTakeDamage)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
@@ -495,6 +497,8 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
+
+    bShouldBaseTakeDamage=true
 
     BarrelSteamEmitterClass=Class'DHMGSteam'
 }

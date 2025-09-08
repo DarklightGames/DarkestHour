@@ -17,6 +17,29 @@ class DHConstructionSocket extends DHActorProxySocket;
 var() array<class<DHConstruction> > IncludeClasses;
 var() array<class<DHConstruction> > ExcludeClasses;
 
+var DHConstruction Occupant;            // The current construction that is occupying this socket.
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        Occupant;
+}
+
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (Occupant != None)
+    {
+        Occupant.Destroy();
+    }
+}
+
+simulated function bool IsOccupied()
+{
+    return Occupant != None;
+}
+
 simulated function bool IsForConstructionClass(class<DHConstruction> ConstructionClass)
 {
     local int i;

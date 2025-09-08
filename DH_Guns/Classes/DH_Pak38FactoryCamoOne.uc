@@ -3,10 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ModifyMDVTele extends DHDeprecated
-    placeable;
+class DH_Pak38FactoryCamoOne extends DHATGunFactory;
 
 defaultproperties
 {
-    Text="Please remove this actor from your level, the class will be deleted and will break your level"
+    VehicleClass=Class'DH_Pak38ATGunCamoOne'
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_camo'
+    TeamNum=AXIS
 }

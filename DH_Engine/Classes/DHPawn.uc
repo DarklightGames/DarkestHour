@@ -6752,13 +6752,12 @@ exec function GimmeSupplies()
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantName)
+exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantName, optional int Distance)
 {
     local class<Vehicle>    VehicleClass;
     local Vehicle           V;
     local Vector            SpawnLocation;
     local Rotator           SpawnDirection;
-    local int               Distance;
     local float             Degrees;
     local string            VehicleClassName, S;
 

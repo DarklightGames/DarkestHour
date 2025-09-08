@@ -37,6 +37,10 @@ auto simulated state Constructing
     {
         super.BeginState();
 
+        // We initialize the spawn point here since we run this code path when we come out of the dummy
+        // state after the spawn point has already been destroyed. This makes sure it's back in business.
+        InitializeSpawnPoint();
+
         if (Radio != none)
         {
             Radio.MakeInvisible();
@@ -68,28 +72,27 @@ simulated state Constructed
     }
 }
 
-simulated function OnPlaced()
-{
-    local Vector HitLocation;
-    super.OnPlaced();
+simulated function DHSpawnPoint_PlatoonHQ InitializeSpawnPoint()
+{  
+    local Vector SpawnPointLocation;
 
-    if (Role == ROLE_Authority)
+    if (SpawnPoint == none)
     {
-        if (SpawnPoint == none)
-        {
-            HitLocation = Location;
-            HitLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
-            SpawnPoint = Spawn(SpawnPointClass, self);
-            SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
-            SpawnPoint.SetLocation(HitLocation);
-            SpawnPoint.SetTeamIndex(GetTeamIndex());
-            SpawnPoint.SetIsActive(true);
-            SpawnPoint.BlockReason = SPBR_Constructing;
-            SpawnPoint.ResetEstablishmentTimer();
-        }
-    }
-}
+        SpawnPointLocation = Location;
+        SpawnPointLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
 
+        SpawnPoint = Spawn(SpawnPointClass, self);
+        SpawnPoint.Construction = self;
+        SpawnPoint.SetLocation(SpawnPointLocation);
+        SpawnPoint.SetTeamIndex(GetTeamIndex());
+        SpawnPoint.SetIsActive(true);
+    }
+    
+    SpawnPoint.ResetEstablishmentTimer();
+    SpawnPoint.BlockReason = SPBR_Constructing;
+
+    return SpawnPoint;
+}
 
 simulated function OnConstructed()
 {
@@ -157,6 +160,8 @@ simulated function DestroyAttachments()
 
 simulated function Destroyed()
 {
+    super.Destroyed();
+
     DestroyAttachments();
 }
 
