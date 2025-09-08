@@ -36,4 +36,5 @@ defaultproperties
     Constructions(15)=(ConstructionClass=Class'DH_M1927GunConstruction',Limit=5,MaxActive=-1)
     Constructions(16)=(ConstructionClass=Class'DH_45mmM1942GunConstruction',Limit=2,MaxActive=-1)
     Constructions(17)=(ConstructionClass=Class'DH_BM36MortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(18)=(ConstructionClass=Class'DH_MaximM191030GunConstruction',Limit=10,MaxActive=-1)
 }

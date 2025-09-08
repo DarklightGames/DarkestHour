@@ -15,5 +15,4 @@ defaultproperties
     bCanOnlyPlaceOnTerrain=false
     bCanPlaceIndoors=true
     ArcLengthTraceIntervalInMeters=0.125
-    bSinglePlayerOnly=true
 }

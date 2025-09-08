@@ -261,10 +261,6 @@ var int SkinIndex;
 // When true, this construction is "active" and counts towards the owning team's active limit.
 var private bool bIsActive;
 
-// Debugging
-var bool bSinglePlayerOnly;  // If true, this construction can only be placed in single player mode.
-                             // Used to prevent players from placing constructions that are not yet ready for multiplayer.
-
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1111,7 +1107,7 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
     PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
 
-    if (default.bSinglePlayerOnly && (Context.LevelInfo != none && Context.LevelInfo.Level.NetMode != NM_Standalone))
+    if (Context.LevelInfo != none && Context.LevelInfo.Level.NetMode != NM_Standalone)
     {
         return false;
     }

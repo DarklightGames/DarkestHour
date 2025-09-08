@@ -2,25 +2,15 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no
-//     cooldown].
-// [ ] *maybe* mid-clip reloading.
-// [ ] Sound notifications for reload animation.
-// [ ] Maybe make a little "ping" sound when the clip cycles.
-// [ ] Fix timing of reload stages and remove the sounds.
-// [ ] Destroyed mesh.
-// [ ] Make sure it all works in MP.
-// [ ] Hide hands actor in third person.
-// [ ] Animation bug when the gun is empty and you get onto it (clip does not
-//     animate) [half-reloads in general are busted]
-// [ ] Fix fucky geo on the hands.
+// Maxim Gun firing: https://www.youtube.com/watch?v=vYx1KnXVvs4
 //==============================================================================
 
-class DH_Fiat1435MG extends DHMountedMG
-    abstract;
+class DH_MaximM191030MG extends DHMountedMG;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_EXT'
+
     ReloadCameraTweenTime=0.5
 
     RangeDistanceUnit=DU_Meters
@@ -29,27 +19,29 @@ defaultproperties
     RangeDriverChannel=1
     RangeDriverBone="REAR_SIGHT"
     
-    RangeTable(0)=(Range=100.0,AnimationTime=0.120)
-    RangeTable(1)=(Range=200.0,AnimationTime=0.135)
-    RangeTable(2)=(Range=300.0,AnimationTime=0.150)
-    RangeTable(3)=(Range=400.0,AnimationTime=0.165)
-    RangeTable(4)=(Range=500.0,AnimationTime=0.190)
-    RangeTable(5)=(Range=600.0,AnimationTime=0.230)
-    RangeTable(6)=(Range=700.0,AnimationTime=0.27)
-    RangeTable(7)=(Range=800.0,AnimationTime=0.31)
-    RangeTable(8)=(Range=900.0,AnimationTime=0.36)
-    RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
+    // RangeTable(0)=(Range=100.0,AnimationTime=0.120)
+    // RangeTable(1)=(Range=200.0,AnimationTime=0.135)
+    // RangeTable(2)=(Range=300.0,AnimationTime=0.150)
+    // RangeTable(3)=(Range=400.0,AnimationTime=0.165)
+    // RangeTable(4)=(Range=500.0,AnimationTime=0.190)
+    // RangeTable(5)=(Range=600.0,AnimationTime=0.230)
+    // RangeTable(6)=(Range=700.0,AnimationTime=0.27)
+    // RangeTable(7)=(Range=800.0,AnimationTime=0.31)
+    // RangeTable(8)=(Range=900.0,AnimationTime=0.36)
+    // RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
 
     bLimitYaw=true
-    MaxNegativeYaw=-2184    // -12 degrees
-    MaxPositiveYaw=2184     // +12 degrees
-    CustomPitchUpLimit=3640     // +20 degrees
-    CustomPitchDownLimit=61895  // -20 degrees
+    MaxNegativeYaw=-8192    // -45 degrees
+    MaxPositiveYaw=8192     // +45 degrees
+    CustomPitchUpLimit=2002     // +12 degrees
+    CustomPitchDownLimit=63534  // -12 degrees
 
     // Ammo
-    ProjectileClass=Class'DH_Fiat1435Bullet'
+    InitialPrimaryAmmo=250
+    NumMGMags=3
+    ProjectileClass=Class'DH_Fiat1435Bullet'                    // TODO: replace with maxim bullet (same as mosin?)
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=Class'DH_Fiat1435TracerBullet'
+    TracerProjectileClass=Class'DH_Fiat1435TracerBullet'        // TODO: replace
     TracerFrequency=7
 
     // Weapon fire
@@ -66,8 +58,6 @@ defaultproperties
     ShellEjectBone="EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
-
-    ProjectileRotationMode=PRM_MuzzleBone
 
     // Regular MGs do not have collision on because it's assumed that they're a small part
     // mounted on a larger vehicle. In this case, we want to have collision on because it's
