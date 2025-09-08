@@ -17,6 +17,7 @@ enum ESpawnPointBlockReason
     SPBR_MissingRequirement,
     SPBR_NotInSafeZone,
     SPBR_Waiting,
+    SPBR_InDangerZone,
 };
 
 var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently
@@ -440,7 +441,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
 
     foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
-        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
+        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0)
         {
             if (P.GetTeamNum() == TeamIndex)
             {

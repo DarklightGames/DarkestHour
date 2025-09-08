@@ -15,8 +15,8 @@ defaultproperties
     PickupClass=Class'DH_M34GrenadePickup'
     Mesh=SkeletalMesh'DH_M34Grenade_1st.M34'
     Skins(0)=Texture'DH_m34grenade_tex.m34' // TODO: there is no specularity mask for this weapon
-    handnum=1
-    sleevenum=2
+    HandNum=1
+    SleeveNum=2
     GroupOffset=4
     DisplayFOV=80.0
 }

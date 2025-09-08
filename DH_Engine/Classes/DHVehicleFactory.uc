@@ -175,7 +175,7 @@ function SpawnVehicle()
         }
         else
         {
-            Log("Spawned vehicle failed for" @ self);
+            Warn("Spawned vehicle failed for" @ self);
         }
     }
 }

@@ -8,18 +8,12 @@ class DHTab_Hud extends ROTab_Hud;
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
-var automated moCheckBox    ch_ShowIndicators;
-var automated moCheckBox    ch_ShowVehicleVisionCone;
-var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
 var automated moCheckBox    ch_UseNativeItemNames;
 
 var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
-var bool bShowIndicators;
-var bool bShowVehicleVisionCone;
-var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
 var bool bUseNativeItemNames, bUseNativeItemNamesD;
 
@@ -28,14 +22,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     i_BG1.UnmanageComponent(ch_ShowMapUpdatedText);
-    RemoveComponent(ch_ShowMapUpdatedText);
+    i_BG1.UnmanageComponent(ch_ShowMapFirstSpawn);
 
-    i_BG1.ManageComponent(ch_ShowRallyPoint);
+    RemoveComponent(ch_ShowMapUpdatedText);
+    RemoveComponent(ch_ShowMapFirstSpawn);
+
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
-    i_BG1.ManageComponent(ch_ShowIndicators);
-    i_BG1.ManageComponent(ch_ShowVehicleVisionCone);
     i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
     i_BG1.ManageComponent(ch_UseNativeItemNames);
 }
@@ -55,17 +49,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     switch (Sender)
     {
-        case ch_ShowIndicators:
-            if (H != none)
-            {
-                bShowIndicators = H.bShowIndicators;
-            }
-            else
-            {
-                bShowIndicators = Class'DHHud'.default.bShowIndicators;
-            }
-            ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
-            break;
         case ch_SimpleColours:
             if (H != none)
             {
@@ -127,18 +110,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
             break;
-        case ch_ShowMapFirstSpawn:
-            if (DHP != none)
-            {
-                bShowMapOnFirstSpawn = DHP.bShowMapOnFirstSpawn;
-            }
-            else
-            {
-                bShowMapOnFirstSpawn = Class'DHPlayer'.default.bShowMapOnFirstSpawn;
-            }
-            bShowMapOnFirstSpawnD=bShowMapOnFirstSpawn;
-            ch_ShowMapFirstSpawn.SetComponentValue(bShowMapOnFirstSpawn,true);
-            break;
         case ch_ShowCompass:
             if (ROH != none)
             {
@@ -149,17 +120,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bShowCompass = Class'ROHud'.default.bShowCompass;
             }
             ch_ShowCompass.SetComponentValue(bShowCompass,true);
-            break;
-        case ch_ShowRallyPoint:
-            if (ROH != none)
-            {
-                bShowRallyPoint = H.bShowRallyPoint;
-            }
-            else
-            {
-                bShowRallyPoint = Class'DHHud'.default.bShowRallyPoint;
-            }
-            ch_ShowRallyPoint.SetComponentValue(bShowRallyPoint, true);
             break;
         case sl_Opacity:
             fOpacity = (PlayerOwner().myHUD.HudOpacity / 255) * 100;
@@ -186,17 +146,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             HintLevelD = HintLevel;
             co_Hints.SilentSetIndex(HintLevel);
-            break;
-        case ch_ShowVehicleVisionCone:
-            if (H != none)
-            {
-                bShowVehicleVisionCone = H.bShowVehicleVisionCone;
-            }
-            else
-            {
-                bShowVehicleVisionCone = Class'DHHud'.default.bShowVehicleVisionCone;
-            }
-            ch_ShowVehicleVisionCone.SetComponentValue(bShowVehicleVisionCone, true);
             break;
         default:
             super(UT2K4Tab_HudSettings).InternalOnLoadINI(sender, s);
@@ -240,21 +189,6 @@ function SaveSettings()
         else
         {
             Class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
-            Class'DHPlayer'.static.StaticSaveConfig();
-        }
-    }
-
-    if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
-    {
-        if (PC != none)
-        {
-            PC.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
-            PC.ConsoleCommand("set DH_Engine.DHPlayer bShowMapOnFirstSpawn" @ string(bShowMapOnFirstSpawn));
-            PC.SaveConfig();
-        }
-        else
-        {
-            Class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
             Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
@@ -305,31 +239,10 @@ function SaveSettings()
 
     if (H != none)
     {
-        if (H.bShowIndicators != bShowIndicators)
-        {
-            H.bShowIndicators = bShowIndicators;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowIndicators" @ string(bShowIndicators));
-            bSave = true;
-        }
-
-        if (H.bShowVehicleVisionCone != bShowVehicleVisionCone)
-        {
-            H.bShowVehicleVisionCone = bShowVehicleVisionCone;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowVehicleVisionCone" @ string(bShowVehicleVisionCone));
-            bSave = true;
-        }
-
         if (H.bShowCompass != bShowCompass)
         {
             H.bShowCompass = bShowCompass;
             PC.ConsoleCommand("set ROEngine.ROHud bShowCompass" @ string(bShowCompass));
-            bSave = true;
-        }
-
-        if (H.bShowRallyPoint != bShowRallyPoint)
-        {
-            H.bShowRallyPoint = bShowRallyPoint;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowRallyPoint" @ string(bShowRallyPoint));
             bSave = true;
         }
 
@@ -369,9 +282,6 @@ function SaveSettings()
     else
     {
         Class'DHHud'.default.bShowCompass = bShowCompass;
-        Class'DHHud'.default.bShowIndicators = bShowIndicators;
-        Class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
-        Class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         Class'DHHud'.default.bSimpleColours = bSimpleColours;
         Class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
         Class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
@@ -383,12 +293,6 @@ function InternalOnChange(GUIComponent Sender)
 {
     switch (Sender)
     {
-        case ch_ShowIndicators:
-            bShowIndicators = ch_ShowIndicators.IsChecked();
-            break;
-        case ch_ShowVehicleVisionCone:
-            bShowVehicleVisionCone = ch_ShowVehicleVisionCone.IsChecked();
-            break;
         case ch_ShowChatMessages:
             bShowChatMessages = ch_ShowChatMessages.IsChecked();
 
@@ -410,9 +314,6 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_ShowDeathMessages:
             bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
-            break;
-        case ch_ShowRallyPoint:
-            bShowRallyPoint = ch_ShowRallyPoint.IsChecked();
             break;
         case ch_UseTechnicalAmmoNames:
             bUseTechnicalAmmoNames = ch_UseTechnicalAmmoNames.IsChecked();
@@ -444,22 +345,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_SimpleColours=DHmoCheckBox'DH_Interface.GameHudSimpleColours'
-
-    Begin Object Class=DHmoCheckBox Name=GameHudShowVehicleVisionCone
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Vehicle Vision Cone"
-        OnCreateComponent=GameHudShowVehicleVisionCone.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.373749
-        WinHeight=0.034156
-        TabOrder=29
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowVehicleVisionCone=DHmoCheckBox'DH_Interface.GameHudShowVehicleVisionCone'
 
     Begin Object Class=DHmoCheckBox Name=ShowChatMessages
         ComponentJustification=TXTA_Left
@@ -493,22 +378,6 @@ defaultproperties
     End Object
     ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.GameHudShowDeathMessages'
 
-    Begin Object Class=DHmoCheckBox Name=GameHudShowIndicators
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Packet Loss Indicator"
-        OnCreateComponent=GameHudShowIndicators.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.373749
-        WinHeight=0.034156
-        TabOrder=29
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowIndicators=DHmoCheckBox'DH_Interface.GameHudShowIndicators'
-
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -523,21 +392,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowCompass=DHmoCheckBox'DH_Interface.ShowCompass'
-
-    Begin Object Class=DHmoCheckBox Name=ShowRallyPoint
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Squad Rally Point Status"
-        OnCreateComponent=ShowRallyPoint.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.481406
-        WinLeft=0.555313
-        WinWidth=0.373749
-        TabOrder=28
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.ShowRallyPoint'
 
     Begin Object Class=DHmoCheckBox Name=ShowMapFirstSpawn
         ComponentJustification=TXTA_Left

@@ -5,38 +5,6 @@
 
 class DH_ChurchillMkVIITank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Churchill_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Churchill_tex.utx
-
-exec function HideGuards() // TEMPDEBUG - exec to hide the track guards, so can see how the tank looks without them
-{
-    if (IsDebugModeAllowed())
-    {
-        if (Skins[6] == default.Skins[6]) Skins[6] = Texture'DH_VehiclesGE_tex2.Alpha';
-        else Skins[6] = default.Skins[6];
-    }
-}
-
-exec function ToggleTreads() // TEMPDEBUG - exec to toggle between normal & destroyed tread skins
-{
-    if (IsDebugModeAllowed())
-    {
-        if (LeftTreadPanner.Material == Combiner'DH_Churchill_tex.churchill_treads_dest')
-        {
-            LeftTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
-            RightTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
-        }
-        else
-        {
-            LeftTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
-            RightTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
-        }
-
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 defaultproperties
 {
     // Vehicle properties

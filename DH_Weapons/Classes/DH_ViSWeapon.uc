@@ -19,8 +19,8 @@ defaultproperties
 
     Skins(1)=Texture'DH_ViS_tex.ViS_texture'
     Skins(2)=Texture'Weapons1st_tex.p38'
-    sleevenum=3
-    handnum=0
+    SleeveNum=3
+    HandNum=0
 
     FirstSelectAnim="draw2"
 

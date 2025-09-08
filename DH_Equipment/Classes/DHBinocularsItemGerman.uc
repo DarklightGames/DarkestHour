@@ -5,8 +5,6 @@
 
 class DHBinocularsItemGerman extends DHBinocularsItem;
 
-#exec OBJ LOAD FILE=DH_VehicleOptics_tex.utx
-
 defaultproperties
 {
     ItemName="Zeiss Dienstglas 6x30"

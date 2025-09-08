@@ -46,7 +46,7 @@ defaultproperties
     PassengerPawns(5)=(AttachBone="passenger_r_3",DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverAttachmentBone="driver_player"
@@ -199,7 +199,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
+    Wheels(0)=RFWheel
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
@@ -208,7 +208,7 @@ defaultproperties
         SupportBoneName="Axle_RF"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
+    Wheels(1)=LFWheel
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_LF"
@@ -217,7 +217,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.FLeft_Drive_Wheel'
+    Wheels(2)=FLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_RF"
@@ -225,7 +225,7 @@ defaultproperties
         BoneOffset=(Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.FRight_Drive_Wheel'
+    Wheels(3)=FRight_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_LR"
@@ -234,7 +234,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.RLeft_Drive_Wheel'
+    Wheels(4)=RLeft_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_RR"
@@ -242,7 +242,7 @@ defaultproperties
         BoneOffset=(Z=-2.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.RRight_Drive_Wheel'
+    Wheels(5)=RRight_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -262,5 +262,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

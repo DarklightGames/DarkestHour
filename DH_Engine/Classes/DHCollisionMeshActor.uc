@@ -53,6 +53,12 @@ var     bool    bWontStopThrownProjectile; // won't stop a DHThrowableExplosiveP
 
 var     bool    bIsBulletProof;            // col mesh is bullet proof, i.e. resistant to small arms fire - used to attach armour attachments to a soft skin vehicle
 
+enum ETransformSpace
+{
+    TS_Actor,
+    TS_Bone
+};
+
 // Modified to copy the owning actor's collision properties
 simulated function PostBeginPlay()
 {
@@ -83,7 +89,7 @@ simulated function PostBeginPlay()
 
 // New function to spawn, attach & align a collision static mesh actor (used by the classes that spawn a col mesh)
 simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMeshOwner, StaticMesh ColStaticMesh,
-    name AttachBone, optional Vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
+    name AttachBone, optional Vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass, optional ETransformSpace TransformSpace)
 {
     local DHCollisionMeshActor ColMeshActor;
 
@@ -101,19 +107,28 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
 
     if (ColMeshActor != none)
     {
-        // Attach col mesh actor to specified attachment bone, so the col mesh will move with the relevant part of the owning actor
         ColMeshOwner.AttachToBone(ColMeshActor, AttachBone);
 
-        // Apply a positional offset if one has been specified
-        if (AttachOffset != vect(0.0, 0.0, 0.0))
+        switch (TransformSpace)
         {
-            ColMeshActor.SetRelativeLocation(AttachOffset);
-        }
-        // But usually the col mesh has been modelled on the owning actor's mesh origin, but is now centred on the attachment bone, so reposition it to align with owning mesh
-        else
-        {
-            ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
-            ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
+            case TS_Actor:
+                // BUG: This is very incorrect. This tries to space-switch the mesh from actor-local to bone-local space but it fails
+                // if the actor's rotation and the attachment bone rotation do not match.
+                if (AttachOffset != vect(0.0, 0.0, 0.0))
+                {
+                    ColMeshActor.SetRelativeLocation(AttachOffset);
+                }
+                else
+                {
+                    ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
+                    ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
+                }
+                break;
+            case TS_Bone:
+                ColMeshOwner.SetRelativeLocation(AttachOffset);
+                break;
+            default:
+                break;
         }
 
         // Finally set the static mesh for the col mesh actor (may be none, if using a subclass of DHCollisionMeshActor & that already specifies a static mesh)

@@ -1312,8 +1312,8 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Dynamic Fog Distance"
-        Hint="Keeps FPS as high as possible by adjusting the fog distance automatically based on performance"
+        Caption="Dynamic View Distance"
+        Hint="Keeps FPS as high as possible by adjusting the view distance automatically based on performance"
         OnCreateComponent=DynamicFogRatioCH.InternalOnCreateComponent
         IniDefault="false"
         TabOrder=41
@@ -1324,14 +1324,14 @@ defaultproperties
     ch_DynamicFogRatio=DynamicFogRatioCH
 
     Begin Object class=DHmoNumericEdit Name=MinDesiredFPS_NU
-        Caption="Dynamic Fog FPS Threshold"
+        Caption="Dynamic View Distance FPS Threshold"
         CaptionWidth=0.85
         OnCreateComponent=MinDesiredFPS_NU.InternalOnCreateComponent
         MinValue=20
         MaxValue=300
         Step=10
         ComponentJustification=TXTA_Left
-        Hint="Used by Dynamic Fog Distance to determine when to start lowing fog distance to improve FPS"
+        Hint="Used by Dynamic View Distance to determine when to start lowering view distance to improve FPS"
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
         INIOption="@Internal"
@@ -1345,7 +1345,7 @@ defaultproperties
         Value=0.5
         SliderCaptionStyleName="DHSmallText"
         CaptionWidth=0.65
-        Caption="Fog Distance"
+        Caption="View Distance"
         LabelStyleName="DHSmallText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"

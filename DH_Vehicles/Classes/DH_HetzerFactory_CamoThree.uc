@@ -3,10 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_HetzerFactory_CamoThree extends DH_HetzerFactory;
+class DH_HetzerFactory_CamoThree extends DH_HetzerFactory_CamoTwo;
 
 defaultproperties
 {
-     VehicleClass=Class'DH_HetzerDestroyer_CamoThree'
-     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_camo3'
 }

@@ -35,7 +35,7 @@ defaultproperties
         FadeOutStartTime=0.1
         //Opacity=0.7
         MaxParticles=1
-        name="impact1"
+        Name="impact1"
         UseRotationFrom=PTRS_Actor
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=20.000000))
@@ -61,7 +61,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=42,G=54,R=59,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         MaxParticles=3
-        name="ground_chunks"
+        Name="ground_chunks"
         //StartLocationOffset=(X=5.000000)
         UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
@@ -101,7 +101,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=7
-        name="random_chunks"
+        Name="random_chunks"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -135,7 +135,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="mud_burst"
+        Name="mud_burst"
         StartLocationOffset=(X=25.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
@@ -167,7 +167,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=10
-        name="main_chunks"
+        Name="main_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -198,7 +198,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=4
-        name="ground_splash"
+        Name="ground_splash"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -215,6 +215,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter10'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

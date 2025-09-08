@@ -22,6 +22,7 @@ struct SCollisionStaticMesh
     var name AttachBone;    // If '', use YawBone.
     var bool bWontStopBullet;
     var bool bWontStopBlastDamage;
+    var DHCollisionMeshActor.ETransformSpace TransformSpace;
 };
 
 var     array<SCollisionStaticMesh> CollisionStaticMeshes;
@@ -64,6 +65,7 @@ var ECounterBatteryReport CounterBatteryReport;
 var     bool                    bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 var     bool                    bIsArtillery;       // report our hits to be tracked on artillery targets
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
+var     Sound               DryFireSound;
 
 var     float       ResupplyInterval;
 var     int         LastResupplyTimestamp;
@@ -150,6 +152,7 @@ struct SAnimationDriver
 
 var() array<SAnimationDriver> AnimationDrivers;
 
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -161,7 +164,11 @@ replication
         ClientSetReloadState;
 }
 
-simulated function OnSwitchMesh();
+simulated function OnSwitchMesh()
+{
+    UpdateGunWheels();
+    UpdateAnimationDrivers();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
@@ -187,7 +194,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Spawns the vehicle attachments. This is only run for the client.
+// Spawns the vehicle attachments.
 simulated function SpawnVehicleAttachments()
 {
     local int i;
@@ -356,7 +363,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone,,,CollisionStaticMeshes[i].TransformSpace);
 
         if (CMA != none)
         {
@@ -418,6 +425,8 @@ simulated function PostNetReceive()
     UpdateAnimationDrivers();
 }
 
+function OnReloadFinished(int AmmoIndex);
+
 // Implemented here to handle multi-stage reload
 simulated function Timer()
 {
@@ -451,9 +460,16 @@ simulated function Timer()
     {
         ReloadState = RL_ReadyToFire;
 
-        if (bUsesMags && Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
-            FinishMagReload();
+            if (bUsesMags)
+            {
+                FinishMagReload();
+            }
+            else
+            {
+                OnReloadFinished(GetAmmoIndex(false));
+            }
         }
     }
     // Otherwise play the reloading sound for the next stage & set the next timer
@@ -509,6 +525,12 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
     // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
+
+    // TODO: might be a bit heavy for the heavy MGs.
+    if (!bAltFire && IsMuzzleObstructed())
+    {
+        return false;
+    }
 
     if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
@@ -721,6 +743,35 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
     return WeaponFireRotation;
 }
 
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function GetMuzzleObstructionTrace(out Vector TraceStart, out Vector TraceEnd)
+{
+    local Vector YawBoneLocation, MuzzleDirection;
+    local float TraceLength;
+
+    MuzzleDirection = Vector(WeaponFireRotation);
+    TraceLength = MuzzleDirection Dot (WeaponFireLocation - Location);
+
+    TraceStart = WeaponFireLocation;
+    TraceEnd = WeaponFireLocation - (MuzzleDirection * Abs(TraceLength));
+}
+
+// Returns whether the barrel is obstructed by solid geometry.
+// This makes the assumption that CalcWeaponFire has already been called before this.
+simulated function bool IsMuzzleObstructed()
+{
+    local Vector TraceStart, TraceEnd;
+
+    GetMuzzleObstructionTrace(TraceStart, TraceEnd);
+
+    if (!FastTrace(TraceStart, TraceEnd))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
 simulated function ClientStartFire(Controller C, bool bAltFire)
 {
@@ -732,6 +783,18 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
     if (FireCountdown > 0.0 && (bUsesMags || bAltFire)) // automatic weapon can't fire unless fire interval has elapsed between shots
     {
         return;
+    }
+
+    // Ensure that
+    if (!bAltFire)
+    {
+        CalcWeaponFire(bAltFire);
+
+        if (IsMuzzleObstructed())
+        {
+            WeaponPawn.DisplayVehicleMessage(31);
+            return;
+        }
     }
 
     bIsAltFire = bAltFire;
@@ -925,8 +988,7 @@ simulated function Sound GetFireSound()
 // New function to play dry-fire effects if trying to fire weapon when empty
 simulated function DryFireEffects(optional bool bAltFire)
 {
-    ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(DryFireSound, SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1555,7 +1617,7 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i, CurrentPitch;
+    local int i, Rotation;
     local float Theta;
 
     for (i = 0;  i < AnimationDrivers.Length; ++i)
@@ -1563,20 +1625,27 @@ simulated function UpdateAnimationDrivers()
         switch (AnimationDrivers[i].RotationType)
         {
             case ROTATION_Yaw:
-                // Get the yaw min->max range.
-                Theta = Class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                if (CurrentAim.Yaw > 32768)
+                {
+                    Rotation = CurrentAim.Yaw - 65536;
+                }
+                else
+                {
+                    Rotation = CurrentAim.Yaw;
+                }
+                Theta = Class'UInterp'.static.MapRangeClamped(Rotation, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
                 break;
             case ROTATION_Pitch:
                 if (CurrentAim.Pitch > 32768)
                 {
-                    CurrentPitch = CurrentAim.Pitch - 65536;
+                    Rotation = CurrentAim.Pitch - 65536;
                 }
                 else
                 {
-                    CurrentPitch = CurrentAim.Pitch;
+                    Rotation = CurrentAim.Pitch;
                 }
 
-                Theta = Class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                Theta = Class'UInterp'.static.MapRangeClamped(Rotation, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
                 break;
         }
 
@@ -1649,4 +1718,6 @@ defaultproperties
     bInheritVelocity=false
 
     ResupplyInterval=2.5
+    
+    DryFireSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
 }

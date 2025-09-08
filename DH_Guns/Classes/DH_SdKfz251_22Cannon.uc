@@ -10,7 +10,7 @@ defaultproperties
     // Don't have a bone for the Pak40 attachment, so this offsets from the hull's 'body' bone to fit correctly onto the pedestal mount
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
     WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
-    Skins(0)=Texture'DH_Artillery_Tex.Pak40_camo'
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_camo'
     InitialPrimaryAmmo=12
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=12
