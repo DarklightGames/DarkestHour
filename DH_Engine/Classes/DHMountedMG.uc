@@ -8,17 +8,16 @@ class DHMountedMG extends DHVehicleWeapon
 
 // Range Driver
 var name                    RangeDriverAnim;
+var private float           RangeDriverAnimFrame;
 var int                     RangeDriverAnimFrameCount;
+var private float           RangeDriverAnimFrameStart;
+var private float           RangeDriverAnimFrameTarget;
+var private float           RangeDriverAnimTimeSecondsStart;
+var private float           RangeDriverAnimTimeSecondsEnd;
 var int                     RangeDriverChannel;
 var name                    RangeDriverBone;
 var DHUnits.EDistanceUnit   RangeDistanceUnit;
 var int                     RangeIndex;
-
-var private float           RangeDriverAnimationFrame;
-var private float           RangeDriverAnimationFrameStart;
-var private float           RangeDriverAnimationFrameTarget;
-var private float           RangeDriverAnimationTimeSecondsStart;
-var private float           RangeDriverAnimationTimeSecondsEnd;
 
 var() float                 RangeDriverAnimationInterpDuration;
 
@@ -218,10 +217,10 @@ function CeaseFire(Controller C, Bool bWasAltFire)
 
 simulated function SetRangeDriverFrameTarget(float NewFrameTarget, optional float InterpDuration)
 {
-    RangeDriverAnimationFrameStart = RangeDriverAnimationFrame;
-    RangeDriverAnimationFrameTarget = NewFrameTarget;
-    RangeDriverAnimationTimeSecondsStart = Level.TimeSeconds;
-    RangeDriverAnimationTimeSecondsEnd = RangeDriverAnimationTimeSecondsStart + InterpDuration;
+    RangeDriverAnimFrameStart = RangeDriverAnimFrame;
+    RangeDriverAnimFrameTarget = NewFrameTarget;
+    RangeDriverAnimTimeSecondsStart = Level.TimeSeconds;
+    RangeDriverAnimTimeSecondsEnd = RangeDriverAnimTimeSecondsStart + InterpDuration;
 }
 
 simulated state Reloading
@@ -293,11 +292,11 @@ simulated function Tick(float DeltaTime)
     // Only do all this crap if the local player is the driver.
     if (RangeDriverChannel != 0 && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
-        if (RangeDriverAnimationFrameTarget != RangeDriverAnimationFrame)
+        if (RangeDriverAnimFrameTarget != RangeDriverAnimFrame)
         {
-            T = Class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, RangeDriverAnimationTimeSecondsStart, RangeDriverAnimationTimeSecondsEnd, 0.0, 1.0);
+            T = Class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, RangeDriverAnimTimeSecondsStart, RangeDriverAnimTimeSecondsEnd, 0.0, 1.0);
 
-            RangeDriverAnimationFrame = Class'UInterp'.static.Deceleration(T, RangeDriverAnimationFrameStart, RangeDriverAnimationFrameTarget);
+            RangeDriverAnimFrame = Class'UInterp'.static.Deceleration(T, RangeDriverAnimFrameStart, RangeDriverAnimFrameTarget);
 
             UpdateRangeDriver();
         }
@@ -349,7 +348,7 @@ simulated function UpdateRangeDriver()
         return;
     }
     
-    FreezeAnimAt(RangeDriverAnimationFrame, RangeDriverChannel);
+    FreezeAnimAt(RangeDriverAnimFrame, RangeDriverChannel);
 }
 
 simulated function UpdateAmmoRounds(int Ammo)
