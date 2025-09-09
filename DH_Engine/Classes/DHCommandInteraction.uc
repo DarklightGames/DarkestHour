@@ -21,13 +21,16 @@ var Vector              Cursor;
 var int                 SelectedIndex;
 
 const MAX_OPTIONS = 8;
+const MAX_PROGRESS_SEGMENTS = 8;
 
 // This is necessary because trying to DrawTile on identical TexRotators
 // and other procedural materials in the same frame ends up only drawing one
 // of them (probably due to engine-level render batching).
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
+var TexRotator          ProgressWheelTexRotators[MAX_PROGRESS_SEGMENTS];
 var Texture             RingTexture;
+var Texture             ProgressSegmentTexture;
 
 var Color               SelectedColor;
 var Color               DisabledColor;
@@ -46,6 +49,12 @@ var Sound               CancelSound;
 var Material            CrosshairMaterial;
 
 var bool                bDebugCursor;
+
+var bool                bIsHolding;         // Whether or not the player is holding the button to select the option.
+var float               HoldTimeStart;      // When the button was first pressed.
+var float               HoldTimeEnd;        // When the hold time ends.
+var Vector              HoldHitLocation;    // The location of the hit when the button was held.
+var Vector              HoldHitNormal;      // The normal of the hit when the button was held.
 
 delegate                OnHidden();
 
@@ -102,6 +111,24 @@ function CreateOptionTexRotators(DHCommandMenu Menu)
     }
 }
 
+function CreateProgressWheelMaterials()
+{
+    local int i;
+    local TexRotator TR;
+
+    for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
+    {
+        TR = new Class'Engine.TexRotator';
+        TR.Rotation.Yaw = -(i * (65536 / MAX_PROGRESS_SEGMENTS));
+        TR.Material = ProgressSegmentTexture;
+        TR.TexRotationType = TR_FixedRotation;
+        TR.UOffset = TR.Material.MaterialUSize() / 2;
+        TR.VOffset = TR.Material.MaterialVSize() / 2;
+
+        ProgressWheelTexRotators[i] = TR;
+    }
+}
+
 // Pushes a new menu onto the top of the stack to be displayed immediately.
 // Allows the specification of an optional object to attach to the menu.
 function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject, optional int OptionalInteger)
@@ -133,6 +160,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     }
 
     CreateOptionTexRotators(Menu);
+    CreateProgressWheelMaterials();
 
     Menus.Push(Menu);
     Menu.OnPush();
@@ -297,6 +325,24 @@ function Tick(float DeltaTime)
             Menu.OnHoverIn(SelectedIndex);
         }
     }
+
+    if (bIsHolding)
+    {
+        if (!CanSelectOption(SelectedIndex))
+        {
+            // The option is now disabled, so stop holding.
+            bIsHolding = false;
+        }
+        else
+        {
+            if (HoldTimeEnd - ViewportOwner.Actor.Level.TimeSeconds <= 0.0)
+            {
+                // Perform the action.
+                bIsHolding = false;
+                OnSelect(SelectedIndex, HoldHitLocation, HoldHitNormal);
+            }
+        }
+    }
 }
 
 function DrawCenteredTile(Canvas C, Material TileMaterial, float CenterX, float CenterY, float GUIScale)
@@ -322,6 +368,7 @@ function PostRender(Canvas C)
     local DHCommandMenu Menu;
     local bool bIsOptionDisabled;
     local DHCommandMenu.OptionRenderInfo ORI;
+    local float HoldProgressTheta;
 
     if (C == none)
     {
@@ -373,7 +420,7 @@ function PostRender(Canvas C)
 
             if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
             else
             {
@@ -428,7 +475,7 @@ function PostRender(Canvas C)
         Theta += ArcLength;
     }
 
-    // Display text of selection
+    // Display text of selection.
     if (SelectedIndex >= 0)
     {
         Menu.GetOptionRenderInfo(SelectedIndex, ORI);
@@ -480,6 +527,35 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 192) - YL);
         C.DrawText(ORI.DescriptionText);
     }
+
+    // Display hold time progress bar, if holding.
+    if (bIsHolding)
+    {
+        HoldProgressTheta = Class'UInterp'.static.MapRangeClamped(
+            ViewportOwner.Actor.Level.TimeSeconds, 
+            HoldTimeStart,
+            HoldTimeEnd,
+            0.0,
+            1.0);
+        
+        // Use a deceleration interpolation so that the user can see that progress is being made immediately.
+        HoldProgressTheta = Class'UInterp'.static.Interpolate(
+            HoldProgressTheta,
+            0.0,
+            1.0,
+            INTERP_Deceleration
+            ) * MAX_PROGRESS_SEGMENTS;
+
+        for (i = 0; i < MAX_PROGRESS_SEGMENTS; ++i)
+        {
+            Theta = Class'UInterp'.static.MapRangeClamped(HoldProgressTheta, i, i + 1.0, 0.0, 1.0);
+
+            C.DrawColor = Class'UColor'.static.Interp(Theta, Class'UColor'.default.White, SelectedColor);
+            C.DrawColor.A = byte(255 * MenuAlpha * Theta);
+
+            DrawCenteredTile(C, ProgressWheelTexRotators[i], CenterX, CenterY, GUIScale);
+        }
+    }
     
     if (bDebugCursor)
     {
@@ -495,6 +571,10 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local Vector HitLocation, HitNormal;
+    local DHCommandMenu Menu;
+    local Sound HoldSound;
+    
+    Menu = DHCommandMenu(Menus.Peek());
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -513,22 +593,32 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     switch (Action)
     {
         case IST_Axis:
-            switch (Key)
+            if (!bIsHolding)
             {
-                case IK_MouseX:
-                    Cursor.X += Delta;
-                    return true;
-                case IK_MouseY:
-                    Cursor.Y -= Delta;
-                    return true;
-                default:
-                    break;
+                switch (Key)
+                {
+                    case IK_MouseX:
+                        Cursor.X += Delta;
+                        break;
+                    case IK_MouseY:
+                        Cursor.Y -= Delta;
+                        break;
+                    default:
+                        break;
+                }
             }
+            return true;
             break;
         case IST_Release:
             switch (Key)
             {
                 case IK_LeftMouse:
+                    if (bIsHolding)
+                    {
+                        bIsHolding = false;
+                        return true;
+                    }
+
                     if (bShouldHideOnLeftMouseRelease)
                     {
                         if (SelectedIndex >= 0)
@@ -553,7 +643,26 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // key, so this will do for now.
                 case IK_LeftMouse:
                     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-                    OnSelect(SelectedIndex, HitLocation, HitNormal);
+
+                    if (Menu != none && Menu.GetOptionHoldTime(SelectedIndex) > 0.0 && !Menu.IsOptionDisabled(SelectedIndex))
+                    {
+                        bIsHolding = true;
+                        HoldTimeStart = ViewportOwner.Actor.Level.TimeSeconds;
+                        HoldTimeEnd = HoldTimeStart + Menu.GetOptionHoldTime(SelectedIndex);
+                        HoldHitLocation = HitLocation;
+                        HoldHitNormal = HitNormal;
+
+                        HoldSound = Menu.GetOptionHoldSound(SelectedIndex);
+
+                        if (HoldSound != none)
+                        {
+                            PlaySound(HoldSound);
+                        }
+                    }
+                    else
+                    {
+                        OnSelect(SelectedIndex, HitLocation, HitNormal);
+                    }
 
                     return true;
                 case IK_RightMouse:
@@ -571,13 +680,27 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function OnSelect(int OptionIndex, optional Vector Location, optional Vector HitNormal)
+function bool CanSelectOption(int OptionIndex)
 {
     local DHCommandMenu Menu;
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (Menu == none || OptionIndex < 0 || OptionIndex >= Menu.Options.Length || Menu.IsOptionDisabled(OptionIndex))
+    return Menu != none && OptionIndex >= 0 && OptionIndex < Menu.Options.Length && !Menu.IsOptionDisabled(OptionIndex);
+}
+
+function OnSelect(int OptionIndex, optional Vector Location, optional Vector HitNormal)
+{
+    local DHCommandMenu Menu;
+
+    if (!CanSelectOption(OptionIndex))
+    {
+        return;
+    }
+
+    Menu = DHCommandMenu(Menus.Peek());
+
+    if (Menu == none)
     {
         return;
     }
@@ -619,6 +742,7 @@ defaultproperties
     OptionTextures(7)=Texture'DH_InterfaceArt_tex.menu_option_8'
 
     RingTexture=Texture'DH_InterfaceArt_tex.ring'
+    ProgressSegmentTexture=Texture'DH_InterfaceArt_tex.menu_progress_segment'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)

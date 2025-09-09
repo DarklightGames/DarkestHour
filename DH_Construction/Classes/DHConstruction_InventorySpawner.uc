@@ -9,9 +9,9 @@ class DHConstruction_InventorySpawner extends DHConstruction
 var class<DHInventorySpawner>   SpawnerClass;
 var DHInventorySpawner          Spawner;
 
-static function DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Context Context)
+static function DHActorProxy.ActorProxyError GetContextError(DHActorProxy.Context Context)
 {
-    local DHConstruction.ConstructionError Error;
+    local DHActorProxy.ActorProxyError Error;
 
     if (default.SpawnerClass == none)
     {
@@ -19,7 +19,7 @@ static function DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Con
         return Error;
     }
 
-    return super.GetPlayerError(Context);
+    return super.GetContextError(Context);
 }
 
 simulated function OnConstructed()
@@ -77,6 +77,10 @@ static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadi
     {
         NewRadius = default.SpawnerClass.default.CollisionRadius;
         NewHeight = default.SpawnerClass.default.CollisionHeight;
+    }
+    else
+    {
+        super.GetCollisionSize(Context, NewRadius, NewHeight);
     }
 }
 

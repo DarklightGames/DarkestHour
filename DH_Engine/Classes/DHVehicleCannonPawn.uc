@@ -1361,6 +1361,16 @@ exec function SetPeriscopeSize(float NewValue)
     }
 }
 
+exec function SetSpread(float NewSpread)
+{
+    if (IsDebugModeAllowed())
+    {
+        Cannon.Spread = NewSpread;
+        Cannon.SecondarySpread = NewSpread;
+        Cannon.TertiarySpread = NewSpread;
+    }
+}
+
 defaultproperties
 {
     // Positions & entry

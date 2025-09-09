@@ -148,7 +148,7 @@ defaultproperties
     ProgressMax=8
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
-    bSnapToTerrain=true
+    bSnapToTerrainVertex=true
     bShouldAlignToGround=false
     bCanBeTornDownWhenConstructed=false
     bCanBeDamaged=false

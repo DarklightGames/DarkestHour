@@ -369,7 +369,7 @@ defaultproperties
     bSpawnWithExtraAmmo=false
     BareHandTexture=Texture'Weapons1st_tex.hands'
     GlovedHandTexture=Texture'Weapons1st_tex.hands_gergloves'
-    HandType=Hand_Bare
+    HandType=HAND_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
     // In order to replicate the locked state of the role, we need to enable property replication and ensure

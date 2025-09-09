@@ -7,48 +7,7 @@ class DHConstruction extends Actor
     abstract
     placeable;
 
-enum EConstructionErrorType
-{
-    ERROR_None,
-    ERROR_Fatal,                    // Some fatal error occurred, usually a case of unexpected values
-    ERROR_NoGround,                 // No solid ground was able to be found
-    ERROR_TooSteep,                 // The ground slope exceeded the allowable maximum
-    ERROR_InWater,                  // The construction is in water and the construction type disallows this
-    ERROR_Restricted,               // Construction overlaps a restriction volume
-    ERROR_NoRoom,                   // No room to place this construction
-    ERROR_NotOnTerrain,             // Construction is not on terrain
-    ERROR_TooCloseFriendly,         // Too close to an identical friendly construction
-    ERROR_TooCloseEnemy,            // Too close to an identical enemy construction
-    ERROR_InMinefield,              // Cannot be in a minefield!
-    ERROR_NearSpawnPoint,           // Cannot be so close to a spawn point (or location hint)
-    ERROR_Indoors,                  // Cannot be placed indoors
-    ERROR_InObjective,              // Cannot be placed inside an objective area
-    ERROR_MaxActive,                // Max active limit reached
-    ERROR_NoSupplies,               // Not within range of any supply caches
-    ERROR_InsufficientSupply,       // Not enough supplies to build this construction
-    ERROR_BadSurface,               // Cannot construct on this surface type
-    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!0
-    ERROR_RestrictedType,           // Restricted construction type (can't build on this map!)
-    ERROR_SquadTooSmall,            // Not enough players in the squad!
-    ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
-    ERROR_TooCloseToObjective,      // Too close to an objective
-    ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
-    ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
-    ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
-    ERROR_Exhausted,                // Your team cannot place any more of these this round.
-    ERROR_SocketOccupied,           // The construction socket is already occupied.
-    ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
-    ERROR_Other
-};
-
-var struct ConstructionError
-{
-    var EConstructionErrorType  Type;
-    var string                  CustomErrorString;  // When Type is ERROR_Custom, this will contain the error string to be used.
-    var int                     OptionalInteger;
-    var Object                  OptionalObject;
-    var string                  OptionalString;
-} ProxyError;
+var DHActorProxy.ActorProxyError ProxyError;
 
 enum ETeamOwner
 {
@@ -82,7 +41,6 @@ var     bool    bSnapRotation;
 var     int     RotationSnapAngle;
 var     Rotator StartRotationMin;
 var     Rotator StartRotationMax;
-var     int     LocalRotationRate;
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
@@ -101,7 +59,7 @@ struct ProximityRequirement
 var     array<ProximityRequirement> ProximityRequirements;
 
 // Terrain placement
-var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
+var     bool    bSnapToTerrainVertex;           // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
 var     bool    bPokesTerrain;                  // If true, terrain is poked when placed on terrain.
 var     bool    bDidPokeTerrain;
 var private int PokeTerrainRadius;
@@ -1131,13 +1089,13 @@ static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
+static function DHActorProxy.ActorProxyError GetContextError(DHActorProxy.Context Context)
 {
     local DHPawn P;
     local DHConstructionManager CM;
     local DHPlayerReplicationInfo PRI;
     local DHSquadReplicationInfo SRI;
-    local ConstructionError E;
+    local DHActorProxy.ActorProxyError E;
     local DHGameReplicationInfo GRI;
     local int MaxActive;
 
@@ -1407,25 +1365,11 @@ simulated function DHActorProxy.Context GetContext()
     return Context;
 }
 
-static function DHActorProxy.Context ContextFromPlayerController(DHPlayer PC)
-{
-    local DHActorProxy.Context Context;
-
-    if (PC != none)
-    {
-        Context.TeamIndex = PC.GetTeamNum();
-        Context.LevelInfo = Class'DH_LevelInfo'.static.GetInstance(PC.Level);
-        Context.PlayerController = PC;
-    }
-
-    return Context;
-}
-
 // This is used to return a custom error that is class specific for specialized
 // placement logic. By default this simply returns no error.
-static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
+static function DHActorProxy.ActorProxyError GetCustomProxyError(DHConstructionProxy P)
 {
-    local DHConstruction.ConstructionError E;
+    local DHActorProxy.ActorProxyError E;
 
     return E;
 }
@@ -1516,8 +1460,6 @@ defaultproperties
     // Stagnation
     bCanDieOfStagnation=true
     StagnationLifespan=300
-
-    LocalRotationRate=32768
 
     // Death
     BrokenLifespan=15.0

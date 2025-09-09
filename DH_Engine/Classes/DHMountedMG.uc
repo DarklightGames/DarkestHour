@@ -72,7 +72,7 @@ var StaticMesh              EmptyAmmoRoundStaticMesh;
 var array<name>             EmptyAmmoRoundBones;
 var() Rotator               EmptyAmmoRoundRelativeRotation;
 
-var int                     RoundsInStaticMesh; // The number of rounds depicted in the static mesh.
+var int                     NumRoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
 replication
 {
@@ -357,7 +357,7 @@ simulated function UpdateAmmoRounds(int Ammo)
     local int i;
     local int VisibleCount, ExpendedCount;
 
-    VisibleCount = Ceil(float(Ammo) / RoundsInStaticMesh);
+    VisibleCount = Ceil(float(Ammo) / NumRoundsInStaticMesh);
 
     for (i = AmmoRounds.Length - 1; i >= 0; --i)
     {
@@ -402,7 +402,7 @@ simulated function UpdateClipDriver(int Ammo)
         return;
     }
 
-    ClipsVisible = Ceil(float(Ammo) / RoundsInStaticMesh);
+    ClipsVisible = Ceil(float(Ammo) / NumRoundsInStaticMesh);
     ClipFrame = CLIP_DRIVER_FRAMES - (ClipsVisible + 1);
 
     FreezeAnimAt(ClipFrame, ClipChannel);
@@ -487,10 +487,8 @@ defaultproperties
     CustomPitchDownLimit=61895  // -20 degrees
 
     // Ammo
-    //ProjectileClass=Class'DH_Fiat1435Bullet'
     FireInterval=0.1    // 600rpm
     Spread=0.002
-    //TracerProjectileClass=Class'DH_Fiat1435TracerBullet'
     TracerFrequency=7
 
     // Weapon fire
@@ -517,7 +515,7 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    RoundsInStaticMesh=1
+    NumRoundsInStaticMesh=1
 
     // BELOW COPIED STRAIGHT FROM VEHICLEMG, DELETE WHATEVER IS NOT NECESSARY!
 
@@ -547,7 +545,7 @@ defaultproperties
     ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=2.0
-    ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
+    ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
 

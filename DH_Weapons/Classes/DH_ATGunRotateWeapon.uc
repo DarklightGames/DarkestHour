@@ -14,11 +14,6 @@ replication
         ServerRotate, ServerExitRotation, ServerEnterRotation;
 }
 
-simulated function bool ShouldSwitchToLastWeaponOnPlacement()
-{
-    return true;
-}
-
 simulated event Tick(float DeltaTime)
 {
     local DHPawn P;
@@ -162,6 +157,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocallyControlled())
     {
+        Log("Entering rotation" @ self);
         OnEnterRotation();
     }
 }

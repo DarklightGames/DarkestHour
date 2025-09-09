@@ -12,12 +12,10 @@
 // and client independently.
 //==============================================================================
 
-class DHConstructionSocket extends Actor;
+class DHConstructionSocket extends DHActorProxySocket;
 
 var() array<class<DHConstruction> > IncludeClasses;
 var() array<class<DHConstruction> > ExcludeClasses;
-var() bool bLimitLocalRotation;         // When true, the local rotation of the construction is limited to the specified yaw range.
-var() Range LocalRotationYawRange;      // Limits the local rotation of the construction attached to this hint.
 
 var DHConstruction Occupant;            // The current construction that is occupying this socket.
 

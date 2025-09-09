@@ -186,7 +186,6 @@ function Timer()
     local Pawn recvr;
     local ROPawn P;
     local Vehicle V;
-    local DHRoleInfo RI;
 
     ProcessActorLeave();
 
@@ -205,21 +204,13 @@ function Timer()
             P = ROPawn(recvr);
             V = Vehicle(recvr);
 
-            if (P != none &&
-                (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Players) ||
-                 (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars) &&
-                  RI != none &&
-                  RI.bCanUseMortars)))
+            if (P != none && ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Players))
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
                 P.bTouchingResupply = true;
             }
-            else if (V != none &&
-                     V != Base &&
-                     (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Vehicles) ||
-                      (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars) &&
-                       V.IsA('DHMortarVehicleWeaponPawn'))))
+            else if (V != none && V != Base && ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Vehicles))
             {
                 ResupplyActors[ResupplyActors.Length] = V;
                 V.bTouchingResupply = true;

@@ -1,0 +1,99 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DH_M2MortarCannon extends DHATGunCannon;
+
+// Ignore manual reloading functionality for mortars.
+simulated function bool PlayerUsesManualReloading()
+{
+    return false;
+}
+
+defaultproperties
+{
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_GUN_EXT'
+    Skins(0)=Texture'DH_M2Mortar_tex.M2MORTAR_BODY_EXT'
+
+    WeaponFireAttachmentBone="MUZZLE"
+    GunnerAttachmentBone="GUN_YAW"
+
+    // Collision meshes
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.M2MORTAR_COLLISION_GUN',AttachBone="GUN_PITCH")
+
+    // Gun Wheels
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-360,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=360,RotationAxis=AXIS_Z)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
+
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=45,RotationType=ROTATION_Pitch,bIsReversed=true)
+
+    // Turret movement
+    MaxPositiveYaw=1274.0    // +/- 7 degrees
+    MaxNegativeYaw=-1274.0
+    YawStartConstraint=-1274.0
+    YawEndConstraint=1274.0
+    CustomPitchUpLimit=8190     // 40-85 degrees
+    CustomPitchDownLimit=65535
+    ManualRotationsPerSecond=0.015
+    RotationsPerSecond=0.015
+
+    // Cannon ammo
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="WP"
+    nProjectileDescriptions(0)="M49A2 HE"
+    nProjectileDescriptions(1)="M302 WP"
+
+    PrimaryProjectileClass=Class'DH_M2MortarProjectileHE'
+    SecondaryProjectileClass=Class'DH_M2MortarProjectileSmoke'
+    InitialPrimaryAmmo=24
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=0
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=4
+    MaxTertiaryAmmo=0
+
+    Spread=0.0125
+    SecondarySpread=0.0125
+    TertiarySpread=0.0125
+
+    // Weapon fire
+    WeaponFireOffset=16.0  // TODO: REPLACE
+    AddedPitch=0  // TODO: REPLACE
+
+    // Sounds
+    // TODO: use 60mm mortar sounds, or just make new ones??
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.81mm_mortar_fire_03'
+
+    // TODO: figure out what to do with this.
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_03',Duration=1.0)
+
+    bIsArtillery=true
+    ResupplyInterval=12.0
+
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+
+    DriverAnimationChannelBone="CAMERA_COM"
+    DriverAnimationChannel=2    // 1 is used for the pitching driver
+
+    ProjectileRotationMode=PRM_MuzzleBone
+
+    ShakeOffsetMag=(X=10.0,Y=10.0,Z=10.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=5.0
+
+    EffectEmitterClass=Class'DH_Effects.DHMortarFireEffect'     // TODO: probably okay
+    // TODO: maybe get a dust emitter for this.
+    CannonDustEmitterClass=None
+
+    FireBlurScale=0.25
+    FireBlurTime=0.2
+}

@@ -1111,6 +1111,27 @@ simulated function HandleSleeveSwapping()
     }
 }
 
+static function string GetInventoryName(bool bUseNativeItemNames)
+{
+    if (bUseNativeItemNames && default.NativeItemName != "")
+    {
+        return default.NativeItemName;
+    }
+
+    return default.ItemName;
+}
+
+// Added so we can override the ammo icon material without needing to have an ammo class.
+simulated function Material GetHudAmmoIconMaterial()
+{
+    if (AmmoClass[0] != none)
+    {
+        return AmmoClass[0].default.IconMaterial;
+    }
+
+    return none;
+}
+
 defaultproperties
 {
     // Sway modifiers

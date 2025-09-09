@@ -7,7 +7,7 @@
 // [ ] *maybe* mid-clip reloading.
 // [ ] Sound notifications for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.
-// [ ] Fix timing of reload stages and remove the sounds.
+// [ ] Have only ONE reload stage, time it to the duration of the animation.
 // [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
 // [ ] Hide hands actor in third person.
@@ -78,5 +78,5 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    RoundsInStaticMesh=1
+    NumRoundsInStaticMesh=1
 }

@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// TODO: rename to DHStationaryWeaponVehicle, make a DHATGun and DHMortar class.
+//==============================================================================
 
 class DHATGun extends DHVehicle
     abstract;
@@ -18,6 +20,17 @@ enum ERotateError
     ERROR_Cooldown,
     ERROR_TooFarAway,
     ERROR_Busy,
+};
+
+enum EPickUpError
+{
+    ERROR_None,
+    ERROR_CannotBePickedUp,
+    ERROR_Occupied,
+    ERROR_Fatal,
+    ERROR_TooFarAway,
+    ERROR_Busy,
+    ERROR_PlayerMoving,
 };
 
 var DHPawn            RotateControllerPawn;
@@ -41,9 +54,11 @@ var Rotator           OldRotator;
 var bool              bOldIsRotating;
 
 var Material          RotationProjectionTexture;
-var DynamicProjector    RotationProjector;
+var DynamicProjector  RotationProjector;
 
 var float               CrushMomentumThreshold;
+// When non-null, this gun can be picked up by a player.
+var class<DHWeapon>   StationaryWeaponClass;
 
 
 replication
@@ -120,9 +135,11 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-function SetVehicleTeam(int TeamIndex)
+function SetTeamNum(byte NewTeam)
 {
-    VehicleTeam = TeamIndex;
+    super.SetTeamNum(NewTeam);
+
+    VehicleTeam = NewTeam;
 
     if (MapIconAttachment != none)
     {
@@ -134,7 +151,7 @@ function SetVehicleTeam(int TeamIndex)
 function KDriverEnter(Pawn P)
 {
     // Update the owning team of the gun.
-    SetVehicleTeam(P.GetTeamNum());
+    SetTeamNum(P.GetTeamNum());
 
     if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
@@ -227,6 +244,41 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     {
         RotationProjector.Destroy();
     }
+}
+
+simulated function EPickUpError GetPickUpError(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (StationaryWeaponClass == none)
+    {
+        return ERROR_CannotBePickedUp;
+    }
+
+    if (Pawn.Velocity != vect(0, 0, 0))
+    {
+        return ERROR_PlayerMoving;
+    }
+
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_Busy;
+    }
+
+    if (bVehicleDestroyed)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (NumPassengers() > 0)
+    {
+        return ERROR_Occupied;
+    }
+
+    return ERROR_None;
 }
 
 // Rotation
@@ -382,7 +434,6 @@ function ServerRotate(byte InputRotationFactor)
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientEnterRotation()
 {
-
     local Vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
@@ -421,7 +472,7 @@ simulated function ClientEnterRotation()
     FinalMaterial.Material = CombinerMaterial;
     FinalMaterial.FallbackMaterial = CombinerMaterial;
 
-    RotationProjector = Spawn(Class'DHConstructionProxyProjector', self, ,Location,Rotation);
+    RotationProjector = Spawn(class'DHActorProxyProjector', self,, Location, Rotation);
     RotationProjector.ProjTexture = FinalMaterial;
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;

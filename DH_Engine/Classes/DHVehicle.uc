@@ -281,6 +281,9 @@ var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combine
 
 var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
 
+// Vehicle state, used to restore a saved state.
+var DHVehicleState VehicleState;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -438,6 +441,15 @@ simulated function PostNetBeginPlay()
 
     // Spawn a variety of vehicle attachment options
     SpawnVehicleAttachments();
+
+    if (Role == ROLE_Authority && VehicleState != none)
+    {
+        // Restore the vehicle state now that all the weapons have been spawned.
+        SetVehicleState(VehicleState);
+
+        // Clear the saved vehicle state to release the object.
+        VehicleState = none;
+    }
 }
 
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
@@ -4622,6 +4634,121 @@ function CreateSpawnPointAttachment(bool bIsTemporary)
 function bool ShouldPlayersSpawnInsideVehicle()
 {
     return !bEngineOff;
+}
+
+// State serialization and deserialization functions.
+function DHVehicleState GetVehicleState()
+{
+    local DHVehicleState VehicleState;
+    local DHVehicleWeapon VehicleWeapon;
+    local int i;
+
+    VehicleState = new Class'DHVehicleState';
+    VehicleState.Health = Health;
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (WeaponPawns[i] == none)
+        {
+            continue;
+        }
+
+        VehicleWeapon = DHVehicleWeapon(WeaponPawns[i].Gun);
+
+        if (VehicleWeapon != none)
+        {
+            VehicleState.WeaponStates[i] = VehicleWeapon.GetVehicleWeaponState();
+        }
+    }
+
+    return VehicleState;
+}
+
+function SetVehicleState(DHVehicleState VehicleState)
+{
+    local DHVehicleWeapon Weapon;
+    local int i;
+
+    Health = VehicleState.Health;
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (WeaponPawns[i] == none)
+        {
+            continue;
+        }
+
+        Weapon = DHVehicleWeapon(WeaponPawns[i].Gun);
+
+        if (Weapon != none)
+        {
+            Weapon.SetVehicleWeaponState(VehicleState.WeaponStates[i]);
+        }
+    }
+}
+
+// Function to create a proxy respresentation for the vehicle.
+static function UpdateProxy(DHActorProxy AP)
+{
+    local int i, j;
+    local DHActorProxyAttachment APA;
+
+    AP.SetDrawType(DT_Mesh);
+    AP.LinkMesh(default.Mesh);
+
+    if (AP.HasAnim(default.BeginningIdleAnim))
+    {
+        AP.PlayAnim(default.BeginningIdleAnim);
+    }
+
+    for (j = 0; j < default.Skins.Length; ++j)
+    {
+        if (default.Skins[j] != none)
+        {
+            AP.Skins[j] = AP.CreateProxyMaterial(default.Skins[j]);
+        }
+    }
+
+    for (i = 0; i < default.PassengerWeapons.Length; ++i)
+    {
+        APA = AP.Spawn(class'DHActorProxyAttachment', AP);
+
+        if (APA != none)
+        {
+            AP.AttachToBone(APA, default.PassengerWeapons[i].WeaponBone);
+
+            APA.SetDrawType(DT_Mesh);
+            APA.LinkMesh(default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
+
+            // HACK: Play an idle animation if it exists. This is needed because on some "vehicles", the gun needs to
+            // be displayed in a certain way (i.e. mortars).
+            // TODO: just define an idle animation on the gun class then?
+            if (APA.HasAnim('idle'))
+            {
+                APA.PlayAnim('idle');
+            }
+
+            // First try to apply the cannon skins.
+            for (j = 0; j < default.CannonSkins.Length; ++j)
+            {
+                if (default.CannonSkins[j] != none)
+                {
+                    APA.Skins[j] = AP.CreateProxyMaterial(default.CannonSkins[j]);
+                }
+            }
+
+            // If there are still any skin slots empty, just use the skins defined in the weapon class.
+            for (j = 0; j < default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins.Length; ++j)
+            {
+                if ((j >= APA.Skins.Length || APA.Skins[j] == none) && default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j] != none)
+                {
+                    APA.Skins[j] = AP.CreateProxyMaterial(default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j]);
+                }
+            }
+
+            AP.Attachments[AP.Attachments.Length] = APA;
+        }
+    }
 }
 
 defaultproperties

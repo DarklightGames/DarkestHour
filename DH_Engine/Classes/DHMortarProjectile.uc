@@ -15,7 +15,7 @@ var     float   DudChance;
 
 // Effects for firing mortar & for shell descending just before it lands
 var     class<Emitter>  FireEmitterClass;
-var     Sound   DescendingSound;
+var     Sound           DescendingSound;
 
 // Impact effects & sounds for a dud round
 var     class<Emitter>  HitDirtEmitterClass;

@@ -15,13 +15,13 @@ defaultproperties
     PickupClass=Class'DH_STG44ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.STG44-Scoped'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.STG44_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
-    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Textured_GerScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Ger_sniperscope_overlay'
     bIsSniper=true
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85

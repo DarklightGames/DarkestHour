@@ -15,16 +15,25 @@ var     float   FiringStartTimeSeconds;         // The time at which the firing 
 var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
 var()   float   FireDelaySeconds;               // The amount of time to wait into the firing animation before actually firing the round.
 
-var()   name  HandsFiringCameraBone;    // The name of the bone to use for the camera while firing.
-var()   name  HandsFiringAnimName;      // The name of the firing animation on the hands mesh.
-var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
-var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
-var()   float ProjectileLifeSpan;       // The life span of the projectile attached to the gunner's hand.
+var()   name    HandsFiringCameraBone;          // The name of the bone to use for the camera while firing.
+var()   name    HandsFiringAnimName;            // The name of the firing animation on the hands mesh.
+
+var()   float   HandsFiringShowInTime;          // The amount of time to wait before showing the hands when firing.
+var()   float   HandsFiringShowOutTime;         // The amount of time to wait before hiding the hands after firing.
+
+var()   float   FiringCameraInTime;             // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
+var()   float   FiringCameraOutTime;            // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+
+var()   float   FiringCameraLocationFactor;
+var()   float   FiringCameraRotationFactor;
+
+var()   float   ProjectileLifeSpan;             // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
-var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
-var     Mesh                HandsMesh;              // The first person hands mesh.
-var     DHDecoAttachment    HandsProjectile;        // The first person projectile actor.
+var     DHFirstPersonHands  HandsActor;                 // The first person hands actor.
+var     Mesh                HandsMesh;                  // The first person hands mesh.
+var     DHDecoAttachment    HandsProjectile;            // The first person projectile actor.
+var     int                 HandsProjectileRollRange;   // The maximum amount of roll deviation for the first person projectile actor.
 
 var()   Vector              HandsRelativeLocation;  // The location of the hands in actor relation to it's attachment bone.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
@@ -350,26 +359,24 @@ simulated state Firing
     // Calculate the linear interpolation value for the camera position and rotation.
     simulated function float GetCameraInterpolationTheta()
     {
-        local float Theta;
-        local float FiringTimeSeconds, ZoomOutTime;
+        return Class'UInterp'.static.LerpBilateral(
+            Level.TimeSeconds, 
+            FiringStartTimeSeconds, 
+            FiringStartTimeSeconds + OverlayFiringAnimDuration, 
+            FiringCameraInTime,
+            FiringCameraOutTime
+        );
+    }
 
-        FiringTimeSeconds = Level.TimeSeconds - FiringStartTimeSeconds;
-        ZoomOutTime = OverlayFiringAnimDuration - FiringCameraOutTime;
-
-        if (FiringTimeSeconds < FiringCameraInTime)
-        {
-            Theta = FiringTimeSeconds / FiringCameraInTime;
-        }
-        else if (FiringTimeSeconds > ZoomOutTime)
-        {
-            Theta = 1.0 - ((FiringTimeSeconds - ZoomOutTime) / FiringCameraOutTime);
-        }
-        else
-        {
-            Theta = 1.0;
-        }
-
-        return Theta;
+    simulated function bool GetHandsHidden()
+    {
+        return Class'UInterp'.static.LerpBilateral(
+            Level.TimeSeconds, 
+            FiringStartTimeSeconds, 
+            FiringStartTimeSeconds + OverlayFiringAnimDuration, 
+            HandsFiringShowInTime,
+            HandsFiringShowOutTime
+        ) < 1.0;
     }
 
     simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
@@ -399,11 +406,11 @@ simulated state Firing
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
 
         // Hide the hands mesh if the camera is not fully in the firing position.
-        HandsActor.bHidden = Theta < 1.0;
+        HandsActor.bHidden = GetHandsHidden();
 
         ViewActor = self;
-        CameraLocation = Class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
-        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
+        CameraLocation = Class'UVector'.static.VLerp(Theta * FiringCameraLocationFactor, NormalCameraLocation, FiringCameraLocation);
+        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta * FiringCameraRotationFactor));
 
         // Neutralize the roll to prevent motion sickness.
         CameraRotation.Roll = CameraRotation.Roll * (1.0 - Theta);
@@ -443,7 +450,7 @@ simulated state Firing
             UpdateHandsProjectileStaticMesh();
 
             // Randomly spin the projectile so it's not always the same.
-            ProjectileRelativeRotation.Roll = Rand(65535);
+            ProjectileRelativeRotation.Roll = RandRange(-HandsProjectileRollRange, HandsProjectileRollRange);
             HandsProjectile.SetRelativeRotation(ProjectileRelativeRotation);
         }
 
@@ -451,7 +458,7 @@ simulated state Firing
     }
 
 Begin:
-    FireDelaySeconds = FMin(OverlayFiringAnimDuration, default.FireDelaySeconds);
+    FireDelaySeconds = FMin(OverlayFiringAnimDuration, FireDelaySeconds);
     Sleep(FireDelaySeconds);
     SuperFire();
     Sleep(OverlayFiringAnimDuration - FireDelaySeconds);
@@ -488,4 +495,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 defaultproperties
 {
     bNetNotify=true
+    HandsProjectileRollRange=2048
+    FiringCameraLocationFactor=1.0
+    FiringCameraRotationFactor=1.0
+    HandsFiringShowInTime=0.5
+    HandsFiringShowOutTime=0.5
 }

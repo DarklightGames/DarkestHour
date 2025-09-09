@@ -86,7 +86,7 @@ state Pending
 
         RI = DHRoleInfo(PC.GetRoleInfo());
 
-        if (RI != none && (RI.bCanUseMortars || RI.bCanBeTankCrew))
+        if (RI != none && RI.bCanBeTankCrew)
         {
             // DebugLog("Role does not qualify:" @ PC);
             GotoState('');

@@ -2176,23 +2176,12 @@ function MouseInterfaceStopCapturing()
 
 function GetPlayerNamePlateIcon(Pawn P, DHPlayerReplicationInfo OtherPRI, out Material IconMaterial, out Color IconMaterialColor)
 {
-    local DHMortarVehicle Mortar;
-
     IconMaterial = none;
     IconMaterialColor = Class'UColor'.default.White;
 
     if (OtherPRI == PortraitPRI)
     {
         IconMaterial = SpeakerIconMaterial;
-    }
-    else if (P.IsA('DHMortarVehicleWeaponPawn')) // a mortar is a special case to check for resupply
-    {
-        Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-
-        if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
-        {
-            IconMaterial = NeedAmmoIconMaterial;
-        }
     }
     else
     {
@@ -2230,7 +2219,6 @@ function DrawPlayerNames(Canvas C)
     local ROVehicle               OwnVehicle, VehicleBase;
     local VehicleWeaponPawn       WepPawn;
     local DHProjectileWeapon      MyProjWeapon;
-    local DHMortarVehicle         Mortar;
     local Actor                   A;
     local Pawn                    LookedAtPawn, PawnForLocation, P;
     local array<Pawn>             Pawns;
@@ -2400,12 +2388,6 @@ function DrawPlayerNames(Canvas C)
                  (PRI.IsSLorASL() && OtherPRI.IsSLorASL()))
         {
             bMayBeValid = true;
-        }
-        // Player is manning a mortar, so we do a specific check whether we can resupply the mortar
-        else if (P.IsA('DHMortarVehicleWeaponPawn'))
-        {
-            Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-            bMayBeValid = Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo;
         }
         // Check whether we can resupply the player or assist them with loading a rocket
         else if (DHPawn(P) != none)
@@ -4279,6 +4261,7 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
+    local DHWeapon DHW;
     local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
@@ -4336,13 +4319,28 @@ function UpdateHud()
 
         if (W != none)
         {
-            if (W.AmmoClass[0] != none)
+            DHW = DHWeapon(W);
+
+            if (DHW != none)
             {
-                AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
+                AmmoIcon.WidgetTexture = DHW.GetHudAmmoIconMaterial();
             }
             else
             {
-                AmmoIcon.WidgetTexture = none;
+                if (W.AmmoClass[0] != none)
+                {
+                    AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
+                }
+                else
+                {
+                    AmmoIcon.WidgetTexture = none;
+                }
+            }
+
+            if (AmmoIcon.WidgetTexture != none)
+            {
+                AmmoIcon.TextureCoords.X2 = AmmoIcon.WidgetTexture.MaterialUSize() - 1;
+                AmmoIcon.TextureCoords.Y2 = AmmoIcon.WidgetTexture.MaterialVSize() - 1;
             }
 
             AmmoCount.Value = W.GetHudAmmoCount();

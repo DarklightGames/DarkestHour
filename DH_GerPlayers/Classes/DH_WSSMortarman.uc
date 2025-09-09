@@ -3,13 +3,4 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_WSSMortarman extends DHGEMortarmanRoles;
-
-defaultproperties
-{
-    RolePawns(0)=(PawnClass=Class'DH_GermanSSPawnB',Weight=1.5)
-    //RolePawns(1)=(PawnClass=Class'DH_GermanSpringSmockSSPawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.DotGreenSleeve'
-    Headgear(0)=Class'DH_SSHelmetOne'
-    Headgear(1)=Class'DH_SSHelmetTwo'
-}
+class DH_WSSMortarman extends DHDeprecated;

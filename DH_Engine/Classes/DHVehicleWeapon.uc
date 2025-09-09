@@ -578,6 +578,13 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return true;
 }
 
+// When true, when the player tries to reload the cannon and the current ammo type is empty,
+// the cannon will automatically switch to the next available ammo type.
+simulated function bool ShouldSwitchToNextAmmoTypeWhenEmpty()
+{
+    return false;
+}
+
 // Fire functions moved out of state 'ProjectileFireMode', which is deprecated as unnecessary in DH
 // Projectile fire is now effectively the default, non-state condition for all DHVehicleWeapon
 // Modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
@@ -626,37 +633,41 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     P = Spawn(ProjClass, none,, GetProjectileFireLocation(ProjClass), GetProjectileFireRotation(bAltFire));
 
-    if (P != none)
+    if (P == none)
     {
-        // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
-        if (!bSkipFiringEffects)
-        {
-            FlashMuzzleFlash(bAltFire);
+        return none;
+    }
 
-            if (bAltFire)
+    // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
+    if (!bSkipFiringEffects)
+    {
+        FlashMuzzleFlash(bAltFire);
+
+        if (bAltFire)
+        {
+            if (bAmbientAltFireSound)
             {
-                if (bAmbientAltFireSound)
-                {
-                    AmbientSound = AltFireSoundClass;
-                    SoundVolume = AltFireSoundVolume;
-                    SoundRadius = AltFireSoundRadius;
-                    AmbientSoundScaling = AltFireSoundScaling;
-                }
-                else
-                {
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-                }
+                AmbientSound = AltFireSoundClass;
+                SoundVolume = AltFireSoundVolume;
+                SoundRadius = AltFireSoundRadius;
+                SoundPitch = GetAltFireSoundPitch() * 64;
+                AmbientSoundScaling = AltFireSoundScaling;
             }
             else
             {
-                if (bAmbientFireSound)
-                {
-                    AmbientSound = FireSoundClass;
-                }
-                else
-                {
-                    PlayOwnedSound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-                }
+                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius, GetAltFireSoundPitch(), false);
+            }
+        }
+        else
+        {
+            if (bAmbientFireSound)
+            {
+                AmbientSound = FireSoundClass;
+                SoundPitch = GetFireSoundPitch() * 64;
+            }
+            else
+            {
+                PlayOwnedSound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius, GetFireSoundPitch(), false);
             }
         }
     }
@@ -790,6 +801,18 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
     OwnerEffects();
 }
 
+// Modifify in subclasses to alter the pitch based on the state of the weapon.
+simulated function float GetFireSoundPitch()
+{
+    return 1.0;
+}
+
+// Modifify in subclasses to alter the pitch based on the state of the weapon.
+simulated function float GetAltFireSoundPitch()
+{
+    return 1.0;
+}
+
 // Modified to add generic support for weapons that use magazines or similar, to add generic support for different fire sounds,
 // to stop 'phantom' coaxial firing effects (flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button,
 // and to enable MG muzzle flash (AmbientEffectEmitter) for listen server host firing own weapon, which the original code misses out
@@ -824,7 +847,7 @@ simulated function OwnerEffects()
         {
             if (!bAmbientFireSound)
             {
-                PlaySound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                PlaySound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius, GetFireSoundPitch(), false);
             }
 
             if (bUsesMags)
@@ -906,11 +929,11 @@ function CeaseFire(Controller C, bool bWasAltFire)
         {
             if (AmbientSound == FireSoundClass && FireEndSound != none)
             {
-                PlaySound(FireEndSound, SLOT_None, SoundVolume / 255.0 * AmbientSoundScaling,, SoundRadius);
+                PlaySound(FireEndSound, SLOT_None, SoundVolume / 255.0 * AmbientSoundScaling,, SoundRadius, GetFireSoundPitch());
             }
             else if (AmbientSound == AltFireSoundClass && AltFireEndSound != none)
             {
-                PlaySound(AltFireEndSound, SLOT_None, AltFireSoundVolume / 255.0 * AltFireSoundScaling,, AltFireSoundRadius);
+                PlaySound(AltFireEndSound, SLOT_None, AltFireSoundVolume / 255.0 * AltFireSoundScaling,, AltFireSoundRadius, GetAltFireSoundPitch());
             }
         }
 
@@ -1576,6 +1599,32 @@ state InstantFireMode
 
 simulated function SimulateTraceFire(out Vector Start, out Rotator Dir, out Vector HitLocation, out Vector HitNormal);
 function TraceFire(Vector Start, Rotator Dir);
+
+// State serialization and deserialization functions.
+function DHVehicleWeaponState GetVehicleWeaponState()
+{
+    local DHVehicleWeaponState WeaponState;
+
+    WeaponState = new Class'DHVehicleWeaponState';
+    WeaponState.LastResupplyTimestamp = LastResupplyTimestamp;
+    WeaponState.MainAmmoCharge[0] = MainAmmoCharge[0];
+    WeaponState.MainAmmoCharge[1] = MainAmmoCharge[1];
+    WeaponState.AltAmmoCharge = AltAmmoCharge;
+    WeaponState.NumMGMags = NumMGMags;
+    WeaponState.ReloadState = ReloadState;
+
+    return WeaponState;
+}
+
+function SetVehicleWeaponState(DHVehicleWeaponState WeaponState)
+{
+    LastResupplyTimestamp = WeaponState.LastResupplyTimestamp;
+    MainAmmoCharge[0] = WeaponState.MainAmmoCharge[0];
+    MainAmmoCharge[1] = WeaponState.MainAmmoCharge[1];
+    AltAmmoCharge = WeaponState.AltAmmoCharge;
+    NumMGMags = WeaponState.NumMGMags;
+    ReloadState = EReloadState(WeaponState.ReloadState);
+}
 
 // Animation Drivers & Gun Wheels
 simulated function SetupAnimationDrivers()

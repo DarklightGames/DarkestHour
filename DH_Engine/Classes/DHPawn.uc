@@ -38,12 +38,8 @@ var     class<Inventory>    BinocsClass;
 var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
 
-// Mortars
-var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
-var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
-var     bool    bMortarCanBeResupplied;
-var     int     MortarHEAmmo;
-var     int     MortarSmokeAmmo;
+// Stationary Weapons
+var     bool    bIsDeployingStationaryWeapon;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bLockViewRotation;
 var     Rotator LockViewRotation;
 
@@ -434,7 +430,6 @@ function PossessedBy(Controller C)
     local ROPlayer                   PC;
     local ROBot                      Bot;
     local array<class<ROAmmoPouch> > AmmoClasses;
-    local class<DHMortarWeapon>      MortarClass;
     local int                        PrimaryWeapon, SecondaryWeapon, GrenadeWeapon, i;
 
     super(Pawn).PossessedBy(C);
@@ -527,26 +522,6 @@ function PossessedBy(Controller C)
                     }
 
                     AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
-                }
-            }
-
-            // Give a mortar operator his default carried mortar ammunition
-            // Don't have weapons yet, so have to get mortar class from role's GivenItems array
-            if (RI.bCanUseMortars)
-            {
-                for (i = 0; i < RI.GivenItems.Length; ++i)
-                {
-                    if (RI.GivenItems[i] != "")
-                    {
-                        MortarClass = class<DHMortarWeapon>(Level.Game.BaseMutator.GetInventoryClass(RI.GivenItems[i]));
-
-                        if (MortarClass != none)
-                        {
-                            MortarHEAmmo = MortarClass.default.HighExplosiveMaximum;
-                            MortarSmokeAmmo = MortarClass.default.SmokeMaximum;
-                            break;
-                        }
-                    }
                 }
             }
         }
@@ -1720,99 +1695,6 @@ function TossAmmo(Pawn Gunner)
     PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
-function TossMortarAmmo(DHPawn P)
-{
-    local DarkestHourGame G;
-    local DHGameReplicationInfo GRI;
-
-    if (bUsedCarriedMGAmmo || P == none || !P.ResupplyMortarAmmunition())
-    {
-        return;
-    }
-
-    bUsedCarriedMGAmmo = true;
-
-    G = DarkestHourGame(Level.Game);
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (Controller != none && P.Controller != none)
-    {
-        // notification message to gunner
-        P.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
-
-        // notification message to supplier
-        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
-
-        if (GRI != none) // remove any resupply request
-        {
-            GRI.RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
-        }
-
-        G.ScoreMortarResupply(Controller, P.Controller);
-    }
-
-    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
-}
-
-function TossMortarVehicleAmmo(DHMortarVehicle V)
-{
-    local DarkestHourGame  G;
-    local DHGameReplicationInfo GRI;
-    local PlayerController Recipient;
-
-    if (V == none || Controller == none || bUsedCarriedMGAmmo || !ResupplyMortarVehicleWeapon(V))
-    {
-        return;
-    }
-
-    bUsedCarriedMGAmmo = true;
-
-    G = DarkestHourGame(Level.Game);
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (V.WeaponPawns.Length > 0 && V.WeaponPawns[0] != none)
-    {
-        Recipient = PlayerController(V.WeaponPawns[0].Controller);
-    }
-
-    if (Recipient != none)
-    {
-        // "You have resupplied {0}"
-        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
-
-        // "You have been resupplied by {0}"
-        Recipient.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
-
-        if (GRI != none)
-        {
-            // Remove any resupply request
-            GRI.RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
-        }
-    }
-    else
-    {
-        // "You have resupplied a friendly mortar"
-        ReceiveLocalizedMessage(Class'DHResupplyMessage', 2);
-    }
-
-    if (G != none)
-    {
-        G.ScoreMortarResupply(Controller, Recipient);
-    }
-
-    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
-}
-
-function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
-{
-    if (V != none || DHMortarVehicleWeaponPawn(V.WeaponPawns[0]) != none)
-    {
-        return V.WeaponPawns[0].ResupplyAmmo();
-    }
-
-    return false;
-}
-
 // Handle assisted reload
 function LoadWeapon(Pawn Gunner)
 {
@@ -2837,11 +2719,6 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
     // Destroy some possible DH special carried/owned actors
     DestroyRadio();
 
-    if (OwnedMortar != none)
-    {
-        OwnedMortar.GotoState('PendingDestroy');
-    }
-
     // Notify other actors that player has died
     if (DrivenVehicle != none)
     {
@@ -3421,7 +3298,7 @@ function CheckGiveSmoke()
     NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
 
     // Exclude tank crewmen and mortar operators
-    if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
+    if (RI == none || RI.bCanBeTankCrew)
     {
         return;
     }
@@ -4079,21 +3956,6 @@ function HandleEndMantle()
 function HandleResetRoot()
 {
     SetAnimAction('ResetRoot');
-}
-
-function HandleMortarDeploy()
-{
-    SetAnimAction('MortarDeploy');
-}
-
-function HandleMortarFire()
-{
-    SetAnimAction('MortarFire');
-}
-
-function HandleMortarUnflinch()
-{
-    SetAnimAction('MortarUnflinch');
 }
 
 // Mantle anims
@@ -5423,7 +5285,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -5445,7 +5307,7 @@ simulated function LeanRightReleased()
 
 simulated function LeanLeft()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
     {
         bLeanLeft = false;
     }
@@ -5631,42 +5493,6 @@ simulated event PhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 }
 
-function bool ResupplyMortarAmmunition()
-{
-    local int i;
-    local DHRoleInfo RI;
-    local class<DHMortarWeapon> W;
-
-    RI = GetRoleInfo();
-
-    if (!bMortarCanBeResupplied || RI == none || !RI.bCanUseMortars)
-    {
-        return false;
-    }
-
-    for (i = 0; i < RI.GivenItems.Length; ++i)
-    {
-        if (RI.GivenItems[i] != "")
-        {
-            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
-        }
-
-        if (W == none)
-        {
-            continue;
-        }
-
-        MortarHEAmmo = Clamp(MortarHEAmmo + W.default.HighExplosiveResupplyCount, 0, W.default.HighExplosiveMaximum);
-        MortarSmokeAmmo = Clamp(MortarSmokeAmmo + W.default.SmokeResupplyCount, 0, W.default.SmokeMaximum);
-
-        CheckIfMortarCanBeResupplied();
-
-        return true;
-    }
-
-    return false;
-}
-
 function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
 {
     local int i;
@@ -5755,46 +5581,6 @@ function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
     }
 
     return false;
-}
-
-function CheckIfMortarCanBeResupplied()
-{
-    local int i;
-    local DHRoleInfo RI;
-    local class<DHMortarWeapon> W;
-
-    RI = GetRoleInfo();
-
-    bMortarCanBeResupplied = false;
-
-    if (RI == none || !RI.bCanUseMortars)
-    {
-        return;
-    }
-
-    for (i = 0; i < RI.GivenItems.Length; ++i)
-    {
-        if (RI.GivenItems[i] != "")
-        {
-            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], Class'Class'));
-        }
-
-        if (W == none)
-        {
-            continue;
-        }
-
-        bMortarCanBeResupplied = MortarHEAmmo < W.default.HighExplosiveMaximum || MortarSmokeAmmo < W.default.SmokeMaximum;
-    }
-}
-
-simulated function bool CanUseMortars()
-{
-    local DHRoleInfo RI;
-
-    RI = GetRoleInfo();
-
-    return RI != none && RI.bCanUseMortars;
 }
 
 simulated function DHRoleInfo GetRoleInfo()
@@ -7408,7 +7194,7 @@ function EnterATRotation(DHATGun Gun)
     GunToRotate = Gun;
     WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", Class'Class'));
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, false);
 }
 
 function ServerExitATRotation()
@@ -7469,6 +7255,8 @@ exec function RotateAT()
     WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", Class'Class'));
 
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
+
+    Log("RotateAT" @ GunToRotate @ WeaponClass);
 }
 
 exec simulated function IronSightDisplayFOV(float FOV)

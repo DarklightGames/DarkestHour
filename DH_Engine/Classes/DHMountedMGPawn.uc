@@ -74,6 +74,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
         if (MG != none)
         {
             MG.UpdateClip();
+            MG.UpdateRangeDriverFrameTarget();
         }
     }
 }
@@ -168,7 +169,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
             Class'UQuaternion'.static.FromAxes(ReloadCameraCoords.XAxis, ReloadCameraCoords.YAxis, ReloadCameraCoords.ZAxis)
         );
 
-        T = Class'UInterp'.static.LerpBilateral(Level.TimeSeconds, VW.ReloadStartTimeSeconds, VW.ReloadEndTimeSeconds, VW.ReloadCameraTweenTime);
+        T = Class'UInterp'.static.LerpBilateral(Level.TimeSeconds, VW.ReloadStartTimeSeconds, VW.ReloadEndTimeSeconds, VW.ReloadCameraTweenTime, VW.ReloadCameraTweenTime);
         T = Class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
 
         CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);

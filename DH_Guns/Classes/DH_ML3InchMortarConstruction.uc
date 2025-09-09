@@ -3,13 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ML3InchMortarConstruction extends DHConstruction_Vehicle;
+class DH_ML3InchMortarConstruction extends DHMortarConstruction;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.mortar'
-    VehicleClasses(0)=(VehicleClass=Class'DH_ML3InchMortar')
-    bIsArtillery=true
+    VehicleClasses(0)=(VehicleClass=Class'DH_Guns.DH_ML3InchMortar')
     SupplyCost=1000
     ProgressMax=8
 }

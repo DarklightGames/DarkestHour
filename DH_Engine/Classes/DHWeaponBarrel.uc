@@ -6,18 +6,27 @@
 class DHWeaponBarrel extends Actor
     notplaceable;
 
+// Non-volatile properties
 var     float       LevelTempCentigrade; // the temperature of the level we're playing in (all temps here are in centigrade)
-var     float       Temperature;         // current barrel temp
 var     float       SteamTemperature;    // temp barrel begins to steam
 var     float       CriticalTemperature; // temp barrel steams a lot and cone-fire error introduced
 var     float       FailureTemperature;  // temp at which barrel fails and unusable
 var     float       FiringHeatIncrement; // increase in barrel temp per shot fired
 var     float       BarrelTimerRate;     // how often to call the timer to handle barrel cooling
 var     float       BarrelCoolingRate;   // rate at which barrel cools off (degrees per second)
-var     bool        bBarrelSteamActive;  // if barrel passes SteamTemperature, we'll start steaming the barrel
-var     bool        bBarrelDamaged;      // if barrel passes CriticalTemperature, becomes true and cone-fire error introduced
-var     bool        bBarrelFailed;       // if barrel passes FailureTemperature, becomes true and barrel unusable
-var     bool        bIsCurrentBarrel;    // this is the weapon's current barrel, not a spare
+
+enum EBarrelCondition
+{
+    BC_Good,
+    BC_Damaged, // If barrel passes CriticalTemperature, cone-fire error introduced.
+    BC_Failed   // If barrel passes FailureTemperature, becomes unusable.
+};
+
+// Volatile properties
+var     float               Temperature;
+var     bool                bIsSteamActive;     // If barrel passes SteamTemperature, we'll start steaming the barrel.
+var     EBarrelCondition    Condition;
+var     bool                bIsCurrentBarrel;   // This is the weapon's current barrel, not a spare.
 
 // Modified to set the LevelTempCentigrade & match barrel's starting temperature to that, & to start a repeating timer to handle barrel cooling & updating
 simulated function PostBeginPlay()
@@ -39,7 +48,7 @@ simulated function PostBeginPlay()
 // Modified to make sure any steam effects are deactivated
 simulated function Destroyed()
 {
-    if (bBarrelSteamActive)
+    if (bIsSteamActive)
     {
         if (DHProjectileWeapon(Owner)!= none)
         {
@@ -48,6 +57,10 @@ simulated function Destroyed()
         else if (DHWeaponPickup(Owner) != none)
         {
             DHWeaponPickup(Owner).SetBarrelSteamActive(false);
+        }
+        else if (DHVehicleMG(Owner) != none)
+        {
+            DHVehicleMG(Owner).SetBarrelTemperature(self, 0);
         }
     }
 
@@ -85,56 +98,63 @@ function Timer()
 // Updates this barrel and the weapon's status
 function UpdateBarrelStatus()
 {
-    local DHProjectileWeapon W;
-    local DHWeaponPickup     PU;
+    local DHProjectileWeapon    W;
+    local DHWeaponPickup        PU;
+    local DHVehicleMG           MG;
 
-    if (Role == ROLE_Authority)
+    if (Role != ROLE_Authority)
     {
-        bBarrelSteamActive = Temperature > SteamTemperature;
-        bBarrelDamaged = Temperature > CriticalTemperature;
-
-        if (!bBarrelFailed && Temperature > FailureTemperature) // no coming back from barrel failure
-        {
-            bBarrelFailed = true;
-        }
-
-        if (bIsCurrentBarrel)
-        {
-            W = DHProjectileWeapon(Owner);
-
-            if (W != none)
-            {
-                if (W.bBarrelSteamActive != bBarrelSteamActive)
-                {
-                    W.SetBarrelSteamActive(bBarrelSteamActive);
-                }
-
-                if (W.bBarrelDamaged != bBarrelDamaged)
-                {
-                    W.SetBarrelDamaged(bBarrelDamaged);
-                }
-
-                if (W.bBarrelFailed != bBarrelFailed)
-                {
-                    W.SetBarrelFailed(bBarrelFailed);
-                }
-
-                if (W.BarrelTemperature != Temperature)
-                {
-                    W.SetBarrelTemperature(Temperature);
-                }
-            }
-            else
-            {
-                PU = DHWeaponPickup(Owner);
-
-                if (PU != none && PU.bBarrelSteamActive != bBarrelSteamActive)
-                {
-                    PU.SetBarrelSteamActive(bBarrelSteamActive);
-                }
-            }
-        }
+        return;
     }
+
+    bIsSteamActive = Temperature > SteamTemperature;
+
+    if (Condition < BC_Damaged && Temperature > CriticalTemperature)
+    {
+        Condition = BC_Damaged;
+    }
+    else if (Condition < BC_Failed && Temperature > FailureTemperature)
+    {
+        Condition = BC_Failed;
+    }
+
+    if (!bIsCurrentBarrel)
+    {
+        return;
+    }
+
+    W = DHProjectileWeapon(Owner);
+    PU = DHWeaponPickup(Owner);
+    MG = DHVehicleMG(Owner);
+
+    if (W != none)
+    {
+        W.SetBarrelSteamActive(bIsSteamActive);
+        // TODO: update the DHProjectileWeapon to just have a Condition variable.
+        W.SetBarrelDamaged(Condition == BC_Damaged);
+        W.SetBarrelFailed(Condition == BC_Failed);
+        W.SetBarrelTemperature(Temperature);
+    }
+    else if (PU != none)
+    {
+        PU.SetBarrelSteamActive(bIsSteamActive);
+    }
+    else if (MG != none)
+    {
+        MG.SetBarrelCondition(self, Condition);
+        MG.SetBarrelTemperature(self, Temperature);
+    }
+}
+
+simulated static function float GetFiringSoundPitch(float BarrelTemperature)
+{
+    return Class'UInterp'.static.MapRangeClamped(
+        BarrelTemperature,
+        default.CriticalTemperature,
+        default.FailureTemperature,
+        1.0,
+        0.8125
+    );
 }
 
 defaultproperties

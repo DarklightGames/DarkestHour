@@ -236,7 +236,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
-        ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
+        ServerLoadATAmmo, ServerSetBayonetAtSpawn,
         ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
@@ -1138,7 +1138,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 
             ViewRotation.Pitch = DHPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
 
-            if (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingMortar || DHPwn.bIsCuttingWire)
+            if (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingStationaryWeapon || DHPwn.bIsCuttingWire)
             {
                 DHPwn.LimitYaw(ViewRotation.Yaw);
             }
@@ -1291,10 +1291,6 @@ exec function ThrowMGAmmo()
                 ServerLoadATAmmo(OtherPawn);
             }
         }
-        else if (DHMortarVehicle(MyPawn.AutoTraceActor) != none)
-        {
-            ServerThrowMortarAmmo(DHMortarVehicle(ROPawn(Pawn).AutoTraceActor));
-        }
     }
 }
 
@@ -1315,22 +1311,6 @@ function ServerThrowMGAmmo(Pawn Gunner)
             P.LoadWeapon(OtherP);
         }
     }
-}
-
-function ServerThrowMortarAmmo(Pawn Gunner)
-{
-    local DHPawn P;
-    local DHMortarVehicle M;
-
-    P = DHPawn(Pawn);
-    M = DHMortarVehicle(Gunner);
-
-    if (P == none || M == none || M.OwningPawn == P)
-    {
-        return;
-    }
-
-    P.TossMortarVehicleAmmo(M);
 }
 
 function ServerLoadATAmmo(Pawn Gunner)
@@ -1542,7 +1522,7 @@ state PlayerWalking
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
-        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
+        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingStationaryWeapon || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
         {
             NewAccel = vect(0.0, 0.0, 0.0);
         }
@@ -2317,7 +2297,7 @@ simulated function bool IsArtilleryOperator()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return (RI != none && RI.bCanUseMortars) || IsInArtilleryVehicle();
+    return IsInArtilleryVehicle();
 }
 
 simulated function bool IsArtillerySpotter()
@@ -2438,7 +2418,7 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
 
     // Only allow if requesting player is a leader role or if he's a machine gunner or mortar operator requesting resupply
     if (RI != none &&
-        (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars))) &&
+        (RI.bIsLeader || (RequestType == 3 && RI.bIsGunner)) &&
         ROGameReplicationInfo(GameReplicationInfo) != none &&
         PRI != none &&
         PRI.Team != none)
@@ -6540,13 +6520,14 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     local Actor HitActor;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    P = DHPawn(Pawn);
 
     if (PRI == none)
     {
         return false;
     }
 
-    if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    if (P != none && P.GunToRotate != none)
     {
         return false;
     }
@@ -6556,6 +6537,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
     foreach TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
+        // If the actor we hit is a vehicle collision actor, set the hit actor to the base vehicle.
+        if (HitActor.IsA('DHCollisionMeshActor'))
+        {
+            HitActor = DHCollisionMeshActor(HitActor).GetBaseVehicle();
+        }
+
         if (HitActor.IsA('DHRadio'))
         {
             Radio = DHRadio(HitActor);
@@ -6571,13 +6558,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         else if (HitActor.IsA('DHATGun'))
         {
             Gun = DHATGun(HitActor);
-            P = DHPawn(Pawn);
 
             if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway && !Gun.bVehicleDestroyed)
             {
                 // TODO: we need some sort of way to check if we're being auto-traced?
                 // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
-                MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
+                MenuClassName = "DH_Engine.DHCommandMenu_StationaryWeapon";
                 MenuObject = HitActor;
                 return true;
             }
@@ -7775,7 +7761,10 @@ function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
 
 exec simulated function ListWeapons()
 {
-    Class'DHWeaponRegistry'.static.DumpToLog(self);
+    if (IsDebugModeAllowed())
+    {
+        Class'DHWeaponRegistry'.static.DumpToLog(self);
+    }
 }
 
 exec function DebugStartRound()
@@ -8028,12 +8017,9 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 // Function for getting the correct inventory item name to display depending on settings.
 simulated static function string GetInventoryName(class<Inventory> InventoryClass)
 {
-    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, Class'DHWeapon'))
+    if (ClassIsChildOf(InventoryClass, Class'DHWeapon'))
     {
-        if (class<DHWeapon>(InventoryClass).default.NativeItemName != "")
-        {
-            return class<DHWeapon>(InventoryClass).default.NativeItemName;
-        }
+        return class<DHWeapon>(InventoryClass).static.GetInventoryName(default.bUseNativeItemNames);
     }
 
     return InventoryClass.default.ItemName;
@@ -8041,7 +8027,10 @@ simulated static function string GetInventoryName(class<Inventory> InventoryClas
 
 exec simulated function ListVehicles()
 {
-    Class'DHVehicleRegistry'.static.DumpToLog(self);
+    if (IsDebugModeAllowed())
+    {
+        Class'DHVehicleRegistry'.static.DumpToLog(self);
+    }
 }
 
 exec function MapBoundsOffset(int X, int Y)

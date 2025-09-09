@@ -78,5 +78,5 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    RoundsInStaticMesh=1
+    NumRoundsInStaticMesh=1
 }

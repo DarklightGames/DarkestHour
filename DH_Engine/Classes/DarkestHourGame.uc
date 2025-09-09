@@ -15,9 +15,6 @@ var     DHGameReplicationInfo       GRI;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 
-var     array<DHSpawnArea>          DHMortarSpawnAreas;
-var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
-
 const   OBJECTIVES_MAX = 32;
 var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 var     array<DHObjectiveGroup>     ObjectiveGroups;
@@ -167,14 +164,13 @@ function PostBeginPlay()
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
     local ROMapBoundsSW         SW;
-    local DHSpawnArea           DHSA;
     local DHAmmoResupplyVolume  ARV;
     local ROMineVolume          MV;
     local ROArtilleryTrigger    RAT;
     local SpectatorCam          ViewPoint;
     local DHObstacleInfo        DHOI;
     local bool                  bMultipleLevelInfos;
-    local int                   i, j, k, m, n, o, p;
+    local int                   i, j, k, m, n, o;
 
     // Matt: for info, this hack could be used to prevent net clients & SP from logging "accessed none" errors for redundant SteamStatsAndAchievements actor
     // Even though PostLogin() event has been overridden & SS&A functionality removed, some native code still calls the event's Super from GameInfo class
@@ -434,15 +430,6 @@ function PostBeginPlay()
         o++;
     }
 
-    // Added for our overridden DHSpawnArea class - saves me having to check in subsequent functions repeatedly, just lay 'em all out here once
-    foreach AllActors(Class'DHSpawnArea', DHSA)
-    {
-        if (DHSA.bMortarmanSpawnArea)
-        {
-            DHMortarSpawnAreas[p++] = DHSA;
-        }
-    }
-
     // Make sure MaxTeamDifference is an acceptable value
     if (MaxTeamDifference < 1)
     {
@@ -622,14 +609,6 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         if (CurrentTankCrewSpawnArea[Team] != none && DHRI != none && DHRI.bCanBeTankCrew)
         {
             if (P.Tag != CurrentTankCrewSpawnArea[Team].Tag)
-            {
-                return -9000000.0;
-            }
-        }
-        // Mortar spawn addition - Colin Basnett, 2010
-        else if (DHCurrentMortarSpawnArea[Team] != none && DHRI != none && DHRI.bCanUseMortars)
-        {
-            if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
             {
                 return -9000000.0;
             }
@@ -1134,10 +1113,6 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, Vector Hi
                 if (RoleInfo.bCanBeTankCrew && CurrentTankCrewSpawnArea[TeamIndex] != none)
                 {
                     SpawnArea = CurrentTankCrewSpawnArea[TeamIndex];
-                }
-                else if (RoleInfo.bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
-                {
-                    SpawnArea = DHCurrentMortarSpawnArea[TeamIndex];
                 }
                 else if (CurrentSpawnArea[TeamIndex] != none)
                 {
@@ -2266,25 +2241,6 @@ function UpdateArtilleryAvailability()
     if (GRI == none || DHLevelInfo == none)
     {
         return;
-    }
-
-    // Check if mortars are enabled (on-map artillery part 1.)
-    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-    {
-        if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
-        {
-            GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
-            break;
-        }
-    }
-
-    for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-    {
-        if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
-        {
-            GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
-            break;
-        }
     }
 
     // Check if artillery vehicles are enabled (on-map artillery part 2.)
@@ -4838,123 +4794,6 @@ function CheckTankCrewSpawnAreas()
 
     CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
     CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
-
-    // Check mortar spawns areas (No longer used?)
-    CheckMortarmanSpawnAreas();
-}
-
-function CheckMortarmanSpawnAreas()
-{
-    local DHSpawnArea Best[2];
-    local bool        bReqsMet, bSomeReqsMet;
-    local int         i, j, h, k;
-
-    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
-    {
-        if (!DHMortarSpawnAreas[i].bEnabled)
-        {
-            continue;
-        }
-
-        // Axis plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
-            {
-                if (!DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-
-        // Allies plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
-            {
-                if (!DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
-            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // Allows mappers to have spawns be used when objectives are neutral, not just captured
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-    }
-
-    DHCurrentMortarSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
-    DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 }
 
 // Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
@@ -5771,7 +5610,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="Gï¿½nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5780,10 +5619,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton Mï¿½ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans Grï¿½schke"
+    GermanNames(12)="Wilhelm Krï¿½ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"

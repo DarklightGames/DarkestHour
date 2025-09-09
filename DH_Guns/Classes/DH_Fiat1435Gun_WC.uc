@@ -8,7 +8,8 @@ class DH_Fiat1435Gun_WC extends DH_Fiat1435Gun;
 defaultproperties
 {
     VehicleNameString="Fiat mod. 14"
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Fiat1435MGPawn_WC',WeaponBone=turret_placement)
+    StationaryWeaponClass=Class'DH_Fiat1435WCWeapon'
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Fiat1435MGPawn_WC',WeaponBone=turret_placement)
     VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'
 }

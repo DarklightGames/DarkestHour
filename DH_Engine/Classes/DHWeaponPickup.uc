@@ -7,7 +7,7 @@ class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
 // General
-var     int                     PlayerNearbyRadius;
+var     int                     PlayerNearbyRadiusMeters;
 var     int                     PlayerNearbyRetryTime;
 
 // Ammo
@@ -26,6 +26,11 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 var     StaticMesh              EmptyStaticMesh;
 
 var    bool                     bWaitingToBolt;
+
+// This is a bit of a hack; the stationary weapons will be forced to be brought up as soon
+// as they are added to the inventory. However, if the player is busy (reloading, etc) then
+// the weapon will not be brought up. In future, replace this with a more elegant solution.
+var     bool                    bCanPickupWhileBusy;
 
 replication
 {
@@ -74,10 +79,29 @@ auto state Pickup
 {
     function bool ValidTouch(Actor Other)
     {
-        return !(DHPawn(Other) != none &&
-                 (DHPawn(Other).bOnFire ||
-                 !DHPawn(Other).bCanPickupWeapons)) &&
-               super.ValidTouch(Other);
+        local DHPawn Pawn;
+        local DHWeapon Weapon;
+
+        Pawn = DHPawn(Other);
+
+        if (Pawn == none)
+        {
+            return false;
+        }
+
+        Weapon = DHWeapon(Pawn.Weapon);
+
+        if (!bCanPickupWhileBusy && Weapon != none && !Weapon.WeaponCanSwitch())
+        {
+            return false;
+        }
+
+        if (Pawn.bOnFire || !Pawn.bCanPickupWeapons)
+        {
+            return false;
+        }
+
+        return super.ValidTouch(Other);
     }
 
     function Timer()
@@ -99,9 +123,12 @@ function bool ArePlayersNearby()
 {
     local DHPawn    DHP;
 
-    foreach RadiusActors(Class'DHPawn', DHP, PlayerNearbyRadius)
+    foreach RadiusActors(class'DHPawn', DHP, Class'DHUnits'.static.MetersToUnreal(PlayerNearbyRadiusMeters))
     {
-        return true;
+        if (DHP.Controller != none)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -221,6 +248,7 @@ simulated event NotifySelected(Pawn User)
 defaultproperties
 {
     DrawType=DT_StaticMesh
+    bAmbientGlow=false
     AmbientGlow=64
     PickupMessage="You got the {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
@@ -229,6 +257,7 @@ defaultproperties
     BarrelSteamEmitterClass=Class'DHMGSteam'
     TouchMessageClass=Class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
-    PlayerNearbyRadius=256
+    PlayerNearbyRadiusMeters=5
     PlayerNearbyRetryTime=10
+    bCanPickupWhileBusy=true
 }
