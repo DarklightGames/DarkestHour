@@ -35,6 +35,7 @@ defaultproperties
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
@@ -191,7 +192,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -200,7 +201,7 @@ defaultproperties
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -210,7 +211,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -219,7 +220,7 @@ defaultproperties
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+    Wheels(3)=RR_Steering
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -240,5 +241,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

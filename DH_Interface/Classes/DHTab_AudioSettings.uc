@@ -87,7 +87,7 @@ defaultproperties
     Begin Object Class=moSlider Name=AudioMusicVolume
         MaxValue=1.0
         Caption="Music Volume"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=AudioMusicVolume.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.5"
@@ -103,7 +103,7 @@ defaultproperties
     Begin Object Class=moSlider Name=AudioEffectsVolumeSlider
         MaxValue=1.0
         Caption="Effects Volume"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=AudioEffectsVolumeSlider.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="0.9"
@@ -120,7 +120,7 @@ defaultproperties
         MaxValue=1.0
         MinValue=0.0
         Caption="Voice Receive Volume"
-        LabelStyleName="DHLargeText"
+        LabelStyleName="DHSmallText"
         OnCreateComponent=VoiceVolume.InternalOnCreateComponent
         IniOption="@Internal"
         WinTop=0.142484

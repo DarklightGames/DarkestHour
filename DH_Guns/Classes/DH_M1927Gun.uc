@@ -5,20 +5,6 @@
 
 class DH_M1927Gun extends DHATGun;
 
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local DHPlayer DHP;
-
-    super.ClientKDriverEnter(PC);
-
-    DHP = DHPlayer(PC);
-
-    if (DHP != none && DHP.IsArtilleryOperator())
-    {
-        DHP.QueueHint(50, false);
-    }
-}
-
 defaultproperties
 {
     VehicleNameString="76 mm regimental gun M1927"
@@ -58,5 +44,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

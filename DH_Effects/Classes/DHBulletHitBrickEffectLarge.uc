@@ -245,6 +245,6 @@ defaultproperties
     End Object
     Emitters(7)=BeamEmitter'BeamEmitter8'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

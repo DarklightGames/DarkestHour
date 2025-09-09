@@ -214,6 +214,9 @@ var     bool                    bIQManaged;
 var globalconfig GUID           ClientGUID;
 var     float                   LastListClientGUIDTime;
 
+// I'd love to put this elsewhere, but I can't seem to poll any relevant state in the HUD.
+var     bool                    bHideMapActivateMousePrompt;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -5845,15 +5848,20 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
+    else if (ChannelTitle ~= VRI.CommandChannelName)
     {
-        if (ChatRoomMessageClass != none)
+        if (!PRI.CanAccessCommandChannel())
         {
-            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            if (ChatRoomMessageClass != none)
+            {
+                ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            }
+            
+            // If we are trying to speak in command but we aren't a SL, then return out
+            return;
         }
 
-        // If we are trying to speak in command but we aren't a SL, then return out
-        return;
+        VCR = VRI.GetCommandChannel(GetTeamNum());
     }
     else
     {
@@ -7238,6 +7246,8 @@ function bool TryToActivateSituationMap()
         HUD.MouseInterfaceStartCapturing();
         HUD.bShowObjectives = true;
         bShouldSkipResetInput = true;
+
+        bHideMapActivateMousePrompt = true;
 
         GUIController.MouseX = GUIController.ResX / 2;
         GUIController.MouseY = GUIController.ResY / 2;

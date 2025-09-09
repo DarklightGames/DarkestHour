@@ -10,16 +10,12 @@ var localized string MGBlockingHatch;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    if (Switch == 1)
-    {
-        return default.MGBlockingHatch;
-    }
-
-    return "";
+    return default.MGBlockingHatch;
 }
 
 defaultproperties
 {
-     MGBlockingHatch="MG is blocking the hatch - turn it sideways to open"
+     MGBlockingHatch="Hatch blocked! Turn MG to 8 o'clock to unblock it."
      bIsUnique=True
+     bIsConsoleMessage=false
 }

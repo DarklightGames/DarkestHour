@@ -33,11 +33,10 @@ defaultproperties
     // Driver
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true)
+    DriverPositions(0)=(ViewFOV=85.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=85.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true)
     DriveAnim="VT3476_driver_idle_close"
-    HUDOverlayClass=Class'T3476DriverOverlay'
-    HUDOverlayFOV=85.0
+    HUDOverlayClass=None
 
     // Hull armor
     FrontArmor(0)=(Thickness=4.5,Slope=-60.0,MaxRelativeHeight=-7.0,LocationName="lower")
@@ -154,7 +153,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+     Wheels(0)=LF_Steering
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=true
         BoneOffset=(X=35.0,Y=10.0,Z=2.0)
@@ -163,7 +162,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+     Wheels(1)=RF_Steering
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=-10.0,Z=2.0)
@@ -173,7 +172,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+     Wheels(2)=LR_Steering
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=10.0,Z=2.0)
@@ -182,7 +181,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+     Wheels(3)=RR_Steering
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=10.0,Z=2.0)
@@ -191,7 +190,7 @@ defaultproperties
          WheelRadius=33.0
          bLeftTrack=true
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+     Wheels(4)=Left_Drive_Wheel
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=-10.0,Z=2.0)
@@ -199,5 +198,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+     Wheels(5)=Right_Drive_Wheel
 }

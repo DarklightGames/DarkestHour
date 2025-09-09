@@ -23,7 +23,7 @@ var DHConstruction Occupant;            // The current construction that is occu
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         Occupant;
 }
 

@@ -8,7 +8,7 @@ class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sd.Kfz.234/1 Armored Car"
+    VehicleNameString="Sd.Kfz. 234/1 Armored Car"
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false
@@ -30,6 +30,8 @@ defaultproperties
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+
+    FPCamPos=(X=-1.0)   // TODO: probably?
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
@@ -145,7 +147,7 @@ defaultproperties
         SupportBoneName="Axel_RF"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
+    Wheels(0)=RFWheel
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -156,7 +158,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
+    Wheels(1)=LFWheel
     Begin Object Class=SVehicleWheel Name=MFRWheel
         bPoweredWheel=true
         BoneName="Wheel_R_1"
@@ -166,7 +168,7 @@ defaultproperties
         SupportBoneName="Axel_R_1"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.MFRWheel'
+    Wheels(2)=MFRWheel
     Begin Object Class=SVehicleWheel Name=MFLWheel
         bPoweredWheel=true
         BoneName="Wheel_L_1"
@@ -177,7 +179,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.MFLWheel'
+    Wheels(3)=MFLWheel
     Begin Object Class=SVehicleWheel Name=MRRWheel
         bPoweredWheel=true
         BoneName="Wheel_R_2"
@@ -187,7 +189,7 @@ defaultproperties
         SupportBoneName="Axel_R_2"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.MRRWheel'
+    Wheels(4)=MRRWheel
     Begin Object Class=SVehicleWheel Name=MRLWheel
         bPoweredWheel=true
         BoneName="Wheel_L_2"
@@ -198,7 +200,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.MRLWheel'
+    Wheels(5)=MRLWheel
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         BoneName="wheel_RR"
@@ -208,7 +210,7 @@ defaultproperties
         SupportBoneName="Axel_RR"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(6)=SVehicleWheel'DH_Vehicles.RRWheel'
+    Wheels(6)=RRWheel
     Begin Object Class=SVehicleWheel Name=RLWheel
         bPoweredWheel=true
         BoneName="Wheel_RL"
@@ -219,7 +221,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(7)=SVehicleWheel'DH_Vehicles.RLWheel'
+    Wheels(7)=RLWheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -239,5 +241,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

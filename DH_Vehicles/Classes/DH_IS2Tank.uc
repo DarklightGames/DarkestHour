@@ -36,8 +36,7 @@ defaultproperties
     UnbuttonedPositionIndex=3 // can't unbutton, no proper exit hatch for driver (small opening hatch is just for vision)
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
-    HUDOverlayClass=Class'IS2DriverOverlay'
-    HUDOverlayFOV=85.0
+    FPCamPos=(X=-4)
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=-0.5,LocationName="lower")
@@ -163,7 +162,7 @@ defaultproperties
          WheelRadius=30.000000
          bLeftTrack=true
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+     Wheels(0)=LF_Steering
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=true
@@ -173,7 +172,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+     Wheels(1)=RF_Steering
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=true
@@ -184,7 +183,7 @@ defaultproperties
          WheelRadius=30.000000
          bLeftTrack=true
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+     Wheels(2)=LR_Steering
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=true
          BoneOffset=(X=-18.0,Y=10.0,Z=6.0)
@@ -193,7 +192,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+     Wheels(3)=RR_Steering
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=-10.0,Z=6.0)
@@ -202,7 +201,7 @@ defaultproperties
          WheelRadius=30.000000
          bLeftTrack=true
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+     Wheels(4)=Left_Drive_Wheel
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=true
          BoneOffset=(X=0.0,Y=10.0,Z=6.0)
@@ -210,5 +209,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+     Wheels(5)=Right_Drive_Wheel
 }

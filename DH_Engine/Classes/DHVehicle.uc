@@ -20,6 +20,12 @@ struct PassengerPawn
     var Rotator InitialViewRotationOffset;
 };
 
+struct SkinIndexMap
+{
+    var int VehicleSkinIndex;
+    var int AttachmentSkinIndex;
+};
+
 struct VehicleAttachment
 {
     var class<Actor>    AttachClass;
@@ -31,8 +37,11 @@ struct VehicleAttachment
     var array<Material> Skins;
     var bool            bHasCollision;
     var float           CullDistance;
-    var bool            bAttachToWeapon;
-    var int             WeaponAttachIndex;
+    var bool            bAttachToWeapon;    // When true, attach this to a weapon instead of the base vehicle.
+    var int             WeaponAttachIndex;  // When bAttachToWeapon is true, the index of the weapon to attach to.
+    // Maps the vehicle skin to the attachment skin.
+    // Used so that attachments on skin variants automatically use the correct textures.
+    var array<SkinIndexMap> SkinIndexMap;
 };
 
 // A static mesh and probability weight for random attachment options.
@@ -69,6 +78,10 @@ var() array<RandomAttachmentGroup> RandomAttachmentGroups;
 const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
 var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
 
+// Use this to set the skins of all random attachments at once.
+// These skins will be applied before individual skins (from VehicleAttachment) are applied.
+var array<Material> RandomAttachmentSkins;
+
 struct VehicleComponentController
 {
     var() int Channel;
@@ -101,7 +114,7 @@ var     bool        bRequiresDriverLicense;      // Vehicle requires player to h
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var()   name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
-var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
 var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
 var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
@@ -336,6 +349,11 @@ simulated function PostBeginPlay()
     local byte StartIndex, Index, i;
 
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+
+    // We set the static mesh here so that the client & the server already have the static mesh reference set.
+    // When the vehicle actually gets destroyed, we only need to set the draw type.
+    // This ensures that we can set the package that contains the destroyed static as ServerSideOnly.
+    SetStaticMesh(DestroyedVehicleMesh);
 
     // Play neutral idle animation
     if (HasAnim(GetIdleAnim()))
@@ -592,6 +610,13 @@ simulated function PostNetReceive()
     {
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
+    }
+
+    if (StaticMesh == none)
+    {
+        // Without this, if the package that contains the destroyed vehicle mesh is marked as ServerSideOnly,
+        // the StaticMesh property will be replicated as `None`. If this happens, we need to swoop in and change it.
+        SetStaticMesh(DestroyedVehicleMesh);
     }
 }
 
@@ -3071,7 +3096,7 @@ simulated function SpawnVehicleAttachments()
     local class<Actor>      AttachClass;
     local Actor             A;
     local float             RandomNumber, ProbabilitySum;
-    local int               i, j, DependenciesMet;
+    local int               i, j, k, DependenciesMet;
     local bool              bDidMeetDependencies;
 
     // Treads & movement sound attachments
@@ -3251,8 +3276,22 @@ simulated function SpawnVehicleAttachments()
             {
                 VA = RandomAttachmentGroups[i].Options[RandomAttachmentGroupOptions[i]].Attachment;
 
+                for (k = 0; k < VA.SkinIndexMap.Length; ++k)
+                {
+                    VA.Skins[VA.SkinIndexMap[k].AttachmentSkinIndex] = Skins[VA.SkinIndexMap[k].VehicleSkinIndex];
+                }
+
                 if (VA.StaticMesh != none)
                 {
+                    // Apply global skin override to the attachment if no per-attachment skin is specified.
+                    for (j = 0; j < RandomAttachmentSkins.Length; ++j)
+                    {
+                        if (RandomAttachmentSkins[j] != none && (VA.Skins.Length < j || VA.Skins[j] == none))
+                        {
+                            VA.Skins[j] = RandomAttachmentSkins[j];
+                        }
+                    }
+
                     VehicleAttachments[VehicleAttachments.Length] = VA;
                 }
             }
@@ -3319,7 +3358,6 @@ simulated function SpawnVehicleAttachments()
     }
 }
 
-// New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
 simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional Vector AttachOffset, optional Rotator AttachRotation, optional Actor AttachTarget)
 {
@@ -3627,7 +3665,8 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
     }
 }
 
-// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo
+// variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;

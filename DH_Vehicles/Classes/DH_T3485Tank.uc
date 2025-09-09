@@ -20,7 +20,6 @@ defaultproperties
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.T3485_ext_dest'
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.T3485_treads_dest'
     DriveAnim="Vt3485_driver_idle_close"
-    HUDOverlayClass=Class'T34DriverOverlay'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.t34_85_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.t34_85_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.T34_85'

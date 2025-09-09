@@ -50,7 +50,7 @@ defaultproperties
     DriveAnim=VSU76_driver_idle_close
     BeginningIdleAnim=driver_hatch_idle_close
     HUDOverlayClass=Class'SU76DriverOverlay'
-    HUDOverlayOffset=(X=0,Y=0,Z=0)
+    HUDOverlayOffset=(X=0.5)
     HUDOverlayFOV=85
 
     // Hull armor
@@ -175,7 +175,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+     Wheels(0)=LF_Steering
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=True
@@ -185,7 +185,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+     Wheels(1)=RF_Steering
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=True
@@ -195,7 +195,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+     Wheels(2)=LR_Steering
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=True
@@ -205,7 +205,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+     Wheels(3)=RR_Steering
      // End Steering Wheels
 
      // Center Drive Wheels
@@ -216,7 +216,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+     Wheels(4)=Left_Drive_Wheel
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=True
@@ -225,7 +225,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+     Wheels(5)=Right_Drive_Wheel
 
     // Karma
     // not sure if this is set up correctly? ro1 su76 class doesnt seem to have that
@@ -247,7 +247,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 
     // Because the turret area is partially disconnected from the hull, we assign a smaller chance of
     // hull components being damaged when the turret is penetrated and vice versa.

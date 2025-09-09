@@ -122,7 +122,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=0.382143,Color=(B=64,G=128,R=255,A=255))
         ColorScale(2)=(RelativeTime=1.000000,Color=(R=255,A=255))
-        name="sparks"
+        Name="sparks"
         UseRotationFrom=PTRS_Actor
         MaxParticles=5
         StartLocationRange=(X=(Max=50.000000))

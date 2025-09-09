@@ -14,4 +14,5 @@ defaultproperties
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
     GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
+    AltName="Snaiper"
 }

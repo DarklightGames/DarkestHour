@@ -155,7 +155,7 @@ defaultproperties
         SupportBoneName="SUSPENSION_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.RFWheel'
+    Wheels(0)=RFWheel
 
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
@@ -166,7 +166,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.LFWheel'
+    Wheels(1)=LFWheel
 
     Begin Object Class=SVehicleWheel Name=BRWheel
         bPoweredWheel=true
@@ -177,7 +177,7 @@ defaultproperties
         SupportBoneName="SUSPENSION_B_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.BRWheel'
+    Wheels(2)=BRWheel
 
     Begin Object Class=SVehicleWheel Name=BLWheel
         bPoweredWheel=true
@@ -189,7 +189,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.BLWheel'
+    Wheels(3)=BLWheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -209,5 +209,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

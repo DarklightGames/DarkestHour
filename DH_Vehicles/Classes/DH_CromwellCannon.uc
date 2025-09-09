@@ -47,7 +47,7 @@ defaultproperties
     InitialTertiaryAmmo=4
     MaxPrimaryAmmo=33
     MaxSecondaryAmmo=26
-    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+    MaxTertiaryAmmo=4
 
     SecondarySpread=0.00175
     TertiarySpread=0.0036

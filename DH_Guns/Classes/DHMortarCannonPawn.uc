@@ -47,7 +47,7 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerPlayThirdPersonFiringAnim;
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         PlayerFireCount, FiringProjectileMesh;
 }
 
@@ -231,6 +231,18 @@ simulated function Fire(optional float F)
     if (!CanFire() || ArePlayersWeaponsLocked() || !Gun.ReadyToFire(false))
     {
         return;
+    }
+
+    if (VehWep != none)
+    {
+        VehWep.CalcWeaponFire(false);
+        
+        if (VehWep.IsMuzzleObstructed())
+        {
+            // Send a message to the user that the gun is obstructed.
+            DisplayVehicleMessage(31);
+            return;
+        }
     }
 
     GotoState('Firing');

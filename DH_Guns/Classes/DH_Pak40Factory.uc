@@ -8,7 +8,7 @@ class DH_Pak40Factory extends DHATGunFactory;
 defaultproperties
 {
     VehicleClass=Class'DH_Pak40ATGun'
-    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body'
+    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
     Skins(0)=Texture'DH_Artillery_Tex.Pak40'
     TeamNum=AXIS
 }

@@ -151,6 +151,7 @@ defaultproperties
         WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
+        TextAlign=TXTA_Center
     End Object
     lb_Credits=CreditText
 
@@ -306,6 +307,8 @@ defaultproperties
     LocalizationTeam(1)="dirtybirdy (Ukrainian)"
     LocalizationTeam(2)="MortarOperator (Russian/Ukrainian)"
     LocalizationTeam(3)="Maciej 'Babi' Babiszewski (Polish)"
+    LocalizationTeam(4)="Ramitos (Spanish)"
+    LocalizationTeam(5)="WernerWolff (German)"
 
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"

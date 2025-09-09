@@ -17,7 +17,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.600000
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=6.000000))
@@ -48,7 +48,7 @@ defaultproperties
         Opacity=0.800000
         FadeOutStartTime=0.200000
         FadeInEndTime=0.150000
-        name="small_puff"
+        Name="small_puff"
         StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
@@ -86,7 +86,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         FadeInEndTime=0.150000
         MaxParticles=2
-        name="big_puff"
+        Name="big_puff"
         StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -121,7 +121,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=10
-        name="main_chunks"
+        Name="main_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -151,7 +151,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=215,G=215,R=215,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=4
-        name="lite_spike"
+        Name="lite_spike"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
@@ -177,7 +177,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=207,G=192,R=177,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=2
-        name="dark_spike"
+        Name="dark_spike"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
@@ -202,7 +202,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=192,G=192,R=192,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
-        name="side_chunks"
+        Name="side_chunks"
         MaxParticles=20
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
@@ -234,7 +234,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=4
-        name="ground_splash"
+        Name="ground_splash"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -251,6 +251,6 @@ defaultproperties
     End Object
     Emitters(7)=SpriteEmitter'SpriteEmitter10'
 
-    Autodestroy=true
+    AutoDestroy=true
     bnodelete=false
 }

@@ -30,6 +30,7 @@ struct NewHitpoint
     var   Vector            PointOffset;
     var   float             DamageMultiplier;
     var   ENewHitPointType  NewHitPointType;
+    var   bool              bIsGun;
 };
 
 // General
@@ -455,12 +456,21 @@ function Vehicle FindEntryVehicle(Pawn P)
 // Modified to handle optional camera offset for initial overlay position
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local DHPlayer DHPC;
+
     super.ClientKDriverEnter(PC);
 
     // If initial position is an overlay position (e.g. driver's periscope), apply any optional 1st person camera offset for the overlay
     if (DriverPositions[InitialPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
     {
         FPCamPos = OverlayFPCamPos;
+    }
+
+    DHPC = DHPlayer(PC);
+
+    if (DHPC != none && bIsArtilleryVehicle)
+    {
+        DHPC.QueueHint(50, false);
     }
 }
 
@@ -1087,20 +1097,13 @@ simulated function bool IsEngineBurning()
 //  ************************  HIT DETECTION & PENETRATION  ************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
-function bool IsNewPointShot(Vector HitLocation, Vector LineCheck, int Index, optional float CheckDistance)
+simulated function Vector GetNewHitPointLocation(int Index)
 {
     local Coords HitPointCoords;
-    local Vector HitPointLocation, Difference;
-    local float  t, DotMM, ClosestDistance;
-
-    if (NewVehHitpoints[Index].PointBone == '')
-    {
-        return false;
-    }
+    local Vector HitPointLocation;
 
     // Get location of the hit point we're going to check (with option to handle turret's yaw bone being specified, so hit point rotates with turret)
-    if (Cannon != none && NewVehHitpoints[Index].PointBone == Cannon.YawBone)
+    if (Cannon != none && (NewVehHitpoints[Index].bIsGun || NewVehHitpoints[Index].PointBone == Cannon.YawBone))
     {
         HitPointCoords = Cannon.GetBoneCoords(NewVehHitpoints[Index].PointBone);
     }
@@ -1115,6 +1118,22 @@ function bool IsNewPointShot(Vector HitLocation, Vector LineCheck, int Index, op
     {
         HitPointLocation += NewVehHitpoints[Index].PointOffset >> Rotator(HitPointCoords.XAxis);
     }
+
+    return HitPointLocation;
+}
+
+// New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
+function bool IsNewPointShot(Vector HitLocation, Vector LineCheck, int Index, optional float CheckDistance)
+{
+    local Vector HitPointLocation, Difference;
+    local float  t, DotMM, ClosestDistance;
+
+    if (NewVehHitpoints[Index].PointBone == '')
+    {
+        return false;
+    }
+
+    HitPointLocation = GetNewHitPointLocation(Index);
 
     // Set the hit line to check
     if (CheckDistance > 0.0)
@@ -2540,7 +2559,7 @@ defaultproperties
         KImpactThreshold=700.0
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.KParams0'
+    KParams=KParams0
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
     bDebuggingText=false

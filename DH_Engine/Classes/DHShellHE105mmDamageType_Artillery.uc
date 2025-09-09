@@ -9,4 +9,11 @@ class DHShellHE105mmDamageType_Artillery extends DHShellExplosionDamageType
 defaultproperties
 {
     bIsArtilleryExplosion=true
+
+    // Copied from DHShellHE105mmDamageType.
+    TankDamageModifier=0.2 //increased from the standard 0.05
+    TreadDamageModifier=0.5
+    VehicleMomentumScaling=1.7
+    KDamageImpulse=7000.0
+    HumanObliterationThreshhold=500
 }
