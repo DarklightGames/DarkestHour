@@ -239,10 +239,10 @@ function CalcSpreadModifiers()
         Spread *= LeanSpreadModifier;
     }
 
-    // Make the spread crazy if you're jumping // TODO: think Spread should be capped, as a really high spread could result in shots going off at impossible angles
+    // Make the spread crazy if you're jumping.
     if (P.Physics == PHYS_Falling)
     {
-        Spread *= 500.0;
+        Spread *= 5.0;
     }
 }
 
