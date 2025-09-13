@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435WCWeapon extends DHStationaryWeapon;
+class DH_Fiat1435WCWeapon extends DHMountedWeapon;
 
 defaultproperties
 {

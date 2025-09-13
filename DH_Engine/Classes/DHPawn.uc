@@ -39,7 +39,7 @@ var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
 
 // Stationary Weapons
-var     bool    bIsDeployingStationaryWeapon;       // whether or not the pawn is deploying his mortar - used for disabling movement
+var     bool    bIsDeployingMountedWeapon;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bLockViewRotation;
 var     Rotator LockViewRotation;
 
@@ -5285,7 +5285,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMountedWeapon || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -5307,7 +5307,7 @@ simulated function LeanRightReleased()
 
 simulated function LeanLeft()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMountedWeapon || bIsCuttingWire)
     {
         bLeanLeft = false;
     }

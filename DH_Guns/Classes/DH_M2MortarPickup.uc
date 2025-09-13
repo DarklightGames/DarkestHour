@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M2MortarPickup extends DHStationaryWeaponPickup;
+class DH_M2MortarPickup extends DHMountedWeaponPickup;
 
 defaultproperties
 {

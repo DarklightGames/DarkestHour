@@ -6,7 +6,7 @@
 // that can be carried by infantry and deployed.
 //==============================================================================
 
-class DHStationaryWeapon extends DHActorProxyWeapon
+class DHMountedWeapon extends DHActorProxyWeapon
     abstract;
 
 var         class<DHVehicle>    VehicleClass;
@@ -46,7 +46,7 @@ simulated state Deploying
 
         if (P != none)
         {
-            P.bIsDeployingStationaryWeapon = true;
+            P.bIsDeployingMountedWeapon = true;
             P.SetLockViewRotation(true, P.Controller.Rotation); // makes the pawn lock view pitch & yaw
         }
     }
@@ -61,7 +61,7 @@ simulated state Deploying
 
         if (P != none)
         {
-            P.bIsDeployingStationaryWeapon = false;
+            P.bIsDeployingMountedWeapon = false;
             P.SetLockViewRotation(false);
         }
 
@@ -239,7 +239,7 @@ simulated function DHActorProxy CreateProxyCursor()
     local DHVehicleProxy Cursor;
 
     Cursor = Spawn(class'DHVehicleProxy', Instigator);
-    Cursor.SetStationaryWeaponClass(Class);
+    Cursor.SetMountedWeaponClass(Class);
 
     return Cursor;
 }
@@ -259,7 +259,7 @@ simulated function Tick(float DeltaTime)
 
     if (CanConfirmPlacement())
     {
-        Instigator.ReceiveLocalizedMessage(class'DHStationaryWeaponControlsMessage', 0, Instigator.PlayerReplicationInfo, none, self);
+        Instigator.ReceiveLocalizedMessage(class'DHMountedWeaponControlsMessage', 0, Instigator.PlayerReplicationInfo, none, self);
     }
 }
 
@@ -335,7 +335,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     }
 
     TestProxy.GroundActor = Owner;
-    TestProxy.SetStationaryWeaponClass(Class);
+    TestProxy.SetMountedWeaponClass(Class);
     TestProxy.SetLocation(Location);
     TestProxy.SetRotation(Rotation);
 

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHCommandMenu_StationaryWeapon extends DHCommandMenu
+class DHCommandMenu_MountedWeapon extends DHCommandMenu
     dependson(DHATGun);
 
 var localized string EnemyGunText;
@@ -20,9 +20,9 @@ var DHATGun.ERotateError RotationError;
 var DHATGun.EPickUpError PickUpError;
 var int                  TeammatesInRadiusCount;
 
-function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
+function PickUpMountedWeapon(DHPawn Pawn, DHATGun Gun)
 {
-    local DHStationaryWeapon StationaryWeapon;
+    local DHMountedWeapon MountedWeapon;
 
     if (Pawn == none || Gun == none)
     {
@@ -31,14 +31,14 @@ function PickUpStationaryWeapon(DHPawn Pawn, DHATGun Gun)
 
     // Give the player the stationary gun, delete the construction.
     // Make sure to store the state of the weapon in the inventory item.
-    Pawn.GiveWeapon(string(Gun.StationaryWeaponClass));
+    Pawn.GiveWeapon(string(Gun.MountedWeaponClass));
 
     // Find the reference to the weapon that we just gave the player and transfer the state.
-    StationaryWeapon = DHStationaryWeapon(Pawn.FindInventoryType(Gun.StationaryWeaponClass));
+    MountedWeapon = DHMountedWeapon(Pawn.FindInventoryType(Gun.MountedWeaponClass));
 
-    if (StationaryWeapon != none)
+    if (MountedWeapon != none)
     {
-        StationaryWeapon.SetVehicleState(Gun.GetVehicleState());
+        MountedWeapon.SetVehicleState(Gun.GetVehicleState());
     }
 
     Gun.Destroy();
@@ -87,7 +87,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
         case 1: // Pick Up
             if (PickUpError == ERROR_None)
             {
-                PickUpStationaryWeapon(P, Gun);
+                PickUpMountedWeapon(P, Gun);
             }
             break;
         default:

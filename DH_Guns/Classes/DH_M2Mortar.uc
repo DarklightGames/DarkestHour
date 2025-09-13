@@ -56,5 +56,5 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_M2Mortar_tex.M2mortar_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_M2Mortar_tex.M2mortar_turret_look'
     DestructionEffectOffset=(Z=-60)
-    StationaryWeaponClass=Class'DH_M2MortarWeapon'
+    MountedWeaponClass=Class'DH_M2MortarWeapon'
 }

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435WCPickup extends DHStationaryWeaponPickup;
+class DH_Fiat1435WCPickup extends DHMountedWeaponPickup;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MaximM191030Weapon extends DHStationaryWeapon;
+class DH_MaximM191030Weapon extends DHMountedWeapon;
 
 defaultproperties
 {

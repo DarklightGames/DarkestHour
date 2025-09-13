@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHStationaryWeaponPickup extends DHWeaponPickup
+class DHMountedWeaponPickup extends DHWeaponPickup
     abstract;
 
 var DHVehicleState              VehicleState;
@@ -23,15 +23,15 @@ simulated function Destroyed()
 function Inventory SpawnCopy(Pawn Other)
 {
 	local Inventory Copy;
-    local DHStationaryWeapon StationaryWeapon;
+    local DHMountedWeapon MountedWeapon;
 
     Copy = super.SpawnCopy(Other);
 
-    StationaryWeapon = DHStationaryWeapon(Copy);
+    MountedWeapon = DHMountedWeapon(Copy);
 
-    if (StationaryWeapon != none)
+    if (MountedWeapon != none)
     {
-        StationaryWeapon.SetVehicleState(VehicleState);
+        MountedWeapon.SetVehicleState(VehicleState);
     }
 
     return Copy;
@@ -40,15 +40,15 @@ function Inventory SpawnCopy(Pawn Other)
 // Modified to transfer the vehicle state to the dropped pickup.
 function InitDroppedPickupFor(Inventory Inv)
 {
-    local DHStationaryWeapon StationaryWeapon;
+    local DHMountedWeapon MountedWeapon;
 
     super.InitDroppedPickupFor(Inv);
 
-    StationaryWeapon = DHStationaryWeapon(Inv);
+    MountedWeapon = DHMountedWeapon(Inv);
 
-    if (StationaryWeapon != none)
+    if (MountedWeapon != none)
     {
-        VehicleState = StationaryWeapon.GetVehicleState();
+        VehicleState = MountedWeapon.GetVehicleState();
     }
 
     if (MapIconAttachment != none)
@@ -62,7 +62,7 @@ function InitDroppedPickupFor(Inventory Inv)
     if (MapIconAttachment != none)
     {
         MapIconAttachment.SetBase(self);
-        MapIconAttachment.VehicleClass = StationaryWeapon.VehicleClass;
+        MapIconAttachment.VehicleClass = MountedWeapon.VehicleClass;
 
         if (Inv.Instigator != none)
         {

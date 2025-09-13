@@ -19,7 +19,7 @@ defaultproperties
     VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'                   // TODO: replace
     VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'        // TODO: replace
     VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'   // TODO: replace
-    StationaryWeaponClass=Class'DH_MaximM191030Weapon'
+    MountedWeaponClass=Class'DH_MaximM191030Weapon'
     ExitPositions(0)=(X=-64.0,Z=58)
     ExitPositions(1)=(X=-64.0,Z=58)
     ExitPositions(2)=(Y=-64.0,Z=58)

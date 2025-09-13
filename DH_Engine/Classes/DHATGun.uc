@@ -2,7 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// TODO: rename to DHStationaryWeaponVehicle, make a DHATGun and DHMortar class.
+// TODO: rename to DHMountedWeaponVehicle, make a DHATGun and DHMortar class.
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -58,7 +58,7 @@ var DynamicProjector  RotationProjector;
 
 var float               CrushMomentumThreshold;
 // When non-null, this gun can be picked up by a player.
-var class<DHWeapon>   StationaryWeaponClass;
+var class<DHWeapon>   MountedWeaponClass;
 
 
 replication
@@ -253,7 +253,7 @@ simulated function EPickUpError GetPickUpError(DHPawn Pawn)
         return ERROR_Fatal;
     }
 
-    if (StationaryWeaponClass == none)
+    if (MountedWeaponClass == none)
     {
         return ERROR_CannotBePickedUp;
     }

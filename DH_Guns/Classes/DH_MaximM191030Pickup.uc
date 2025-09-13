@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MaximM191030Pickup extends DHStationaryWeaponPickup;
+class DH_MaximM191030Pickup extends DHMountedWeaponPickup;
 
 defaultproperties
 {

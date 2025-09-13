@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M2MortarWeapon extends DHStationaryWeapon;
+class DH_M2MortarWeapon extends DHMountedWeapon;
 
 defaultproperties
 {

@@ -5,9 +5,9 @@
 
 class DHVehicleProxy extends DHActorProxy;
 
-var class<DHStationaryWeapon>   WeaponClass;
+var class<DHMountedWeapon>   WeaponClass;
 
-final function SetStationaryWeaponClass(class<DHStationaryWeapon> WeaponClass)
+final function SetMountedWeaponClass(class<DHMountedWeapon> WeaponClass)
 {
     if (WeaponClass == none)
     {

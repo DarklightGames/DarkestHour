@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHStationaryWeaponControlsMessage extends DHControlsMessage
+class DHMountedWeaponControlsMessage extends DHControlsMessage
     abstract;
 
 defaultproperties
