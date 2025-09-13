@@ -5,17 +5,17 @@
 
 class DHVehicleProxy extends DHActorProxy;
 
-var class<DHVehicle>        VehicleClass;
+var class<DHStationaryWeapon>   WeaponClass;
 
-final function SetVehicleClass(class<DHVehicle> VehicleClass)
+final function SetStationaryWeaponClass(class<DHStationaryWeapon> WeaponClass)
 {
-    if (VehicleClass == none)
+    if (WeaponClass == none)
     {
-        Warn("Cannot set the vehicle class to none");
+        Warn("Cannot set the stationary weapon class to none");
         return;
     }
 
-    self.VehicleClass = VehicleClass;
+    self.WeaponClass = WeaponClass;
 
     UpdateAppearance();
 }
@@ -24,28 +24,33 @@ final function SetVehicleClass(class<DHVehicle> VehicleClass)
 
 function UpdateProxyAppearance()
 {
-    VehicleClass.static.UpdateProxy(self);
+    WeaponClass.default.VehicleClass.static.UpdateProxy(self);
 }
 
 function GetCollisionSize(Context Context, out float OutRadius, out float OutHeight)
 {
-    if (VehicleClass == none)
+    if (WeaponClass.default.VehicleClass == none)
     {
         super.GetCollisionSize(Context, OutRadius, OutHeight);
     }
     
-    OutRadius = VehicleClass.default.CollisionRadius;
-    OutHeight = VehicleClass.default.CollisionHeight;
+    OutRadius = WeaponClass.default.VehicleClass.default.CollisionRadius;
+    OutHeight = WeaponClass.default.VehicleClass.default.CollisionHeight;
 }
 
 function string GetMenuName()
 {
-    if (VehicleClass == none)
+    if (WeaponClass.default.VehicleClass == none)
     {
         return super.GetMenuName();
     }
 
-    return VehicleClass.default.VehicleNameString;
+    return WeaponClass.default.VehicleClass.default.VehicleNameString;
+}
+
+protected simulated function bool ShouldAlignToGround()
+{
+    return WeaponClass.default.bShouldAlignToGround;
 }
 
 defaultproperties

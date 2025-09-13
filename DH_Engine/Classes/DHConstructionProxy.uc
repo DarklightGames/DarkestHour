@@ -116,6 +116,7 @@ protected simulated function bool CanOnlyPlaceOnTerrain()
 {
     return ConstructionClass.default.bCanOnlyPlaceOnTerrain;
 }
+
 protected simulated function bool ShouldAlignToGround()
 {
     return ConstructionClass.default.bShouldAlignToGround;

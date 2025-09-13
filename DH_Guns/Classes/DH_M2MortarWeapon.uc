@@ -15,4 +15,5 @@ defaultproperties
     FreeAimRotationSpeed=2.0
     bUsesFreeAim=true
     HudAmmoIconMaterial=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_ICON'
+    bShouldAlignToGround=false
 }

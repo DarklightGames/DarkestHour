@@ -23,6 +23,8 @@ var()   bool    bCanDeployWhileStanding;
 var()   bool    bCanDeployWhileCrouched;
 var()   bool    bCanDeployWhileCrawling;
 
+var()   bool    bShouldAlignToGround;
+
 replication
 {
     // Functions a client can call on the server
@@ -237,7 +239,7 @@ simulated function DHActorProxy CreateProxyCursor()
     local DHVehicleProxy Cursor;
 
     Cursor = Spawn(class'DHVehicleProxy', Instigator);
-    Cursor.SetVehicleClass(VehicleClass);
+    Cursor.SetStationaryWeaponClass(Class);
 
     return Cursor;
 }
@@ -333,7 +335,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     }
 
     TestProxy.GroundActor = Owner;
-    TestProxy.SetVehicleClass(VehicleClass);
+    TestProxy.SetStationaryWeaponClass(Class);
     TestProxy.SetLocation(Location);
     TestProxy.SetRotation(Rotation);
 
@@ -445,6 +447,11 @@ public function bool ShouldShowProxyCursor()
     }
 }
 
+protected simulated function bool ShouldAlignToGround()
+{
+    return bShouldAlignToGround;
+}
+
 defaultproperties
 {
     InventoryGroup=9
@@ -464,4 +471,5 @@ defaultproperties
     TraceDepthMeters=1.25
     bCanRotateCursor=false
     bCanDeployWhileCrouched=true
+    bShouldAlignToGround=true
 }
