@@ -17,5 +17,5 @@ defaultproperties
     YawBone="GUN_YAW"
 
     AltFireAttachmentBone="MG_MUZZLE"
-    AltFireOffset=(X=0,Y=0,Z=0)
+    AltFireOffset=(X=-8,Y=0,Z=0)
 }
