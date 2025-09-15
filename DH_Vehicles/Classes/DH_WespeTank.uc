@@ -12,23 +12,6 @@
 
 class DH_WespeTank extends DHArmoredVehicle;
 
-simulated function SpawnVehicleAttachments()
-{
-    local int i;
-    local DHIdentifierAttachment IdentifierAttachment;
-
-    super.SpawnVehicleAttachments();
-
-    for (i = 0; i < VehicleAttachments.Length; i++)
-    {
-        if (VehicleAttachments[i].Actor != none && VehicleAttachments[i].Actor.IsA('DHIdentifierAttachment'))
-        {
-            IdentifierAttachment = DHIdentifierAttachment(VehicleAttachments[i].Actor);
-            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, "123");
-        }
-    }
-}
-
 exec function SetId(string NewId)
 {
     local int i;

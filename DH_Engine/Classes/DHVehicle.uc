@@ -3098,6 +3098,7 @@ simulated function SpawnVehicleAttachments()
     local float             RandomNumber, ProbabilitySum;
     local int               i, j, k, DependenciesMet;
     local bool              bDidMeetDependencies;
+    local DHIdentifierAttachment IdentifierAttachment;
 
     // Treads & movement sound attachments
     if (Level.NetMode != NM_DedicatedServer)
@@ -3355,6 +3356,15 @@ simulated function SpawnVehicleAttachments()
     {
         CollisionAttachments[i].Actor = Class'DHCollisionMeshActor'.static.AttachCollisionMesh
             (self, CollisionAttachments[i].StaticMesh, CollisionAttachments[i].AttachBone, CollisionAttachments[i].Offset, class<DHCollisionMeshActor>(CollisionAttachments[i].AttachClass));
+    }
+
+    for (i = 0; i < VehicleAttachments.Length; i++)
+    {
+        if (VehicleAttachments[i].Actor != none && VehicleAttachments[i].Actor.IsA('DHIdentifierAttachment'))
+        {
+            IdentifierAttachment = DHIdentifierAttachment(VehicleAttachments[i].Actor);
+            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, "123");
+        }
     }
 }
 
