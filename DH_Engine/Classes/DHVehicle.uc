@@ -281,6 +281,9 @@ var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combine
 
 var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
 
+var     string       OldIdentifier;
+var     string       Identifier;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -289,11 +292,11 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount, bWheelsAreDamaged;
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount, bWheelsAreDamaged, Identifier;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerUnloadSupplies, ServerLoadSupplies;
+        ServerStartEngine, ServerUnloadSupplies, ServerLoadSupplies, ServerSetIdentifier;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -610,6 +613,12 @@ simulated function PostNetReceive()
     {
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
+    }
+
+    if (OldIdentifier != Identifier)
+    {
+        SetIdentifier(Identifier);
+        OldIdentifier = Identifier;
     }
 
     if (StaticMesh == none)
@@ -3363,7 +3372,7 @@ simulated function SpawnVehicleAttachments()
         if (VehicleAttachments[i].Actor != none && VehicleAttachments[i].Actor.IsA('DHIdentifierAttachment'))
         {
             IdentifierAttachment = DHIdentifierAttachment(VehicleAttachments[i].Actor);
-            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, "123");
+            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, Identifier);
         }
     }
 }
@@ -4634,19 +4643,32 @@ function bool ShouldPlayersSpawnInsideVehicle()
     return !bEngineOff;
 }
 
-exec function SetId(string NewId)
+// Identifier functions.
+function ServerSetIdentifier(string NewId)
+{
+    SetIdentifier(NewId);
+}
+
+simulated function SetIdentifier(string NewId)
 {
     local int i;
     local DHIdentifierAttachment IdentifierAttachment;
+
+    Identifier = NewId;
 
     for (i = 0; i < VehicleAttachments.Length; i++)
     {
         if (VehicleAttachments[i].Actor.IsA('DHIdentifierAttachment'))
         {
             IdentifierAttachment = DHIdentifierAttachment(VehicleAttachments[i].Actor);
-            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, NewId);
+            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, Identifier);
         }
     }
+}
+
+simulated exec function DebugSetId(string NewId)
+{
+    ServerSetIdentifier(NewId);
 }
 
 defaultproperties

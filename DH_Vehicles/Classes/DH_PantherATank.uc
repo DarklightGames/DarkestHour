@@ -3,13 +3,13 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] passenger positions
-// [ ] attach MG
 // [ ] driver animations (closed hatch etc.)
-// [ ] set up armor values
 // [ ] hit points
 // [ ] camo variants
 // [ ] side skirts, maybe randomize them?
 // [ ] destroyed mesh
+// [ ] make sure it doesn't lean in MP (COM)
+// [ ] first-person mesh for all positions
 //==============================================================================
 
 class DH_PantherATank extends DHArmoredVehicle;

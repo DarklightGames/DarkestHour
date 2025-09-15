@@ -57,7 +57,16 @@ static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type,
         AttachmentActor.Skins = StaticMeshSkins;
 
         // Trim the string to the maximum length supported by the identifier.
-        TrimmedString = Left(String, default.Identifiers[i].SkinIndices.Length);
+        switch (default.Identifiers[i].Justification)
+        {
+            case Justify_Left:
+            case Justify_Center:
+                TrimmedString = Left(String, default.Identifiers[i].SkinIndices.Length);
+                break;
+            case Justify_Right:
+                TrimmedString = Right(String, default.Identifiers[i].SkinIndices.Length);
+                break;
+        }
 
         // Based on the justification, figure out which skin index to start at.
         switch (default.Identifiers[i].Justification)
