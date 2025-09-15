@@ -49,18 +49,18 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
+    FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=57.78291,LocationName="lower")
     FrontArmor(1)=(Thickness=8.5,Slope=55.0,LocationName="upper")
-    RightArmor(0)=(Thickness=4.5,MaxRelativeHeight=23.0,LocationName="lower")
+    RightArmor(0)=(Thickness=4.5,MaxRelativeHeight=83.6763,LocationName="lower")
     RightArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=4.5,MaxRelativeHeight=23.0,LocationName="lower")
+    LeftArmor(0)=(Thickness=4.5,MaxRelativeHeight=83.6763,LocationName="lower")
     LeftArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="upper")
     RearArmor(0)=(Thickness=4.0,Slope=-30.0)
 
-    FrontLeftAngle=334.0
-    FrontRightAngle=26.0
-    RearRightAngle=154.0
-    RearLeftAngle=206.0
+    FrontLeftAngle=333.5
+    FrontRightAngle=26.5
+    RearRightAngle=153.0
+    RearLeftAngle=207.0
 
     // Movement
     bTurnInPlace=true // don't think this affects panther's ability to turn, i.e. to neutral turn; think it's just a bot property
