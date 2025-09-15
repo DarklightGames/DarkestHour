@@ -229,7 +229,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.6) // default is -0.5
+        KCOMOffset=(X=0,Y=0,Z=0.5)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

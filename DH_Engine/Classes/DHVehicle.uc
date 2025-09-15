@@ -4634,6 +4634,21 @@ function bool ShouldPlayersSpawnInsideVehicle()
     return !bEngineOff;
 }
 
+exec function SetId(string NewId)
+{
+    local int i;
+    local DHIdentifierAttachment IdentifierAttachment;
+
+    for (i = 0; i < VehicleAttachments.Length; i++)
+    {
+        if (VehicleAttachments[i].Actor.IsA('DHIdentifierAttachment'))
+        {
+            IdentifierAttachment = DHIdentifierAttachment(VehicleAttachments[i].Actor);
+            IdentifierAttachment.SetIdentiferByType(ID_UserNumber, NewId);
+        }
+    }
+}
+
 defaultproperties
 {
     // Miscellaneous

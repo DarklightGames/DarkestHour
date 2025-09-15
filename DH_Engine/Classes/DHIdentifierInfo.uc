@@ -39,31 +39,18 @@ struct Identifier
 
 var() array<Identifier> Identifiers;
 
-static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type, string String)
+static function SetIdentifierByType(Actor AttachmentActor, EIdentifierType Type, string String, array<Material> StaticMeshSkins)
 {
     local int i, j;
     local int StartSkinIndex, SkinIndex;
     local string TrimmedString, Character;
-    local array<Material> StaticMeshSkins;
     local Material GlyphMaterial, CombinerMaterial;
-
-    // Get the original skins from the static mesh.
-    // TODO: this might be expensive so we want to avoid doing this every time.
-    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(AttachmentActor.StaticMesh);
 
     for (i = 0; i < default.Identifiers.Length; ++i)
     {
         if (default.Identifiers[i].Type != Type)
         {
             continue;
-        }
-
-        for (j = 0; j < StaticMeshSkins.Length; ++j)
-        {
-            if (j < AttachmentActor.Skins.Length && AttachmentActor.Skins[j] != none)
-            {
-                StaticMeshSkins[j] = AttachmentActor.Skins[j];
-            }
         }
 
         // Set the skins to the original skins.
