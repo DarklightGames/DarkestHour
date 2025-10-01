@@ -1,0 +1,16 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DH_LWAntiTank extends DHGEAntiTankRoles;
+
+defaultproperties
+{
+    RolePawns(0)=(PawnClass=Class'DH_GermanLuftwaffePawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.FJ_Sleeve'
+    Headgear(0)=Class'DH_LWHelmet'
+    Headgear(1)=Class'DH_LWHelmetTwo'
+
+    GivenItems(0)="DH_Weapons.DH_PanzerfaustWeapon"
+}
