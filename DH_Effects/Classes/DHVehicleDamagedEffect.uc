@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleDamagedEffect extends VehicleDamagedEffect;
@@ -81,7 +81,7 @@ defaultproperties
         MaxParticles=30
         StartLocationOffset=(Z=2.000000)
         InitialParticlesPerSecond=5.000000
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=1.000000,Max=2.0)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=50.000000,Max=100.000000))
     End Object

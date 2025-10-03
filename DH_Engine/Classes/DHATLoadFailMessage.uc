@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHATLoadFailMessage extends ROCriticalMessage
@@ -17,6 +17,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
     if (RelatedPRI_1 != none)
     {
         S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+    }
+    else
+    {
+        S = Repl(S, "{0}", class'GameInfo'.default.DefaultPlayerName);
     }
 
     return S;

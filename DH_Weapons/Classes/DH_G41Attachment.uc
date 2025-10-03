@@ -1,18 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_G41Attachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=InterfaceArt2_tex.utx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g41_3rd'
-    MenuImage=Texture'InterfaceArt2_tex.Menu_weapons.g41'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'InterfaceArt2_tex.g41'
+    mMuzFlashClass=Class'MuzzleFlash3rdSVT'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bRapidFire=false
 
     WA_Idle="idle_kar98"

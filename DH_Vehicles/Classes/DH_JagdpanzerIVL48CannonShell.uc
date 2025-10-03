@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdpanzerIVL48CannonShell extends DHGermanCannonShell;
@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=700  //29 gramms TNT filler
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.45
     EngineFireChance=0.85
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WolverineCannonShell extends DHCannonShell;
@@ -15,7 +15,7 @@ defaultproperties
     //Damage
     bShatterProne=true
     ImpactDamage=700  //64 gramms TNT filler
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageAP'
     HullFireChance=0.5
     EngineFireChance=0.88
 

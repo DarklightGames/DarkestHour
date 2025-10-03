@@ -1,0 +1,247 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "python tools/make/make.py -mod DarkestHourDev .",
+            "problemMatcher": [
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "pattern": {
+                        "regexp": "(?!.*Class names shouldn't end in a digit)(^.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+$)",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    }
+                },
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "severity": "info",
+                    "pattern": {
+                        "regexp": "^(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\sWarning,\\s(Class names shouldn't end in a digit)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build with Parameters",
+            "type": "shell",
+            "command": "python tools/make/make.py ${input:buildArgs} -mod DarkestHourDev .",
+            "problemMatcher": [
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "pattern": {
+                        "regexp": "^(?!.*Class names shouldn't end in a digit)(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    }
+                },
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "severity": "info",
+                    "pattern": {
+                        "regexp": "^(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\sWarning,\\s(Class names shouldn't end in a digit)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Run",
+            "command": "./RedOrchestraLargeAddressAware.exe -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run with Parameters",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:buildArgs} -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- ${input:buildArgs} -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Map",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- ${input:pickMap}?quickstart=true -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Default Map",
+            "command": "./RedOrchestraLargeAddressAware.exe DH-Target_Range.rom?quickstart=true -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- DH-Target_Range.rom?quickstart=true -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Connect",
+            "command": "./RedOrchestraLargeAddressAware.exe 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev",
+            "linux": { "command": "steam -applaunch 1280 -- 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            // TODO: Add support for Windows
+            "label": "Connect Multiple Clients",
+            "command": "echo Not supported on Windows. Use dhdev_server_with_clients.bat script instead.; echo",
+            "linux": { "command": "steam -applaunch 1280 -- 127.0.0.1 ${input:runArgs} -mod=DarkestHourDev --multi" },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Server",
+            "command": "./UCC.exe server ${input:pickMap}?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator -log=DHServerLog.log -mod=DarkestHourDev -ini=DarkestHourDev.ini",
+            "linux": { "command": "wine UCC.exe server ${input:pickMap}?game=DH_Engine.DarkestHourGame?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator -log=DHServerLog.log -mod=DarkestHourDev -ini=DarkestHourDev.ini"},
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Search for Class in Maps",
+            "command": "grep -Rl . -e ${input:className} . | sort | uniq",
+            "type": "shell",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/DarkestHourDev/Maps"
+            }
+        },
+        {
+            "label": "Build and Run",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Run Map",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run Map"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Run Default Map",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run Default Map"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Run Server",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run Server"
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+    ],
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "runArgs",
+            "description": "Optional: Type-in extra client launch parameters",
+            "default": ""
+        },
+        {
+            "type": "promptString",
+            "id": "buildArgs",
+            "description": "Optional: Type-in extra build parameters",
+            "default": ""
+        },
+        {
+            "type": "promptString",
+            "id": "className",
+            "description": "Name of the class to search for",
+            "default": ""
+        },
+        {
+            "id": "pickMap",
+            "type": "command",
+            "command": "extension.commandvariable.pickStringRemember",
+            "args": {
+                "description": "Run map",
+                "options": [
+                    ["Use last map", "${remember:lastMapName}"],
+                    ["Select map", "${pickFile:mapName}"]
+                ],
+                "rememberTransformed": true,
+                "key": "lastMapName",
+                "pickFile": {
+                    "mapName": {
+                        "description": "Select a map",
+                        "include": "DarkestHourDev/Maps/**/*.rom",
+                        "keyRemember": "mapName",
+                        "display": "fileName",
+                        "transform": { "text": "${fileBasename}" }
+                    }
+                }
+            }
+        }
+    ]
+}

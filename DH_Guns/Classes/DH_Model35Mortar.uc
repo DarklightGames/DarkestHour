@@ -1,0 +1,29 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DH_Model35Mortar extends DHMortar;
+
+defaultproperties
+{
+    VehicleNameString="Mortaio da 81/14 mod. 35"
+    VehicleTeam=0
+    Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
+    Skins(0)=Texture'DH_Model35Mortar_tex.Model35Mortar_ext'
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
+    CollisionRadius=32.0
+    CollisionHeight=8.0
+    // Reversed because the gunner uses index 1.
+    ExitPositions(0)=(X=-50.00,Y=35.0,Z=20)
+    ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
+
+    bUsesCodedDestroyedSkins=true
+    DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.model35mortar_destroyed'
+
+    VehicleHudImage=Texture'DH_Model35Mortar_tex.model35mortar_body_icon'
+    VehicleHudTurret=TexRotator'DH_Model35Mortar_tex.model35mortar_tube_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Model35Mortar_tex.model35mortar_tube_icon_look'
+
+    DestructionEffectOffset=(Z=-60)
+}

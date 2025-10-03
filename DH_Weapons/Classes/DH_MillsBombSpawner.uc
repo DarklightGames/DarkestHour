@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MillsBombSpawner extends DHInventorySpawner;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MillsBombWeapon'
+    WeaponClass=Class'DH_MillsBombWeapon'
     Mesh=Mesh'DH_Construction_anm.BRIT_grenade_box'
-    Skins(0)=Material'DH_Construction_tex.Ammo.BRIT_grenade_box'
+    Skins(0)=Material'DH_Construction_tex.BRIT_grenade_box'
     PickupBoneNames(0)="grenade.000"
     PickupBoneNames(1)="grenade.001"
     PickupBoneNames(2)="grenade.002"
@@ -25,4 +25,3 @@ defaultproperties
     PickupCount=15
     PickupsMax=15
 }
-

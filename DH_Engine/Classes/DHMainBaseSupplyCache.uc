@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMainBaseSupplyCache extends Actor
@@ -79,7 +79,7 @@ function DestroySupplyAttachment()
 
 defaultproperties
 {
-    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static_Main'
+    SupplyAttachmentClass=Class'DHConstructionSupplyAttachment_Static_Main'
     InitialSupplyCount=8000
     SupplyCountMax=8000
     BonusSupplyGenerationRate=500

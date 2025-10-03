@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFilterListPage extends UT2K4_FilterListPage;
@@ -104,7 +104,7 @@ defaultproperties
         WinHeight=0.766448
         OnPreDraw=sbBackground.InternalPreDraw
     End Object
-    sb_Background=DHGUIPlainBackground'DH_Interface.DHFilterListPage.sbBackground'
+    sb_Background=DHGUIPlainBackground'DH_Interface.sbBackground'
 
     Begin Object Class=GUIButton Name=bCreate
         Caption="Create"
@@ -116,7 +116,7 @@ defaultproperties
         OnClick=DHFilterListPage.CreateClick
         OnKeyEvent=bCreate.InternalOnKeyEvent
     End Object
-    b_Create=GUIButton'DH_Interface.DHFilterListPage.bCreate'
+    b_Create=GUIButton'DH_Interface.bCreate'
 
     Begin Object Class=GUIButton Name=bRemove
         Caption="Remove"
@@ -128,7 +128,7 @@ defaultproperties
         OnClick=DHFilterListPage.RemoveClick
         OnKeyEvent=bRemove.InternalOnKeyEvent
     End Object
-    b_Remove=GUIButton'DH_Interface.DHFilterListPage.bRemove'
+    b_Remove=GUIButton'DH_Interface.bRemove'
 
     Begin Object Class=GUIButton Name=bEdit
         Caption="Edit"
@@ -140,7 +140,7 @@ defaultproperties
         OnClick=DHFilterListPage.EditClick
         OnKeyEvent=bEdit.InternalOnKeyEvent
     End Object
-    b_Edit=GUIButton'DH_Interface.DHFilterListPage.bEdit'
+    b_Edit=GUIButton'DH_Interface.bEdit'
 
     Begin Object Class=GUIButton Name=bOk
         Caption="OK"
@@ -152,7 +152,7 @@ defaultproperties
         OnClick=DHFilterListPage.OkClick
         OnKeyEvent=bOk.InternalOnKeyEvent
     End Object
-    b_OK=GUIButton'DH_Interface.DHFilterListPage.bOk'
+    b_OK=GUIButton'DH_Interface.bOk'
 
     Begin Object Class=GUIButton Name=bCancel
         Caption="Cancel"
@@ -164,7 +164,7 @@ defaultproperties
         OnClick=DHFilterListPage.CancelClick
         OnKeyEvent=bCancel.InternalOnKeyEvent
     End Object
-    b_Cancel=GUIButton'DH_Interface.DHFilterListPage.bCancel'
+    b_Cancel=GUIButton'DH_Interface.bCancel'
 
     Begin Object Class=DHGUIMultiOptionListBox Name=lbFilters
         SelectedStyleName="DHListSelectionStyle"
@@ -175,7 +175,7 @@ defaultproperties
         WinWidth=0.343359
         WinHeight=0.766448
     End Object
-    lb_Filters=DHGUIMultiOptionListBox'DH_Interface.DHFilterListPage.lbFilters'
+    lb_Filters=DHGUIMultiOptionListBox'DH_Interface.lbFilters'
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
@@ -191,10 +191,10 @@ defaultproperties
         OnMousePressed=FloatingWindow.FloatingMousePressed
         OnMouseRelease=FloatingWindow.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHFilterListPage.TitleBar'
+    t_WindowTitle=DHGUIHeader'DH_Interface.TitleBar'
 
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -204,5 +204,5 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHFilterListPage.FloatingFrameBackground'
+    i_FrameBG=FloatingImage'DH_Interface.FloatingFrameBackground'
 }

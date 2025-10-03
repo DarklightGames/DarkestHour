@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class TreeMap_string_Object extends Object;
@@ -286,7 +286,7 @@ private static function TreeMapNode_string_Object PutStatic(TreeMap_string_Objec
 
     if (Node == none)
     {
-        Node = new class'TreeMapNode_string_Object';
+        Node = new Class'TreeMapNode_string_Object';
         Node.Key = D.RecursiveKey;
         Node.Value = D.RecursiveValue;
 

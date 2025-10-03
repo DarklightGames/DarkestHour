@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_UniCarrierFactory extends DH_BrenCarrierFactory // just a legacy class for backwards compatibility, as UniCarrier version was renamed to BrenCarrier

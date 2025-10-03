@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_SpawnVehicleButton extends DHStyle_SpawnPointButton;
@@ -8,9 +8,9 @@ class DHStyle_SpawnVehicleButton extends DHStyle_SpawnPointButton;
 defaultproperties
 {
     KeyName="DHSpawnVehicleButtonStyle"
-    Images(0)=Material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(1)=Material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(2)=Material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(3)=Material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(4)=Material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
+    Images(0)=Material'DH_GUI_Tex.SpawnPointVehicle_Osc'
+    Images(1)=Material'DH_GUI_Tex.SpawnPointVehicle_Osc'
+    Images(2)=Material'DH_GUI_Tex.SpawnPointVehicle_Osc'
+    Images(3)=Material'DH_GUI_Tex.SpawnPointVehicle_Osc'
+    Images(4)=Material'DH_GUI_Tex.SpawnPointVehicle_Osc'
 }

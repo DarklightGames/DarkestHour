@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitBrickEffect extends emitter;
+class DHBulletHitBrickEffect extends Emitter;
 
 defaultproperties
 {
@@ -31,7 +31,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=25.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.000000)
@@ -66,7 +66,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.000000)
@@ -101,7 +101,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.250000,Max=1.500000)
@@ -139,7 +139,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.500000,Max=2.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.concrete_chunks'
+        Texture=Texture'Effects_Tex.concrete_chunks'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Max=1.500000)
@@ -169,7 +169,7 @@ defaultproperties
         StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=20.000000,Max=30.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.150000,Max=0.250000)
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter5'
@@ -193,7 +193,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.25)
         InitialParticlesPerSecond=1000.000000
         UseRotationFrom=PTRS_Actor
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        Texture=Texture'Effects_Tex.fire_quad'
         LifetimeRange=(Min=0.20,Max=0.35)
         StartVelocityRange=(X=(Min=20.000000,Max=100.000000),Y=(Min=-12.000000,Max=20.000000),Z=(Min=-20.000000,Max=15.000000))
     End Object
@@ -217,12 +217,12 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=25.000000,Max=40.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.100000,Max=0.20000)
         StartVelocityRange=(X=(Min=100.000000,Max=200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
     End Object
     Emitters(6)=BeamEmitter'BeamEmitter1'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

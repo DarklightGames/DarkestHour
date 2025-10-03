@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GermanRadioSSPawn extends DH_GermanPawn;
@@ -8,8 +8,8 @@ class DH_GermanRadioSSPawn extends DH_GermanPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Heer_Radioman'
-    Skins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
+    Skins(1)=Texture'DHGermanCharactersTex.SS_2'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_2'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_6'
+    BodySkins(0)=Texture'DHGermanCharactersTex.SS_2'
+    BodySkins(1)=Texture'DHGermanCharactersTex.SS_6'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment_SpawnPoint_SquadRallyPoint extends DHMapIconAttachment_SpawnPoint
@@ -9,5 +9,5 @@ class DHMapIconAttachment_SpawnPoint_SquadRallyPoint extends DHMapIconAttachment
 defaultproperties
 {
     bIgnoreGRIUpdates=true
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.rally_point_encircled'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.rally_point_encircled'
 }

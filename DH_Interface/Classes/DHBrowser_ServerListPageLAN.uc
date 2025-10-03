@@ -1,24 +1,24 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_ServerListPageLAN extends ROUT2k4Browser_ServerListPageLAN;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
 
-    class'ROInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'ROInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
-    class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
-    class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
+    Class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
+    Class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
+    Class'ROInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
 }
 
 function InitServerList()
 {
-    li_Server = new(none) class'DH_Interface.DHBrowser_ServersList';
+    li_Server = new(none) Class'DHBrowser_ServersList';
 
     // Switch out the list
     lb_Server.InitBaseList(li_Server);
@@ -41,7 +41,7 @@ defaultproperties
         RenderWeight=1.0
         OnLoadINI=DHBrowser_ServerListPageLAN.InternalOnLoadINI
     End Object
-    sp_Main=GUISplitter'DH_Interface.DHBrowser_ServerListPageLAN.HorzSplitter'
+    sp_Main=GUISplitter'DH_Interface.HorzSplitter'
 
     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"

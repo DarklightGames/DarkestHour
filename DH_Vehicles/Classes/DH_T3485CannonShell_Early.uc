@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3485CannonShell_Early extends DHSovietCannonShell;
@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=900  //164 gramms TNT filler
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_ShermanM4A176WCannonShellDamageAP'
     HullFireChance=0.6
     EngineFireChance=0.98
 

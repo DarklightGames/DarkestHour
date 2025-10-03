@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment_SpawnPoint_PlatoonHQ extends DHMapIconAttachment_SpawnPoint
@@ -8,5 +8,5 @@ class DHMapIconAttachment_SpawnPoint_PlatoonHQ extends DHMapIconAttachment_Spawn
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq_encircled'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.platoon_hq_encircled'
 }

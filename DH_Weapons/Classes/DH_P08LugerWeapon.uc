@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_P08LugerWeapon extends DHPistolWeapon;
@@ -8,13 +8,13 @@ class DH_P08LugerWeapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="Luger P08"
-    FireModeClass(0)=class'DH_Weapons.DH_P08LugerFire'
-    FireModeClass(1)=class'DH_Weapons.DH_P08LugerMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_P08LugerAttachment'
-    PickupClass=class'DH_Weapons.DH_P08LugerPickup'
+    FireModeClass(0)=Class'DH_P08LugerFire'
+    FireModeClass(1)=Class'DH_P08LugerMeleeFire'
+    AttachmentClass=Class'DH_P08LugerAttachment'
+    PickupClass=Class'DH_P08LugerPickup'
 
     Mesh=SkeletalMesh'DH_Luger_1st.P08Luger'
-    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.luger_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.luger_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -22,8 +22,8 @@ defaultproperties
     IronSightDisplayFOV=75.0
     ZoomOutTime=0.3
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

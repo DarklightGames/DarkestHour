@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSovietCannonShell extends DHCannonShellAP // a solid shot armor-piercing shell (with no armor-piercing cap or ballistic cap)
@@ -9,7 +9,7 @@ class DHSovietCannonShell extends DHCannonShellAP // a solid shot armor-piercing
 defaultproperties
 {
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    CoronaClass=Class'DHShellTracer_GreenLarge'
+    ShellTrailClass=Class'DHShellTrail_Green'
     TracerHue=64
 }

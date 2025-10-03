@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // http://algs4.cs.princeton.edu/34hash/LinearProbingHashST.java.html
 //==============================================================================
@@ -17,7 +17,7 @@ static function Hashtable_string_int Create(int Capacity)
     local int i;
     local Hashtable_string_int HT;
 
-    HT = new class'Hashtable_string_int';
+    HT = new Class'Hashtable_string_int';
     HT.Keys.Length = Capacity;
     HT.Values.Length = Capacity;
 
@@ -63,7 +63,7 @@ function Clear()
 
 private function int Hash(string Key)
 {
-    return (class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
+    return (Class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
 }
 
 private function Resize(int Capacity)
@@ -71,7 +71,7 @@ private function Resize(int Capacity)
     local int i;
     local Hashtable_string_int T;
 
-    T = class'Hashtable_string_int'.static.Create(Capacity);
+    T = Class'Hashtable_string_int'.static.Create(Capacity);
 
     for (i = 0; i < Keys.Length; ++i)
     {

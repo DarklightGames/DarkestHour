@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_StandardFireteamLeaderEarly extends DHSOVCorporalRoles;
@@ -8,7 +8,7 @@ class DH_RKKA_StandardFireteamLeaderEarly extends DHSOVCorporalRoles;
 defaultproperties
 {
     // Sergeant tunic is for testing (no over-shoulder tent)
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicSergeantEarlyPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    RolePawns(0)=(PawnClass=Class'DH_SovietTunicSergeantEarlyPawn',Weight=1.0)
+    Headgear(0)=Class'DH_SovietSidecap'
+    SleeveTexture=Texture'DHSovietCharactersTex.DH_rus_sleeves'
 }

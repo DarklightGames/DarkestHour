@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZB30Weapon extends DHAutoWeapon;
@@ -12,15 +12,15 @@ defaultproperties
     ItemName="ZB-30 Machine Gun"
     NativeItemName="ZB vz.30 Kulomet"
 
-    FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
-    AttachmentClass=class'DH_Weapons.DH_ZB30Attachment'
-    PickupClass=class'DH_Weapons.DH_ZB30Pickup'
+    FireModeClass(0)=Class'DH_ZB30AutoFire'
+    AttachmentClass=Class'DH_ZB30Attachment'
+    PickupClass=Class'DH_ZB30Pickup'
 
     Mesh=SkeletalMesh'DH_ZB_1st.ZB30_1st'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=0
-    Skins(0)=Texture'DH_Weapon_CC_tex.SmallArms.ZB30_diffuse'
-    Skins(1)=Shader'Weapons1st_tex.Bullets.kar98k_stripper_s'
+    Skins(0)=Texture'DH_Weapon_CC_tex.ZB30_diffuse'
+    Skins(1)=Shader'Weapons1st_tex.kar98k_stripper_s'
     HandNum=2
     SleeveNum=3
 
@@ -38,7 +38,7 @@ defaultproperties
     NumMagsToResupply=3
 
     InitialBarrels=2
-    BarrelClass=class'DH_Weapons.DH_ZB30Barrel'
+    BarrelClass=Class'DH_ZB30Barrel'
     BarrelSteamBone="Barrel"
 
     IdleToBipodDeploy="deploy"

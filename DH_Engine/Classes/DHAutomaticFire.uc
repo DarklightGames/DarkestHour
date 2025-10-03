@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAutomaticFire extends DHProjectileFire
@@ -216,8 +216,8 @@ defaultproperties
 {
     bPawnRapidFireAnim=true
     FAProjSpawnOffset=(X=-20.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    FlashEmitterClass=Class'MuzzleFlash1stSTG'
+    SmokeEmitterClass=Class'ROMuzzleSmoke'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=0.0)
 
     // Recoil

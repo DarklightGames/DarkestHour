@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Tiger2BCannonShellAPCR extends DHCannonShellAPDS;
@@ -20,8 +20,8 @@ defaultproperties
     EngineFireChance=0.7
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This is an artillery type used for backwards compatibility with the old
 // Red Orchestra artillery system.
@@ -44,7 +44,7 @@ function PostBeginPlay()
     }
 
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     BatterySize = LI.GetBatterySize(TeamIndex);
     SalvoAmount = LI.GetSalvoAmount(TeamIndex);
@@ -91,7 +91,7 @@ function Destroyed()
 function Timer()
 {
     local DHVolumeTest VT;
-    local vector       RandomSpread;
+    local Vector       RandomSpread;
     local bool         bInvalid;
 
     // Cancel the strike if the arty officer has switched teams or left the server, or if the round is over
@@ -102,7 +102,7 @@ function Timer()
     // Check whether the target location has become a NoArtyVolume after the strike was called - if it has then cancel the strike
     else
     {
-        VT = Spawn(class'DHVolumeTest', self,, Location); // using Location instead of deprecated OriginalArtyLocation this actor now located on strike location
+        VT = Spawn(Class'DHVolumeTest', self,, Location); // using Location instead of deprecated OriginalArtyLocation this actor now located on strike location
 
         if (VT != none)
         {
@@ -112,7 +112,7 @@ function Timer()
 
                 if (Owner.IsA('PlayerController'))
                 {
-                    PlayerController(Owner).ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid artillery target
+                    PlayerController(Owner).ReceiveLocalizedMessage(Class'ROArtilleryMsg', 5); // not a valid artillery target
                 }
             }
 
@@ -140,7 +140,7 @@ function Timer()
         RandomSpread.Y += Rand((2 * SpreadAmount) + 1) - SpreadAmount;
 
         // Altered to spawn shell a standard approx 50m above strike location & to use a different method of setting shell's InstigatorController
-        LastSpawnedShell = Spawn(class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, rotator(PhysicsVolume.Gravity));
+        LastSpawnedShell = Spawn(Class'DHArtilleryShell',,, Location + vect(0.0, 0.0, 3000.0) + RandomSpread, Rotator(PhysicsVolume.Gravity));
 
         if (LastSpawnedShell != none)
         {
@@ -179,7 +179,7 @@ static function int GetLimitOverride(int TeamIndex, LevelInfo Level)
 {
     local DH_LevelInfo LI;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI == none)
     {
@@ -201,7 +201,7 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 {
     local DH_LevelInfo LI;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI == none)
     {
@@ -215,6 +215,6 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 defaultproperties
 {
-    ActiveArtilleryMarkerClass=class'DHMapMarker_OngoingBarrage'
+    ActiveArtilleryMarkerClass=Class'DHMapMarker_OngoingBarrage'
     ArtilleryType=ArtyType_Barrage
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak38Cannon extends DHATGunCannon;
@@ -8,12 +8,24 @@ class DH_Pak38Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_turret'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
-    Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll')
-    GunnerAttachmentBone="com_player"
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_turret_ext'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_yaw_collision',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_pitch_collision',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Pak38_stc.pak38_turret_barrel_collision',AttachBone="BARREL")
+    GunnerAttachmentBone="GUN_YAW"
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+
+    BeginningIdleAnim="idle"
+
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
+
+    AnimationDrivers(0)=(Channel=1,BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=35,RotationType=ROTATION_Pitch)
+
+    DriverAnimationChannel=2
+    DriverAnimationChannelBone="CAMERA_COM"
 
     // Turret movement
     MaxPositiveYaw=5825
@@ -24,9 +36,9 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
-    TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'
+    PrimaryProjectileClass=Class'DH_Pak38CannonShell'
+    SecondaryProjectileClass=Class'DH_Pak38CannonShellAPCR'
+    TertiaryProjectileClass=Class'DH_Pak38CannonShellHE'
 
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
@@ -47,6 +59,7 @@ defaultproperties
     TertiarySpread=0.0013
 
     // Weapon fire
+    WeaponFireAttachmentBone="MUZZLE"
     WeaponFireOffset=1.0
 
     //Anims
@@ -54,13 +67,13 @@ defaultproperties
     ShootRaisedAnim="shoot"
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.50mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.50mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.50mm_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(1)=100
@@ -83,4 +96,10 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
+
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=7.0
 }

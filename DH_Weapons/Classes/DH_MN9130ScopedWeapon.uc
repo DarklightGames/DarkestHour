@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Mosin M91/30 (PU)"
     SwayModifyFactor=0.66 // +0.06
-    FireModeClass(0)=class'DH_Weapons.DH_MN9130ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MN9130ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
+    FireModeClass(0)=Class'DH_MN9130ScopedFire'
+    FireModeClass(1)=Class'DH_MN9130ScopedMeleeFire'
+    AttachmentClass=Class'DH_MN9130ScopedAttachment'
+    PickupClass=Class'DH_MN9130ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Nagantscope_1st.mosinscoped_mesh'
     bUseHighDetailOverlayIndex=true
@@ -20,8 +20,8 @@ defaultproperties
 
     bHasScope=true
     bIsSniper=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay' //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_SovScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
 
     ScopeOverlaySize=0.266 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     DisplayFOV=82.0

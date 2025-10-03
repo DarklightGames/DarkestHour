@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SdKfz251_22Transport extends DH_Sdkfz251Transport;
@@ -17,7 +17,7 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", class'Class'));
+    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", Class'Class'));
 }
 
 defaultproperties
@@ -32,24 +32,25 @@ defaultproperties
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
-    VehicleNameString="Sd.Kfz.251/22 Halftrack"
+    VehicleNameString="Sd.Kfz. 251/22 Halftrack"
     ReinforcementCost=2
     PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
+    Skins(0)=Texture'DH_VehiclesGE_tex.Halftrack_body_camo2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.SdKfz251_22_Destroyed'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_gun_topdown'
 
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sdkfz_251_22'
 
     //Add AMMO HIT BOX for 7.5 cm shell storage
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     FireDetonationChance=0.07 //increased fire detonation and ammo ignition probability over normal halftrack as ammo is explosive
     AmmoIgnitionProbability=0.75
 }

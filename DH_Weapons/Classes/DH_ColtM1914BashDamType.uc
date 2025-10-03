@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ColtM1914BashDamType extends DHWeaponBashDamageType
@@ -8,5 +8,5 @@ class DH_ColtM1914BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_ColtM1914Weapon'
+    WeaponClass=Class'DH_ColtM1914Weapon'
 }

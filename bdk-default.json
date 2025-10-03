@@ -10,7 +10,7 @@
                 "type": "EXCLUDE"
             },
             {
-                "pattern": "Maps/*.rom",
+                "pattern": "*.rom",
                 "type": "EXCLUDE"
             },
             {
@@ -20,5 +20,4 @@
             }
         ]
     }
-    
 }

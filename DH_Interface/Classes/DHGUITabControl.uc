@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGUITabControl extends GUITabControl;
@@ -49,7 +49,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         }
         else
         {
-            NewTabButton = new class'DHGUITabButton';
+            NewTabButton = new Class'DHGUITabButton';
 
             if (NewTabButton == none)
             {
@@ -124,7 +124,7 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
         }
         else
         {
-            NewTabButton = new class'DHGUITabButton';
+            NewTabButton = new Class'DHGUITabButton';
 
             if (NewTabButton == none)
             {

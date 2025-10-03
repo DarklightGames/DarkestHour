@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP41Weapon extends DHAutoWeapon;
@@ -9,13 +9,13 @@ defaultproperties
 {
     ItemName="MP 41"
     NativeItemName="Maschinenpistole 41"
-    FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
-    PickupClass=class'DH_Weapons.DH_MP41Pickup'
-    AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
+    FireModeClass(0)=Class'DH_MP41Fire'
+    FireModeClass(1)=Class'DH_MP41MeleeFire'
+    PickupClass=Class'DH_MP41Pickup'
+    AttachmentClass=Class'DH_MP41Attachment'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp41_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.MP41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -33,7 +33,7 @@ defaultproperties
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
 
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44_firemodeswitch01'
 
     bPlusOneLoading=false
 
@@ -55,6 +55,6 @@ defaultproperties
     PutDownEmptyAnim="put_away_empty"
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 }

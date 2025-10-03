@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class Period extends Object;
@@ -16,7 +16,7 @@ static function Period FromSeconds(int Seconds)
 {
     local Period P;
 
-    P = new class'Period';
+    P = new Class'Period';
 
     P.Years = Seconds / 31536000;
     Seconds = Seconds % 31536000;

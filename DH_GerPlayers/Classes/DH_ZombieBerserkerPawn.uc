@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Halloween Special 2020
 
@@ -8,8 +8,11 @@ class DH_ZombieBerserkerPawn extends DH_ZombiePawn;
 
 defaultproperties
 {
+    GroundSpeed=250
+    WalkingPct=0.3
     Health=300
     Stamina=500
+    MinHurtSpeed=700.0
     bNeverStaggers=true
     bAlwaysSeverBodyparts=true
 

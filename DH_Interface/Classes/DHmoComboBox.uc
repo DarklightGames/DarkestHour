@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHmoComboBox extends moComboBox;
@@ -13,6 +13,6 @@ function Clear()
 defaultproperties
 {
     ComponentClassName="DH_Interface.DHGUIComboBox"
-    LabelStyleName="DHLargeText"
+    LabelStyleName="DHSmallText"
     StyleName="DHSmallText"
 }

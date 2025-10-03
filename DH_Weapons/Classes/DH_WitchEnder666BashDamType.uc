@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_WitchEnder666BashDamType extends DHWeaponBashDamageType
@@ -8,6 +8,6 @@ class DH_WitchEnder666BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_WitchEnder666Weapon'
+    WeaponClass=Class'DH_WitchEnder666Weapon'
     bAlwaysSevers=true
 }

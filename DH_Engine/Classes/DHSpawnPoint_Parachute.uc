@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPoint_Parachute extends DHSpawnPointBase;
@@ -26,8 +26,7 @@ simulated function int GetDesirability()
 
 defaultproperties
 {
-    SpawnPointStyle="DHParatroopersButtonStyle"
-
+    bAirborneSpawn=true
     SpawnLocationOffset=(Z=10000)
     SpawnRadius=1024.0
 }

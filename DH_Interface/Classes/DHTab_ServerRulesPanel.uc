@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_ServerRulesPanel extends UT2K4Tab_ServerRulesPanel;
@@ -154,7 +154,7 @@ defaultproperties
         WinHeight=0.9
         OnPreDraw=myBackgroundGroup.InternalPreDraw
     End Object
-    sb_Background=DHGUIProportionalContainer'DH_Interface.DHTab_ServerRulesPanel.myBackgroundGroup'
+    sb_Background=DHGUIProportionalContainer'DH_Interface.myBackgroundGroup'
     Begin Object Class=DHmoCheckBox Name=EnableWebadmin
         Caption="Enable WebAdmin"
         OnCreateComponent=EnableWebadmin.InternalOnCreateComponent
@@ -167,7 +167,7 @@ defaultproperties
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
     End Object
-    ch_Webadmin=DHmoCheckBox'DH_Interface.DHTab_ServerRulesPanel.EnableWebadmin'
+    ch_Webadmin=DHmoCheckBox'DH_Interface.EnableWebadmin'
     Begin Object Class=DHmoCheckBox Name=LANServer
         Caption="LAN Server"
         OnCreateComponent=LANServer.InternalOnCreateComponent
@@ -180,7 +180,7 @@ defaultproperties
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
     End Object
-    ch_LANServer=DHmoCheckBox'DH_Interface.DHTab_ServerRulesPanel.LANServer'
+    ch_LANServer=DHmoCheckBox'DH_Interface.LANServer'
     Begin Object Class=DHmoNumericEdit Name=WebadminPort
         MinValue=1
         MaxValue=65536
@@ -197,7 +197,7 @@ defaultproperties
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
     End Object
-    nu_Port=DHmoNumericEdit'DH_Interface.DHTab_ServerRulesPanel.WebadminPort'
+    nu_Port=DHmoNumericEdit'DH_Interface.WebadminPort'
     Begin Object Class=DHmoCheckBox Name=AdvancedButton
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
@@ -211,7 +211,7 @@ defaultproperties
         bScaleToParent=true
         OnChange=DHTab_ServerRulesPanel.InternalOnChange
     End Object
-    ch_Advanced=DHmoCheckBox'DH_Interface.DHTab_ServerRulesPanel.AdvancedButton'
+    ch_Advanced=DHmoCheckBox'DH_Interface.AdvancedButton'
     i_bk=none
     Begin Object Class=DHGUIMultiOptionListBox Name=RuleListBox
         SelectedStyleName="DHListSelectionStyle"
@@ -224,5 +224,5 @@ defaultproperties
         bScaleToParent=true
         OnChange=DHTab_ServerRulesPanel.InternalOnChange
     End Object
-    lb_Rules=DHGUIMultiOptionListBox'DH_Interface.DHTab_ServerRulesPanel.RuleListBox'
+    lb_Rules=DHGUIMultiOptionListBox'DH_Interface.RuleListBox'
 }

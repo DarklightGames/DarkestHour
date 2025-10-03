@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class INet4Address extends Object;
@@ -87,7 +87,7 @@ final static function INet4Address FromString(string S)
         }
     }
 
-    Address = new class'INet4Address';
+    Address = new Class'INet4Address';
     Address.Addresses[0] = k[0];
     Address.Addresses[1] = k[1];
     Address.Addresses[2] = k[2];

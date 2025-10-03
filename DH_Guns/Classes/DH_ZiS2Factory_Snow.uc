@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2Factory_Snow extends DH_ZiS2Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_ZiS2Gun_Snow'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun_winter'
+    VehicleClass=Class'DH_ZiS2Gun_Snow'
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT_WINTER'
 }

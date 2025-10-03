@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Actor to enable or disable main base supply caches.
 //==============================================================================
@@ -22,7 +22,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    foreach AllActors(class'DHMainBaseSupplyCache', MainBaseSupplyCache, MainBaseSupplyCacheTag)
+    foreach AllActors(Class'DHMainBaseSupplyCache', MainBaseSupplyCache, MainBaseSupplyCacheTag)
     {
         break;
     }

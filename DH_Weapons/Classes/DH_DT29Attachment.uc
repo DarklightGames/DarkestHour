@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_DT29Attachment extends DHHighROFWeaponAttachment;
@@ -8,15 +8,15 @@ class DH_DT29Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.DT29_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dt_icon' 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'DH_InterfaceArt_tex.dt_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdDP'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true
 
-    ClientProjectileClass=class'DH_Weapons.DH_DT29Bullet'
+    ClientProjectileClass=Class'DH_DT29Bullet'
     bUsesTracers=true
     TracerFrequency=5
-    ClientTracerClass=class'DH_Weapons.DH_DT29TracerBullet'
+    ClientTracerClass=Class'DH_DT29TracerBullet'
 
     WA_Idle="idle_DP28"
     WA_IdleEmpty="idle_DP28"

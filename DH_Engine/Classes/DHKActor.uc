@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHKActor extends KActor
@@ -9,7 +9,7 @@ class DHKActor extends KActor
 defaultproperties
 {
     bNoDelete=false
-    StaticMesh=StaticMesh'DH_Artillery_stc.M5.M5_shell_case'
+    StaticMesh=StaticMesh'DH_Artillery_stc.M5_shell_case'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KLinearDamping=0.1
@@ -25,6 +25,6 @@ defaultproperties
         KImpactThreshold=700.0
         KMass=0.1
     End Object
-    KParams=KarmaParamsRBFull'DHKActor.KParams0'
+    KParams=KParams0
 }
 

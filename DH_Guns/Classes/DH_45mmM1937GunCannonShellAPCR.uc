@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_45mmM1937GunCannonShellAPCR extends DHCannonShellAPDS;
@@ -17,21 +17,21 @@ defaultproperties
     ImpactDamage=220 // just a tungsten slug; no explosive filler
     Damage=790.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
     DamageRadius=100.0
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    ShellImpactDamage=Class'DHShellSubCalibreImpactDamageType'
     HullFireChance=0.22
     EngineFireChance=0.45
 
     bShatterProne=true
 
     //Effects
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    CoronaClass=Class'DHShellTracer_Green'
+    ShellTrailClass=Class'DHShellTrail_Green'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=9.4  // 100m

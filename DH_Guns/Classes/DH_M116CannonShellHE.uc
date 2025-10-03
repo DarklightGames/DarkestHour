@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Just a copy-paste from the Sherman 75's HE with some modifications
 //==============================================================================
@@ -16,15 +16,15 @@ defaultproperties
     SpeedFudgeScale=1.0
     LifeSpan=30.0
     bHasTracer=false
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_HE'
 
     //Damage
     ImpactDamage=710
-    ShellImpactDamage=class'DH_Engine.DHArtilleryKillDamageType'
+    ShellImpactDamage=Class'DHArtilleryKillDamageType'
     PenetrationMag=750.0
     Damage=350.0   //680 gramms TNT
     DamageRadius=950.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType_Artillery'
+    MyDamageType=Class'DHShellHE75mmATDamageType_Artillery'
     HullFireChance=0.8
     EngineFireChance=0.8
 

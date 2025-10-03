@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_EditBox extends STY_EditBox;
@@ -25,11 +25,11 @@ defaultproperties
     FontNames(14)="DHSmallFont"
     FontColors(3)=(B=255,G=255,R=255)
     FontColors(4)=(B=255,G=255,R=255)
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(0)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(1)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(2)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(3)=Texture'DH_GUI_Tex.DHSmallBox'
+    Images(4)=Texture'DH_GUI_Tex.DHSmallBox'
     ImgStyle(0)=ISTY_PartialScaled
     ImgStyle(1)=ISTY_PartialScaled
     ImgStyle(2)=ISTY_PartialScaled

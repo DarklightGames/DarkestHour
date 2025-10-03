@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuartTank extends DHArmoredVehicle;
@@ -15,14 +15,14 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
-    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
-    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(0)=Texture'DH_VehiclesUS_tex.M5_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.M5_body_int'
+    Skins(2)=Texture'DH_VehiclesUS_tex.M5_treads'
+    Skins(3)=Texture'DH_VehiclesUS_tex.M5_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_StuartCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -47,7 +47,6 @@ defaultproperties
     RearLeftAngle=208.0
 
     // Movement
-    MaxCriticalSpeed=1057.0 // 63 kph
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.13
@@ -63,14 +62,14 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointOffset=(X=-73.0,Z=10.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=10.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=59.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
     FireAttachBone="Player_Driver"
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart_dest1'
 
     // Exit
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
@@ -83,13 +82,13 @@ defaultproperties
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
     RumbleSoundBone="placeholder_int"
-    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart_inside_rumble'
 
     // Visual effects
     LeftTreadIndex=3
@@ -103,9 +102,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.stuart_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Stuart_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Stuart_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.63
@@ -120,7 +119,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.65
     VehicleHudOccupantsY(5)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.m5_stuart'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -152,7 +151,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_StuartTank.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -161,7 +160,7 @@ defaultproperties
         BoneOffset=(Z=11.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_StuartTank.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -171,7 +170,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_StuartTank.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -180,7 +179,7 @@ defaultproperties
         BoneOffset=(X=-50.0,Z=11.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_StuartTank.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -189,7 +188,7 @@ defaultproperties
         WheelRadius=33.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_StuartTank.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -197,5 +196,5 @@ defaultproperties
         BoneOffset=(X=-20.0,Z=11.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_StuartTank.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 }

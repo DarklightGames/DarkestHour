@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdtigerCannonShell extends DHGermanCannonShell;
@@ -20,7 +20,7 @@ defaultproperties
     EngineFireChance=1.0
 
     //Effects
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.122mm_Shell'
 
     //Penetration
     DHPenetrationTable(0)=26.7

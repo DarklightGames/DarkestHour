@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This is now largely unused, but was heavily used in pre-6.0 "spawn rooms"
 // where players would walk through ethereal portals to teleport to the battle.
@@ -21,9 +21,9 @@ var()   bool    bResetStamina;
 // Set timer for spawn protection
 simulated function bool Accept(Actor Incoming, Actor Source)
 {
-    local rotator NewRotation, OldRotation;
+    local Rotator NewRotation, OldRotation;
     local float Magnitude;
-    local vector OldDirection;
+    local Vector OldDirection;
     local Controller P;
     local DHPawn DHP;
 
@@ -116,9 +116,9 @@ simulated function bool Accept(Actor Incoming, Actor Source)
                 OldRotation.Pitch = 0;
             }
 
-            OldDirection = vector(OldRotation);
+            OldDirection = Vector(OldRotation);
             Magnitude = Incoming.Velocity dot OldDirection;
-            Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * vector(Incoming.Rotation);
+            Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * Vector(Incoming.Rotation);
         }
 
         if (bReversesX)

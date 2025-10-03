@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMetricsRound extends JSONSerializable;
@@ -20,15 +20,15 @@ function JSONValue ToJSON()
 {
     local JSONObject JSON;
 
-    JSON = (new class'JSONObject')
+    JSON = (new Class'JSONObject')
         .PutString("started_at", StartedAt.IsoFormat())
         .PutInteger("winner", Winner)
-        .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
-        .Put("vehicle_frags", class'JSONArray'.static.FromSerializables(VehicleFrags))
-        .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
-        .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions))
-        .Put("rally_points", class'JSONArray'.static.FromSerializables(RallyPoints))
-        .Put("events", class'JSONArray'.static.FromValues(Events));
+        .Put("frags", Class'JSONArray'.static.FromSerializables(Frags))
+        .Put("vehicle_frags", Class'JSONArray'.static.FromSerializables(VehicleFrags))
+        .Put("captures", Class'JSONArray'.static.FromSerializables(Captures))
+        .Put("constructions", Class'JSONArray'.static.FromSerializables(Constructions))
+        .Put("rally_points", Class'JSONArray'.static.FromSerializables(RallyPoints))
+        .Put("events", Class'JSONArray'.static.FromValues(Events));
 
     if (EndedAt == none)
     {

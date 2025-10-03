@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak38CannonShell extends DHGermanCannonShell;
@@ -14,13 +14,13 @@ defaultproperties
 
     //Damage
     ImpactDamage=325  //18 gramms TNT filler
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_PanzerIIILCannonShellDamageAP'
     HullFireChance=0.30
     EngineFireChance=0.55
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
+    CoronaClass=Class'DHShellTracer_Orange'
+    StaticMesh=StaticMesh'WeaponPickupSM.76mm_shell'
 
     //Penetration
     DHPenetrationTable(0)=9.6

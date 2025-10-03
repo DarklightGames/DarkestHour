@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2CannonShell extends DHSovietCannonShell;
@@ -15,7 +15,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=460  //14 gramms TNT filler
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.35
     EngineFireChance=0.62
 

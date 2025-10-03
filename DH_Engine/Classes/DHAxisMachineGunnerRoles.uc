@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAxisMachineGunnerRoles extends DHAxisRoles
@@ -11,8 +11,6 @@ defaultproperties
     bIsGunner=true
     MyName="Machine-Gunner"
     AltName="Maschinengewehrschütze"
-    Article="a "
-    PluralName="Machine-Gunners"
     Limit=2
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=20

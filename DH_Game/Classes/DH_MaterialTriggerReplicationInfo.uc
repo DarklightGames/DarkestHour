@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MaterialTriggerReplicationInfo extends ReplicationInfo;
 
-var     material    MaterialToTrigger;
+var     Material    MaterialToTrigger;
 var     string      MaterialName;
 var     int         ClientTriggerCount;
 var     int         ClientUnTriggerCount;
@@ -55,7 +55,7 @@ simulated function Timer()
 {
     if (MaterialName != "" && MaterialToTrigger == none)
     {
-        MaterialToTrigger = material(DynamicLoadObject(MaterialName, class'Material'));
+        MaterialToTrigger = Material(DynamicLoadObject(MaterialName, Class'Material'));
 
         if (MaterialToTrigger != none)
         {

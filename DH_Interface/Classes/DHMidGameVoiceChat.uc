@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMidGameVoiceChat extends ROUT2K4Tab_MidGameVoiceChat;
@@ -13,7 +13,7 @@ defaultproperties
         WinLeft=0.647884
         WinTop=0.685424
         Caption="Ignore Voice Commands"
-        Hint="Do not receive any voice commands, such as \"Take cover!\" from this player"
+        Hint="Do not receive any voice commands, such as 'Take cover!' from this player"
         OnChange=InternalOnChange
         TabOrder=3
         MenuState=MSAT_Disabled

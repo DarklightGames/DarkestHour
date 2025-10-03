@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionGroup_Logistics extends DHConstructionGroup;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.platoon_hq'
     GroupName="Logistics"
     SortOrder=0
 }

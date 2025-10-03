@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_USSmokeGrenadePickup extends DHOneShotWeaponPickup
@@ -8,6 +8,6 @@ class DH_USSmokeGrenadePickup extends DHOneShotWeaponPickup
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USSmokeGrenade'
+    InventoryType=Class'DH_USSmokeGrenadeWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.USSmokeGrenade'
 }

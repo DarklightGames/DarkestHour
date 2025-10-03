@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Nagant1895BramitBashDamType extends DHWeaponBashDamageType
@@ -8,6 +8,6 @@ class DH_Nagant1895BramitBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Nagant1895BramitWeapon'
+    WeaponClass=Class'DH_Nagant1895BramitWeapon'
 }
 

@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_SovRadioItem extends DHRadioItem;
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Equipment.DHSovRadioAttachment'
+    AttachmentClass=Class'DHSovRadioAttachment'
     AttachBoneName="Bip01_Spine1"
 }

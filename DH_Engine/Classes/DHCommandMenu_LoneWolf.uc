@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_LoneWolf extends DHCommandMenu;
 
 var localized string AutoJoinSquadDisabledText;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
 
@@ -72,7 +72,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (IsOptionDisabled(OptionIndex))
             {
                 ORI.InfoText[0] = default.AutoJoinSquadDisabledText;
-                ORI.InfoColor = class'UColor'.default.Red;
+                ORI.InfoColor = Class'UColor'.default.Red;
             }
             break;
         default:
@@ -83,7 +83,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 defaultproperties
 {
     AutoJoinSquadDisabledText="No eligible squads"
-    Options(0)=(ActionText="Auto-Join Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad')
-    Options(1)=(ActionText="Create Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad_leader')
+    Options(0)=(ActionText="Auto-Join Squad",Material=Texture'DH_InterfaceArt2_tex.squad')
+    Options(1)=(ActionText="Create Squad",Material=Texture'DH_InterfaceArt2_tex.squad_leader')
 }
 

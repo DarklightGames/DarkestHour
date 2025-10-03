@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_GMCTruckTransport extends DH_GMCTruck;
@@ -8,7 +8,7 @@ class DH_GMCTruckTransport extends DH_GMCTruck;
 defaultproperties
 {
     VehicleNameString="GMC CCKW (Transport)"
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.gmc_deco_bench')
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.gmc_deco_bench')
     PassengerPawns(1)=(AttachBone="body",DriveRot=(Yaw=16384),DrivePos=(X=-20.0,Y=-45.0,Z=97.0),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DriveRot=(Yaw=16384),DrivePos=(X=-60.0,Y=-45.0,Z=97.0),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(3)=(AttachBone="body",DriveRot=(Yaw=16384),DrivePos=(X=-100.0,Y=-45.0,Z=97.0),DriveAnim="VHalftrack_Rider4_idle")

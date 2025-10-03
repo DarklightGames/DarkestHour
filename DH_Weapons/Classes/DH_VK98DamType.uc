@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_VK98DamType extends DH_Kar98DamType
@@ -8,5 +8,5 @@ class DH_VK98DamType extends DH_Kar98DamType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_VK98Weapon'
+    WeaponClass=Class'DH_VK98Weapon'
 }

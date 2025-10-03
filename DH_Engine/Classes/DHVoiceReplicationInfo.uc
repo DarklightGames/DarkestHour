@@ -1,12 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoiceReplicationInfo extends TeamVoiceReplicationInfo;
 
 const SQUAD_CHANNELS_MAX = 8;
 
+var VoiceChatRoom               AxisCommandChannel;
+var VoiceChatRoom               AlliesCommandChannel;
 var VoiceChatRoom               AxisSquadChannels[SQUAD_CHANNELS_MAX];
 var VoiceChatRoom               AlliesSquadChannels[SQUAD_CHANNELS_MAX];
 
@@ -21,6 +23,19 @@ replication
 {
     reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
         AxisSquadChannels, AlliesSquadChannels;
+}
+
+simulated function VoiceChatRoom GetCommandChannel(int TeamIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return AxisCommandChannel;
+        case ALLIES_TEAM_INDEX:
+            return AlliesCommandChannel;
+        default:
+            return none;
+    }
 }
 
 simulated function VoiceChatRoom GetSquadChannel(int TeamIndex, int SquadIndex)
@@ -50,6 +65,7 @@ simulated event InitChannels()
     VCR = AddVoiceChannel();
     if (VCR != none)
     {
+        AxisCommandChannel = VCR;
         VCR.SetTeam(AXIS_TEAM_INDEX);
     }
 
@@ -57,6 +73,7 @@ simulated event InitChannels()
     VCR = AddVoiceChannel();
     if (VCR != none)
     {
+        AlliesCommandChannel = VCR;
         VCR.SetTeam(ALLIES_TEAM_INDEX);
     }
 
@@ -214,8 +231,8 @@ function VerifyTeamChatters()
 
 defaultproperties
 {
-    ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
-    ChatBroadcastClass=class'DH_Engine.DHChatHandler'
+    ChatRoomClass=Class'DHVoiceChatRoom'
+    ChatBroadcastClass=Class'DHChatHandler'
     LocalChannelText="Local"
     PublicChannelNames(0)="Command" //Axis
     PublicChannelNames(1)="Command" //Allies

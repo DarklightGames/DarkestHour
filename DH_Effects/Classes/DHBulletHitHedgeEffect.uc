@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitHedgeEffect extends emitter;
+class DHBulletHitHedgeEffect extends Emitter;
 
 defaultproperties
 {
@@ -22,13 +22,13 @@ defaultproperties
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=87,G=109,R=130,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=12
-        name="main_impact"
+        Name="main_impact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
     End Object
@@ -49,7 +49,7 @@ defaultproperties
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=50,G=99,R=91,A=255))
         ColorScaleRepeats=2.000000
         MaxParticles=10
-        name="Leaves_Up"
+        Name="Leaves_Up"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=25.000000)
         UseRotationFrom=PTRS_Actor
@@ -58,7 +58,7 @@ defaultproperties
         StartSizeRange=(X=(Min=2.0,Max=3.5))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.LeafDebris01'
+        Texture=Texture'DH_FX_Tex.LeafDebris01'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=3.000000)
@@ -81,7 +81,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=120,G=167,R=175,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=12
-        name="green_puff"
+        Name="green_puff"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -90,7 +90,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.DSmoke_2'
         LifetimeRange=(Min=0.150000,Max=1.500000)
         StartVelocityRange=(X=(Min=5.000000,Max=75.000000),Y=(Min=-35.000000,Max=40.000000),Z=(Min=-35.000000,Max=40.000000))
     End Object
@@ -111,7 +111,7 @@ defaultproperties
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=68,R=60,A=255))
         ColorScaleRepeats=2.000000
         MaxParticles=10
-        name="LeavesOut"
+        Name="LeavesOut"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=10.0000,Max=25.000000)
         UseRotationFrom=PTRS_Actor
@@ -120,7 +120,7 @@ defaultproperties
         StartSizeRange=(X=(Min=2.5,Max=5.5))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=3.000000)
@@ -130,7 +130,7 @@ defaultproperties
     Emitters(3)=SpriteEmitter'SpriteEmitter98'
 
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'LyesKrovySM.Veg.Lyes_fallen_branchlarge'
+        StaticMesh=StaticMesh'LyesKrovySM.Lyes_fallen_branchlarge'
         UseCollision=True
         UseMaxCollisions=True
         RespawnDeadParticles=False
@@ -141,7 +141,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="LargeTwig"
+        Name="LargeTwig"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=25.000000)
         UseRotationFrom=PTRS_Actor
@@ -170,7 +170,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=3
-        name="dust"
+        Name="dust"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -178,7 +178,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.000000)
@@ -189,6 +189,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter2'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

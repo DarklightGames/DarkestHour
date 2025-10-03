@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_SquadAssistant extends DHCommandMenu;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
@@ -60,6 +60,6 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
 //    NoPlayerInLineOfSight="No player in sights"
-    Options(0)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
-    Options(1)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
+    Options(0)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.construction')
+    Options(1)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.binoculars')
 }

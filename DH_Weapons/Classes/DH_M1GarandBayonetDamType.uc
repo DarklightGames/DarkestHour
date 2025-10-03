@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1GarandBayonetDamType extends DHWeaponBayonetDamageType
@@ -8,5 +8,5 @@ class DH_M1GarandBayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
+    WeaponClass=Class'DH_M1GarandWeapon'
 }

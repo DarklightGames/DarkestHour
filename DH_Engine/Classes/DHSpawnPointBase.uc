@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -17,6 +17,7 @@ enum ESpawnPointBlockReason
     SPBR_MissingRequirement,
     SPBR_NotInSafeZone,
     SPBR_Waiting,
+    SPBR_InDangerZone,
 };
 
 var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently
@@ -31,13 +32,15 @@ var()   bool            bMainSpawn;      // is a main spawn for gametype: Advanc
 var()   bool            bAirborneSpawn;  // the spawn is located on a plane or in the air
 
 var     string          SpawnPointStyle; // style name to use for spawnpoints (can be overriden in GetMapStyleName())
+var     float           SpawnPointIconOffsetMultiplierX; // offset icon horizontally by a product of its width; TODO: Replace this with pixel size?
+var     float           SpawnPointIconOffsetMultiplierY; // offset icon vertically by a product of its height
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
 var     float           SpawnKillProtectionTime; // how many seconds a kill on a player will be considered a spawn kill after spawning on this spawn point
 
 // Parameters for spawning in a radius (NOTE: currently only works for infantry!)
-var     vector          SpawnLocationOffset;
+var     Vector          SpawnLocationOffset;
 var     float           SpawnRadius;
 var     int             SpawnRadiusSegmentCount;
 var     bool            bShouldTraceCheckSpawnLocations;
@@ -199,8 +202,8 @@ event Destroyed()
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
+    local Vector SpawnLocation;
+    local Rotator SpawnRotation;
     local Pawn P;
 
     G = DarkestHourGame(Level.Game);
@@ -265,10 +268,10 @@ simulated function bool CanSpawnRole(DHRoleInfo RI)
 }
 
 // Override to specify a different spawn pose, otherwise it just uses the spawn point's pose
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local DHPawnCollisionTest CT;
-    local vector              L;
+    local Vector              L;
     local float               Angle, AngleInterval;
     local int                 i, j, k;
 
@@ -289,7 +292,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
             L = Location;
             L.X += Cos(Angle) * SpawnRadius;
             L.Y += Sin(Angle) * SpawnRadius;
-            L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
+            L.Z += 10.0 + Class'DHPawn'.default.CollisionHeight / 2;
 
             // If enabled, this check ensures we don't spawn in a place that's
             // not visible from the origin. This stops a bug where players could
@@ -301,7 +304,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
                 continue;
             }
 
-            CT = Spawn(class'DHPawnCollisionTest',,, L);
+            CT = Spawn(Class'DHPawnCollisionTest',,, L);
 
             if (CT != none)
             {
@@ -402,6 +405,11 @@ function SetIsActive(bool bIsActive)
     }
 }
 
+simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
+{
+    return GUIController.GetStyle(SpawnPointStyle, FontScale);
+}
+
 // Override to change the button style for display on the deploy menu.
 simulated function string GetMapStyleName()
 {
@@ -431,9 +439,9 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
     EnemyCount = 0;
     TeammateCount = 0;
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    foreach RadiusActors(Class'Pawn', P, Class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
-        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
+        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0)
         {
             if (P.GetTeamNum() == TeamIndex)
             {

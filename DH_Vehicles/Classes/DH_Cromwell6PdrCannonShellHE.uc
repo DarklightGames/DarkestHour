@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShellHE extends DHCannonShellHE;
@@ -14,20 +14,20 @@ defaultproperties
 
     //Damage
     ImpactDamage=350
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
     Damage=260.0  //couldnt find any information, so copied from ZIS-2
     DamageRadius=650.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    MyDamageType=Class'DHShellHE50mmATDamageType'
     PenetrationMag=690.0
     HullFireChance=0.5
     EngineFireChance=0.50
 
     //Effects
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+    ShellHitDirtEffectClass=Class'TankHEHitDirtEffect'
+    ShellHitSnowEffectClass=Class'TankHEHitSnowEffect'
+    ShellHitWoodEffectClass=Class'TankHEHitWoodEffect'
+    ShellHitRockEffectClass=Class'TankHEHitRockEffect'
+    ShellHitWaterEffectClass=Class'TankHEHitWaterEffect'
 
     //Penetration
     DHPenetrationTable(0)=2.9

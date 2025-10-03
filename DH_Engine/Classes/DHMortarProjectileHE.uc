@@ -1,40 +1,32 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarProjectileHE extends DHMortarProjectile
     abstract;
 
 // Explosion effect emitters & sounds
-var     class<Emitter>  GroundExplosionEmitterClass;
-var     class<Emitter>  SnowExplosionEmitterClass;
-var     class<Emitter>  WaterExplosionEmitterClass;
-
-var     class<Emitter>      FlashEffectClass; //new for DH
-
-var     array<sound>    GroundExplosionSounds;
-var     array<sound>    SnowExplosionSounds;
-var     array<sound>    WaterExplosionSounds;
+var     class<DHHitEffect>      ImpactEffect; // effect to spawn when round hits something other than a vehicle (handles sound & visual effect)
 
 // View shake
 var     float           BlurTime;         // how long blur effect should last for this shell
 var     float           BlurEffectScalar; // how much to scale blur & shake effect
-var     vector          ShakeRotMag;      // how far to rot view
-var     vector          ShakeRotRate;     // how fast to rot view
+var     Vector          ShakeRotMag;      // how far to rot view
+var     Vector          ShakeRotRate;     // how fast to rot view
 var     float           ShakeRotTime;     // how much time to rot the instigator's view
-var     vector          ShakeOffsetMag;   // max view offset vertically
-var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     Vector          ShakeOffsetMag;   // max view offset vertically
+var     Vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
 // Modified to stop shell from blowing up if it's in a no arty volume (just make the shell a dud if it is)
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     local DHVolumeTest VT;
 
     if (Role == ROLE_Authority && !bDud)
     {
-        VT = Spawn(class'DHVolumeTest',,, HitLocation);
+        VT = Spawn(Class'DHVolumeTest',,, HitLocation);
 
         if (VT != none)
         {
@@ -48,7 +40,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Modified to cause blast damage
-function BlowUp(vector HitLocation)
+function BlowUp(Vector HitLocation)
 {
     super.BlowUp(HitLocation);
 
@@ -59,7 +51,7 @@ function BlowUp(vector HitLocation)
 }
 
 // Modified to only play impact effects for a dud HE shell, as if it does explode the explosion effects will 'drown out' the smaller impact effects
-simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnImpactEffects(Vector HitLocation, Vector HitNormal)
 {
     if (bDud)
     {
@@ -70,25 +62,12 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
 // Implemented for HE shell explosion
 // TODO: Need to add throwing ragdoll bodies around, same as other HE shells exploding
 // But also need to add a mechanism to stop server destroying projectile before client has time to trigger this locally & play explosion effects (there are several solutions)
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+simulated function SpawnExplosionEffects(Vector HitLocation, Vector HitNormal)
 {
-    local ESurfaceTypes    HitSurfaceType;
-    local class<Emitter>   ExplosionEmitterClass;
-    local class<Projector> ExplosionDecalClass;
-    local sound            ExplosionSound;
-
     // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
     if (Level.NetMode != NM_DedicatedServer)
     {
-        GetHitSurfaceType(HitSurfaceType, HitNormal);
-        GetExplosionSound(ExplosionSound, HitSurfaceType);
-        GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
-        GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
-
-        PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
-        Spawn(ExplosionEmitterClass, self,, HitLocation);
-        Spawn(FlashEffectClass, self,, HitLocation);
-        Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+        Spawn(ImpactEffect, self,, Location, Rotator(-HitNormal));
 
         DoShakeEffect();
     }
@@ -122,77 +101,14 @@ simulated function DoShakeEffect()
     }
 }
 
-// New function to appropriate explosion sound for shell hitting a given surface type
-simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
-            return;
-
-        case EST_Water:
-            ExplosionSound = WaterExplosionSounds[Rand(WaterExplosionSounds.Length)];
-            return;
-
-        default:
-            ExplosionSound = GroundExplosionSounds[Rand(GroundExplosionSounds.Length)];
-            return;
-    }
-}
-
-// New function to appropriate explosion effects emitter for shell hitting a given surface type
-simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionEmitterClass = SnowExplosionEmitterClass;
-            return;
-
-        case EST_Water:
-            ExplosionEmitterClass = WaterExplosionEmitterClass;
-            return;
-
-        default:
-            ExplosionEmitterClass = GroundExplosionEmitterClass;
-            return;
-    }
-}
-
-// New function to appropriate explosion decal for shell hitting a given surface type
-simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalClass, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionDecalClass = ExplosionDecalSnow;
-            return;
-
-        default:
-            ExplosionDecalClass = ExplosionDecal;
-            return;
-    }
-}
-
 defaultproperties
 {
-    MyDamageType=class'DH_Engine.DHMortarDamageType'
+    MyDamageType=Class'DHMortarDamageType'
     MomentumTransfer=75000.0
+    
+    ImpactEffect=Class'DHMortarHitEffect' //default for 60mm HE projectile
 
-    GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
-    SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
-    WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
-
-    FlashEffectClass=class'DH_Effects.DHFlashEffectMedium'
-
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-
-    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
+    HitMapMarkerClass=Class'DHMapMarker_ArtilleryHit_HE'
 
     ShakeRotMag=(Z=100.0)
     ShakeRotRate=(Z=2500.0)

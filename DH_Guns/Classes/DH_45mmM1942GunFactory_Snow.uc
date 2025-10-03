@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_45mmM1942GunFactory_Snow extends DH_45mmM1942GunFactory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_45mmM1942Gun_Snow'
-    Skins(0)=Texture'DH_Artillery_tex.45mmATGun.45mmATGun_winter'
+    VehicleClass=Class'DH_45mmM1942Gun_Snow'
+    Skins(0)=Texture'DH_Pak36_tex.45mm_ext_winter'
 }

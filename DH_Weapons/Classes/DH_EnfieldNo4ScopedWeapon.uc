@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
@@ -9,19 +9,19 @@ defaultproperties
 {
     ItemName="Enfield No.4 Mk.I (T) (No.32)"
     SwayModifyFactor=0.65 // +0.05
-    FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
+    FireModeClass(0)=Class'DH_EnfieldNo4ScopedFire'
+    FireModeClass(1)=Class'DH_EnfieldNo4ScopedMeleeFire'
+    AttachmentClass=Class'DH_EnfieldNo4ScopedAttachment'
+    PickupClass=Class'DH_EnfieldNo4ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped_1st'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_Scoped_1st'
 
     bHasScope=true
     bIsSniper=true
     bPlusOneLoading=true
 
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
-    ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_BritScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_overlay'
 
     ScopeOverlaySize=0.54 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5

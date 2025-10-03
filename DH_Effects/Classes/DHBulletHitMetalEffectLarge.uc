@@ -1,26 +1,26 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMetalEffectLarge extends emitter;
+class DHBulletHitMetalEffectLarge extends Emitter;
 
-var texture SparkGroup[4];
+var Texture SparkGroup[4];
 
 //particles: 34
 
 simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties
 {
-    SparkGroup(0)=Texture'DH_FX_Tex.Sparks.sparks01'
-    SparkGroup(1)=Texture'DH_FX_Tex.Sparks.sparks02'
-    SparkGroup(2)=Texture'DH_FX_Tex.Sparks.sparks03'
-    SparkGroup(3)=Texture'DH_FX_Tex.Sparks.sparks04'
+    SparkGroup(0)=Texture'DH_FX_Tex.sparks01'
+    SparkGroup(1)=Texture'DH_FX_Tex.sparks02'
+    SparkGroup(2)=Texture'DH_FX_Tex.sparks03'
+    SparkGroup(3)=Texture'DH_FX_Tex.sparks04'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         RespawnDeadParticles=False
@@ -37,7 +37,7 @@ defaultproperties
         StartSizeRange=(X=(Min=6.000000,Max=18.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -67,7 +67,7 @@ defaultproperties
         StartSizeRange=(X=(Min=25.000000,Max=45.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.500000,Max=0.500000)
@@ -111,7 +111,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.350000,Max=0.500000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        Texture=Texture'Effects_Tex.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.350000,Max=0.750000)
@@ -133,7 +133,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=1.000000,Max=3.000000),Y=(Min=1.000000,Max=3.000000),Z=(Min=1.000000,Max=3.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.sparkfinal2'
         LifetimeRange=(Min=0.150000,Max=0.250000)
         StartVelocityRange=(X=(Min=150.000000,Max=200.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
@@ -184,12 +184,12 @@ defaultproperties
         StartSizeRange=(X=(Min=45.00000,Max=65.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.dust.dustpuff01'
+        Texture=Texture'DH_FX_Tex.dustpuff01'
         LifetimeRange=(Min=0.25,Max=0.55)
         StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-35.000000,Max=45.000000),Z=(Min=-45.000000,Max=35.000000))
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter25'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

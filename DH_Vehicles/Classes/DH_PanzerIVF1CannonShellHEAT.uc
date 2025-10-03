@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerIVF1CannonShellHEAT extends DHCannonShellHEAT;
@@ -18,11 +18,11 @@ defaultproperties
     DamageRadius=700.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     //Penetration
-    DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced. 
+    DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced.
     DHPenetrationTable(1)=8.7
     DHPenetrationTable(2)=8.7
     DHPenetrationTable(3)=8.7

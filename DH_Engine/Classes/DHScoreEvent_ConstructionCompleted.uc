@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHScoreEvent_ConstructionCompleted extends DHScoreEvent;
@@ -11,7 +11,7 @@ static function DHScoreEvent_ConstructionCompleted Create(class<DHConstruction> 
 {
     local DHScoreEvent_ConstructionCompleted ScoreEvent;
 
-    ScoreEvent = new class'DHScoreEvent_ConstructionCompleted';
+    ScoreEvent = new Class'DHScoreEvent_ConstructionCompleted';
     ScoreEvent.ConstructionClass = ConstructionClass;
 
     return ScoreEvent;
@@ -25,6 +25,6 @@ function int GetValue()
 defaultproperties
 {
     HumanReadableName="Construction Built"
-    CategoryClass=class'DHScoreCategory_Support'
+    CategoryClass=Class'DHScoreCategory_Support'
 }
 

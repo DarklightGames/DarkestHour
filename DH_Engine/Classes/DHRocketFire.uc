@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRocketFire extends DHProjectileFire
@@ -30,7 +30,7 @@ simulated function bool AllowFire()
 // Modified to add exhaust damage & to call PostFire() on the Weapon
 event ModeDoFire()
 {
-    local vector WeaponLocation, ExhaustDirection, HitLocation, HitNormal, ExhaustReflectDirection;
+    local Vector WeaponLocation, ExhaustDirection, HitLocation, HitNormal, ExhaustReflectDirection;
     local Actor  HitActor;
 
     super.ModeDoFire();
@@ -43,7 +43,7 @@ event ModeDoFire()
     if (bCausesExhaustDamage && Weapon.ThirdPersonActor != none)
     {
         WeaponLocation = Weapon.ThirdPersonActor.Location;
-        ExhaustDirection = -vector(Weapon.ThirdPersonActor.Rotation);
+        ExhaustDirection = -Vector(Weapon.ThirdPersonActor.Rotation);
 
         // Check if the exhaust backblast hit an object behind the firer
         HitActor = Trace(HitLocation, HitNormal, WeaponLocation + (ExhaustDirection * 0.75 * default.ExhaustLength), WeaponLocation, false);
@@ -153,9 +153,9 @@ defaultproperties
     ExhaustDamage=200.0
     ExhaustMomentumTransfer=100.0
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.BazookaFire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.BazookaFire01'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.BazookaFire01'
     FireForce="RocketLauncherFire"
     FireAnim=""
 

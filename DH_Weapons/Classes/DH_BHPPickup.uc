@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BHPPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_BHPWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BHP'
+    InventoryType=Class'DH_BHPWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.BHP'
     CollisionRadius=15.0 // as is a pistol, which is small
 }

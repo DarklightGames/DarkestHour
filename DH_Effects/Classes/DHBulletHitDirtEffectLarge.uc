@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitDirtEffectLarge extends emitter;
+class DHBulletHitDirtEffectLarge extends Emitter;
 
 defaultproperties
 {
@@ -22,7 +22,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -49,7 +49,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=30.000000),Y=(Min=10.000000,Max=30.000000),Z=(Min=85.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
     End Object
@@ -82,7 +82,7 @@ defaultproperties
         StartSizeRange=(X=(Min=20.000000,Max=35.000000))
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.750000,Max=1.500000)
         StartVelocityRange=(X=(Min=75.000000,Max=250.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -118,7 +118,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=55.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.510000,Max=1.000000)
         StartVelocityRange=(X=(Min=100.000000,Max=350.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -156,7 +156,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.250000)
         StartVelocityRange=(Y=(Min=-10.000000,Max=12.000000),Z=(Min=-10.000000,Max=12.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -194,7 +194,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=300.000000,Max=300.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunkssparse'
+        Texture=Texture'DH_FX_Tex.genericchunkssparse'
         LifetimeRange=(Min=0.350000,Max=0.750000)
         StartVelocityRange=(X=(Min=250.000000,Max=350.000000),Y=(Min=-100.000000,Max=75.000000),Z=(Min=-80.000000,Max=125.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -232,7 +232,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=300.000000,Max=300.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunkssparse'
+        Texture=Texture'DH_FX_Tex.genericchunkssparse'
         LifetimeRange=(Min=0.250000,Max=0.455000)
         StartVelocityRange=(X=(Min=250.000000,Max=350.000000),Y=(Min=-100.000000,Max=115.000000),Z=(Min=-120.000000,Max=125.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -270,7 +270,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=300.000000,Max=300.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunkssparse'
+        Texture=Texture'DH_FX_Tex.genericchunkssparse'
         LifetimeRange=(Min=0.350000,Max=0.950000)
         StartVelocityRange=(X=(Min=250.000000,Max=350.000000),Y=(Min=-100.000000,Max=75.000000),Z=(Min=-80.000000,Max=125.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -309,12 +309,12 @@ defaultproperties
         StartSizeRange=(X=(Min=25.000000,Max=35.000000))
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        Texture=Texture'Effects_Tex.LSmoke1'
         LifetimeRange=(Min=1.000000,Max=1.500000)
         StartVelocityRange=(X=(Min=25.000000,Max=75.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-20.0,Max=20.000000))
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter33'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

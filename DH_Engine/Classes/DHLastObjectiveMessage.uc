@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHLastObjectiveMessage extends ROCriticalMessage
@@ -41,5 +41,5 @@ defaultproperties
     AlliesAboutToWinMessage="Last objective -- the Allies have almost won the battle!"
     iconID=12
     altIconID=13
-    iconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    iconTexture=Texture'DH_GUI_Tex.criticalmessages_icons'
 }

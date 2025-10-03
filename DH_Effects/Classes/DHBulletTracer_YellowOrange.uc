@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBulletTracer_YellowOrange extends Emitter;
@@ -32,7 +32,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.75)
         StartSizeRange=(X=(Min=3.0,Max=4.0))
         InitialParticlesPerSecond=2000.0
-        Texture=Texture'DH_FX_Tex.effects.dhtrailblur'
+        Texture=Texture'DH_FX_Tex.dhtrailblur'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=1.2,Max=2.0)
     End Object

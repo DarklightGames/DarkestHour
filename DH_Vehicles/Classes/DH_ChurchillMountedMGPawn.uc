@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ChurchillMountedMGPawn extends DHVehicleMGPawn; // TODO: make this extra functionality generic in DHVehicleMGPawn and/or DHVehicleWeaponPawn
 
 var     int         PeriscopePositionIndex;
-var     texture     PeriscopeOverlay;
+var     Texture     PeriscopeOverlay;
 
 // Can't fire if on binoculars or if moving between positions
 function bool CanFire()
@@ -15,9 +15,9 @@ function bool CanFire()
 }
 
 // Modified to only use the position 0 for the gunsight, as player can fire the gun in other 'look around' positions (also some redundancy removed)
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -194,7 +194,7 @@ simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ChurchillMountedMG'
+    GunClass=Class'DH_ChurchillMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=44.74,ViewLocation=(X=10.0,Y=-7.0,Z=0.0),TransitionUpAnim="MG_periscope_in",ViewPitchDownLimit=65535,bDrawOverlays=true)
@@ -208,7 +208,7 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
     CameraBone="camera_MG"
     GunsightCameraBone="MG_pivot"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.BesaMG_sight'
     GunsightSize=0.469 // 21 degrees visible FOV at 1.9x magnification (No.50 x1.9 Mk IS sight)
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_Allied'
 }

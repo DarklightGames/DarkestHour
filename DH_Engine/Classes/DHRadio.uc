@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -34,6 +34,7 @@ enum ERadioUsageError
     ERROR_NoTarget,
     ERROR_Busy,
     ERROR_TooFarAway,
+    ERROR_Calibrating,
     ERROR_Fatal
 };
 
@@ -91,23 +92,28 @@ state Busy
 simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 {
     local DHPawn P;
-    local DHRoleInfo RI;
     local DHPlayerReplicationInfo PRI;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
+    local VehicleWeaponPawn VWP;
 
     P = DHPawn(User);
+    VWP = VehicleWeaponPawn(User);
+
+    if (P == none && VWP != none)
+    {
+        P = DHPawn(VWP.Driver);
+    }
 
     if (P == none || P.Health <= 0 || Carrier == P)
     {
         return ERROR_Fatal;
     }
 
-    RI = P.GetRoleInfo();
-    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-    PC = DHPlayer(P.Controller);
+    PRI = DHPlayerReplicationInfo(User.PlayerReplicationInfo);
+    PC = DHPlayer(User.Controller);
 
-    if (RI == none || PRI == none || PC == none)
+    if (PRI == none || PC == none)
     {
         return ERROR_Fatal;
     }
@@ -130,12 +136,17 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NoTarget;
     }
 
-    if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
+    if (bIsBusy)
     {
         return ERROR_Busy;
     }
 
-    if (VSize(P.Location - Location) > class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
+    if (GRI != none && GRI.bIsInSetupPhase)
+    {
+        return ERROR_Calibrating;
+    }
+
+    if (VSize(P.Location - Location) > Class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
     {
         return ERROR_TooFarAway;
     }
@@ -159,7 +170,7 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
         return;
     }
 
-    Request = new class'DHArtilleryRequest';
+    Request = new Class'DHArtilleryRequest';
     Request.TeamIndex = PC.GetTeamNum();
     Request.Sender = PC;
     Request.ArtilleryTypeIndex = ArtilleryTypeIndex;
@@ -198,7 +209,7 @@ state Requesting extends Busy
 
         super.BeginState();
 
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (LI == none)
         {
@@ -216,18 +227,18 @@ state Requesting extends Busy
         }
 
         // "Requesting {name}."
-        Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
+        Request.Sender.ReceiveLocalizedMessage(Class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
         RequestSound = GetRequestSound(Request.TeamIndex, LI);
 
         if (Request.Sender.Pawn != none)
         {
-            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
         }
 
-        // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
+        // Wait for the length of the response delay, then move to Responding state.
+        SetTimer(ResponseDelaySeconds, false);
     }
 
     function Timer()
@@ -244,11 +255,11 @@ state Responding extends Busy
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
         local DHGameReplicationInfo GRI;
-        local vector MapLocation;
+        local Vector MapLocation;
 
         super.BeginState();
 
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+        LI = Class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (LI == none)
         {
@@ -265,7 +276,7 @@ state Responding extends Busy
             GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
 
             // "Artillery strike confirmed."
-            Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
+            Request.Sender.ReceiveLocalizedMessage(Class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
             ResponseSound = GetConfirmSound(Request.TeamIndex, LI);
         }
         else
@@ -327,31 +338,36 @@ simulated function NotifySelected(Pawn User)
 
     Error = GetRadioUsageError(User);
 
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+    
     switch (Error)
     {
         case ERROR_None:
             // "Press [%USE%] to request artillery"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 0,,, User.Controller);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 0,,, User.Controller);
             break;
         case ERROR_NotQualified:
             // "You are not qualified to use this radio"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 1);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 1);
             break;
         case ERROR_NoTarget:
             // "No artillery target marked"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 2);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 2);
             break;
         case ERROR_NotOwned:
             // "You cannot use enemy radios"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 3);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 3);
             break;
         case ERROR_Busy:
             // "Radio is currently in use"
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 4);
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 4);
             break;
-        case ERROR_Fatal:
-            // For debugging purposes only!
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
+        case ERROR_Calibrating:
+            // "Radio is calibrating"
+            User.ReceiveLocalizedMessage(Class'DHRadioTouchMessage', 5);
             break;
         default:
             break;
@@ -362,7 +378,9 @@ simulated function NotifySelected(Pawn User)
 // and results in nonsense like this needing to be coded up.
 function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
 {
-    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass;
+    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass.static.GetVoicePackClass(
+        LI.GetTeamNationClass(int(!bool(TeamIndex)))
+        );
 }
 
 function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)
@@ -400,13 +418,13 @@ defaultproperties
     TeamIndex=2 // NEUTRAL_TEAM_INDEX
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
-    ResponseDelaySeconds=2.0
-    AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
+    ResponseDelaySeconds=15.0   // TODO: also make italian request sounds shorter
+    AmbientSound=Sound'DH_SundrySounds.RadioStatic'
 
     ResponseSoundRadius=100.0
     ResponseSoundVolume=3.0
 
-    ArtilleryMessageClass=class'DHArtilleryMessage'
+    ArtilleryMessageClass=Class'DHArtilleryMessage'
 
     UsageDistanceMaximumMeters=2.0
 

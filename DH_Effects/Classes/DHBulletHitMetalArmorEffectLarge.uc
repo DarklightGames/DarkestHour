@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBulletHitMetalArmorEffectLarge extends Emitter;
 
-var texture SparkGroup[4];
-var texture ShrapGroup[4];
+var Texture SparkGroup[4];
+var Texture ShrapGroup[4];
 
 //particles: 34
 
@@ -14,20 +14,20 @@ simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
     Emitters[6].Texture = ShrapGroup[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties
 {
-    SparkGroup(0)=Texture'DH_FX_Tex.Sparks.sparks01'
-    SparkGroup(1)=Texture'DH_FX_Tex.Sparks.sparks02'
-    SparkGroup(2)=Texture'DH_FX_Tex.Sparks.sparks03'
-    SparkGroup(3)=Texture'DH_FX_Tex.Sparks.sparks04'
+    SparkGroup(0)=Texture'DH_FX_Tex.sparks01'
+    SparkGroup(1)=Texture'DH_FX_Tex.sparks02'
+    SparkGroup(2)=Texture'DH_FX_Tex.sparks03'
+    SparkGroup(3)=Texture'DH_FX_Tex.sparks04'
 
-    ShrapGroup(0)=Texture'DH_FX_Tex.debris.shrapnel2'
-    ShrapGroup(1)=Texture'DH_FX_Tex.debris.shrapnel3'
-    ShrapGroup(2)=Texture'DH_FX_Tex.debris.shrapnel4'
-    ShrapGroup(3)=Texture'DH_FX_Tex.debris.shrapnel6'
+    ShrapGroup(0)=Texture'DH_FX_Tex.shrapnel2'
+    ShrapGroup(1)=Texture'DH_FX_Tex.shrapnel3'
+    ShrapGroup(2)=Texture'DH_FX_Tex.shrapnel4'
+    ShrapGroup(3)=Texture'DH_FX_Tex.shrapnel6'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         RespawnDeadParticles=False
@@ -44,7 +44,7 @@ defaultproperties
         StartSizeRange=(X=(Min=12.000000,Max=16.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -80,9 +80,9 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=25.000000))
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
-        TextureVSubdivisions=2//Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        TextureVSubdivisions=2//Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=2.000000,Max=3.000000)
         StartVelocityRange=(X=(Min=150.000000,Max=350.000000),Y=(Min=-35.000000,Max=45.000000),Z=(Min=-45.000000,Max=35.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -113,7 +113,7 @@ defaultproperties
         StartSizeRange=(X=(Min=55.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=-100.000000,Max=-250.000000),Y=(Min=-20.000000,Max=35.000000),Z=(Min=-35.000000,Max=200.000000))
     End Object
@@ -144,7 +144,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=50.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_Transluscent
-        Texture=Texture'DH_FX_Tex.blood.blood_spatter1alt'
+        Texture=Texture'DH_FX_Tex.blood_spatter1alt'
         InitialDelayRange=(Min=0.05000,Max=0.100000)
         LifetimeRange=(Min=0.25,Max=0.350000)
         StartVelocityRange=(X=(Min=5.000000,Max=10.000000))
@@ -189,7 +189,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=1.000000,Max=3.000000),Y=(Min=1.000000,Max=3.000000),Z=(Min=1.000000,Max=3.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.sparkfinal2'
         LifetimeRange=(Min=0.150000,Max=0.250000)
         StartVelocityRange=(X=(Min=150.000000,Max=300.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
@@ -225,6 +225,6 @@ defaultproperties
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter18'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

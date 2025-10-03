@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdpantherCannonShellHE extends DHCannonShellHE;
@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=550
     Damage=475.0
     DamageRadius=1550.0
-    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
+    MyDamageType=Class'DHShellHE88mmDamageType'
     PenetrationMag=1020.0
     HullFireChance=0.4
     EngineFireChance=0.55
