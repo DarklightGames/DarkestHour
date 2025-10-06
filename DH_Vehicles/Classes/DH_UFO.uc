@@ -1,11 +1,11 @@
 //-----------------------------------------------------------
 // Props to Moz
 //-----------------------------------------------------------
-class DH_BA109Car extends ROChopperCraft;
+class DH_UFO extends ROChopperCraft;
 
 #exec OBJ LOAD FILE=..\Animations\allies_ba64_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\Vehicle_Optic.utx
-#exec OBJ LOAD FILE=..\textures\DH_BA64Custom.utx
+#exec OBJ LOAD FILE=..\textures\DH_UFO_tex.utx
 
 // wheel params
 var()	float			WheelSoftness;
@@ -256,7 +256,7 @@ defaultproperties
      IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
-     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.BA64.BA64_Destoyed'
+     DestroyedVehicleMesh=none
      DestructionEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
      DisintegrationEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
      DisintegrationHealth=-10000.000000
@@ -286,7 +286,7 @@ defaultproperties
          SupportBoneName="Axle_RF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BA109Car.LFWheel1'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_UFO.LFWheel1'
 
      Begin Object Class=SVehicleWheel Name=RFWheel1
          SteerType=VST_Steered
@@ -297,7 +297,7 @@ defaultproperties
          SupportBoneName="Axle_LF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BA109Car.RFWheel1'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_UFO.RFWheel1'
 
      Begin Object Class=SVehicleWheel Name=LRWheel1
          bPoweredWheel=True
@@ -309,7 +309,7 @@ defaultproperties
          SupportBoneName="Axle_LR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BA109Car.LRWheel1'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_UFO.LRWheel1'
 
      Begin Object Class=SVehicleWheel Name=RRWheel1
          bPoweredWheel=True
@@ -321,7 +321,7 @@ defaultproperties
          SupportBoneName="Axle_RR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BA109Car.RRWheel1'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_UFO.RRWheel1'
 
      VehicleMass=4.000000
      bTeamLocked=False
@@ -336,20 +336,20 @@ defaultproperties
      TPCamDistance=350.000000
      TPCamLookat=(X=0.000000,Z=0.000000)
      TPCamWorldOffset=(Z=100.000000)
-     VehiclePositionString="in the BA-109"
-     VehicleNameString="BA-109"
+     VehiclePositionString="in UFO"
+     VehicleNameString="Undefined Fantastic Object"
      MaxDesireability=0.600000
      ObjectiveGetOutDist=1500.000000
-     HUDOverlayClass=Class'ROVehicles.BA64DriverOverlay'
+     HUDOverlayClass=Class'ROVehicles.BA64DriverOverlay'  //Change later
      HUDOverlayOffset=(X=2.000000)
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
      GroundSpeed=100000.000000
      HealthMax=500.000000
      Health=500
-     Mesh=SkeletalMesh'allies_ba64_anm.BA64_body_ext'
-     Skins(0)=Texture'DH_BA64Custom.ext_vehicles.BA109'
-     Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
+     Mesh=SkeletalMesh'DH_UFO_anm.UFO_body_ext'
+     Skins(0)=Texture'UFO_tex.UFO.ufo_d_A00'
+     //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
      SoundRadius=600.000000
      CollisionRadius=175.000000
      CollisionHeight=40.000000
@@ -373,9 +373,9 @@ defaultproperties
          KFriction=1.500000
          KImpactThreshold=300.000000
      End Object
-     KParams=KarmaParamsRBFull'DH_Vehicles.DH_BA109Car.KParams1100'
+     KParams=KarmaParamsRBFull'DH_Vehicles.DH_UFO.KParams1100'
 
-     HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.BA64_int_s'
-     bUseHighDetailOverlayIndex=True
-     HighDetailOverlayIndex=1
+     //HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.BA64_int_s'
+     bUseHighDetailOverlayIndex=False
+     //HighDetailOverlayIndex=1
 }
