@@ -177,8 +177,8 @@ simulated function Tick(float DeltaTime)
 
     if(Level.NetMode != NM_DedicatedServer)
 	{
-        EnginePitch = 48.0 + VSize(Velocity)/MaxPitchSpeed *16.0;
-        SoundPitch = FClamp(EnginePitch, 96, 128);
+        EnginePitch = 48.0 + VSize(Velocity)/MaxPitchSpeed *32.0;
+        SoundPitch = FClamp(EnginePitch, 48, 96);
     }
 
 

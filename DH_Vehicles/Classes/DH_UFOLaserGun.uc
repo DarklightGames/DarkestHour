@@ -30,9 +30,9 @@ defaultproperties
     ProjectileClass=Class'DH_UFOLaserBulletYellow'
     InitialPrimaryAmmo=5000
     NumMGMags=15
-    FireInterval=0.05
+    FireInterval=0.03
     TracerProjectileClass=Class'DH_UFOLaserBulletRed' //this one is anti-armor
-    TracerFrequency=3
+    TracerFrequency=4
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel"
