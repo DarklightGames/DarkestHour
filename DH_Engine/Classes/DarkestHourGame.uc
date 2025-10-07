@@ -5734,12 +5734,13 @@ function bool HandleDeath(ROPlayer Player)
 // Event for when on-map artillery is fired. Used to feed to the counter-battery managers.
 simulated function OnArtilleryFired(int TeamIndex, class<DHVehicleWeapon> VehicleWeaponClass, Vector FireLocation)
 {
-    if (TeamIndex < 0 || TeamIndex > arraycount(CounterBatteryManagers) || CounterBatteryManagers[TeamIndex] == none)
+    if (TeamIndex < 0 || TeamIndex >= arraycount(CounterBatteryManagers) || CounterBatteryManagers[TeamIndex] == none)
     {
         return;
     }
 
-    CounterBatteryManagers[TeamIndex].OnArtilleryFired(VehicleWeaponClass, FireLocation);
+    // Send the OnArtilleryFired call to the enemy team's counter-battery manager.
+    CounterBatteryManagers[int(!bool(TeamIndex))].OnArtilleryFired(VehicleWeaponClass, FireLocation);
 }
 
 defaultproperties

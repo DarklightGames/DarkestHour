@@ -7,9 +7,9 @@ class DHCounterBatteryManager extends Actor
     dependson(DHVehicleWeapon)
     notplaceable;
 
-const SMALL_DEVIATION = 100;
-const MEDIUM_DEVIATION = 75;
-const LARGE_DEVIATION = 50;
+const SMALL_GUN_DEVIATION = 100;
+const MEDIUM_GUN_DEVIATION = 75;
+const LARGE_GUN_DEVIATION = 50;
 
 // The index of the team who will be notified of the artillery reports with markers.
 var int TeamIndex;
@@ -26,17 +26,17 @@ static function float GetDeviationMax(Class<DHVehicleWeapon> VehicleClass)
 {
     if (VehicleClass == none)
     {
-        return MEDIUM_DEVIATION;    // Fallback value, mainly for debugging.
+        return MEDIUM_GUN_DEVIATION;    // Fallback value, mainly for debugging.
     }
 
     switch (VehicleClass.default.CounterBatteryReport)
     {
         case CBR_Small:
-            return SMALL_DEVIATION;
+            return SMALL_GUN_DEVIATION;
         case CBR_Medium:
-            return MEDIUM_DEVIATION;
+            return MEDIUM_GUN_DEVIATION;
         case CBR_Large:
-            return LARGE_DEVIATION;
+            return LARGE_GUN_DEVIATION;
         default:
             return 0.0;
     }
@@ -65,18 +65,19 @@ function OnArtilleryFired(Class<DHVehicleWeapon> VehicleWeaponClass, Vector Worl
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        // TODO:
+        PC = DHPlayer(C);
+
+        if (PC == none)
+        {
+            continue;
+        }
+
         if (Level.NetMode != NM_Standalone && PC.GetTeamNum() != TeamIndex)
         {
             continue;
         }
 
-        PC = DHPlayer(C);
-
-        if (PC != none)
-        {
-            PC.ClientAddPersonalMapMarker(class'DHMapMarker_CounterBattery', MarkerLocation);
-        }
+        PC.ClientAddPersonalMapMarker(Class'DHMapMarker_CounterBattery', MarkerLocation);
     }
 }
 
