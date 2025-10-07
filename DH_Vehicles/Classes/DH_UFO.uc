@@ -177,7 +177,7 @@ simulated function Tick(float DeltaTime)
 
     if(Level.NetMode != NM_DedicatedServer)
 	{
-        EnginePitch = 96.0 + VSize(Velocity)/MaxPitchSpeed * 32.0;
+        EnginePitch = 48.0 + VSize(Velocity)/MaxPitchSpeed *16.0;
         SoundPitch = FClamp(EnginePitch, 96, 128);
     }
 
@@ -214,7 +214,7 @@ simulated event SVehicleUpdateParams()
 defaultproperties
 {
 
-     //DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_BA109Gun',WeaponBone="Turret_placement") YOU WILL NEED TO REPLACE THIS WITH YOUR OWN WEAPON
+     DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_UFOLaserGun',WeaponBone="Turret_placement2")
 
      WheelPenScale=1.200000
      WheelPenOffset=0.010000
@@ -253,18 +253,18 @@ defaultproperties
      StopThreshold=100.000000
      MaxRandForce=0.100000
      RandForceInterval=0.750000
-     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-     StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
-     ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
+     IdleSound=Sound'DH_UFO_snd.UFO.se_ufoalert'
+     StartUpSound=Sound'DH_UFO_snd.UFO.se_ufo'
+     ShutDownSound=Sound'DH_UFO_snd.UFO.se_piyo'
      DestroyedVehicleMesh=none
      DestructionEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
      DisintegrationEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
-     DisintegrationHealth=-10000.000000
+     DisintegrationHealth=-1.000000
      DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
      DestructionAngularMomentum=(Max=150.000000)
-     DamagedEffectScale=0.750000
+     DamagedEffectScale=1.750000
      DamagedEffectOffset=(X=60.000000,Y=10.000000,Z=10.000000)
-     TimeTilDissapear=30.000000
+     TimeTilDissapear=1.000000
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'allies_ba64_anm.BA64_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=65535,ViewPitchDownLimit=65535,bDrawOverlays=True)
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.BA64_body'
@@ -345,8 +345,8 @@ defaultproperties
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
      GroundSpeed=100000.000000
-     HealthMax=500.000000
-     Health=500
+     HealthMax=20000.000000
+     Health=20000
      Mesh=SkeletalMesh'DH_UFO_anm.UFO_body_ext'
      Skins(0)=Texture'UFO_tex.UFO.ufo_d_A00'
      //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
