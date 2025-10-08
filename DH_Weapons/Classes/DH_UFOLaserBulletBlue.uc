@@ -3,12 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_UFOLaserBulletRed extends DH_GeratPIIBullet;
+class DH_UFOLaserBulletBlue extends DH_GeratPIIBullet;
 
 defaultproperties
 {
-    Speed=8000.0  //very slow
-    TracerEffectClass=Class'DHBulletTracerUFO_Red'
+    Speed=9000.0  //very slow
+    TracerEffectClass=Class'DHBulletTracerUFO_Blue'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     SpeedFudgeScale=1.0

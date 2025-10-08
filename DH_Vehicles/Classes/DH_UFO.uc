@@ -351,6 +351,11 @@ defaultproperties
      Skins(0)=Texture'UFO_tex.UFO.ufo_d_A00'
      //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
      SoundRadius=600.000000
+     ExplosionSounds(0)=sound'DH_UFO_snd.UFO.UfoDeath'
+     ExplosionSounds(1)=sound'DH_UFO_snd.UFO.UfoDeath'
+
+
+
      CollisionRadius=175.000000
      CollisionHeight=40.000000
      Begin Object Class=KarmaParamsRBFull Name=KParams1100
