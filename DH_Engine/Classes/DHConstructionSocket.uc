@@ -7,9 +7,6 @@
 // construction may add one of these on either side of the "pit" so that
 // a stationary machine-gun can be placed on it, overriding the usual rules
 // that would disallow placement for other reasons.
-//
-// These are not replicated and are expected to be created on the server
-// and client independently.
 //==============================================================================
 
 class DHConstructionSocket extends DHActorProxySocket

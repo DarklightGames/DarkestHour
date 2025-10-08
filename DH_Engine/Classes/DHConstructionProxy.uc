@@ -11,6 +11,7 @@ var class<DHConstruction>   ConstructionClass;
 var Rotator                 Direction;
 var Actor                   GroundActor;
 var Vector                  GroundNormal;
+var DHConstructionSocket    Socket;
 
 var int                     VariantIndex;       // The current selected variant index.
 var int                     DefaultSkinIndex;   // The default skin index for the current variant.
@@ -18,6 +19,10 @@ var int                     SkinIndex;          // The current selected skin ind
 
 var DHConstruction.ConstructionError    ProxyError;
 var private DHConstruction.RuntimeData  RuntimeData;
+
+// Functions to call when the proxy is snapped or unsnapped from a socket.
+delegate OnSocketEnter(DHConstructionSocket Socket);
+delegate OnSocketExit(DHConstructionSocket Socket);
 
 function DHConstruction.RuntimeData GetRuntimeData()
 {
@@ -193,7 +198,6 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
     local bool bIsTerrainSurfaceTypeAllowed;
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
-    local DHConstructionSocket Socket;
 
     GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
 
@@ -218,7 +222,6 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         // The ground actor is a location hint, so just use the hint location & rotation.
         BaseLocation = GroundActor.Location;
         Forward = Vector(GroundActor.Rotation);
-        Socket = DHConstructionSocket(GroundActor);
     }
     else
     {
@@ -407,6 +410,25 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         Forward = Normal(Vector(Direction));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
+    }
+
+    // Handle socket entering and exiting.
+    if (Socket != GroundActor)
+    {
+        if (Socket != none)
+        {
+            OnSocketExit(Socket);
+        }
+
+        if (GroundActor.IsA('DHConstructionSocket'))
+        {
+            Socket = DHConstructionSocket(GroundActor);
+            OnSocketEnter(Socket);
+        }
+        else
+        {
+            Socket = none;
+        }
     }
 
     SetLocation(BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << Rotator(Forward)));
