@@ -37,4 +37,6 @@ defaultproperties
     Constructions(18)=(ConstructionClass=Class'DH_Flak88GunConstruction',Limit=2,MaxActive=-1)
     Constructions(19)=(ConstructionClass=Class'DH_Leig18GunConstruction',Limit=2,MaxActive=-1)
     Constructions(20)=(ConstructionClass=Class'DH_Granatwerfer34MortarConstruction',Limit=3,MaxActive=-1)
+
+    Constructions(21)=(ConstructionClass=Class'DHConstruction_MortarPit',Limit=-1,MaxActive=-1)
 }

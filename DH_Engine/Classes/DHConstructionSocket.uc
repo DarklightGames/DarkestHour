@@ -12,66 +12,85 @@
 // and client independently.
 //==============================================================================
 
-class DHConstructionSocket extends Actor;
+class DHConstructionSocket extends DHActorProxySocket
+    dependson(DHConstructionTypes);
 
-var() array<class<DHConstruction> > IncludeClasses;
-var() array<class<DHConstruction> > ExcludeClasses;
-var() bool bLimitLocalRotation;         // When true, the local rotation of the construction is limited to the specified yaw range.
-var() Range LocalRotationYawRange;      // Limits the local rotation of the construction attached to this hint.
+var() array<DHConstructionTypes.SClassFilter> ClassFilters;
+var() array<DHConstructionTypes.STagFilter> TagFilters;
+var() int CollisionRadiusMax;
 
-var DHConstruction Occupant;            // The current construction that is occupying this socket.
+simulated function PostBeginPlay()
+{   
+    super.PostBeginPlay();
 
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        Occupant;
+    Hide();
 }
 
-function Destroyed()
+simulated function Show()
 {
-    super.Destroyed();
-
-    if (Occupant != None)
-    {
-        Occupant.Destroy();
-    }
+    bHidden = false;
+    bBlockZeroExtentTraces = true;
 }
 
-simulated function bool IsOccupied()
+simulated function Hide()
 {
-    return Occupant != None;
+    bHidden = true;
+    bBlockZeroExtentTraces = false;
 }
 
-simulated function bool IsForConstructionClass(class<DHConstruction> ConstructionClass)
+simulated function bool IsForConstructionClass(DHActorProxy.Context Context, Class<DHConstruction> ConstructionClass)
 {
     local int i;
     local bool bIncluded;
+    local float MyCollisionRadius, MyCollisionHeight;
 
-    for (i = 0; i < IncludeClasses.Length; ++i)
-    {
-        if (ConstructionClass == IncludeClasses[i] ||
-            ClassIsChildOf(ConstructionClass, IncludeClasses[i]))
-        {
-            bIncluded = true;
-            break;
-        }
-    }
-
-    if (!bIncluded)
+    if (ConstructionClass == none)
     {
         return false;
     }
 
-    for (i = 0; i < ExcludeClasses.Length; ++i)
+    if (CollisionRadiusMax > 0.0)
     {
-        if (ConstructionClass == ExcludeClasses[i] ||
-            ClassIsChildOf(ConstructionClass, ExcludeClasses[i]))
+        ConstructionClass.static.GetCollisionSize(Context, MyCollisionRadius, MyCollisionHeight);
+
+        if (MyCollisionRadius > CollisionRadiusMax)
         {
             return false;
         }
     }
 
-    return true;
+    for (i = 0; i < ClassFilters.Length; ++i)
+    {
+        if (ConstructionClass == ClassFilters[i].Class ||
+            ClassIsChildOf(ConstructionClass, ClassFilters[i].Class))
+        {
+            switch (ClassFilters[i].Operation)
+            {
+                case Include:
+                    bIncluded = true;
+                    break;
+                case Exclude:
+                    return false;
+            }
+        }
+    }
+
+    for (i = 0; i < TagFilters.Length; ++i)
+    {
+        if (ConstructionClass.static.HasConstructionTag(TagFilters[i].Tag))
+        {
+            switch (TagFilters[i].Operation)
+            {
+                case Include:
+                    bIncluded = true;
+                    break;
+                case Exclude:
+                    return false;
+            }
+        }
+    }
+
+    return bIncluded;
 }
 
 defaultproperties
@@ -91,4 +110,8 @@ defaultproperties
     bBlockProjectiles=false
     bBlockActors=false
     bBlockKarma=false
+
+    bHidden=false
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_Misc.CONSTRUCTION_SOCKET'
 }

@@ -16,6 +16,75 @@ replication
         ServerCreateConstruction;
 }
 
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+}
+
+// TODO: add a nice sound effect when the construction slots into a socket!
+// TODO: have the color change to green when the slot is being occupied.
+// BUG: when the construction dies, the socket remains, but anything that was put in it
+// is destroyed as soon as the construction is. To fix this we have to tear off the ownership
+// of socket occupants.
+
+simulated function ShowAllSockets()
+{
+    local DHConstructionSocket Socket;
+
+    // Show relevant construction sockets.
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        if (Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
+        {
+            Socket.Show();
+        }
+    }
+}
+
+simulated function HideAllSockets()
+{
+    local DHConstructionSocket Socket;
+
+    // TODO: HIDE all construction sockets.
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        Socket.Hide();
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // TODO: we need to show all *relevant* sockets.
+    //   also have to handle the case where sockets are created after the weapon is brought up.
+    //   the dumb thing to do would be to check this in TICK but that's not great.
+    //   dynamicactor 
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        ShowAllSockets();
+    }
+}
+
+simulated function bool PutDown()
+{
+    // TODO: we need to show all *relevant* sockets.
+    //   also have to handle the case where sockets are created after the weapon is brought up.
+    //   the dumb thing to do would be to check this in TICK but that's not great.
+    //   dynamicactor 
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+
+    return super.PutDown();
+}
+
 simulated function ClientPlayClickSound()
 {
     local PlayerController PC;
@@ -184,7 +253,7 @@ simulated function TraceFromPlayer(
     TraceStart = Instigator.Location + Instigator.EyePosition();
     TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
 
-    // Trace for location hints.
+    // Trace for construction sockets.
     foreach TraceActors(Class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
     {
         if (Socket == none)
@@ -194,7 +263,7 @@ simulated function TraceFromPlayer(
 
         // This is assumed to be in ascending order of distance, so this should
         // return the nearest traced location hint.
-        if (Socket.IsForConstructionClass(ConstructionClass))
+        if (Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
         {
             HitActor = Socket;
             HitLocation = HitActor.Location;
