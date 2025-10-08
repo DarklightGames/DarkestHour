@@ -67,12 +67,7 @@ function OnArtilleryFired(Class<DHVehicleWeapon> VehicleWeaponClass, Vector Worl
     {
         PC = DHPlayer(C);
 
-        if (PC == none)
-        {
-            continue;
-        }
-
-        if (Level.NetMode != NM_Standalone && PC.GetTeamNum() != TeamIndex)
+        if (PC == none || PC.GetTeamNum() != TeamIndex)
         {
             continue;
         }
