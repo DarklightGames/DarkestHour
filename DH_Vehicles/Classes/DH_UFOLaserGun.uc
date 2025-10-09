@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_UFOLaserGun extends DHVehicleMG;
+class DH_UFOLaserGun extends DHVehicleAutoCannon; 
 
 defaultproperties
 {
-    // MG mesh
+    // mesh
     Mesh=SkeletalMesh'DH_UFO_anm.UFO_turret_ext'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
 
@@ -27,28 +27,50 @@ defaultproperties
     CustomPitchDownLimit=35000
 
     // Ammo
-    ProjectileClass=Class'DH_UFOLaserBulletYellow'
+    bMultipleRoundTypes=False
+    PrimaryProjectileClass=Class'DH_UFOLaserBulletYellow'
+
     InitialPrimaryAmmo=5000
-    NumMGMags=15
-    FireInterval=0.03
-    TracerProjectileClass=Class'DH_UFOLaserBulletRed' //this one is anti-armor
-    TracerFrequency=4
+    NumPrimaryMags=200
+
+    Spread=0.3 //very wide
+    FireInterval=0.1
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel"
-    AmbientEffectEmitterClass=Class'VehicleMGEmitter'
-    FireSoundClass=Sound'DH_UFO_snd.UFO.UfoLaser'
-    FireEndSound=none
+    AltFireAttachmentBone="Barrel"
+    AmbientEffectEmitterClass=none
+    CannonFireSound(0)=Sound'DH_UFO_snd.UFO.se_tan00'
+    CannonFireSound(1)=Sound'DH_UFO_snd.UFO.se_tan01'
+    CannonFireSound(2)=Sound'DH_UFO_snd.UFO.se_tan02'
+
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
 
+    AltFireSoundClass=Sound'DH_UFO_snd.UFO.UfoFireAlt'
+    AltFireEndSound=Sound'DH_UFO_snd.UFO.UfoFireAlt_End'
 
-    // Reload
-    HUDOverlayReloadAnim="Bipod_Reload_s"
-    ReloadStages(0)=(Sound=none,Duration=1.57) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.56)
-    ReloadStages(2)=(Sound=none,Duration=1.92)
-    ReloadStages(3)=(Sound=none,Duration=1.63)
+    // Coaxial MG ammo
+    AltFireProjectileClass=Class'DH_UFOLaserBulletBlue'
+    InitialAltAmmo=43000
+    NumMGMags=150
+    AltFireInterval=0.03
+    TracerProjectileClass=Class'DH_UFOLaserBulletRed'
+    TracerFrequency=4
+
+    AltFireSoundScaling=0.7
+
+    // Reload (i cant get it to work)
+    //HUDOverlayReloadAnim="Bipod_Reload_s"
+    ReloadStages(0)=(Sound=Sound'DH_UFO_snd.UFO.UfoCharge',Duration=1.97) // 
+    ReloadStages(1)=(Sound=none,Duration=0.06)
+    ReloadStages(2)=(Sound=none,Duration=0.02)
+    ReloadStages(3)=(Sound=none,Duration=0.03)
+
+    AltReloadStages(0)=(Sound=Sound'DH_UFO_snd.UFO.UfoChargeTwo',Duration=1.97) // 
+    AltReloadStages(1)=(Sound=none,Duration=0.06)
+    AltReloadStages(2)=(Sound=none,Duration=0.02)
+    AltReloadStages(3)=(Sound=none,Duration=0.03)
 }
