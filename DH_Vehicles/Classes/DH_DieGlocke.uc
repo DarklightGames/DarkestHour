@@ -267,7 +267,7 @@ defaultproperties
      TimeTilDissapear=1.000000
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'allies_ba64_anm.BA64_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=65535,ViewPitchDownLimit=65535,bDrawOverlays=True)
-     VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.BA64_body'
+     VehicleHudImage=none
      VehicleHudOccupantsX(0)=0.500000
      VehicleHudOccupantsX(2)=0.000000
      VehicleHudOccupantsY(0)=0.500000
@@ -324,7 +324,8 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_DieGlocke.RRWheel1'
 
      VehicleMass=4.000000
-     bTeamLocked=False
+     bTeamLocked=false
+     //VehicleTeam=0
      bHasHandbrake=True
      DriveAnim="VBA64_driver_idle_close"
      ExitPositions(0)=(Y=-200.000000,Z=100.000000)
@@ -340,7 +341,7 @@ defaultproperties
      VehicleNameString="Die Glocke"
      MaxDesireability=0.600000
      ObjectiveGetOutDist=1500.000000
-     HUDOverlayClass=Class'ROVehicles.BA64DriverOverlay'  //Change later
+     HUDOverlayClass=none //Change later
      HUDOverlayOffset=(X=2.000000)
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True

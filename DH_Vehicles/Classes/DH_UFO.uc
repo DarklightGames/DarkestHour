@@ -216,6 +216,16 @@ defaultproperties
 
      DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_UFOLaserGun',WeaponBone="Turret_placement2")
 
+     AmbientGlow=224
+     bUseDynamicLights=true
+     bUseLightingFromBase=true
+     //LightType=LT_SubtlePulse
+    // LightEffect=LE_TorchWaver
+     LightRadius=555
+     LightBrightness=200
+     LightPeriod=2
+     bLightingVisibility=True 
+     
      WheelPenScale=1.200000
      WheelPenOffset=0.010000
      WheelRestitution=0.100000
@@ -267,7 +277,7 @@ defaultproperties
      TimeTilDissapear=1.000000
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'allies_ba64_anm.BA64_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=65535,ViewPitchDownLimit=65535,bDrawOverlays=True)
-     VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.BA64_body'
+     VehicleHudImage=none
      VehicleHudOccupantsX(0)=0.500000
      VehicleHudOccupantsX(2)=0.000000
      VehicleHudOccupantsY(0)=0.500000
@@ -340,7 +350,7 @@ defaultproperties
      VehicleNameString="Undefined Fantastic Object"
      MaxDesireability=0.600000
      ObjectiveGetOutDist=1500.000000
-     HUDOverlayClass=Class'ROVehicles.BA64DriverOverlay'  //Change later
+     HUDOverlayClass=none
      HUDOverlayOffset=(X=2.000000)
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
