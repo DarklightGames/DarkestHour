@@ -19,8 +19,8 @@ defaultproperties
     CollisionRadius=32.0
     CollisionHeight=8.0
     // Reversed because the gunner uses index 1.
-    ExitPositions(0)=(X=-50.00,Y=35.0,Z=20)
-    ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
+    ExitPositions(0)=(X=-40.00,Y=35.0,Z=30)
+    ExitPositions(1)=(X=-40.00,Y=-35.0,Z=30)
 
     bUsesCodedDestroyedSkins=true
     DestroyedVehicleMesh=StaticMesh'DH_Model35Mortar_stc.GRW34_destroyed'
