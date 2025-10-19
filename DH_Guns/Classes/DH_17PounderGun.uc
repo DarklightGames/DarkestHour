@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_17PounderGun extends DHATGun;
@@ -9,22 +9,20 @@ defaultproperties
 {
     VehicleNameString="17 Pounder AT gun"
     VehicleTeam=1
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
-    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17pounder.17Pounder_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    Skins(0)=Texture'DH_Artillery_Tex.17Pounder'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17Pounder_dest'
+    VehicleHudImage=Texture'DH_Artillery_Tex.pak43_body'
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak43_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak43_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     VehicleMass=11.0
-    SupplyCost=1600
-    ConstructionPlacementOffset=(Z=12.0)
     bCanBeRotated=true
     PlayersNeededToRotate=2
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -44,5 +42,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_17PounderGun.KParams0'
+    KParams=KParams0
 }

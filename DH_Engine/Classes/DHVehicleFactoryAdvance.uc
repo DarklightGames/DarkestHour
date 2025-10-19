@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleFactoryAdvance extends DHVehicleFactory;
@@ -19,7 +19,7 @@ function Timer()
     local DHPawn    DHP;
     local int       NumPlayersInRadius;
 
-    foreach RadiusActors(class'DHPawn', DHP, ProximityRadius)
+    foreach RadiusActors(Class'DHPawn', DHP, ProximityRadius)
     {
         ++NumPlayersInRadius;
     }

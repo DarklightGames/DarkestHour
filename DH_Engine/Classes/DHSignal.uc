@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSignal extends Object
@@ -10,7 +10,7 @@ var localized string    SignalName;
 var Material            MenuIconMaterial;
 var Material            WorldIconMaterial;
 var float               DurationSeconds;
-var color               MyColor;
+var Color               MyColor;
 var bool                bIsUnique;
 var bool                bShouldShowLabel;
 var bool                bShouldShowDistance;
@@ -51,13 +51,13 @@ static function bool CanPlayerRecieve(DHPlayer Sender, DHPlayer Recipient)
 }
 
 // Called when this signal is sent.
-static function OnSent(DHPlayer PC, vector Location, optional Object OptionalObject);
+static function OnSent(DHPlayer PC, Vector Location, optional Object OptionalObject);
 
 defaultproperties
 {
     bShouldShowLabel=true
-    DurationSeconds=15.0
+    DurationSeconds=10.0
     WorldIconScale=1.0
-    SignalRadiusInMeters=50.0
+    SignalRadiusInMeters=25.0
     bSquadMembersOnly=false
 }

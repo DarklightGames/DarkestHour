@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZB30Attachment extends DHWeaponAttachment;
@@ -8,11 +8,11 @@ class DH_ZB30Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.ZB30'
-    MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.ZB30'
-    //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
+    MenuImage=Texture'DH_InterfaceArt_CC_tex.ZB30'
+    //MenuImage=Texture'CCInterfaceArt_tex.ZB30'
     
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=Class'MuzzleFlash3rdSTG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     MuzzleBoneName="tip"
     ShellEjectionBoneName="weapon_eject"
 
@@ -98,7 +98,7 @@ defaultproperties
     PA_ProneTurnLeftAnim="prone_turnL_zb30"
     PA_StandToProneAnim="StandtoProne_kar"
     PA_CrouchToProneAnim="CrouchtoProne_zb30"
-    PA_ProneToStandAnim="PronetoStand_kar98"
+    PA_ProneToStandAnim="PronetoStand_zb30"
     PA_ProneToCrouchAnim="PronetoCrouch_zb30"
     PA_CrouchTurnRightAnim="crouch_turnR_zb30"
     PA_CrouchTurnLeftAnim="crouch_turnL_zb30"

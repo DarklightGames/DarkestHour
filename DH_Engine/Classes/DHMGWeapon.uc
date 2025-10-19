@@ -1,78 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGWeapon extends DHProjectileWeapon
     abstract;
-
-var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
-var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
-var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
-
-// Modified to spawn the ammo belt
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SpawnAmmoBelt();
-    }
-}
-
-// Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
-// TODO: REMOVE THIS WHEN WE MERGE ITALY BRANCH
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        UpdateAmmoBelt();
-    }
-}
-
-// Handles making ammo belt bullets disappear
-simulated function UpdateAmmoBelt()
-{
-    local int i;
-
-    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
-    {
-        MGBeltArray[i].SetDrawType(DT_None);
-    }
-}
-
-// Spawn the first-person linked ammo belt
-simulated function SpawnAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltBones.Length; ++i)
-    {
-        MGBeltArray[i] = Spawn(BeltBulletClass, self);
-        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
-    }
-}
-
-// Make the ammo belt represent the ammo amount in the belt we are loading
-simulated function RenewAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltArray.Length; ++i)
-    {
-        if (i < NextMagAmmoCount)
-        {
-            MGBeltArray[i].SetDrawType(DT_StaticMesh);
-        }
-        else
-        {
-            MGBeltArray[i].SetDrawType(DT_None);
-        }
-    }
-}
 
 // Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
@@ -208,9 +140,9 @@ Begin:
 }
 
 // Modified to allow for different free aim conditions in this class (due to possibility of hip fire from ironsights key))
-function SetServerOrientation(rotator NewRotation)
+function SetServerOrientation(Rotator  NewRotation)
 {
-    local rotator WeaponRotation;
+    local Rotator WeaponRotation;
 
     if (bUsesFreeAim && bUsingSights && Instigator != none)
     {

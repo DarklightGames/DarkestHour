@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShellTrail_White extends Emitter;
@@ -32,7 +32,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.75)
         StartSizeRange=(X=(Min=6.0,Max=8.0))
         InitialParticlesPerSecond=2000.0
-        Texture=Texture'Effects_tex.Weapons.trailblur'
+        Texture=Texture'Effects_tex.trailblur'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=10.0,Max=10.0)
     End Object

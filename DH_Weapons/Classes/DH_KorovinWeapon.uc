@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_KorovinWeapon extends DHAutoWeapon;
@@ -9,10 +9,10 @@ defaultproperties
 {
     ItemName="Korovin 1941"
     SwayModifyFactor=0.57 // -0.13 because its a light SMG
-    FireModeClass(0)=class'DH_Weapons.DH_KorovinFire'
-    FireModeClass(1)=class'DH_Weapons.DH_KorovinMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_KorovinAttachment'
-    PickupClass=class'DH_Weapons.DH_KorovinPickup'
+    FireModeClass(0)=Class'DH_KorovinFire'
+    FireModeClass(1)=Class'DH_KorovinMeleeFire'
+    AttachmentClass=Class'DH_KorovinAttachment'
+    PickupClass=Class'DH_KorovinPickup'
 
     Mesh=SkeletalMesh'DH_Korovin_1st.korovin_mesh'
 

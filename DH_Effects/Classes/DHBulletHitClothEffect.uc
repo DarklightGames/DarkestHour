@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitClothEffect extends emitter;
+class DHBulletHitClothEffect extends Emitter;
 
 defaultproperties
 {
@@ -17,7 +17,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=3
-        name="base_puff"
+        Name="base_puff"
         StartLocationRange=(X=(Min=1.000000,Max=5.00000))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -25,7 +25,7 @@ defaultproperties
         StartSizeRange=(X=(Min=4.000000,Max=8.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.smoke.LightSmoke_8frame'
+        Texture=Texture'Effects_Tex.LightSmoke_8frame'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=0.150000,Max=0.250000)
@@ -49,7 +49,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         Opacity=0.5
         MaxParticles=3
-        name="dust_base"
+        Name="dust_base"
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.250000))
@@ -58,7 +58,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.000000,Max=35.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
+        Texture=Texture'Effects_Tex.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.0000,Max=1.250000)
@@ -81,7 +81,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=147,G=147,R=147,A=255))
         Opacity=0.75
         MaxParticles=2
-        name="fabric_smoke"
+        Name="fabric_smoke"
         UseRotationFrom=PTRS_Actor
         //SpinsPerSecondRange=(X=(Min=0.15000,Max=0.2500000))
         //StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -90,7 +90,7 @@ defaultproperties
         StartSizeRange=(X=(Min=25.00000,Max=45.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.dust.dustpuff01'
+        Texture=Texture'DH_FX_Tex.dustpuff01'
         LifetimeRange=(Min=0.20,Max=0.35)
         StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-35.000000,Max=45.000000),Z=(Min=-45.000000,Max=35.000000))
     End Object
@@ -109,7 +109,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=147,G=147,R=147,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=147,G=147,R=147,A=255))
         MaxParticles=10
-        name="fabric_chunks"
+        Name="fabric_chunks"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=35.000000)
         UseRotationFrom=PTRS_Actor
@@ -118,7 +118,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.0000,Max=2.500000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Subdivision_Particles.Feathers'
+        Texture=Texture'DH_FX_Tex.Feathers'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.000000,Max=3.000000)
@@ -140,7 +140,7 @@ defaultproperties
         FadeOutStartTime=0.15
         Opacity=0.3
         MaxParticles=1
-        name="main_impact"
+        Name="main_impact"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=20.000000))
         SizeScale(0)=(RelativeSize=0.100000)
@@ -148,7 +148,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.0000,RelativeSize=5.000)
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.35000,Max=0.50000)
         StartVelocityRange=(X=(Min=100.000000,Max=200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
     End Object
@@ -165,12 +165,12 @@ defaultproperties
         ColorScale(0)=(Color=(B=121,G=157,R=174,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=121,G=157,R=174,A=255))
         MaxParticles=4
-        name="bullet_hole"
+        Name="bullet_hole"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.paperchunks'
+        Texture=Texture'Effects_Tex.paperchunks'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=1.000000,Max=3.000000)
@@ -178,6 +178,6 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter14'
 
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

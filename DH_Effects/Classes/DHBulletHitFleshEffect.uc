@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitFleshEffect extends emitter;
+class DHBulletHitFleshEffect extends Emitter;
 
 defaultproperties
 {
@@ -16,13 +16,13 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=8.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)
@@ -42,7 +42,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=239,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=1
-        name="initial_spray"
+        Name="initial_spray"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -51,7 +51,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.150000,Max=0.250000)
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter98'
@@ -70,7 +70,7 @@ defaultproperties
         Opacity=0.75
         FadeOutStartTime=0.100000
         MaxParticles=2
-        name="2nd_spray"
+        Name="2nd_spray"
         UseRotationFrom=PTRS_Actor
         //StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -80,7 +80,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=30.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.blood.blood_spatter1'
+        Texture=Texture'DH_FX_Tex.blood_spatter1'
         InitialDelayRange=(Min=0.05000,Max=0.100000)
         LifetimeRange=(Min=0.250000,Max=0.350000)
         StartVelocityRange=(X=(Min=5.000000,Max=10.000000))
@@ -104,7 +104,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=8 // 25
-        name="bloody_chunks"
+        Name="bloody_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -113,7 +113,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.000000,Max=1.50000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.550000,Max=0.750000)
@@ -125,6 +125,6 @@ defaultproperties
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter26'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

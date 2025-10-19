@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kar98ScopedZF41MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_Kar98ScopedZF41BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_Kar98ScopedZF41BayonetDamType'
+    DamageType=Class'DH_Kar98ScopedZF41BashDamType'
+    BayonetDamageType=Class'DH_Kar98ScopedZF41BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

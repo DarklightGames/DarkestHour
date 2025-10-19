@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
@@ -9,22 +9,19 @@ defaultproperties
 {
     ItemName="Enfield No.4 Mk.I (T) (No.32)"
     SwayModifyFactor=0.65 // +0.05
-    FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
+    FireModeClass(0)=Class'DH_EnfieldNo4ScopedFire'
+    FireModeClass(1)=Class'DH_EnfieldNo4ScopedMeleeFire'
+    AttachmentClass=Class'DH_EnfieldNo4ScopedAttachment'
+    PickupClass=Class'DH_EnfieldNo4ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
-    HighDetailOverlay=Shader'DH_EnfieldNo4_tex.EnfieldNo4.No4MainSniper_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_Scoped_1st'
 
     bHasScope=true
     bIsSniper=true
     bPlusOneLoading=true
 
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
-    ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_BritScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_overlay'
 
     ScopeOverlaySize=0.54 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5
@@ -39,9 +36,6 @@ defaultproperties
 
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
-
-    HandNum=1
-    SleeveNum=0
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
@@ -58,7 +52,10 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
+    PreReloadCockedAnim="reload_start_cocked"
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
+
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="cocker",Animation="cocker")
 }

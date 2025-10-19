@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MN9130ScopedPEAttachment extends DHWeaponAttachment;
@@ -21,10 +21,10 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.MosinScopedPE_3rd' 
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.MosinScopedPE_icon'  
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.MosinScopedPE_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.MosinScopedPE_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
     

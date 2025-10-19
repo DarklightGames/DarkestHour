@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerDestroyer_CamoTwo extends DH_HetzerDestroyer;
 
 defaultproperties
 {
-     CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_camo2'
-     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_camo2'
+    CannonSkins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo2'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body_ext_camo2'
+    DestroyedMeshSkins(0)=Combiner'DH_Hetzer_tex.HETZER_BODY_EXT_CAMO2_DEST'
 }

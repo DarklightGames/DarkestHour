@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Base64 is a group of similar binary-to-text encoding schemes that represent
 // binary data in an ASCII string format by translating it into a radix-64
@@ -17,7 +17,7 @@ final static function CreateCodeIndices()
 {
     local int i;
 
-    default.CodeIndices = new class'TreeMap_string_int';
+    default.CodeIndices = new Class'TreeMap_string_int';
 
     for (i = 0; i < Len(default.Codes); ++i)
     {

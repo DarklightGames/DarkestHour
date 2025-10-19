@@ -1,16 +1,19 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RKKA_StandardRiflemanEarly extends DHSOVRiflemanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicBackpackEarlyPawn',Weight=6.0)
-    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicBackpackEarlyDarkPawn',Weight=1.0)
-    RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicEarlyPawn',Weight=3.0)
+    RolePawns(0)=(PawnClass=Class'DH_SovietTunicBackpackEarlyPawn',Weight=6.0)
+    RolePawns(1)=(PawnClass=Class'DH_SovietTunicBackpackEarlyDarkPawn',Weight=1.0)
+    RolePawns(2)=(PawnClass=Class'DH_SovietTunicEarlyPawn',Weight=3.0)
 
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
+    Headgear(0)=Class'DH_SovietSidecap'
+    Headgear(1)=Class'DH_SovietHelmet'
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
 }

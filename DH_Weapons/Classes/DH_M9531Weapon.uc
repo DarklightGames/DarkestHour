@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M9531Weapon extends DHBoltActionWeapon; 
+class DH_M9531Weapon extends DHBoltActionWeapon;
 //Hungarian 1931 modification of Mannlicher M95
 //Meant for hungarian loadouts (not volkssturm)
 
@@ -13,10 +13,10 @@ defaultproperties
     NativeItemName="31.M Puska"
     SwayModifyFactor=0.50  // -0.10
 
-    FireModeClass(0)=class'DH_Weapons.DH_M9531Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_M9531MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M9531Attachment'
-    PickupClass=class'DH_Weapons.DH_M9531Pickup'
+    FireModeClass(0)=Class'DH_M9531Fire'
+    FireModeClass(1)=Class'DH_M9531MeleeFire'
+    AttachmentClass=Class'DH_M9531Attachment'
+    PickupClass=Class'DH_M9531Pickup'
 
     Mesh=SkeletalMesh'DH_Mannlicher_1st.m9531_mesh'
 
@@ -40,4 +40,7 @@ defaultproperties
     FullReloadAnim="reload"
     SingleReloadAnim="reload_half_middle"
     PostReloadAnim="reload_half_end"
+
+    BoltHipLastAnim="bolt_clipfall"
+    BoltIronLastAnim="iron_bolt_clipfall"
 }

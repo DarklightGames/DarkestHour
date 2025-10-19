@@ -1,21 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMGAutomaticFire extends DHFastAutoFire
     abstract;
-
-// Modified to make rounds disappear from the visible ammo belt when nearly out of ammo
-event ModeDoFire()
-{
-    super.ModeDoFire();
-
-    if (Level.NetMode != NM_DedicatedServer && DHMGWeapon(Weapon) != none)
-    {
-        DHMGWeapon(Weapon).UpdateAmmoBelt();
-    }
-}
 
 // Modified to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
 simulated function float CustomHandleRecoil()
@@ -53,8 +42,8 @@ defaultproperties
 
     PackingThresholdTime=0.12
     bUsesTracers=true
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    FlashEmitterClass=Class'MuzzleFlash1stMG'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04
 

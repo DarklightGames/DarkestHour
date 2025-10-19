@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_SquadManageMember extends DHCommandMenu;
@@ -38,7 +38,7 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
@@ -168,10 +168,10 @@ function bool IsOptionHidden(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_kick')
-    Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt2_tex.Icons.squad_leader')
-    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_ban')
-    Options(3)=(SubjectText="Make assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
-    Options(4)=(SubjectText="Remove assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
+    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt2_tex.squad_kick')
+    Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt2_tex.squad_leader')
+    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt2_tex.squad_ban')
+    Options(3)=(SubjectText="Make assistant",Material=Texture'DH_InterfaceArt2_tex.assistant')
+    Options(4)=(SubjectText="Remove assistant",Material=Texture'DH_InterfaceArt2_tex.assistant')
 }
 

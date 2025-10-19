@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPoint extends DHSpawnPointBase
@@ -9,17 +9,19 @@ class DHSpawnPoint extends DHSpawnPointBase
 
 enum ESpawnPointType
 {
-    ESPT_Infantry,
-    ESPT_Vehicles,
-    ESPT_Mortars,
-    ESPT_All,
-    ESPT_VehicleCrewOnly
+    ESPT_Infantry,          // Allow the spawning of infantry only.
+    ESPT_Vehicles,          // Allow the spawning of vehicles and tank crewman (on foot).
+    ESPT_Mortars,           // Allow the spawning of mortar crew only.
+    ESPT_All,               // Anything goes.
+    ESPT_VehicleCrewOnly,   // Allow the spawning of tank crewmen only.
+    ESPT_VehicleOnly,       // Allow the spawning of vehicles only (no on-foot tank crewmen).
 };
 
 var()   ESpawnPointType Type;
 var()   bool            bNoSpawnVehicles;              // option to prevent SP from spawning spawn vehicles
 var()   bool            bIsInitiallyActive;            // whether or not the SP is active at the start of the round (or waits to be activated later)
 var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
+var(DHSpawnPointBase)   bool            bBoatSpawn;    // players can only spawn boat vehicles from here
 
 var     bool            bIsLocked;                     // locked spawn points will not be affected by enable or disable commands
 var     bool            bCanOnlySpawnInfantryVehicles; // players can spawn into infantry vehicles (as well as on foot) but can't spawn armoured fighting vehicles
@@ -72,7 +74,7 @@ simulated function PostBeginPlay()
     {
         if (Type == ESPT_Infantry && VehicleLocationHintTag != '')
         {
-            foreach AllActors(class'DHLocationHint', LH, VehicleLocationHintTag)
+            foreach AllActors(Class'DHLocationHint', LH, VehicleLocationHintTag)
             {
                 bCanOnlySpawnInfantryVehicles = true;
                 break; // no need to check for more, we only need to verify there is at least 1
@@ -94,7 +96,7 @@ simulated function PostBeginPlay()
     // Find any linked mine volume (that will only protect this spawn point only if the spawn is active)
     if (MineVolumeProtectionTag != '')
     {
-        foreach AllActors(class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
+        foreach AllActors(Class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
         {
             break;
         }
@@ -104,7 +106,7 @@ simulated function PostBeginPlay()
     // And tell it that it will be controlled by a spawn point, so it does not activate itself
     if (LinkedAmmoResupplyTag != '')
     {
-        foreach DynamicActors(class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
+        foreach DynamicActors(Class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
         {
             LinkedAmmoResupplyRef.bControlledBySpawnPoint = true;
             break;
@@ -115,7 +117,7 @@ simulated function PostBeginPlay()
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this spawn point
     if (NoArtyVolumeProtectionTag != '')
     {
-        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        foreach AllActors(Class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
         {
             NAV.AssociatedActor = self;
             break;
@@ -126,7 +128,7 @@ simulated function PostBeginPlay()
     // And tell them they will be controlled by a spawn point, so they do not activate themselves
     if (LinkedVehicleFactoriesTag != '')
     {
-        foreach DynamicActors(class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
+        foreach DynamicActors(Class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
         {
             LinkedVehicleFactories[LinkedVehicleFactories.Length] = VF;
             VF.bControlledBySpawnPoint = true;
@@ -150,7 +152,7 @@ function BuildLocationHintsArrays()
     local DHLocationHint LH;
 
     // Find associated location hint actors & build arrays of actor references.
-    foreach AllActors(class'DHLocationHint', LH)
+    foreach AllActors(Class'DHLocationHint', LH)
     {
         if (LH.Tag != '')
         {
@@ -232,7 +234,7 @@ simulated function bool CanSpawnInfantry()
 
 simulated function bool CanSpawnVehicles()
 {
-    return Type == ESPT_Vehicles || Type == ESPT_All;
+    return Type == ESPT_Vehicles || Type == ESPT_All || Type == ESPT_VehicleOnly;
 }
 
 simulated function bool CanSpawnMortars()
@@ -271,6 +273,10 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
         {
             return RI.default.bCanBeTankCrew;
         }
+        else if (Type == ESPT_VehicleOnly)
+        {
+            return false;
+        }
         else
         {
             return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
@@ -289,8 +295,22 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
 
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-    return VehicleClass != none &&
-           GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
+    if (VehicleClass == none)
+    {
+        return false;
+    }
+
+    // If this is not a boat, and the spawn point only allows boats, then don't allow spawning into it.
+    if (bBoatSpawn != VehicleClass.default.bCanSwim)
+    {
+        // Ambphibious vehicles can be spawned from boat and land spawn points.
+        if (class<DHVehicle>(VehicleClass) != none && !class<DHVehicle>(VehicleClass).default.bIsAmphibious)
+        {
+            return false;
+        }
+    }
+
+    return GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
            !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
            GRI.CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck);                                                   // check one of these vehicles is available at the current time
@@ -300,8 +320,8 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
 function bool PerformSpawn(DHPlayer PC)
 {
     local DarkestHourGame G;
-    local vector          SpawnLocation;
-    local rotator         SpawnRotation;
+    local Vector          SpawnLocation;
+    local Rotator         SpawnRotation;
     local Pawn            P;
 
     G = DarkestHourGame(Level.Game);
@@ -331,18 +351,20 @@ function bool PerformSpawn(DHPlayer PC)
 
 // Modified to try to use one of the spawn point's linked LocationHint actors for the spawn location & rotation
 // A random selection, ignoring any locations that have enemy nearby, or that are blocked by another pawn
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out Vector SpawnLocation, out Rotator SpawnRotation, int VehiclePoolIndex)
 {
     local array<DHLocationHint> LocationHints;
     local DHLocationHint        LocationHint;
-    local array<vector>         EnemyLocations;
-    local array<int>            LocationHintIndices, EncroachedLocationHintIndices;
-    local int                   LocationHintIndex, LocationHintIndexOffset, i, j, k;
+    local array<Vector>         EnemyLocations;
+    local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;
     local Pawn                  P;
     local bool                  bIsBlocked;
     local float                 TestCollisionRadius;
+    local DHSpawnManager        SM;
+
+    SM = DarkestHourGame(Level.Game).SpawnManager;
 
     if (VehiclePoolIndex >= 0)
     {
@@ -350,12 +372,46 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         LocationHintIndexOffset = VehicleLocationHintIndexOffset;
         VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
         TestCollisionRadius = VehicleClass.default.CollisionRadius;
+
+/*
+        LocationHintTag = SM.GetVehiclePoolLocationHintTag(VehiclePoolIndex);
+        
+        if (LocationHintTag != '')
+        {
+            // The vehicle pool has a location hint tag.
+            // Try to preferentially use location hints with this tag.
+
+            // First, determine if any of the location hints have this tag.
+            for (i = 0; i < LocationHints.Length; ++i)
+            {
+                if (LocationHints[i].LocationHintTag == LocationHintTag)
+                {
+                    bHasMatchingLocationHintTag = true;
+                    break;
+                }
+            }
+
+            if (bHasMatchingLocationHintTag)
+            {
+                // We have location hints with the tag corresponding to the vehicle pool.
+                // Remove all location hints that don't have this tag.
+                for (i = LocationHints.Length; i >= 0; --i)
+                {
+                    if (VehicleLocationHints[i].LocationHintTag != LocationHintTag)
+                    {
+                        VehicleLocationHints.Remove(i, 1);
+                        --i;
+                    }
+                }
+            }
+        }
+        */
     }
     else
     {
         LocationHints = InfantryLocationHints;
         LocationHintIndexOffset = InfantryLocationHintIndexOffset;
-        TestCollisionRadius = class'DHPawn'.default.CollisionRadius;
+        TestCollisionRadius = Class'DHPawn'.default.CollisionRadius;
     }
 
     // TODO: make this functionality generic so it applied to all spawn point types?
@@ -388,7 +444,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
+        foreach RadiusActors(Class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
         {
             // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
             bIsBlocked = true;

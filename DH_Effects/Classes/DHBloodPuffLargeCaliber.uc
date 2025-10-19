@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBloodPuffLargeCaliber extends Emitter;
@@ -20,7 +20,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=239,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=2
-        name="blood_impact"
+        Name="blood_impact"
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=0.250000,RelativeSize=1.000000)
@@ -28,7 +28,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.radialexplosion_1frame'
         LifetimeRange=(Min=0.150000,Max=0.250000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter15'
@@ -42,13 +42,13 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=6.000000,Max=10.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.150000)
@@ -70,14 +70,14 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=136,G=136,R=255,A=255))
         Opacity=0.6
         MaxParticles=1
-        name="large_exit"
+        Name="large_exit"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=55.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=-100.000000,Max=-250.000000),Y=(Min=-20.000000,Max=35.000000),Z=(Min=-35.000000,Max=200.000000))
     End Object
@@ -99,14 +99,14 @@ defaultproperties
         Opacity=0.800000
         FadeOutStartTime=0.200000
         MaxParticles=2
-        name="small_exits"
+        Name="small_exits"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=30.000000,Max=35.000000),Y=(Min=30.000000,Max=35.000000),Z=(Min=35.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.500000,Max=0.850000)
         StartVelocityRange=(Y=(Min=-20.000000,Max=35.000000),Z=(Min=-125.000000,Max=100.000000))
     End Object
@@ -131,7 +131,7 @@ defaultproperties
         Opacity=0.800000
         FadeOutStartTime=0.350000
         MaxParticles=3
-        name="dust_puffs"
+        Name="dust_puffs"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
         StartSpinRange=(X=(Min=0.025000,Max=0.750000))
@@ -140,7 +140,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.750000,Max=2.000000)
@@ -168,7 +168,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=150
-        name="blood_spray"
+        Name="blood_spray"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -177,7 +177,7 @@ defaultproperties
         StartSizeRange=(X=(Min=1.000000,Max=1.250000),Y=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.250000,Max=1.250000)
@@ -207,7 +207,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         FadeInEndTime=0.200000
         MaxParticles=3
-        name="blood_puffs"
+        Name="blood_puffs"
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
         UseRotationFrom=PTRS_Actor
         SpinCCWorCW=(X=1.000000)
@@ -218,7 +218,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.000000,Max=45.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.250000,Max=1.600000)
@@ -228,7 +228,7 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter19'
 
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'EffectsSM.PlayerGibbs.Chunk1_Gibb'
+        StaticMesh=StaticMesh'EffectsSM.Chunk1_Gibb'
         UseCollision=True
         RespawnDeadParticles=False
         SpinParticles=True
@@ -239,7 +239,7 @@ defaultproperties
         DampingFactorRange=(X=(Min=0.200000,Max=0.500000),Y=(Min=0.200000,Max=0.500000),Z=(Min=0.200000,Max=0.500000))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        name="chunks"
+        Name="chunks"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=10.000000,Max=20.000000)
         UseRotationFrom=PTRS_Actor

@@ -1,12 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponsLockedMessage extends LocalMessage
     abstract;
-
-#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 var localized string LockedFFMessage;
 var localized string LockedSKMessage;
@@ -14,13 +12,14 @@ var localized string LockedWithTimerMessage;
 var localized string LockedSetupPhaseMessage;
 var localized string UnlockedMessage;
 var localized string LockedFFSKMessage;
+var Sound MessageSound;
 
 // Modified to play a buzz sound to go with screen screen message if player's weapon's are locked and he can't fire
 static function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     if ((Switch == 0 || Switch == 1) && P != none)
     {
-        P.ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+        P.ClientPlaySound(default.MessageSound,,, SLOT_Interface);
 
         P.bFire = 0; // 'releases' fire button if being held down, which avoids spamming repeated messages & buzz sounds
         P.bAltFire = 0;
@@ -63,14 +62,14 @@ static function string GetString(optional int Switch, optional PlayerReplication
 }
 
 // Modified to show message in red if weapon is locked, or white when unlocked
-static function color GetColor(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
+static function Color GetColor(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
 {
     if (Switch == 0 || Switch == 1)
     {
-        return class'UColor'.default.Red;
+        return Class'UColor'.default.Red;
     }
 
-    return class'UColor'.default.White;
+    return Class'UColor'.default.White;
 }
 
 defaultproperties
@@ -86,4 +85,5 @@ defaultproperties
     LockedSKMessage="Your weapons have been locked due to excessive spawn killing!"
     LockedWithTimerMessage="Your weapons are locked for {0} seconds"
     UnlockedMessage="Your weapons are now unlocked"
+    MessageSound=Sound'DHMenuSounds.Buzz'
 }

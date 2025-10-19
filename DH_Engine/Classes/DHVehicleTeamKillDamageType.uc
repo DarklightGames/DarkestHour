@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleTeamKillDamageType extends DHInstantObituaryDamageTypes
@@ -8,8 +8,5 @@ class DHVehicleTeamKillDamageType extends DHInstantObituaryDamageTypes
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.Andy'
-    DeathString="" // No string as its handled else where
-    MaleSuicide=""
-    FemaleSuicide=""
+    HUDIcon=Texture'DH_InterfaceArt_tex.Andy'
 }

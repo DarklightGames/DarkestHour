@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMineVolume extends ROMineVolume;
@@ -95,7 +95,7 @@ function Activate()
 
         if (FindPawnsInMineVolume())
         {
-            PainTimer = Spawn(class'DHAccurateVolumeTimer', self);
+            PainTimer = Spawn(Class'DHAccurateVolumeTimer', self);
         }
     }
 }
@@ -135,7 +135,7 @@ function bool FindPawnsInMineVolume()
     local Pawn P;
     local bool bFoundRelevantPawn;
 
-    foreach TouchingActors(class'Pawn', P)
+    foreach TouchingActors(Class'Pawn', P)
     {
         if (IsARelevantPawn(P))
         {
@@ -201,7 +201,7 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
         {
             // If pawn has exited this MV, check it isn't still inside another active MV - if it is, we do nothing more (e.g. don't zero pawn's MineAreaEnterTime)
             // This can happen where MVs overlap, especially boundary MVs around map edges
-            foreach TouchingActors(class'ROMineVolume', MV)
+            foreach TouchingActors(Class'ROMineVolume', MV)
             {
                 if (MV != self && MV.bActive)
                 {
@@ -250,7 +250,7 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
         // If player entered MV, make sure we have a PainTimer running
         if (PainTimer == none && !bUnTouch)
         {
-            PainTimer = Spawn(class'DHAccurateVolumeTimer', self);
+            PainTimer = Spawn(Class'DHAccurateVolumeTimer', self);
         }
     }
 }
@@ -382,7 +382,7 @@ function KillPawn(Pawn P)
     }
 
     P.TakeDamage(Damage, none, Location, vect(0.0, 0.0, 0.0), DamageType);
-    Spawn(class'GrenadeExplosion',,, P.Location - (P.CollisionHeight * vect(0.0, 0.0, 1.0)));
+    Spawn(Class'GrenadeExplosion',,, P.Location - (P.CollisionHeight * vect(0.0, 0.0, 1.0)));
 }
 
 // New function to check if the pawn is a player or vehicle on a team that this mine volume is set up to kill
@@ -432,6 +432,7 @@ function bool WarningDueForPawn(Pawn P)
 defaultproperties
 {
     bInitiallyActive=true // normal minefield will always be active, but leveller can override this option to start deactivated & be activated by a future event
-    WarningMessageClass=class'ROEngine.ROMineFieldMsg' // the standard RO 'live' minefield warning
+    WarningMessageClass=Class'ROMineFieldMsg' // the standard RO 'live' minefield warning
     RemoteRole=ROLE_DumbProxy
+	KillTime=15
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
@@ -165,23 +165,27 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     // Begin Drawing!
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName), FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName), FontScale);
 
     if (MapDatabase != none && MapDatabase.GetMapInfo(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, MI))
     {
         // Allied Side
         GetCellLeftWidth(1, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
+
+        // Axis Side
+        GetCellLeftWidth(2, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation), FontScale);
 
         // Type
-        GetCellLeftWidth(2, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType), FontScale);
+        GetCellLeftWidth(3, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MI.GameTypeClass.default.GameTypeName, FontScale);
 
         // Map Size
-        GetCellLeftWidth(3, CellLeft, CellWidth);
+        GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawStyle = DrawStyle;
 
-        class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+        Class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
         // Do a check if the current player count is in bounds of recommended range
         if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
@@ -189,7 +193,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             DrawStyle = RedListStyle;
         }
 
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
         DrawStyle = OldDrawStyle;
     }
 }
@@ -217,18 +221,23 @@ function string GetSortString(int i)
     switch (SortColumn)
     {
         case 0: // Map name
-            return Locs(class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
+            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
         case 1: // Allied country
             if (bHasMapInfo)
             {
-                return class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
+                return Class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
             }
-        case 2: // Game Type
+        case 2: // Axis country
             if (bHasMapInfo)
             {
-                return class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
+                return Class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation);
             }
-        case 3: // Map Size
+        case 3: // Game Type
+            if (bHasMapInfo)
+            {
+                return MI.GameTypeClass.default.GameTypeName;
+            }
+        case 4: // Map Size
             if (bHasMapInfo)
             {
                 return string(int(MI.Size));
@@ -242,21 +251,24 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    // Map Name | Allied Nation | Game Type | Map Size
+    // Map Name | Allied Nation | Axis Nation | Game Type | Map Size
     ColumnHeadings(0)="Map Name"
     ColumnHeadings(1)="Allied Nation"
-    ColumnHeadings(2)="Game Type"
-    ColumnHeadings(3)="Map Size"
+    ColumnHeadings(2)="Axis Nation"
+    ColumnHeadings(3)="Game Type"
+    ColumnHeadings(4)="Map Size"
 
-    InitColumnPerc(0)=0.35
-    InitColumnPerc(1)=0.20
-    InitColumnPerc(2)=0.20
-    InitColumnPerc(3)=0.25
+    InitColumnPerc(0)=0.40
+    InitColumnPerc(1)=0.15
+    InitColumnPerc(2)=0.15
+    InitColumnPerc(3)=0.15
+    InitColumnPerc(4)=0.15
 
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="The Allied country for the map."
-    ColumnHeadingHints(2)="What type of game or battle for the map."
-    ColumnHeadingHints(3)="Recommended players for the map."
+    ColumnHeadingHints(2)="The Axis country for the map."
+    ColumnHeadingHints(3)="What type of game or battle for the map."
+    ColumnHeadingHints(4)="Recommended players for the map."
 
     RedListStyleName="DHListRed"
 }

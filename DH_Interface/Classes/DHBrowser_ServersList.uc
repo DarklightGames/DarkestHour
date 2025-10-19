@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBrowser_ServersList extends UT2K4Browser_ServersList;
@@ -9,13 +9,13 @@ const MAX_RULES_REFRESH_ATTEMPTS = 5;
 
 var(Style) noexport GUIStyles           WrongVersionStyle;
 var(Style) string                       WrongVersionStyleName;
-var        color                        WrongVersionColor;
+var        Color                        WrongVersionColor;
 
 var int    ServerRulesRefreshAttempts;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-    Super.InitComponent(InController, InOwner);
+    super.InitComponent(InController, InOwner);
 
     if (WrongVersionStyleName != "" && WrongVersionStyle == none)
     {
@@ -59,9 +59,9 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
 {
     local float CellLeft, CellWidth, DrawX;
     local float IconPosX, IconPosY;
-    local string Ping, VersionString, LocationString, HealthString;
+    local string Ping, VersionString, LocationString, HealthString, GitCommit;
     local int k, j, flags, checkFlag;
-    local color HealthColor;
+    local Color HealthColor;
     local GUIStyles DStyle;
 
     // Get values for columns (have to use j as i is passed in as arguement)
@@ -70,8 +70,8 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
         // Get the server's performance string
         if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "AverageTick")
         {
-            HealthString = class'DHLib'.static.GetServerHealthString(byte(Servers[SortData[i].SortItem].ServerInfo[j].Value), HealthColor);
-            HealthString = class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString;
+            HealthString = Class'DHLib'.static.GetServerHealthString(byte(Servers[SortData[i].SortItem].ServerInfo[j].Value), HealthColor);
+            HealthString = Class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString;
         }
 
         // Get the server's location string
@@ -80,21 +80,27 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
             LocationString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
 
-        // Get the game version the server is running
+        // Get the game version the server is running.
         if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "Version")
         {
             VersionString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
+
+        // Get the commit hash of the build that the server is running.
+        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "GitCommit")
+        {
+            GitCommit = Servers[SortData[i].SortItem].ServerInfo[j].Value;
+        }
     }
 
-    // Choose style, we will grey out servers which don't match version
-    if (VersionString != class'DarkestHourGame'.default.Version.ToString())
+    // Choose style, we will grey out servers which don't match the current build.
+    if (GitCommit != Class'DHBuildManifest'.default.GitCommit)
     {
-        VersionString = class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
+        VersionString = Class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
 
         if (bSelected)
         {
-            WrongVersionStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
+            WrongVersionStyle.Draw(Canvas, MenuState, X, Y, W, H + 1);
         }
 
         DStyle = WrongVersionStyle;

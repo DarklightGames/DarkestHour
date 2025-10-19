@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Use this to modify the danger zone influences for objectives dynamically.
 //==============================================================================
@@ -32,7 +32,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     for (i = 0; i < DangerZoneInfluences.Length; ++i)
     {
-        foreach AllActors(class'DHObjective', Objective, DangerZoneInfluences[i].ObjectiveTag)
+        foreach AllActors(Class'DHObjective', Objective, DangerZoneInfluences[i].ObjectiveTag)
         {
             switch (DangerZoneInfluences[i].Type)
             {

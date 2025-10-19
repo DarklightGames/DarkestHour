@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVoteInfo extends Info
@@ -45,7 +45,7 @@ function string GetQuestionText()
 
 function Destroyed()
 {
-    EndedAt = class'DateTime'.static.Now(self);
+    EndedAt = Class'DateTime'.static.Now(self);
     OnVoteEnded();
 }
 
@@ -78,14 +78,14 @@ function StartVote()
 
     VoterCount = Voters.Length;
 
-    StartedAt = class'DateTime'.static.Now(self);
+    StartedAt = Class'DateTime'.static.Now(self);
     OnVoteStarted();
 
     if (bNominatorsVoteAutomatically)
     {
         i = 0; while (i < Voters.Length)
         {
-            if (Voters[i] != none && class'UArray'.static.IndexOf(Nominators, Voters[i]) >= 0)
+            if (Voters[i] != none && Class'UArray'.static.IndexOf(Nominators, Voters[i]) >= 0)
             {
                 TempVoterCount = Voters.Length;
 
@@ -123,7 +123,7 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
         return;
     }
 
-    VoterIndex = class'UArray'.static.IndexOf(Voters, Voter);
+    VoterIndex = Class'UArray'.static.IndexOf(Voters, Voter);
 
     if (VoterIndex == -1)
     {
@@ -147,7 +147,7 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
 function OnVoteReceieved(PlayerController Voter, int OptionIndex)
 {
     // "Your vote has been receieved."
-    Voter.ReceiveLocalizedMessage(class'DHVoteMessage', 0);
+    Voter.ReceiveLocalizedMessage(Class'DHVoteMessage', 0);
 }
 
 state Open
@@ -215,7 +215,7 @@ function SendMetricsEvent(string VoteType, int Result)
     }
 
     // Get voter IDs
-    Votes = class'JSONArray'.static.Create();
+    Votes = Class'JSONArray'.static.Create();
 
     for (i = 0; i < Options.Length; ++i)
     {
@@ -229,9 +229,9 @@ function SendMetricsEvent(string VoteType, int Result)
             }
         }
 
-        Votes.Add((new class'JSONObject')
+        Votes.Add((new Class'JSONObject')
                       .PutInteger("option_id", i)
-                      .Put("voter_ids", class'JSONArray'.static.FromStrings(VoterIDs)));
+                      .Put("voter_ids", Class'JSONArray'.static.FromStrings(VoterIDs)));
     }
 
     // Get nominator IDs
@@ -261,11 +261,11 @@ function SendMetricsEvent(string VoteType, int Result)
 
     // Get the current round situation
     // TODO: Make this a generic object that can be attached to other events.
-    TeamStats = class'JSONArray'.static.Create();
+    TeamStats = Class'JSONArray'.static.Create();
 
     for (i = 0; i < arraycount(TeamSizes); ++i)
     {
-        TeamStats.Add((new class'JSONObject')
+        TeamStats.Add((new Class'JSONObject')
                   .PutInteger("team_index", i)
                   .PutInteger("size", TeamSizes[i])
                   .PutInteger("reinforcements", GRI.SpawnsRemaining[i])
@@ -273,19 +273,19 @@ function SendMetricsEvent(string VoteType, int Result)
                   .PutInteger("objectives_owned", ObjectiveCount[i]));
     }
 
-    RoundState = (new class'JSONObject')
+    RoundState = (new Class'JSONObject')
                      .PutInteger("round_time", GRI.ElapsedTime)
                      .Put("teams", TeamStats);
 
     // Send away
-    G.Metrics.AddEvent("vote", (new class'JSONObject')
+    G.Metrics.AddEvent("vote", (new Class'JSONObject')
                                    .PutString("vote_type", VoteType)
                                    .PutString("started_at", StartedAt.IsoFormat())
                                    .PutString("ended_at", EndedAt.IsoFormat())
                                    .PutInteger("team_index", TeamIndex)
                                    .PutInteger("result_id", Result)
                                    .Put("votes", Votes)
-                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs))
+                                   .Put("nominator_ids", Class'JSONArray'.static.FromStrings(NominatorIDs))
                                    .Put("round_state", RoundState));
 }
 

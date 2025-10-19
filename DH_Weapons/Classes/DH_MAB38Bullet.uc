@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MAB38Bullet extends DHBullet;
 
 defaultproperties
 {
-    Speed=22934.0 // differs from RO but that had incorrect conversion to UU
+    Speed=25347.0   // 420m/s
     BallisticCoefficient=0.16
     WhizType=2
     Damage=59.0
-    MyDamageType=class'DH_Weapons.DH_MAB38DamType'
+    MyDamageType=Class'DH_MAB38DamType'
 }

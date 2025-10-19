@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ViSWeapon extends DHPistolWeapon;
@@ -8,19 +8,19 @@ class DH_ViSWeapon extends DHPistolWeapon;
 defaultproperties
 {
     ItemName="ViS wz.35"
-    FireModeClass(0)=class'DH_Weapons.DH_ViSFire'
-    FireModeClass(1)=class'DH_Weapons.DH_ViSMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ViSAttachment'
-    PickupClass=class'DH_Weapons.DH_ViSPickup'
+    FireModeClass(0)=Class'DH_ViSFire'
+    FireModeClass(1)=Class'DH_ViSMeleeFire'
+    AttachmentClass=Class'DH_ViSAttachment'
+    PickupClass=Class'DH_ViSPickup'
 
     Mesh=SkeletalMesh'DH_ViS_1st.ViS_Mesh'
 
     bUseHighDetailOverlayIndex=false
 
-    Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
-    Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
-    sleevenum=3
-    handnum=0
+    Skins(1)=Texture'DH_ViS_tex.ViS_texture'
+    Skins(2)=Texture'Weapons1st_tex.p38'
+    SleeveNum=3
+    HandNum=0
 
     FirstSelectAnim="draw2"
 
@@ -28,8 +28,8 @@ defaultproperties
     IronSightDisplayFOV=75.0
     ZoomOutTime=0.4
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
 
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"

@@ -1,24 +1,24 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitMudEffect extends emitter;
+class DHBulletHitMudEffect extends Emitter;
 
-var texture Impacts[4];
+var Texture Impacts[4];
 
 simulated function PostBeginPlay()
 {
     Emitters[0].Texture = Impacts[Rand(4)];
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 defaultproperties
 {
-    Impacts(0)=Texture'DH_FX_Tex.Effects.MudImpact01'
-    Impacts(1)=Texture'DH_FX_Tex.Effects.MudImpact02'
-    Impacts(2)=Texture'DH_FX_Tex.Effects.MudImpact03'
-    Impacts(3)=Texture'DH_FX_Tex.Effects.MudImpact04'
+    Impacts(0)=Texture'DH_FX_Tex.MudImpact01'
+    Impacts(1)=Texture'DH_FX_Tex.MudImpact02'
+    Impacts(2)=Texture'DH_FX_Tex.MudImpact03'
+    Impacts(3)=Texture'DH_FX_Tex.MudImpact04'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter4
         FadeOut=true
@@ -35,7 +35,7 @@ defaultproperties
         FadeOutStartTime=0.1
         //Opacity=0.7
         MaxParticles=1
-        name="impact1"
+        Name="impact1"
         UseRotationFrom=PTRS_Actor
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=20.000000))
@@ -61,7 +61,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=42,G=54,R=59,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         MaxParticles=3
-        name="ground_chunks"
+        Name="ground_chunks"
         //StartLocationOffset=(X=5.000000)
         UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
@@ -73,7 +73,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=12.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.300000)
         StartVelocityRange=(Y=(Min=-10.000000,Max=12.000000),Z=(Min=-10.000000,Max=12.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -101,7 +101,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=7
-        name="random_chunks"
+        Name="random_chunks"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -112,7 +112,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=25.000000),Y=(Min=10.000000,Max=25.000000),Z=(Min=300.000000,Max=300.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunkssparse'
+        Texture=Texture'DH_FX_Tex.genericchunkssparse'
         LifetimeRange=(Min=1.25000,Max=3.00000)
         StartVelocityRange=(X=(Min=275.000000,Max=400.000000),Y=(Min=-95.000000,Max=105.000000),Z=(Min=-110.000000,Max=95.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -135,7 +135,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="mud_burst"
+        Name="mud_burst"
         StartLocationOffset=(X=25.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
@@ -144,7 +144,7 @@ defaultproperties
         StartSizeRange=(X=(Min=6.000000,Max=12.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.genericchunks'
+        Texture=Texture'DH_FX_Tex.genericchunks'
         LifetimeRange=(Min=0.150000,Max=0.250000)
         StartVelocityRange=(X=(Min=20.000000,Max=60.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=-10.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -167,7 +167,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=10
-        name="main_chunks"
+        Name="main_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -175,7 +175,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.500000,Max=2.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.groundchunksfinal'
+        Texture=Texture'Effects_Tex.groundchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Max=2.000000)
@@ -198,7 +198,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=4
-        name="ground_splash"
+        Name="ground_splash"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -207,7 +207,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=10.000000,Max=15.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal'
+        Texture=Texture'Effects_Tex.snowfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.3500000)
@@ -215,6 +215,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter10'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

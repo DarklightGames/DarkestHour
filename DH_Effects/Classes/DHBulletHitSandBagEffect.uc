@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitSandBagEffect extends emitter;
+class DHBulletHitSandBagEffect extends Emitter;
 
 defaultproperties
 {
@@ -23,7 +23,7 @@ defaultproperties
         StartSizeRange=(X=(Min=6.000000,Max=9.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.150000,Max=0.200000)
@@ -55,7 +55,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
+        Texture=Texture'Effects_Tex.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.000000)
@@ -91,7 +91,7 @@ defaultproperties
         StartSizeRange=(X=(Min=8.000000,Max=14.000000))
         InitialParticlesPerSecond=600.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.debris.chunksparselite'
+        Texture=Texture'DH_FX_Tex.chunksparselite'
         //InitialDelayRange=(Min=0.10000,Max=0.150000)
         LifetimeRange=(Min=0.50000,Max=1.000)
         StartVelocityRange=(X=(Min=-100.000000,Max=90.000000),Y=(Min=-95.000000,Max=110.000000),Z=(Min=-30.000000,Max=300.000000))
@@ -121,7 +121,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.750000,Max=2.0000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.paperchunks'
+        Texture=Texture'Effects_Tex.paperchunks'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=1.000000,Max=3.000000)
@@ -145,7 +145,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.paperchunks'
+        Texture=Texture'Effects_Tex.paperchunks'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=3.0,Max=4.000000)
@@ -178,7 +178,7 @@ defaultproperties
         StartSizeRange=(X=(Min=20.000000,Max=35.000000))
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.510000,Max=1.000000)
         StartVelocityRange=(X=(Min=150.000000,Max=425.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -212,7 +212,7 @@ defaultproperties
         SizeScale(0)=(RelativeTime=1.000000,RelativeSize=0.05)
         InitialParticlesPerSecond=150.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         InitialDelayRange=(Min=0.10000,Max=0.150000)
@@ -221,6 +221,6 @@ defaultproperties
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter88'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

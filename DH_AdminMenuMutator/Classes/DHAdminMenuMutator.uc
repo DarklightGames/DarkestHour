@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAdminMenuMutator extends Mutator;
@@ -24,7 +24,7 @@ var     PlayerController    Admin;                  // temporarily saves the adm
 var     array<Minefield>    SavedMinefields;        // an array of minefields that records their original properties, so they can be re-enabled later
 var     int                 ParaDropHeight;         // the Z co-ordinate used for the starting height in all paradrop options
 var     float               MapScale;               // size/scale of current map, used to calculate grid locations for paradrops
-var     vector              MapCenter;              // centre location of map, also used to calculate grid locations for paradrops
+var     Vector              MapCenter;              // centre location of map, also used to calculate grid locations for paradrops
 
 // Settings that are replicated to clients via the Replicator
 var     bool                bRealismMutPresent;     // flags whether the realism match mutator is present on the server
@@ -77,7 +77,7 @@ function SetInitialVariables()
     }
 
     // If we're in single player or DH debug mode (i.e. the development branch), always enable the extra menu options for convenience
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode())
     {
         bParaDropPlayerAllowed = true;
         bShowRealismMenu = true;
@@ -107,7 +107,7 @@ function SetInitialVariables()
     }
 
     // Spawns the 'helper' actor (Replicator) that will get replicated to all clients
-    Replicator = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_Replicator', self);
+    Replicator = Spawn(Class'DHAdminMenu_Replicator', self);
 }
 
 // Builds a SavedMinefields array so we can restore minefield properties if they are disabled then re-enabled
@@ -594,7 +594,7 @@ function SetGamePassword(string NewPassword)
 function ParaDropPlayer(string PlayerName, string TypeOfDropTarget, optional string DropTarget, optional string ObjectiveIndex)
 {
     local Controller PlayerToDrop;
-    local vector     ParaDropVector;
+    local Vector     ParaDropVector;
 
     if (!IsLoggedInAsAdmin())
     {
@@ -659,11 +659,11 @@ function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
         // Kill the player (includes custom damage type that shows "was re-spawned by admin" message in the console)
         if (PlayerPawn.IsA('ROPawn'))
         {
-            PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator.DHAdminMenu_DamageType');
+            PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, Class'DHAdminMenu_DamageType');
         }
         else
         {
-            Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator.DHAdminMenu_DamageType');
+            Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, Class'DHAdminMenu_DamageType');
         }
 
         ROTG.FriendlyFireScale = OriginalFriendlyFireScale; // now restore the original friendly fire setting
@@ -743,7 +743,7 @@ function ForceRealismMatchLive()
 function ParaDropAll(string TeamName, string TypeOfDropTarget, string DropTarget, optional string ObjectiveIndex)
 {
     local int        SelectedTeamIndex;
-    local vector     ParaDropVector;
+    local Vector     ParaDropVector;
     local Controller C;
 
     if (!bShowRealismMenu || !IsLoggedInAsAdmin())
@@ -957,7 +957,7 @@ function SetRoundMinutesRemaining(float NewMinutesRemaining)
     if (NewMinutesRemaining > 0.0 && DarkestHourGame(ROTG) != none)
     {
         DarkestHourGame(ROTG).ModifyRoundTime(int(NewMinutesRemaining * 60.0), 2);
-        Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ class'ROEngine.ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ Class'ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
     }
 }
 
@@ -984,7 +984,7 @@ function ToggleAdminCanPauseGame()
 function DestroyActorInSights()
 {
     local int    TraceDistance;
-    local vector AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
+    local Vector AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
     local Actor  HitActor;
 
     if (!bShowRealismMenu || !IsLoggedInAsAdmin())
@@ -995,7 +995,7 @@ function DestroyActorInSights()
     if (Admin.IsA('ROPlayer') && Admin.Pawn != none)
     {
         TraceDistance = ROPlayer(Admin).GetMaxViewDistance();
-        AimDirection = vector(Admin.Pawn.GetViewRotation());
+        AimDirection = Vector(Admin.Pawn.GetViewRotation());
         StartTrace = Admin.Pawn.Location + Admin.Pawn.EyePosition();
         EndTrace = StartTrace + (AimDirection * TraceDistance);
 
@@ -1107,7 +1107,7 @@ function BroadcastMessageToAll(int MessageNumber)
 {
     if (MessageNumber > 0 && Admin != none)
     {
-        BroadcastLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+        BroadcastLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
     }
 }
 
@@ -1117,11 +1117,11 @@ function NotifyPlayer(byte MessageNumber, Controller Receiver, optional bool bNo
     {
         if (bNoAdminName)
         {
-            PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber);
+            PlayerController(Receiver).ReceiveLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber);
         }
         else
         {
-            PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+            PlayerController(Receiver).ReceiveLocalizedMessage(Class'DHAdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
         }
     }
 }
@@ -1130,7 +1130,7 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 {
     if (MessageNumber > 0 && Admin != none)
     {
-        Admin.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+        Admin.ClientMessage(Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
     }
 }
 
@@ -1169,7 +1169,7 @@ function string GetAdminName()
         return "'" $ Admin.PlayerReplicationInfo.PlayerName $ "'";
     }
 
-    return class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
+    return Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
 }
 
 // Returns player's name (from their Controller) for use in messages & logging
@@ -1180,7 +1180,7 @@ function string GetPlayerName(Controller Player)
         return Player.PlayerReplicationInfo.PlayerName;
     }
 
-    return class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
+    return Class'DHAdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
 }
 
 // Takes an index number passed by a local menu as a string in brackets (just to add readability to an on-screen command), strips the brackets & converts to a integer
@@ -1309,7 +1309,7 @@ function int GetTeamIndexFromName(out string TeamName)
 /////////////////////////////////////  PARADROP FUNCTIONS  /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Generic function that actually actions a player paradrop - called as required from other functions that are called directly from Mutate (e.g. ParaDropPlayer & ParaDropAll)
-function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, optional string PlayerName)
+function ParaDropThisPlayer(Controller PlayerToDrop, Vector ParaDropVector, optional string PlayerName)
 {
     local Pawn PlayerPawn;
 
@@ -1337,7 +1337,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
             DHPawn(PlayerPawn).GiveChute();
         }
 
-        PlayerPawn.SetLocation(ParaDropVector + RandRange(10.0, 20.0) * 60.0 * vector(RotRand()));
+        PlayerPawn.SetLocation(ParaDropVector + RandRange(10.0, 20.0) * 60.0 * Vector(RotRand()));
 
         if (PlayerPawn.IsA('Vehicle')) // if we dropped a vehicle, we must now reset it's normal physics, otherwise it just hangs in the sky !
         {
@@ -1374,12 +1374,12 @@ function string ConcatenateGridRef(array<string> Characters, byte StartIndex)
 // Coverts a grid reference into paradrop location coordinates
 // For quick typing it accepts the format "e25" for map grid E2 keypad 5, is not case sensitive & ignores any spaces between characters
 // Also accepts "e2" format & assumes a central keypad 5 sub-grid position if a keypad number is not specified
-function vector GetGridDropLocation(string GridRef)
+function Vector GetGridDropLocation(string GridRef)
 {
     local string GridLetter;
     local byte   GridNumber, KeypadNumber;
     local float  GridX, GridY;
-    local vector DropLocation;
+    local Vector DropLocation;
 
     GridRef = Repl(GridRef, " ", "");  // remove any unwanted spaces
     GridRef = Repl(GridRef, "kp", ""); // remove "kp" if the admin has entered a grid ref in format of "E 4 kp 3" (the original Builder mutator format)
@@ -1490,10 +1490,10 @@ function vector GetGridDropLocation(string GridRef)
 }
 
 // Finds a map objective & returns its location for paradrop coordinates
-function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveIndexString)
+function Vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveIndexString)
 {
     local DarkestHourGame DHG;
-    local vector          DropLocation;
+    local Vector          DropLocation;
     local int             ObjectiveIndex;
     local DHObjective     Objective;
 
@@ -1520,9 +1520,9 @@ function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveI
 }
 
 // Returns player's current location for paradrop coordinates
-function vector GetCurrentDropLocation(Controller PlayerToDrop)
+function Vector GetCurrentDropLocation(Controller PlayerToDrop)
 {
-    local vector DropLocation;
+    local Vector DropLocation;
 
     if (PlayerToDrop == none || PlayerToDrop.Pawn == none)
     {
@@ -1539,7 +1539,7 @@ function vector GetCurrentDropLocation(Controller PlayerToDrop)
 
 // This function will adjust a hud map location based on the rotation offset of the overhead map (used by GetGridDropLocation function)
 // Note this is from ROHud but that is not accessible serverside, so we need the same function here
-function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+function Vector GetAdjustedHudLocation(Vector HudLoc, optional bool bInvert)
 {
     local int   OverheadOffset;
     local float SwapX, SwapY;
@@ -1590,13 +1590,13 @@ function SetParaDropVariables()
 {
     local ROGameReplicationInfo GRI;
     local TerrainInfo           TI;
-    local vector                TestLocation, MapDiagonal;
+    local Vector                TestLocation, MapDiagonal;
     local Actor                 TestActor;
     local int                   i;
 
     // Get the maximum safe height to paradrop a player, without him getting stuck in the skybox or whatever
     // For a starting location we get the location of the TerrainInfo actor
-    foreach AllActors(class'TerrainInfo', TI)
+    foreach AllActors(Class'TerrainInfo', TI)
     {
         TestLocation = TI.Location;
         break;
@@ -1610,7 +1610,7 @@ function SetParaDropVariables()
         // On the 1st pass we'll spawn the test actor (1920 UU above the TerrainInfo)
         if (TestActor == none)
         {
-            TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM',,, TestLocation); // spawns on 1st pass & then gets moved
+            TestActor = Spawn(Class'DHAdminMenu_TestSM',,, TestLocation); // spawns on 1st pass & then gets moved
         }
         // Only subsequent passes we try to move the test actor to the new higher location
         // If we fail (i.e. SetLocation returns false) then we're too high, so revert to the previous height & stop checking

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // The purpose of this class is to optimize both server and client performance using FogDistance and FogRatio
@@ -142,7 +142,7 @@ simulated function Tick( float DeltaTime )
         if (ClientMinDesiredFrame != TargetMinDesiredFrame && C.bDynamicFogRatio)
         {
             T = FClamp((Level.TimeSeconds - ClientFrameChangeStart) / (ClientFrameChangeEnd - ClientFrameChangeStart), 0.0, 1.0);
-            ClientMinDesiredFrame = class'UInterp'.static.Linear(T, ClientSavedDesiredFrame, TargetMinDesiredFrame);
+            ClientMinDesiredFrame = Class'UInterp'.static.Linear(T, ClientSavedDesiredFrame, TargetMinDesiredFrame);
             bUpdate = true;
         }
 
@@ -150,7 +150,7 @@ simulated function Tick( float DeltaTime )
         if (RealDistanceFogEnd != TargetDistanceFog)
         {
             T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
-            RealDistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
+            RealDistanceFogEnd = Class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
             ClientFogRatio = TargetFogRatio;
             bUpdate = true;
         }
@@ -159,7 +159,7 @@ simulated function Tick( float DeltaTime )
         if (ClientFogRatio != TargetFogRatio && C.bDynamicFogRatio)
         {
             T = FClamp((Level.TimeSeconds - FogRatioChangeStart) / (FogRatioChangeEnd - FogRatioChangeStart), 0.0, 1.0);
-            ClientFogRatio = class'UInterp'.static.Linear(T, ClientFogRatio, TargetFogRatio);
+            ClientFogRatio = Class'UInterp'.static.Linear(T, ClientFogRatio, TargetFogRatio);
             bUpdate = true;
         }
 
@@ -180,7 +180,7 @@ simulated function Tick( float DeltaTime )
             if (FogChangeEnd > FogChangeStart)
             {
                 T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
-                DistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
+                DistanceFogEnd = Class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
             }
             else
             {

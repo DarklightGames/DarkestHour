@@ -1,33 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_DP27LateFire extends DHFastAutoFire;
 
-// Modified to rotate the magazine after a shot.
-event ModeDoFire()
-{
-    local DH_DP27Weapon W;
-
-    super.ModeDoFire();
-
-    if (Instigator.IsLocallyControlled())
-    {
-        W = DH_DP27Weapon(Weapon);
-
-        if (W != none)
-        {
-            W.UpdateMagRotation();
-        }
-    }
-}
-
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
-    AmmoClass=class'DH_Weapons.DH_DP27Ammo'
+    ProjectileClass=Class'DH_DP27Bullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
+    AmmoClass=Class'DH_DP27Ammo'
     FireRate=0.105 // 632 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)
@@ -42,9 +24,9 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stDP'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.DP28_fire_end'
+    FlashEmitterClass=Class'MuzzleFlash1stDP'
     BipodDeployFireAnim="Deploy_shoot_loop"
     BipodDeployFireLoopAnim="Deploy_Shoot_Loop"
     BipodDeployFireEndAnim="Deploy_Shoot_End"
@@ -55,10 +37,10 @@ defaultproperties
     FireLastAnim="shoot_last"
     BipodDeployFireLastAnim="deploy_shoot_last"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=Class'ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
     ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
-    ShellRotOffsetIron=(Pitch=-16384)  
+    ShellRotOffsetIron=(Pitch=-16384)
     ShellRotOffsetHip=(Pitch=-16384)
 
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)

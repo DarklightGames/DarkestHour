@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerDestroyer_SnowOne_Bushes extends DH_HetzerDestroyer_SnowOne;
 
 defaultproperties
 {
-     Skins(3)=Texture'VegetationSMT.WildBushes.WildBush_A'
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_BODY_ATTACHMENT_BUSHES',AttachBone="BODY",Skins=(Texture'DH_Vegetation2_tex.pinebranch_d_snow'))
+    VehicleAttachments(1)=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_TURRET_ATTACHMENT_BUSHES',AttachBone="PITCH",bAttachToWeapon=true,Skins=(Texture'DH_Vegetation2_tex.pinebranch_d_snow'))
 }

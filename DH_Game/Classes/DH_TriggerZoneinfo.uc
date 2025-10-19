@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_TriggerZoneInfo extends ZoneInfo;
 
-var() color OnColor;       // Color when light is on
-var() color OffColor;      // Color when light is off
+var() Color OnColor;       // Color when light is on
+var() Color OffColor;      // Color when light is off
 
 var() float ChangeTime;        // Time light takes to change from on to off.
 var() bool  bInitiallyOn;      // Whether it's initially on.

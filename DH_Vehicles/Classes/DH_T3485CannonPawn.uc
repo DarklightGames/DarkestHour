@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_T3485CannonPawn extends DHSovietCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3485Cannon'
+    GunClass=Class'DH_T3485Cannon'
     DriverPositions(0)=(ViewLocation=(X=23.0,Y=-15.0,Z=0.0),ViewFOV=21.25,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=0,Y=0,Z=15.0),ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',DriverTransitionAnim="VT3485_com_close",TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //
@@ -18,7 +18,7 @@ defaultproperties
     PeriscopePositionIndex=1
     BinocPositionIndex=3
 
-    //PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
+    //PeriscopeOverlay=Texture'DH_VehicleOptics_tex.MG_sight'
     //PeriscopeSize=0.5
 
     GunsightOverlay=Texture'Vehicle_Optic.t3485_sight'
@@ -28,12 +28,12 @@ defaultproperties
     ScopeCenterPositionX=0.075
     ScopeCenterScaleX=2.0
     ScopeCenterScaleY=1.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
 
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'
 
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredRotateSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'
 }

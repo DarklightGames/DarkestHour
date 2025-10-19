@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS2Cannon extends DHATGunCannon;
@@ -8,24 +8,40 @@ class DH_ZiS2Cannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS2_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision')
+    Mesh=SkeletalMesh'DH_ZiS_anm.ZIS2_TURRET_EXT'
+
+    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT'
+    Skins(1)=Texture'DH_ZiS_tex.ZIS_TURRET_EXT'
+    
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS2_TURRET_YAW_COLLISION',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS2_BARREL_COLLISION',AttachBone="BARREL")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_ZiS_stc.ZIS_PITCH_COLLISION',AttachBone="GUN_PITCH")
+
+    AnimationDrivers(0)=(Channel=2,AnimationName="PITCH_DRIVER",BoneName="PITCH_DRIVER_ROOT",RotationType=ROTATION_Pitch,AnimationFrameCount=34)
+    AnimationDrivers(1)=(Channel=3,AnimationName="YAW_DRIVER",BoneName="YAW_BASE_POST",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+    AnimationDrivers(2)=(Channel=4,AnimationName="YAW_DRIVER",BoneName="YAW_WHEEL",RotationType=ROTATION_Yaw,AnimationFrameCount=26)
+
+    GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_Y)
+
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
+    GunnerAttachmentBone="GUN_YAW"
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE_ZIS2"
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
     MaxNegativeYaw=-4915
-    YawStartConstraint=-5500.0
-    YawEndConstraint=5500.0
-    CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64100
+    YawStartConstraint=-4915.0
+    YawEndConstraint=4915.0
+    CustomPitchUpLimit=5460     // +30 degrees
+    CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellAPCR'
-
+    PrimaryProjectileClass=Class'DH_ZiS2CannonShell'
+    SecondaryProjectileClass=Class'DH_ZiS2CannonShellHE'
+    TertiaryProjectileClass=Class'DH_ZiS2CannonShellAPCR'
 
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(2)="APCR"
@@ -43,13 +59,13 @@ defaultproperties
     SecondarySpread=0.002
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_VL_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_VL_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_VL_fire03'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') // 3.5 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(1)=200
@@ -74,4 +90,13 @@ defaultproperties
     RangeSettings(20)=4000
 
     ResupplyInterval=5.0
+
+    ProjectileRotationMode=PRM_MuzzleBone
+
+    ShakeOffsetMag=(X=12.0,Y=4.0,Z=20.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=6.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=5.0
 }

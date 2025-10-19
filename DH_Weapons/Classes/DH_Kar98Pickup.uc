@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kar98Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_Kar98Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98'
+    InventoryType=Class'DH_Kar98Weapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.k98'
 }

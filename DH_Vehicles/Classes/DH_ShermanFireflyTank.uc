@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ShermanFireflyTank extends DHArmoredVehicle;
@@ -15,15 +15,15 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
-    Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
-    Skins(4)=Texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
-    Skins(5)=Texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
+    Skins(0)=Texture'DH_VehiclesUK_tex.FireFly_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.FireFly_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.Sherman_hatch_int'
+    Skins(3)=Texture'DH_VehiclesUS_tex.Sherman_body_int'
+    Skins(4)=Texture'DH_VehiclesUK_tex.FireFly_treads'
+    Skins(5)=Texture'DH_VehiclesUK_tex.FireFly_treads'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-144.0,Y=-68.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-186.0,Y=-29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-186.0,Y=29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
@@ -50,7 +50,6 @@ defaultproperties
     RearLeftAngle=203.0
 
     // Movement
-    MaxCriticalSpeed=693.0 // 41 kph
     GearRatios(1)=0.19
     GearRatios(3)=0.62
     GearRatios(4)=0.76
@@ -63,18 +62,18 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointOffset=(X=-120.0,Y=0.0,Z=5.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=30.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=70.15
-    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_left'
-    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_right'
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Firefly_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Firefly_DamagedTrack_right'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-80.0,Y=0.0,Z=75.0)
     FireAttachBone="Body"
     FireEffectOffset=(X=80.0,Y=-35.0,Z=60.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_Dest'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Firefly_Dest'
 
     // Exit
     ExitPositions(0)=(X=80.0,Y=-115.0,Z=125.0)   // driver's hatch (exit to side)
@@ -86,12 +85,12 @@ defaultproperties
     ExitPositions(6)=(X=80.0,Y=115.0,Z=125.0)    // co-driver's hatch (a fallback)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' // TODO: Sherman Mk.V (M4A4) used a different gasoline multi-engine to M4/M4A1, so ideally add different engine sounds
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.ShermanEngineLoop' // TODO: Sherman Mk.V (M4A4) used a different gasoline multi-engine to M4/M4A1, so ideally add different engine sounds
+    StartUpSound=Sound'DH_AlliedVehicleSounds.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_R'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=5
@@ -104,9 +103,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.firefly_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.FireFly_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.FireFly_turret_look'
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.62
     VehicleHudTreadsPosY=0.495
@@ -121,7 +120,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.82
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.sherman_firefly'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -156,7 +155,7 @@ defaultproperties
         WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -164,7 +163,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -173,7 +172,7 @@ defaultproperties
         WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -181,7 +180,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -189,14 +188,14 @@ defaultproperties
         WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -217,5 +216,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanFireflyTank.KParams0'
+    KParams=KParams0
 }

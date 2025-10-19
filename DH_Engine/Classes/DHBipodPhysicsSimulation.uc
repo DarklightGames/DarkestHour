@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // A simple pendulum simulation to allow bipods to wobble around realistically.
 // All angles are in radians.
@@ -71,7 +71,7 @@ function UnlockBipod()
 
 function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 {
-    local rotator BarrelBoneRotation, BipodBoneRotation;
+    local Rotator BarrelBoneRotation, BipodBoneRotation;
     local Controller Controller;
     local float InstigatorYaw;
     local float YawDeltaAngularAcceleration;
@@ -90,7 +90,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     if (bIsLocking)
     {
         T = (Weapon.Level.TimeSeconds - LockStartTimeSeconds) / (LockEndTimeSeconds - LockStartTimeSeconds);
-        Angle = class'UInterp'.static.Acceleration(T, LockAngleStart, LockAngleTarget);
+        Angle = Class'UInterp'.static.Acceleration(T, LockAngleStart, LockAngleTarget);
 
         if (T >= 1.0)
         {
@@ -103,7 +103,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     DeltaTime /= Weapon.Level.TimeDilation;
 
     // TODO: get the local "world" location of the BAR (rotation of world only)
-    InstigatorYaw = class'UUnits'.static.UnrealToRadians(Controller.Rotation.Yaw);
+    InstigatorYaw = Class'UUnits'.static.UnrealToRadians(Controller.Rotation.Yaw);
 
     // Angular acceleration imparted by the weapon's rotation in the world
     YawDeltaAngularAcceleration = -1.0 * ((InstigatorYaw - OldInstigatorYaw) * Settings.YawDeltaFactor);
@@ -113,9 +113,9 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
     // Get the barrel bone roll (so that we know which way is down!)
     BarrelBoneRotation = Weapon.GetBoneRotation(Settings.BarrelBoneName) + Settings.BarrelBoneRotationOffset;
-    BarrelRoll = class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelRollAxis, BarrelBoneRotation));
-    BarrelPitch = class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelPitchAxis, BarrelBoneRotation));
-    BarrelPitch = FClamp(BarrelPitch, class'UUnits'.static.DegreesToRadians(-90), class'UUnits'.static.DegreesToRadians(90));
+    BarrelRoll = Class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelRollAxis, BarrelBoneRotation));
+    BarrelPitch = Class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelPitchAxis, BarrelBoneRotation));
+    BarrelPitch = FClamp(BarrelPitch, Class'UUnits'.static.DegreesToRadians(-90), Class'UUnits'.static.DegreesToRadians(90));
 
     PendulumForce = (-1 * Settings.GravityScale / Settings.ArmLength) * Sin(Angle - BarrelRoll) * Cos(BarrelPitch);
 
@@ -153,7 +153,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     InstantaneousAngularAcceleration = 0;
 
     // Set the bipod bone's rotation
-    BipodRoll = class'UUnits'.static.RadiansToUnreal(Angle * Settings.AngleFactor);
+    BipodRoll = Class'UUnits'.static.RadiansToUnreal(Angle * Settings.AngleFactor);
 
     switch (Settings.BipodRollAxis)
     {

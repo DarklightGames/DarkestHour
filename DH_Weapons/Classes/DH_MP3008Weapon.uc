@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MP3008Weapon extends DHAutoWeapon;
@@ -9,17 +9,17 @@ defaultproperties
 {
     ItemName="MP 3008"
     NativeItemName="Maschinenpistole 3008"
-    FireModeClass(0)=class'DH_Weapons.DH_MP3008Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP3008MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MP3008Attachment'
-    PickupClass=class'DH_Weapons.DH_MP3008Pickup'
+    FireModeClass(0)=Class'DH_MP3008Fire'
+    FireModeClass(1)=Class'DH_MP3008MeleeFire'
+    AttachmentClass=Class'DH_MP3008Attachment'
+    PickupClass=Class'DH_MP3008Pickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.MP3008_mesh'
     //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
-    Skins(2)=Texture'DH_Sten_tex.Sten.mp3008_tex'
+    Skins(2)=Texture'DH_Sten_tex.mp3008_tex'
     HandNum=1
     SleeveNum=0
 
@@ -33,7 +33,7 @@ defaultproperties
     InitialNumPrimaryMags=6
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelClass=Class'DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true

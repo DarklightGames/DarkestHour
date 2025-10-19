@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShellHE88mmATDamageType extends DHShellHE88mmDamageType
@@ -8,5 +8,5 @@ class DHShellHE88mmATDamageType extends DHShellHE88mmDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.ATGunKill'
 }

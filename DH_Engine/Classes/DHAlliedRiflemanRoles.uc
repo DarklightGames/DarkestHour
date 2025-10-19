@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAlliedRiflemanRoles extends DHAlliedRoles
@@ -10,7 +10,5 @@ defaultproperties
 {
     MyName="Rifleman"
     AltName="Rifleman"
-    Article="a "
-    PluralName="Riflemen"
     bSpawnWithExtraAmmo=true
 }

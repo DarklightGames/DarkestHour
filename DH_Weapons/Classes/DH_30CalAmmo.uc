@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_30CalAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=151
-    InitialAmount=150
-    IconMaterial=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    MaxAmmo=201
+    InitialAmount=200
+    IconMaterial=Texture'InterfaceArt_tex.mg42_ammo'
 }

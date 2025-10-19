@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // A marker for measuring distances on the map. Any role can use it.
 
@@ -15,7 +15,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 defaultproperties
 {
     MarkerName="Measure"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Calipers'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Calipers'
     IconColor=(R=0,G=204,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4

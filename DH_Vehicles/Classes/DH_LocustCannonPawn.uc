@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_LocustCannonPawn extends DHAmericanCannonPawn;
@@ -122,7 +122,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 
     if (bOpticsDamaged && DriverPositionIndex < GunsightPositions)
     {
-        PeriscopeOverlay = Texture'DH_VehicleOpticsDestroyed_tex.Allied.Pericope_allied_damaged'; // TODO: get a broken periscope overlay made (this is a crude placeholder)
+        PeriscopeOverlay = Texture'DH_VehicleOpticsDestroyed_tex.Pericope_allied_damaged'; // TODO: get a broken periscope overlay made (this is a crude placeholder)
     }
     else
     {
@@ -174,7 +174,7 @@ exec function SetSightSize(float NewValue)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_LocustCannon'
+    GunClass=Class'DH_LocustCannon'
     // TEMP added ViewLocation to fake camera position changes, until anims are made:
     DriverPositions(0)=(ViewLocation=(X=31.0,Y=-35.0,Z=14.9),ViewFOV=85.0,TransitionUpAnim="gunsight_out",bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=-5.0,Y=-15.0,Z=0.0),TransitionUpAnim="periscope_in",TransitionDownAnim="gunsight_in",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768)
@@ -188,14 +188,14 @@ defaultproperties
     DriveRot=(Yaw=55536) // have to turn commander to the left so he just about squeezes inside the hatch without clipping the turret
     DriveAnim="stand_idlehip_binoc"
     bManualTraverseOnly=true
-    GunsightOverlay=Combiner'DH_VehicleOptics_tex.US.Locust_sight_combiner' // combiner used by HUD overlay to draw gunsight telescope 'portal' view
+    GunsightOverlay=Combiner'DH_VehicleOptics_tex.Locust_sight_combiner' // combiner used by HUD overlay to draw gunsight telescope 'portal' view
     GunsightSize=0.135 // slightly over 6 degrees visible FOV through sight (should be 0.1271), but gives correct 1.8x magnification with portal FOV, where we have to work with an integer
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Stuart_sight_destroyed'
     bIsPeriscopicGunsight=true
-    HUDOverlayClass=class'DH_Vehicles.DH_LocustGunsightOverlay'
+    HUDOverlayClass=Class'DH_LocustGunsightOverlay'
     HUDOverlayFOV=85.0
     HUDOverlayOffset=(X=5.25,Y=0.0,Z=0.0)
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.StuartShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.StuartShell_reload'
     FireImpulse=(X=-30000.0)
 }

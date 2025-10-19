@@ -1,9 +1,39 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
+
+function InternalOnClick(GUIContextMenu Sender, int Index)
+{
+    if (Sender == none || NotifyContextSelect(Sender, Index))
+    {
+        return;
+    }
+
+    if (Index == 0 && DHMapVotingPage(MenuOwner) != none)
+    {
+        DHMapVotingPage(MenuOwner).ForceMapVote(self);
+    }
+}
+
+function bool InternalOnOpen(GUIContextMenu Sender)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsAdmin();
+}
 
 function LoadList(VotingReplicationInfo LoadVRI)
 {
@@ -13,7 +43,7 @@ function LoadList(VotingReplicationInfo LoadVRI)
 
     for (i = 0; i < LoadVRI.GameConfig.Length; ++i)
     {
-        ListArray[i] = new class'DHMapVoteMultiColumnList';
+        ListArray[i] = new Class'DHMapVoteMultiColumnList';
         ListArray[i].LoadList(LoadVRI, i);
 
         DHMapVoteMultiColumnList(ListArray[i]).GameTypeIndex = i;
@@ -29,5 +59,11 @@ function LoadList(VotingReplicationInfo LoadVRI)
 
 defaultproperties
 {
-    ContextMenu=none
+    Begin Object Class=GUIContextMenu Name=AdminMapContextMenu
+		ContextItems(0)="ADMIN: Force map to this"
+        OnSelect=InternalOnClick
+        OnOpen=InternalOnOpen
+    End Object
+
+    ContextMenu=AdminMapContextMenu
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuH42CannonShellHEAT extends DHCannonShellHEAT;
@@ -13,16 +13,16 @@ defaultproperties
     BallisticCoefficient=2.96
 
     //Damage
-    ImpactDamage=373  //~~600 gramms TNT
-    Damage=300.0
+    ImpactDamage=650 // 1.49kg of PETN: UK HANDBOOK OF ENEMY AMMUNITION PAMPHLET No. 14
+    Damage=415.0
     DamageRadius=700.0
 
     bDebugInImperial=false
 
     //Effects
     DrawScale=1.5
-    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    CoronaClass=Class'DHShellTracer_OrangeLarge'
+    ShellTrailClass=Class'DHShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=11.5

@@ -1,30 +1,63 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
 
+var() RangeInt HatchClearRange;
+
+simulated function bool IsHatchBlocked()
+{
+    if (Gun == none)
+    {
+        return false;
+    }
+
+    if (Gun.CurrentAim.Yaw < HatchClearRange.Min || Gun.CurrentAim.Yaw > HatchClearRange.Max)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Modified to prevent player from unbuttoning if MG is not turned sideways (otherwise it will be blocking hatch, due to hetzer's small size)
 simulated function NextWeapon()
 {
-    if (Gun != none && Abs(Gun.CurrentAim.Yaw) > 10700 && Abs(Gun.CurrentAim.Yaw) < 22700) // to open, MG must be between approx 2 to 4 o'clock, or 8 to 10 o'clock
+    if (IsHatchBlocked())
     {
-        super.NextWeapon();
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage');
+        }
+
+        return;
     }
-    else if (IsHumanControlled())
+
+    if (VehWep != none && VehWep.IsInState('Reloading'))
     {
-        PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 1); // "MG is blocking the hatch - turn it sideways to open"
+        return;
     }
+
+    super.NextWeapon();
+}
+
+simulated function bool CanReload()
+{
+    return DriverPositionIndex == 1 && !IsInState('ViewTransition');
 }
 
 defaultproperties
 {
-     BinocsDrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionUpAnim="MG_open",DriverTransitionAnim="VT60_com_close")
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG',TransitionDownAnim="MG_close",DriverTransitionAnim="VT60_com_open")
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_MG')
-     GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
-     DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
-     DriveAnim="VT60_com_idle_open"
+    HatchClearRange=(Min=-24500,Max=-18200)
+    BinocsDrivePos=(X=0,Y=0,Z=0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',TransitionUpAnim="raise",DriverTransitionAnim="hetzer_mg_lower")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',TransitionDownAnim="lower",DriverTransitionAnim="hetzer_mg_raise",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.HETZER_MG_INT',DriverTransitionAnim="hetzer_mg_binocs")
+    GunClass=Class'DH_HetzerMountedMG'
+    DrivePos=(X=-1.08303,Y=-13.4031,Z=58)
+    DriveAnim="hetzer_mg_idle"
+    GunsightCameraBone="GUNSIGHT_CAMERA"
+    CameraBone="COM_CAMERA"
 }

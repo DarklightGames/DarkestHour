@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M9530BashDamType extends DHWeaponBashDamageType
@@ -8,6 +8,6 @@ class DH_M9530BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_M9530Weapon'
+    WeaponClass=Class'DH_M9530Weapon'
 }
 

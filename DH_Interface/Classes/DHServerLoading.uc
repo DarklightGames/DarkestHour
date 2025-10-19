@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHServerLoading extends UT2K4ServerLoading;
@@ -10,9 +10,6 @@ class DHServerLoading extends UT2K4ServerLoading;
 var localized string DeployingText;
 var localized string AuthorText;
 var localized string UnspecifiedText;
-var localized string EnabledText;
-var localized string DisabledText;
-var localized string GameTypeText;
 
 var Material DHTextLogo;
 var Material DefaultControlsImage;
@@ -21,7 +18,7 @@ var CacheManager.MapRecord LoadingMapRecord;
 
 simulated event Init()
 {
-    LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MapName);
+    LoadingMapRecord = Class'CacheManager'.static.GetMapRecord(MapName);
 
     // Calls the base background and text functions (should be after we get the mapRecord)
     super.Init();
@@ -113,7 +110,7 @@ simulated function SetImage()
 
     DrawOpImage(Operations[0]).Image = M;
 
-    M = material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
+    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", Class'Material'));
 
     if (M == none)
     {
@@ -126,8 +123,8 @@ simulated function SetImage()
     else
     {
         // If using the map's background, then the borders should be default
-        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
-        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
+        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.DHSectionTopper';
+        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.DHSectionTopper';
     }
     
     DrawOpImage(Operations[0]).Image = M;
@@ -135,9 +132,6 @@ simulated function SetImage()
 
 defaultproperties
 {
-    GameTypeText="Game Type: {0}"
-    EnabledText="Enabled"
-    DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
 
@@ -145,29 +139,29 @@ defaultproperties
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
+        Image=Texture'DH_GUI_Tex.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.0
         Lft=0.0
         Width=1.0
         Height=0.09
-        DrawColor=(R=255,B=255,G=255,A=255)
+        DrawColor=(R=0,B=0,G=0,A=255)
     End Object
     Operations(1)=OpTopBorder
 
     Begin Object class=DrawOpImage Name=OpBottomBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
+        Image=Texture'DH_GUI_Tex.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.91
         Lft=0.0
         Width=1.0
         Height=0.09
-        DrawColor=(R=255,B=255,G=255,A=255)
+        DrawColor=(R=0,B=0,G=0,A=255)
     End Object
     Operations(2)=OpBottomBorder
 
     Begin Object class=DrawOpImage Name=OpDHTextLogoImg
-        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.DHTextLogo'
         ImageStyle=0
         Top=0.1
         Lft=0.0
@@ -178,24 +172,23 @@ defaultproperties
     Operations(3)=OpDHTextLogoImg
 
     Begin Object class=DrawOpText Name=OpLoading
-        Top=0.93
+        Top=0.92
         Lft=0.05
         Height=0.05
         Width=0.9
-        Justification=0
-        FontName="ROInterface.fntROMainMenu"
+        Justification=2
+        FontName="DH_Interface.DHHugeButtonFont"
         bWrapText=false
     End Object
     Operations(4)=OpLoading
 
-    Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
+    Begin Object class=DrawOpText Name=OpMapAuthorText
         Top=0.02
         Lft=0.05
         Height=0.05
-        Width=0.32
-        Justification=0
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
+        Width=0.9
+        Justification=2
+        FontName="DH_Interface.DHHugeButtonFont"
     End Object
     Operations(5)=OpMapAuthorText
 }

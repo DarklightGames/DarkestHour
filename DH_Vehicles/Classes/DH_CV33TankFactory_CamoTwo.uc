@@ -1,0 +1,12 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DH_CV33TankFactory_CamoTwo extends DH_CV33TankFactory;
+
+defaultproperties
+{
+    VehicleClass=Class'DH_CV33Tank_CamoTwo'
+    Skins(0)=Texture'DH_CV33_tex.cv33_body_ext_camo2'
+}

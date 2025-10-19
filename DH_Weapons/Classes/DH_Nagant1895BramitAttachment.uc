@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Nagant1895BramitAttachment extends DHWeaponAttachment;
@@ -12,7 +12,7 @@ simulated function WeaponLight() //emptying this out to remove muzzle flash ligh
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895Bramit_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895Bramit_icon'  
+    MenuImage=Texture'DH_InterfaceArt_tex.m1895Bramit_icon'
     mMuzFlashClass=none
     ROShellCaseClass=none //its a revolver
     bRapidFire=false

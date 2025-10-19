@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCreditsPage extends LargeWindow;
@@ -8,9 +8,86 @@ class DHCreditsPage extends LargeWindow;
 var automated GUIButton b_Close;
 var automated GUIScrollTextBox lb_Credits;
 
-var localized array<string> CreditLines;
+var array<string> ProjectLeads;
+var array<string> Programmers;
+var array<string> Animators;
+var array<string> Modelers;
+var array<string> TextureArtists;
+var array<string> Artists;
+var array<string> LevelDesigners;
+var array<string> SoundArtists;
+var array<string> VoiceActors;
+var array<string> LocalizationTeam;
+var array<string> CommunityAdmins;
+var array<string> PastPatreonSupporters;
+var array<string> OtherContributors;
+var array<string> SpecialThanks;
+
+var array<string> CreditLines;
+
+var localized string ProjectLeadsText;
+var localized string ProgrammersText;
+var localized string AnimatorsText;
+var localized string ModelersText;
+var localized string TextureArtistsText;
+var localized string ArtistsText;
+var localized string LevelDesignersText;
+var localized string SoundArtistsText;
+var localized string VoiceActorsText;
+var localized string LocalizationTeamText;
+var localized string CommunityAdminsText;
+var localized string PastPatreonSupportersText;
+var localized string OtherContributorsText;
+var localized string SpecialThanksText;
 
 function AddSystemMenu(){}
+
+function AddCreditLine(string Line)
+{
+    CreditLines[CreditLines.Length] = Line;
+}
+
+function AddHeader(string Header)
+{
+    AddCreditLine(Header);
+    AddCreditLine("");
+}
+
+function AddSection(string Header, array<string> Lines)
+{
+    local int i;
+
+    AddHeader("====" @ Header @ "====");
+
+    for (i = 0; i < Lines.Length; ++i)
+    {
+        AddCreditLine(Lines[i]);
+    }
+
+    AddCreditLine("");
+}
+
+function BuildCreditLines()
+{
+    CreditLines.Length = 0;
+
+    AddHeader("DARKEST HOUR: EUROPE '44-'45");
+
+    AddSection(ProjectLeadsText, ProjectLeads);
+    AddSection(ProgrammersText, Programmers);
+    AddSection(AnimatorsText, Animators);
+    AddSection(ModelersText, Modelers);
+    AddSection(TextureArtistsText, TextureArtists);
+    AddSection(ArtistsText, Artists);
+    AddSection(LevelDesignersText, LevelDesigners);
+    AddSection(VoiceActorsText, VoiceActors);
+    AddSection(SoundArtistsText, SoundArtists);
+    AddSection(LocalizationTeamText, LocalizationTeam);
+    AddSection(CommunityAdminsText, CommunityAdmins);
+    AddSection(PastPatreonSupportersText, PastPatreonSupporters);
+    AddSection(OtherContributorsText, OtherContributors);
+    AddSection(SpecialThanksText, SpecialThanks);
+}
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -19,7 +96,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super.InitComponent(MyController, MyOwner);
 
-    class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+
+    BuildCreditLines();
 
     for (i = 0; i < CreditLines.Length; ++i)
     {
@@ -61,7 +140,7 @@ defaultproperties
         OnClick=DHCreditsPage.InternalOnClick
         OnKeyEvent=CloseButton.InternalOnKeyEvent
     End Object
-    b_Close=GUIButton'DH_Interface.DHCreditsPage.CloseButton'
+    b_Close=CloseButton
     Begin Object Class=DHGUIScrollTextBox Name=CreditText
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
@@ -72,8 +151,9 @@ defaultproperties
         WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
+        TextAlign=TXTA_Center
     End Object
-    lb_Credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
+    lb_Credits=CreditText
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
@@ -88,10 +168,10 @@ defaultproperties
         OnMousePressed=DHCreditsPage.FloatingMousePressed
         OnMouseRelease=DHCreditsPage.FloatingMouseRelease
     End Object
-    t_WindowTitle=DHGUIHeader'DH_Interface.DHCreditsPage.TitleBar'
+    t_WindowTitle=TitleBar
     WindowName="Credits"
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
@@ -101,206 +181,211 @@ defaultproperties
         WinHeight=0.98
         RenderWeight=0.000003
     End Object
-    i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
+    i_FrameBG=FloatingFrameBackground
 
-    CreditLines(0)="DARKEST HOUR: EUROPE '44-'45"
-    CreditLines(1)=""
-    CreditLines(2)="Project Leads:"
-    CreditLines(3)=""
-    CreditLines(4)="Colin Basnett"
-    CreditLines(5)="dirtybirdy"
-    CreditLines(6)="Matty"
-    CreditLines(7)="Exocet"
-    CreditLines(8)=""
-    CreditLines(9)="Code:"
-    CreditLines(10)=""
-    CreditLines(11)="Colin Basnett"
-    CreditLines(12)="Matt UK"
-    CreditLines(13)="Theel"
-    CreditLines(14)="Shurek"
-    CreditLines(15)="PsYcH0_Ch!cKeN"
-    CreditLines(16)="dirtybirdy"
-    CreditLines(17)="Daniel Mann"
-    CreditLines(18)="mimi~"
-    CreditLines(19)="Hopkins"
-    CreditLines(20)="Teufelhund"
-    CreditLines(21)="Fennich_FJR6"
-    CreditLines(22)="jmoney"
-    CreditLines(23)=""
-    CreditLines(24)="Art Coordinator:"
-    CreditLines(25)="Patison"
-    CreditLines(26)=""
-    CreditLines(27)="Models:"
-    CreditLines(28)=""
-    CreditLines(29)="RustIronCrowe"
-    CreditLines(30)="Apekop"
-    CreditLines(31)="Coyote Ninja"
-    CreditLines(32)="Diablo"
-    CreditLines(33)="Garisson"
-    CreditLines(34)="Maharzan"
-    CreditLines(35)="Nights2o06"
-    CreditLines(36)="ScubaSteve"
-    CreditLines(37)="Silence14"
-    CreditLines(38)="Tman"
-    CreditLines(39)="2_k"
-    CreditLines(40)="FooBar"
-    CreditLines(41)="DmitriB"
-    CreditLines(42)="Captain Obvious"
-    CreditLines(43)="piotrlukasik"
-    CreditLines(44)="Theel"
-    CreditLines(45)="Respio"
-    CreditLines(46)="AAZ"
-    CreditLines(47)="Mechanic"
-    CreditLines(48)="eksha"
-    CreditLines(49)="Leyawynn"
-    CreditLines(50)="Matty"
-    CreditLines(51)="Napoleon Blownapart"
-    CreditLines(52)="Pvt.Winter"
-    CreditLines(53)=""
-    CreditLines(54)="Textures:"
-    CreditLines(55)=""
-    CreditLines(56)="Protector"
-    CreditLines(57)="Aeneas2020"
-    CreditLines(58)="Blacklabel"
-    CreditLines(59)="Fennich_FJR6"
-    CreditLines(60)="FooBar"
-    CreditLines(61)="CYoung"
-    CreditLines(62)="Captain Obvious"
-    CreditLines(63)="piotrlukasik"
-    CreditLines(64)="Theel"
-    CreditLines(65)="Groundwaffe"
-    CreditLines(66)="Matty"
-    CreditLines(67)=""
-    CreditLines(68)="Art:"
-    CreditLines(69)=""
-    CreditLines(70)="Der Landser"
-    CreditLines(71)="Protector"
-    CreditLines(72)="Aeneas2020"
-    CreditLines(73)="Fennich_FJR6"
-    CreditLines(74)="Patison"
-    CreditLines(75)="Seven"
-    CreditLines(76)=""
-    CreditLines(77)="Animations:"
-    CreditLines(78)=""
-    CreditLines(79)="Exocet"
-    CreditLines(80)="Mike Munk (TWI)"
-    CreditLines(81)="TT33"
-    CreditLines(82)="Razorneck"
-    CreditLines(83)="AAZ"
-    CreditLines(84)="Aarón Q.V."
-    CreditLines(85)="Colin Basnett"
-    CreditLines(86)="dirtybirdy"
-    CreditLines(87)=""
-    CreditLines(88)="Level Design:"
-    CreditLines(89)=""
-    CreditLines(90)="Theel"
-    CreditLines(91)="SchutzeSepp"
-    CreditLines(92)="Razorneck"
-    CreditLines(93)="BOH-rekrut"
-    CreditLines(94)="Jorg Biermann"
-    CreditLines(95)="Exocet"
-    CreditLines(96)="Nestor Makhno"
-    CreditLines(97)="602RAF_Puff"
-    CreditLines(98)="Drecks"
-    CreditLines(99)="FlashPanHunter"
-    CreditLines(100)="Jeff Duquette"
-    CreditLines(101)="Sichartshofen"
-    CreditLines(102)="kashash"
-    CreditLines(103)="EvilHobo"
-    CreditLines(104)="TWB*RedYager and TWB*JimMiller"
-    CreditLines(105)="Ravelo"
-    CreditLines(106)="dolas"
-    CreditLines(107)="Bäckis"
-    CreditLines(108)="WOLFkraut"
-    CreditLines(109)="Cpt.Caverne"
-    CreditLines(110)="Mad.Death.Hound"
-    CreditLines(111)="John Davidson"
-    CreditLines(112)=""
-    CreditLines(113)="Sound:"
-    CreditLines(114)=""
-    CreditLines(115)="Fennich_FJR6"
-    CreditLines(116)="Blitzkreig"
-    CreditLines(117)="Wiseq"
-    CreditLines(118)="Boone"
-    CreditLines(119)="Demonizer"
-    CreditLines(120)="PsYcH0_Ch!cKeN"
-    CreditLines(121)="Shurek"
-    CreditLines(122)="602RAF_Puff"
-    CreditLines(123)="engineer"
-    CreditLines(124)="pillam"
-    CreditLines(125)="Logan Laidlaw"
-    CreditLines(126)="jmoney"
-    CreditLines(127)="Nathan B. Lewis"
-    CreditLines(128)="AAZ"
-    CreditLines(129)=""
-    CreditLines(130)="Community Admins:"
-    CreditLines(131)=""
-    CreditLines(132)="Colonel_Ironnuts"
-    CreditLines(133)="toaster"
-    CreditLines(134)="Sugardust"
-    CreditLines(135)="Wittmann"
-    CreditLines(136)=""
-    CreditLines(137)="Past Patreon Supporters:"
-    CreditLines(138)=""
-    CreditLines(139)="-[SiN]-Titus"
-    CreditLines(140)=".Reflected."
-    CreditLines(141)="[DNR]Gun4hire"
-    CreditLines(142)="8BitWarrior"
-    CreditLines(143)="Brian Briggs"
-    CreditLines(144)="Caleb Coates"
-    CreditLines(145)="clad"
-    CreditLines(146)="Clay McCarty"
-    CreditLines(147)="Duncan Langford"
-    CreditLines(148)="Frank Baele"
-    CreditLines(149)="Garth Davis"
-    CreditLines(150)="Glock Shanty"
-    CreditLines(151)="Jeffrey Allan Beeler"
-    CreditLines(152)="John Ciccariello"
-    CreditLines(153)="Josef Erik Sedlácek"
-    CreditLines(154)="Joshua Dressel"
-    CreditLines(155)="Justin Hall"
-    CreditLines(156)="Keith Olson"
-    CreditLines(157)="Kevin Vones"
-    CreditLines(158)="KS"
-    CreditLines(159)="Mal"
-    CreditLines(160)="Mikolaj Stefan"
-    CreditLines(161)="Munakoiso"
-    CreditLines(162)="Peter Senzamici"
-    CreditLines(163)="PFC Patison [29th ID]"
-    CreditLines(164)="ProjectMouthwash"
-    CreditLines(165)="Rawhide"
-    CreditLines(166)="Remington Spooner"
-    CreditLines(167)="Robert Morra"
-    CreditLines(168)="Saferight"
-    CreditLines(169)="Sean Gift"
-    CreditLines(170)="Zhang Han"
-    CreditLines(171)=""
-    CreditLines(172)="Other Contributors:"
-    CreditLines(173)=""
-    CreditLines(174)="After-Hourz Gaming Network"
-    CreditLines(175)="All the lads from Splat"
-    CreditLines(176)="The Wild Bunch"
-    CreditLines(177)="Schneller"
-    CreditLines(178)="Beppo and the lads from Sentry Studios"
-    CreditLines(179)="Amizaur for vehicle optics code and German vehicle gun sights"
-    CreditLines(180)="Thommy-L (Fatal Error)"
-    CreditLines(181)="Carpathian Crosses Team"
-    CreditLines(182)="Torben 'thens' Hensgens"
-    CreditLines(183)="29th Infantry Division"
-    CreditLines(184)="Good Guys Gaming Community"
-    CreditLines(185)="ChrisMo1944"
-    CreditLines(186)=""
-    CreditLines(187)="Special Thanks:"
-    CreditLines(188)=""
-    CreditLines(189)="A huge thanks goes out to all the former members of the Darklight Games team. Without their years of hard work, we would never have made it to this point. We're eternally grateful."
-    CreditLines(190)="All of our testers over the years. You've helped create a (mostly) bug free experience!"
-    CreditLines(191)="Alan, John, Dayle & all the guys at Tripwire Interactive for their assistance, support, and of course for the game that we all love so much."
-    CreditLines(192)="Our faithful community who has stuck by us over the years and continue to offer support and ideas for the betterment of the game."
-    CreditLines(193)="And to everyone else who has contributed to this mod over the years that we may have missed, thank you!"
+    ProjectLeads(0)="Colin Basnett"
+    ProjectLeads(1)="dirtybirdy"
+    ProjectLeads(2)="Matty"
+    ProjectLeads(3)="Exocet"
+
+    Programmers(0)="Colin Basnett"
+    Programmers(1)="Matt UK"
+    Programmers(2)="Theel"
+    Programmers(3)="Shurek"
+    Programmers(4)="PsYcH0_Ch!cKeN"
+    Programmers(5)="dirtybirdy"
+    Programmers(6)="Daniel Mann"
+    Programmers(7)="mimi~"
+    Programmers(8)="Hopkins"
+    Programmers(9)="Teufelhund"
+    Programmers(10)="Fennich_FJR6"
+    Programmers(11)="jmoney"
+    
+    Modelers(0)="RustIronCrowe"
+    Modelers(1)="Apekop"
+    Modelers(2)="Coyote Ninja"
+    Modelers(3)="Diablo"
+    Modelers(4)="Garisson"
+    Modelers(5)="Maharzan"
+    Modelers(6)="Nights2o06"
+    Modelers(7)="ScubaSteve"
+    Modelers(8)="Silence14"
+    Modelers(9)="Tman"
+    Modelers(10)="2_k"
+    Modelers(11)="FooBar"
+    Modelers(12)="DmitriB"
+    Modelers(13)="Captain Obvious"
+    Modelers(14)="piotrlukasik"
+    Modelers(15)="Theel"
+    Modelers(16)="Respio"
+    Modelers(17)="AAZ"
+    Modelers(18)="Mechanic"
+    Modelers(19)="eksha"
+    Modelers(20)="Leyawynn"
+    Modelers(21)="Matty"
+    Modelers(22)="Napoleon Blownapart"
+    Modelers(23)="Pvt.Winter"
+    Modelers(24)="Emercom Camper"
+    Modelers(25)="-Red-(Rus)-"
+
+    TextureArtists(0)="Protector"
+    TextureArtists(1)="Aeneas2020"
+    TextureArtists(2)="Blacklabel"
+    TextureArtists(3)="Fennich_FJR6"
+    TextureArtists(4)="FooBar"
+    TextureArtists(5)="CYoung"
+    TextureArtists(6)="Captain Obvious"
+    TextureArtists(7)="piotrlukasik"
+    TextureArtists(8)="Theel"
+    TextureArtists(9)="Groundwaffe"
+    TextureArtists(10)="Matty"
+    TextureArtists(11)="Napoleon Blownapart"
+    TextureArtists(12)="-Red-(Rus)-"
+
+    Artists(0)="Der Landser"
+    Artists(1)="Protector"
+    Artists(2)="Aeneas2020"
+    Artists(3)="Fennich_FJR6"
+    Artists(4)="Patison"
+    Artists(5)="Seven"
+    Artists(6)="Napoleon Blownapart"
+    
+    Animators(0)="Exocet"
+    Animators(1)="Mike Munk (TWI)"
+    Animators(2)="TT33"
+    Animators(3)="Razorneck"
+    Animators(4)="AAZ"
+    Animators(5)="Aarón Q.V."
+    Animators(6)="Colin Basnett"
+    Animators(7)="dirtybirdy"
+    Animators(8)="Enfield"
+
+    LevelDesigners(0)="Theel"
+    LevelDesigners(1)="SchutzeSepp"
+    LevelDesigners(2)="Razorneck"
+    LevelDesigners(3)="BOH-rekrut"
+    LevelDesigners(4)="Jorg Biermann"
+    LevelDesigners(5)="Exocet"
+    LevelDesigners(6)="Nestor Makhno"
+    LevelDesigners(7)="602RAF_Puff"
+    LevelDesigners(8)="Drecks"
+    LevelDesigners(9)="FlashPanHunter"
+    LevelDesigners(10)="Jeff Duquette"
+    LevelDesigners(11)="Sichartshofen"
+    LevelDesigners(12)="kashash"
+    LevelDesigners(13)="EvilHobo"
+    LevelDesigners(14)="TWB*RedYager and TWB*JimMiller"
+    LevelDesigners(15)="Ravelo"
+    LevelDesigners(16)="dolas"
+    LevelDesigners(17)="Bäckis"
+    LevelDesigners(18)="WOLFkraut"
+    LevelDesigners(19)="Cpt.Caverne"
+    LevelDesigners(20)="Mad.Death.Hound"
+    LevelDesigners(21)="John Davidson"
+    LevelDesigners(22)="Soul$eek"
+
+    VoiceActors(0)="Logan Laidlaw (American & Canadian)"
+    VoiceActors(1)="602RAF_Puff (British)"
+    VoiceActors(2)="Ettore Fulvio (Italian)"
+
+    SoundArtists(0)="Fennich_FJR6"
+    SoundArtists(1)="Blitzkreig"
+    SoundArtists(2)="Wiseq"
+    SoundArtists(3)="Boone"
+    SoundArtists(4)="Demonizer"
+    SoundArtists(5)="PsYcH0_Ch!cKeN"
+    SoundArtists(6)="Shurek"
+    SoundArtists(7)="engineer"
+    SoundArtists(8)="pillam"
+    SoundArtists(9)="Logan Laidlaw"
+    SoundArtists(10)="jmoney"
+    SoundArtists(11)="Nathan B. Lewis"
+    SoundArtists(12)="AAZ"
+    SoundArtists(13)="Ariel Hansen"
+
+    LocalizationTeam(0)="-Red-(Rus)- (Russian)"
+    LocalizationTeam(1)="dirtybirdy (Ukrainian)"
+    LocalizationTeam(2)="MortarOperator (Russian/Ukrainian)"
+    LocalizationTeam(3)="Maciej 'Babi' Babiszewski (Polish)"
+    LocalizationTeam(4)="Ramitos (Spanish)"
+    LocalizationTeam(5)="WernerWolff (German)"
+
+    CommunityAdmins(0)="Colonel_Ironnuts"
+    CommunityAdmins(1)="toaster"
+    CommunityAdmins(2)="Sugardust"
+    CommunityAdmins(3)="Wittmann"
+    
+    PastPatreonSupporters(0)="-[SiN]-Titus"
+    PastPatreonSupporters(1)=".Reflected."
+    PastPatreonSupporters(2)="[DNR]Gun4hire"
+    PastPatreonSupporters(3)="8BitWarrior"
+    PastPatreonSupporters(4)="Brian Briggs"
+    PastPatreonSupporters(5)="Caleb Coates"
+    PastPatreonSupporters(6)="clad"
+    PastPatreonSupporters(7)="Clay McCarty"
+    PastPatreonSupporters(8)="Duncan Langford"
+    PastPatreonSupporters(9)="Frank Baele"
+    PastPatreonSupporters(10)="Garth Davis"
+    PastPatreonSupporters(11)="Glock Shanty"
+    PastPatreonSupporters(12)="Jeffrey Allan Beeler"
+    PastPatreonSupporters(13)="John Ciccariello"
+    PastPatreonSupporters(14)="Josef Erik Sedlácek"
+    PastPatreonSupporters(15)="Joshua Dressel"
+    PastPatreonSupporters(16)="Justin Hall"
+    PastPatreonSupporters(17)="Keith Olson"
+    PastPatreonSupporters(18)="Kevin Vones"
+    PastPatreonSupporters(19)="KS"
+    PastPatreonSupporters(20)="Mal"
+    PastPatreonSupporters(21)="Mikolaj Stefan"
+    PastPatreonSupporters(22)="Munakoiso"
+    PastPatreonSupporters(23)="Peter Senzamici"
+    PastPatreonSupporters(24)="PFC Patison [29th ID]"
+    PastPatreonSupporters(25)="ProjectMouthwash"
+    PastPatreonSupporters(26)="Rawhide"
+    PastPatreonSupporters(27)="Remington Spooner"
+    PastPatreonSupporters(28)="Robert Morra"
+    PastPatreonSupporters(29)="Saferight"
+    PastPatreonSupporters(30)="Sean Gift"
+    PastPatreonSupporters(31)="Zhang Han"
+    
+    OtherContributors(0)="After-Hourz Gaming Network"
+    OtherContributors(1)="All the lads from Splat"
+    OtherContributors(2)="The Wild Bunch"
+    OtherContributors(3)="Schneller"
+    OtherContributors(4)="Beppo and the lads from Sentry Studios"
+    OtherContributors(5)="Amizaur for vehicle optics code and German vehicle gun sights"
+    OtherContributors(6)="Thommy-L (Fatal Error)"
+    OtherContributors(7)="Carpathian Crosses Team"
+    OtherContributors(8)="Torben 'thens' Hensgens"
+    OtherContributors(9)="29th Infantry Division"
+    OtherContributors(10)="Good Guys Gaming Community"
+    OtherContributors(11)="ChrisMo1944"
+    OtherContributors(12)="Metallicafan212 for the fix to the SDK selection bug"
+    
+    SpecialThanks(0)="A huge thanks goes out to all the former members of the Darklight Games team. Without their years of hard work, we would never have made it to this point. We're eternally grateful."
+    SpecialThanks(1)="All of our testers over the years. You've helped create a (mostly) bug free experience!"
+    SpecialThanks(2)="Alan, John, Dayle & all the guys at Tripwire Interactive for their assistance, support, and of course for the game that we all love so much."
+    SpecialThanks(3)="Our faithful community who has stuck by us over the years and continue to offer support and ideas for the betterment of the game."
+    SpecialThanks(4)="And to everyone else who has contributed to this mod over the years that we may have missed, thank you!"
 
     bRequire640x480=false
     WinTop=0.1
     WinLeft=0.1
     WinWidth=0.8
     WinHeight=0.8
+
+    ProjectLeadsText="Project Leads"
+    ProgrammersText="Programmers"
+    AnimatorsText="Animators"
+    ModelersText="Modelers"
+    TextureArtistsText="Texture Artists"
+    ArtistsText="Artists"
+    LevelDesignersText="Level Designers"
+    SoundArtistsText="Sound Artists"
+    VoiceActorsText="Voice Actors"
+    LocalizationTeamText="Localization Team"
+    CommunityAdminsText="Community Admins"
+    PastPatreonSupportersText="Past Patreon Supporters"
+    OtherContributorsText="Other Contributors"
+    SpecialThanksText="Special Thanks"
 }

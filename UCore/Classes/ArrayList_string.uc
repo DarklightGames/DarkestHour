@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class ArrayList_string extends Object;
@@ -145,6 +145,6 @@ private function int QuickSortPartition(int Lo, int Hi)
             return j;
         }
 
-        class'UCore'.static.SSwap(Items[i], Items[j]);
+        Class'UCore'.static.SSwap(Items[i], Items[j]);
     }
 }

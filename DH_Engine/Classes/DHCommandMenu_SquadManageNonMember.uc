@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_SquadManageNonMember extends DHCommandMenu;
@@ -41,7 +41,7 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local Pawn P;
@@ -120,12 +120,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         if (OtherPRI.IsInSquad())
         {
             ORI.InfoText[0] = default.AlreadyInASquadText;
-            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoColor = Class'UColor'.default.Red;
         }
         else if (PC != none && PC.SquadReplicationInfo != none && PC.SquadReplicationInfo.IsSquadFull(PC.GetTeamNum(), PC.GetSquadIndex()))
         {
             ORI.InfoText[0] = default.SquadIsFullText;
-            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoColor = Class'UColor'.default.Red;
         }
     }
 }
@@ -134,7 +134,7 @@ defaultproperties
 {
     AlreadyInASquadText="Already in a squad"
     SquadIsFullText="Squad is full"
-    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_invite')
+    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt2_tex.squad_invite')
     SlotCountOverride=4
 }
 

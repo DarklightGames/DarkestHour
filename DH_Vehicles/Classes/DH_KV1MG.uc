@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_KV1MG extends DHVehicleMG;
@@ -23,26 +23,26 @@ defaultproperties
     CustomPitchDownLimit=63000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
+    ProjectileClass=Class'DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
     FireInterval=0.105
-    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
+    TracerProjectileClass=Class'DH_DP27TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="muzzle"
     WeaponFireOffset=-8
     AmbientSoundScaling=1.3 // TODO: compare to DH MGs that use 2.75
     FireSoundClass=SoundGroup'DH_WeaponSounds.dt_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.dt.dt_fire_end'
+    FireEndSound=SoundGroup'DH_WeaponSounds.dt_fire_end'
 
     // Reload
     HUDOverlayReloadAnim="reload_tankmg"
-    ReloadStages(0)=(Sound=none,Duration=1.76) //Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000'
-    ReloadStages(1)=(Sound=none,Duration=2.29,HUDProportion=0.65) //Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052'
-    ReloadStages(2)=(Sound=none,Duration=2.35) //Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121'
-    ReloadStages(3)=(Sound=none,Duration=2.2,HUDProportion=0.35) //Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191'
+    ReloadStages(0)=(Sound=none,Duration=1.76) //Sound'Inf_Weapons_Foley.DT_reloadempty01_000'
+    ReloadStages(1)=(Sound=none,Duration=2.29,HUDProportion=0.65) //Sound'Inf_Weapons_Foley.DT_reloadempty02_052'
+    ReloadStages(2)=(Sound=none,Duration=2.35) //Sound'Inf_Weapons_Foley.DT_reloadempty03_121'
+    ReloadStages(3)=(Sound=none,Duration=2.2,HUDProportion=0.35) //Sound'Inf_Weapons_Foley.DT_reloadempty04_191'
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHStyle_ListSelectionBlack extends STY_ListSelection;
@@ -43,11 +43,11 @@ defaultproperties
     RStyles(2)=MSTY_Alpha
     RStyles(3)=MSTY_Alpha
     RStyles(4)=MSTY_Alpha
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=Texture'InterfaceArt_tex.empty'
+    Images(1)=Texture'InterfaceArt_tex.empty'
+    Images(2)=Texture'InterfaceArt_tex.empty'
+    Images(3)=Texture'InterfaceArt_tex.empty'
+    Images(4)=Texture'InterfaceArt_tex.empty'
     ImgStyle(0)=ISTY_Scaled
     ImgStyle(1)=ISTY_Scaled
     ImgStyle(2)=ISTY_Scaled

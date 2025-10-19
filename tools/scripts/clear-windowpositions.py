@@ -23,7 +23,7 @@ def main():
         with open(config_path, 'r+') as config_file:
             data = config_file.read()
             config_file.seek(0)
-            config_file.write(re.sub('\[WindowPositions\](\n.*?)*?\n(?=(\[|\Z))', '', data, flags=re.MULTILINE))
+            config_file.write(re.sub(r'\[WindowPositions\](\n.*?)*?\n(?=(\[|\Z))', '', data, flags=re.MULTILINE))
             config_file.truncate()
     except IOError as err:
         print('Error (', err.errno, '): ', err.strerror, sep='')

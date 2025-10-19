@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCannonShellHEAT extends DHCannonShell
@@ -17,14 +17,13 @@ var bool  bDidPenetrationExplosionFX; // already did the penetration explosion e
 var bool  bHitWorldObject;            // flags that shell has hit a world object & should run a world penetration check (reversing original bHitWorldObject, as this way seems more logical)
 
 var globalconfig float PenetrationScale; // global penetration depth scale factor
-var globalconfig float DistortionScale;  // global distortion scale factor
 
 // Modified to handle world object penetration
-simulated function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(Vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
     local Actor           TraceHitActor;
-    local vector          Direction, TempHitLocation, TempHitNormal;
+    local Vector          Direction, TempHitLocation, TempHitNormal;
     local float           xH, TempMaxWall;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
@@ -110,7 +109,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     bInHitWall = true; // set flag to prevent recursive calls
 
     // Do the MaxWall calculations
-    Direction = vector(Rotation);
+    Direction = Vector(Rotation);
     CheckWall(HitNormal, Direction);
     xH = 1.0 / Hardness;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
@@ -160,7 +159,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 }
 
 // Modified to handle shell destruction only if we didn't hit & penetrate a world object (if we did then we leave it to WorldPenetrationExplode)
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function Explode(Vector HitLocation, Vector HitNormal)
 {
     if (!bHitWorldObject)
     {
@@ -185,7 +184,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Alternative version of Explode if we have penetrated a world object (renamed from original PenetrationExplode, which misleadingly implied it related to vehicle penetration)
-simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
+simulated function WorldPenetrationExplode(Vector HitLocation, Vector HitNormal)
 {
     if (!bCollided)
     {
@@ -200,11 +199,11 @@ simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
 }
 
 // Sets Hardness based on the surface type hit
-simulated function CheckWall(vector HitNormal, vector X)
+simulated function CheckWall(Vector HitNormal, Vector X)
 {
-    local material      HitMaterial;
+    local Material      HitMaterial;
     local ESurfaceTypes HitSurfaceType;
-    local vector        TempHitLocation, TempHitNormal;
+    local Vector        TempHitLocation, TempHitNormal;
 
     Trace(TempHitLocation, TempHitNormal, Location, Location + X * 16.0, false,, HitMaterial);
 
@@ -297,7 +296,7 @@ defaultproperties
     bExplodesOnArmor=true
     bExplodesOnHittingWater=true
     bAlwaysDoShakeEffect=true
-    ShellImpactDamage=class'DH_Engine.DHShellHEATImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEATImpactDamageType'
 
     HullFireChance=0.3
     EngineFireChance=0.8
@@ -307,26 +306,25 @@ defaultproperties
     // This is why Hull fire chance is quite low, as a HEAT shell has to hit components directly in order to damage them even more so than APCR
     // but Engine fire chance is increased, because a concentrated powerful jet of molten metal is more likely to critically damage it even than the APCR
 
-    ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-    ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-    ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-    ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    ExplosionSound(0)=SoundGroup'ProjectileSounds.OUT_HE_explode01'
+    ExplosionSound(1)=SoundGroup'ProjectileSounds.OUT_HE_explode02'
+    ExplosionSound(2)=SoundGroup'ProjectileSounds.OUT_HE_explode03'
+    ExplosionSound(3)=SoundGroup'ProjectileSounds.OUT_HE_explode04'
     WScale=1.0
     EnergyFactor=1000.0
     PeneExploWallOut=75.0
     PenetrationScale=0.08
-    DistortionScale=0.4
     ShakeRotMag=(Y=0.0)
     ShakeRotRate=(Z=2500.0)
     BlurTime=6.0
     BlurEffectScalar=2.1
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
-    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.HE_deflect'
+    ShellHitVehicleEffectClass=Class'DHPanzerfaustHitTank'
+    ShellDeflectEffectClass=Class'TankHEHitDeflect'
     DamageRadius=300.0
-    MyDamageType=class'DH_Engine.DHShellHEATDamageType'
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    MyDamageType=Class'DHShellHEATDamageType'
+    ExplosionDecal=Class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=Class'ArtilleryMarkSnow'
     LifeSpan=10.0
 //  SoundRadius=1000.0 // removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
     ExplosionSoundVolume=1.5

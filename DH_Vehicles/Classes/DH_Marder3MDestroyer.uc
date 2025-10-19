@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Marder3MDestroyer extends DHArmoredVehicle;
@@ -14,15 +14,15 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
-    Skins(2)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(4)=Texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.marder_turret_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.marder_body_ext'
+    Skins(2)=Texture'DH_VehiclesGE_tex7.marder_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.marder_treads'
+    Skins(4)=Texture'DH_VehiclesGE_tex7.marder3m_body_int'
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
     // Driver
@@ -53,7 +53,6 @@ defaultproperties
     RearLeftAngle=210.0
 
     // Movement
-    MaxCriticalSpeed=729.0 // 43 kph
     GearRatios(4)=0.72
     TransRatio=0.1
 
@@ -67,14 +66,14 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-5.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
     FireEffectOffset=(X=10.0,Y=0.0,Z=-20.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3M_dest'
 
     // Exit
     ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)      // driver's hatch
@@ -84,12 +83,12 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=450.0
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    IdleSound=SoundGroup'Vehicle_Engines.KV1s_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.KV1s_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.track_squeak_R03'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -100,9 +99,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.MarderIII_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.MarderIII_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.MarderIII_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudEngineY=0.47
     VehicleHudTreadsPosX(0)=0.36
@@ -117,7 +116,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.71
     VehicleHudOccupantsX(3)=0.575
     VehicleHudOccupantsY(3)=0.5
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.marder3'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
@@ -145,7 +144,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -154,7 +153,7 @@ defaultproperties
         BoneOffset=(X=10.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -164,7 +163,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -173,7 +172,7 @@ defaultproperties
         BoneOffset=(X=-30.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -181,14 +180,14 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -209,7 +208,14 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Marder3MDestroyer.KParams0'
+    KParams=KParams0
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
+
+    // Because the turret is completely disconnected from the hull, there should be no chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.0
+    HullPenetrationTurretDamageChanceModifier=0.0
+    TurretPenetrationDamageModifier=0.25
 }

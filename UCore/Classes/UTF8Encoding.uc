@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // http://clang.llvm.org/doxygen/ConvertUTF_8c_source.html
 //==============================================================================
@@ -16,7 +16,7 @@ final static function array<int> ToBytes(string S)
     local array<int> UTF32Bytes;
     local array<int> UTF8Bytes;
 
-    UTF32Bytes = class'UString'.static.ToBytes(S);
+    UTF32Bytes = Class'UString'.static.ToBytes(S);
 
     for (i = 0; i < UTF32Bytes.Length; ++i)
     {

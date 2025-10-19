@@ -1,29 +1,30 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// [ ] Add foliage adding mechanics.
 //==============================================================================
 
 class DH_Pak40ATGun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="7.5cm Pak40 AT gun"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawn',WeaponBone="Turret_placement")
-    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak40.Pak40'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_destroyed'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
-    VehicleHudOccupantsX(1)=0.47
-    VehicleHudOccupantsY(1)=0.6
-    ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
-    VehicleMass=11.0
-    SupplyCost=1200  //150 more than zis-3; its a better and heavier gun + germans get a cheaper pak38 now so it shouldnt have balance problems
-    ConstructionPlacementOffset=(Z=13.0)
-    bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    VehicleNameString="7,5cm Pak 40"
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Pak40CannonPawn',WeaponBone="Turret_placement")
+    Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.pak40_ext_gray'
 
+    DestroyedVehicleMesh=StaticMesh'DH_Pak40_stc.pak40_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_Pak40_tex.pak40_ext_gray_destroyed'
+    VehicleHudImage=Texture'DH_Pak40_tex.interface.Pak40_base'
+    VehicleHudTurret=TexRotator'DH_Pak40_tex.interface.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak40_tex.interface.Pak40_turret_look'
+
+    ExitPositions(1)=(X=-120.00,Y=-27.00,Z=35.00)
+    VehicleMass=11.0
+    bCanBeRotated=true
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
+    ShadowZOffset=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -42,5 +43,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak40ATGun.KParams0'
+    KParams=KParams0
 }

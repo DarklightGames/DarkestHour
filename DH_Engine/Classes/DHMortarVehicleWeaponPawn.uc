@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
@@ -39,12 +39,15 @@ var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
 var     int         OverlaySleeveTexNum;
 var     int         OverlayHandTexNum;
+var     name        OverlayPrimaryShellBone;
+var     name        OverlaySecondaryShellBone;
+var     bool        bSwapShellBonesBasedOnSelectedAmmo;
 
 // HUD
-var     texture     HUDArcTexture;           // the elevation display
+var     Texture     HUDArcTexture;           // the elevation display
 var     TexRotator  HUDArrowTexture;         // indicator icon for current elevation
-var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
-var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
+var     Texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
+var     Texture     HUDSmokeTexture;         // ammo icon for smoke rounds
 var     ROHud.NumericWidget AmmoAmount;
 var     ROHud.SpriteWidget AmmoIcon;
 
@@ -90,10 +93,10 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local coords  CameraCoords;
-    local rotator WeaponAimRot;
+    local Coords  CameraCoords;
+    local Rotator WeaponAimRot;
 
     ViewActor = self;
 
@@ -108,13 +111,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         {
             WeaponAimRot = Gun.CurrentAim;
             WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-            WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
+            WeaponAimRot = Rotator(Vector(WeaponAimRot) >> Gun.Rotation);
             WeaponAimRot.Roll = Gun.Rotation.Roll;
             CameraLocation += FPCamPos >> WeaponAimRot;
         }
 
         // Set camera rotation
-        CameraRotation = rotator(CameraCoords.XAxis);
+        CameraRotation = Rotator(CameraCoords.XAxis);
         CameraRotation.Roll = 0; // make the mortar view have no roll
 
         // Finalise the camera with any shake
@@ -130,8 +133,8 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 {
     local int Deflection;
     local string DeflectionSign;
-    local vector WeaponLocation, Target;
-    local rotator WeaponRotation;
+    local Vector WeaponLocation, Target;
+    local Rotator WeaponRotation;
     local DHGameReplicationInfo.MapMarker TargetMarker;
 
     if (PC == none)
@@ -151,14 +154,14 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 
     WeaponRotation = Gun.CurrentAim;
     WeaponRotation.Yaw = -WeaponRotation.Yaw; // reversed due to messed up rigging
-    WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+    WeaponRotation = Rotator(Vector(WeaponRotation) >> Gun.Rotation);
     WeaponRotation.Roll = 0;
     WeaponRotation.Pitch = 0;
 
     Target = TargetMarker.WorldLocation - WeaponLocation;
 
-    Deflection = -class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1));
-    Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
+    Deflection = -Class'UVector'.static.SignedAngle(Target, Vector(WeaponRotation), vect(0, 0, 1));
+    Deflection = Class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
     if (Abs(Deflection) > 500)
     {
@@ -171,32 +174,6 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     }
 
     return DeflectionSign $ string(Deflection);
-}
-
-exec function CalibrateFire(int MilsMin, int MilsMax)
-{
-    local int Mils;
-    local DHBallisticProjectile BP;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
-        {
-            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
-            VehWep.CurrentAim.Yaw = 0;
-
-            VehWep.CalcWeaponFire(false);
-            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
-
-            if (BP != none)
-            {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
-                BP.StartLocation = BP.Location;
-            }
-        }
-    }
 }
 
 simulated function int GetIndex(class<Projectile> ProjectileClass)
@@ -270,8 +247,8 @@ simulated function DrawHUD(Canvas C)
 
         if (AmmoCount > 0)
         {
-            AmmoIcon.Tints[0] = class'UColor'.default.White;
-            AmmoAmount.Tints[0] = class'UColor'.default.White;
+            AmmoIcon.Tints[0] = Class'UColor'.default.White;
+            AmmoAmount.Tints[0] = Class'UColor'.default.White;
         }
         else
         {
@@ -383,12 +360,22 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
+// Set the initial position of the player and the weapon
+simulated function SetPlayerPosition()
+{
+    super.SetPlayerPosition();
+
+    //  Hide the shell during inital setup because the inital idle animation is
+    //  not handled by PlayThirdPersonAnimations()
+    HideThirdPersonShell();
+}
+
 // Modified to match rotation to mortar's aimed direction, so player exits facing the same way as the mortar
 // Necessary because while on mortar, his view rotation is locked but his pawn/PC rotation can wander meaninglessly via mouse movement
 // Also to destroy the mortar if player just un-deployed it
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local rotator NewRotation;
+    local Rotator NewRotation;
 
     if (PC != none && Gun != none)
     {
@@ -749,15 +736,13 @@ Begin:
     }
 }
 
-// overriding DHVehicle.ViewTransition to enter 'Idle' state instead of ''
-simulated state ViewTransition
+simulated state LeavingViewTransition
 {
-Begin:
-    HandleTransition();
-    Sleep(ViewTransitionDuration);
-    GotoState('Idle');
+    simulated function BeginState()
+    {
+        GotoState('Idle');
+    }
 }
-
 
 // New state where mortar is being fired
 // Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
@@ -779,6 +764,7 @@ simulated state Firing extends Busy
     }
 
 Begin:
+    SetFirstPersonShellDisplay();
     PlayFirstPersonAnimation(OverlayFiringAnim);
     SetCurrentAnimationIndex(FIRING_ANIM_INDEX);
 
@@ -889,7 +875,7 @@ simulated function int GetGunPitch()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.Elevation);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.Elevation);
     }
 
     return 0;
@@ -903,7 +889,7 @@ simulated function int GetGunPitchMin()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMinimum);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMinimum);
     }
 
     return 0;
@@ -917,7 +903,7 @@ simulated function int GetGunPitchMax()
 
     if (MVW != none)
     {
-        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMaximum);
+        return Class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMaximum);
     }
 
     return 0;
@@ -926,6 +912,28 @@ simulated function int GetGunPitchMax()
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************************  ANIMATIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// Display different shell models depending on the selected ammo type
+simulated function SetFirstPersonShellDisplay()
+{
+    if (!bSwapShellBonesBasedOnSelectedAmmo || VehWep == none || HUDOverlay == none)
+    {
+        return;
+    }
+
+    switch (VehWep.GetAmmoIndex())
+    {
+        case 0:
+            // Hide secondary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlaySecondaryShellBone);
+            break;
+        case 1:
+            // Hide primary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlayPrimaryShellBone);
+            break;
+        default:
+    }
+}
 
 // New function to set a new CurrentAnimationIndex & play the relevant animations, & for a net client to replicate the CurrentAnimationIndex to the server
 simulated function SetCurrentAnimationIndex(byte AnimIndex)
@@ -945,9 +953,25 @@ simulated function ServerSetCurrentAnimationIndex(byte AnimIndex)
     CurrentAnimationIndex = AnimIndex;
 }
 
+simulated function HideThirdPersonShell()
+{
+    local DHMortarVehicleWeapon MVH;
+
+    MVH = DHMortarVehicleWeapon(Gun);
+
+    if (MVH != none)
+    {
+        MVH.HideShell();
+    }
+}
+
 // New function to play current 1st person animations for the mortar & the operator ('Driver')
 simulated function PlayThirdPersonAnimations()
 {
+    // Hide the shell for all animations, as it's expected to only appear when
+    // it's loaded into a tube. The shell is made visible via notifies.
+    HideThirdPersonShell();
+
     switch (CurrentAnimationIndex)
     {
         case IDLE_ANIM_INDEX:
@@ -1094,7 +1118,7 @@ defaultproperties
     bDrawMeshInFP=false
     CameraBone="Camera"
     HUDOverlayFOV=90.0
-    HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
+    HUDArrowTexture=TexRotator'DH_Mortars_tex.ArrowRotator'
     TPCamDistance=128.0
     TPCamDistRange=(Min=128.0,Max=128.0)
     TPCamLookat=(X=0.0,Y=0.0,Z=16.0)
@@ -1114,7 +1138,7 @@ defaultproperties
     OverlaySleeveTexNum=1
 
     // Fire adjustment info
-    TargetMarkerClass=class'DHMapMarker_Ruler'
+    TargetMarkerClass=Class'DHMapMarker_Ruler'
     PeriscopeIndex=1
     OverlayCorrectionY=-60.0
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kar98ScopedZF41BayonetDamType extends DHWeaponBayonetDamageType
@@ -8,5 +8,5 @@ class DH_Kar98ScopedZF41BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Kar98ScopedZF41Weapon'
+    WeaponClass=Class'DH_Kar98ScopedZF41Weapon'
 }

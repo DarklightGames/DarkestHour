@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHLocalMessage extends LocalMessage
@@ -38,14 +38,14 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     return MessageString;
 }
 
-static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, bool bSimpleColours)
 {
     if (RelatedPRI_1 != none &&
         RelatedPRI_1.Team != none &&
         RelatedPRI_1.Team.TeamIndex >= 0 &&
-        RelatedPRI_1.Team.TeamIndex < arraycount(class'DHColor'.default.TeamColors))
+        RelatedPRI_1.Team.TeamIndex < arraycount(Class'DHColor'.default.TeamColors))
     {
-        return class'DHColor'.default.TeamColors[RelatedPRI_1.Team.TeamIndex];
+        return Class'DHColor'.default.TeamColors[RelatedPRI_1.Team.TeamIndex];
     }
 
     return default.DrawColor;

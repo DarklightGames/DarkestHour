@@ -1,32 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// We changed the class hierarchy so that each nation gets its own
+// construction class, so this was made abstract. However, levelers had placed
+// place this in maps, so we have to keep it around until they are all removed.
+// This functionality of this class is now in `DHConstructionResupplyVehicles`.
 //==============================================================================
 
-class DHConstruction_Resupply_Vehicles extends DHConstruction_Resupply;
-
-#exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
-
-static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
-{
-    switch (Context.TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.GER_AT_Ammo_Box';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.USA_AT_Ammo_Box';
-        default:
-            break;
-    }
-
-    return super.GetConstructedStaticMesh(Context);
-}
-
-defaultproperties
-{
-    ResupplyType=RT_Vehicles
-    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.GER_AT_Ammo_Box'
-    ResupplyAttachmentCollisionRadius=600.0
-    MenuName="Ammo Crate (Vehicles)"
-    MenuDescription="Provides a resupply point for vehicles and guns."
-}
+class DHConstruction_Resupply_Vehicles extends DHDeprecated;

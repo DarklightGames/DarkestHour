@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_StuartCannonShell extends DHCannonShell;
@@ -16,19 +16,19 @@ defaultproperties
     ImpactDamage=245  //solid shell
     Damage=980.0 //"regular" damage is only changed so that AT guns can be killed more reliably, so the radius is very small
     DamageRadius=70.0
-    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
+    ShellImpactDamage=Class'DH_StuartCannonShellDamageAP'
     HullFireChance=0.17
     EngineFireChance=0.3
 
     //Effects
     bShatterProne=true
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    CoronaClass=Class'DHShellTracer_Red'
+    ShellHitVehicleEffectClass=Class'TankAPHitPenetrateSmall'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=7.1

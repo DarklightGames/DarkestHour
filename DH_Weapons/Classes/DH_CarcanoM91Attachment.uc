@@ -1,39 +1,56 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// TODO:
+// - Add WA anims.
+// - Add PA reload and bayonet attachment anims.
 
 class DH_CarcanoM91Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Nagant9130'
-    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
+    MenuImage=Texture'DH_Carcano_tex.carcano_m91_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdNagant'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
+    MuzzleBoneName="MUZZLE"
+    ShellEjectionBoneName="EJECTOR"
 
-    WA_Idle="idle_nagant"
-    WA_Fire="shoot_nagant9130"
-    WA_Reload="idle_nagant"
-    WA_ProneReload="idle_nagant"
-    WA_ReloadEmpty="stand_reload_nagant9130"
-    WA_ProneReloadEmpty="prone_reload_nagant9130"
-    WA_PostReload="close_nagant9130"
-    WA_BayonetIdle="idle_nagant_bayo"
-    WA_BayonetIdleEmpty="idle_nagant_bayo"
-    WA_BayonetFire="shoot_nagant9130_bayo"
-    WA_BayonetReload="idle_nagant_bayo"
-    WA_BayonetProneReload="idle_nagant_bayo"
-    WA_BayonetReloadEmpty="stand_reload_nagant9130_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_nagant9130_bayo"
-    WA_BayonetAttach="bayattach_nagant9130"
-    WA_BayonetDetach="bayremove_nagant9130"
-    WA_BayonetAttachProne="prone_bayattach_nagant9130"
-    WA_BayonetDetachProne="prone_bayremove_nagant9130"
-    WA_WorkBolt="Bolt_nagant9130"
-    WA_BayonetWorkBolt="Bolt_nagant9130_bayo"
+    // Idle / Fire
+    WA_Idle="idle_carcano"
+    WA_Fire="idle_carcano"
+    WA_BayonetIdle="idle_carcano_bayo"
+    WA_BayonetIdleEmpty="idle_carcano_bayo"
+    WA_BayonetFire="idle_carcano_bayo"
+
+    // Reload
+    WA_ReloadEmpty="stand_reload_carcano"
+    WA_ProneReloadEmpty="prone_reload_carcano"
+    WA_BayonetReloadEmpty="stand_reload_carcano_bayo"
+    WA_BayonetProneReloadEmpty="prone_reload_carcano_bayo"
+
+    // Partial reload
+    WA_PreReload="open_carcano"
+    WA_Reload="insert_carcano"
+    WA_PostReload="close_carcano"
+    WA_ProneReload="insert_carcano"
+    WA_BayonetPreReload="open_carcano_bayo"
+    WA_BayonetReload="insert_carcano_bayo"
+    WA_BayonetProneReload="insert_carcano_bayo"
+    WA_BayonetPostReload="close_carcano_bayo"
+
+    // Bolt
+    WA_WorkBolt="bolt_carcano"
+    WA_BayonetWorkBolt="bolt_carcano_bayo"
+
+    // Bayonet attach
+    WA_BayonetAttach="stand_bayattach_carcano_m91"
+    WA_BayonetDetach="stand_bayremove_carcano_m91"
+    WA_BayonetAttachProne="prone_bayattach_carcano_m91"
+    WA_BayonetDetachProne="prone_bayremove_carcano_m91"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -117,6 +134,7 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
     PA_IdleProneAnim="prone_idle_kar"
+    PA_ProneIdleRestAnim="prone_idle_kar"
     PA_TurnLeftAnim="stand_turnLhip_kar"
     PA_TurnRightAnim="stand_turnRhip_kar"
     PA_TurnIronLeftAnim="stand_turnLiron_kar"
@@ -165,9 +183,9 @@ defaultproperties
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
     PA_ReloadAnim="stand_insert_karscope"
-    PA_ReloadEmptyAnim="stand_reload_kar"
+    PA_ReloadEmptyAnim="stand_reload_carcano"
     PA_ProneReloadAnim="prone_insert_karscope"
-    PA_ProneReloadEmptyAnim="prone_reload_kar"
+    PA_ProneReloadEmptyAnim="prone_reload_carcano"
     PA_PreReloadAnim="stand_open_karscope"
     PA_PostReloadAnim="stand_close_karscope"
     PA_PronePreReloadAnim="prone_open_karscope"
@@ -178,10 +196,10 @@ defaultproperties
     PA_BayonetAltFire="stand_stab_kar"
     PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
     PA_ProneBayonetAltFire="prone_idlestrike_bayo"
-    PA_BayonetAttachAnim="stand_bayattach_svt40"
-    PA_ProneBayonetAttachAnim="prone_bayattach_svt40"
-    PA_BayonetDetachAnim="stand_bayremove_svt40"
-    PA_ProneBayonetDetachAnim="prone_bayremove_svt40"
+    PA_BayonetAttachAnim="stand_bayattach_carcano_m91"
+    PA_ProneBayonetAttachAnim="prone_bayattach_carcano_m91"
+    PA_BayonetDetachAnim="stand_bayremove_carcano_m91"
+    PA_ProneBayonetDetachAnim="prone_bayremove_carcano_m91"
     PA_AirStillAnim="jump_mid_kar"
     PA_AirAnims(0)="jumpF_mid_kar"
     PA_AirAnims(1)="jumpB_mid_kar"

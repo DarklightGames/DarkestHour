@@ -1,20 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ZiS3CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_ZiS3Cannon'
-    DriverPositions(0)=(ViewLocation=(X=5.0,Y=-19.5,Z=36.5),ViewFOV=22.97,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idle_binoc",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
-    DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_ptrd",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-    DriveAnim="crouch_idle_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.PG1_sight_background'
+    GunClass=Class'DH_ZiS3Cannon'
+    DriverPositions(0)=(ViewFOV=22.97,TransitionUpAnim="overlay_out",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(TransitionDownAnim="overlay_in",TransitionUpAnim="raise",DriverTransitionAnim="zis_gunner_lower",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(TransitionDownAnim="lower",DriverTransitionAnim="zis_gunner_raise",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="zis_gunner_binocs",ViewPitchUpLimit=6000,ViewPitchDownLimit=49152,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    BinocPositionIndex=3
+    DriveAnim="zis_gunner_idle"
+    DrivePos=(Z=58)
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.PG1_sight_background'
     GunsightSize=0.441 // 10.5 degrees visible FOV at 3.7x magnification (PG1 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
+    AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
+    CameraBone="GUNSIGHT_CAMERA_ZIS3"
+    PlayerCameraBone="CAMERA_COM_ZIS3"
 }

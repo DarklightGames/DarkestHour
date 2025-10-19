@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RedSmokeProjectile extends DHGrenadeProjectile_Smoke;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.US_RedSmokeGrenade_throw'
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Red'
-    MyDamageType=class'DH_Equipment.DH_RedSmokeDamType'
+    StaticMesh=StaticMesh'DH_WeaponPickups.US_RedSmokeGrenade_throw'
+    SmokeAttachmentClass=Class'DHSmokeEffectAttachment_Red'
+    MyDamageType=Class'DH_RedSmokeDamType'
 }

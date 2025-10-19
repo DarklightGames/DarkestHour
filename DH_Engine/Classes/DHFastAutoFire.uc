@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFastAutoFire extends DHAutomaticFire;
@@ -14,9 +14,9 @@ var     float                   LoopFireAnimRate;       // The rate to play the 
 var     float                   IronLoopFireAnimRate;   // The rate to play the looped fire animation when deployed or in iron sights
 
 // sound
-var     sound                   FireEndSound;           // The sound to play at the end of the ambient fire sound
+var     Sound                   FireEndSound;           // The sound to play at the end of the ambient fire sound
 var     float                   AmbientFireSoundRadius; // The sound radius for the ambient fire sound
-var     sound                   AmbientFireSound;       // How loud to play the looping ambient fire sound
+var     Sound                   AmbientFireSound;       // How loud to play the looping ambient fire sound
 var     byte                    AmbientFireVolume;      // The ambient fire sound
 
 // High ROF system
@@ -25,7 +25,7 @@ var     float                   PackingThresholdTime;   // If the shots are clos
 // Modified to support packing two shots together to save net bandwidth
 // The high rate of fire system packs shots together, replicates the shot info to net clients & then they spawn their own client bullets
 // Bullet actor replication is disabled
-function Projectile SpawnProjectile(vector Start, rotator Dir)
+function Projectile SpawnProjectile(Vector Start, Rotator Dir)
 {
     local Projectile SpawnedProjectile;
 
@@ -121,11 +121,26 @@ function PlayAmbientSound(sound aSound)
     }
 }
 
+simulated function UpdateMagazineDriver()
+{
+    local DHProjectileWeapon PW;
+
+    // Update the weapon's component animations for the magazine ammunition.
+    PW = DHProjectileWeapon(Weapon);
+
+    if (PW != none)
+    {
+        PW.UpdateWeaponComponentAnimationsWithDriverType(DRIVER_MagazineAmmunition);
+    }
+}
+
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
 {
     if (ROWeapon(Owner) != none && !ROWeapon(Owner).IsBusy() && AllowFire() && (IsInState('FireLoop') || bWaitForRelease))
     {
+        UpdateMagazineDriver();
+
         super.ModeDoFire();
     }
 }
@@ -230,7 +245,7 @@ defaultproperties
     PackingThresholdTime=0.1
     MaxVerticalRecoilAngle=300
     MaxHorizontalRecoilAngle=90
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.dryfire_smg'
     AmbientFireVolume=255
     AmbientFireSoundRadius=750.0
     PreFireAnim="Shoot1_start"

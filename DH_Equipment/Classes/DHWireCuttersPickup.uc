@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWireCuttersPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DHWireCuttersItem'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.CCwirecutters'
+    InventoryType=Class'DHWireCuttersItem'
+    StaticMesh=StaticMesh'DH_WeaponPickups.CCwirecutters'
+    CollisionRadius=8
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Flak88CannonShellHE extends DHCannonShellHE;
@@ -17,12 +17,12 @@ defaultproperties
     ImpactDamage=1000
     Damage=475.0   // 1002 gramms TNT
     DamageRadius=1550.0
-    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
+    MyDamageType=Class'DHShellHE88mmDamageType'
     PenetrationMag=1020.0
     HullFireChance=1.0
     EngineFireChance=1.0
 
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
 
 
     bDebugInImperial=false

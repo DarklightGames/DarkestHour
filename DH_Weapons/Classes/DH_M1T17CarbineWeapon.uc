@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_M1T17CarbineWeapon extends DHAutoWeapon;
@@ -9,14 +9,14 @@ defaultproperties
 {
     ItemName="M1/T17 Automatic Carbine"
     SwayModifyFactor=0.45 // -0.25  because it was a very light carbine
-    FireModeClass(0)=class'DH_Weapons.DH_M1T17CarbineFire'
-    FireModeClass(1)=class'DH_Weapons.DH_M1T17CarbineMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_M1T17CarbineAttachment'
-    PickupClass=class'DH_Weapons.DH_M1T17CarbinePickup'
+    FireModeClass(0)=Class'DH_M1T17CarbineFire'
+    FireModeClass(1)=Class'DH_M1T17CarbineMeleeFire'
+    AttachmentClass=Class'DH_M1T17CarbineAttachment'
+    PickupClass=Class'DH_M1T17CarbinePickup'
 
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine_mesh'
-    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Carbine'
-    Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.M1CarbineExtra'
+    Skins(2)=Texture'DH_Weapon_tex.M1Carbine'
+    Skins(3)=Texture'DH_Weapon_tex.M1CarbineExtra'
 
     bUseHighDetailOverlayIndex=false
 

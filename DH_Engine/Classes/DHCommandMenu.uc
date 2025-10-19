@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu extends Object
@@ -8,23 +8,23 @@ class DHCommandMenu extends Object
 
 const MAX_LABELS = 3;
 
-var color SpottingMarkerDisabledColor;
-var color SpottingMarkerEnabledColor;
+var Color SpottingMarkerDisabledColor;
+var Color SpottingMarkerEnabledColor;
 
 struct OptionRenderInfo
 {
     var string      OptionName;
     var string      InfoText[MAX_LABELS];
     var Material    InfoIcon;
-    var color       InfoColor;
+    var Color       InfoColor;
     var string      DescriptionText;
 };
 
 struct Option
 {
-    var string ActionText;    // TODO: rename Action/Subject to something more understandable
-    var string SubjectText;
-    var string DescriptionText;
+    var localized string ActionText;
+    var localized string SubjectText;
+    var localized string DescriptionText;
     var Material ActionIcon;
     var Material Material;
     var Object OptionalObject;
@@ -38,6 +38,7 @@ var DHCommandInteraction    Interaction;
 var DHCommandMenu           NextMenu;
 var DHCommandMenu           PreviousMenu;
 var Object                  MenuObject;
+var int                     MenuInteger;
 var int                     SlotCount;
 var int                     SlotCountOverride;  // If non-zero, the amount of slots will always be at least this many.
 
@@ -103,7 +104,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     ORI.OptionName = Options[OptionIndex].ActionText;
     ORI.InfoText[0] = Options[OptionIndex].SubjectText;
-    ORI.InfoColor = class'UColor'.default.White;
+    ORI.InfoColor = Class'UColor'.default.White;
     ORI.DescriptionText = Options[OptionIndex].DescriptionText;
 }
 
@@ -123,7 +124,7 @@ function OnPush()
 
         if (PC.SpottingMarker == none)
         {
-            PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
+            PC.SpottingMarker = PC.Spawn(Class'DHSpottingMarker', PC);
         }
 
         if (PC.SpottingMarker != none)
@@ -158,7 +159,7 @@ function OnActive();                    // Called when a menu becomes the topmos
 function OnPassive();                   // Called when a menu is no longer the topmost menu on the stack
 function OnHoverIn(int OptionIndex);    // Called when a menu option is hovered over
 function OnHoverOut(int OptionIndex);   // Called when a menu option is no longer being hovered over
-function OnSelect(int OptionIndex, vector Location, optional vector HitLocation);
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitLocation);
 
 function Tick();                        // Called every frame if bShouldTick is true and the menu is at the top of the stack
 

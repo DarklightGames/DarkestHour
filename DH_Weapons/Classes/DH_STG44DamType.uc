@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_STG44DamType extends DHMediumCaliberDamageType
@@ -8,8 +8,8 @@ class DH_STG44DamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_STG44Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    WeaponClass=Class'DH_STG44Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=1500.0
     KDeathVel=110.0
     KDeathUpKick=2.0

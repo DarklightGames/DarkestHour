@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_RedSmokePickup extends DHOneShotWeaponPickup
@@ -8,6 +8,6 @@ class DH_RedSmokePickup extends DHOneShotWeaponPickup
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DH_RedSmokeWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USRedSmokeGrenade'
+    InventoryType=Class'DH_RedSmokeWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.USRedSmokeGrenade'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellAPCR extends DHGermanCannonShell;
@@ -18,7 +18,7 @@ defaultproperties
     //Damage
     bShatterProne=true
     ImpactDamage=120
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
+    ShellImpactDamage=Class'DH_Sdkfz2341CannonShellDamageAP'
     HullFireChance=0.20 // Slightly increased fire chances due to incendiary characteristics of projectile
     EngineFireChance=0.35
 
@@ -27,28 +27,28 @@ defaultproperties
 
     //Effects
     DrawScale=0.75
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
+    CoronaClass=Class'DHShellTracer_Orange'
+    ShellTrailClass=Class'DH20mmShellTrail_Red'
 
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
-    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
-    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
-    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
-    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
-    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+    ShellShatterEffectClass=Class'DHShellShatterEffect_Small'
+    ShellDeflectEffectClass=Class'TankAPHitDeflect'
+    ShellHitVehicleEffectClass=Class'DH20mmAPHitPenetrate'
+    ShellHitDirtEffectClass=Class'DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=Class'DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=Class'DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=Class'DH20mmAPHitConcreteEffect'
+    ShellHitWaterEffectClass=Class'DHShellSplashEffect'
 
-    ExplosionDecal=class'ROEffects.BulletHoleConcrete'
-    ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
+    ExplosionDecal=Class'BulletHoleConcrete'
+    ExplosionDecalSnow=Class'BulletHoleSnow'
 
     //Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Impact_Wood'
 
     //Penetration
     DHPenetrationTable(0)=5.8 //100m

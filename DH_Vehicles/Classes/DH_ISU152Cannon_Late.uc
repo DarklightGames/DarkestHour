@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ISU152Cannon_Late extends DH_ISU152Cannon;
 
 defaultproperties
 {
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell_Late'
+    SecondaryProjectileClass=Class'DH_ISU152CannonShell_Late'
 
     ProjectileDescriptions(1)="APBC"
 

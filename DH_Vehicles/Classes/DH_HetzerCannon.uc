@@ -1,22 +1,30 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_HetzerCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
-    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision',AttachBone="Gun")
+    Mesh=SkeletalMesh'DH_Hetzer_anm.HETZER_TURRET_EARLY_EXT'
+    Skins(0)=Texture'DH_Hetzer_tex.HETZER_BODY_EXT'
+    BeginningIdleAnim="idle"
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_PITCH',AttachBone="PITCH")
+    // NOTE: The code that tries to space-switch the model to the attached bone is completely fucked if the orientations do not match.
+    // Therefore, I exported the back hatch in bone-space. I've added the TransformSpace option to hack in this fix.
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_B',AttachBone="HATCH_B",TransformSpace=TS_Bone)
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_HATCH_F',AttachBone="HATCH_F")
+    CollisionStaticMeshes(3)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.HETZER_TURRET_COLLISION_YAW',AttachBone="YAW")
+    GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
 
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
 
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    PrimaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=Class'DH_JagdpanzerIVL48CannonShellSmoke'
 
     ProjectileDescriptions(2)="Smoke"
 
@@ -26,9 +34,9 @@ defaultproperties
 
     SecondarySpread=0.001270
     TertiarySpread=0.003570
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
     ManualRotationsPerSecond=0.025000
     RangeSettings(1)=100
     RangeSettings(2)=200
@@ -57,19 +65,25 @@ defaultproperties
     RangeSettings(25)=3000
     bHasTurret=False
 
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    FireEffectOffset=(X=5.000000)
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_04')
+    FireEffectOffset=(X=20,Y=0,Z=30)
     YawStartConstraint=-2000.000000
     YawEndConstraint=3000.000000
-    PitchBone="gun_pitch"
-    WeaponFireOffset=34.200001
-    CustomPitchUpLimit=1820
-    CustomPitchDownLimit=64444
-    MaxPositiveYaw=2000
-    MaxNegativeYaw=-910
+    PitchBone="PITCH"
+    YawBone="YAW"
+    WeaponFireAttachmentBone="MUZZLE"
+    WeaponFireOffset=0
+    GunnerAttachmentBone="TURRET"
+
+    CustomPitchUpLimit=2184     // +12 degrees
+    CustomPitchDownLimit=64444  // -6 degrees
+
+    MaxPositiveYaw=2002     // +11 degrees
+    MaxNegativeYaw=-910     // -5 degrees
+
     bLimitYaw=True
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=8
@@ -77,4 +91,7 @@ defaultproperties
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=15
     MaxTertiaryAmmo=5
+
+    ShootAnim="shoot"
+    ShootAnimBoneName="barrel"
 }

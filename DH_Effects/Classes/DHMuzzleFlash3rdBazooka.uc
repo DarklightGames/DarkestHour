@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMuzzleFlash3rdBazooka extends ROMuzzleFlash3rd;
@@ -45,7 +45,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=2.000000,Max=2.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         SubdivisionScale(0)=0.500000
@@ -81,7 +81,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         StartVelocityRange=(X=(Min=50.000000,Max=100.000000)) //10 to 30
@@ -117,7 +117,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         InitialDelayRange=(Min=0.050000,Max=0.050000)
@@ -153,7 +153,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
     End Object
@@ -186,7 +186,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=1.500000,Max=1.500000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         SubdivisionScale(0)=0.500000
@@ -220,7 +220,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.500000)
         StartSizeRange=(X=(Min=5.000000,Max=10.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         LifetimeRange=(Min=1.200000,Max=1.200000)
         StartVelocityRange=(X=(Min=40.000000,Max=80.000000),Z=(Min=-5.000000,Max=5.000000))
         VelocityLossRange=(X=(Max=2.000000))
@@ -252,7 +252,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=25.000000,Max=50.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=Texture'Effects_Tex.MP3rdPmuzzle_smoke1frame'
         LifetimeRange=(Min=1.500000,Max=3.000000)
         StartVelocityRange=(X=(Min=50.000000,Max=75.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
@@ -277,7 +277,7 @@ defaultproperties
       SphereRadiusRange=(Max=5.000000) //20
       StartSizeRange=(X=(Min=1.000000,Max=2.000000),Y=(Min=2.000000,Max=3.000000))
       InitialParticlesPerSecond=100.000000
-      Texture=Texture'DH_FX_tex.Effects.dhweaponspark' //verticle tracer particle
+      Texture=Texture'DH_FX_tex.dhweaponspark' //verticle tracer particle
       LifetimeRange=(Min=0.20000,Max=0.400000)
       StartVelocityRange=(X=(Min=80.000000,Max=150.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-100.000000,Max=100.000000))
     End Object

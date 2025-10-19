@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Bofors40mmCannon extends DHVehicleAutoCannon;
@@ -11,7 +11,7 @@ var     name        ElevationControlBone;
 // New function to animate the traverse & elevation controls, called by cannon pawn when gun moves
 simulated function UpdateControlsRotation()
 {
-    local rotator ControlRotation;
+    local Rotator ControlRotation;
 
     ControlRotation.Pitch = -CurrentAim.Pitch * 32;
     SetBoneRotation(TraverseControlBone, ControlRotation);
@@ -21,7 +21,7 @@ simulated function UpdateControlsRotation()
 }
 
 // From DHATGunCannon, as gun will always be penetrated by a shell
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, Vector HitLocation, Vector ProjectileDirection, float MaxArmorPenetration)
 {
    return true;
 }
@@ -31,7 +31,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Bofors_anm.Bofors40mm_gun'
     Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
-    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(1)=Texture'Weapons1st_tex.Bullet_Shell_Rifle'
 
     // Turret movement
     RotationsPerSecond=0.138888 // 50 degrees per sec
@@ -42,13 +42,13 @@ defaultproperties
     ElevationControlBone="elevation_control"
 
     // Sounds (HUDProportion overrides to better suit magazine reload)
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.40mmBofors_fire03'
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
+    PrimaryProjectileClass=Class'DH_Bofors40mmCannonShellHE'
+    SecondaryProjectileClass=Class'DH_Bofors40mmCannonShell'
 
     ProjectileDescriptions(0)="HE-T"
     ProjectileDescriptions(1)="AP"

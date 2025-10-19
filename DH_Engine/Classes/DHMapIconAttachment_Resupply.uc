@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapIconAttachment_Resupply extends DHMapIconAttachment
@@ -66,9 +66,9 @@ simulated function float GetIconScale(DHPlayer PC)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.munitions_infantry'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.munitions_infantry'
     IconScale=0.05
 
-    IconMaterialVehicle=Texture'DH_InterfaceArt2_tex.Icons.munitions_vehicle'
+    IconMaterialVehicle=Texture'DH_InterfaceArt2_tex.munitions_vehicle'
     IconScaleVehicle=0.05
 }

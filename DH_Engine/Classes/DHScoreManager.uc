@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHScoreManager extends Object;
@@ -201,29 +201,29 @@ function JSONObject Serialize()
     local JSONObject Root, EventScoreObject, CategoryScoreObject;
     local JSONArray EventScoresArray, CategoryScoresArray;
 
-    CategoryScoresArray = class'JSONArray'.static.Create();
+    CategoryScoresArray = Class'JSONArray'.static.Create();
 
     for (i = 0; i < arraycount(CategoryScores); ++i)
     {
-        CategoryScoreObject = new class'JSONObject';
+        CategoryScoreObject = new Class'JSONObject';
         CategoryScoreObject.PutString("type", GetCategoryClassByIndex(i));
         CategoryScoreObject.PutInteger("score", CategoryScores[i]);
         CategoryScoresArray.Add(CategoryScoreObject);
     }
 
-    EventScoresArray = class'JSONArray'.static.Create();
+    EventScoresArray = Class'JSONArray'.static.Create();
 
     for (i = 0; i < EventScores.Length; ++i)
     {
-        EventScoreObject = new class'JSONObject';
+        EventScoreObject = new Class'JSONObject';
         EventScoreObject.PutString("type", string(EventScores[i].EventClass));
         EventScoreObject.PutInteger("count", EventScores[i].Count);
         EventScoreObject.PutInteger("score", EventScores[i].Score);
         EventScoresArray.Add(EventScoreObject);
     }
 
-    Root = new class'JSONObject';
-    Root.Put("total", class'JSONNumber'.static.ICreate(TotalScore));
+    Root = new Class'JSONObject';
+    Root.Put("total", Class'JSONNumber'.static.ICreate(TotalScore));
     Root.Put("categories", CategoryScoresArray);
     Root.Put("events", EventScoresArray);
 
@@ -232,6 +232,6 @@ function JSONObject Serialize()
 
 defaultproperties
 {
-    ScoreCategoryClasses(0)=class'DHScoreCategory_Combat'
-    ScoreCategoryClasses(1)=class'DHScoreCategory_Support'
+    ScoreCategoryClasses(0)=Class'DHScoreCategory_Combat'
+    ScoreCategoryClasses(1)=Class'DHScoreCategory_Support'
 }

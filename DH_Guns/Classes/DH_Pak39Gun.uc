@@ -1,22 +1,22 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Pak39Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="5.0cm KwK 39 gun"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak39CannonPawn',WeaponBone="turret_placement")
+    VehicleNameString="5,0cm KwK 39"
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak39CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_body'
-    Skins(0)=Texture'DH_Pak39_tex.body.pak39_body'
-    DestroyedVehicleMesh=StaticMesh'DH_Pak39_stc.Destroyed.pak39_destroyed'
-    VehicleHudImage=Texture'DH_Pak39_tex.interface.pak39_body_hud'
-    VehicleHudTurret=TexRotator'DH_Pak39_tex.interface.pak39_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Pak39_tex.interface.pak39_turret_look'
+    Skins(0)=Texture'DH_Pak39_tex.pak39_body'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak39_stc.pak39_destroyed'
+    VehicleHudImage=Texture'DH_Pak39_tex.pak39_body_hud'
+    VehicleHudTurret=TexRotator'DH_Pak39_tex.pak39_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak39_tex.pak39_turret_look'
     ExitPositions(0)=(X=-115.00,Y=0.00,Z=60.00)
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Static'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -36,5 +36,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak39Gun.KParams0'
+    KParams=KParams0
 }

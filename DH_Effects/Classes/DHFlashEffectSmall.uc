@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHFlashEffectSmall extends Emitter;
@@ -10,8 +10,8 @@ defaultproperties
 {
     LifeSpan=0.10
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 
     bDynamicLight=true
     //bMovable=true

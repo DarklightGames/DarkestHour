@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_USMortarmanSummer extends DHUSMortarmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_AmericanPawn',Weight=3.0)
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNet'
+    RolePawns(0)=(PawnClass=Class'DH_AmericanPawn',Weight=3.0)
+    Headgear(0)=Class'DH_AmericanHelmet'
+    Headgear(1)=Class'DH_AmericanHelmetNet'
 }

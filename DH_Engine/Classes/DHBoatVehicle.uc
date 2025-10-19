@@ -1,14 +1,17 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBoatVehicle extends DHVehicle
     abstract;
 
-var     sound   WashSound;
+var     Sound               WashSound;
+var     name                WashSoundBoneName;
+var     float               WashSoundRadius;
+var     ROSoundAttachment   WashSoundAttachment;
 
-var     name    DestroyedAnimName;
+var     name                DestroyedAnimName;
 
 // Modified to add wash sound attachment
 simulated function SpawnVehicleAttachments()
@@ -22,9 +25,25 @@ simulated function SpawnVehicleAttachments()
 
     if (VehicleAttachments[0].Actor != none)
     {
-        VehicleAttachments[0].Actor.AmbientSound = WashSound;
-        VehicleAttachments[0].Actor.SoundVolume = 255;
-        VehicleAttachments[0].Actor.SoundRadius = 300.0;
+        WashSoundAttachment = ROSoundAttachment(VehicleAttachments[0].Actor);
+        WashSoundAttachment.AmbientSound = WashSound;
+        WashSoundAttachment.SoundVolume = 255;
+        WashSoundAttachment.SoundRadius = WashSoundRadius;
+    }
+}
+
+simulated function SetWashSoundActive(bool bActive)
+{
+    if (WashSoundAttachment != none)
+    {
+        if (bActive)
+        {
+            WashSoundAttachment.SoundVolume = 255;
+        }
+        else
+        {
+            WashSoundAttachment.SoundVolume = 0;
+        }
     }
 }
 
@@ -92,7 +111,8 @@ defaultproperties
     GroundSpeed=200.0
     DustSlipRate=0.0
     DustSlipThresh=100000.0
-    VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+    VehicleAttachments(0)=(AttachClass=Class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+    WashSoundRadius=300.0
 
     // Vehicle properties
     CollisionRadius=300.0
@@ -101,14 +121,19 @@ defaultproperties
 
     // Damage
     EngineHealth=100
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DestructionEffectClass=Class'ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=Class'ROVehicleDestroyedEmitter_simple'
+    DisintegrationEffectClass=Class'ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=Class'ROVehicleObliteratedEmitter_simple'
     ImpactDamageThreshold=5000.0
 
     // View
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Y=0.0,Z=2.0)
     ViewShakeOffsetFreq=7.0
+
+    WaterMovementState=PlayerDriving
+
+    bEngineOff=false
+    bSavedEngineOff=false
 }

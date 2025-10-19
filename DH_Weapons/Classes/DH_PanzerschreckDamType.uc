@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_PanzerschreckDamType extends DHAntiTankProjectileDamageType
@@ -8,6 +8,6 @@ class DH_PanzerschreckDamType extends DHAntiTankProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.schreckkill'
-    WeaponClass=class'DH_Weapons.DH_PanzerschreckWeapon'
+    HUDIcon=Texture'DH_InterfaceArt_tex.schreckkill'
+    WeaponClass=Class'DH_PanzerschreckWeapon'
 }

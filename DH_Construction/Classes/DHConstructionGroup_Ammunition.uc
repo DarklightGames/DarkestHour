@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionGroup_Ammunition extends DHConstructionGroup;
@@ -8,7 +8,7 @@ class DHConstructionGroup_Ammunition extends DHConstructionGroup;
 defaultproperties
 {
     GroupName="Ammunition"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'   // TODO: change
+    MenuIcon=Texture'DH_InterfaceArt2_tex.resupply_box'   // TODO: change
     SortOrder=2
 }
 

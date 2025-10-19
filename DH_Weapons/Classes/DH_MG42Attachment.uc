@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_MG42Attachment extends DHHighROFWeaponAttachment;
@@ -8,14 +8,14 @@ class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg42'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MenuImage=Texture'InterfaceArt_tex.mg42'
+    mMuzFlashClass=Class'MuzzleFlash3rdMG'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
 
-    ClientProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    ClientProjectileClass=Class'DH_MG42Bullet'
     bUsesTracers=true
     TracerFrequency=7
-    ClientTracerClass=class'DH_Weapons.DH_MG42TracerBullet'
+    ClientTracerClass=Class'DH_MG42TracerBullet'
 
     WA_Idle="idle_mg42"
     WA_IdleEmpty="idle_mg42"
@@ -41,14 +41,6 @@ defaultproperties
     PA_CrouchAnims(5)="crouch_walkFR_mg34"
     PA_CrouchAnims(6)="crouch_walkBL_mg34"
     PA_CrouchAnims(7)="crouch_walkBR_mg34"
-    PA_ProneIronAnims(0)="prone_slowcrawlF_mg42"
-    PA_ProneIronAnims(1)="prone_slowcrawlB_mg42"
-    PA_ProneIronAnims(2)="prone_slowcrawlL_mg42"
-    PA_ProneIronAnims(3)="prone_slowcrawlR_mg42"
-    PA_ProneIronAnims(4)="prone_slowcrawlL_mg42"
-    PA_ProneIronAnims(5)="prone_slowcrawlR_mg42"
-    PA_ProneIronAnims(6)="prone_slowcrawlB_mg42"
-    PA_ProneIronAnims(7)="prone_slowcrawlB_mg42"
     PA_WalkAnims(0)="stand_walkFhip_mg34"
     PA_WalkAnims(1)="stand_walkBhip_mg34"
     PA_WalkAnims(2)="stand_walkLhip_mg34"

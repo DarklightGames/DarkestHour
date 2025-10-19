@@ -1,18 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHScoreEvent_ObjectiveNeutralize extends DHScoreEvent;
 
 static function DHScoreEvent_ObjectiveNeutralize Create()
 {
-    return new class'DHScoreEvent_ObjectiveNeutralize';
+    return new Class'DHScoreEvent_ObjectiveNeutralize';
 }
 
 defaultproperties
 {
     HumanReadableName="Objective Neutralized"
-    CategoryClass=class'DHScoreCategory_Support'
+    CategoryClass=Class'DHScoreCategory_Support'
     Value=250
 }

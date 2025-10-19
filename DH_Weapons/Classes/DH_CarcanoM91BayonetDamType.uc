@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_CarcanoM91BayonetDamType extends DHWeaponBayonetDamageType
@@ -8,8 +8,8 @@ class DH_CarcanoM91BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_CarcanoM91Weapon'
+    WeaponClass=Class'DH_CarcanoM91Weapon'
     GibModifier=0.0
     KDamageImpulse=400
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=Class'ROBloodPuff'
 }

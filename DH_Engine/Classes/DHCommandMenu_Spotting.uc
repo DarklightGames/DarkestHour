@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_Spotting extends DHCommandMenu;
@@ -30,13 +30,13 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local class<DHMapMarker> MapMarkerClass;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PC = GetPlayerController();
 
@@ -58,15 +58,26 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 
     PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
     
-    PC.ServerSignal(class'DHSignal_Spotting', Location, MapMarkerClass);
+    PC.ServerSignal(Class'DHSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
+}
+
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local class<DHMapMarker> MapMarkerClass;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GetPlayerController().GameReplicationInfo);
+    MapMarkerClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
+
+    return GRI == none || (MapMarkerClass != none && !MapMarkerClass.static.CanBeUsed(GRI));
 }
 
 function Tick()
 {
     local DHPlayer PC;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
 
     PC = GetPlayerController();
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_JagdpantherCannonShell extends DHGermanCannonShell;
@@ -13,8 +13,8 @@ defaultproperties
     BallisticCoefficient=3.8 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=975  //109 gramms TNT filler
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    ImpactDamage=1150  //109 gramms TNT filler same as king tiger now
+    ShellImpactDamage=Class'DHShellAPGunImpactDamageType'
     HullFireChance=0.5
     EngineFireChance=0.98
 

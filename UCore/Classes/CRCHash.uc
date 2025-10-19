@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Implementation based on crc32c function:
 // http://www.hackersdelight.org/hdcodetxt/crc.c.txt
@@ -12,7 +12,7 @@ var private int Table[256];
 
 final static function int FromString(string S)
 {
-    return FromBytes(class'UString'.static.ToBytes(S));
+    return FromBytes(Class'UString'.static.ToBytes(S));
 }
 
 final static function int FromBytes(array<int> Bytes)

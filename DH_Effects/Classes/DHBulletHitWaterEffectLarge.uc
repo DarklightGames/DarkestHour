@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBulletHitWaterEffectLarge extends emitter;
-
-#exec OBJ LOAD FILE=..\Textures\DH_FX_Tex.utx
+class DHBulletHitWaterEffectLarge extends Emitter;
 
 //particles:
 
@@ -37,7 +35,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=20.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=100
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.BulletHits.waterring_2frame'
+        Texture=Texture'Effects_Tex.waterring_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         SubdivisionScale(0)=0.500000
@@ -60,7 +58,7 @@ defaultproperties
         MaxParticles=15
         Name="drops"
         InitialParticlesPerSecond=200.000000
-        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.sparkfinal2'
         LifetimeRange=(Min=0.5,Max=0.75)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=200.000000,Max=600.000000))
     End Object
@@ -86,7 +84,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=20.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.watersplatter2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.500000,Max=0.600000)
@@ -116,7 +114,7 @@ defaultproperties
         StartSizeRange=(X=(Min=15.000000,Max=25.000000))
         InitialParticlesPerSecond=1000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.watersplatter2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.750000,Max=0.750000)
@@ -150,7 +148,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=20.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.watersplatter2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.50000,Max=0.750000)
@@ -187,7 +185,7 @@ defaultproperties
         StartSizeRange=(X=(Min=40.000000,Max=65.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.50000,Max=1.000000)
         //InitialDelayRange=(Min=0.15,Max=0.25)
         StartVelocityRange=(X=(Min=350.000000,Max=450.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
@@ -220,7 +218,7 @@ defaultproperties
         StartSizeRange=(X=(Min=25.000000,Max=35.000000),Y=(Min=25.000000,Max=35.000000),Z=(Min=150.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Impact03'
         LifetimeRange=(Min=0.200000,Max=0.250000)
         StartVelocityRange=(X=(Min=300.000000,Max=500.000000),Y=(Min=-20.000000,Max=25.000000),Z=(Min=-25.000000,Max=20.000000))
     End Object
@@ -252,7 +250,7 @@ defaultproperties
         StartSizeRange=(X=(Min=75.000000,Max=95.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Impact01'
         LifetimeRange=(Min=0.50000,Max=1.250000)
         //InitialDelayRange=(Min=0.10,Max=0.20)
         StartVelocityRange=(X=(Min=350.000000,Max=450.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
@@ -285,7 +283,7 @@ defaultproperties
         StartSizeRange=(X=(Min=0.500000,Max=2.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
+        Texture=Texture'Effects_Tex.snowchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Max=1.5)
@@ -293,6 +291,6 @@ defaultproperties
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter7'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

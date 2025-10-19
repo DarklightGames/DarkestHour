@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShellExplosionDamageType extends ROTankShellExplosionDamage
@@ -11,9 +11,6 @@ var bool bIsArtilleryExplosion;
 defaultproperties
 {
     bIsArtilleryExplosion=false
-    DeathString="%o was blown up by %k's cannon shell."
-    MaleSuicide="%o was blown up his own cannon shell."
-    FemaleSuicide="%o was blown up by her own cannon shell."
     VehicleMomentumScaling=1.3
     KDamageImpulse=5000.0
     KDeathVel=300.0

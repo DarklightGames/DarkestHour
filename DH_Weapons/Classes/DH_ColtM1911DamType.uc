@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ColtM1911DamType extends DHSmallCaliberDamageType
@@ -8,8 +8,8 @@ class DH_ColtM1911DamType extends DHSmallCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_ColtM1911Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    WeaponClass=Class'DH_ColtM1911Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.b762mm'
     KDamageImpulse=750.0
     KDeathVel=100.0
     KDeathUpKick=0.0

@@ -1,12 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHHitEffect extends Effects
     abstract;
-
-#exec OBJ LOAD FILE=..\Sounds\ProjectileSounds.uax
 
 //Merging modifications from 'old' DHBulletHitEffect into this new parent class to
 //support additional material surface types and new funtionality for a variety
@@ -17,16 +15,19 @@ struct DHHitEffectData
     var class<ProjectedDecal>       HitDecal;
     var class<Emitter>      HitEffect;
     var class<Emitter>      FlashEffect; //new for DH
-    var sound               HitSound;
+    var Sound               HitSound;
 };
 
 //overwritten from ROHitEffect to expand array to 50 from 20
-var()   DHHitEffectData       HitEffects[50];
+var()   DHHitEffectData     HitEffects[50];
+
+var()   float MinSoundRadius;
+var()   float MaxSoundRadius;
 
 simulated function PostNetBeginPlay()
 {
     local ESurfaceTypes ST;
-    local vector        HitLoc, HitNormal;
+    local Vector        HitLoc, HitNormal;
     local Material      HitMat;
 
     if (Level.NetMode == NM_DedicatedServer)
@@ -34,7 +35,7 @@ simulated function PostNetBeginPlay()
         return;
     }
 
-    Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+    Trace(HitLoc, HitNormal, Location + Vector(Rotation) * 16.0, Location, true,, HitMat);
 
     if (HitMat != none)
     {
@@ -53,7 +54,7 @@ simulated function PostNetBeginPlay()
 
     if (HitEffects[ST].HitSound != none)
     {
-        PlaySound(HitEffects[ST].HitSound, SLOT_None, 1.0, false, RandRange(200.0, 300.0),, true);
+        PlaySound(HitEffects[ST].HitSound, SLOT_None, TransientSoundVolume, false, RandRange(MinSoundRadius, MaxSoundRadius),, true);
     }
 
     if (Owner == none || Owner.EffectIsRelevant(HitLoc, false)) // added effect relevance check, using owning bullet actor to call the function
@@ -65,12 +66,12 @@ simulated function PostNetBeginPlay()
 
         if (HitEffects[ST].HitEffect != none)
         {
-            Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
+            Spawn(HitEffects[ST].HitEffect,,, HitLoc, Rotator(HitNormal));
         }
 
         if (HitEffects[ST].FlashEffect != none)
         {
-            Spawn(HitEffects[ST].FlashEffect,,, HitLoc, rotator(HitNormal));
+            Spawn(HitEffects[ST].FlashEffect,,, HitLoc, Rotator(HitNormal));
         }
     }
 }
@@ -84,4 +85,8 @@ defaultproperties
     bNetTemporary=true
     LifeSpan=0.5
     DrawType=DT_None
+    MinSoundRadius=200
+    MaxSoundRadius=300
+    SoundVolume=1.0
+    TransientSoundVolume=1.0
 }

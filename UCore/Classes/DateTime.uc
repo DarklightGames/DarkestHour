@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DateTime extends JSONSerializable;
@@ -20,7 +20,7 @@ final static function DateTime Now(Actor A)
 {
     local DateTime Now;
 
-    Now = new class'DateTime';
+    Now = new Class'DateTime';
 
     if (A != none && A.Level != none)
     {
@@ -40,12 +40,12 @@ final static function DateTime Now(Actor A)
 // Returns an ISO-8601 compliant string (eg. 2016-07-26T20:52:54)
 function string IsoFormat()
 {
-    return class'UString'.static.ZFill(Year, 4) $ "-" $
-           class'UString'.static.ZFill(Month, 2) $ "-" $
-           class'UString'.static.ZFill(Day, 2) $ "T" $
-           class'UString'.static.ZFill(Hour, 2) $ ":" $
-           class'UString'.static.ZFill(Minute, 2) $ ":" $
-           class'UString'.static.ZFill(Second, 2);
+    return Class'UString'.static.ZFill(Year, 4) $ "-" $
+           Class'UString'.static.ZFill(Month, 2) $ "-" $
+           Class'UString'.static.ZFill(Day, 2) $ "T" $
+           Class'UString'.static.ZFill(Hour, 2) $ ":" $
+           Class'UString'.static.ZFill(Minute, 2) $ ":" $
+           Class'UString'.static.ZFill(Second, 2);
 }
 
 // Returns the total number of seconds since the beginning of January 1st, 1970.
@@ -137,7 +137,7 @@ function int Compare(DateTime Other)
 
 function JSONValue ToJSON()
 {
-    return class'JSONString'.static.Create(IsoFormat());
+    return Class'JSONString'.static.Create(IsoFormat());
 }
 
 defaultproperties

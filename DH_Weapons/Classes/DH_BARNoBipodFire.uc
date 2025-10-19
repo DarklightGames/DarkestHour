@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_BARNoBipodFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_BARNoBipodBullet'
-    AmmoClass=class'DH_Weapons.DH_BARAmmo'
+    ProjectileClass=Class'DH_BARNoBipodBullet'
+    AmmoClass=Class'DH_BARAmmo'
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
@@ -26,9 +26,9 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
+    FlashEmitterClass=Class'MuzzleFlash1stPistol'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR_Fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR_Fire02'
 
     BipodDeployFireAnim="iron_fire"
     //BipodDeployFireLoopAnim="SightUp_iron_shoot_loop"
@@ -37,7 +37,7 @@ defaultproperties
     FireIronAnim=Iron_fire
     ShellEmitBone=ejector3
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

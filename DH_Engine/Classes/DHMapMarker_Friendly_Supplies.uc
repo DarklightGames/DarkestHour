@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker_Friendly_Supplies extends DHMapMarker_Friendly
@@ -13,7 +13,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.supply_cache'
     MarkerName="Request Supplies"
     LifetimeSeconds=300
 }

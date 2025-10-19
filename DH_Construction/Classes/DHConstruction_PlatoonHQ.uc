@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
@@ -8,6 +8,7 @@ class DHConstruction_PlatoonHQ extends DHConstruction
 
 var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
+var Material                        FlagMaterial;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
 var localized string                CustomErrorString;
@@ -17,8 +18,8 @@ var float                           PermittedFriendlyControlledDistanceMeters;  
 // Radio attachment
 var DHRadioHQAttachment        Radio;
 var class<DHRadioHQAttachment> RadioClass;
-var vector                     RadioLocationOffset;
-var rotator                    RadioRotationOffset;
+var Vector                     RadioLocationOffset;
+var Rotator                    RadioRotationOffset;
 
 simulated state Dummy
 {
@@ -35,6 +36,10 @@ auto simulated state Constructing
     simulated function BeginState()
     {
         super.BeginState();
+
+        // We initialize the spawn point here since we run this code path when we come out of the dummy
+        // state after the spawn point has already been destroyed. This makes sure it's back in business.
+        InitializeSpawnPoint();
 
         if (Radio != none)
         {
@@ -57,33 +62,50 @@ simulated state Constructed
             return true;
         }
 
-        // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
-            P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
+            // "You must have another teammate nearby to deconstruct an enemy Command Post!"
+            P.ReceiveLocalizedMessage(Class'DHGameMessage', 22);
         }
 
         return false;
     }
 }
 
+simulated function DHSpawnPoint_PlatoonHQ InitializeSpawnPoint()
+{  
+    local Vector SpawnPointLocation;
+
+    if (SpawnPoint == none)
+    {
+        SpawnPointLocation = Location;
+        SpawnPointLocation.Z += Class'DHPawn'.default.CollisionHeight / 2;
+
+        SpawnPoint = Spawn(SpawnPointClass, self);
+        SpawnPoint.Construction = self;
+        SpawnPoint.SetLocation(SpawnPointLocation);
+        SpawnPoint.SetTeamIndex(GetTeamIndex());
+        SpawnPoint.SetIsActive(true);
+    }
+    
+    SpawnPoint.ResetEstablishmentTimer();
+    SpawnPoint.BlockReason = SPBR_Constructing;
+
+    return SpawnPoint;
+}
+
 simulated function OnConstructed()
 {
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     super.OnConstructed();
 
     if (Role == ROLE_Authority)
     {
-        if (SpawnPoint == none)
-        {
-            SpawnPoint = Spawn(SpawnPointClass, self);
-        }
-
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been constructed and will be established in N seconds."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+            // "A Command Post has been constructed and will be established in N seconds."
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 4,,, Class);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -94,14 +116,6 @@ simulated function OnConstructed()
                 Warn("Hey yo something done fucked up, bad spawn locations afoot");
                 Destroy();
             }
-
-            HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
-
-            SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
-            SpawnPoint.SetLocation(HitLocation);
-            SpawnPoint.SetTeamIndex(GetTeamIndex());
-            SpawnPoint.SetIsActive(true);
-            SpawnPoint.ResetEstablishmentTimer();
         }
 
         if (Radio == none)
@@ -122,7 +136,7 @@ simulated function OnConstructed()
             Warn("Failed to spawn a radio attachment!");
         }
 
-        // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+        // TODO: Find any nearby friendly "Build Command Post" icons within 50m and remove them.
     }
 
     if (Radio != none)
@@ -146,6 +160,8 @@ simulated function DestroyAttachments()
 
 simulated function Destroyed()
 {
+    super.Destroyed();
+
     DestroyAttachments();
 }
 
@@ -155,72 +171,24 @@ simulated state Broken
     {
         super.BeginState();
 
-        if (SpawnPoint != none)
+        if (SpawnPoint != none && SpawnPoint.BlockReason != SPBR_InDangerZone)
         {
-            // "A Platoon HQ has been destroyed."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+            // "A Command Post has been destroyed."
+            Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHCommandPostMessage', 3,,, Class);
         }
 
         DestroyAttachments();
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = Context.LevelInfo.GetTeamNationClass(Context.TeamIndex);
-
-    return NationClass.default.PlatoonHQConstructedStaticMesh;
-}
-
-function StaticMesh GetBrokenStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQBrokenStaticMesh;
-}
-
-function StaticMesh GetStageStaticMesh(int StageIndex)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQUnpackedStaticMesh;
-}
-
-function StaticMesh GetTatteredStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQTatteredStaticMesh;
-}
-
 simulated function OnTeamIndexChanged()
 {
-    local Material FlagMaterial;
-
     super.OnTeamIndexChanged();
 
-    if (FlagSkinIndex != -1)
+    if (FlagSkinIndex != -1 && FlagMaterial != none)
     {
-        FlagMaterial = GetFlagMaterial();
-
-        if (FlagMaterial != none)
-        {
-            Skins[FlagSkinIndex] = FlagMaterial;
-        }
+        Skins[FlagSkinIndex] = FlagMaterial;
     }
-}
-
-simulated function Material GetFlagMaterial()
-{
-    return LevelInfo.GetTeamNationClass(GetTeamIndex()).default.PlatoonHQFlagTexture;
 }
 
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
@@ -238,11 +206,11 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     GRI = DHGameReplicationInfo(P.GetContext().PlayerController.GameReplicationInfo);
 
     // Do we have a friendly duplicate within PermittedFriendlyControlledDistanceMeters distance?
-    foreach P.RadiusActors(default.Class, A, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+    foreach P.RadiusActors(default.Class, A, Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
     {
         C = DHConstruction(A);
 
-        if (C != none && !C.IsInState('Dummy') && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
         {
             bFoundFriendlyDuplicate = true;
             break;
@@ -252,7 +220,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     // If we have not found a friendly HQ, then lets check if we are near main spawn
     if (!bFoundFriendlyDuplicate)
     {
-        foreach P.RadiusActors(class'DHSpawnPoint', SP, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+        foreach P.RadiusActors(Class'DHSpawnPoint', SP, Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
         {
             if (SP != none && SP.bMainSpawn && (SP.GetTeamIndex() == NEUTRAL_TEAM_INDEX || SP.GetTeamIndex() == TeamIndex))
             {
@@ -265,8 +233,8 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     // If we have not found a friendly duplicate, then check if we are trying to place too close to an inactive enemy objective
     if (!bFoundFriendlyDuplicate)
     {
-        ControlledObjDistanceMin = class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
-        DistanceMin = class'DHUnits'.static.MetersToUnreal(default.EnemySecuredObjectiveDistanceMinMeters);
+        ControlledObjDistanceMin = Class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
+        DistanceMin = Class'DHUnits'.static.MetersToUnreal(default.EnemySecuredObjectiveDistanceMinMeters);
         ObjectiveIndex = -1;
 
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
@@ -318,27 +286,21 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
 // Modified to put the correct nation flag on the flag skin.
 function static UpdateProxy(DHActorProxy CP)
 {
-    local class<DHNation> NationClass;
-
     super.UpdateProxy(CP);
-
-    NationClass = CP.GetContext().LevelInfo.GetTeamNationClass(CP.GetContext().TeamIndex);
-
-    if (NationClass != none)
-    {
-        CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(NationClass.default.PlatoonHQFlagTexture);
-    }
+    
+    CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(default.FlagMaterial);
 }
 
 defaultproperties
 {
-    MenuName="Platoon HQ"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuName="Command Post"
+    MenuIcon=Texture'DH_InterfaceArt2_tex.platoon_hq'
     MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
     SupplyCost=750
     MinDamagetoHurt=50
+    ExplosionDamageTraceOffset=(Z=40.0)
 
     // Placement
     bCanPlaceIndoors=false
@@ -351,7 +313,7 @@ defaultproperties
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
-    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of controlled territory."
+    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of a controlled objective."
     bCanBePlacedInDangerZone=false
 
     StartRotationMin=(Yaw=32768)
@@ -366,28 +328,30 @@ defaultproperties
     TatteredHealthThreshold=250
     
     // Damage
-    DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
-    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
-    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
-    DamageTypeScales(3)=(DamageType=class'DHShellHEImpactDamageType',Scale=1.5)             // HE Impact
-    DamageTypeScales(4)=(DamageType=class'ROTankShellExplosionDamage',Scale=1.33)           // HE Splash
+    DamageTypeScales(0)=(DamageType=Class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
+    DamageTypeScales(1)=(DamageType=Class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
+    DamageTypeScales(2)=(DamageType=Class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
+    DamageTypeScales(3)=(DamageType=Class'DHShellHEImpactDamageType',Scale=1.5)             // HE Impact
+    DamageTypeScales(4)=(DamageType=Class'ROTankShellExplosionDamage',Scale=1.33)           // HE Splash
 
     FlagSkinIndex=1
-    SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
+    SpawnPointClass=Class'DHSpawnPoint_PlatoonHQ'
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
     ObjectiveDistanceMinMeters=100
     EnemyObjectiveDistanceMinMeters=150.0
     EnemySecuredObjectiveDistanceMinMeters=800.0
     PermittedFriendlyControlledDistanceMeters=300.0 // This should be higher than both ObjectiveDistanceMinMeters and DuplicateFriendlyDistanceInMeters
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=Class'DHConstructionGroup_Logistics'
 
     CompletionPointValue=1000
 
     BrokenLifespan=30.0
 
     // Radio attachment
-    RadioClass=class'DHRadioHQAttachment'
+    RadioClass=Class'DHRadioHQAttachment'
     RadioLocationOffset=(X=65,Y=-115,Z=2)
     RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
+
+    FlagMaterial=Texture'DH_Construction_tex.flags_01_blank'
 }

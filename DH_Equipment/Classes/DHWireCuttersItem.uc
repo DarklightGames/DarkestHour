@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWireCuttersItem extends DHWeapon;
@@ -173,7 +173,7 @@ simulated function Fire(float F)
 {
     local DHConstruction C;
     local DHObstacleInstance O;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     if (Instigator == none ||
         Instigator.Controller == none ||
@@ -185,10 +185,10 @@ simulated function Fire(float F)
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + (vector(Instigator.Controller.Rotation) * CutDistance);
+    TraceEnd = TraceStart + (Vector(Instigator.Controller.Rotation) * CutDistance);
 
     // Support for obstacles
-    foreach TraceActors(class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
+    foreach TraceActors(Class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
         if (O != none && !O.Info.IsCleared() && O.Info.CanBeCut())
         {
@@ -199,7 +199,7 @@ simulated function Fire(float F)
     }
 
     // Support for constructions
-    foreach TraceActors(class'DHConstruction', C, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
+    foreach TraceActors(Class'DHConstruction', C, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
         if (C != none && C.CanBeCut())
         {
@@ -213,8 +213,8 @@ simulated function Fire(float F)
 defaultproperties
 {
     ItemName="Wire Cutters"
-    AttachmentClass=class'DHWireCuttersAttachment'
-    PickupClass=class'DHWireCuttersPickup'
+    AttachmentClass=Class'DHWireCuttersAttachment'
+    PickupClass=Class'DHWireCuttersPickup'
     InventoryGroup=7
     GroupOffset=2
     Priority=1
@@ -230,6 +230,7 @@ defaultproperties
     ZoomOutTime=0.2
     bUsesFreeAim=false
     bCanSway=false
+    bCanResupplyWhenEmpty=false
 
     SelectAnim="Draw" // TODO: rename anims to standard, inherited names & then delete these properties
     PutDownAnim="putaway"

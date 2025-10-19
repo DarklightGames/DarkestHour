@@ -1,25 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleHitEffect extends ROVehicleHitEffect;
 
 var class<ProjectedDecal>       HitDecal;
 
-simulated function InitHitEffects(vector HitLoc, vector HitNormal)
+simulated function InitHitEffects(Vector HitLoc, Vector HitNormal)
 {
     PlaySound(HitSound, SLOT_None, 3.0, false, 100.0);
 
-    Spawn(class'DHBulletHitMetalEffect',,, HitLoc, rotator(HitNormal));
+    Spawn(Class'DHBulletHitMetalEffect',,, HitLoc, Rotator(HitNormal));
 
     if (HitDecal != None)
     {
-        Spawn(HitDecal,self,, Location, rotator(-HitNormal));
+        Spawn(HitDecal, self,, Location, Rotator(-HitNormal));
     }
 }
 
 defaultproperties
 {
-    HitDecal=class'BulletHoleMetalArmor'
+    HitDecal=Class'BulletHoleMetalArmor'
 }

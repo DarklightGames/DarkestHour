@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_17PounderGunCannon extends DHATGunCannon;
@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret'
-    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
-    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll')
+    Skins(0)=Texture'DH_Artillery_Tex.17Pounder'
+    Skins(1)=Texture'Weapons1st_tex.Bullet_Shell_Rifle_MN'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pdr_turret_coll')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -25,8 +25,8 @@ defaultproperties
     CustomPitchDownLimit=64444
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
+    PrimaryProjectileClass=Class'DH_17PounderCannonShell'
+    SecondaryProjectileClass=Class'DH_17PounderCannonShellHE'
 
     nProjectileDescriptions(0)="Mk.IV APC"
     nProjectileDescriptions(1)="Mk.I HE-T"
@@ -41,13 +41,13 @@ defaultproperties
     WeaponFireOffset=-5.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3.9 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.DH17pounder'
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_1') //~3.9 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(1)=100

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCommandMenu_FireSupport extends DHCommandMenu
@@ -17,12 +17,12 @@ var localized string AvailableAirstrikesText;
 var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 var bool bIsArtilleryTargetValid;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
-    local vector MapLocation;
+    local Vector MapLocation;
 
     PC = GetPlayerController();
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -42,7 +42,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
     else
     {
         // "Not a Valid Artillery Target!"
-        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
+        PC.ReceiveLocalizedMessage(Class'ROArtilleryMsg', 5);
     }
 
     Interaction.Hide();
@@ -118,7 +118,7 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
 function Tick()
 {
     local DHPlayer              PC;
-    local vector                HitLocation, HitNormal;
+    local Vector                HitLocation, HitNormal;
     local DHGameReplicationInfo GRI;
     local Actor                 HitActor;
 
@@ -191,8 +191,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (!bIsArtilleryTargetValid)
     {
-        ORI.InfoColor = class'UColor'.default.Red;
-        ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+        ORI.InfoColor = Class'UColor'.default.Red;
+        ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
         ORI.InfoText[0] = default.InvalidTargetText;
         return;
     }
@@ -221,7 +221,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case FSE_None:
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
-                ORI.InfoColor = class'UColor'.default.White;
+                ORI.InfoColor = Class'UColor'.default.White;
 
                 for (i = 0; i < AvailableOffMapSupportArray.Length; ++i)
                 {
@@ -258,26 +258,26 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             }
             else if (FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest)
             {
-                ORI.InfoColor = class'UColor'.default.White;
+                ORI.InfoColor = Class'UColor'.default.White;
                 ORI.InfoText[0] = Options[OptionIndex].SubjectText;
             }
             break;
         case FSE_Exhausted:
-            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoColor = Class'UColor'.default.Red;
             ORI.InfoText[0] = default.OffMapSupportExhaustedText;
             break;
         case FSE_NotEnoughSquadmates:
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
-            ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoColor = Class'UColor'.default.Red;
+            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
             ORI.InfoText[0] = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case FSE_InsufficientPrivileges:
         case FSE_Disabled:
         case FSE_Fatal:
         default:
-            ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoColor = Class'UColor'.default.Red;
+            ORI.InfoIcon = Texture'DH_GUI_tex.spawn_point_disabled';
             ORI.InfoText[0] = default.UnavailableText;
             break;
     }
@@ -307,9 +307,12 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
-    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
-    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
+    // HACK: Because engine doesn't handle arrays of empty structs properly, we have to force the array to have at least one element, otherwise
+    //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
+    //  pass on the translation files.
+    Options(0)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Artillery')
+    Options(1)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.FireSupportSmoke')
+    Options(2)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.FireSupportHE')
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"

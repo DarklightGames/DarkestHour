@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_Kar98ScopedZF41Attachment extends DHWeaponAttachment;
@@ -21,10 +21,10 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_ZF41_3rd' 
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_zf41_icon' 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_ZF41_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.kar98k_zf41_icon'
+    mMuzFlashClass=Class'MuzzleFlash3rdKar'
+    ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
     bLoopReloadAnim=true
