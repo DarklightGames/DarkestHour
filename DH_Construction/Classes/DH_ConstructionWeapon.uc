@@ -35,22 +35,20 @@ simulated function Destroyed()
     }
 }
 
-// TODO: add a nice sound effect when the construction slots into a socket!
-// TODO: have the color change to green when the slot is being occupied.
-// BUG: when the construction dies, the socket remains, but anything that was put in it
-// is destroyed as soon as the construction is. To fix this we have to tear off the ownership
-// of socket occupants.
-
-simulated function ShowAllSockets()
+simulated function UpdateSocketVisibility()
 {
     local DHConstructionSocket Socket;
 
     // Show relevant construction sockets.
     foreach DynamicActors(Class'DHConstructionSocket', Socket)
     {
-        if (Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
+        if (!Socket.IsOccupied() && Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
         {
             Socket.Show();
+        }
+        else
+        {
+            Socket.Hide();
         }
     }
 }
@@ -59,7 +57,6 @@ simulated function HideAllSockets()
 {
     local DHConstructionSocket Socket;
 
-    // TODO: HIDE all construction sockets.
     foreach DynamicActors(Class'DHConstructionSocket', Socket)
     {
         Socket.Hide();
@@ -76,7 +73,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     //   dynamicactor 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        ShowAllSockets();
+        UpdateSocketVisibility();
     }
 }
 
@@ -277,14 +274,9 @@ simulated function TraceFromPlayerResult TraceFromPlayer()
     // Trace for construction sockets.
     foreach TraceActors(Class'DHConstructionSocket', Socket, Result.HitLocation, Result.HitNormal, TraceStart, TraceEnd)
     {
-        if (Socket == none)
-        {
-            continue;
-        }
-
         // This is assumed to be in ascending order of distance, so this should
         // return the nearest traced location hint.
-        if (Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
+        if (Socket != none && Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
         {
             Result.HitActor = Socket;
             Result.HitLocation = Result.HitActor.Location;
@@ -394,31 +386,33 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     Socket = DHConstructionSocket(Owner);
 
-    if (C != none)
+    if (C == none)
     {
-        C.InstigatorController = DHPlayer(Instigator.Controller);
-
-        // If we are being placed into a socket, set the socket as occupied by the new construction.
-        Socket = DHConstructionSocket(Owner);
-
-        if (Socket != none)
-        {
-            Socket.Occupant = C;
-        }
-
-        C.VariantIndex = VariantIndex;
-        C.SkinIndex = Context.SkinIndex;
-        
-        C.OnPlaced();
-
-        if (!C.bIsNeutral)
-        {
-            C.SetTeamIndex(Instigator.GetTeamNum());
-        }
-
-        C.UpdateAppearance();
-        C.OnSpawnedByPlayer(C.InstigatorController);
+        return;
     }
+
+    C.InstigatorController = DHPlayer(Instigator.Controller);
+
+    // If we are being placed into a socket, set the socket as occupied by the new construction.
+    Socket = DHConstructionSocket(Owner);
+
+    if (Socket != none)
+    {
+        Socket.SetOccupant(C);
+    }
+
+    C.VariantIndex = VariantIndex;
+    C.SkinIndex = Context.SkinIndex;
+    
+    C.OnPlaced();
+
+    if (!C.bIsNeutral)
+    {
+        C.SetTeamIndex(Instigator.GetTeamNum());
+    }
+
+    C.UpdateAppearance();
+    C.OnSpawnedByPlayer(C.InstigatorController);
 }
 
 simulated function ResetCursor()

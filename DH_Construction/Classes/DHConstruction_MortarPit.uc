@@ -14,10 +14,15 @@ defaultproperties
     MenuName="Sandbags (Mortar Pit)"
     MenuIcon=Texture'DH_InterfaceArt2_tex.sandbags_crescent'
     CollisionHeight=100
-    CollisionRadius=150
+    CollisionRadius=135
     SupplyCost=250
     HealthMax=750
 
+    Begin Object Class=DHConstructionSocketParameters Name=MortarSocketParams
+        TagFilters(0)=(Tag=CT_Mortar)
+    End Object
+
     // Mortar Socket
-    Sockets(0)=(TagFilters=((Operation=Include,Tag=CT_Mortar)))
+    Sockets(0)=(Parameters=MortarSocketParams)
+    ConstructionTags=(CT_MortarPit)
 }

@@ -9,7 +9,8 @@ var() bool  bLimitLocalRotation;    // When true, the local rotation of the acto
 var() Range LocalRotationYawRange;  // Limits the local rotation of the actor proxy attached to this hint.
 var() bool  bShouldDestroyOccupant;
 
-var Actor   Occupant;               // The current actor that is occupying this socket.
+var private Actor Occupant;         // The current actor that is occupying this socket.
+var private DHActorProxy Proxy;     // The proxy actor that is snapped to this socket.
 
 replication
 {
@@ -21,8 +22,6 @@ function Destroyed()
 {
     super.Destroyed();
 
-    // TODO: only destroy occupant if 
-
     if (bShouldDestroyOccupant && Occupant != None)
     {
         Occupant.Destroy();
@@ -33,6 +32,37 @@ simulated function bool IsOccupied()
 {
     return Occupant != None;
 }
+
+function Actor GetOccupant()
+{
+    return Occupant;
+}
+
+function SetOccupant(Actor Occupant)
+{
+    if (self.Occupant != Occupant)
+    {
+        self.Occupant = Occupant;
+        OnOccupantChanged();
+    }
+}
+
+function DHActorProxy GetProxy()
+{
+    return Proxy;
+}
+
+function SetProxy(DHActorProxy Proxy)
+{
+    if (self.Proxy != Proxy)
+    {
+        self.Proxy = Proxy;
+        OnProxyChanged();
+    }
+}
+
+function OnOccupantChanged();
+function OnProxyChanged();
 
 defaultproperties
 {

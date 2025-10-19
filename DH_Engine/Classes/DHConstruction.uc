@@ -243,15 +243,10 @@ struct SConstructionSocket
 {
     var Vector Location;
     var Rotator Rotation;
-    var bool bLimitLocalRotation;
-    var Range LocalRotationYawRange;
-    var int CollisionRadiusMax;         // The maximum collision radius allowable. If 0, then there is no limit.
-    var bool bShouldDestroyOccupant;    // When true, destroy the occupant of the construction socket when the construction is destroyed.
-    var array<DHConstructionTypes.SClassFilter> ClassFilters;
-    var array<DHConstructionTypes.STagFilter> TagFilters;
+    var DHConstructionSocketParameters Parameters;
 };
-var array<SConstructionSocket> Sockets;
-var array<DHConstructionSocket> SocketActors;
+var array<SConstructionSocket>      Sockets;
+var array<DHConstructionSocket>     SocketActors;
 
 // Cached values that are calculated only when needed (e.g., when any of the user-editable properties change such as variant or skin)
 struct RuntimeData
@@ -360,11 +355,6 @@ simulated function SpawnConstructionSockets()
 {
     local int i;
     local DHConstructionSocket Socket;
-    local float SocketCollisionRadius, SocketCollisionHeight;
-    local Vector SocketDrawScale3D;
-
-    const SOCKET_COLLISION_RADIUS_DEFAULT = 32;
-    const SOCKET_COLLISION_HEIGHT_DEFAULT = 32;
 
     if (Role != ROLE_Authority)
     {
@@ -387,33 +377,11 @@ simulated function SpawnConstructionSockets()
             continue;
         }
 
-        Socket.bLimitLocalRotation = Sockets[i].bLimitLocalRotation;
-        Socket.LocalRotationYawRange = Sockets[i].LocalRotationYawRange;
-        Socket.ClassFilters = Sockets[i].ClassFilters;
-        Socket.TagFilters = Sockets[i].TagFilters;
-        Socket.CollisionRadiusMax = Sockets[i].CollisionRadiusMax;
-        Socket.bShouldDestroyOccupant = Sockets[i].bShouldDestroyOccupant;
+        Socket.Setup(Sockets[i].Parameters);
         Socket.SetBase(self);
         Socket.SetRelativeLocation(Sockets[i].Location);
         Socket.SetRelativeRotation(Sockets[i].Rotation);
-
-        if (Socket.CollisionRadiusMax == 0)
-        {
-            SocketCollisionRadius = SOCKET_COLLISION_RADIUS_DEFAULT;
-        }
-        else
-        {
-            SocketCollisionRadius = Socket.CollisionRadiusMax;
-        }
-
-        SocketCollisionHeight = SOCKET_COLLISION_HEIGHT_DEFAULT;
-
-        SocketDrawScale3D.X = SocketCollisionRadius;
-        SocketDrawScale3D.Y = SocketCollisionRadius;
-        SocketDrawScale3D.Z = SocketCollisionHeight;
-        Socket.SetDrawScale3D(SocketDrawScale3D);
-        Socket.SetCollisionSize(SocketCollisionRadius, SocketCollisionHeight);
-
+        
         SocketActors[i] = Socket;
     }
 }
@@ -831,8 +799,6 @@ simulated state Constructed
     simulated function BeginState()
     {
         local DarkestHourGame G;
-
-        Log("Constructed BeginState" @ self);
 
         if (Role == ROLE_Authority)
         {

@@ -11,6 +11,7 @@ class DHConstructionTypes extends Object
 enum EConstructionTag
 {
     CT_Mortar,
+    CT_MortarPit,
 };
 
 enum EFilterOperation

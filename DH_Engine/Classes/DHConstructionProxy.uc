@@ -43,6 +43,17 @@ function DHActorProxy.Context GetContext()
     return Context;
 }
 
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (Socket != none)
+    {
+        Socket.SetProxy(none);
+        OnSocketExit(Socket);
+    }
+}
+
 final function SetConstructionClass(class<DHConstruction> ConstructionClass)
 {
     if (ConstructionClass == none)
@@ -417,12 +428,14 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
     {
         if (Socket != none)
         {
+            Socket.SetProxy(none);
             OnSocketExit(Socket);
         }
 
         if (GroundActor.IsA('DHConstructionSocket'))
         {
             Socket = DHConstructionSocket(GroundActor);
+            Socket.SetProxy(self);
             OnSocketEnter(Socket);
         }
         else
@@ -604,7 +617,7 @@ function DHConstruction.ConstructionError GetPositionError()
     // Don't allow the construction to be placed on a socket if it's occupied.
     Socket = DHConstructionSocket(GroundActor);
 
-    if (Socket != none && Socket.Occupant != none)
+    if (Socket != none && Socket.GetOccupant() != none)
     {
         E.Type = ERROR_SocketOccupied;
         return E;
