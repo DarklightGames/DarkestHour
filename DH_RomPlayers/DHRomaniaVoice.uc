@@ -1,0 +1,93 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DHROmaniaVoice extends DHVoicePack;
+
+//iirc romanian voicelines dont adress any specific enemy, so they are "universal"
+
+defaultproperties
+{
+    // Support sound groups
+    SupportSound(0)=SoundGroup'DH_voice_rom_infantry.need_help'
+    SupportSound(1)=SoundGroup'DH_voice_rom_infantry.need_help_at'
+    SupportSound(2)=SoundGroup'DH_voice_rom_infantry.need_ammo'
+    SupportSound(3)=SoundGroup'DH_voice_rom_infantry.need_sniper'
+    SupportSound(4)=SoundGroup'DH_voice_rom_infantry.need_MG'
+    SupportSound(5)=SoundGroup'DH_voice_rom_infantry.need_AT'
+    SupportSound(6)=SoundGroup'DH_voice_rom_infantry.need_demolitions'
+    SupportSound(7)=SoundGroup'DH_voice_rom_infantry.need_tank'
+    SupportSound(8)=SoundGroup'DH_voice_rom_infantry.need_artillery'
+    SupportSound(9)=SoundGroup'DH_voice_rom_infantry.need_transport'
+    // Ack sound groups
+    AckSound(0)=SoundGroup'DH_voice_rom_infantry.yes'
+    AckSound(1)=SoundGroup'DH_voice_rom_infantry.no'
+    AckSound(2)=SoundGroup'DH_voice_rom_infantry.thanks'
+    AckSound(3)=SoundGroup'DH_voice_rom_infantry.sorry'
+    // Enemy sound groups
+    EnemySound(0)=SoundGroup'DH_voice_rom_infantry.infantry'
+    EnemySound(1)=SoundGroup'DH_voice_rom_infantry.MG'
+    EnemySound(2)=SoundGroup'DH_voice_rom_infantry.sniper'
+    EnemySound(3)=SoundGroup'DH_voice_rom_infantry.pioneer'
+    EnemySound(4)=SoundGroup'DH_voice_rom_infantry.AT_soldier'
+    EnemySound(5)=SoundGroup'DH_voice_rom_infantry.Vehicle'
+    EnemySound(6)=SoundGroup'DH_voice_rom_infantry.tank'
+    EnemySound(7)=SoundGroup'DH_voice_rom_infantry.heavy_tank'
+    EnemySound(8)=SoundGroup'DH_voice_rom_infantry.artillery'
+    // Alert sound groups
+    AlertSound(0)=SoundGroup'DH_voice_rom_infantry.Grenade'
+    AlertSound(1)=SoundGroup'DH_voice_rom_infantry.gogogo'
+    AlertSound(2)=SoundGroup'DH_voice_rom_infantry.take_cover'
+    AlertSound(3)=SoundGroup'DH_voice_rom_infantry.Stop'
+    AlertSound(4)=SoundGroup'DH_voice_rom_infantry.follow_me'
+    AlertSound(5)=SoundGroup'DH_voice_rom_infantry.satchel_planted'
+    AlertSound(6)=SoundGroup'DH_voice_rom_infantry.covering_fire'
+    AlertSound(7)=SoundGroup'DH_voice_rom_infantry.friendly_fire'
+    AlertSound(8)=SoundGroup'DH_voice_rom_infantry.under_attack_at'
+    AlertSound(9)=SoundGroup'DH_voice_rom_infantry.retreat'
+    // Vehicle direction sound groups
+    vehicleDirectionSound(0)=SoundGroup'DH_voice_rom_vehicle.go_to_objective'
+    vehicleDirectionSound(1)=SoundGroup'DH_voice_rom_vehicle.forwards'
+    vehicleDirectionSound(2)=SoundGroup'DH_voice_rom_vehicle.Stop'
+    vehicleDirectionSound(3)=SoundGroup'DH_voice_rom_vehicle.Reverse'
+    vehicleDirectionSound(4)=SoundGroup'DH_voice_rom_vehicle.Left'
+    vehicleDirectionSound(5)=SoundGroup'DH_voice_rom_vehicle.Right'
+    vehicleDirectionSound(6)=SoundGroup'DH_voice_rom_vehicle.nudge_forward'
+    vehicleDirectionSound(7)=SoundGroup'DH_voice_rom_vehicle.nudge_back'
+    vehicleDirectionSound(8)=SoundGroup'DH_voice_rom_vehicle.nudge_left'
+    vehicleDirectionSound(9)=SoundGroup'DH_voice_rom_vehicle.nudge_right'
+    // Vehicle alert sound groups
+    vehicleAlertSound(0)=SoundGroup'DH_voice_rom_vehicle.enemy_forward'
+    vehicleAlertSound(1)=SoundGroup'DH_voice_rom_vehicle.enemy_left'
+    vehicleAlertSound(2)=SoundGroup'DH_voice_rom_vehicle.enemy_right'
+    vehicleAlertSound(3)=SoundGroup'DH_voice_rom_vehicle.enemy_behind'
+    vehicleAlertSound(4)=SoundGroup'DH_voice_rom_vehicle.enemy_infantry'
+    vehicleAlertSound(5)=SoundGroup'DH_voice_rom_vehicle.yes'
+    vehicleAlertSound(6)=SoundGroup'DH_voice_rom_vehicle.no'
+    vehicleAlertSound(7)=SoundGroup'DH_voice_rom_vehicle.we_are_burning'
+    vehicleAlertSound(8)=SoundGroup'DH_voice_rom_vehicle.get_out'
+    vehicleAlertSound(9)=SoundGroup'DH_voice_rom_vehicle.Loaded'
+    // Commander sound groups
+    OrderSound(0)=SoundGroup'DH_voice_rom_infantry.attack_objective'
+    OrderSound(1)=SoundGroup'DH_voice_rom_infantry.defend_objective'
+    OrderSound(2)=SoundGroup'DH_voice_rom_infantry.hold_position'
+    OrderSound(3)=SoundGroup'DH_voice_rom_infantry.follow_me'
+    OrderSound(4)=SoundGroup'DH_voice_rom_infantry.Attack'
+    OrderSound(5)=SoundGroup'DH_voice_rom_infantry.retreat'
+    OrderSound(6)=SoundGroup'DH_voice_rom_infantry.fire_at_will'
+    OrderSound(7)=SoundGroup'DH_voice_rom_infantry.cease_fire'
+    // Extras sound groups
+    ExtraSound(0)=SoundGroup'DH_voice_rom_infantry.i_will_kill_you'
+    ExtraSound(1)=SoundGroup'DH_voice_rom_infantry.no_retreat'
+    ExtraSound(2)=SoundGroup'DH_voice_rom_infantry.insult'
+    bUseAxisStrings=true
+    SupportStringAxis(5)="We need an anti-tank rifle!"
+    SupportAbbrevAxis(5)="Need an Anti-Tank Rifle"
+
+    EnemyStringAxis(6)="Tank! Tank!"
+
+    RadioRequestSound=Sound'DH_voice_rom_infantry.need_artillery01' //weird, but there doesnt seem to be a proper artillery request line
+    RadioResponseConfirmSound=SoundGroup'DH_voice_rom_infantry.confirm'
+    RadioResponseDenySound=SoundGroup'DH_voice_rom_infantry.deny'
+}

@@ -9,7 +9,7 @@ defaultproperties
 {
     NationName="Romania"
     NativeNationName="România"  //Change everything below
-    VoicePackClass=class'DH_GerPlayers.DHGerVoice'
+    VoicePackClass=class'DH_RomPlayers.DHRomaniaVoice'
     SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.GER_flag_01'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
