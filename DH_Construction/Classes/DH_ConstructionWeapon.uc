@@ -384,23 +384,12 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     C = Spawn(ConstructionClass, Owner,, Location, Rotation);
 
-    Socket = DHConstructionSocket(Owner);
-
     if (C == none)
     {
         return;
     }
 
     C.InstigatorController = DHPlayer(Instigator.Controller);
-
-    // If we are being placed into a socket, set the socket as occupied by the new construction.
-    Socket = DHConstructionSocket(Owner);
-
-    if (Socket != none)
-    {
-        Socket.SetOccupant(C);
-    }
-
     C.VariantIndex = VariantIndex;
     C.SkinIndex = Context.SkinIndex;
     
@@ -413,6 +402,14 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     C.UpdateAppearance();
     C.OnSpawnedByPlayer(C.InstigatorController);
+
+    // If we are being placed into a socket, set the socket as occupied by the new construction.
+    Socket = DHConstructionSocket(Owner);
+
+    if (Socket != none)
+    {
+        Socket.SetOccupant(C);
+    }
 }
 
 simulated function ResetCursor()
