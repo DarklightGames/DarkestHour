@@ -24,4 +24,5 @@ sync:
     - pl  # Polish
     - es  # Spanish
     - de  # German
+    # - ja  # Japanese
   

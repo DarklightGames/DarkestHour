@@ -7,7 +7,7 @@ unrealscript:
     directory: ./DH_Interface/Classes
   # The path to the script that will be generated to support loading and accessing fonts.
   fonts:
-    directory: ./DH_Engine/Classes
+    directory: ./DH_Fonts/Classes
     class_name: DHFonts
 proportional:
   resolution:
