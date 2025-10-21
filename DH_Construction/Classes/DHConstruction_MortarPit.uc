@@ -7,10 +7,11 @@ class DHConstruction_MortarPit extends DHConstruction_Sandbags;
 
 defaultproperties
 {
-    // Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.mortar_pit_01')
-    // Stages(1)=(Progress=2,StaticMesh=StaticMesh'DH_Construction_stc.mortar_pit_02')
-    //ProgressMax=4
-    StaticMesh=StaticMesh'DH_Construction_stc.mortar_pit'
+    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.MORTAR_PIT_01')
+    Stages(1)=(Progress=4,StaticMesh=StaticMesh'DH_Construction_stc.MORTAR_PIT_02')
+
+    ProgressMax=8
+    StaticMesh=StaticMesh'DH_Construction_stc.MORTAR_PIT_03'
     MenuName="Sandbags (Mortar Pit)"
     MenuIcon=Texture'DH_InterfaceArt2_tex.sandbags_crescent'
     CollisionHeight=100

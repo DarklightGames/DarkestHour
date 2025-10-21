@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Tweak third person animations
-//==============================================================================
 
 class DH_ML3InchMortar extends DHMortar;
 

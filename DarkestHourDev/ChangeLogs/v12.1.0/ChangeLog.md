@@ -17,8 +17,10 @@ We hope that this change will have the following effects:
 * Create a major advantage to mobile artillery (e.g., Wespe, Priest) by allowing them to evade incoming counter-battery fire.
 * Create another objective for artillery operators other than responding to fire request markers.
 
-# Future Plans
-The current downsides for this are that the 8cm mortars and pack howitzers are now uniquely vulnerable to enemy fire since they are unable to be moved. We plan on adding the ability to pick these up and move them in the future (this system is already implemented for the mounted MG system which is currently in development).
+# Mortar Pit Construction
+This new system makes unprotected 8cm mortars uniquely vulnerable to enemy fire since they are currently unable to be moved (we plan on adding the ability to move these later). To provide some protection from counter-battery fire, we have added a new Mortar Pit construction. This is the first construction that uses the new "sockets" system that let's constructions slot into places where the placement rules would otherwise forbid it.
+
+<< gif for this >>
 
 # Trivia
 * This system was inspired by the Blitzkrieg series of games by Nival Interactive.
