@@ -229,9 +229,9 @@ def generate_font_scripts(args):
 
         if ensure_all_characters:
             characters = set()
-            pattern = f'{mod_path}\\System\\*.{language_suffix}'
+            pattern = Path(mod_path) / 'System' / f'*.{language_suffix}'
 
-            for filename in glob.glob(pattern):
+            for filename in glob.glob(str(pattern)):
                 characters |= read_unique_characters_from_unt_file(filename)
 
             # For each of the characters, see if it's in the unicode ranges.
