@@ -346,10 +346,10 @@ defaultproperties
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
      GroundSpeed=100000.000000
-     HealthMax=20000.000000
-     Health=10000
+     HealthMax=8000.000000
+     Health=8000
      Mesh=SkeletalMesh'DH_UFO_anm.DieGlockeBody'
-     Skins(0)=Texture'UFO_tex.DieGlocke.DieGlockeT'
+     Skins(0)=Texture'DH_UFO_tex.DieGlocke.DieGlockeT'
      //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
      SoundRadius=600.000000
 
