@@ -1,5 +1,6 @@
 # This file is used to generate the fonts and supporting code for the game.
 # All fonts must be installed before executing the script.
+# On Linux, the fonts must be installed on both the host machine and the WINE prefix.
 package_name: DHFonts
 unrealscript:
   gui_fonts:
@@ -152,12 +153,12 @@ font_styles:
 languages:
   en:
     name: English, French, German, Italian, Spanish
-#  ja:
-#    name: Japanese
-#    font_substitutions:
-#      Sofia Sans Condensed: BIZ UDGothic
-#    ensure_all_characters: true
-#    unicode_ranges:
-#      - [0x3041, 0x309F]
-#      - [0x30A0, 0x30FF]
-#      - [0x31F0, 0x31FF]
+  ja:
+    name: Japanese
+    font_substitutions:
+      Sofia Sans Condensed: BIZ UDGothic
+    ensure_all_characters: true
+    unicode_ranges:
+      - [0x3041, 0x309F]
+      - [0x30A0, 0x30FF]
+      - [0x31F0, 0x31FF]

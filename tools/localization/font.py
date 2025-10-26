@@ -238,9 +238,6 @@ def generate_font_scripts(args):
             # If it's not, add it to the unicode ranges.
             unicode_ranges.add_ordinals(characters)
 
-            # if len(added_characters) > 0:
-            #     print(f'Added {len(characters)} characters to unicode ranges for language {language["name"]} ({language_code}): {[hex(c) for c in added_characters]}')
-
         for font_style_name, style in font_styles.items():
             font_style_items[font_style_name] = []
 
