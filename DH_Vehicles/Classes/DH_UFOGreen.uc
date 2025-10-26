@@ -5,6 +5,7 @@ class DH_UFOGreen extends DH_UFO;
 
 defaultproperties
 {
+    VehiclePositionString="in Green UFO"
     VehicleNameString="Green UFO of Loyalty"
 
     DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_UFOLaserGunGreen',WeaponBone="Turret_placement2")
