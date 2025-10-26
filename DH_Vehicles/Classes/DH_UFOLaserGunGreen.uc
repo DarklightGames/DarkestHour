@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_UFOLaserGun extends DHVehicleAutoCannon; 
+class DH_UFOLaserGunGreen extends DHVehicleAutoCannon; 
 
 defaultproperties
 {
@@ -28,13 +28,13 @@ defaultproperties
 
     // Ammo
     bMultipleRoundTypes=False
-    PrimaryProjectileClass=Class'DH_UFObubbleGreen'
+    PrimaryProjectileClass=Class'DH_UFOLaserBulletYellow'
 
     InitialPrimaryAmmo=5000
     NumPrimaryMags=200
 
     Spread=0.12 //very wide
-    AltFireSpread=0.01
+    AltFireSpread=0.3
     FireInterval=0.1
 
     // Weapon fire
@@ -54,12 +54,12 @@ defaultproperties
     AltFireEndSound=Sound'DH_UFO_snd.UFO.UfoFireAlt_End'
 
     // Coaxial MG ammo
-    AltFireProjectileClass=Class'DH_UFOLaserBulletBlue'
+    AltFireProjectileClass=Class'DH_UFOSnake'
     InitialAltAmmo=43000
     NumMGMags=150
-    AltFireInterval=0.15
+    AltFireInterval=0.05
     TracerProjectileClass=Class'DH_UFOLaserBulletYellow'
-    TracerFrequency=2
+    TracerFrequency=44
 
     AltFireSoundScaling=0.7
 

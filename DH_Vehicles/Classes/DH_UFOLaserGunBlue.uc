@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_UFOLaserGun extends DHVehicleAutoCannon; 
+class DH_UFOLaserGunBlue extends DHVehicleAutoCannon; 
 
 defaultproperties
 {
@@ -28,22 +28,22 @@ defaultproperties
 
     // Ammo
     bMultipleRoundTypes=False
-    PrimaryProjectileClass=Class'DH_UFObubbleGreen'
+    PrimaryProjectileClass=Class'DH_UFOBubbleBlue'
 
     InitialPrimaryAmmo=5000
     NumPrimaryMags=200
 
-    Spread=0.12 //very wide
-    AltFireSpread=0.01
-    FireInterval=0.1
+    Spread=0.01
+    AltFireSpread=0.002
+    FireInterval=1
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
     AltFireAttachmentBone="tip"
     AmbientEffectEmitterClass=none
-    CannonFireSound(0)=Sound'DH_UFO_snd.UFO.se_tan00'
-    CannonFireSound(1)=Sound'DH_UFO_snd.UFO.se_tan01'
-    CannonFireSound(2)=Sound'DH_UFO_snd.UFO.se_tan02'
+    CannonFireSound(0)=Sound'DH_UFO_snd.UFO.UfoBigShot'
+    CannonFireSound(1)=Sound'DH_UFO_snd.UFO.UfoBigShotD'
+    CannonFireSound(2)=Sound'DH_UFO_snd.UFO.UfoBigShotE'
 
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
@@ -54,12 +54,12 @@ defaultproperties
     AltFireEndSound=Sound'DH_UFO_snd.UFO.UfoFireAlt_End'
 
     // Coaxial MG ammo
-    AltFireProjectileClass=Class'DH_UFOLaserBulletBlue'
+    AltFireProjectileClass=Class'DH_UFOLightning'
     InitialAltAmmo=43000
     NumMGMags=150
-    AltFireInterval=0.15
-    TracerProjectileClass=Class'DH_UFOLaserBulletYellow'
-    TracerFrequency=2
+    AltFireInterval=0.2
+    TracerProjectileClass=Class'DH_UFOLaserBulletBlue'
+    TracerFrequency=11
 
     AltFireSoundScaling=0.7
 
