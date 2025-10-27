@@ -12,5 +12,5 @@ defaultproperties
     Constructions(8)=(ConstructionClass=Class'DHConstruction_Sandbags_Line',Limit=-1,MaxActive=-1)
     Constructions(9)=(ConstructionClass=Class'DHConstruction_Sandbags_Crescent',Limit=-1,MaxActive=-1)
     Constructions(10)=(ConstructionClass=Class'DHConstruction_Sandbags_Bunker',Limit=-1,MaxActive=-1)
-    Constructions(11)=(ConstructionClass=Class'DHConstruction_MortarPit',Limit=-1,MaxActive=-1)
+    Constructions(11)=(ConstructionClass=Class'DHConstruction_Sandbags_MortarPit',Limit=-1,MaxActive=-1)
 }

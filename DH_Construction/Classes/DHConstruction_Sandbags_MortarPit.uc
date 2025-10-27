@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHConstruction_MortarPit extends DHConstruction_Sandbags;
+class DHConstruction_Sandbags_MortarPit extends DHConstruction_Sandbags;
 
 defaultproperties
 {
