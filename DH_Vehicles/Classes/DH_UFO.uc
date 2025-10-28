@@ -249,7 +249,7 @@ defaultproperties
      LatDamping=0.100000
      MaxRiseForce=100.000000
      UpDamping=0.100000
-     TurnTorqueFactor=10000.000000
+     TurnTorqueFactor=4400.000000
      TurnTorqueMax=2500.000000
      TurnDamping=150.000000
      MaxYawRate=4.500000
