@@ -10,6 +10,14 @@ var bool    bLimitLocalRotation;
 var Range   LocalRotationYawRange;
 var int     CollisionRadiusMax;         // The maximum collision radius allowable. If 0, then there is no limit.
 var bool    bShouldDestroyOccupant;    // When true, destroy the occupant of the construction socket when the construction is destroyed.
+var int     CollisionRadius;
+var int     CollisionHeight;
 
 var array<DHConstructionTypes.SClassFilter> ClassFilters;
 var array<DHConstructionTypes.STagFilter> TagFilters;
+
+defaultproperties
+{
+    CollisionRadius=32
+    CollisionHeight=32
+}

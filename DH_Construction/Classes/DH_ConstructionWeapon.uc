@@ -67,10 +67,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);
 
-    // TODO: we need to show all *relevant* sockets.
-    //   also have to handle the case where sockets are created after the weapon is brought up.
-    //   the dumb thing to do would be to check this in TICK but that's not great.
-    //   dynamicactor 
+    // TODO: We need to also handle the case where sockets are created after the weapon is brought up.
     if (Level.NetMode != NM_DedicatedServer)
     {
         UpdateSocketVisibility();
@@ -79,10 +76,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 simulated function bool PutDown()
 {
-    // TODO: we need to show all *relevant* sockets.
-    //   also have to handle the case where sockets are created after the weapon is brought up.
-    //   the dumb thing to do would be to check this in TICK but that's not great.
-    //   dynamicactor 
     if (Level.NetMode != NM_DedicatedServer)
     {
         HideAllSockets();
@@ -164,7 +157,7 @@ simulated function OnTick(float DeltaTime)
 
     PC = PlayerController(Instigator.Controller);
 
-    if (CP == none)
+    if (PC == none)
     {
         return;
     }
@@ -187,13 +180,11 @@ simulated function OnTick(float DeltaTime)
 
 simulated function OnProxySocketEnter(DHConstructionSocket Socket)
 {
-    // TODO: play a neat sound.
     ClientPlayClickSound();
 }
 
 simulated function OnProxySocketExit(DHConstructionSocket Socket)
 {
-    // TODO: play a neat sound.
     ClientPlayClickSound();
 }
 

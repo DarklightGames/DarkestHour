@@ -29,9 +29,6 @@ simulated function Setup(DHConstructionSocketParameters Parameters)
     local float SocketCollisionRadius, SocketCollisionHeight;
     local Vector SocketDrawScale3D;
 
-    const SOCKET_COLLISION_RADIUS_DEFAULT = 32;
-    const SOCKET_COLLISION_HEIGHT_DEFAULT = 32;
-
     bLimitLocalRotation = Parameters.bLimitLocalRotation;
     LocalRotationYawRange = Parameters.LocalRotationYawRange;
     ClassFilters = Parameters.ClassFilters;
@@ -41,18 +38,19 @@ simulated function Setup(DHConstructionSocketParameters Parameters)
 
     if (CollisionRadiusMax == 0)
     {
-        SocketCollisionRadius = SOCKET_COLLISION_RADIUS_DEFAULT;
+        SocketCollisionRadius = Parameters.CollisionRadius;
     }
     else
     {
         SocketCollisionRadius = CollisionRadiusMax;
     }
 
-    SocketCollisionHeight = SOCKET_COLLISION_HEIGHT_DEFAULT;
+    SocketCollisionHeight = Parameters.CollisionHeight;
 
     SocketDrawScale3D.X = SocketCollisionRadius;
     SocketDrawScale3D.Y = SocketCollisionRadius;
     SocketDrawScale3D.Z = SocketCollisionHeight;
+    
     SetDrawScale3D(SocketDrawScale3D);
     SetCollisionSize(SocketCollisionRadius, SocketCollisionHeight);
 }

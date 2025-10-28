@@ -54,9 +54,6 @@ var localized string        AdminDestroyAxisSpawnsText;
 var localized string        AdminDestroySpawnText;
 var localized string        AdminTeleportText;
 
-// TODO: debugging
-var localized string        AdminCounterBatteryText;
-
 var             bool                        bSelectArtilleryTarget;
 var             bool                        bDeselectArtilleryTarget;
 var             int                         TargetSquadIndex;
@@ -595,8 +592,6 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         Sender.AddItem("-");
         Sender.AddItem(default.AdminDestroyAlliedSpawnsText);
         Sender.AddItem(default.AdminDestroyAxisSpawnsText);
-        Sender.AddItem("-");
-        Sender.AddItem(default.AdminCounterBatteryText);
     }
 
     return Sender.ContextItems.Length > 0;
@@ -646,10 +641,6 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
                     break;
                 case 6:
                     PC.ServerDestroyAllAdminSpawns(AXIS_TEAM_INDEX);
-                    break;
-                case 8:
-                    Log("sending counter battery emitter" @ MapClickLocation.X  @ MapClickLocation.Y);
-                    PC.ServerAddCounteryBatteryEmitter(GRI.GetWorldSurfaceCoords(MapClickLocation.X, MapClickLocation.Y, ADMIN_SPAWN_TRACE_HEIGHT), int(!bool(PC.GetTeamNum())));
                     break;
             }
         }
@@ -881,7 +872,6 @@ defaultproperties
     AdminDestroyAxisSpawnsText="ADMIN: Destroy AXIS admin spawns"
     AdminDestroySpawnText="ADMIN: Destroy spawn"
     AdminTeleportText="ADMIN: Teleport here"
-    AdminCounterBatteryText="ADMIN: Add counter-battery emitter"
     RemoveText="Remove {0}"
     ActiveTargetSelectText="Select as Active Target"
     ActiveTargetDeselectText="Deselect Active Target"

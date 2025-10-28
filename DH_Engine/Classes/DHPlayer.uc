@@ -254,8 +254,7 @@ replication
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
         ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
-        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation,
-        ServerAddCounteryBatteryEmitter;
+        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -6362,21 +6361,6 @@ function ServerDestroyAllAdminSpawns(byte TeamIndex)
     }
 }
 
-
-function ServerAddCounteryBatteryEmitter(Vector WorldLocation, int TeamIndex)
-{
-    local DHCounterBatteryMarkerEmitter Emitter;
-
-    WorldLocation.Z = 0.0;
-
-    Emitter = Spawn(Class'DHCounterBatteryMarkerEmitter',,, WorldLocation);
-
-    if (Emitter != none)
-    {
-        Emitter.TeamIndex = TeamIndex;
-    }
-}
-
 // Moves the player to a location based on map coordinates
 function ServerTeleportToMapLocation(float X, float Y)
 {
@@ -6582,6 +6566,8 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     }
 
     TraceStart = CalcViewLocation;
+    // TODO: this is incorrect; for this trace we should choose a *reasonable* max distance.
+    // right now you can trace out for kilometers and get the AT gun rotate menu etc.
     TraceEnd = TraceStart + (Vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
 
     foreach TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)

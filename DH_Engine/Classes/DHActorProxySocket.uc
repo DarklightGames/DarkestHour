@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHActorProxySocket extends Actor;
+class DHActorProxySocket extends Actor
+    notplaceable;
 
 var() bool  bLimitLocalRotation;    // When true, the local rotation of the actor proxy is limited to the specified yaw range.
 var() Range LocalRotationYawRange;  // Limits the local rotation of the actor proxy attached to this hint.
