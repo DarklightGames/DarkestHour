@@ -211,6 +211,16 @@ simulated event SVehicleUpdateParams()
 
 }
 
+// Overridden to play the correct idle animation for the vehicle
+simulated function PostBeginPlay()
+{
+	// RO functionality
+	if( HasAnim(BeginningIdleAnim))
+	{
+	    LoopAnim(BeginningIdleAnim);
+	}
+}
+
 defaultproperties
 {
 
