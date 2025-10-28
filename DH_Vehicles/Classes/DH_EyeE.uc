@@ -255,7 +255,7 @@ defaultproperties
      UprightDamping=300.000000
      MaxThrustForce=300.000000
      LongDamping=0.100000
-     MaxStrafeForce=50.000000
+     MaxStrafeForce=250.000000
      LatDamping=0.100000
      MaxRiseForce=200.000000
      UpDamping=0.100000
@@ -267,7 +267,7 @@ defaultproperties
      PitchTorqueMax=35.000000
      PitchDamping=30.000000
      RollTorqueTurnFactor=450.000000
-     RollTorqueStrafeFactor=50.000000
+     RollTorqueStrafeFactor=250.000000
      RollTorqueMax=70.000000
      RollDamping=40.000000
      StopThreshold=100.000000
