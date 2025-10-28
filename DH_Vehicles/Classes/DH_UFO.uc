@@ -241,7 +241,7 @@ defaultproperties
      WheelSuspensionMaxRenderTravel=5.000000
      MinBrakeFriction=40.000000
      MaxPitchSpeed=4500.000000
-     UprightStiffness=500.000000
+     UprightStiffness=100.000000
      UprightDamping=300.000000
      MaxThrustForce=200.000000
      LongDamping=0.100000
@@ -249,10 +249,10 @@ defaultproperties
      LatDamping=0.100000
      MaxRiseForce=100.000000
      UpDamping=0.100000
-     TurnTorqueFactor=1000.000000
-     TurnTorqueMax=200.000000
-     TurnDamping=50.000000
-     MaxYawRate=1.500000
+     TurnTorqueFactor=10000.000000
+     TurnTorqueMax=2500.000000
+     TurnDamping=150.000000
+     MaxYawRate=4.500000
      PitchTorqueFactor=200.000000
      PitchTorqueMax=35.000000
      PitchDamping=30.000000
