@@ -57,7 +57,7 @@ defaultproperties
     AltFireProjectileClass=Class'DH_UFOLightning'
     InitialAltAmmo=43000
     NumMGMags=150
-    AltFireInterval=0.2
+    AltFireInterval=0.1
     TracerProjectileClass=Class'DH_UFOLaserBulletBlue'
     TracerFrequency=11
 
