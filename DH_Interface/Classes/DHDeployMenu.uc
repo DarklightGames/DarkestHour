@@ -402,18 +402,20 @@ function int GetSelectedVehiclePoolIndex()
 function UpdateSpawnPoints()
 {
     local int RoleIndex;
-    local byte TeamIndex;
+    local DHRoleInfo RI;
 
-    if (GRI != none)
+    RI = DHRoleInfo(li_Roles.GetObject());
+
+    if (GRI != none && RI != none)
     {
-        RoleIndex = GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), TeamIndex);
+        RoleIndex = GRI.GetRoleIndexAndTeam(RI);
     }
     else
     {
         RoleIndex = -1;
     }
 
-    c_Map.p_Map.UpdateSpawnPoints(TeamIndex, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
+    c_Map.p_Map.UpdateSpawnPoints(CurrentTeam, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
 }
 
 function UpdateStatus()
