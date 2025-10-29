@@ -34,7 +34,7 @@ defaultproperties
     NumPrimaryMags=200
 
     Spread=0.01
-    AltFireSpread=0.016
+    AltFireSpread=0.55
     FireInterval=0.55
 
     // Weapon fire
@@ -50,16 +50,16 @@ defaultproperties
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
 
-    AltFireSoundClass=Sound'DH_UFO_snd.UFO.EyeSmallShotC'
-    AltFireEndSound=none
+    AltFireSoundClass=Sound'DH_UFO_snd.UFO.kira'
+    AltFireEndSound=Sound'DH_UFO_snd.UFO.kira_end'
 
     // Coaxial MG ammo
-    AltFireProjectileClass=Class'DH_KunaiGrey'
+    AltFireProjectileClass=Class'DH_UfoBubbleRed'
     InitialAltAmmo=43000
     NumMGMags=150
-    AltFireInterval=0.1
-    TracerProjectileClass=Class'DH_KunaiCyan'
-    TracerFrequency=3
+    AltFireInterval=0.06
+    TracerProjectileClass=Class'DH_BatBullet'
+    TracerFrequency=2
 
     AltFireSoundScaling=0.7
 
