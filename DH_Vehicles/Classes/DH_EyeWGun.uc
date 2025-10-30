@@ -34,7 +34,7 @@ defaultproperties
     NumPrimaryMags=200
 
     Spread=0.01
-    AltFireSpread=0.55
+    AltFireSpread=0.33
     FireInterval=0.55
 
     // Weapon fire
