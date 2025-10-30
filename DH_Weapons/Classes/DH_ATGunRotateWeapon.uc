@@ -157,7 +157,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocallyControlled())
     {
-        Log("Entering rotation" @ self);
         OnEnterRotation();
     }
 }

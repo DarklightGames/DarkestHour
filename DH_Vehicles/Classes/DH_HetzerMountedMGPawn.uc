@@ -5,6 +5,12 @@
 
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
 
+struct RangeInt
+{
+    var int Min;
+    var int Max;
+};
+
 var() RangeInt HatchClearRange;
 
 simulated function bool IsHatchBlocked()

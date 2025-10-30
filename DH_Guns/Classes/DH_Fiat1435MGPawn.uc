@@ -12,5 +12,11 @@ defaultproperties
     DrivePos=(X=-15.5622,Y=0,Z=29.7831)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="cv33_gunner_closed"  // TODO: replace
-    AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",FrameCount=20,Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=0))
+
+    Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
+        Sequences(0)="fiat1435_gunner_yaw_driver"
+        SequenceInputType=DIT_Yaw
+        DriverPositionIndexRange=(Min=0,Max=0)
+    End Object
+    AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
 }

@@ -520,7 +520,7 @@ defaultproperties
 
     // Movement
     bInstantRotation=true
-    RotationsPerSecond=0.25
+    RotationsPerSecond=0.125
 
     // Ammo & weapon fire
     bUsesMags=true

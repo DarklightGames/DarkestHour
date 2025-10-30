@@ -53,6 +53,8 @@ defaultproperties
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=0,Yaw=32768)
 
+    WeaponFireOffset=-10
+
     // Regular MGs do not have collision on because it's assumed that they're a small part
     // mounted on a larger vehicle. In this case, we want to have collision on because it's
     // a standalone weapon.

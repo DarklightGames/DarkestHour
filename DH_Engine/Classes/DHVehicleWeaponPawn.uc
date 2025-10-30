@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHVehicleWeaponPawn extends ROVehicleWeaponPawn
+    dependson(DHVehicleWeaponPawnAnimationDriverParameters) // TODO: move this to a "types" class instead.
     abstract;
 
 var     DHVehicleWeapon     VehWep;              // just a convenient reference to the VehicleWeapon actor
@@ -38,29 +39,13 @@ var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation wh
 // Animation Drivers
 // These are used to animate the occpants' body based on the yaw or pitch
 // of the weapon. In lieu of a proper IK system, this will suffice!
-var enum EAnimationDriverType
-{
-    ADT_Yaw,
-    ADT_Pitch,
-} Type;
 
-struct RangeInt
-{
-    var int Min;
-    var int Max;
-};
-
+// TODO: maybe make this an obj?
 struct SAnimationDriver
 {
-    var EAnimationDriverType Type;
-    var RangeInt DriverPositionIndexRange;  // Range is inclusive
-    var int Channel;
-    var name BoneName;
-    var name Sequence;
-    var int FrameCount; // The number of frames in the animation.
-
-    // Runtime State
-    var bool bActive;
+    var DHVehicleWeaponPawnAnimationDriverParameters Parameters;
+    var bool    bActive;
+    var float   BlendAlpha;
 };
 
 var array<SAnimationDriver> AnimationDrivers;
@@ -1007,8 +992,8 @@ simulated state ViewTransition
 
         for (i = 0; i < AnimationDrivers.Length; i++)
         {
-            if (PositionIndex >= AnimationDrivers[i].DriverPositionIndexRange.Min &&
-                PositionIndex <= AnimationDrivers[i].DriverPositionIndexRange.Max)
+            if (PositionIndex >= AnimationDrivers[i].Parameters.DriverPositionIndexRange.Min &&
+                PositionIndex <= AnimationDrivers[i].Parameters.DriverPositionIndexRange.Max)
             {
                 return i;
             }
@@ -2734,6 +2719,8 @@ simulated function UpdateAnimationDriverStates()
     local int i;
     local bool bShouldBeActive;
 
+    Log("UpdateAnimationDriverStates" @ Driver);
+
     if (Driver == none)
     {
         return;
@@ -2767,9 +2754,6 @@ private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bo
     if (bActive)
     {
         SetAnimationDriverBlendAlpha(AnimationDriverIndex, 1.0);
-
-        Driver.PlayAnim(AnimationDrivers[AnimationDriverIndex].Sequence, 0.0, 0.0, AnimationDrivers[AnimationDriverIndex].Channel);
-        Driver.FreezeAnimAt(0.0, AnimationDrivers[AnimationDriverIndex].Channel);
     }
     else
     {
@@ -2779,34 +2763,34 @@ private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bo
 
 private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex, float BlendAlpha)
 {
-    local SAnimationDriver AD;
-
-    AD = AnimationDrivers[AnimationDriverIndex];
-    
-    if (Driver != none && AD.Channel != 0)
+    if (AnimationDriverIndex < 0 || AnimationDriverIndex >= AnimationDrivers.Length)
     {
-        Driver.AnimBlendParams(AD.Channel, BlendAlpha, 0.0, 0.0, AD.BoneName);
+        return;
     }
+
+    AnimationDrivers[AnimationDriverIndex].BlendAlpha = FClamp(BlendAlpha, 0.0, 1.0);
 }
 
 // Gets the theta value (0..1) that indicates what frame the associated sequence should
 // be at. Note that the theta vaule is normalized, where 0.0 is the beginning of the
 // sequence, and 1.0 is the end of the sequence.
-simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
+simulated function float GetAnimationDriverTheta(DHVehicleWeaponPawnAnimationDriverParameters.EDriverInputType Type)
 {
     local float Theta;
 
+    if (Gun == none)
+    {
+        return 0.5;
+    }
+
     switch (Type)
     {
-        case ADT_Yaw:
-            // 0.0 is full left, 1.0 is full right
-            if (Gun != none)
-            {
-                Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
-            }
+        case DIT_Yaw:
+            Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
             break;
-        case ADT_Pitch:
-            Theta = 0.5; // TODO: figure this out
+        case DIT_Pitch:
+            Theta = float(GetGunPitch() - GetGunPitchMin()) / (GetGunPitchMax() - GetGunPitchMin());
+            break;
         default:
             break;
     }
@@ -2816,24 +2800,48 @@ simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i;
-    local float Theta;
+    local int i, SequenceIndex, SequenceCount, FrameCount;
+    local float SequenceTheta, BlendTheta, SequenceAlpha;
+    local SAnimationDriver AD;
+
+    if (Driver == none)
+    {
+        return;
+    }
 
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
-        if (!AnimationDrivers[i].bActive)
+        AD = AnimationDrivers[i];
+
+        if (!AD.bActive)
         {
             continue;
         }
 
-        Theta = GetAnimationDriverTheta(AnimationDrivers[i].Type);
+        // Convenience variables.
+        SequenceCount = AD.Parameters.Sequences.Length;
+        FrameCount = AD.Parameters.FrameCount;
 
-        // The theta value must be normalized to the range of the sequence. A theta value of 1.0
+        // The frame theta value must be normalized to the range of the sequence. A theta value of 1.0
         // is not the end of the sequence, as you might expect, but is in fact the beginning of
         // the sequence.
-        Theta *= float(AnimationDrivers[i].FrameCount - 1) / (AnimationDrivers[i].FrameCount);
+        SequenceTheta = GetAnimationDriverTheta(AD.Parameters.SequenceInputType);
+        SequenceTheta *= float(FrameCount - 1) / FrameCount;
 
-        Driver.SetAnimFrame(Theta, AnimationDrivers[i].Channel);
+        BlendTheta = GetAnimationDriverTheta(AD.Parameters.BlendInputType);
+        BlendTheta *= (SequenceCount - 1);
+        SequenceIndex = int(BlendTheta);
+
+        // Calculate the "theta" now based on the remainder to contribute to the next sequence.
+        BlendTheta = BlendTheta % 1.0;
+
+        Driver.AnimBlendParams(AD.Parameters.SequenceChannel, AD.BlendAlpha, 0.0, 0.0, AD.Parameters.BoneName);
+        Driver.PlayAnim(AD.Parameters.Sequences[SequenceIndex],,, AD.Parameters.SequenceChannel);
+        Driver.FreezeAnimAt(SequenceTheta * (FrameCount + 1), AD.Parameters.SequenceChannel);
+
+        Driver.AnimBlendParams(AD.Parameters.BlendChannel, BlendTheta * AD.BlendAlpha, 0.0, 0.0, AD.Parameters.BoneName);
+        Driver.PlayAnim(AD.Parameters.Sequences[Clamp(SequenceIndex + 1, 0, SequenceCount - 1)],,, AD.Parameters.BlendChannel);
+        Driver.FreezeAnimAt(SequenceTheta * (FrameCount + 1), AD.Parameters.BlendChannel);
     }
 }
 
@@ -2843,8 +2851,8 @@ simulated function bool HasAnimationDriverForPosition(int DriverPositionIndex)
 
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
-        if (DriverPositionIndex >= AnimationDrivers[i].DriverPositionIndexRange.Min &&
-            DriverPositionIndex <= AnimationDrivers[i].DriverPositionIndexRange.Max)
+        if (DriverPositionIndex >= AnimationDrivers[i].Parameters.DriverPositionIndexRange.Min &&
+            DriverPositionIndex <= AnimationDrivers[i].Parameters.DriverPositionIndexRange.Max)
         {
             return true;
         }
@@ -2855,8 +2863,8 @@ simulated function bool HasAnimationDriverForPosition(int DriverPositionIndex)
 
 simulated function bool IsAnimationDriverActiveForDriverPositionIndex(int AnimationDriverIndex, int InputDriverPositionIndex)
 {
-    return InputDriverPositionIndex >= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Min &&
-            InputDriverPositionIndex <= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Max;
+    return InputDriverPositionIndex >= AnimationDrivers[AnimationDriverIndex].Parameters.DriverPositionIndexRange.Min &&
+            InputDriverPositionIndex <= AnimationDrivers[AnimationDriverIndex].Parameters.DriverPositionIndexRange.Max;
 }
 
 simulated function DeactivateAllAnimationDrivers(Pawn Driver)
@@ -2866,33 +2874,40 @@ simulated function DeactivateAllAnimationDrivers(Pawn Driver)
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         SetAnimationDriverActive(i, false);
-    }
-}
 
-simulated function bool IsFullBodyAnimDriverActive()
-{
-    local int i;
-
-    for (i = 0; i < AnimationDrivers.Length; ++i)
-    {
-        if (AnimationDrivers[i].bActive && AnimationDrivers[i].Channel == 0)
+        if (Driver != none)
         {
-            return true;
+            Driver.AnimBlendParams(AnimationDrivers[i].Parameters.SequenceChannel);
+            Driver.AnimBlendParams(AnimationDrivers[i].Parameters.BlendChannel);
+        }
+        else
+        {
+            Log("Driver is null when trying to deactivate animation drivers");
         }
     }
-
-    return false;
 }
+
+// simulated function bool IsFullBodyAnimDriverActive()
+// {
+//     local int i;
+
+//     for (i = 0; i < AnimationDrivers.Length; ++i)
+//     {
+//         if (AnimationDrivers[i].bActive && AnimationDrivers[i].Parameters.SequenceChannel == 0)
+//         {
+//             return true;
+//         }
+//     }
+
+//     return false;
+// }
 
 // Modified to update the driver yaw animation.
 simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    if (Driver != none)
-    {
-        UpdateAnimationDrivers();
-    }
+    UpdateAnimationDrivers();
 }
 
 defaultproperties

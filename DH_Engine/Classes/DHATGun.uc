@@ -533,6 +533,7 @@ state Rotating
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
         RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
         RotatingActor.ControllerPawn = RotateControllerPawn;
+        RotatingActor.RotationRate.Yaw = RotationsPerSecond * 65536;;
 
         if (RotateSound != none)
         {
@@ -811,7 +812,7 @@ defaultproperties
 
     // Rotation
     PlayersNeededToRotate=1
-    RotationsPerSecond=0.1
+    RotationsPerSecond=0.03125
     bFixedRotationDir=false
     RotateCooldown=5
     RotateControlRadiusInMeters=5

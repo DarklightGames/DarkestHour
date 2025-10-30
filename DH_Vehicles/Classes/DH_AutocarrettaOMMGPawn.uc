@@ -33,5 +33,11 @@ defaultproperties
     GunsightCameraBone="GUNNER_CAMERA"
     CameraBone="GUNNER_CAMERA"
 
-    AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)   // todo: fill in
+    Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimSweet
+        Sequences(0)="fiat1435_gunner_yaw_driver"
+        SequenceInputType=DIT_Yaw
+        DriverPositionIndexRange=(Min=0,Max=1)
+        FrameCount=32
+    End Object
+    AnimationDrivers(0)=(Parameters=AnimSweet)
 }
