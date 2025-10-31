@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHTrenchMaceAttachment extends DHShovelAttachment;
+class DHTrenchMaceAttachment extends DHZombieMaceAttachment;
 
 defaultproperties
 {
