@@ -3,11 +3,14 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHTrenchMaceAttachment_bone extends DHZombieMaceAttachment;
+class DHBulletWhizUFO extends ROBulletWhiz;
+
+simulated function PostBeginPlay()
+{
+    PlayOwnedSound(WhizSound, SLOT_None, 30.0, false, 500.0, 1.0, true);
+}
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Halloween3rd_anm.bonemace_3rd'
-    Skins(0)=Texture'DH_Halloween_tex.maces_world'
-    MenuImage=Texture'DH_Halloween_tex.bone_icon'
+    WhizSound=Sound'DH_UFO_snd.UFO.Graze'
 }
