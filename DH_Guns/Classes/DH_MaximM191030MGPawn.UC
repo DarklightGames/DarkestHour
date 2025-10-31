@@ -12,7 +12,7 @@ defaultproperties
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="cv33_gunner_closed"  // TODO: replace with an idle anim frame?
-    DriverPositions(0)=(bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_INT',bExposed=true)
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="maxim_gunner_yaw_driver_pitch_0"
