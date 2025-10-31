@@ -2,6 +2,30 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// MODELING & TEXTURING
+//==============================================================================
+// [ ] FP and TP texturing
+// [ ] FP model
+// [ ] Destroyed mesh
+//==============================================================================
+// ANIMATION
+//==============================================================================
+// [ ] FP belt animations
+// [ ] FP reload animation
+// [ ] TP reload animation
+// [ ] FP item animations
+// [ ] TP item animations
+//==============================================================================
+// CODE
+//==============================================================================
+// [ ] functionality to allow for good looking TP reload animations (either move
+//     the gun to aim straight or just have this occur in TP, ala the hetzer)
+//==============================================================================
+// MISC
+//==============================================================================
+// [ ] new sounds (firing, reload etc.)
+// [ ] interface art
+//==============================================================================
 
 class DH_MaximM191030Gun extends DHATGun;
 
