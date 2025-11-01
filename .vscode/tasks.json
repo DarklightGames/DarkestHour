@@ -154,7 +154,7 @@
             "command": "./DHEd.bat",
             "linux": {
                 // NOTE: Requires launch options configured on Linux. See:
-                //       https://github.com/DarklightGames/DarkestHour/wiki/Running-Development-SDK-on-Linux
+                //       https://github.com/DarklightGames/DarkestHour/wiki/Running-SDK-on-Linux
                 "command": "steam -applaunch 1220 -- -mod=DarkestHourDev -nogamma",
             },
             "type": "shell",
