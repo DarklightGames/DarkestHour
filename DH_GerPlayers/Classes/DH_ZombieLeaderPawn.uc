@@ -20,7 +20,7 @@ defaultproperties
     ShovelClass=Class'DHShovelItem_German'
     BinocsClass=Class'DHBinocularsItemGerman'
 
-    GroundSpeed=225
+    GroundSpeed=250
     WalkingPct=0.3
     Health=500
     Stamina=500
