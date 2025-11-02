@@ -8,7 +8,7 @@ class DH_UFOLaserBulletRed extends DH_GeratPIIBullet;
 defaultproperties
 {
     Damage=5000000
-    Speed=4000.0  //very slow
+    Speed=9000.0  //very slow
     TracerEffectClass=Class'DHBulletTracerUFO_Red'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'

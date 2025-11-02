@@ -8,7 +8,7 @@ class DH_UFOLaserBulletYellow extends DH_MG34Bullet;
 defaultproperties
 {
     Damage=5000000
-    Speed=10000.0  //very slow
+    Speed=12000.0  
     bIsTracerBullet=true
     TracerEffectClass=Class'DHBulletTracerUFO_YellowOrange'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
