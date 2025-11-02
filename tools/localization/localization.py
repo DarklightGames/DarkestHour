@@ -472,7 +472,7 @@ def sync(args):
         basename = os.path.basename(filename)
 
         # TODO: have this regex be part of the configuration file.
-        regex = r'([^\.]+)\.([^\.]+)\.po$'
+        regex = r'([^\.]+)\.([^\_\.]+)(_[^\.]*)?\.po$'
         match = re.search(regex, basename)
         basename = match.group(1)
         language_code = match.group(2)
