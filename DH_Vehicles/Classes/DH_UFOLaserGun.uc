@@ -31,10 +31,10 @@ defaultproperties
     PrimaryProjectileClass=Class'DH_UFObubbleGreen'
 
     InitialPrimaryAmmo=5000
-    NumPrimaryMags=200
+    NumPrimaryMags=20000
 
     Spread=0.12 //very wide
-    AltFireSpread=0.01
+    AltFireSpread=0.03
     FireInterval=0.1
 
     // Weapon fire
