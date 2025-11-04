@@ -6,7 +6,7 @@ unrealscript:
     # The directory where the GUIFonts will be generated.
   gui_fonts_directory: ./DH_Interface/Classes
   # The path to the script that will be generated to support loading and accessing fonts.
-  fonts_directory: ./DH_Fonts/Classes
+  fonts_package_name: DH_Fonts
   fonts_class_name: DHFonts
 resolution:
   baseline: 1080  # The resolution that the baseline font size is based on.
@@ -55,6 +55,7 @@ defaults:
     padding:
       x: 1
       y: 1
+    anti_alias: 1
   resolution_group: canvas
 font_styles:
   # TODO: do not duplicate duplicate font styles if the hash of all the settings are identical.

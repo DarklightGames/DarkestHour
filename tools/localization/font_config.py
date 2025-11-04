@@ -149,14 +149,14 @@ class Defaults:
 class UnrealScript:
     def __init__(self):
         self.gui_fonts_directory: str = ''
-        self.fonts_directory: str = ''
+        self.fonts_package_name: str = ''
         self.fonts_class_name: str = ''
     
     @staticmethod
     def from_data(data: dict) -> 'UnrealScript':
         unrealscript = UnrealScript()
         unrealscript.gui_fonts_directory = data['gui_fonts_directory']
-        unrealscript.fonts_directory = data['fonts_directory']
+        unrealscript.fonts_package_name = data['fonts_package_name']
         unrealscript.fonts_class_name = data['fonts_class_name']
         return unrealscript
 

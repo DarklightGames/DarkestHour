@@ -2,7 +2,7 @@ from typing import Optional
 from unicode_ranges import UnicodeRanges
 
 class TrueTypeFont:
-    def __init__(self, package: str, group: str, fontname: str, height: int, anti_alias: int, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, resolution: Optional[int] = None):
+    def __init__(self, package: str, group: str, fontname: str, height: int, anti_alias: bool, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, resolution: Optional[int] = None):
         self.package = package
         self.group = group
         self.fontname = fontname
@@ -53,7 +53,7 @@ class TrueTypeFactory:
                 f'VSIZE={self.font.v_size} ' \
                 f'XPAD={self.font.x_pad} ' \
                 f'YPAD={self.font.y_pad} ' \
-                f'ANTIALIAS={self.font.anti_alias} ' \
+                f'ANTIALIAS={int(self.font.anti_alias)} ' \
                 f'UNICODERANGE="{self.unicode_ranges.get_unicode_ranges_string()}" ' \
                 f'KERNING={self.font.kerning} ' \
                 f'DROPSHADOWX={self.font.drop_shadow_x} ' \

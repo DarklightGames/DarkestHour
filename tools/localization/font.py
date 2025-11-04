@@ -24,7 +24,7 @@ class FontPackage:
     def __init__(self, mod: str, package_name: str):
         self.mod = mod
         self.package_name = package_name
-        self.font_factories: List[TrueTypeFactory] = []
+        self.font_factories: Dict[str, TrueTypeFactory] = {}
 
 
 class FontStyleItem:
@@ -289,8 +289,8 @@ def write_fonts_class_file(
 def write_font_package_generation_script(path: Path, font_packages: Iterable[FontPackage]):
     lines = []
 
-    for _, font_package in font_packages.items():
-        for font_factory in font_package.font_factories:
+    for font_package in font_packages:
+        for _, font_factory in font_package.font_factories.items():
             lines.append(font_factory.get_command_string())
             lines.append('')
         lines.append(f'OBJ SAVEPACKAGE PACKAGE={font_package.package_name} FILE="..\\{font_package.mod}\\Textures\\{font_package.package_name}.utx"')
@@ -353,9 +353,7 @@ def generate(args):
     font_style_items: Dict[str, List[FontStyleItem]] = {}
     font_packages: Dict[str, FontPackage] = dict()
 
-    # TODO: logically separate the "languages" from the primary language.
-    #  iterating over the languages should have a direct mapping to the
-    #  resulting localization file.
+    # Add the initial font package.
     font_package = FontPackage(mod, config.package_name)
     font_packages[config.package_name] = font_package
 
@@ -391,6 +389,7 @@ def generate(args):
                 style=style.weight if style.weight is not None else 500,
                 italic=style.italic if style.italic is not None else 0,
             )
+            font_package.font_factories[font.name] = TrueTypeFactory(font, config.defaults.unicode_ranges)
 
             if font.name not in fonts:
                 # Add the font if the font has not yet been encountered.
@@ -430,67 +429,75 @@ def generate(args):
         
         language_font_names: List[Tuple[int, str]] = []
 
+        font_package = FontPackage(mod, package_name)
+
         # Create language font substitution mappings.
         for font_index, (font_name, font) in enumerate(fonts.items()):
             if font.fontname not in package.font_substitutions:
                 continue
-            target_font = package.font_substitutions[font.fontname]
+        
+            # Make a deep copy of the font and change the font name and package.
             font_substitute = copy.deepcopy(font)
-            font_substitute.fontname = target_font
+            font_substitute.fontname = package.font_substitutions[font.fontname]
+            font_substitute.package = package_name
+
+            font_package.font_factories[font_substitute.name] = TrueTypeFactory(font_substitute, package_unicode_ranges)
+
             language_font_names.append((font_index, font_substitute.name))
 
+        # Write a localization file that swaps out the fonts as described in the package's
+        # font substitutions data for each language.
         for language_code in package.languages:
-            # Write a localization file that swaps out the fonts as described in the package's
-            # font substitutions data for each language.
             language_extension = get_language_extension(language_code)
-            localization_file_path = root_path / 'System' / f'{config.package_name}.{language_extension}'
-            with open(localization_file_path, 'w') as fp:
+            localization_file_path = root_path / mod / 'System' / f'{config.unrealscript.fonts_package_name}.{language_extension}'
+
+            with open(localization_file_path.resolve(), 'wb') as fp:
+                contents = ''
                 # Go through all of the fonts and make substitutions if necessary.
-                fp.write(f'[{config.package_name}]\n')
+                contents += f'[{config.unrealscript.fonts_class_name}]\n'
                 for font_index, font_name in language_font_names:
-                    fp.write(f'FontNames[{font_index}]="{font_name}"\n')
+                    contents += f'FontNames[{font_index}]="{package_name}.{font_name}"\n'
+                fp.write(b'\xff\xfe')  # Byte-order-mark.
+                fp.write(contents.encode('utf-16-le'))
+        
+        font_packages[package_name] = font_package
 
     #======================================
     # FONT PACKAGE GENERATION
     #======================================
 
     # Keep a cache of evaluated unicode ranges for each font, since this is a very intensive operation.
-    font_unicode_ranges_cache = dict()
+    font_unicode_ranges_cache: Dict[str, UnicodeRanges] = dict()
     installed_fonts = get_installed_fonts()
 
-    # Add font factory entries for the font package.
-    for _, font in fonts.items():
-        styles = get_font_styles_from_weight(font.style)
+    # Refine the unicode ranges based on what the font actually supports.
+    for _, font_package in font_packages.items():
+        for _, font_factory in font_package.font_factories.items():
+            font = font_factory.font
+            styles = get_font_styles_from_weight(font.style)
 
-        # Ensure that the font is installed.
-        if font.fontname not in installed_fonts:
-            raise Exception(f'Font family "{font.fontname}" is not installed')
+            # Ensure that the font is installed.
+            if font.fontname not in installed_fonts:
+                raise Exception(f'Font family "{font.fontname}" is not installed')
 
-        # Get the path to the font that is closest to matching the requested styles.
-        font_path = get_font_style_closest(installed_fonts, styles, font.fontname)
-        if font_path is None:
-            raise Exception(f'Could not find {styles} styles for installed font "{font.fontname}"')
+            # Get the path to the font that is closest to matching the requested styles.
+            font_path = get_font_style_closest(installed_fonts, styles, font.fontname)
+            if font_path is None:
+                raise Exception(f'Could not find {styles} styles for installed font "{font.fontname}"')
 
-        # Load the font and get the supported unicode ranges.
-        if font_path not in font_unicode_ranges_cache:
-            font_unicode_ranges = UnicodeRanges()
-            with TTFont(font_path) as ttf:
-                from itertools import chain
-                x = chain.from_iterable(x.cmap.keys() for x in ttf['cmap'].tables)
-                for ordinal in x:
-                    font_unicode_ranges.add_ordinal(ordinal)
-            font_unicode_ranges_cache[font_path] = font_unicode_ranges
-        else:
+            # Load the font and get the supported unicode ranges.
+            if font_path not in font_unicode_ranges_cache:
+                font_unicode_ranges_cache[font_path] = read_font_unicode_ranges(font_path)
+            
             font_unicode_ranges = font_unicode_ranges_cache[font_path]
 
-        # Intersect the font's unicode ranges with the supported unicode ranges.
-        unicode_ranges = font_unicode_ranges.intersect(package_unicode_ranges)
-
-        font_package.font_factories.append(TrueTypeFactory(font, unicode_ranges))
+            # Intersect the font's unicode ranges with the system's supported unicode ranges.
+            # TODO: the naming is weird here.
+            font_factory.unicode_ranges = font_unicode_ranges.intersect(font_factory.unicode_ranges)
 
     # Write font package generation script.
     import_font_script_path = font_paths / 'ImportFonts.exec.txt'
-    write_font_package_generation_script(import_font_script_path, font_packages)
+    write_font_package_generation_script(import_font_script_path, font_packages.values())
 
     #======================================
     # UNREALSCRIPT
@@ -504,7 +511,7 @@ def generate(args):
         write_font_style_class_file(gui_font_path, font_style_name, config.package_name)
 
     # Write the fonts class.
-    unrealscript_fonts_path = Path(root_path) / config.unrealscript.fonts_directory / f'{config.unrealscript.fonts_class_name}.uc'
+    unrealscript_fonts_path = Path(root_path) / config.unrealscript.fonts_package_name / 'Classes' / f'{config.unrealscript.fonts_class_name}.uc'
 
     write_fonts_class_file(
         config.package_name,
@@ -513,6 +520,16 @@ def generate(args):
         config.unrealscript.fonts_class_name, 
         unrealscript_fonts_path
         )
+
+
+def read_font_unicode_ranges(font_path: str) -> UnicodeRanges:
+    font_unicode_ranges = UnicodeRanges()
+    with TTFont(font_path) as ttf:
+        from itertools import chain
+        x = chain.from_iterable(x.cmap.keys() for x in ttf['cmap'].tables)
+        for ordinal in x:
+            font_unicode_ranges.add_ordinal(ordinal)
+    return font_unicode_ranges
 
 
 if __name__ == '__main__':
