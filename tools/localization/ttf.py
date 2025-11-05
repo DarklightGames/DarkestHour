@@ -37,11 +37,25 @@ class TrueTypeFont:
                         f'{f"W{self.style}" if self.style is not None and self.style != 500 else ""}'
                         f'{self.height}')
 
+import tempfile
+
 
 class TrueTypeFactory:
     def __init__(self, font: TrueTypeFont, unicode_ranges: UnicodeRanges):
         self.font = font
         self.unicode_ranges = unicode_ranges
+    
+    def write_characters_to_disk(self):
+        contents = ''
+        for codepoint in self.unicode_ranges.iter_ordinals():
+            contents += chr(codepoint)
+        self.path = tempfile.mkdtemp()
+        fd, name = tempfile.mkstemp(dir=self.path)
+        from pathlib import Path
+        self.wildcard = Path(name).name
+        with open(fd, 'wb') as fp:
+            fp.write(b'\xff\xfe')  # Byte-order-mark.
+            fp.write(contents.encode('utf-16-le'))
 
     def get_command_string(self) -> str:
         return f'NEW TRUETYPEFONTFACTORY ' \
@@ -54,7 +68,6 @@ class TrueTypeFactory:
                 f'XPAD={self.font.x_pad} ' \
                 f'YPAD={self.font.y_pad} ' \
                 f'ANTIALIAS={int(self.font.anti_alias)} ' \
-                f'UNICODERANGE="{self.unicode_ranges.get_unicode_ranges_string()}" ' \
                 f'KERNING={self.font.kerning} ' \
                 f'DROPSHADOWX={self.font.drop_shadow_x} ' \
                 f'DROPSHADOWY={self.font.drop_shadow_y} ' \
@@ -64,12 +77,10 @@ class TrueTypeFactory:
                 f'EXTENDRIGHT={self.font.extend_right} ' \
                 f'PACKAGE={self.font.package} ' \
                 f'GROUP={self.font.group} ' \
-                f'NAME={self.font.name}'
+                f'NAME={self.font.name} ' \
+                f'PATH="{self.path}" ' \
+                f'WILDCARD="{self.wildcard}" ' \
     
             #  f'UNDERLINE={self.underline} ' \
-            #  f'COUNT={self.count} ' \
             #  f'GAMMA={self.gamma} ' \
-            #  f'CHARS={self.chars} ' \
-                #  f'PATH={self.path} ' \
-                #  f'WILDCARD={self.wildcard} ' \
             #  f'COMPRESSION={self.compression} ' \

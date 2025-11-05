@@ -16,6 +16,16 @@ from font_config import FontConfiguration, FontSize
 from unt import iso639_to_language_extension, read_unique_characters_from_unt_file
 
 
+def read_font_unicode_ranges(font_path: str) -> UnicodeRanges:
+    font_unicode_ranges = UnicodeRanges()
+    with TTFont(font_path) as ttf:
+        from itertools import chain
+        x = chain.from_iterable(x.cmap.keys() for x in ttf['cmap'].tables)
+        for ordinal in x:
+            font_unicode_ranges.add_ordinal(ordinal)
+    return font_unicode_ranges
+
+
 def get_language_extension(language_code: str):
     part3 = Language.from_part1(language_code).part3
     return iso639_to_language_extension.get(part3, part3)
@@ -291,6 +301,7 @@ def write_font_package_generation_script(path: Path, font_packages: Iterable[Fon
 
     for font_package in font_packages:
         for _, font_factory in font_package.font_factories.items():
+            font_factory.write_characters_to_disk()
             lines.append(font_factory.get_command_string())
             lines.append('')
         lines.append(f'OBJ SAVEPACKAGE PACKAGE={font_package.package_name} FILE="..\\{font_package.mod}\\Textures\\{font_package.package_name}.utx"')
@@ -520,16 +531,6 @@ def generate(args):
         config.unrealscript.fonts_class_name, 
         unrealscript_fonts_path
         )
-
-
-def read_font_unicode_ranges(font_path: str) -> UnicodeRanges:
-    font_unicode_ranges = UnicodeRanges()
-    with TTFont(font_path) as ttf:
-        from itertools import chain
-        x = chain.from_iterable(x.cmap.keys() for x in ttf['cmap'].tables)
-        for ordinal in x:
-            font_unicode_ranges.add_ordinal(ordinal)
-    return font_unicode_ranges
 
 
 if __name__ == '__main__':

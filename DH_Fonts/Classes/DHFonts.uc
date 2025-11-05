@@ -12,7 +12,7 @@ struct FontStyleItem {
     var int Resolution;
 };
 
-var string FontNames[31];
+var localized string FontNames[31];
 var Font Fonts[31];
 var FontStyleItem DHConsoleFontItems[5];
 var FontStyleItem DHConsoleFontDSItems[5];
