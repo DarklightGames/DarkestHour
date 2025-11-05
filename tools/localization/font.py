@@ -10,7 +10,7 @@ from typing import List, Iterable, Dict, Tuple
 from iso639 import Language
 from fontTools.ttLib import TTFont
 from unicode_ranges import UnicodeRanges
-from ttf import TrueTypeFont, TrueTypeFactory
+from ttf import Compression, TrueTypeFont, TrueTypeFactory
 from font_config import FontConfiguration, FontSize
 
 from unt import iso639_to_language_extension, read_unique_characters_from_unt_file
@@ -399,6 +399,7 @@ def generate(args):
                 kerning=style.kerning if style.kerning is not None else 0,
                 style=style.weight if style.weight is not None else 500,
                 italic=style.italic if style.italic is not None else 0,
+                compression=style.compression if style.compression is not None else Compression.RGBA8
             )
             font_package.font_factories[font.name] = TrueTypeFactory(font, config.defaults.unicode_ranges)
 

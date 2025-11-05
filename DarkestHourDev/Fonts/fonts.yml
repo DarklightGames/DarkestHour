@@ -44,6 +44,7 @@ defaults:
     - [ 0x2032, 0x2033 ]
     - 0x20AC
   font_style:
+    compression: DXT5  # [RGBA8, DXT3, DXT5]
     texture_size: # Maximum size of each texture atlas.
       x: 512
       y: 512

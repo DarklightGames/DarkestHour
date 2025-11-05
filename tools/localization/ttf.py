@@ -1,8 +1,27 @@
+import tempfile
+
 from typing import Optional
 from unicode_ranges import UnicodeRanges
+from enum import Enum
+
+
+class Compression(Enum):
+    P8 = 0x00
+    RGBA7 = 0x01
+    RGB16 = 0x02
+    DXT1 = 0x03
+    RGB8 = 0x04
+    RGBA8 = 0x05
+    NODATA = 0x06
+    DXT3 = 0x07
+    DXT5 = 0x08
+    L8 = 0x09
+    G16 = 0x0A
+    RRRGGGBBB = 0x0B
+
 
 class TrueTypeFont:
-    def __init__(self, package: str, group: str, fontname: str, height: int, anti_alias: bool, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, resolution: Optional[int] = None):
+    def __init__(self, package: str, group: str, fontname: str, height: int, anti_alias: bool, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, compression: Compression, resolution: Optional[int] = None):
         self.package = package
         self.group = group
         self.fontname = fontname
@@ -23,6 +42,7 @@ class TrueTypeFont:
         self.style = style
         self.italic = italic
         self.resolution = resolution
+        self.compression = compression
     
     @property
     def has_drop_shadow(self):
@@ -37,10 +57,9 @@ class TrueTypeFont:
                         f'{f"W{self.style}" if self.style is not None and self.style != 500 else ""}'
                         f'{self.height}')
 
-import tempfile
-
 
 class TrueTypeFactory:
+    
     def __init__(self, font: TrueTypeFont, unicode_ranges: UnicodeRanges):
         self.font = font
         self.unicode_ranges = unicode_ranges
@@ -80,7 +99,7 @@ class TrueTypeFactory:
                 f'NAME={self.font.name} ' \
                 f'PATH="{self.path}" ' \
                 f'WILDCARD="{self.wildcard}" ' \
+                f'COMPRESSION={self.font.compression.value} ' \
     
             #  f'UNDERLINE={self.underline} ' \
             #  f'GAMMA={self.gamma} ' \
-            #  f'COMPRESSION={self.compression} ' \

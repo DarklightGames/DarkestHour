@@ -1,3 +1,4 @@
+from ttf import Compression
 from unicode_ranges import UnicodeRanges
 from typing import Optional, Dict, List, Literal
 import yaml
@@ -57,6 +58,7 @@ class FontStyle:
         self.kerning: Optional[int] = None
         self.italic: Optional[bool] = None
         self.drop_shadow: Optional[Vec2] = None
+        self.compression: Optional[Compression] = None
     
     @staticmethod
     def from_data(data: dict) -> 'FontStyle':
@@ -71,6 +73,7 @@ class FontStyle:
         font_style.kerning = data.get('kerning', None)
         font_style.italic = bool(data['italic']) if 'italic' in data else None
         font_style.drop_shadow = Vec2.from_data(data['drop_shadow']) if 'drop_shadow' in data else None
+        font_style.compression = Compression[data['compression']] if 'compression' in data else None
         return font_style
     
     @property
@@ -88,6 +91,7 @@ class FontStyle:
         self.kerning = default.kerning if self.kerning is None else self.kerning
         self.italic = default.italic if self.italic is None else self.italic
         self.drop_shadow = default.drop_shadow if self.drop_shadow is None else self.drop_shadow
+        self.compression = default.compression if self.compression is None else self.compression
 
 
 class Package:
