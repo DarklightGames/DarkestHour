@@ -73,7 +73,7 @@ def get_font_resolutions_and_sizes(config: FontConfiguration, font_style_size: F
     return resolutions, sizes
 
 
-def write_font_style_class_file(path: Path, font_style_name: str, package_name: str):
+def write_font_style_class_file(path: Path, font_style_name: str, class_name: str):
     with open(path, 'w') as f:
         lines = [
             '//==============================================================================',
@@ -86,7 +86,7 @@ def write_font_style_class_file(path: Path, font_style_name: str, package_name: 
             '',
             f'event Font GetFont(int ResX)',
             '{',
-            f'    return Class\'{package_name}\'.static.Get{font_style_name}ByResolution(Controller.ResX, Controller.ResY);',
+            f'    return Class\'{class_name}\'.static.Get{font_style_name}ByResolution(Controller.ResX, Controller.ResY);',
             '}',
             '',
             'defaultproperties',
@@ -207,7 +207,8 @@ def write_fonts_class_file(
         fonts: Iterable[TTFont], 
         font_style_items, 
         class_name: str,
-        unrealscript_fonts_path: Path
+        unrealscript_fonts_path: Path,
+        font_packages: Iterable[FontPackage]
         ):
     lines = []
     lines += [
@@ -217,6 +218,15 @@ def write_fonts_class_file(
         '// To regenerate this file, run ./tools/localization/generate_fonts.bat',
         '//==============================================================================',
         '',
+    ]
+
+    for font_package in font_packages:
+        for _, font_factory in font_package.font_factories.items():
+            font_factory.write_characters_to_disk()
+            lines.append(f'#EXEC {font_factory.get_command_string()}')
+        lines.append('')
+
+    lines += [
         f'class {class_name} extends Object',
         '    abstract;',
         '',
@@ -508,8 +518,8 @@ def generate(args):
             font_factory.unicode_ranges = font_unicode_ranges.intersect(font_factory.unicode_ranges)
 
     # Write font package generation script.
-    import_font_script_path = font_paths / 'ImportFonts.exec.txt'
-    write_font_package_generation_script(import_font_script_path, font_packages.values())
+    # import_font_script_path = font_paths / 'ImportFonts.exec.txt'
+    # write_font_package_generation_script(import_font_script_path, font_packages.values())
 
     #======================================
     # UNREALSCRIPT
@@ -520,7 +530,7 @@ def generate(args):
     # Write the font style classes.
     for font_style_name in font_style_items.keys():
         gui_font_path = unrealscript_gui_font_path / f'{font_style_name}.uc'
-        write_font_style_class_file(gui_font_path, font_style_name, config.package_name)
+        write_font_style_class_file(gui_font_path, font_style_name, config.unrealscript.fonts_class_name)
 
     # Write the fonts class.
     unrealscript_fonts_path = Path(root_path) / config.unrealscript.fonts_package_name / 'Classes' / f'{config.unrealscript.fonts_class_name}.uc'
@@ -530,7 +540,8 @@ def generate(args):
         fonts,
         font_style_items, 
         config.unrealscript.fonts_class_name, 
-        unrealscript_fonts_path
+        unrealscript_fonts_path,
+        font_packages.values()
         )
 
 

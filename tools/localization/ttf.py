@@ -21,7 +21,7 @@ class Compression(Enum):
 
 
 class TrueTypeFont:
-    def __init__(self, package: str, group: str, fontname: str, height: int, anti_alias: bool, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, compression: Compression, resolution: Optional[int] = None):
+    def __init__(self, package: Optional[str], group: str, fontname: str, height: int, anti_alias: bool, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, compression: Compression, resolution: Optional[int] = None):
         self.package = package
         self.group = group
         self.fontname = fontname
@@ -77,7 +77,7 @@ class TrueTypeFactory:
             fp.write(contents.encode('utf-16-le'))
 
     def get_command_string(self) -> str:
-        return f'NEW TRUETYPEFONTFACTORY ' \
+        command_string = f'NEW TRUETYPEFONTFACTORY ' \
                 f'STYLE={self.font.style} ' \
                 f'ITALIC={self.font.italic} ' \
                 f'FONTNAME="{self.font.fontname}" ' \
@@ -94,12 +94,16 @@ class TrueTypeFactory:
                 f'EXTENDTOP={self.font.extend_top} ' \
                 f'EXTENDLEFT={self.font.extend_left} ' \
                 f'EXTENDRIGHT={self.font.extend_right} ' \
-                f'PACKAGE={self.font.package} ' \
                 f'GROUP={self.font.group} ' \
                 f'NAME={self.font.name} ' \
                 f'PATH="{self.path}" ' \
                 f'WILDCARD="{self.wildcard}" ' \
                 f'COMPRESSION={self.font.compression.value} ' \
-    
+            
+        if self.font.package is not None:
+            command_string += f'PACKAGE={self.font.package} ' \
+        
+        return command_string
+        
             #  f'UNDERLINE={self.underline} ' \
             #  f'GAMMA={self.gamma} ' \
