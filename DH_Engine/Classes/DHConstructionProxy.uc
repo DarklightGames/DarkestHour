@@ -210,7 +210,7 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
 
-    GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
     if (ConstructionClass == none || GRI == none)
     {
@@ -824,4 +824,3 @@ defaultproperties
     bBlockActors=false
     bAcceptsProjectors=false
 }
-
