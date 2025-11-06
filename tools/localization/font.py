@@ -461,7 +461,8 @@ def generate(args):
             # Make a deep copy of the font and change the font name and package.
             font_substitute = copy.deepcopy(font)
             font_substitute.fontname = package.font_substitutions[font.fontname]
-            font_substitute.package = package_name
+            # TODO: if we want to add different packages per language, change the second argument.
+            font_substitute.package = config.package_name
 
             font_package.font_factories[font_substitute.name] = TrueTypeFactory(font_substitute, package_unicode_ranges)
 
@@ -478,7 +479,7 @@ def generate(args):
                 # Go through all of the fonts and make substitutions if necessary.
                 contents += f'[{config.unrealscript.fonts_class_name}]\n'
                 for font_index, font_name in language_font_names:
-                    contents += f'FontNames[{font_index}]="{package_name}.{font_name}"\n'
+                    contents += f'FontNames[{font_index}]="{config.package_name}.{font_name}"\n'
                 fp.write(b'\xff\xfe')  # Byte-order-mark.
                 fp.write(contents.encode('utf-16-le'))
         
@@ -516,10 +517,6 @@ def generate(args):
             # Intersect the font's unicode ranges with the system's supported unicode ranges.
             # TODO: the naming is weird here.
             font_factory.unicode_ranges = font_unicode_ranges.intersect(font_factory.unicode_ranges)
-
-    # Write font package generation script.
-    # import_font_script_path = font_paths / 'ImportFonts.exec.txt'
-    # write_font_package_generation_script(import_font_script_path, font_packages.values())
 
     #======================================
     # UNREALSCRIPT
