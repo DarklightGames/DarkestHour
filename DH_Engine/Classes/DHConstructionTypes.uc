@@ -16,6 +16,7 @@ enum EConstructionTag
 
 enum EFilterOperation
 {
+    NoOp,
     Include,
     Exclude
 };

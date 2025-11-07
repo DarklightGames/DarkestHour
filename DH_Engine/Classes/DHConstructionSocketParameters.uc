@@ -13,8 +13,8 @@ var bool    bShouldDestroyOccupant;    // When true, destroy the occupant of the
 var int     CollisionRadius;
 var int     CollisionHeight;
 
-var array<DHConstructionTypes.SClassFilter> ClassFilters;
-var array<DHConstructionTypes.STagFilter> TagFilters;
+var DHConstructionTypes.SClassFilter ClassFilters[4];
+var DHConstructionTypes.STagFilter TagFilters[4];
 
 defaultproperties
 {

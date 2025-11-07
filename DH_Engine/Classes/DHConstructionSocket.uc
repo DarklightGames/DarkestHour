@@ -12,27 +12,60 @@
 class DHConstructionSocket extends DHActorProxySocket
     dependson(DHConstructionTypes);
 
-var() array<DHConstructionTypes.SClassFilter> ClassFilters;
-var() array<DHConstructionTypes.STagFilter> TagFilters;
+var() DHConstructionTypes.SClassFilter ClassFilters[4];
+var() DHConstructionTypes.STagFilter TagFilters[4];
 var() int CollisionRadiusMax;
+
+replication
+{
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        ClassFilters, TagFilters, CollisionRadiusMax;
+}
 
 simulated function PostBeginPlay()
 {   
     super.PostBeginPlay();
 
-    SetupSkins();
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupSkins();
+    }
+    
     Hide();
 }
 
-simulated function Setup(DHConstructionSocketParameters Parameters)
+simulated function PostNetBeginPlay()
 {
-    local float SocketCollisionRadius, SocketCollisionHeight;
     local Vector SocketDrawScale3D;
+
+    super.PostNetBeginPlay();
+
+    // Because the DrawScale3D is not replicated, we rely on the client to set this up themselves.
+    SocketDrawScale3D.X = CollisionRadius;
+    SocketDrawScale3D.Y = CollisionRadius;
+    SocketDrawScale3D.Z = CollisionHeight;
+    
+    SetDrawScale3D(SocketDrawScale3D);
+}
+
+function Setup(DHConstructionSocketParameters Parameters)
+{
+    local int i;
+    local float SocketCollisionRadius, SocketCollisionHeight;
 
     bLimitLocalRotation = Parameters.bLimitLocalRotation;
     LocalRotationYawRange = Parameters.LocalRotationYawRange;
-    ClassFilters = Parameters.ClassFilters;
-    TagFilters = Parameters.TagFilters;
+
+    for (i = 0; i < arraycount(Parameters.ClassFilters); ++i)
+    {
+        ClassFilters[i] = Parameters.ClassFilters[i];
+    }
+
+    for (i = 0; i < arraycount(Parameters.TagFilters); ++i)
+    {
+        TagFilters[i] = Parameters.TagFilters[i];
+    }
+
     CollisionRadiusMax = Parameters.CollisionRadiusMax;
     bShouldDestroyOccupant = Parameters.bShouldDestroyOccupant;
 
@@ -47,11 +80,6 @@ simulated function Setup(DHConstructionSocketParameters Parameters)
 
     SocketCollisionHeight = Parameters.CollisionHeight;
 
-    SocketDrawScale3D.X = SocketCollisionRadius;
-    SocketDrawScale3D.Y = SocketCollisionRadius;
-    SocketDrawScale3D.Z = SocketCollisionHeight;
-    
-    SetDrawScale3D(SocketDrawScale3D);
     SetCollisionSize(SocketCollisionRadius, SocketCollisionHeight);
 }
 
@@ -101,7 +129,7 @@ simulated function bool IsForConstructionClass(DHActorProxy.Context Context, Cla
         }
     }
 
-    for (i = 0; i < ClassFilters.Length; ++i)
+    for (i = 0; i < arraycount(ClassFilters); ++i)
     {
         if (ConstructionClass == ClassFilters[i].Class ||
             ClassIsChildOf(ConstructionClass, ClassFilters[i].Class))
@@ -117,7 +145,7 @@ simulated function bool IsForConstructionClass(DHActorProxy.Context Context, Cla
         }
     }
 
-    for (i = 0; i < TagFilters.Length; ++i)
+    for (i = 0; i < arraycount(TagFilters); ++i)
     {
         if (ConstructionClass.static.HasConstructionTag(TagFilters[i].Tag))
         {
@@ -219,19 +247,17 @@ static function UpdateMaterialColors(Actor A, Color Color)
     }
 }
 
-function Color GetProxyColor()
+simulated function Color GetProxyColor()
 {
     return Class'UColor'.default.White;
 }
 
-function UpdateColor(Color Color)
+simulated function UpdateColor(Color Color)
 {
-    local int i;
-
     UpdateMaterialColors(self, Color);
 }
 
-function OnProxyChanged()
+simulated function OnProxyChanged()
 {
     super.OnProxyChanged();
 
@@ -266,4 +292,5 @@ defaultproperties
     bHidden=false
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Misc.CONSTRUCTION_SOCKET'
+    bAcceptsProjectors=false
 }

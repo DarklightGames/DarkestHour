@@ -22,7 +22,7 @@ defaultproperties
     StartRotationMax=(Yaw=0)
     GroundSlopeMaxInDegrees=5.0
     Begin Object Class=DHConstructionSocketParameters Name=MortarSocketParams
-        TagFilters(0)=(Tag=CT_Mortar)
+        TagFilters(0)=(Operation=Include,Tag=CT_Mortar)
     End Object
     Sockets(0)=(Parameters=MortarSocketParams)
 }

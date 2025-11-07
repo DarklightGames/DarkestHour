@@ -9,20 +9,29 @@ class DHMortar extends DHATGun
 var DHConstructionSocket Socket;
 var DHConstructionSocketParameters Params;
 
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        Socket;
+}
+
 simulated function PostBeginPlay()
 {
     local DHConstructionSocket Socket;
 
     super.PostBeginPlay();
 
-    Socket = Spawn(class'DHConstructionSocket', self,, Location, Rotation);
-
-    if (Socket != none)
+    if (Role == ROLE_Authority)
     {
-        Socket.Setup(Params);
-        Socket.SetBase(self);
-        Socket.SetRelativeLocation(vect(0, 0, 0));
-        Socket.SetRelativeRotation(rot(0, 0, 0));
+        Socket = Spawn(Class'DHConstructionSocket', self,, Location, Rotation);
+
+        if (Socket != none)
+        {
+            Socket.Setup(Params);
+            Socket.SetBase(self);
+            Socket.SetRelativeLocation(vect(0, 0, 0));
+            Socket.SetRelativeRotation(rot(0, 0, 0));
+        }
     }
 }
 
@@ -60,7 +69,7 @@ defaultproperties
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 
     Begin Object Class=DHConstructionSocketParameters Name=MortarPitSocketParams
-        TagFilters(0)=(Tag=CT_MortarPit)
+        TagFilters(0)=(Operation=Include,Tag=CT_MortarPit)
     End Object
     Params=MortarPitSocketParams
 }

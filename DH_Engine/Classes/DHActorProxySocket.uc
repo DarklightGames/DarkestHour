@@ -48,12 +48,12 @@ function SetOccupant(Actor Occupant)
     }
 }
 
-function DHActorProxy GetProxy()
+simulated function DHActorProxy GetProxy()
 {
     return Proxy;
 }
 
-function SetProxy(DHActorProxy Proxy)
+simulated function SetProxy(DHActorProxy Proxy)
 {
     if (self.Proxy != Proxy)
     {
@@ -63,7 +63,7 @@ function SetProxy(DHActorProxy Proxy)
 }
 
 function OnOccupantChanged();
-function OnProxyChanged();
+simulated function OnProxyChanged();
 
 defaultproperties
 {

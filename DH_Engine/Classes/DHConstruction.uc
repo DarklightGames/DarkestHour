@@ -351,7 +351,7 @@ simulated function PostBeginPlay()
     }
 }
 
-simulated function SpawnConstructionSockets()
+function SpawnConstructionSockets()
 {
     local int i;
     local DHConstructionSocket Socket;
