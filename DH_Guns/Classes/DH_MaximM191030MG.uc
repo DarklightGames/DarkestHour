@@ -11,18 +11,21 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_EXT'
 
-    RangeTable(0)=(Range=200.0,AnimationTime=0.0375)
-    RangeTable(1)=(Range=300.0,AnimationTime=0.045)
-    RangeTable(2)=(Range=400.0,AnimationTime=0.06)
-    RangeTable(3)=(Range=600.0,AnimationTime=0.085)
-    RangeTable(4)=(Range=800.0,AnimationTime=0.12)
-    RangeTable(5)=(Range=1000.0,AnimationTime=0.16)
-
-    RangeDistanceUnit=DU_Meters
-    RangeDriverBone="SIGHT_ROOT"
-    RangeDriverAnim="SIGHT_DRIVER"
-    RangeDriverAnimFrameCount=15
-    RangeDriverChannel=1
+    Begin Object Class=DHWeaponRangeParams Name=RangeParams0
+        DistanceUnit=DU_Meters
+        Anim="SIGHT_DRIVER"
+        AnimFrameCount=15
+        Channel=1
+        Bone="SIGHT_ROOT"
+        AnimationInterpDuration=0.5
+        RangeTable(0)=(Range=200.0,AnimationTime=0.0375)
+        RangeTable(1)=(Range=300.0,AnimationTime=0.045)
+        RangeTable(2)=(Range=400.0,AnimationTime=0.06)
+        RangeTable(3)=(Range=600.0,AnimationTime=0.085)
+        RangeTable(4)=(Range=800.0,AnimationTime=0.12)
+        RangeTable(5)=(Range=1000.0,AnimationTime=0.16)
+    End Object
+    RangeParams=RangeParams0
 
     bLimitYaw=true
     MaxNegativeYaw=-8192    // -45 degrees
@@ -41,8 +44,6 @@ defaultproperties
     // Weapon fire
     FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
     FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
-
-    RangeDriverAnimationInterpDuration=0.5
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

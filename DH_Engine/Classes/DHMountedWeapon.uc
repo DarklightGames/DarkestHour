@@ -288,7 +288,6 @@ simulated function bool WeaponCanSwitch()
 exec simulated function Deploy()
 {
     local DHPawn  P;
-    local Rotator LockedViewRotation;
 
     P = DHPawn(Instigator);
 

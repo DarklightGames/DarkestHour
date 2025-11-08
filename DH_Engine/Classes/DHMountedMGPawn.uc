@@ -224,7 +224,7 @@ simulated exec function SpawnRangeTarget()
     
     MG = DHMountedMG(Gun);
 
-    if (Gun == none)
+    if (Gun == none || MG.RangeParams == none)
     {
         return;
     }
@@ -240,29 +240,29 @@ simulated exec function SpawnRangeTarget()
         TargetActor.Destroy();
     }
 
-    TargetLocation = MuzzleCoords.Origin + (Direction * Class'DHUnits'.static.MetersToUnreal(MG.RangeTable[MG.RangeIndex].Range));
+    TargetLocation = MuzzleCoords.Origin + (Direction * Class'DHUnits'.static.MetersToUnreal(MG.RangeParams.RangeTable[MG.RangeIndex].Range));
 
     TargetActor = Spawn(Class'DHRangeTargetActor', self,, TargetLocation, Rotator(-Direction));
     TargetActor.SetStaticMesh(TargetStaticMesh);
 }
 
+//  Debugging function for calibrating the range table to the animations.
 simulated exec function SetRangeTheta(float NewTheta)
 {
     local DHMountedMG MG;
     MG = DHMountedMG(Gun);
 
-    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode() || MG.RangeParams == none)
     {
         return;
     }
 
-    MG.RangeTable[MG.RangeIndex].AnimationTime = NewTheta;
+    MG.RangeParams.RangeTable[MG.RangeIndex].AnimationTime = NewTheta;
     MG.UpdateRangeDriverFrameTarget();
 }
 
 simulated exec function DumpRangeTable()
 {
-    local int i;
     local DHMountedMG MG;
 
     if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
@@ -272,9 +272,9 @@ simulated exec function DumpRangeTable()
 
     MG = DHMountedMG(Gun);
 
-    for (i = 0; i < MG.RangeTable.Length; ++i)
+    if (MG.RangeParams != none)
     {
-        Log("RangeTable(" $ i $ ")=(Range=" $ MG.RangeTable[i].Range $ ",AnimationTime=" $ MG.RangeTable[i].AnimationTime $ ")");
+        MG.RangeParams.DumpRangeTable();
     }
 }
 

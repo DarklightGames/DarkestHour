@@ -6,34 +6,16 @@
 class DHMountedMG extends DHVehicleWeapon
     abstract;
 
-// Range Driver
-var name                    RangeDriverAnim;
-var private float           RangeDriverAnimFrame;
-var int                     RangeDriverAnimFrameCount;
-var private float           RangeDriverAnimFrameStart;
-var private float           RangeDriverAnimFrameTarget;
-var private float           RangeDriverAnimTimeSecondsStart;
-var private float           RangeDriverAnimTimeSecondsEnd;
-var int                     RangeDriverChannel;
-var name                    RangeDriverBone;
-var DHUnits.EDistanceUnit   RangeDistanceUnit;
+var DHWeaponRangeParams     RangeParams;
 var int                     RangeIndex;
-
-var() float                 RangeDriverAnimationInterpDuration;
-
-// Range Table
-struct RangeTableItem
-{
-    var() float Range;          // Range in the specified distance unit.
-    var() float AnimationTime;  // Animation driver theta value.
-};
-var array<RangeTableItem> RangeTable;
 
 // Reload
 var()   name                    ReloadSequence;
 var     float                   ReloadStartTimeSeconds; // The time that the reload animation started.
 var     float                   ReloadEndTimeSeconds;   // The time that the reload animation will end.
 var()   float                   ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
+
+// TODO: all these systems should be componentized.
 
 // Firing Animation
 var int                     FiringChannel;
@@ -215,14 +197,6 @@ function CeaseFire(Controller C, Bool bWasAltFire)
     StopFiringAnimation();
 }
 
-simulated function SetRangeDriverFrameTarget(float NewFrameTarget, optional float InterpDuration)
-{
-    RangeDriverAnimFrameStart = RangeDriverAnimFrame;
-    RangeDriverAnimFrameTarget = NewFrameTarget;
-    RangeDriverAnimTimeSecondsStart = Level.TimeSeconds;
-    RangeDriverAnimTimeSecondsEnd = RangeDriverAnimTimeSecondsStart + InterpDuration;
-}
-
 simulated state Reloading
 {
     // Don't allow the player to change the range while reloading.
@@ -290,13 +264,11 @@ simulated function Tick(float DeltaTime)
     local float T;
 
     // Only do all this crap if the local player is the driver.
-    if (RangeDriverChannel != 0 && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
+    if (RangeParams != none && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
-        if (RangeDriverAnimFrameTarget != RangeDriverAnimFrame)
+        if (RangeParams.GetAnimFrameTarget() != RangeParams.GetAnimFrame())
         {
-            T = Class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, RangeDriverAnimTimeSecondsStart, RangeDriverAnimTimeSecondsEnd, 0.0, 1.0);
-
-            RangeDriverAnimFrame = Class'UInterp'.static.Deceleration(T, RangeDriverAnimFrameStart, RangeDriverAnimFrameTarget);
+            RangeParams.Tick(Level.TimeSeconds);
 
             UpdateRangeDriver();
         }
@@ -320,10 +292,10 @@ simulated function SetupAnimationDrivers()
         PlayAnim(FiringIdleAnim, 0.0, 0.0, FiringChannel);
     }
 
-    if (RangeDriverChannel != 0)
+    if (RangeParams != none)
     {
-        AnimBlendParams(RangeDriverChannel, 1.0,,, RangeDriverBone);
-        PlayAnim(RangeDriverAnim, 0.0, 0.0, RangeDriverChannel);
+        AnimBlendParams(RangeParams.Channel, 1.0,,, RangeParams.Bone);
+        PlayAnim(RangeParams.Anim, 0.0, 0.0, RangeParams.Channel);
         UpdateRangeDriver();
     }
 
@@ -343,12 +315,10 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateRangeDriver()
 {
-    if (RangeDriverChannel == 0)
+    if (RangeParams != none)
     {
-        return;
+        FreezeAnimAt(RangeParams.GetAnimFrame(), RangeParams.Channel);
     }
-    
-    FreezeAnimAt(RangeDriverAnimFrame, RangeDriverChannel);
 }
 
 simulated function UpdateAmmoRounds(int Ammo)
@@ -409,21 +379,26 @@ simulated function UpdateClipDriver(int Ammo)
 
 simulated private function SendRangeMessage()
 {
-    // Send a message to the player's HUD.
-    if (WeaponPawn != none && WeaponPawn.IsLocallyControlled())
+    if (WeaponPawn == none || !WeaponPawn.IsLocallyControlled())
     {
-        WeaponPawn.ReceiveLocalizedMessage(Class'DHWeaponRangeMessage', Class'UInteger'.static.FromShorts(RangeTable[RangeIndex].Range, int(RangeDistanceUnit)));
+        return;
     }
+
+    // Send a message to the player's HUD.
+    WeaponPawn.ReceiveLocalizedMessage(Class'DHWeaponRangeMessage', Class'UInteger'.static.FromShorts(RangeParams.RangeTable[RangeIndex].Range, int(RangeParams.DistanceUnit)));
 }
 
 simulated function RangeIndexChanged()
 {
-    UpdateRangeDriverFrameTarget(RangeDriverAnimationInterpDuration);
+    UpdateRangeDriverFrameTarget();
 }
 
-simulated function UpdateRangeDriverFrameTarget(optional float InterpDuration)
+simulated function UpdateRangeDriverFrameTarget()
 {
-    SetRangeDriverFrameTarget(RangeTable[RangeIndex].AnimationTime * (RangeDriverAnimFrameCount - 1), InterpDuration);
+    if (RangeParams != none)
+    {
+        RangeParams.SetRangeDriverFrameTarget(Level.TimeSeconds, RangeIndex);
+    }
 }
 
 simulated function DecrementRange()
@@ -443,13 +418,16 @@ simulated function IncrementRange()
 {
     super.IncrementRange();
 
-    if (RangeIndex < RangeTable.Length - 1)
+    if (RangeParams != none)
     {
-        RangeIndex++;
-        RangeIndexChanged();
-    }
+        if (RangeIndex < RangeParams.RangeTable.Length - 1)
+        {
+            RangeIndex++;
+            RangeIndexChanged();
+        }
 
-    SendRangeMessage();
+        SendRangeMessage();
+    }
 }
 
 simulated function StartReload(optional bool bResumingPausedReload)
@@ -470,12 +448,6 @@ defaultproperties
 {
     ReloadCameraTweenTime=0.5
 
-    RangeDistanceUnit=DU_Meters
-    RangeDriverAnim="SIGHT_DRIVER"
-    RangeDriverAnimFrameCount=10
-    RangeDriverChannel=1
-    RangeDriverBone="REAR_SIGHT"
-
     YawBone="MG_YAW"
     PitchBone="MG_PITCH"
 
@@ -493,8 +465,6 @@ defaultproperties
     // Weapon fire
     FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
     FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
-
-    RangeDriverAnimationInterpDuration=0.5
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

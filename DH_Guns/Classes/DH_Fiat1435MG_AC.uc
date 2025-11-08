@@ -9,16 +9,25 @@ class DH_Fiat1435MG_AC extends DH_Fiat1435MG;
 
 defaultproperties
 {
-    RangeTable(0)=(Range=100.0,AnimationTime=0.000)
-    RangeTable(1)=(Range=200.0,AnimationTime=0.010)
-    RangeTable(2)=(Range=300.0,AnimationTime=0.020)
-    RangeTable(3)=(Range=400.0,AnimationTime=0.040)
-    RangeTable(4)=(Range=500.0,AnimationTime=0.060)
-    RangeTable(5)=(Range=600.0,AnimationTime=0.080)
-    RangeTable(6)=(Range=700.0,AnimationTime=0.110)
-    RangeTable(7)=(Range=800.0,AnimationTime=0.140)
-    RangeTable(8)=(Range=900.0,AnimationTime=0.175)
-    RangeTable(9)=(Range=1000.0,AnimationTime=0.215)
+    Begin Object Class=DHWeaponRangeParams Name=RangeParams0
+        DistanceUnit=DU_Meters
+        Anim="SIGHT_DRIVER"
+        AnimFrameCount=10
+        Channel=1
+        Bone="REAR_SIGHT"
+        RangeTable(0)=(Range=100.0,AnimationTime=0.000)
+        RangeTable(1)=(Range=200.0,AnimationTime=0.010)
+        RangeTable(2)=(Range=300.0,AnimationTime=0.020)
+        RangeTable(3)=(Range=400.0,AnimationTime=0.040)
+        RangeTable(4)=(Range=500.0,AnimationTime=0.060)
+        RangeTable(5)=(Range=600.0,AnimationTime=0.080)
+        RangeTable(6)=(Range=700.0,AnimationTime=0.110)
+        RangeTable(7)=(Range=800.0,AnimationTime=0.140)
+        RangeTable(8)=(Range=900.0,AnimationTime=0.175)
+        RangeTable(9)=(Range=1000.0,AnimationTime=0.215)
+        AnimationInterpDuration=0.5
+    End Object
+    RangeParams=RangeParams0
 
     InitialPrimaryAmmo=300
     NumMGMags=3

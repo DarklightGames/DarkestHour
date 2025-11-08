@@ -18,22 +18,25 @@ defaultproperties
 
     ReloadCameraTweenTime=0.5
 
-    RangeDistanceUnit=DU_Meters
-    RangeDriverAnim="SIGHT_DRIVER"
-    RangeDriverAnimFrameCount=10
-    RangeDriverChannel=1
-    RangeDriverBone="REAR_SIGHT"
-    
-    RangeTable(0)=(Range=100.0,AnimationTime=0.120)
-    RangeTable(1)=(Range=200.0,AnimationTime=0.135)
-    RangeTable(2)=(Range=300.0,AnimationTime=0.150)
-    RangeTable(3)=(Range=400.0,AnimationTime=0.165)
-    RangeTable(4)=(Range=500.0,AnimationTime=0.190)
-    RangeTable(5)=(Range=600.0,AnimationTime=0.230)
-    RangeTable(6)=(Range=700.0,AnimationTime=0.27)
-    RangeTable(7)=(Range=800.0,AnimationTime=0.31)
-    RangeTable(8)=(Range=900.0,AnimationTime=0.36)
-    RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
+    Begin Object Class=DHWeaponRangeParams Name=RangeParams0
+        DistanceUnit=DU_Meters
+        Anim="SIGHT_DRIVER"
+        AnimFrameCount=10
+        Channel=1
+        Bone="REAR_SIGHT"
+        RangeTable(0)=(Range=100.0,AnimationTime=0.120)
+        RangeTable(1)=(Range=200.0,AnimationTime=0.135)
+        RangeTable(2)=(Range=300.0,AnimationTime=0.150)
+        RangeTable(3)=(Range=400.0,AnimationTime=0.165)
+        RangeTable(4)=(Range=500.0,AnimationTime=0.190)
+        RangeTable(5)=(Range=600.0,AnimationTime=0.230)
+        RangeTable(6)=(Range=700.0,AnimationTime=0.27)
+        RangeTable(7)=(Range=800.0,AnimationTime=0.31)
+        RangeTable(8)=(Range=900.0,AnimationTime=0.36)
+        RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
+        AnimationInterpDuration=0.5
+    End Object
+    RangeParams=RangeParams0
 
     YawBone="GUN_YAW"
     PitchBone="GUN_PITCH"
@@ -55,8 +58,6 @@ defaultproperties
     FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
-
-    RangeDriverAnimationInterpDuration=0.5
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

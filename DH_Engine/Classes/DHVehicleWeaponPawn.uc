@@ -2801,7 +2801,7 @@ simulated function float GetAnimationDriverTheta(DHVehicleWeaponPawnAnimationDri
 simulated function UpdateAnimationDrivers()
 {
     local int i, SequenceIndex, SequenceCount, FrameCount;
-    local float SequenceTheta, BlendTheta, SequenceAlpha;
+    local float SequenceTheta, BlendTheta;
     local SAnimationDriver AD;
 
     if (Driver == none)
