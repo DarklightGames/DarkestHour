@@ -56,6 +56,7 @@ defaultproperties
 
     // Artillery
     bIsArtillery=true
+    CounterBatteryReport=CBR_Large
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.88mm_fire01'

@@ -85,11 +85,10 @@ defaultproperties
     // Exit
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
     ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
-    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // hull MG hatch
-    ExitPositions(3)=(X=-75.0,Y=-125.0,Z=75.0) // left
-    ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
-    ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
-    ExitPositions(6)=(X=200.0,Y=0.0,Z=75.0)    // front
+    ExitPositions(2)=(X=-75.0,Y=-125.0,Z=75.0) // left
+    ExitPositions(3)=(X=-200.0,Y=2.24,Z=75.0)  // rear
+    ExitPositions(4)=(X=-75.0,Y=125.0,Z=75.0)  // right
+    ExitPositions(5)=(X=200.0,Y=0.0,Z=75.0)    // front
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
@@ -173,7 +172,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+     Wheels(0)=LF_Steering
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
          bPoweredWheel=True
@@ -183,7 +182,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+     Wheels(1)=RF_Steering
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
          bPoweredWheel=True
@@ -193,7 +192,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+     Wheels(2)=LR_Steering
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
          bPoweredWheel=True
@@ -203,7 +202,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+     Wheels(3)=RR_Steering
      // End Steering Wheels
 
      // Center Drive Wheels
@@ -214,7 +213,7 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+     Wheels(4)=Left_Drive_Wheel
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
          bPoweredWheel=True
@@ -223,5 +222,5 @@ defaultproperties
          BoneRollAxis=AXIS_Y
          WheelRadius=33.000000
      End Object
-     Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+     Wheels(5)=Right_Drive_Wheel
 }

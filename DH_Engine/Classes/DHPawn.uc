@@ -6966,13 +6966,12 @@ exec function GimmeSupplies()
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function SpawnVehicle(string VehicleName, optional string VariantName)
+exec function Vehicle SpawnVehicle(string VehicleName, optional string VariantName, optional int Distance)
 {
     local class<Vehicle>    VehicleClass;
     local Vehicle           V;
     local Vector            SpawnLocation;
     local Rotator           SpawnDirection;
-    local int               Distance;
     local float             Degrees;
     local string            VehicleClassName, S;
 
@@ -7002,8 +7001,12 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
             S = Repl(S, "{name}", GetHumanReadableName());
             S = Repl(S, "{vehicle}", V.GetHumanReadableName());
             Level.Game.Broadcast(self, S);
+
+            return V;
         }
     }
+
+    return none;
 }
 
 // New debug exec to make player's current weapon fire dummy AP shells, which is very useful for checking vehicle armour is set up correctly
@@ -7600,6 +7603,7 @@ simulated function bool CanSquadPlaceConstruction()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     return Level != none && Level.NetMode == NM_Standalone ||
+           PRI.bAdmin || PRI.bSilentAdmin ||
            IsDebugModeAllowed() ||
            !PRI.IsSquadLeader() ||
            HasSquadmatesWithinDistance(50.0); // TODO: This shouldn't be a literal!

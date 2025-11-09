@@ -7,7 +7,7 @@ class DH_GeratPWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Gerat Potsdam"
+    ItemName="Gerät Potsdam"
     FireModeClass(0)=Class'DH_GeratPFire'
     FireModeClass(1)=Class'DH_GeratPMeleeFire'
     AttachmentClass=Class'DH_GeratPAttachment'

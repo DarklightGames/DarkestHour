@@ -211,6 +211,6 @@ defaultproperties
     End Object
     Emitters(6)=SparkEmitter'SparkEmitter2'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

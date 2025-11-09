@@ -9,4 +9,5 @@ defaultproperties
 {
     InventoryType=Class'DHWireCuttersItem'
     StaticMesh=StaticMesh'DH_WeaponPickups.CCwirecutters'
+    CollisionRadius=8
 }

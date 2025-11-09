@@ -1253,7 +1253,7 @@ simulated function bool HasLimitedRole()
     local DHRoleInfo RI;
 
     RI = DHRoleInfo(GetRoleInfo());
-    
+
     return RI != none && RI.IsLimited();
 }
 
@@ -3685,7 +3685,7 @@ function ClientSaveROIDHash(string ROID)
     ROIDHash = ROID;
 
     SaveConfig();
-    
+
     PatronTier = Class'DHAccessControl'.static.GetPatronTier(ROIDHash);
 
     // If we have script patron status, then set patron status on server
@@ -5848,15 +5848,20 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
+    else if (ChannelTitle ~= VRI.CommandChannelName)
     {
-        if (ChatRoomMessageClass != none)
+        if (!PRI.CanAccessCommandChannel())
         {
-            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            if (ChatRoomMessageClass != none)
+            {
+                ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+            }
+
+            // If we are trying to speak in command but we aren't a SL, then return out
+            return;
         }
 
-        // If we are trying to speak in command but we aren't a SL, then return out
-        return;
+        VCR = VRI.GetCommandChannel(GetTeamNum());
     }
     else
     {
@@ -6138,7 +6143,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 {
     local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker PMM;
-    local int i;
+    local int i, Index;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -6188,9 +6193,23 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
         PMM.ExpiryTime = -1;
     }
 
-    PersonalMapMarkers.Insert(0, 1);
-    PersonalMapMarkers[0] = PMM;
-    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[0]);
+    // Find the index in which to insert the new marker.
+    // Look for any expired marker slots that we can take over.
+    // If none are expired, add to the end of the list.
+    Index = PersonalMapMarkers.Length;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.LifetimeSeconds != -1 &&
+            GRI.ElapsedTime > PersonalMapMarkers[i].ExpiryTime)
+        {
+            Index = i;
+            break;
+        }
+    }
+
+    PersonalMapMarkers[Index] = PMM;
+    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[Index]);
 }
 
 function RemovePersonalMarker(int Index)
@@ -6547,6 +6566,8 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     }
 
     TraceStart = CalcViewLocation;
+    // TODO: this is incorrect; for this trace we should choose a *reasonable* max distance.
+    // right now you can trace out for kilometers and get the AT gun rotate menu etc.
     TraceEnd = TraceStart + (Vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
 
     foreach TraceActors(Class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
@@ -6638,7 +6659,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 exec function DebugPatron(int Tier)
 {
     local DHPlayerReplicationInfo.EPatronTier PatronTier;
-    
+
     switch (Tier)
     {
         case 0:
@@ -6932,7 +6953,7 @@ exec function GiveCamera()
     {
         return;
     }
-    
+
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
 }
 
@@ -7643,7 +7664,7 @@ simulated function GetEyeTraceLocation(out Vector HitLocation, out Vector HitNor
     {
         HitLocation = vect(0, 0, 0);
     }
-    
+
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (Vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
     PawnVehicleBase = Pawn.GetVehicleBase();
@@ -7805,7 +7826,7 @@ simulated function int GetMapMarkerLockExpiryTime(class<DHMapMarker> MapMarkerCl
     {
         return 0;
     }
-    
+
     switch(MapMarkerClass.default.OverwritingRule)
     {
         case UNIQUE:
@@ -7909,7 +7930,7 @@ function SetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTim
             MapMarkerCooldowns[Index].GroupIndex = MapMarkerClass.default.GroupIndex;
             break;
     }
-    
+
     MapMarkerCooldowns[Index].ExpiryTime = ExpiryTime;
 }
 
@@ -7979,7 +8000,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     local DHGameReplicationInfo GRI;
     local int Count, BotCount, Limit;
     local bool bIsRoleLimitless;
-    
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -8045,7 +8066,7 @@ exec function MapBoundsOffset(int X, int Y)
     local ROMapBoundsNE NE;
     local ROMapBoundsSW SW;
     local Vector NorthEastBounds, SouthWestBounds, Offset;
-    
+
     // Find the location of the map bounds
     foreach AllActors(Class'ROMapBoundsNE', NE)
     {

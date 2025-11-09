@@ -6,15 +6,14 @@
 class DHReinforcementMsg extends DHFriendlyInformationMsg
     abstract;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_SundrySounds.uax
-
 var localized string ReinforcementsRemaining;
 var localized string ReinforcementsDepleted;
+var Sound MessageSound;
 
 // Modified to play a sound to go with screen screen message
 static function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    P.ClientPlaySound(Sound'DH_SundrySounds.ReinforcementsLow',,, SLOT_Interface);
+    P.ClientPlaySound(default.MessageSound,,, SLOT_Interface);
 
     super(LocalMessage).ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 }
@@ -38,4 +37,5 @@ defaultproperties
 {
     ReinforcementsRemaining="Your team has {0}% reinforcements remaining!"
     ReinforcementsDepleted="Your team has ran out of reinforcements!"
+    MessageSound=Sound'DH_SundrySounds.ReinforcementsLow'
 }

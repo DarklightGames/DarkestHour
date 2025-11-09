@@ -5,37 +5,23 @@
 
 class DH_Pak38ATGun extends DHATGun;
 
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-
-    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(Class'Combiner'));
-    DestroyedSkin.Material1 = Skins[0];
-    DestroyedSkin.Material2 = Texture'DH_FX_Tex.DestroyedVehicleOverlay2';
-    DestroyedSkin.FallbackMaterial = Skins[0];
-    DestroyedSkin.CombineOperation = CO_Multiply;
-    DestroyedMeshSkins[0] = DestroyedSkin;
-
-    super.DestroyAppearance();
-}
-
 defaultproperties
 {
-    VehicleNameString="5.0 cm Pak38 AT gun"
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Pak38CannonPawn',WeaponBone="Turret_placement")
-    Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
-    Skins(0)=Texture'DH_Artillery_Tex.Pak38'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.pak38_dest'
-    VehicleHudImage=Texture'DH_Artillery_Tex.Pak40_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.Pak40_turret_look'
-    VehicleHudOccupantsX(1)=0.47
-    VehicleHudOccupantsY(1)=0.6
+    VehicleNameString="5,0cm Pak 38"
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
+    Mesh=SkeletalMesh'DH_Pak38_anm.pak38_body_ext'
+    Skins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
+    CannonSkins(0)=Texture'DH_Pak38_tex.pak38_ext_yellow'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak38_stc.pak38_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_Pak38_tex.pak38_ext_yellow_destroyed'
+    VehicleHudImage=Texture'DH_Pak38_tex.pak38_body_icon'
+    VehicleHudTurret=TexRotator'DH_Pak38_tex.pak38_turret_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak38_tex.pak38_turret_icon_look'
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
     VehicleMass=11.0
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
-
+    ShadowZOffset=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -54,5 +40,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.KParams0'
+    KParams=KParams0
 }

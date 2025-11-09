@@ -223,6 +223,6 @@ defaultproperties
     End Object
     Emitters(6)=BeamEmitter'BeamEmitter1'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

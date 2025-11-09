@@ -22,6 +22,7 @@ struct SCollisionStaticMesh
     var name AttachBone;    // If '', use YawBone.
     var bool bWontStopBullet;
     var bool bWontStopBlastDamage;
+    var DHCollisionMeshActor.ETransformSpace TransformSpace;
 };
 
 var     array<SCollisionStaticMesh> CollisionStaticMeshes;
@@ -49,10 +50,22 @@ struct WeaponAttachments
     var StaticMesh StaticMesh;
 };
 
+// A rough estimate of the gun's size.
+// Affects how easily counter-battery systems can triangulate the firing position.
+enum ECounterBatteryReport
+{
+    CBR_None,
+    CBR_Small,
+    CBR_Medium,
+    CBR_Large,
+};
+var ECounterBatteryReport CounterBatteryReport;
+
 // Weapon fire
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
-var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
+var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
+var     Sound               DryFireSound;
 
 var     float       ResupplyInterval;
 var     int         LastResupplyTimestamp;
@@ -151,7 +164,11 @@ replication
         ClientSetReloadState;
 }
 
-simulated function OnSwitchMesh();
+simulated function OnSwitchMesh()
+{
+    UpdateGunWheels();
+    UpdateAnimationDrivers();
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
@@ -177,7 +194,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Spawns the vehicle attachments. This is only run for the client.
+// Spawns the vehicle attachments.
 simulated function SpawnVehicleAttachments()
 {
     local int i;
@@ -192,7 +209,7 @@ simulated function SpawnVehicleAttachments()
         {
             continue;
         }
-        
+
         if (VA.AttachClass == none)
         {
             VA.AttachClass = Class'DHDecoAttachment';
@@ -222,7 +239,7 @@ simulated function SpawnVehicleAttachments()
             {
                 VA.RadioCollisionHeight = Class'DHRadio'.default.CollisionHeight;
             }
-            
+
             Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
         }
 
@@ -318,7 +335,7 @@ simulated function int GetGunPitchMin()
     {
         return CustomPitchDownLimit - 65535;
     }
-    
+
     return CustomPitchDownLimit;
 }
 
@@ -346,7 +363,7 @@ simulated function AttachCollisionMeshes()
             AttachBone = CollisionStaticMeshes[i].AttachBone;
         }
 
-        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+        CMA = Class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone,,,CollisionStaticMeshes[i].TransformSpace);
 
         if (CMA != none)
         {
@@ -403,10 +420,12 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = false;
         bInitializedVehicleAndWeaponPawn = false;
     }
-    
+
     UpdateGunWheels();
     UpdateAnimationDrivers();
 }
+
+function OnReloadFinished(int AmmoIndex);
 
 // Implemented here to handle multi-stage reload
 simulated function Timer()
@@ -441,9 +460,16 @@ simulated function Timer()
     {
         ReloadState = RL_ReadyToFire;
 
-        if (bUsesMags && Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
-            FinishMagReload();
+            if (bUsesMags)
+            {
+                FinishMagReload();
+            }
+            else
+            {
+                OnReloadFinished(GetAmmoIndex(false));
+            }
         }
     }
     // Otherwise play the reloading sound for the next stage & set the next timer
@@ -570,6 +596,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Also added a fix for bug where listen server host watching another player fire didn't see the firing effects from any AmbientEffectEmitter
 function Fire(Controller C)
 {
+    local DarkestHourGame G;
+
     if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
     {
         SpawnProjectile(TracerProjectileClass, false);
@@ -577,6 +605,17 @@ function Fire(Controller C)
     else if (ProjectileClass != none)
     {
         SpawnProjectile(ProjectileClass, false);
+    }
+
+    if (bIsArtillery)
+    {
+        // Notify the game that artillery has been fired. This will be handled by the counter-battery system.
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            G.OnArtilleryFired(WeaponPawn.VehicleBase.GetTeamNum(), Class, Location);
+        }
     }
 
     if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
@@ -949,8 +988,7 @@ simulated function Sound GetFireSound()
 // New function to play dry-fire effects if trying to fire weapon when empty
 simulated function DryFireEffects(optional bool bAltFire)
 {
-    ShakeView(bAltFire);
-    PlaySound(Sound'Inf_Weapons_Foley.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(DryFireSound, SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1579,7 +1617,7 @@ simulated function SetupAnimationDrivers()
 
 simulated function UpdateAnimationDrivers()
 {
-    local int i, CurrentPitch;
+    local int i, Rotation;
     local float Theta;
 
     for (i = 0;  i < AnimationDrivers.Length; ++i)
@@ -1587,20 +1625,27 @@ simulated function UpdateAnimationDrivers()
         switch (AnimationDrivers[i].RotationType)
         {
             case ROTATION_Yaw:
-                // Get the yaw min->max range.
-                Theta = Class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                if (CurrentAim.Yaw > 32768)
+                {
+                    Rotation = CurrentAim.Yaw - 65536;
+                }
+                else
+                {
+                    Rotation = CurrentAim.Yaw;
+                }
+                Theta = Class'UInterp'.static.MapRangeClamped(Rotation, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
                 break;
             case ROTATION_Pitch:
                 if (CurrentAim.Pitch > 32768)
                 {
-                    CurrentPitch = CurrentAim.Pitch - 65536;
+                    Rotation = CurrentAim.Pitch - 65536;
                 }
                 else
                 {
-                    CurrentPitch = CurrentAim.Pitch;
+                    Rotation = CurrentAim.Pitch;
                 }
 
-                Theta = Class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                Theta = Class'UInterp'.static.MapRangeClamped(Rotation, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
                 break;
         }
 
@@ -1673,4 +1718,6 @@ defaultproperties
     bInheritVelocity=false
 
     ResupplyInterval=2.5
+
+    DryFireSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
 }

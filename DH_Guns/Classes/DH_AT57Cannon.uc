@@ -5,8 +5,6 @@
 
 class DH_AT57Cannon extends DHATGunCannon;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_ArtillerySounds.uax
-
 defaultproperties
 {
     // Cannon mesh

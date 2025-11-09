@@ -39,19 +39,20 @@ defaultproperties
     CustomPitchDownLimit=65172
 
     // Cannon ammo
-    PrimaryProjectileClass=Class'DH_IS2CannonShell'
-    SecondaryProjectileClass=Class'DH_IS2CannonShellHE'
+    PrimaryProjectileClass=Class'DH_IS2CannonShellHE'
+    SecondaryProjectileClass=Class'DH_IS2CannonShell'
 
-    ProjectileDescriptions(0)="AP"
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="AP"
 
-    nProjectileDescriptions(0)="BR-471" // earlier AP round without ballistic cap
-    nProjectileDescriptions(1)="OF-471"
+    nProjectileDescriptions(0)="OF-471" 
+    nProjectileDescriptions(1)="BR-471" // earlier AP round without ballistic cap
 
     InitialPrimaryAmmo=16
     InitialSecondaryAmmo=8
-    MaxPrimaryAmmo=16
-    MaxSecondaryAmmo=12
-    SecondarySpread=0.002
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=8
+    Spread=0.002
 
     // Coaxial MG ammo
     AltFireProjectileClass=Class'DH_DP27Bullet'

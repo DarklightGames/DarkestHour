@@ -68,10 +68,10 @@ defaultproperties
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-    VehHitpoints(0)=(PointRadius=35.0,PointBone="Jackson_body_ext",PointOffset=(X=-90.0,Z=-35.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointBone="Jackson_body_ext",PointOffset=(X=-20.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=35.0,PointBone="Jackson_body_ext",PointOffset=(X=-90.0,Z=68.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=55.0,Z=95.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=-55.0,Z=95.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Jackson_body_ext",PointOffset=(X=-20.0,Z=83.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=65.0
     DamagedEffectOffset=(X=-126.0,Y=20.0,Z=105.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson_Dest'
@@ -160,7 +160,7 @@ defaultproperties
         BoneOffset=(X=10.0,Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -168,7 +168,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=10.0,Z=10.0)
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -177,7 +177,7 @@ defaultproperties
         BoneOffset=(X=-30.0,Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -185,7 +185,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=10.0)
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -193,14 +193,14 @@ defaultproperties
         BoneOffset=(Z=10.0)
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -221,5 +221,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.KParams0'
+    KParams=KParams0
 }

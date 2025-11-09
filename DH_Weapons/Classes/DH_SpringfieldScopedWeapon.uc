@@ -19,8 +19,8 @@ defaultproperties
     HighDetailOverlay=Shader'DH_Springfield_tex.Springfield_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-	sleevenum=1
-	handnum=2
+	SleeveNum=1
+	HandNum=2
 
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Springfield_Scope_Overlay'

@@ -38,10 +38,6 @@ var array<SVehicleClass>    VehicleClasses;
 
 var DHVehicle               Vehicle;
 
-// The mesh to use when the vehicle is being constructed.
-// If not set, the vehicle's default mesh will be used.
-var Mesh                    ConstructionBaseMesh;
-
 replication
 {
     reliable if (bNetInitial && Role == ROLE_Authority)
@@ -52,9 +48,19 @@ simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    // Skins are not replicated, therefore we need to update client's appearance here.
     if (Role < ROLE_Authority)
     {
+        // The client already knows what the mesh should be based on the vehicle class.
+        if (VehicleClass.default.ConstructionBaseMesh != none)
+        {
+            LinkMesh(VehicleClass.default.ConstructionBaseMesh);
+        }
+        else
+        {
+            LinkMesh(VehicleClass.default.Mesh);
+        }
+
+        // Skins are not replicated, therefore we need to update client's appearance here.
         UpdateSkins();
     }
 }
@@ -78,14 +84,11 @@ function OnPlaced()
 
 simulated function OnConstructed()
 {
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && VehicleClass != none)
     {
-        if (VehicleClass != none)
-        {
-            Vehicle = Spawn(VehicleClass,,, Location, Rotation);
+        Vehicle = Spawn(VehicleClass,,, Location, Rotation);
 
-            GotoState('Dummy');
-        }
+        GotoState('Dummy');
     }
 }
 
@@ -200,13 +203,17 @@ simulated function UpdateSkins()
     }
 }
 
+// Don't use LinkMesh here since clients will not successfully link the mesh unless
+// the package that mesh is in is not marked as ServerSideOnly.
+// This is as organizational issue because it pushes us closer to the magic
+// package name limit that breaks client's ability to connect to servers.
 function UpdateAppearance()
 {
     SetDrawType(DT_Mesh);
 
-    if (ConstructionBaseMesh != none)
+    if (VehicleClass.default.ConstructionBaseMesh != none)
     {
-        LinkMesh(ConstructionBaseMesh);
+        LinkMesh(VehicleClass.default.ConstructionBaseMesh);
     }
     else
     {
@@ -454,4 +461,12 @@ defaultproperties
     CompletionPointValue=100
     bCanOnlyPlaceOnTerrain=false
     Stages(0)=(Progress=0)
+
+    // The client can determine the mesh to use by itself based on the vehicle class.
+    // Therefore, we don't replicate the mesh.
+    // Previously, we used LinkMesh and relied on the native replication to get the client to display the correct the mesh.
+    // However, if the mesh was in a package marked with the ServerSideOnly flag, the client would display an empty mesh.
+    // Because we need to keep the amount of non-ServerSideOnly packages down to an absolute minimum, we changed it so that
+    // the client and server set the meshes independently.
+    bNoRepMesh=true
 }

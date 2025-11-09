@@ -279,6 +279,6 @@ defaultproperties
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter14'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

@@ -134,7 +134,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=1.600000
         FadeInEndTime=0.08
-        name="embers"
+        Name="embers"
         StartLocationRange=(Z=(Min=100.000000,Max=150.000000))
         SizeScale(0)=(RelativeSize=1.00000)
         SizeScale(1)=(RelativeTime=0.500000,RelativeSize=2.000000)

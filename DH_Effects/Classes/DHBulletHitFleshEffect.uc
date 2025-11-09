@@ -16,7 +16,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=8.000000))
@@ -42,7 +42,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=239,A=255))
         FadeOutStartTime=0.100000
         MaxParticles=1
-        name="initial_spray"
+        Name="initial_spray"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -70,7 +70,7 @@ defaultproperties
         Opacity=0.75
         FadeOutStartTime=0.100000
         MaxParticles=2
-        name="2nd_spray"
+        Name="2nd_spray"
         UseRotationFrom=PTRS_Actor
         //StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -104,7 +104,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=8 // 25
-        name="bloody_chunks"
+        Name="bloody_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -125,6 +125,6 @@ defaultproperties
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter26'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

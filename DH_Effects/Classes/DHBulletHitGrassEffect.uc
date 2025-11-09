@@ -20,7 +20,7 @@ defaultproperties
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=79,R=71,A=255))
         ColorScaleRepeats=2.000000
         MaxParticles=25
-        name="GreenGrass"
+        Name="GreenGrass"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=2.000000,Max=5.000000)
         UseRotationFrom=PTRS_Actor
@@ -52,7 +52,7 @@ defaultproperties
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=87,G=109,R=130,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=12
-        name="mainimpact"
+        Name="mainimpact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
@@ -78,7 +78,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=65,G=86,R=95,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=8
-        name="darkimpact"
+        Name="darkimpact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
@@ -105,7 +105,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=12
-        name="greenpuff"
+        Name="greenpuff"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -134,7 +134,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=0.485714,Color=(B=98,G=157,R=131,A=255))
         ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=68,R=60,A=255))
         ColorScaleRepeats=2.000000
-        name="GreenBits"
+        Name="GreenBits"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
@@ -169,7 +169,7 @@ defaultproperties
         FadeOutStartTime=0.2500000
         FadeInEndTime=0.1
         MaxParticles=4
-        name="dustcloud"
+        Name="dustcloud"
         StartLocationOffset=(Z=-25.000000)
         UseRotationFrom=PTRS_Actor
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
@@ -187,6 +187,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter3'
 
-    Autodestroy=true
-    bnodelete=false
+    AutoDestroy=true
+    bNoDelete=false
 }

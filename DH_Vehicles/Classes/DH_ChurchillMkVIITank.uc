@@ -5,38 +5,6 @@
 
 class DH_ChurchillMkVIITank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Churchill_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Churchill_tex.utx
-
-exec function HideGuards() // TEMPDEBUG - exec to hide the track guards, so can see how the tank looks without them
-{
-    if (IsDebugModeAllowed())
-    {
-        if (Skins[6] == default.Skins[6]) Skins[6] = Texture'DH_VehiclesGE_tex2.Alpha';
-        else Skins[6] = default.Skins[6];
-    }
-}
-
-exec function ToggleTreads() // TEMPDEBUG - exec to toggle between normal & destroyed tread skins
-{
-    if (IsDebugModeAllowed())
-    {
-        if (LeftTreadPanner.Material == Combiner'DH_Churchill_tex.churchill_treads_dest')
-        {
-            LeftTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
-            RightTreadPanner.Material = Texture'DH_Churchill_tex.churchill_treads';
-        }
-        else
-        {
-            LeftTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
-            RightTreadPanner.Material = Combiner'DH_Churchill_tex.churchill_treads_dest';
-        }
-
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 defaultproperties
 {
     // Vehicle properties
@@ -67,7 +35,7 @@ defaultproperties
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_int',TransitionUpAnim="driver_visionport_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=60500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_int',TransitionUpAnim="driver_periscope_out",TransitionDownAnim="driver_visionport_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_int',TransitionUpAnim="driver_periscope_out",TransitionDownAnim="driver_visionport_open",ViewPitchUpLimit=2731,ViewPitchDownLimit=64080,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_periscope_in",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=60500,ViewPositiveYawLimit=2500,ViewNegativeYawLimit=-1500)
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=64700,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
     InitialPositionIndex=2

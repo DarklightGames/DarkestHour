@@ -3,4 +3,5 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ModifyActors extends DH_LevelActors;
+class DH_ModifyActors extends DH_LevelActors
+    abstract;

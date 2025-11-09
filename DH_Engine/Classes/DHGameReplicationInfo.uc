@@ -2101,7 +2101,7 @@ function UpdateMapIconAttachments()
 {
     local DHMapIconAttachment MIA;
 
-    foreach AllActors(Class'DHMapIconAttachment', MIA)
+    foreach DynamicActors(Class'DHMapIconAttachment', MIA)
     {
         if (MIA != none && !MIA.bIgnoreGRIUpdates)
         {
@@ -2442,8 +2442,9 @@ defaultproperties
     MapMarkerClassNameS(6)="DH_Engine.DHMapMarker_Enemy_Vehicle"
     MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_Tank"
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_CommandPost"
-    MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Enemy_Artillery"
+    MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_CommandPost"
+    MapMarkerClassNames(11)="DH_Engine.DHMapMarker_Friendly_Supplies"
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in

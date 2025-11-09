@@ -1,1 +1,0 @@
-class DHConstruction_MortarPit extends DHDeprecated;
