@@ -392,9 +392,7 @@ simulated function DestroyConstructionSockets()
 
     for (i = 0; i < SocketActors.Length; ++i)
     {
-        if (SocketActors[i] != none &&
-            Sockets[i].Parameters != none &&
-            Sockets[i].Parameters.bShouldDestroyOccupant)
+        if (SocketActors[i] != none)
         {
             SocketActors[i].Destroy();
         }
