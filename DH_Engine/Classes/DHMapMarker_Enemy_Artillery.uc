@@ -3,14 +3,13 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_BM36MortarConstruction extends DHConstruction_Vehicle;
+class DHMapMarker_Enemy_Artillery extends DHMapMarker_Enemy
+    abstract;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.mortar'
-    VehicleClasses(0)=(VehicleClass=Class'DH_BM36Mortar')
-    bIsArtillery=true
-    SupplyCost=750
-    ProgressMax=8
-    ConstructionTags=(CT_Mortar)
+    IconMaterial=Texture'DH_InterfaceArt2_tex.artillery'
+    MarkerName="Enemy Artillery"
+    LifetimeSeconds=300
+    SpottingConsoleCommand="SPEECH ENEMY 8"
 }
