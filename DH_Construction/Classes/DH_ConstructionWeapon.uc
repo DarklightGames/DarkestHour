@@ -131,7 +131,7 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
     local DHConstructionProxy CP;
 
     ConstructionClass = NewConstructionClass;
-    
+
     // We already have the construction weapon in our inventory, so let's
     // simply update the construction class of the existing proxy cursor.
     CP = DHConstructionProxy(ProxyCursor);
@@ -383,7 +383,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     C.InstigatorController = DHPlayer(Instigator.Controller);
     C.VariantIndex = VariantIndex;
     C.SkinIndex = Context.SkinIndex;
-    
+
     C.OnPlaced();
 
     if (!C.bIsNeutral)

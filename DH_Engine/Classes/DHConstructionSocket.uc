@@ -23,14 +23,14 @@ replication
 }
 
 simulated function PostBeginPlay()
-{   
+{
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupSkins();
     }
-    
+
     Hide();
 }
 
@@ -44,7 +44,7 @@ simulated function PostNetBeginPlay()
     SocketDrawScale3D.X = CollisionRadius;
     SocketDrawScale3D.Y = CollisionRadius;
     SocketDrawScale3D.Z = CollisionHeight;
-    
+
     SetDrawScale3D(SocketDrawScale3D);
 }
 

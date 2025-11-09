@@ -381,7 +381,7 @@ function SpawnConstructionSockets()
         Socket.SetBase(self);
         Socket.SetRelativeLocation(Sockets[i].Location);
         Socket.SetRelativeRotation(Sockets[i].Rotation);
-        
+
         SocketActors[i] = Socket;
     }
 }
@@ -422,7 +422,7 @@ function Activate(int InstigatorTeamIndex)
         Warn("Activate call was attempted on a non-player placed construction!");
         return;
     }
-    
+
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (GRI == none)
@@ -499,7 +499,7 @@ function OnSpawnedByPlayer(DHPlayer PC)
     {
         return;
     }
-    
+
     Activate(PC.GetTeamNum());
 }
 

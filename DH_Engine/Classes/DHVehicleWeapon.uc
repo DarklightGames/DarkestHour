@@ -62,8 +62,8 @@ enum ECounterBatteryReport
 var ECounterBatteryReport CounterBatteryReport;
 
 // Weapon fire
-var     bool                    bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
-var     bool                    bIsArtillery;       // report our hits to be tracked on artillery targets
+var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
+var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 var     Sound               DryFireSound;
 
@@ -209,7 +209,7 @@ simulated function SpawnVehicleAttachments()
         {
             continue;
         }
-        
+
         if (VA.AttachClass == none)
         {
             VA.AttachClass = Class'DHDecoAttachment';
@@ -239,7 +239,7 @@ simulated function SpawnVehicleAttachments()
             {
                 VA.RadioCollisionHeight = Class'DHRadio'.default.CollisionHeight;
             }
-            
+
             Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
         }
 
@@ -335,7 +335,7 @@ simulated function int GetGunPitchMin()
     {
         return CustomPitchDownLimit - 65535;
     }
-    
+
     return CustomPitchDownLimit;
 }
 
@@ -420,7 +420,7 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = false;
         bInitializedVehicleAndWeaponPawn = false;
     }
-    
+
     UpdateGunWheels();
     UpdateAnimationDrivers();
 }
@@ -1718,6 +1718,6 @@ defaultproperties
     bInheritVelocity=false
 
     ResupplyInterval=2.5
-    
+
     DryFireSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
 }

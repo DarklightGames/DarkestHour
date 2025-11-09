@@ -1913,7 +1913,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    
+
                     SetCharacter(aPlayer);
                 }
             }
