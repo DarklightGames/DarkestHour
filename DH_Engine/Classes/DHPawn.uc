@@ -7596,7 +7596,7 @@ exec function BigHead(float V)
     SetHeadScale(V);
 }
 
-simulated function bool CanSquadPlaceConstruction()
+simulated function bool CanPlaceConstruction()
 {
     local DHPlayerReplicationInfo PRI;
 

@@ -244,7 +244,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoIcon = default.SquadIcon;
             ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
             break;
-        case ERROR_SLCantBuildAlone:
+        case ERROR_NoSquadmatesNearby:
             ORI.InfoIcon = default.SquadIcon;
             ORI.InfoText[0] = default.NoSquadMembersNearbyText;
             break;
@@ -298,7 +298,7 @@ defaultproperties
     ExhaustedText="Exhausted"
     RemainingText="{0} Remaining"
     MaxActiveText="{0}/{1} Active"
-    NoSquadMembersNearbyText="Squad absent"
+    NoSquadMembersNearbyText="No squadmates nearby"
     BusyText="Busy"
     MoreText="More"
     SlotCountOverride=8
