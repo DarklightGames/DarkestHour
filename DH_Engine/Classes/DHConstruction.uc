@@ -38,8 +38,9 @@ enum EConstructionErrorType
     ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
     ERROR_SocketOccupied,           // The construction socket is already occupied.
+    ERROR_NoSquadmatesNearby,       // There are no squad members within 50 meters
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
-    ERROR_Other
+    ERROR_Other,
 };
 
 var struct ConstructionError
@@ -1202,6 +1203,12 @@ static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
+    }
+    
+    if (!P.CanPlaceConstruction())
+    {
+        E.Type = ERROR_NoSquadmatesNearby;
         return E;
     }
 

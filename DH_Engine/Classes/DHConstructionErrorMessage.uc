@@ -89,4 +89,5 @@ defaultproperties
     ErrorMessages(25)="You cannot {verb} a {name} in enemy territory"
     ErrorMessages(26)="There are no more {name} available"
     ErrorMessages(27)="This socket is already occupied"
+    ErrorMessages(28)="No squadmates nearby."
 }
