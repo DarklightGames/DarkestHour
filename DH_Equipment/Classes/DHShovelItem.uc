@@ -17,13 +17,6 @@ simulated function Fire(float F)
 
     P = DHPawn(Instigator);
 
-    if (P != none && !P.CanBuildWithShovel())
-    {
-        // "You must have another squadmate nearby to use your shovel to build!"
-        P.ReceiveLocalizedMessage(Class'DHShovelWarningMessage', 1);
-        return;
-    }
-
     if (Instigator != none && Instigator.bIsCrawling)
     {
         Class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);

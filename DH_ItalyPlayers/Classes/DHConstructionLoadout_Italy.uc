@@ -8,6 +8,8 @@ class DHConstructionLoadout_Italy extends DHConstructionLoadout
 
 defaultproperties
 {
+    Loadouts(0)=Class'DHConstructionLoadout_Sandbags'
+    
     // Logistics
     Constructions(0)=(ConstructionClass=Class'DHConstruction_SupplyCache_Italy',Limit=-1,MaxActive=-1)
     Constructions(1)=(ConstructionClass=Class'DHConstruction_PlatoonHQ_Italy',Limit=-1,MaxActive=5)
@@ -17,12 +19,6 @@ defaultproperties
     Constructions(3)=(ConstructionClass=Class'DHConstruction_Resupply_Players_Italy',Limit=-1,MaxActive=-1)
     Constructions(4)=(ConstructionClass=Class'DHConstruction_Resupply_Vehicles_Italy',Limit=-1,MaxActive=-1)
     Constructions(5)=(ConstructionClass=Class'DH_SRCMMod35GrenadeCrateConstruction',Limit=-1,MaxActive=-1)
-
-    // Defenses
-    Constructions(6)=(ConstructionClass=Class'DHConstruction_Foxhole',Limit=-1,MaxActive=-1)
-    Constructions(7)=(ConstructionClass=Class'DHConstruction_Sandbags_Line',Limit=-1,MaxActive=-1)
-    Constructions(8)=(ConstructionClass=Class'DHConstruction_Sandbags_Crescent',Limit=-1,MaxActive=-1)
-    Constructions(9)=(ConstructionClass=Class'DHConstruction_Sandbags_Bunker',Limit=-1,MaxActive=-1)
 
     // Obstacles
     Constructions(10)=(ConstructionClass=Class'DHConstruction_ConcertinaWire',Limit=-1,MaxActive=-1)
