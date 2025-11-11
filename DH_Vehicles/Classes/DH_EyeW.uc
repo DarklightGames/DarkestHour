@@ -19,7 +19,6 @@ defaultproperties
      //LightPeriod=2
      //bLightingVisibility=True 
      
-     VehiclePositionString="in Wicked Eye"
      VehicleNameString="Wicked Eye"
      Mesh=SkeletalMesh'DH_UFO_anm.EyeBody'
      Skins(0)=Texture'DH_UFO_tex.UFO.EyeC'
