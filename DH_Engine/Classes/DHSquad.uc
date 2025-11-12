@@ -19,6 +19,8 @@ var int                              NextRallyPointTime;
 var bool                             bIsLocked;
 var byte                             AssistantSquadLeaderMemberIndex;
 
+var array<string>                    Bans;  // List of ROIDs that are banned from the squad.
+
 // TODO: we also manage the rallies in here??
 
 replication
@@ -216,6 +218,47 @@ simulated function bool HasMember(DHPlayerReplicationInfo PRI)
 simulated function bool HasMembers()
 {
     return GetMemberCount() > 0;
+}
+
+function bool IsPlayerBanned(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < Bans.Length; ++i)
+    {
+        if (Bans[i] == ROID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function BanPlayer(string ROID)
+{
+    class'UArray'.static.SAddUnique(Bans, ROID);
+}
+
+function bool UnbanPlayer(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < Bans.Length; ++i)
+    {
+        if (Bans[i] == ROID)
+        {
+            Bans.Remove(i, 1);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function ClearBans()
+{
+    Bans.Length = 0;
 }
 
 defaultproperties

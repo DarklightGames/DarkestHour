@@ -61,15 +61,6 @@ struct SquadLeaderDraw
 };
 var array<SquadLeaderDraw>          SquadLeaderDraws;
 
-// Squads Bans
-struct SquadBan
-{
-    var int TeamIndex;
-    var int SquadIndex;
-    var string ROID;
-};
-var array<SquadBan>                 SquadBans;
-
 // Squad Merge Requests
 enum ESquadMergeRequestResult
 {
@@ -554,7 +545,6 @@ function ResetSquadInfo()
         }
     }
 
-    SquadBans.Length = 0;
     SquadLeaderDraws.Length = 0;
     SquadLeaderVolunteers.Length = 0;
     SquadMergeRequests.Length = 0;
@@ -1299,24 +1289,24 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
 // Attempts to kick the specified player from the specified squad.
 // Returns true if the the player was successfully kicked from a squad.
-function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo MemberToKick)
+function bool KickFromSquad(DHPlayerReplicationInfo Instigator, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo MemberToKick)
 {
     local DHPlayer OtherPC;
 
-    if (PRI == none || MemberToKick == none || PRI == MemberToKick)
+    if (Instigator == none || MemberToKick == none || Instigator == MemberToKick)
     {
         return false;
     }
 
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || !IsInSquad(MemberToKick, TeamIndex, SquadIndex))
+    if (!IsSquadLeader(Instigator, TeamIndex, SquadIndex) || !IsInSquad(MemberToKick, TeamIndex, SquadIndex))
     {
-        if (PRI.IsLoggedInAsAdmin())
+        if (Instigator.IsLoggedInAsAdmin())
         {
             Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
                                                                         TeamIndex,
                                                                         Class'DHAdminMessage',
                                                                         Class'UInteger'.static.FromShorts(0, SquadIndex),
-                                                                        PRI,
+                                                                        Instigator,
                                                                         MemberToKick,
                                                                         self);
         }
@@ -1347,6 +1337,7 @@ function bool IsPlayerBannedFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex
 {
     local int i;
     local DHPlayer PC;
+    local DHSquad Squad;
 
     if (PRI == none)
     {
@@ -1354,20 +1345,11 @@ function bool IsPlayerBannedFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex
     }
 
     PC = DHPlayer(PRI.Owner);
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    if (PC == none)
+    if (PC != none && Squad != none)
     {
-        return false;
-    }
-
-    for (i = 0; i < SquadBans.Length; ++i)
-    {
-        if (SquadBans[i].TeamIndex == TeamIndex &&
-            SquadBans[i].SquadIndex == SquadIndex &&
-            SquadBans[i].ROID == PC.ROIDHash)
-        {
-            return true;
-        }
+        return Squad.IsPlayerBanned(PC.ROIDHash);
     }
 
     return false;
@@ -1377,6 +1359,7 @@ function bool ClearSquadBan(int TeamIndex, int SquadIndex, DHPlayerReplicationIn
 {
     local int i;
     local DHPlayer PC;
+    local DHSquad Squad;
 
     if (PRI == none)
     {
@@ -1384,21 +1367,11 @@ function bool ClearSquadBan(int TeamIndex, int SquadIndex, DHPlayerReplicationIn
     }
 
     PC = DHPlayer(PRI.Owner);
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    if (PC == none)
+    if (PC != none && Squad != none)
     {
-        return false;
-    }
-
-    for (i = SquadBans.Length - 1; i >= 0; --i)
-    {
-        if (SquadBans[i].TeamIndex == TeamIndex &&
-            SquadBans[i].SquadIndex == SquadIndex &&
-            SquadBans[i].ROID == PC.ROIDHash)
-        {
-            SquadBans.Remove(i, 1);
-            return true;
-        }
+        return Squad.UnbanPlayer(PC.ROIDHash);
     }
 
     return false;
@@ -1407,25 +1380,32 @@ function bool ClearSquadBan(int TeamIndex, int SquadIndex, DHPlayerReplicationIn
 function ClearSquadBans(int TeamIndex, int SquadIndex)
 {
     local int i;
+    local DHSquad Squad;
+    
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    for (i = SquadBans.Length - 1; i >= 0; --i)
+    if (Squad != none)
     {
-        if (SquadBans[i].TeamIndex == TeamIndex && SquadBans[i].SquadIndex == SquadIndex)
-        {
-            SquadBans.Remove(i, 1);
-        }
+        Squad.ClearBans();
     }
 }
 
 // Kicks and bans the specified player from the squad.
 // Returns true if the player was kicked and is now banned from the squad.
-function bool BanFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo PlayerToBan)
+function bool BanFromSquad(DHPlayerReplicationInfo Instigator, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo PlayerToBan)
 {
     local DHPlayer PC, OtherPC;
-    local SquadBan Ban;
     local DHBot Bot;
+    local DHSquad Squad;
 
-    if (!KickFromSquad(PRI, TeamIndex, SquadIndex, PlayerToBan))
+    Squad = GetSquad(TeamIndex, SquadIndex);
+
+    if (Squad == none)
+    {
+        return false;
+    }
+
+    if (!KickFromSquad(Instigator, TeamIndex, SquadIndex, PlayerToBan))
     {
         return false;
     }
@@ -1439,13 +1419,10 @@ function bool BanFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Squad
             return false;
         }
 
-        Ban.TeamIndex = TeamIndex;
-        Ban.SquadIndex = SquadIndex;
-        Ban.ROID = OtherPC.ROIDHash;
-        SquadBans[SquadBans.Length] = Ban;
+        Squad.BanPlayer(OtherPC.ROIDHash);
 
-        PC = DHPlayer(PRI.Owner);
-        Bot = DHBot(PRI.Owner);
+        PC = DHPlayer(Instigator.Owner);
+        Bot = DHBot(Instigator.Owner);
 
         if (PC != none)
         {
@@ -2749,11 +2726,6 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
     Squad = GetSquad(TeamIndex, SquadIndex);
 
     if (Squad == none)
-    {
-        return;
-    }
-
-    if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         return;
     }

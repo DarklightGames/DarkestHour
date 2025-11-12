@@ -12,7 +12,7 @@ struct HintInfo
     var localized string    Text;  // hint display text
 };
 
-const                   HINT_COUNT = 70;
+const                   HINT_COUNT = 72;
 
 var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
 var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
