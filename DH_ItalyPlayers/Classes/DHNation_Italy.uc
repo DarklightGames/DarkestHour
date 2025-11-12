@@ -33,5 +33,8 @@ defaultproperties
     RoundStartSound=Sound'DH_SundrySounds.Axis_Start'
     SupplyTruckClass=Class'DH_Fiat626TruckSupport'
 
-    SquadSize=8
+    // Italian squads were actually 20-man squads with 2 sections.
+    // The current system doesn't allow more than 12 per squad though,
+    // so we'll set it to 12 for now until it can be changed.
+    SquadSize=12
 }
