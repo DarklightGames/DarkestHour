@@ -32,4 +32,6 @@ defaultproperties
 
     RoundStartSound=Sound'DH_SundrySounds.Axis_Start'
     SupplyTruckClass=Class'DH_Fiat626TruckSupport'
+
+    SquadSize=8
 }
