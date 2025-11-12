@@ -16,6 +16,9 @@ if [[ 'git status --porcelain | wc -l' -ne 0 ]]; then
     exit 1
 fi
 
+# Clean localization
+../localization/localization clean -y
+
 # Build the game (requires wine, UCC etc.)
 ../make/clean
 

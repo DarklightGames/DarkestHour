@@ -1,0 +1,30 @@
+//-----------------------------------------------------------
+// Props to Moz
+//-----------------------------------------------------------
+class DH_EyeN extends DH_EyeE;
+
+
+defaultproperties
+{
+
+     DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_EyeNGun',WeaponBone="Turret_placement3")
+
+     //AmbientGlow=224
+     //bUseDynamicLights=true
+     //bUseLightingFromBase=true
+     //LightType=LT_SubtlePulse
+    // LightEffect=LE_TorchWaver
+     //LightRadius=555
+     //LightBrightness=200
+     //LightPeriod=2
+     //bLightingVisibility=True 
+     
+     VehicleNameString="Nefarious Eye"
+     Mesh=SkeletalMesh'DH_UFO_anm.EyeBody'
+     Skins(0)=Texture'DH_UFO_tex.UFO.EyeA'
+     //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
+     ExplosionSounds(0)=sound'DH_UFO_snd.UFO.UfoDeath'
+     ExplosionSounds(1)=sound'DH_UFO_snd.UFO.UfoDeath'
+
+
+}

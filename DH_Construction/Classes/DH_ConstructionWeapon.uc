@@ -9,11 +9,79 @@ var class<DHConstruction>       ConstructionClass;
 
 var Sound                       ClickSound;
 
+struct TraceFromPlayerResult
+{
+    var Actor HitActor;
+    var Vector HitLocation;
+    var Vector HitNormal;
+    var Range LocalRotationYawRange;
+    var bool bLimitLocalRotation;
+};
+
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerCreateConstruction;
+}
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+}
+
+simulated function UpdateSocketVisibility()
+{
+    local DHConstructionSocket Socket;
+
+    // Show relevant construction sockets.
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        if (!Socket.IsOccupied() && Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
+        {
+            Socket.Show();
+        }
+        else
+        {
+            Socket.Hide();
+        }
+    }
+}
+
+simulated function HideAllSockets()
+{
+    local DHConstructionSocket Socket;
+
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        Socket.Hide();
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // TODO: We need to also handle the case where sockets are created after the weapon is brought up.
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        UpdateSocketVisibility();
+    }
+}
+
+simulated function bool PutDown()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+
+    return super.PutDown();
 }
 
 simulated function ClientPlayClickSound()
@@ -63,7 +131,7 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
     local DHConstructionProxy CP;
 
     ConstructionClass = NewConstructionClass;
-    
+
     // We already have the construction weapon in our inventory, so let's
     // simply update the construction class of the existing proxy cursor.
     CP = DHConstructionProxy(ProxyCursor);
@@ -76,35 +144,48 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
 
 simulated function OnTick(float DeltaTime)
 {
-    local Actor HitActor;
-    local Vector HitLocation, HitNormal;
+    local TraceFromPlayerResult R;
     local PlayerController PC;
     local DHConstructionProxy CP;
-    local int bLimitLocalRotation;
-    local Range LocalRotationYawRange;
 
-    if (ProxyCursor != none)
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP == none)
     {
-        PC = PlayerController(Instigator.Controller);
-
-        TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
-
-        CP = DHConstructionProxy(ProxyCursor);
-
-        if (CP != none)
-        {
-            CP.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
-
-            if (CP.ProxyError.Type != ERROR_None)
-            {
-                Instigator.ReceiveLocalizedMessage(Class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
-            }
-            else
-            {
-                Instigator.ReceiveLocalizedMessage(Class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
-            }
-        }
+        return;
     }
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    R = TraceFromPlayer();
+
+    CP.UpdateParameters(R.HitLocation, PC.CalcViewRotation, R.HitActor, R.HitNormal, R.bLimitLocalRotation, R.LocalRotationYawRange);
+
+    if (CP.ProxyError.Type != ERROR_None)
+    {
+        // Display the construction error message.
+        Instigator.ReceiveLocalizedMessage(Class'DHConstructionErrorMessage', int(CP.ProxyError.Type),,, ProxyCursor);
+    }
+    else
+    {
+        // Display the construction controls message.
+        Instigator.ReceiveLocalizedMessage(Class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
+    }
+}
+
+simulated function OnProxySocketEnter(DHConstructionSocket Socket)
+{
+    ClientPlayClickSound();
+}
+
+simulated function OnProxySocketExit(DHConstructionSocket Socket)
+{
+    ClientPlayClickSound();
 }
 
 simulated function DHActorProxy CreateProxyCursor()
@@ -113,6 +194,8 @@ simulated function DHActorProxy CreateProxyCursor()
 
     Cursor = Spawn(Class'DHConstructionProxy', Instigator);
     Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
+    Cursor.OnSocketEnter = OnProxySocketEnter;
+    Cursor.OnSocketExit = OnProxySocketExit;
 
     return Cursor;
 }
@@ -158,24 +241,19 @@ simulated function float GetLocalRotationRate()
     return ConstructionClass.default.LocalRotationRate;
 }
 
-simulated function TraceFromPlayer(
-    out Actor HitActor,
-    out Vector HitLocation,
-    out Vector HitNormal,
-    optional out int bLimitLocalRotation,
-    optional out Range LocalRotationYawRange
-    )
+simulated function TraceFromPlayerResult TraceFromPlayer()
 {
     local PlayerController PC;
     local Actor TempHitActor;
     local Vector TraceStart, TraceEnd, X, Y, Z;
     local DHConstructionSocket Socket;
+    local TraceFromPlayerResult Result;
 
-    bLimitLocalRotation = 0;
+    Result.bLimitLocalRotation = false;
 
     if (Instigator == none)
     {
-        return;
+        return Result;
     }
 
     PC = PlayerController(Instigator.Controller);
@@ -184,59 +262,56 @@ simulated function TraceFromPlayer(
     TraceStart = Instigator.Location + Instigator.EyePosition();
     TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
 
-    // Trace for location hints.
-    foreach TraceActors(Class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
+    // Trace for construction sockets.
+    foreach TraceActors(Class'DHConstructionSocket', Socket, Result.HitLocation, Result.HitNormal, TraceStart, TraceEnd)
     {
-        if (Socket == none)
-        {
-            continue;
-        }
-
         // This is assumed to be in ascending order of distance, so this should
         // return the nearest traced location hint.
-        if (Socket.IsForConstructionClass(ConstructionClass))
+        if (Socket != none && Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
         {
-            HitActor = Socket;
-            HitLocation = HitActor.Location;
-            GetAxes(HitActor.Rotation, X, Y, Z);
-            HitNormal = Z;
-            bLimitLocalRotation = int(Socket.bLimitLocalRotation);
-            LocalRotationYawRange = Socket.LocalRotationYawRange;
-            return;
+            Result.HitActor = Socket;
+            Result.HitLocation = Result.HitActor.Location;
+            GetAxes(Result.HitActor.Rotation, X, Y, Z);
+            Result.HitNormal = Z;
+            Result.bLimitLocalRotation = Socket.bLimitLocalRotation;
+            Result.LocalRotationYawRange = Socket.LocalRotationYawRange;
+            return Result;
         }
     }
 
     // Trace static actors and (world geometry etc.)
-    foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    foreach TraceActors(Class'Actor', TempHitActor, Result.HitLocation, Result.HitNormal, TraceEnd, TraceStart)
     {
         if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
         {
-            HitActor = TempHitActor;
+            Result.HitActor = TempHitActor;
             break;
         }
     }
 
-    if (HitActor == none)
+    if (Result.HitActor == none)
     {
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
         TraceEnd = TraceStart + vect(0, 0, -1) * Class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
 
-        foreach TraceActors(Class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        foreach TraceActors(Class'Actor', TempHitActor, Result.HitLocation, Result.HitNormal, TraceEnd, TraceStart)
         {
             if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
             {
-                HitActor = TempHitActor;
+                Result.HitActor = TempHitActor;
                 break;
             }
         }
 
-        if (HitActor == none)
+        if (Result.HitActor == none)
         {
-            HitLocation = TraceStart;
+            Result.HitLocation = TraceStart;
         }
     }
+
+    return Result;
 }
 
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
@@ -300,32 +375,31 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     C = Spawn(ConstructionClass, Owner,, Location, Rotation);
 
+    if (C == none)
+    {
+        return;
+    }
+
+    C.InstigatorController = DHPlayer(Instigator.Controller);
+    C.VariantIndex = VariantIndex;
+    C.SkinIndex = Context.SkinIndex;
+
+    C.OnPlaced();
+
+    if (!C.bIsNeutral)
+    {
+        C.SetTeamIndex(Instigator.GetTeamNum());
+    }
+
+    C.UpdateAppearance();
+    C.OnSpawnedByPlayer(C.InstigatorController);
+
+    // If we are being placed into a socket, set the socket as occupied by the new construction.
     Socket = DHConstructionSocket(Owner);
 
-    if (C != none)
+    if (Socket != none)
     {
-        C.InstigatorController = DHPlayer(Instigator.Controller);
-
-        // If we are being placed into a socket, set the socket as occupied by the new construction.
-        Socket = DHConstructionSocket(Owner);
-
-        if (Socket != none)
-        {
-            Socket.Occupant = C;
-        }
-
-        C.VariantIndex = VariantIndex;
-        C.SkinIndex = Context.SkinIndex;
-        
-        C.OnPlaced();
-
-        if (!C.bIsNeutral)
-        {
-            C.SetTeamIndex(Instigator.GetTeamNum());
-        }
-
-        C.UpdateAppearance();
-        C.OnSpawnedByPlayer(C.InstigatorController);
+        Socket.SetOccupant(C);
     }
 }
 

@@ -11,6 +11,7 @@ var class<DHConstruction>   ConstructionClass;
 var Rotator                 Direction;
 var Actor                   GroundActor;
 var Vector                  GroundNormal;
+var DHConstructionSocket    Socket;
 
 var int                     VariantIndex;       // The current selected variant index.
 var int                     DefaultSkinIndex;   // The default skin index for the current variant.
@@ -18,6 +19,10 @@ var int                     SkinIndex;          // The current selected skin ind
 
 var DHConstruction.ConstructionError    ProxyError;
 var private DHConstruction.RuntimeData  RuntimeData;
+
+// Functions to call when the proxy is snapped or unsnapped from a socket.
+delegate OnSocketEnter(DHConstructionSocket Socket);
+delegate OnSocketExit(DHConstructionSocket Socket);
 
 function DHConstruction.RuntimeData GetRuntimeData()
 {
@@ -36,6 +41,17 @@ function DHActorProxy.Context GetContext()
     Context.SkinIndex = DefaultSkinIndex + SkinIndex;
 
     return Context;
+}
+
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (Socket != none)
+    {
+        Socket.SetProxy(none);
+        OnSocketExit(Socket);
+    }
 }
 
 final function SetConstructionClass(class<DHConstruction> ConstructionClass)
@@ -193,9 +209,8 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
     local bool bIsTerrainSurfaceTypeAllowed;
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
-    local DHConstructionSocket Socket;
 
-    GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
     if (ConstructionClass == none || GRI == none)
     {
@@ -218,7 +233,6 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         // The ground actor is a location hint, so just use the hint location & rotation.
         BaseLocation = GroundActor.Location;
         Forward = Vector(GroundActor.Rotation);
-        Socket = DHConstructionSocket(GroundActor);
     }
     else
     {
@@ -409,6 +423,27 @@ function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
         Forward = HitNormal cross Left;
     }
 
+    // Handle socket entering and exiting.
+    if (Socket != GroundActor)
+    {
+        if (Socket != none)
+        {
+            Socket.SetProxy(none);
+            OnSocketExit(Socket);
+        }
+
+        if (GroundActor.IsA('DHConstructionSocket'))
+        {
+            Socket = DHConstructionSocket(GroundActor);
+            Socket.SetProxy(self);
+            OnSocketEnter(Socket);
+        }
+        else
+        {
+            Socket = none;
+        }
+    }
+
     SetLocation(BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << Rotator(Forward)));
     SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(Rotator(Forward)))));
 
@@ -438,7 +473,7 @@ function DHConstruction.ConstructionError GetPositionError()
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
-    if (Level.NetMode != NM_DedicatedServer && !bHidden)
+    if (Level != none && Level.NetMode != NM_DedicatedServer && !bHidden)
     {
         foreach TouchingActors(Class'DHConstructionProxy', CP)
         {
@@ -582,7 +617,7 @@ function DHConstruction.ConstructionError GetPositionError()
     // Don't allow the construction to be placed on a socket if it's occupied.
     Socket = DHConstructionSocket(GroundActor);
 
-    if (Socket != none && Socket.Occupant != none)
+    if (Socket != none && Socket.GetOccupant() != none)
     {
         E.Type = ERROR_SocketOccupied;
         return E;
@@ -789,4 +824,3 @@ defaultproperties
     bBlockActors=false
     bAcceptsProjectors=false
 }
-

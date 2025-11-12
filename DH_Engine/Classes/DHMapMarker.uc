@@ -74,7 +74,8 @@ enum EMarkerType
     MT_ArtilleryHit,
     MT_ArtilleryBarrage,
     MT_Measurement,
-    MT_Movement
+    MT_Movement,
+    MT_CounterBattery
 };
 
 var EMarkerType Type;

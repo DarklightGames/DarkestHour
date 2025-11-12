@@ -8,12 +8,11 @@ class DH_ZombieBerserkerPawn extends DH_ZombiePawn;
 
 defaultproperties
 {
-    GroundSpeed=250
+    GroundSpeed=205
     WalkingPct=0.3
     Health=300
     Stamina=500
     MinHurtSpeed=700.0
-    bNeverStaggers=true
     bAlwaysSeverBodyparts=true
 
     Hitpoints(1)=(DamageMultiplier=6.0) // head

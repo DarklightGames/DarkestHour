@@ -324,7 +324,7 @@ simulated function UpdateProxies()
         Proxies[Proxies.Length] = Proxy;
     }
 
-    bShouldHideProxies = !CanBeUsedByTeam(Level.GetLocalPlayerController().GetTeamNum());
+    bShouldHideProxies = Level.GetLocalPlayerController() == none || !CanBeUsedByTeam(Level.GetLocalPlayerController().GetTeamNum());
 
     for (i = 0; i < Proxies.Length; ++i)
     {
