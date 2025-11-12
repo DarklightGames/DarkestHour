@@ -216,4 +216,10 @@ defaultproperties
 
     Hints(65)=(Title="Semovente da 90/53",Text="Although the Semovente da 90/53 has a powerful gun, it has a very limited ammunition rack. Make every shot count!")
     Hints(66)=(Title="Incoming!",Text="You have just launched a mortar round straight up into the air. You may want to take cover!")
+    
+    Hints(67)=(Title="Rally Points",Text="Rally points are temporary spawn points that can be used by your squad. The bag icon in the bottom right displays the squad's rally point status.")
+    Hints(68)=(Title="Creating Rally Points",Text="Rally points can be created by pressing [%PLACERALLYPOINT%] when you are in friendly territory (i.e., behind the blue line), or when you have at least one other squadmate nearby.")
+    Hints(69)=(Title="Multiple Rally Points",Text="You can have up to 2 rally points placed at once, although only one can be active at a time. The most recent rally point will become the active one.")
+    Hints(70)=(Title="Managing Rally Points",Text="You can destroy or swap the active rally point by right-clicking the active rally point on the map.")
+    Hints(71)=(Title="Rally Points Inside Objectives",Text="Rally points inside active objectives have significantly longer respawn times. Make sure to do this only as a last resort!")
 }

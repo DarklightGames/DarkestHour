@@ -142,8 +142,8 @@ var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     bool                    bIgnoreSquadMergeRequestPrompts;
-var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
-var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
+var     int                     SquadMemberLocations[16];   // SQUAD_MEMBERS_MAX
+var     int                     SquadLeaderLocations[7];    // TEAM_SQUADS_MAX
 var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
 var     bool                    bIgnoreSquadPromotionRequestPrompts;
 

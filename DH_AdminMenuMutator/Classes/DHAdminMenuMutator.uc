@@ -281,15 +281,6 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 DestroyActorInSights();
             }
-            // Set new maximum squad size foe either team
-            else if (MutateOption ~= "ChangeAlliesSquadSize")
-            {
-                ChangeAlliesSquadSize(int(Words[2]));
-            }
-            else if (MutateOption ~= "ChangeAxisSquadSize")
-            {
-                ChangeAxisSquadSize(int(Words[2]));
-            }
             else if (MutateOption ~= "DisableRallyPoints")
             {
                 SetRallyPoints(false);
@@ -1011,32 +1002,6 @@ function DestroyActorInSights()
     }
 }
 
-function ChangeAlliesSquadSize(int SquadSize)
-{
-    local DHPlayer PC;
-
-    PC = DHPlayer(Admin);
-
-    if (PC != none && PC.SquadReplicationInfo != none)
-    {
-        PC.SquadReplicationInfo.SetTeamSquadSize(ALLIES_TEAM_INDEX, SquadSize);
-        BroadcastMessageToAll(15);
-    }
-}
-
-function ChangeAxisSquadSize(int SquadSize)
-{
-    local DHPlayer PC;
-
-    PC = DHPlayer(Admin);
-
-    if (PC != none && PC.SquadReplicationInfo != none)
-    {
-        PC.SquadReplicationInfo.SetTeamSquadSize(AXIS_TEAM_INDEX, SquadSize);
-        BroadcastMessageToAll(16);
-    }
-}
-
 function SetRallyPoints(bool bEnabled)
 {
     local DarkestHourGame DHG;
@@ -1247,7 +1212,7 @@ function Controller FindControllerFromName(string PlayerName, optional bool bAll
         if (C.PlayerReplicationInfo != none)
         {
             // Replace any spaces in name with non-breaking spaces - needed to match against names passed from menu choices because those will have had the same treatment
-            CheckedPlayerName = Repl(GetPlayerName(C)," "," ");
+            CheckedPlayerName = Repl(GetPlayerName(C)," ","ï¿½");
 
             if (CheckedPlayerName == PlayerName)
             {

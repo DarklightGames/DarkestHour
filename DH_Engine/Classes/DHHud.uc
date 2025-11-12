@@ -5509,6 +5509,7 @@ function DrawRallyPointStatus(Canvas C)
     local DHPlayer PC;
     local DHSquadReplicationInfo SRI;
     local DHSquadReplicationInfo.RallyPointPlacementResult Result;
+    local DHPawn P;
     local float X, Y, XL, YL;
     local string ErrorString;
     local Material ErrorIcon;
@@ -5700,7 +5701,11 @@ function DrawRallyPointStatus(Canvas C)
         }
     }
 
-    if (SRI.bAllowRallyPointsBehindEnemyLines && Result.bIsInDangerZone)
+    P = DHPawn(PC.Pawn);
+
+    // If the player is in an active objective, display the yellow warning since this
+    // rally point will have an increased spawn time.
+    if (P != none && P.CurrentCapArea != 255)
     {
         GlobalCoors.PosX = BaseX;
         GlobalCoors.PosY = BaseY;

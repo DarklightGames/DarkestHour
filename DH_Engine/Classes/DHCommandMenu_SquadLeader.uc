@@ -117,15 +117,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 GRI.IsInDangerZone(PC.Pawn.Location.X, PC.Pawn.Location.Y, PC.GetTeamNum()))
             {
                 ORI.InfoText[0] = default.InEnemyTerritory;
-
-                if (PC.SquadReplicationInfo.bAllowRallyPointsBehindEnemyLines)
-                {
-                    ORI.InfoColor = Class'UColor'.default.Yellow;
-                }
-                else
-                {
-                    ORI.InfoColor = Class'UColor'.default.Red;
-                }
+                ORI.InfoColor = Class'UColor'.default.Red;
             }
             break;
         case 3: // Player Menu
