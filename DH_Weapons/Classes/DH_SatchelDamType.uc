@@ -9,7 +9,7 @@ class DH_SatchelDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=Class'DH_SatchelCharge10lb10sWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.satchel'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.satchel'
 
     VehicleDamageModifier=1.0
     APCDamageModifier=1.0

@@ -430,7 +430,7 @@ def write_unt(path: str, unt_contents: str):
 
 
 def clean(args):
-    language_extensions = {'.det', '.int', '.frt',  '.est', '.itt', '.dut', '.jap'}
+    language_extensions = {'.det', '.int', '.frt',  '.est', '.itt', '.dut', '.jap', '.ukr', '.rus', '.pol'}
     root_path = Path(args.path).absolute().resolve()
     repository_path = root_path / args.mod / 'System'
     files_to_delete = []

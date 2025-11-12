@@ -356,7 +356,6 @@ defaultproperties
      TPCamDistance=350.000000
      TPCamLookat=(X=0.000000,Z=0.000000)
      TPCamWorldOffset=(Z=100.000000)
-     VehiclePositionString="in Evil Eye"
      VehicleNameString="Evil Eye"
      MaxDesireability=0.600000
      ObjectiveGetOutDist=1500.000000

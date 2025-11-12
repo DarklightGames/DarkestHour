@@ -257,13 +257,33 @@ simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruct
     return -1;
 }
 
+simulated private function bool HasConstruction(int TeamIndex, Class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < ConstructionsEvaluated.Length; ++i)
+    {
+        if (ConstructionsEvaluated[i].TeamIndex == TeamIndex &&
+            ConstructionsEvaluated[i].ConstructionClass == ConstructionClass)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // This function evaluates the level's construction classes and populates the ConstructionsEvaluated list.
 simulated function EvaluateConstructions()
 {
-    local int i, TeamIndex, ConstructionIndex;
+    local int i, j, TeamIndex, ConstructionIndex;
     local class<DHNation> NationClass;
+    local Stack_Object LoadoutClassStack;
     local class<DHConstructionLoadout> LoadoutClass;
+    local array< class<DHConstructionLoadout> > LoadoutClasses;
     local SConstruction Construction;
+
+    LoadoutClassStack = new Class'Stack_Object';
 
     // Clear the evaluated constructions.
     ConstructionsEvaluated.Length = 0;
@@ -296,15 +316,46 @@ simulated function EvaluateConstructions()
             continue;
         }
 
-        for (i = 0; i < LoadoutClass.default.Constructions.Length; ++i)
-        {
-            Construction.TeamIndex = TeamIndex;
-            Construction.ConstructionClass = LoadoutClass.default.Constructions[i].ConstructionClass;
-            Construction.Limit = LoadoutClass.default.Constructions[i].Limit;
-            Construction.MaxActive = LoadoutClass.default.Constructions[i].MaxActive;
+        LoadoutClasses.Length = 0;
+        LoadoutClassStack.Clear();
+        LoadoutClassStack.Push(LoadoutClass);
 
-            ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+        // Recursively push all sub-loadouts onto the stack, making sure not to add duplicates.
+        while (!LoadoutClassStack.IsEmpty())
+        {
+            LoadoutClass = class<DHConstructionLoadout>(LoadoutClassStack.Pop());
+
+            if (!class'UArray'.static.AddUnique(LoadoutClasses, LoadoutClass))
+            {
+                // Loadout was already added to the list, so ignore it.
+                continue;
+            }
+
+            for (i = 0; i < LoadoutClass.default.Loadouts.Length; ++i)
+            {
+                LoadoutClassStack.Push(LoadoutClass.default.Loadouts[i]);
+            }
         }
+
+        for (i = 0; i < LoadoutClasses.Length; ++i)
+        {
+            for (j = 0; j < LoadoutClasses[i].default.Constructions.Length; ++j)
+            {
+                if (HasConstruction(TeamIndex, LoadoutClasses[i].default.Constructions[j].ConstructionClass))
+                {
+                    // Construction already added for this team, skip it.
+                    continue;
+                }
+
+                Construction.TeamIndex = TeamIndex;
+                Construction.ConstructionClass = LoadoutClasses[i].default.Constructions[j].ConstructionClass;
+                Construction.Limit = LoadoutClasses[i].default.Constructions[j].Limit;
+                Construction.MaxActive = LoadoutClasses[i].default.Constructions[j].MaxActive;
+
+                ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+            }
+        }
+
     }
 
     // Now add or override any construction classes with the level's list.

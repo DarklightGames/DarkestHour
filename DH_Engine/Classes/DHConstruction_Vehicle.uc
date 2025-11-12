@@ -84,14 +84,11 @@ function OnPlaced()
 
 simulated function OnConstructed()
 {
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && VehicleClass != none)
     {
-        if (VehicleClass != none)
-        {
-            Vehicle = Spawn(VehicleClass,,, Location, Rotation);
+        Vehicle = Spawn(VehicleClass,,, Location, Rotation);
 
-            GotoState('Dummy');
-        }
+        GotoState('Dummy');
     }
 }
 

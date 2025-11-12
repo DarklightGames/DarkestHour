@@ -7,7 +7,6 @@ class DH_PanzerIVF1CannonPawn extends DHGermanCannonPawn;
 
 defaultproperties
 {
-    VehiclePositionString="in a Panzer IV F1 cannon"
     VehicleNameString="Panzer IV F1 Cannon"
     GunClass=Class'DH_PanzerIVF1Cannon'
 
