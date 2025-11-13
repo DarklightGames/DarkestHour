@@ -1171,5 +1171,5 @@ defaultproperties
     PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.developer'
     DeathIconMaterial=Texture'InterfaceArt_tex.mine'
-    DeathIconColor=(R=71,G=71,B=71,A=255) // White (28% Value)
+    DeathIconColor=(R=64,G=64,B=64,A=255) // White (25% Value)
 }
