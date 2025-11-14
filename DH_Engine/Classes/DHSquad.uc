@@ -9,17 +9,19 @@ class DHSquad extends Actor
 const SQUAD_LEADER_MEMBER_INDEX = 0;
 const SQUAD_MEMBERS_MAX = 16;
 
-var private byte                     TeamIndex;
-var private byte                     SquadIndex;
+var private byte                    TeamIndex;
+var private byte                    SquadIndex;
 
-var string                           SquadName;
-var private DHPlayerReplicationInfo  Members[SQUAD_MEMBERS_MAX];
-var private byte                     MembersMax;
-var int                              NextRallyPointTime;
-var bool                             bIsLocked;
-var byte                             AssistantSquadLeaderMemberIndex;
+var string                          SquadName;
+var private DHPlayerReplicationInfo Members[SQUAD_MEMBERS_MAX];
+var private byte                    MembersMax;
+var int                             NextRallyPointTime;
+var bool                            bIsLocked;
+var byte                            AssistantSquadLeaderMemberIndex;
 
-var array<string>                    Bans;  // List of ROIDs that are banned from the squad.
+var array<string>                   Bans;  // List of ROIDs that are banned from the squad.
+
+var array<DHPlayerReplicationInfo>  SquadLeaderVolunteers;
 
 // TODO: we also manage the rallies in here??
 
@@ -77,6 +79,10 @@ simulated function Destroyed()
 
     super.Destroyed();
 }
+
+//==============================================================================
+// MEMBERS
+//==============================================================================
 
 private function RemoveAllMembers()
 {
@@ -136,6 +142,8 @@ function SetMember(int MemberIndex, DHPlayerReplicationInfo PRI)
     {
         OldMember.SquadIndex = OldMember.default.SquadIndex;
         OldMember.SquadMemberIndex = OldMember.default.SquadMemberIndex;
+
+        // TODO: remove from the squad volunteer list.
     }
     
     if (!bDeleteMe)
@@ -220,6 +228,10 @@ simulated function bool HasMembers()
     return GetMemberCount() > 0;
 }
 
+//==============================================================================
+// BANS
+//==============================================================================
+
 function bool IsPlayerBanned(string ROID)
 {
     local int i;
@@ -259,6 +271,37 @@ function bool UnbanPlayer(string ROID)
 function ClearBans()
 {
     Bans.Length = 0;
+}
+
+//==============================================================================
+// SQUAD LEADER VOLUNTEERS
+//==============================================================================
+
+function array<DHPlayerReplicationInfo> GetSquadLeaderVolunteers()
+{
+    return SquadLeaderVolunteers;
+}
+
+function ClearSquadLeaderVolunteers()
+{
+    SquadLeaderVolunteers.Length = 0;
+}
+
+function RemoveSquadLeaderVolunteer(DHPlayerReplicationInfo PRI)
+{
+    Class'UArray'.static.Erase(SquadLeaderVolunteers, PRI);
+}
+
+function bool AddSquadLeaderVolunteer(DHPlayerReplicationInfo PRI)
+{
+    if (HasMember(PRI))
+    {
+        Class'UArray'.static.AddUnique(SquadLeaderVolunteers, PRI);
+
+        return true;
+    }
+
+    return false;
 }
 
 defaultproperties

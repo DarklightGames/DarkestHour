@@ -45,14 +45,6 @@ var float                           RallyPointInitialSpawnsMemberFactor;
 var float                           RallyPointInitialSpawnsDangerZoneFactor;
 var config  bool                    bAllowRallyPointsBehindEnemyLines;
 
-struct SquadLeaderVolunteer
-{
-    var int TeamIndex;
-    var int SquadIndex;
-    var array<DHPlayerReplicationInfo> Volunteers;
-};
-var array<SquadLeaderVolunteer>     SquadLeaderVolunteers;
-
 struct SquadLeaderDraw
 {
     var int TeamIndex;
@@ -546,7 +538,6 @@ function ResetSquadInfo()
     }
 
     SquadLeaderDraws.Length = 0;
-    SquadLeaderVolunteers.Length = 0;
     SquadMergeRequests.Length = 0;
     NextSquadMergeRequestID = default.NextSquadMergeRequestID;
     SquadPromotionRequests.Length = 0;
@@ -2518,47 +2509,22 @@ function UpdateRallyPoints()
     }
 }
 
-// Squad leader volunteer functionality
-function int GetSquadLeaderVolunteersIndex(int TeamIndex, int SquadIndex)
-{
-    local int i;
-
-    for (i = 0; i < SquadLeaderVolunteers.Length; ++i)
-    {
-        if (SquadLeaderVolunteers[i].TeamIndex == TeamIndex &&
-            SquadLeaderVolunteers[i].SquadIndex == SquadIndex)
-        {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 function VolunteerForSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
-    local int i;
     local DHPlayer PC;
+    local DHSquad Squad;
 
-    if (PRI == none || PRI.Team == none || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
+    Squad = GetSquad(TeamIndex, SquadIndex);
+
+    if (Squad == none)
     {
         return;
     }
 
-    // Find the squad leader volunteers entry.
-    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
-
-    if (i == -1)
+    if (!Squad.AddSquadLeaderVolunteer(PRI))
     {
-        // No entry, create one.
-        i = 0;
-        SquadLeaderVolunteers.Insert(0, 1);
-        SquadLeaderVolunteers[0].TeamIndex = TeamIndex;
-        SquadLeaderVolunteers[0].SquadIndex = SquadIndex;
+        return;
     }
-
-    // Add player to volunteer list.
-    Class'UArray'.static.AddUnique(SquadLeaderVolunteers[i].Volunteers, PRI);
 
     PC = DHPlayer(PRI.Owner);
 
@@ -2571,29 +2537,14 @@ function VolunteerForSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int
 
 function GetSquadLeaderVolunteers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Volunteers)
 {
-    local int i, j;
     local DHPlayerReplicationInfo PRI;
+    local DHSquad Squad;
 
-    Volunteers.Length = 0;
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
-
-    if (i == -1)
+    if (Squad == none)
     {
-        return;
-    }
-
-    for (j = 0; j < SquadLeaderVolunteers[i].Volunteers.Length; ++j)
-    {
-        PRI = SquadLeaderVolunteers[i].Volunteers[j];
-
-        if (PRI != none &&
-            PRI.Team != none &&
-            PRI.Team.TeamIndex == TeamIndex &&
-            PRI.SquadIndex == SquadIndex)
-        {
-            Volunteers[Volunteers.Length] = PRI;
-        }
+        Volunteers = Squad.GetSquadLeaderVolunteers();
     }
 }
 
@@ -2641,25 +2592,25 @@ function StartSquadLeaderDraw(int TeamIndex, int SquadIndex)
 
 function ClearSquadLeaderVolunteers(int TeamIndex, int SquadIndex)
 {
-    local int i;
+    local DHSquad Squad;
 
-    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    if (i != -1)
+    if (Squad != none)
     {
-        SquadLeaderVolunteers.Remove(i, 1);
+        Squad.ClearSquadLeaderVolunteers();
     }
 }
 
 function ClearSquadLeaderVolunteer(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
-    local int i;
+    local DHSquad Squad;
 
-    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+    Squad = GetSquad(TeamIndex, SquadIndex);
 
-    if (i != -1)
+    if (Squad != none)
     {
-        Class'UArray'.static.Erase(SquadLeaderVolunteers[i].Volunteers, PRI);
+        Squad.RemoveSquadLeaderVolunteer(PRI);
     }
 }
 
