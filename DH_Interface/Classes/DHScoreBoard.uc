@@ -8,6 +8,11 @@ class DHScoreBoard extends ROScoreBoard;
 const DHMAXPERSIDE = 40;
 const DHMAXPERSIDEWIDE = 35;
 
+const AXIS_PLAYER_COLOR_DARKEN_FACTOR = 0.33;
+const ALLIES_PLAYER_COLOR_DARKEN_FACTOR = 0.33;
+const SQUAD_PLAYER_COLOR_DARKEN_FACTOR = 0.5;
+const ADMIN_PLAYER_COLOR_DARKEN_FACTOR = 0.5;
+
 var UComparator PRIComparator;
 
 var DHPlayer                PC;
@@ -32,6 +37,12 @@ var Color SquadHeaderColor;
 var Color PlayerBackgroundColor;
 var Color SelfBackgroundColor;
 
+var Material DeadPlayerIconMaterial;
+var Color    DeadPlayerIconColor;
+var Color    DeadPlayerTeamColors[2];
+var Color    DeadPlayerSquadColor;
+var Color    DeadPlayerAdminColor;
+
 var array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
 
 var Material PatronLeadMaterial,
@@ -40,8 +51,6 @@ var Material PatronLeadMaterial,
              PatronGoldMaterial;
 
 var Material DeveloperIconMaterial;
-var Material DeathIconMaterial;
-var Color    DeathIconColor;
 
 enum EScoreboardColumnType
 {
@@ -84,6 +93,14 @@ struct CellRenderInfo
 };
 
 var array<ScoreboardColumn> ScoreboardColumns;
+
+function SetColors()
+{
+    DeadPlayerTeamColors[0] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[0], AXIS_PLAYER_COLOR_DARKEN_FACTOR);
+    DeadPlayerTeamColors[1] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[1], ALLIES_PLAYER_COLOR_DARKEN_FACTOR);
+    DeadPlayerSquadColor = Class'UColor'.static.Darken(Class'DHColor'.default.SquadColor, SQUAD_PLAYER_COLOR_DARKEN_FACTOR);
+    DeadPlayerAdminColor = Class'UColor'.static.Darken(Class'DHColor'.default.AdminColor, ADMIN_PLAYER_COLOR_DARKEN_FACTOR);
+}
 
 function array<int> GetScoreboardColumnIndicesForTeam(int TeamIndex)
 {
@@ -164,7 +181,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
     {
         if (PRI.Team.TeamIndex == MyPRI.Team.TeamIndex && !PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
         {
-            CRI.TextColor = Class'DHColor'.default.AdminDimmedColor;
+            CRI.TextColor = DeadPlayerAdminColor;
         }
         else
         {
@@ -179,7 +196,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
         }
         else if (PRI.Team.TeamIndex == MyPRI.Team.TeamIndex && !PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
         {
-            CRI.TextColor = Class'DHColor'.default.TeamDimmedColors[PRI.Team.TeamIndex];
+            CRI.TextColor = DeadPlayerTeamColors[PRI.Team.TeamIndex];
         }
         else
         {
@@ -210,13 +227,13 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 }
                 else if (Class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, PRI))
                 {
-                    if (PRI.bIsPossesingPawn || DHGRI.bRoundIsOver)
+                    if (!PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
                     {
-                        CRI.TextColor = Class'DHColor'.default.SquadColor;
+                        CRI.TextColor = DeadPlayerSquadColor;
                     }
                     else
                     {
-                        CRI.TextColor = Class'DHColor'.default.SquadDimmedColor;
+                        CRI.TextColor = Class'DHColor'.default.SquadColor;
                     }
                 }
             }
@@ -261,8 +278,8 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
         case COLUMN_DeathIndicator:
             if (!PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
             {
-                CRI.Icon = default.DeathIconMaterial;
-                CRI.IconColor = default.DeathIconColor;
+                CRI.Icon = default.DeadPlayerIconMaterial;
+                CRI.IconColor = default.DeadPlayerIconColor;
                 CRI.U = 0;
                 CRI.V = 0;
                 CRI.UL = CRI.Icon.MaterialUSize() - 1;
@@ -314,6 +331,8 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
 // Note the bAlphaSortScoreBoard option can only be enabled by changing the config file before playing, not during the game, so no need to check which option after this
 function PostBeginPlay()
 {
+    SetColors();
+
     super.PostBeginPlay();
 
     PRIComparator = new Class'UComparator';
@@ -1170,6 +1189,6 @@ defaultproperties
     PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Silver'
     PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.developer'
-    DeathIconMaterial=Texture'InterfaceArt_tex.mine'
-    DeathIconColor=(R=64,G=64,B=64,A=255) // White (25% Value)
+    DeadPlayerIconMaterial=Texture'InterfaceArt_tex.mine'
+    DeadPlayerIconColor=(R=64,G=64,B=64,A=255)
 }
