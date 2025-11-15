@@ -10,8 +10,8 @@ class DH_LTypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
 defaultproperties
 {
-    Speed=750.0  // reduced from 1100 as it was a VERY heavy grenade
-    MaxSpeed=780.0
+    Speed=600.0  // reduced from 1100 as it was a VERY heavy grenade
+    MaxSpeed=600.0
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     PickupClass=Class'DH_LTypeGrenadePickup'
@@ -25,17 +25,18 @@ defaultproperties
 
     // Armour penetration
     //Not a HEAT grenade but still an AT grenade
-    DHPenetrationTable(0)=1.0
-    DHPenetrationTable(1)=1.0
-    DHPenetrationTable(2)=1.0
-    DHPenetrationTable(3)=1.0
-    DHPenetrationTable(4)=1.0
-    DHPenetrationTable(5)=1.0
-    DHPenetrationTable(6)=1.0
-    DHPenetrationTable(7)=1.0
-    DHPenetrationTable(8)=1.0
-    DHPenetrationTable(9)=1.0
-    DHPenetrationTable(10)=1.0
+    //This penetration should ideally not depend on the impact angle
+    DHPenetrationTable(0)=2.5
+    DHPenetrationTable(1)=2.5
+    DHPenetrationTable(2)=2.5
+    DHPenetrationTable(3)=2.5
+    DHPenetrationTable(4)=2.5
+    DHPenetrationTable(5)=2.5
+    DHPenetrationTable(6)=2.5
+    DHPenetrationTable(7)=2.5
+    DHPenetrationTable(8)=2.5
+    DHPenetrationTable(9)=2.5
+    DHPenetrationTable(10)=2.5
 
     // Damage
     ImpactDamage=600
