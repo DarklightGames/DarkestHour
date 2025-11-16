@@ -177,26 +177,33 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
     CRI.Icon = none;
     CRI.Justification = ScoreboardColumns[ScoreboardColumnIndex].Justification;
 
-    if (PRI.bAdmin)
+    if (PRI == MyPRI) // Player's own stats
     {
-        if (PRI.Team.TeamIndex == MyPRI.Team.TeamIndex && !PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
+        if (PRI.bAdmin)
+        {
+            CRI.TextColor = Class'DHColor'.default.AdminColor;
+        }
+        else
+        {
+            CRI.TextColor = Class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
+        }
+    }
+    else if (MyPRI.Team != none && PRI.Team.TeamIndex == MyPRI.Team.TeamIndex && !PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver) // Dead
+    {
+        if (PRI.bAdmin)
         {
             CRI.TextColor = DeadPlayerAdminColor;
         }
         else
         {
-            CRI.TextColor = Class'DHColor'.default.AdminColor;
+            CRI.TextColor = DeadPlayerTeamColors[PRI.Team.TeamIndex];
         }
     }
-    else
+    else // Alive
     {
-        if (PRI == MyPRI)
+        if (PRI.bAdmin)
         {
-            CRI.TextColor = Class'UColor'.default.White;
-        }
-        else if (PRI.Team.TeamIndex == MyPRI.Team.TeamIndex && !PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
-        {
-            CRI.TextColor = DeadPlayerTeamColors[PRI.Team.TeamIndex];
+            CRI.TextColor = Class'DHColor'.default.AdminColor;
         }
         else
         {
