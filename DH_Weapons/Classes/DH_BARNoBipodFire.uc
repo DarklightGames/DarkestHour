@@ -15,14 +15,13 @@ defaultproperties
     MuzzleBone=MuzzleNew
 
     // Spread
-    HipSpreadModifier=6.0
     Spread=65.0
 
     // Recoil //adjusted from full variant
     RecoilRate=0.1
-    MaxVerticalRecoilAngle=688
-    MaxHorizontalRecoilAngle=140
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.1),(InVal=16.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=660
+    MaxHorizontalRecoilAngle=150
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=3.0,OutVal=1.0),(InVal=5.0,OutVal=1.1),(InVal=9.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
