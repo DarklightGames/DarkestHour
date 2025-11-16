@@ -8,10 +8,11 @@ class DHScoreBoard extends ROScoreBoard;
 const DHMAXPERSIDE = 40;
 const DHMAXPERSIDEWIDE = 35;
 
-const AXIS_PLAYER_COLOR_DARKEN_FACTOR = 0.33;
-const ALLIES_PLAYER_COLOR_DARKEN_FACTOR = 0.33;
-const SQUAD_PLAYER_COLOR_DARKEN_FACTOR = 0.5;
-const ADMIN_PLAYER_COLOR_DARKEN_FACTOR = 0.5;
+const DEAD_AXIS_COLOR_DARKEN_FACTOR = 0.33;
+const DEAD_ALLIES_COLOR_DARKEN_FACTOR = 0.33;
+const DEAD_SQUAD_COLOR_DARKEN_FACTOR = 0.5;
+const DEAD_ADMIN_COLOR_DARKEN_FACTOR = 0.5;
+const DEAD_ICON_COLOR_DARKEN_FACTOR = 0.33;
 
 var UComparator PRIComparator;
 
@@ -37,11 +38,12 @@ var Color SquadHeaderColor;
 var Color PlayerBackgroundColor;
 var Color SelfBackgroundColor;
 
-var Material DeadPlayerIconMaterial;
-var Color    DeadPlayerIconColor;
-var Color    DeadPlayerTeamColors[2];
-var Color    DeadPlayerSquadColor;
-var Color    DeadPlayerAdminColor;
+var Material DeadIconMaterial;
+var Color    DeadIconColor;
+var Color    DeadIconSelfColor;
+var Color    DeadTeamColors[2];
+var Color    DeadSquadColor;
+var Color    DeadAdminColor;
 
 var array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
 
@@ -96,10 +98,10 @@ var array<ScoreboardColumn> ScoreboardColumns;
 
 function SetColors()
 {
-    DeadPlayerTeamColors[0] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[0], AXIS_PLAYER_COLOR_DARKEN_FACTOR);
-    DeadPlayerTeamColors[1] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[1], ALLIES_PLAYER_COLOR_DARKEN_FACTOR);
-    DeadPlayerSquadColor = Class'UColor'.static.Darken(Class'DHColor'.default.SquadColor, SQUAD_PLAYER_COLOR_DARKEN_FACTOR);
-    DeadPlayerAdminColor = Class'UColor'.static.Darken(Class'DHColor'.default.AdminColor, ADMIN_PLAYER_COLOR_DARKEN_FACTOR);
+    DeadTeamColors[0] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[0], DEAD_AXIS_COLOR_DARKEN_FACTOR);
+    DeadTeamColors[1] = Class'UColor'.static.Darken(Class'DHColor'.default.TeamColors[1], DEAD_ALLIES_COLOR_DARKEN_FACTOR);
+    DeadSquadColor = Class'UColor'.static.Darken(Class'DHColor'.default.SquadColor, DEAD_SQUAD_COLOR_DARKEN_FACTOR);
+    DeadAdminColor = Class'UColor'.static.Darken(Class'DHColor'.default.AdminColor, DEAD_ADMIN_COLOR_DARKEN_FACTOR);
 }
 
 function array<int> GetScoreboardColumnIndicesForTeam(int TeamIndex)
@@ -192,11 +194,11 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
     {
         if (PRI.bAdmin)
         {
-            CRI.TextColor = DeadPlayerAdminColor;
+            CRI.TextColor = DeadAdminColor;
         }
         else
         {
-            CRI.TextColor = DeadPlayerTeamColors[PRI.Team.TeamIndex];
+            CRI.TextColor = DeadTeamColors[PRI.Team.TeamIndex];
         }
     }
     else // Alive
@@ -236,7 +238,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 {
                     if (!PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
                     {
-                        CRI.TextColor = DeadPlayerSquadColor;
+                        CRI.TextColor = DeadSquadColor;
                     }
                     else
                     {
@@ -285,8 +287,17 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
         case COLUMN_DeathIndicator:
             if (!PRI.bIsPossesingPawn && !DHGRI.bRoundIsOver)
             {
-                CRI.Icon = default.DeadPlayerIconMaterial;
-                CRI.IconColor = default.DeadPlayerIconColor;
+                CRI.Icon = default.DeadIconMaterial;
+
+                if (PRI == MyPRI)
+                {
+                    CRI.IconColor = default.DeadIconSelfColor;
+                }
+                else
+                {
+                    CRI.IconColor = default.DeadIconColor;
+                }
+
                 CRI.U = 0;
                 CRI.V = 0;
                 CRI.UL = CRI.Icon.MaterialUSize() - 1;
@@ -1196,6 +1207,7 @@ defaultproperties
     PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Silver'
     PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.developer'
-    DeadPlayerIconMaterial=Texture'InterfaceArt_tex.mine'
-    DeadPlayerIconColor=(R=64,G=64,B=64,A=255)
+    DeadIconMaterial=Texture'InterfaceArt_tex.mine'
+    DeadIconColor=(R=64,G=64,B=64,A=255)
+    DeadIconSelfColor=(R=96,G=96,B=96,A=255)
 }
