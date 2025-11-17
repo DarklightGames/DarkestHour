@@ -68,9 +68,15 @@ enum EScoreboardColumnType
     COLUMN_Ping
 };
 
+var localized string SquadMemberIndexColumnTitle;
+var localized string RoleColumnTitle;
+var localized string KillsColumnTitle;
+var localized string DeathsColumnTitle;
+var localized string ScoreColumnTitle;
+var localized string PingColumnTitle;
+
 struct ScoreboardColumn
 {
-    var localized string Title;
     var Material IconMaterial;
     var EScoreboardColumnType Type;
     var float Width;
@@ -652,13 +658,25 @@ function string GetColumnTitle(int TeamIndex, int ColumnIndex)
 {
     local int TeamSizes[2];
 
-    switch (ColumnIndex)
+    switch (ScoreboardColumns[ColumnIndex].Type)
     {
-        case 1: // Name
+        case COLUMN_SquadMemberIndex:
+            return SquadMemberIndexColumnTitle;
+        case COLUMN_PlayerName:
             DHGRI.GetTeamSizes(TeamSizes);
             return PlayersText @ "(" $ TeamSizes[TeamIndex] $ ")";
+        case COLUMN_Role:
+            return RoleColumnTitle;
+        case COLUMN_Score:
+            return ScoreColumnTitle;
+        case COLUMN_Kills:
+            return KillsColumnTitle;
+        case COLUMN_Deaths:
+            return DeathsColumnTitle;
+        case COLUMN_Ping:
+            return PingColumnTitle;
         default:
-            return ScoreboardColumns[ColumnIndex].Title;
+            return "";
     }
 }
 
@@ -668,14 +686,12 @@ function string GetTotalColumnTitle(int TeamIndex, int ColumnIndex)
     {
         case COLUMN_PlayerName: // Name
             return TotalsText $ ":";
-        case COLUMN_SquadMemberIndex:
-        case COLUMN_DeathIndicator:
-        case COLUMN_Role:
-        case COLUMN_Score:
-        case COLUMN_Ping:
-            return "";
+        case COLUMN_Kills:
+            return KillsColumnTitle;
+        case COLUMN_Deaths:
+            return DeathsColumnTitle;
         default:
-            return ScoreboardColumns[ColumnIndex].Title;
+            return "";
     }
 }
 
@@ -1172,17 +1188,24 @@ defaultproperties
 {
     TabSpaces="    "
     LargeTabSpaces="        "
+    
+    SquadMemberIndexColumnTitle="#"
+    RoleColumnTitle="Role"
+    KillsColumnTitle="K"
+    DeathsColumnTitle="D"
+    ScoreColumnTitle="Score"
+    PingColumnTitle="Ping"
 
-    ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
+    ScoreboardColumns(0)=(Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=5.0)
     ScoreboardColumns(2)=(Type=COLUMN_DeathIndicator,Width=0.5,bFriendlyOnly=true)
-    ScoreboardColumns(3)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
-    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_combat')
-    ScoreboardColumns(5)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_support')
-    ScoreboardColumns(6)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(7)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(8)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
-    ScoreboardColumns(9)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
+    ScoreboardColumns(3)=(Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
+    ScoreboardColumns(4)=(Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_combat')
+    ScoreboardColumns(5)=(Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.points_support')
+    ScoreboardColumns(6)=(Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(7)=(Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(8)=(Type=COLUMN_Score,Width=1.5,Justification=1)
+    ScoreboardColumns(9)=(Type=COLUMN_Ping,Width=1.0,Justification=1)
 
     ScoreboardLabelColor=(R=128,G=128,B=128)
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
