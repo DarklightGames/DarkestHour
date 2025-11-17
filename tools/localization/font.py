@@ -312,7 +312,10 @@ def write_font_package_generation_script(path: Path, font_packages: Iterable[Fon
     for font_package in font_packages:
         for _, font_factory in font_package.font_factories.items():
             font_factory.write_characters_to_disk()
-            lines.append(font_factory.get_command_string())
+            command_string = font_factory.get_command_string()
+            if len(command_string) > 256:
+                lines.append('// WARNING: The following line exceeds 256 characters and will not be fully parsed!')
+            lines.append(command_string)
             lines.append('')
         lines.append(f'OBJ SAVEPACKAGE PACKAGE={font_package.package_name} FILE="..\\{font_package.mod}\\Textures\\{font_package.package_name}.utx"')
         lines.append('')
@@ -390,9 +393,6 @@ def generate(args):
         # Add fonts for each size.
         for size, resolution in zip(sizes, resolutions):            
             font = TrueTypeFont(
-                package=config.package_name,
-                group=font_style_name,
-                # name=font_name,
                 fontname=style.font,
                 height=size,
                 anti_alias=style.anti_alias if style.anti_alias is not None else 0,
@@ -402,13 +402,13 @@ def generate(args):
                 v_size=style.texture_size.y if style.texture_size is not None else 512,
                 x_pad=style.padding.x if style.padding is not None else 0,
                 y_pad=style.padding.y if style.padding is not None else 0,
-                extend_bottom=style.margin.bottom if style.margin is not None else 0,
-                extend_top=style.margin.top if style.margin is not None else 0,
-                extend_left=style.margin.left if style.margin is not None else 0,
-                extend_right=style.margin.right if style.margin is not None else 0,
+                extend_box_bottom=style.margin.bottom if style.margin is not None else 0,
+                extend_box_top=style.margin.top if style.margin is not None else 0,
+                extend_box_left=style.margin.left if style.margin is not None else 0,
+                extend_box_right=style.margin.right if style.margin is not None else 0,
                 kerning=style.kerning if style.kerning is not None else 0,
                 style=style.weight if style.weight is not None else 500,
-                italic=style.italic if style.italic is not None else 0,
+                italic=style.italic if style.italic is not None else False,
                 compression=style.compression if style.compression is not None else Compression.RGBA8
             )
             font_package.font_factories[font.name] = TrueTypeFactory(font, config.defaults.unicode_ranges)
@@ -462,7 +462,7 @@ def generate(args):
             font_substitute = copy.deepcopy(font)
             font_substitute.fontname = package.font_substitutions[font.fontname]
             # TODO: if we want to add different packages per language, change the second argument.
-            font_substitute.package = config.package_name
+            # font_substitute.package = config.package_name
 
             font_package.font_factories[font_substitute.name] = TrueTypeFactory(font_substitute, package_unicode_ranges)
 

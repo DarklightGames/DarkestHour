@@ -48,11 +48,11 @@ defaults:
     texture_size: # Maximum size of each texture atlas.
       x: 512
       y: 512
-    margin: # Margin around each character
-      bottom: 1
-      top: 1
-      left: 1
-      right: 1
+    # margin: # Margin around each character
+    #   bottom: 1
+    #   top: 1
+    #   left: 1
+    #   right: 1
     padding:
       x: 1
       y: 1
