@@ -339,4 +339,5 @@ defaultproperties
     MapInfos(183)=(Name="DH-Yaryshivka_Advance",AlliedNation=NATION_USSR,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Medium)
     MapInfos(184)=(Name="DH-Haunted_Moonbase_Survival",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
     MapInfos(185)=(Name="DH-Haunted_Darkest_Wonderland",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
+    MapInfos(186)=(Name="DH-San_Celeste_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=Class'DHGameType_Defence',Size=SIZE_Small)
 }
