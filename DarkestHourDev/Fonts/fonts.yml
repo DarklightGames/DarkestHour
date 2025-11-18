@@ -1,7 +1,7 @@
 # This file is used to generate the fonts and supporting code for the game.
 # All fonts must be installed before executing the script.
 # On Linux, the fonts must be installed on both the host machine and the WINE prefix.
-package_name: DH_Fonts
+package_name: DH_Fonts_int
 unrealscript:
     # The directory where the GUIFonts will be generated.
   gui_fonts_directory: ./DH_Interface/Classes
@@ -150,7 +150,7 @@ font_styles:
         baseline: 8
         resolution_group: gui
 packages:
-  DHFonts_jap:
+  DH_Fonts_jap:
     languages: [ja]
     font_substitutions:
       Sofia Sans Condensed: Source Han Sans JP

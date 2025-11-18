@@ -208,7 +208,6 @@ def write_fonts_class_file(
         font_style_items, 
         class_name: str,
         unrealscript_fonts_path: Path,
-        font_packages: Iterable[FontPackage]
         ):
     lines = []
     lines += [
@@ -219,12 +218,6 @@ def write_fonts_class_file(
         '//==============================================================================',
         '',
     ]
-
-    for font_package in font_packages:
-        for _, font_factory in font_package.font_factories.items():
-            font_factory.write_characters_to_disk()
-            lines.append(f'#EXEC {font_factory.get_command_string()}')
-        lines.append('')
 
     lines += [
         f'class {class_name} extends Object',
@@ -314,9 +307,10 @@ def write_font_package_generation_script(path: Path, font_packages: Iterable[Fon
             font_factory.write_characters_to_disk()
             command_string = font_factory.get_command_string()
             if len(command_string) > 256:
-                lines.append('// WARNING: The following line exceeds 256 characters and will not be fully parsed!')
+                lines.append('; WARNING: The following line exceeds 256 characters and will not be fully parsed!')
             lines.append(command_string)
-            lines.append('')
+        
+        lines.append('')
         lines.append(f'OBJ SAVEPACKAGE PACKAGE={font_package.package_name} FILE="..\\{font_package.mod}\\Textures\\{font_package.package_name}.utx"')
         lines.append('')
     
@@ -331,13 +325,6 @@ def write_font_package_generation_script(path: Path, font_packages: Iterable[Fon
 
     with open(path, 'w') as file:
         file.write('\n'.join(lines))
-
-
-class FontLocalization:
-    def __init__(self, language_code: str):
-        self.language_code = language_code 
-        self.fonts: Dict[str, TTFont] = dict()
-        self.font_overrides: Dict[str, str] = dict()
 
 
 def generate(args):
@@ -358,8 +345,8 @@ def generate(args):
         print(f'Error: mod path "{mod_path}" does not exist or is not a directory', file=sys.stderr)
         return
 
-    font_paths = mod_path / 'Fonts'
-    fonts_config_path = font_paths / 'fonts.yml'
+    font_directory = mod_path / 'Fonts'
+    fonts_config_path = font_directory / 'fonts.yml'
 
     # Make sure the fonts.yml file exists.
     if not fonts_config_path.exists():
@@ -393,6 +380,7 @@ def generate(args):
         # Add fonts for each size.
         for size, resolution in zip(sizes, resolutions):            
             font = TrueTypeFont(
+                package=config.package_name,
                 fontname=style.font,
                 height=size,
                 anti_alias=style.anti_alias if style.anti_alias is not None else 0,
@@ -461,8 +449,7 @@ def generate(args):
             # Make a deep copy of the font and change the font name and package.
             font_substitute = copy.deepcopy(font)
             font_substitute.fontname = package.font_substitutions[font.fontname]
-            # TODO: if we want to add different packages per language, change the second argument.
-            # font_substitute.package = config.package_name
+            font_substitute.package = package_name
 
             font_package.font_factories[font_substitute.name] = TrueTypeFactory(font_substitute, package_unicode_ranges)
 
@@ -479,7 +466,7 @@ def generate(args):
                 # Go through all of the fonts and make substitutions if necessary.
                 contents += f'[{config.unrealscript.fonts_class_name}]\n'
                 for font_index, font_name in language_font_names:
-                    contents += f'FontNames[{font_index}]="{config.package_name}.{font_name}"\n'
+                    contents += f'FontNames[{font_index}]="{package_name}.{font_name}"\n'
                 fp.write(b'\xff\xfe')  # Byte-order-mark.
                 fp.write(contents.encode('utf-16-le'))
         
@@ -537,7 +524,15 @@ def generate(args):
         fonts,
         font_style_items, 
         config.unrealscript.fonts_class_name, 
-        unrealscript_fonts_path,
+        unrealscript_fonts_path
+        )
+    
+    #======================================
+    # PACKAGE GENERATION SCRIPT
+    #======================================
+    package_generation_script_path = font_directory / 'ImportFonts.exec.txt'
+    write_font_package_generation_script(
+        package_generation_script_path,
         font_packages.values()
         )
 

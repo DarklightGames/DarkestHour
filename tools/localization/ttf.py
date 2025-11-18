@@ -76,7 +76,7 @@ class TrueTypeFactory:
             fp.write(b'\xff\xfe')  # Byte-order-mark.
             fp.write(contents.encode('utf-16-le'))
 
-    def get_command_string(self) -> str:
+    def get_command_string(self, should_write_package: bool = True) -> str:
         command_string = f'NEW TRUETYPEFONTFACTORY ' \
                 f'FONTNAME="{self.font.fontname}" ' \
                 f'NAME={self.font.name} ' \
@@ -108,7 +108,7 @@ class TrueTypeFactory:
         if self.font.extend_box_right != 0:
             command_string += f'EXTENDBOXRIGHT={self.font.extend_box_right} '
 
-        if self.font.package is not None:
+        if should_write_package and self.font.package is not None:
             command_string += f'PACKAGE={self.font.package} '
         
         if self.font.group is not None:
