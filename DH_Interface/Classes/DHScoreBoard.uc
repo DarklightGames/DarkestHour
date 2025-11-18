@@ -682,7 +682,7 @@ function string GetColumnTitle(int TeamIndex, int ColumnIndex)
 
 function string GetTotalColumnTitle(int TeamIndex, int ColumnIndex)
 {
-    switch (EScoreboardColumnType(ColumnIndex))
+    switch (ScoreboardColumns[ColumnIndex].Type)
     {
         case COLUMN_PlayerName: // Name
             return TotalsText $ ":";
@@ -690,6 +690,8 @@ function string GetTotalColumnTitle(int TeamIndex, int ColumnIndex)
             return KillsColumnTitle;
         case COLUMN_Deaths:
             return DeathsColumnTitle;
+        case COLUMN_Score:
+            return ScoreColumnTitle;
         default:
             return "";
     }
