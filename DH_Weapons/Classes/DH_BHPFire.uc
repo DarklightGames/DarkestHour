@@ -13,6 +13,7 @@ defaultproperties
     Spread=185.0
     MaxVerticalRecoilAngle=380
     MaxHorizontalRecoilAngle=235
+    FireRate=0.21
 
     FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghpfire01'
     FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghpfire02'
