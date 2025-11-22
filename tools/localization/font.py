@@ -43,7 +43,7 @@ class FontStyleItem:
         self.resolution = resolution
 
 
-def get_font_resolutions_and_sizes(config: FontConfiguration, font_style_size: FontSize) -> Tuple[List[tuple[int, int]], List[int]]:
+def get_font_resolutions_and_sizes(config: FontConfiguration, font_style_size: FontSize) -> Tuple[List[int], List[int]]:
     match font_style_size.method:
         case 'proportional':
             resolution_baseline = config.resolution.baseline
@@ -117,7 +117,7 @@ for weight, styles in font_weight_to_styles:
         font_style_to_weight[style] = weight
 
 
-def get_font_styles_from_weight(weight: int) -> str:
+def get_font_styles_from_weight(weight: int) -> List[str]:
     weight_min = 100
     weight_max = 950
     weight = max(weight_min, min(weight, weight_max))
@@ -383,7 +383,7 @@ def generate(args):
                 package=config.package_name,
                 fontname=style.font,
                 height=size,
-                anti_alias=style.anti_alias if style.anti_alias is not None else 0,
+                anti_alias=style.anti_alias if style.anti_alias is not None else False,
                 drop_shadow_x=style.drop_shadow.x if style.drop_shadow is not None else 0,
                 drop_shadow_y=style.drop_shadow.y if style.drop_shadow is not None else 0,
                 u_size=style.texture_size.x if style.texture_size is not None else 512,
@@ -473,39 +473,6 @@ def generate(args):
         font_packages[package_name] = font_package
 
     #======================================
-    # FONT PACKAGE GENERATION
-    #======================================
-
-    # Keep a cache of evaluated unicode ranges for each font, since this is a very intensive operation.
-    font_unicode_ranges_cache: Dict[str, UnicodeRanges] = dict()
-    installed_fonts = get_installed_fonts()
-
-    # Refine the unicode ranges based on what the font actually supports.
-    for _, font_package in font_packages.items():
-        for _, font_factory in font_package.font_factories.items():
-            font = font_factory.font
-            styles = get_font_styles_from_weight(font.style)
-
-            # Ensure that the font is installed.
-            if font.fontname not in installed_fonts:
-                raise Exception(f'Font family "{font.fontname}" is not installed')
-
-            # Get the path to the font that is closest to matching the requested styles.
-            font_path = get_font_style_closest(installed_fonts, styles, font.fontname)
-            if font_path is None:
-                raise Exception(f'Could not find {styles} styles for installed font "{font.fontname}"')
-
-            # Load the font and get the supported unicode ranges.
-            if font_path not in font_unicode_ranges_cache:
-                font_unicode_ranges_cache[font_path] = read_font_unicode_ranges(font_path)
-            
-            font_unicode_ranges = font_unicode_ranges_cache[font_path]
-
-            # Intersect the font's unicode ranges with the system's supported unicode ranges.
-            # TODO: the naming is weird here.
-            font_factory.unicode_ranges = font_unicode_ranges.intersect(font_factory.unicode_ranges)
-
-    #======================================
     # UNREALSCRIPT
     #======================================
 
@@ -527,14 +494,47 @@ def generate(args):
         unrealscript_fonts_path
         )
     
-    #======================================
-    # PACKAGE GENERATION SCRIPT
-    #======================================
-    package_generation_script_path = font_directory / 'ImportFonts.exec.txt'
-    write_font_package_generation_script(
-        package_generation_script_path,
-        font_packages.values()
-        )
+    if not args.slim:
+        #======================================
+        # FONT PACKAGE GENERATION
+        #======================================
+
+        # Keep a cache of evaluated unicode ranges for each font, since this is a very intensive operation.
+        font_unicode_ranges_cache: Dict[str, UnicodeRanges] = dict()
+        installed_fonts = get_installed_fonts()
+
+        # Refine the unicode ranges based on what the font actually supports.
+        for _, font_package in font_packages.items():
+            for _, font_factory in font_package.font_factories.items():
+                font = font_factory.font
+                styles = get_font_styles_from_weight(font.style)
+
+                # Ensure that the font is installed.
+                if font.fontname not in installed_fonts:
+                    raise Exception(f'Font family "{font.fontname}" is not installed')
+
+                # Get the path to the font that is closest to matching the requested styles.
+                font_path = get_font_style_closest(installed_fonts, styles, font.fontname)
+                if font_path is None:
+                    raise Exception(f'Could not find {styles} styles for installed font "{font.fontname}"')
+
+                # Load the font and get the supported unicode ranges.
+                if font_path not in font_unicode_ranges_cache:
+                    font_unicode_ranges_cache[font_path] = read_font_unicode_ranges(font_path)
+                
+                font_unicode_ranges = font_unicode_ranges_cache[font_path]
+
+                # Intersect the font's unicode ranges with the system's supported unicode ranges.
+                font_factory.unicode_ranges = font_unicode_ranges.intersect(font_factory.unicode_ranges)
+        
+        #======================================
+        # PACKAGE GENERATION SCRIPT
+        #======================================
+        package_generation_script_path = font_directory / 'ImportFonts.exec.txt'
+        write_font_package_generation_script(
+            package_generation_script_path,
+            font_packages.values()
+            )
 
 
 if __name__ == '__main__':
@@ -549,6 +549,7 @@ if __name__ == '__main__':
     generate_font_scripts_parser.add_argument('root_path', help='The path of the game root directory.')
     generate_font_scripts_parser.add_argument('-m', '--mod', help='The name of the mod to generate font scripts for.', required=True)
     generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
+    generate_font_scripts_parser.add_argument('-s', '--slim', help='Only generate the UnrealScript and localization files')
     generate_font_scripts_parser.set_defaults(func=generate)
 
     args = argparse.parse_args()
