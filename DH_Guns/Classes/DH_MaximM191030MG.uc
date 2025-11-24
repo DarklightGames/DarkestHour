@@ -18,12 +18,13 @@ defaultproperties
         Channel=1
         Bone="SIGHT_ROOT"
         AnimationInterpDuration=0.5
-        RangeTable(0)=(Range=200.0,AnimationTime=0.0375)
-        RangeTable(1)=(Range=300.0,AnimationTime=0.045)
-        RangeTable(2)=(Range=400.0,AnimationTime=0.06)
-        RangeTable(3)=(Range=600.0,AnimationTime=0.085)
-        RangeTable(4)=(Range=800.0,AnimationTime=0.12)
-        RangeTable(5)=(Range=1000.0,AnimationTime=0.16)
+        RangeTable(0)=(Range=0,AnimationTime=0.0375)
+        RangeTable(1)=(Range=300,AnimationTime=0.045)
+        RangeTable(2)=(Range=400,AnimationTime=0.06)
+        RangeTable(3)=(Range=500,AnimationTime=0.0725)
+        RangeTable(4)=(Range=600,AnimationTime=0.085)
+        RangeTable(5)=(Range=800,AnimationTime=0.12)
+        RangeTable(6)=(Range=1000,AnimationTime=0.16)
     End Object
     RangeParams=RangeParams0
 
@@ -68,4 +69,7 @@ defaultproperties
     NumRoundsInStaticMesh=1
 
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Maxim_stc.MAXIM_TURRET_PITCH_COLLISION',AttachBone="MG_PITCH")
+
+    BarrelCount=1
+    BarrelClass=Class'DH_MaximM191030Barrel'
 }

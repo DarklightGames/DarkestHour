@@ -278,6 +278,20 @@ simulated exec function DumpRangeTable()
     }
 }
 
+function bool CanFire()
+{
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    if (MG.BarrelCondition == BC_Failed)
+    {
+        return false;
+    }
+
+    return super.CanFire();
+}
+
 defaultproperties
 {
     HandsAttachBone="HANDS_ATTACHMENT"
@@ -292,6 +306,6 @@ defaultproperties
     CameraBone="GUNNER_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
-    ZoomFOV=60.0
+    ZoomFOV=50.0
     TPCamLookat=(Z=-70.0)
 }

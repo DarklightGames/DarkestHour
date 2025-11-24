@@ -10,12 +10,12 @@ var DHWeaponRangeParams     RangeParams;
 var int                     RangeIndex;
 
 // Reload
-var()   name                    ReloadSequence;
-var     float                   ReloadStartTimeSeconds; // The time that the reload animation started.
-var     float                   ReloadEndTimeSeconds;   // The time that the reload animation will end.
-var()   float                   ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
+var()   name                ReloadSequence;
+var     float               ReloadStartTimeSeconds; // The time that the reload animation started.
+var     float               ReloadEndTimeSeconds;   // The time that the reload animation will end.
+var()   float               ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
 
-// TODO: all these systems should be componentized.
+// TODO: many of these systems should be componentized.
 
 // Firing Animation
 var int                     FiringChannel;
@@ -55,10 +55,111 @@ var() Rotator               EmptyAmmoRoundRelativeRotation;
 
 var int                     NumRoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
+// Barrels
+var int                             BarrelCount;
+var int                             BarrelIndex;
+var class<DHWeaponBarrel>           BarrelClass;
+var class<ROMGSteam>                BarrelSteamEmitterClass;
+var ROMGSteam                       BarrelSteamEmitter;
+var name                            BarrelSteamBone;
+var array<DHWeaponBarrel>           Barrels;
+var DHWeaponBarrel.EBarrelCondition BarrelCondition;
+var float                           BarrelTemperature;
+var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
+
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         RangeIndex;
+    unreliable if (bNetDirty && Role == ROLE_Authority)
+        BarrelCondition, BarrelTemperature, bBarrelIsSteamActive;
+}
+
+private function SpawnBarrels()
+{
+    local int i;
+    local DHWeaponBarrel Barrel;
+
+    Barrels.Length = 0;
+
+    for (i = 0; i < BarrelCount; ++i)
+    {
+        Barrel = Spawn(BarrelClass, self);
+        Barrel.OnTemperatureChanged = OnBarrelTemperatureChanged;
+        Barrel.OnConditionChanged = OnBarrelConditionChanged;
+        Barrel.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
+        Barrels[i] = Barrel;
+    }
+
+    if (Barrels.Length > 0)
+    {
+        // Set the first barrel is being active.
+        Barrels[0].bIsCurrentBarrel = true;
+    }
+}
+
+function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
+{
+    BarrelTemperature = Temperature;
+}
+
+function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+{
+    // Sets the variable here on the server. The client will then have this variable replicated to them.
+    bBarrelIsSteamActive = bIsSteamActive;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        // In a standalone game there is no PostNetReceive, so we must trigger the steam update immediately.
+        SetBarrelSteamActive(bIsSteamActive);
+    }
+}
+
+simulated function SetBarrelSteamActive(bool bIsSteamActive)
+{
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (bIsSteamActive)
+    {
+        if (BarrelSteamEmitter == none)
+        {
+            BarrelSteamEmitter = Spawn(BarrelSteamEmitterClass, self);
+            AttachToBone(BarrelSteamEmitter, BarrelSteamBone);
+        }
+    }
+
+    if (BarrelSteamEmitter == none)
+    {
+        return;
+    }
+
+    if (bIsSteamActive)
+    {
+        BarrelSteamEmitter.StartSteam();
+    }
+    else
+    {
+        BarrelSteamEmitter.StopSteam();
+    }
+}
+
+function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
+{
+    BarrelCondition = Condition;
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bOldBarrelIsSteamActive != bBarrelIsSteamActive)
+    {
+        // TODO: turn on or off the steam emitter.
+        SetBarrelSteamActive(bBarrelIsSteamActive);
+    }
 }
 
 simulated function OnSwitchMesh()
@@ -136,6 +237,18 @@ simulated function InitializeAmmoRounds()
     }
 }
 
+// TODO: would be neat to display the barrel damage on the HUD!
+event bool AttemptFire(Controller C, bool bAltFire)
+{
+    if (BarrelCondition == BC_Failed)
+    {
+        // Do not allow fire if the barrel has failed.
+        return false;
+    }
+
+    super.AttemptFire(C, bAltFire);
+}
+
 function Fire(Controller C)
 {
     local Coords ShellEjectCoords;
@@ -158,6 +271,14 @@ function Fire(Controller C)
             // The class defines bOwnerNoSee as true since this is meant only for third person, but we want to just
             // reuse the same class for first person as well.
             ShellEjectActor.bOwnerNoSee = false;
+        }
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
+        {
+            Barrels[BarrelIndex].WeaponFired();
         }
     }
     
@@ -282,6 +403,11 @@ simulated function PostBeginPlay()
     PlayAnim('IDLE');
 
     SetupAnimationDrivers();
+
+    if (Role == ROLE_Authority)
+    {
+        SpawnBarrels();
+    }
 }
 
 simulated function SetupAnimationDrivers()
@@ -444,6 +570,16 @@ simulated event ClipFill()
     UpdateClipWithAmmo(InitialPrimaryAmmo);
 }
 
+simulated function float GetFireSoundPitch()
+{
+    if (BarrelClass != none)
+    {
+        return BarrelClass.static.GetFiringSoundPitch(BarrelTemperature);
+    }
+
+    return super.GetFireSoundPitch();
+}
+
 defaultproperties
 {
     ReloadCameraTweenTime=0.5
@@ -519,4 +655,7 @@ defaultproperties
     ShakeRotTime=2.0
 
     ProjectileRotationMode=PRM_MuzzleBone
+
+    BarrelSteamEmitterClass=Class'DHMGSteam'
+    BarrelSteamBone="MUZZLE"
 }

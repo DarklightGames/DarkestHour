@@ -80,4 +80,7 @@ defaultproperties
     bBlockZeroExtentTraces=true
 
     NumRoundsInStaticMesh=1
+
+    BarrelCount=1
+    BarrelClass=Class'DH_30CalBarrel'
 }

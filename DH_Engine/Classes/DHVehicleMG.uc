@@ -10,6 +10,8 @@ class DHVehicleMG extends DHVehicleWeapon
 var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
 var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
+var     bool    bShouldBaseTakeDamage;       // When true, damage will not be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
+
 // Barrels
 struct SBarrel
 {
@@ -23,7 +25,8 @@ struct SBarrel
 
 struct SBarrelState
 {
-    var int                             Temperature;
+    var bool bIsSteamActive;
+    var float Temperature;
     var DHWeaponBarrel.EBarrelCondition Condition;
 };
 
@@ -33,14 +36,13 @@ var bool            bHasMultipleBarrels;
 var byte            FiringBarrelIndex;        // Barrel index that is due to fire next.
 var array<SBarrel>  Barrels;
 
-var bool            bShouldBaseTakeDamage;       // When true, damage will not be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
-
+// For weapons with multiple active barrels (i.e. quad maxim guns etc.)
 const BARRELS_MAX = 4;
 var SBarrelState    BarrelStates[BARRELS_MAX];
 
 replication
 {
-    reliable if (bNetDirty && Role == ROLE_Authority)
+    unreliable if (bNetDirty && Role == ROLE_Authority)
         BarrelStates;
 }
 
@@ -63,6 +65,9 @@ function SpawnBarrels()
         if (Barrels[i].BarrelActor != none)
         {
             Barrels[i].BarrelActor.SetCurrentBarrel(true);
+            Barrels[i].BarrelActor.OnTemperatureChanged = OnBarrelTemperatureChanged;
+            Barrels[i].BarrelActor.OnConditionChanged = OnBarrelConditionChanged;
+            Barrels[i].BarrelActor.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
 
             // Attach the barrel actor to the MG.
             // This is not strictly necessary since the barrel has no visual representation and is server-side only.
@@ -239,7 +244,7 @@ simulated function InitEffects()
 
     super.InitEffects();
 
-    if (bHasMultipleBarrels)
+    if (bHasMultipleBarrels)    // TODO: why only multi-barrels?
     {
         for (i = 0; i < Barrels.Length; ++i)
         {
@@ -357,12 +362,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
 // Modified to change the pitch of the firing sound based on the barrel temperature.
 simulated function float GetFireSoundPitch()
 {
-    if (FiringBarrelIndex < Barrels.Length && Barrels[FiringBarrelIndex].BarrelActor != none)
+    if (FiringBarrelIndex < 0 || FiringBarrelIndex >= Barrels.Length || Barrels[FiringBarrelIndex].BarrelActor == none)
     {
-        return Barrels[FiringBarrelIndex].BarrelActor.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
+        return 1.0;
     }
 
-    return 1.0;
+    return Barrels[FiringBarrelIndex].BarrelActor.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
 }
 
 function int GetBarrelIndex(DHWeaponBarrel Barrel)
@@ -426,11 +431,11 @@ simulated function UpdateBarrelSteam()
 
     for (i = 0; i < Barrels.Length; ++i)
     {
-        SetBarrelSteamActive(i, BarrelStates[i].Temperature > Barrels[i].BarrelClass.default.SteamTemperature);
+        SetBarrelSteamActive(i, BarrelStates[i].bIsSteamActive);
     }
 }
 
-function SetBarrelTemperature(DHWeaponBarrel Barrel, int NewTemperature)
+function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemperature)
 {
     local int BarrelIndex;
 
@@ -447,7 +452,7 @@ function SetBarrelTemperature(DHWeaponBarrel Barrel, int NewTemperature)
     }
 }
 
-function SetBarrelCondition(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition NewCondition)
+function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition NewCondition)
 {
     local int BarrelIndex;
 
@@ -456,6 +461,20 @@ function SetBarrelCondition(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelConditi
     if (BarrelIndex != -1)
     {
         BarrelStates[BarrelIndex].Condition = NewCondition;
+    }
+}
+
+function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+{
+    local int BarrelIndex;
+
+    BarrelIndex = GetBarrelIndex(Barrel);
+
+    if (BarrelIndex != -1)
+    {
+        BarrelStates[BarrelIndex].bIsSteamActive = bIsSteamActive;
+
+        UpdateBarrelSteam();
     }
 }
 

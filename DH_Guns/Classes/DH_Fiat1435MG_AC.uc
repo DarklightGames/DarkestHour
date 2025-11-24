@@ -86,5 +86,7 @@ defaultproperties
     BeltFireLoopAnimation="BELT_FIRE_LOOP"
     BeltFireEndAnimation="BELT_FIRE_END"
 
-    //Barrels(0)=(MuzzleBone="MUZZLE_AC",BarrelClass=Class'DH_Fiat1435MGBarrel')
+    BarrelCount=1
+    BarrelClass=Class'DH_Fiat1435MGBarrel'
+    BarrelSteamBone="MUZZLE_AC"
 }

@@ -5,8 +5,30 @@
 
 class DHMGSteam extends ROMGSteam;
 
+var Sound SteamAmbientSound;
+
+function StopSteam()
+{
+    super.StopSteam();
+
+    // Stop the ambient sound.
+    AmbientSound = none;
+}
+
+function StartSteam()
+{
+    super.StartSteam();
+
+    // Start the ambient steaming sound.
+    AmbientSound = SteamAmbientSound;
+}
+
 defaultproperties
 {
+    SteamAmbientSound=Sound'DH_Ambience.Vehicle_cookoff2'   // TODO: replace this with a custom sound.
+    SoundVolume=255
+    SoundRadius=50
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true

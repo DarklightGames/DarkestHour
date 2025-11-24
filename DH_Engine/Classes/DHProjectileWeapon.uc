@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
+    dependson(DHWeaponBarrel)
     abstract;
 
 enum EUnloadedMunitionsPolicy
@@ -806,7 +807,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     {
         if (bBarrelSteamActive)
         {
-            SetBarrelSteamActive(true);
+            OnBarrelIsSteamActiveChanged(none, true);
         }
 
         InitializeClientWeaponSystems();
@@ -3126,7 +3127,7 @@ function PerformBarrelChange()
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function SetBarrelSteamActive(bool bSteaming)
+simulated function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bSteaming)
 {
     local DHPlayer PC;
 
@@ -3208,21 +3209,17 @@ simulated function ClientSetBarrelSteam(bool bSteaming)
 {
     if (Role < ROLE_Authority)
     {
-        SetBarrelSteamActive(bSteaming);
+        OnBarrelIsSteamActiveChanged(none, bSteaming);
     }
 }
 
-function SetBarrelDamaged(bool bDamaged)
+function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
 {
-    bBarrelDamaged = bDamaged;
+    bBarrelDamaged = Condition >= BC_Damaged;
+    bBarrelFailed = Condition >= BC_Failed;
 }
 
-function SetBarrelFailed(bool bFailed)
-{
-    bBarrelFailed = bFailed;
-}
-
-function SetBarrelTemperature(float NewTemp)
+function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemp)
 {
     BarrelTemperature = NewTemp;
 }
@@ -3231,46 +3228,72 @@ function SetBarrelTemperature(float NewTemp)
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     local int i;
+    local DHWeaponPickup WP;
+
+    WP = DHWeaponPickup(Pickup);
 
     super.GiveTo(Other, Pickup);
 
-    if (BarrelClass != none && Role == ROLE_Authority)
+    if (BarrelClass == none || Role != ROLE_Authority)
     {
-        // This weapon is spawning for this player, so spawn any barrels
-        if (Pickup == none)
-        {
-            if (InitialBarrels > 0)
-            {
-                for (i = 0; i < InitialBarrels; ++i)
-                {
-                    Barrels[i] = Spawn(BarrelClass, self);
-                }
+        return;
+    }
 
-                BarrelIndex = 0;
-                Barrels[BarrelIndex].SetCurrentBarrel(true);
+    // This weapon is spawning for this player, so spawn any barrels
+    if (Pickup == none)
+    {
+        if (InitialBarrels > 0)
+        {
+            for (i = 0; i < InitialBarrels; ++i)
+            {
+                Barrels[i] = Spawn(BarrelClass, self);
+            }
+
+            BarrelIndex = 0;
+            Barrels[BarrelIndex].SetCurrentBarrel(true);
+        }
+    }
+    // Player has picked up this weapon from the ground, so transfer any barrels from the pickup
+    else if (WP != none && WP.Barrels.Length > 0)
+    {
+        Barrels = WP.Barrels; // copy the pickup's reference to the Barrels array
+
+        for (i = 0; i < Barrels.Length; ++i)
+        {
+            if (Barrels[i] == none)
+            {
+                continue;
+            }
+
+            Barrels[i].SetOwner(self); // barrel's owner is now this weapon
+
+            if (Barrels[i].bIsCurrentBarrel)
+            {
+                BarrelIndex = i;
             }
         }
-        // Player has picked up this weapon from the ground, so transfer any barrels from the pickup
-        else if (DHWeaponPickup(Pickup) != none && DHWeaponPickup(Pickup).Barrels.Length > 0)
+    }
+
+    bHasSpareBarrel = Barrels.Length >= 2;
+
+    // Update delegate functions.
+    for (i = 0; i < Barrels.Length; ++i)
+    {
+        if (Barrels[i] == none)
         {
-            Barrels = DHWeaponPickup(Pickup).Barrels; // copy the pickup's reference to the Barrels array
-
-            for (i = 0; i < Barrels.Length; ++i)
-            {
-                if (Barrels[i] != none)
-                {
-                    Barrels[i].SetOwner(self); // barrel's owner is now this weapon
-
-                    if (Barrels[i].bIsCurrentBarrel)
-                    {
-                        BarrelIndex = i;
-                        Barrels[BarrelIndex].UpdateBarrelStatus();
-                    }
-                }
-            }
+            return;
         }
 
-        bHasSpareBarrel = Barrels.Length >= 2;
+        // Set up delegate functions.
+        Barrels[i].OnTemperatureChanged = OnBarrelTemperatureChanged;
+        Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
+        Barrels[i].OnConditionChanged = OnBarrelConditionChanged;
+
+        if (Barrels[BarrelIndex].bIsCurrentBarrel)
+        {
+            // Now that the delegates have been hooked up, trigger the status updates.
+            Barrels[BarrelIndex].UpdateBarrelStatus();
+        }
     }
 }
 

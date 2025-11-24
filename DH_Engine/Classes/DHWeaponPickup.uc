@@ -67,10 +67,12 @@ simulated function Destroyed()
 // Non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off
 simulated function PostNetReceive()
 {
+    super.PostNetReceive();
+
     if (bBarrelSteamActive != bOldBarrelSteamActive)
     {
         bOldBarrelSteamActive = bBarrelSteamActive;
-        SetBarrelSteamActive(bBarrelSteamActive);
+        OnBarrelIsSteamActiveChanged(Barrels[BarrelIndex], bBarrelSteamActive);
     }
 }
 
@@ -185,6 +187,9 @@ function InitDroppedPickupFor(Inventory Inv)
                 if (Barrels[i] != none)
                 {
                     Barrels[i].SetOwner(self); // barrel's owner is now this pickup
+                    Barrels[i].OnTemperatureChanged = none;
+                    Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
+                    Barrels[i].OnConditionChanged = none;
 
                     if (Barrels[i].bIsCurrentBarrel)
                     {
@@ -204,9 +209,9 @@ function InitDroppedPickupFor(Inventory Inv)
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function SetBarrelSteamActive(bool bSteaming)
+simulated function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
 {
-    bBarrelSteamActive = bSteaming;
+    bBarrelSteamActive = bIsSteamActive;
 
     if (Level.NetMode != NM_DedicatedServer)
     {

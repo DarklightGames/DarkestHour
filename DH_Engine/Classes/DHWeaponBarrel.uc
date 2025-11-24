@@ -6,7 +6,7 @@
 class DHWeaponBarrel extends Actor
     notplaceable;
 
-// Non-volatile properties
+// Non-volatile properties (make this an object type!)
 var     float       LevelTempCentigrade; // the temperature of the level we're playing in (all temps here are in centigrade)
 var     float       SteamTemperature;    // temp barrel begins to steam
 var     float       CriticalTemperature; // temp barrel steams a lot and cone-fire error introduced
@@ -27,6 +27,10 @@ var     float               Temperature;
 var     bool                bIsSteamActive;     // If barrel passes SteamTemperature, we'll start steaming the barrel.
 var     EBarrelCondition    Condition;
 var     bool                bIsCurrentBarrel;   // This is the weapon's current barrel, not a spare.
+
+delegate OnTemperatureChanged(DHWeaponBarrel Barrel, float Temperature);
+delegate OnIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive);
+delegate OnConditionChanged(DHWeaponBarrel Barrel, EBarrelCondition NewCondition);
 
 // Modified to set the LevelTempCentigrade & match barrel's starting temperature to that, & to start a repeating timer to handle barrel cooling & updating
 simulated function PostBeginPlay()
@@ -50,19 +54,11 @@ simulated function Destroyed()
 {
     if (bIsSteamActive)
     {
-        if (DHProjectileWeapon(Owner)!= none)
-        {
-            DHProjectileWeapon(Owner).SetBarrelSteamActive(false);
-        }
-        else if (DHWeaponPickup(Owner) != none)
-        {
-            DHWeaponPickup(Owner).SetBarrelSteamActive(false);
-        }
-        else if (DHVehicleMG(Owner) != none)
-        {
-            DHVehicleMG(Owner).SetBarrelTemperature(self, 0);
-        }
+        OnIsSteamActiveChanged(self, false);
     }
+
+    OnConditionChanged(self, BC_Good);
+    OnTemperatureChanged(self, 0);
 
     super.Destroyed();
 }
@@ -74,6 +70,7 @@ function SetCurrentBarrel(bool bIsCurrent)
 
     if (bIsCurrentBarrel)
     {
+        OnTemperatureChanged(self, Temperature);
         UpdateBarrelStatus();
     }
 }
@@ -82,15 +79,26 @@ function SetCurrentBarrel(bool bIsCurrent)
 function WeaponFired()
 {
     Temperature += FiringHeatIncrement;
+
+    OnTemperatureChanged(self, Temperature);
+
     UpdateBarrelStatus();
 }
 
 // Periodically lowers the barrel temp, but no further than the level's ambient temp
 function Timer()
 {
+    local float OldTemperature;
+
     if (Role == ROLE_Authority && Temperature != LevelTempCentigrade)
     {
         Temperature = FMax(LevelTempCentigrade, Temperature -= (BarrelCoolingRate * BarrelTimerRate));
+
+        if (bIsCurrentBarrel && OldTemperature != Temperature)
+        {
+            OnTemperatureChanged(self, Temperature);
+        }
+
         UpdateBarrelStatus();
     }
 }
@@ -98,51 +106,41 @@ function Timer()
 // Updates this barrel and the weapon's status
 function UpdateBarrelStatus()
 {
-    local DHProjectileWeapon    W;
-    local DHWeaponPickup        PU;
-    local DHVehicleMG           MG;
+    local bool bOldIsSteamActive;
 
     if (Role != ROLE_Authority)
     {
         return;
     }
 
+    bOldIsSteamActive = bIsSteamActive;
     bIsSteamActive = Temperature > SteamTemperature;
+
+    if (bOldIsSteamActive != bIsSteamActive)
+    {
+        if (bIsCurrentBarrel)
+        {
+            OnIsSteamActiveChanged(self, bIsSteamActive);
+        }
+    }
 
     if (Condition < BC_Damaged && Temperature > CriticalTemperature)
     {
         Condition = BC_Damaged;
+
+        if (bIsCurrentBarrel)
+        {
+            OnConditionChanged(self, Condition);
+        }
     }
     else if (Condition < BC_Failed && Temperature > FailureTemperature)
     {
         Condition = BC_Failed;
-    }
 
-    if (!bIsCurrentBarrel)
-    {
-        return;
-    }
-
-    W = DHProjectileWeapon(Owner);
-    PU = DHWeaponPickup(Owner);
-    MG = DHVehicleMG(Owner);
-
-    if (W != none)
-    {
-        W.SetBarrelSteamActive(bIsSteamActive);
-        // TODO: update the DHProjectileWeapon to just have a Condition variable.
-        W.SetBarrelDamaged(Condition == BC_Damaged);
-        W.SetBarrelFailed(Condition == BC_Failed);
-        W.SetBarrelTemperature(Temperature);
-    }
-    else if (PU != none)
-    {
-        PU.SetBarrelSteamActive(bIsSteamActive);
-    }
-    else if (MG != none)
-    {
-        MG.SetBarrelCondition(self, Condition);
-        MG.SetBarrelTemperature(self, Temperature);
+        if (bIsCurrentBarrel)
+        {
+            OnConditionChanged(self, Condition);
+        }
     }
 }
 

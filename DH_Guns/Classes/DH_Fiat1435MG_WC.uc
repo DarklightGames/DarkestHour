@@ -40,7 +40,7 @@ defaultproperties
 
     HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
 
-    // TODO: water cooled version should have a different barrel class with better
-    // cooling attributes.
-    //Barrels(0)=(MuzzleBone="MUZZLE_WC",BarrelClass=Class'DH_Fiat1435MGWCBarrel')
+    BarrelCount=1
+    BarrelClass=Class'DH_Fiat1435MGWCBarrel'
+    BarrelSteamBone="MUZZLE_WC"
 }
