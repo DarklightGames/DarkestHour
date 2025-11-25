@@ -424,7 +424,7 @@ simulated function float GetViewFOV(int PositionIndex)
 
     if (IsHumanControlled())
     {
-        return PlayerController(Controller).DefaultFOV;
+        return 70;
     }
 
     return Class'DHPlayer'.default.DefaultFOV;
