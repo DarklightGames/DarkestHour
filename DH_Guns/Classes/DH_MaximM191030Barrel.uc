@@ -9,5 +9,5 @@ class DH_MaximM191030Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    BarrelCoolingRate=2.0
+    BarrelCoolingRate=4.0
 }

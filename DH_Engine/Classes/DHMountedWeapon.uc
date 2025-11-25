@@ -9,8 +9,10 @@
 class DHMountedWeapon extends DHActorProxyWeapon
     abstract;
 
-var         class<DHVehicle>    VehicleClass;
-var private DHVehicleState      VehicleState;
+// TODO: got a small issue here; we want to be able to cycle the variants. Perhaps we should not use VehicleClass, but use the ConstructionClass
+// and then cycle through variants that way. Minor hiccup if there are different skin variants, but it's probably fine.
+var         class<DHConstruction_Vehicle>   ConstructionClass;
+var private DHVehicleState                  VehicleState;
 
 var()       Material    HudAmmoIconMaterial;
 var         int         HudAmmoCount;
@@ -95,8 +97,17 @@ Begin:
     GotoState('Idle');
 }
 
+function class<DHVehicle> GetVehicleClass()
+{
+    return ConstructionClass.static.GetVehicleClass(ProxyCursor.GetContext());
+}
+
 function DHVehicleState EnsureVehicleState()
 {
+    local class<DHVehicle> VehicleClass;
+
+    VehicleClass = GetVehicleClass();
+
     if (VehicleState == none)
     {
         VehicleState = Class'DHVehicleState'.static.GetDefaultVehicleState(VehicleClass);
@@ -142,6 +153,9 @@ function bool FillAmmo()
     local DHVehicleWeaponState VehicleWeaponState;
     local class<DHVehicleWeapon> VehicleWeaponClass;
     local class<DHVehicleCannon> VehicleCannonClass;
+    local class<DHVehicle> VehicleClass;
+
+    VehicleClass = GetVehicleClass();
 
     if (VehicleClass == none)
     {
@@ -353,8 +367,16 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
 function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHVehicle Vehicle;
+    local class<DHVehicle> VehicleClass;
     
     if (!CanSpawnVehicle(Owner, Location, Rotation))
+    {
+        return;
+    }
+
+    VehicleClass = GetVehicleClass();
+
+    if (VehicleClass == none)
     {
         return;
     }
@@ -397,12 +419,31 @@ exec simulated function ROManualReload();
 
 static function string GetInventoryName(bool bUseNativeItemNames)
 {
-    if (default.VehicleClass != none)
+    if (default.ConstructionClass.default.VehicleClass != none)
     {
-        return default.VehicleClass.default.VehicleNameString;
+        return default.ConstructionClass.default.VehicleClass.default.VehicleNameString;
     }
 
     return super.GetInventoryName(bUseNativeItemNames);
+}
+
+final function CycleVariant()
+{
+    local DHVehicleProxy VP;
+
+    VP = DHVehicleProxy(ProxyCursor);
+
+    if (VP != none)
+    {
+        VP.CycleVariant();
+
+        ClientPlayClickSound();
+    }
+}
+
+exec simulated function SwitchFireMode()
+{
+    CycleVariant();
 }
 
 // TODO: use state instead.
@@ -470,5 +511,7 @@ defaultproperties
     TraceDepthMeters=1.25
     bCanRotateCursor=false
     bCanDeployWhileCrouched=true
+    bCanDeployWhileStanding=true
+    bCanDeployWhileCrawling=true
     bShouldAlignToGround=true
 }

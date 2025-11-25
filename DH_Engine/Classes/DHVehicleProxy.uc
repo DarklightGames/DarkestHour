@@ -6,8 +6,19 @@
 class DHVehicleProxy extends DHActorProxy;
 
 var class<DHMountedWeapon>   WeaponClass;
+var int VariantIndex;
 
-final function SetMountedWeaponClass(class<DHMountedWeapon> WeaponClass)
+function DHActorProxy.Context GetContext()
+{
+    local DHActorProxy.Context Context;
+
+    Context = super.GetContext();
+    Context.VariantIndex = VariantIndex;
+
+    return Context;
+}
+
+final function SetMountedWeaponClass(class<DHMountedWeapon> WeaponClass, optional int VariantIndex)
 {
     if (WeaponClass == none)
     {
@@ -16,6 +27,14 @@ final function SetMountedWeaponClass(class<DHMountedWeapon> WeaponClass)
     }
 
     self.WeaponClass = WeaponClass;
+    self.VariantIndex = VariantIndex;
+
+    UpdateAppearance();
+}
+
+function CycleVariant()
+{
+    VariantIndex = ++VariantIndex % WeaponClass.default.ConstructionClass.static.GetVariantCount();
 
     UpdateAppearance();
 }
@@ -24,32 +43,39 @@ final function SetMountedWeaponClass(class<DHMountedWeapon> WeaponClass)
 
 function UpdateProxyAppearance()
 {
-    WeaponClass.default.VehicleClass.static.UpdateProxy(self);
+    if (WeaponClass == none || WeaponClass.default.ConstructionClass == none)
+    {
+        return;
+    }
+
+    WeaponClass.default.ConstructionClass.static.UpdateProxy(self);
 }
 
 function GetCollisionSize(Context Context, out float OutRadius, out float OutHeight)
 {
-    if (WeaponClass.default.VehicleClass == none)
+    if (WeaponClass == none || WeaponClass.default.ConstructionClass == none)
     {
         super.GetCollisionSize(Context, OutRadius, OutHeight);
     }
     
-    OutRadius = WeaponClass.default.VehicleClass.default.CollisionRadius;
-    OutHeight = WeaponClass.default.VehicleClass.default.CollisionHeight;
+    WeaponClass.default.ConstructionClass.static.GetCollisionSize(Context, OutRadius, OutHeight);
 }
 
 function string GetMenuName()
 {
-    if (WeaponClass.default.VehicleClass == none)
+    if (WeaponClass == none ||
+        WeaponClass.default.ConstructionClass == none ||
+        WeaponClass.default.ConstructionClass.default.VehicleClass == none)
     {
         return super.GetMenuName();
     }
 
-    return WeaponClass.default.VehicleClass.default.VehicleNameString;
+    return WeaponClass.default.ConstructionClass.default.VehicleClass.default.VehicleNameString;
 }
 
 protected simulated function bool ShouldAlignToGround()
 {
+    // TODO: we want to be able to override this for certain variants.
     return WeaponClass.default.bShouldAlignToGround;
 }
 

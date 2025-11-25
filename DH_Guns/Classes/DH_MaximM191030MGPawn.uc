@@ -11,15 +11,15 @@ defaultproperties
     GunClass=Class'DH_MaximM191030MG'
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
-    DriveAnim="cv33_gunner_closed"  // TODO: replace with an idle anim frame?
+    DriveAnim="cv33_gunner_closed"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_INT',bExposed=true)
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
-        Sequences(0)="maxim_gunner_yaw_driver_pitch_0"
-        Sequences(1)="maxim_gunner_yaw_driver_pitch_25"
-        Sequences(2)="maxim_gunner_yaw_driver_pitch_50"
-        Sequences(3)="maxim_gunner_yaw_driver_pitch_75"
-        Sequences(4)="maxim_gunner_yaw_driver_pitch_100"
+        Sequences(0)="maxim_yaw_pitch_0"
+        Sequences(1)="maxim_yaw_pitch_25"
+        Sequences(2)="maxim_yaw_pitch_50"
+        Sequences(3)="maxim_yaw_pitch_75"
+        Sequences(4)="maxim_yaw_pitch_100"
         SequenceChannel=4
         BlendChannel=5
         SequenceInputType=DIT_Yaw

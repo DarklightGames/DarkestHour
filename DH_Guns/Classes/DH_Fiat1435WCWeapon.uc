@@ -7,7 +7,7 @@ class DH_Fiat1435WCWeapon extends DHMountedWeapon;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_Fiat1435Gun_WC'
+    ConstructionClass=Class'DH_Fiat1435GunConstruction'
     AttachmentClass=Class'DH_Fiat1435WCAttachment'
     PickupClass=Class'DH_Fiat1435WCPickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'

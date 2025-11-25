@@ -9,4 +9,5 @@ class DHMountedWeaponControlsMessage extends DHControlsMessage
 defaultproperties
 {
     Controls(0)=(Keys=("DEPLOY"),Text="Deploy")
+    Controls(1)=(Keys=("SWITCHFIREMODE"),Text="Change Variant")
 }

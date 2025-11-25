@@ -7,25 +7,11 @@ class DH_ConstructionWeapon extends DHActorProxyWeapon;
 
 var class<DHConstruction>       ConstructionClass;
 
-var Sound                       ClickSound;
-
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerCreateConstruction;
-}
-
-simulated function ClientPlayClickSound()
-{
-    local PlayerController PC;
-
-    PC = PlayerController(Instigator.Controller);
-
-    if (PC != none)
-    {
-        PC.ClientPlaySound(ClickSound);
-    }
 }
 
 // Overridden to cycle the variant of the construction proxy.

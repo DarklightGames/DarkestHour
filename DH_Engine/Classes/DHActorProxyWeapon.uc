@@ -15,6 +15,8 @@ var() int                           LocalRotationRate;
 var() protected float               TraceDepthMeters;
 var() protected float               TraceHeightMeters;
 
+var Sound                           ClickSound;
+
 simulated function DHActorProxy CreateProxyCursor();
 simulated function OnConfirmPlacement();
 simulated function bool ShouldSnapRotation();
@@ -408,6 +410,18 @@ function float GetTraceHeightMeters()
     return TraceHeightMeters;
 }
 
+simulated function ClientPlayClickSound()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none)
+    {
+        PC.ClientPlaySound(ClickSound);
+    }
+}
+
 defaultproperties
 {
     SprintStartAnim="crawl_in"
@@ -439,5 +453,6 @@ defaultproperties
     TraceHeightMeters=2.0
     LocalRotationRate=32768
     bCanRotateCursor=true
+    ClickSound=Sound'ROMenuSounds.msfxMouseClick'
 }
 

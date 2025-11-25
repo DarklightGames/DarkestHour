@@ -20,10 +20,29 @@
 //==============================================================================
 // [ ] functionality to allow for good looking TP reload animations (either move
 //     the gun to aim straight or just have this occur in TP, ala the hetzer)
+// [ ] persist barrel states through different instances (pickup, inventory,
+//     vehicle)
+// [ ] add collision querying for standing mounts
+// [ ] standing mounts should always be flat when placed
+// [ ] add UI for barrel heat/damage??
+// [ ] persist variant when picking up mounted gun
+// [ ] add barrel overheating/swap prompt for mounted MGs
+//==============================================================================
+// BUGS
+//==============================================================================
+// [ ] mounted guns start moving as karma objects once force is applied to them
+//     (grenade explosion nearby etc.)
+// [ ] view screws up once barrel has failed (due to CanFire being used in
+//     SpecialCamCalc or whatever it's called)
+// [ ] reloads from supply points not working
+// [ ] the anim channel for blending the upper body is still active for some
+//     reason? was not an issue before. maybe just mute that channel; first 
+//     find out which one it is!
 //==============================================================================
 // MISC
 //==============================================================================
 // [ ] new sounds (firing, reload etc.)
+// [ ] add steaming sound for MG steam actor (placeholder used for now)
 // [ ] interface art
 //==============================================================================
 
@@ -33,6 +52,7 @@ defaultproperties
 {
     VehicleTeam=ALLIES_TEAM_INDEX
     VehicleNameString="Maxim M1910/30"
+    BeginningIdleAnim="IDLE"
     Mesh=SkeletalMesh'DH_Maxim_anm.MAXIM_BODY_EXT'
     bCanBeRotated=true
     CollisionRadius=32.0
