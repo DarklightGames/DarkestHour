@@ -11,8 +11,9 @@ defaultproperties
     GunClass=Class'DH_MaximM191030MG'
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
-    DriveAnim="cv33_gunner_closed"
+    DriveAnim="cv33_gunner_closed"   // TODO: replace with the idle animation.
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_INT',bExposed=true)
+    DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="maxim_yaw_pitch_0"

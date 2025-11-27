@@ -38,6 +38,9 @@
 // [ ] the anim channel for blending the upper body is still active for some
 //     reason? was not an issue before. maybe just mute that channel; first 
 //     find out which one it is!
+// [ ] mounted weapons lerp to initial sight position instead of snapping immediately. make it do this when created?
+// [ ] fix collision box on base
+// [ ] shells eject backwards with other mount (maybe make a second base mesh entirely so we can have different collision)
 //==============================================================================
 // MISC
 //==============================================================================
@@ -54,6 +57,7 @@ defaultproperties
     VehicleNameString="Maxim M1910/30"
     BeginningIdleAnim="IDLE"
     Mesh=SkeletalMesh'DH_Maxim_anm.MAXIM_BODY_EXT'
+    Skins(0)=Texture'DH_Maxim_tex.MAXIM_BODY_EXT'
     bCanBeRotated=true
     CollisionRadius=32.0
     CollisionHeight=16.0

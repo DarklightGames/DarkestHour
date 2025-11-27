@@ -62,7 +62,7 @@ function InitDroppedPickupFor(Inventory Inv)
     if (MapIconAttachment != none)
     {
         MapIconAttachment.SetBase(self);
-        MapIconAttachment.VehicleClass = MountedWeapon.ConstructionClass.default.VehicleClass;
+        MapIconAttachment.VehicleClass = MountedWeapon.ConstructionClasses[0].default.VehicleClasses[0].VehicleClass;
 
         if (Inv.Instigator != none)
         {

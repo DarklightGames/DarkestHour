@@ -82,9 +82,9 @@ struct Context
     var DHPlayer PlayerController;
     var Actor GroundActor;
     var Object OptionalObject;
-    // TODO: these are construction-specific.
     var int VariantIndex;
     var int SkinIndex;
+    var bool bIsInHands;    // The actor for which this is a proxy is in the player's hands.
 };
 
 protected simulated function bool CanPlaceIndoors() { return true; }

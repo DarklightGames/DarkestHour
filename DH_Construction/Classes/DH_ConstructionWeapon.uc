@@ -29,6 +29,11 @@ exec simulated function SwitchFireMode()
     }
 }
 
+simulated function bool WeaponCanBusySwitch()
+{
+    return true;
+}
+
 // Overridden to cycle the skin of the construction proxy.
 exec simulated function ROMGOperation()
 {
@@ -251,7 +256,6 @@ simulated function ROIronSights()
 
 defaultproperties
 {
-    ClickSound=Sound'ROMenuSounds.msfxMouseClick'
     ControlsMessageClass=Class'DHConstructionControlsMessage'
     DrawScale=0.0
 }

@@ -9,9 +9,11 @@
 class DHMountedWeapon extends DHActorProxyWeapon
     abstract;
 
-// TODO: got a small issue here; we want to be able to cycle the variants. Perhaps we should not use VehicleClass, but use the ConstructionClass
-// and then cycle through variants that way. Minor hiccup if there are different skin variants, but it's probably fine.
-var         class<DHConstruction_Vehicle>   ConstructionClass;
+// Construction classes here are meant to be used to toggle the mount being used.
+// This method was chosen because different mounts will have different placement
+// rules and mechanics (a role best suited for being handled in constructions).
+var array<class<DHConstruction_Vehicle> >   ConstructionClasses;
+var int                                     ConstructionClassIndex;
 var private DHVehicleState                  VehicleState;
 
 var()       Material    HudAmmoIconMaterial;
@@ -99,7 +101,8 @@ Begin:
 
 function class<DHVehicle> GetVehicleClass()
 {
-    return ConstructionClass.static.GetVehicleClass(ProxyCursor.GetContext());
+    // TODO: this sucks.
+    return ConstructionClasses[ConstructionClassIndex].default.VehicleClasses[0].VehicleClass;
 }
 
 function DHVehicleState EnsureVehicleState()
@@ -250,10 +253,10 @@ simulated function Material GetHudAmmoIconMaterial()
 
 simulated function DHActorProxy CreateProxyCursor()
 {
-    local DHVehicleProxy Cursor;
+    local DHMountedWeaponProxy Cursor;
 
-    Cursor = Spawn(class'DHVehicleProxy', Instigator);
-    Cursor.SetMountedWeaponClass(Class);
+    Cursor = Spawn(class'DHMountedWeaponProxy', Instigator);
+    Cursor.SetConstructionClass(ConstructionClasses[ConstructionClassIndex]);
 
     return Cursor;
 }
@@ -336,11 +339,11 @@ simulated function bool CanConfirmPlacement()
 
 function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
 {
-    local DHVehicleProxy TestProxy;
+    local DHMountedWeaponProxy TestProxy;
     local DHActorProxy.ActorProxyError Error;
 
     // Create a proxy to test placement logic on the server-side.
-    TestProxy = Spawn(class'DHVehicleProxy', Instigator);
+    TestProxy = Spawn(class'DHMountedWeaponProxy', Instigator);
 
     if (TestProxy == none)
     {
@@ -348,7 +351,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     }
 
     TestProxy.GroundActor = Owner;
-    TestProxy.SetMountedWeaponClass(Class);
+    TestProxy.SetConstructionClass(ConstructionClasses[ConstructionClassIndex]);
     TestProxy.SetLocation(Location);
     TestProxy.SetRotation(Rotation);
 
@@ -363,7 +366,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     return Error.Type == ERROR_None;
 }
 
-// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy this carried Weapon version of the mortar
+// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy the carried weapon.
 function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHVehicle Vehicle;
@@ -371,6 +374,8 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
     
     if (!CanSpawnVehicle(Owner, Location, Rotation))
     {
+        Log("Can't spawn vehicle for some reason");
+
         return;
     }
 
@@ -378,6 +383,8 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 
     if (VehicleClass == none)
     {
+        Log("Vehicle class is None");
+
         return;
     }
 
@@ -419,9 +426,9 @@ exec simulated function ROManualReload();
 
 static function string GetInventoryName(bool bUseNativeItemNames)
 {
-    if (default.ConstructionClass.default.VehicleClass != none)
+    if (default.ConstructionClasses[0].default.VehicleClass != none)
     {
-        return default.ConstructionClass.default.VehicleClass.default.VehicleNameString;
+        return default.ConstructionClasses[0].default.VehicleClass.default.VehicleNameString;
     }
 
     return super.GetInventoryName(bUseNativeItemNames);
@@ -429,13 +436,15 @@ static function string GetInventoryName(bool bUseNativeItemNames)
 
 final function CycleVariant()
 {
-    local DHVehicleProxy VP;
+    local DHMountedWeaponProxy Proxy;
 
-    VP = DHVehicleProxy(ProxyCursor);
+    Proxy = DHMountedWeaponProxy(ProxyCursor);
 
-    if (VP != none)
+    if (Proxy != none)
     {
-        VP.CycleVariant();
+        ConstructionClassIndex = ++ConstructionClassIndex % ConstructionClasses.Length;
+
+        Proxy.SetConstructionClass(ConstructionClasses[ConstructionClassIndex]);
 
         ClientPlayClickSound();
     }

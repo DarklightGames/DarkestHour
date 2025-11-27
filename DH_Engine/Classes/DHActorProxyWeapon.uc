@@ -455,4 +455,3 @@ defaultproperties
     bCanRotateCursor=true
     ClickSound=Sound'ROMenuSounds.msfxMouseClick'
 }
-

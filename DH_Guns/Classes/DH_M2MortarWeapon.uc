@@ -7,7 +7,7 @@ class DH_M2MortarWeapon extends DHMountedWeapon;
 
 defaultproperties
 {
-    ConstructionClass=Class'DH_M2MortarConstruction'
+    ConstructionClasses(0)=Class'DH_M2MortarConstruction'
     AttachmentClass=Class'DH_M2MortarAttachment'
     PickupClass=Class'DH_M2MortarPickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'

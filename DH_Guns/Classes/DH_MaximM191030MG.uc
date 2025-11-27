@@ -10,6 +10,7 @@ class DH_MaximM191030MG extends DHMountedMG;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_EXT'
+    Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
 
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
         DistanceUnit=DU_Meters

@@ -65,6 +65,9 @@ var     bool        bUseInternalMeshForBaseVehicle; // If true, we use the inter
 // but internally the pitch is at 0 degrees).
 var     int         GunPitchOffset;
 
+// In cases where we have meshes with complete different skins.
+var     array<Material> DriverPositionMeshSkins;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2228,6 +2231,7 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
 {
     local Mesh    NewMesh;
     local Rotator WeaponYaw, WeaponPitch;
+    local int i;
 
     if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
     {
@@ -2265,6 +2269,22 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
                 WeaponPitch.Pitch = -Gun.CurrentAim.Pitch;
                 Gun.SetBoneRotation(Gun.YawBone, WeaponYaw);
                 Gun.SetBoneRotation(Gun.PitchBone, WeaponPitch);
+            }
+
+            // Handle skins if we are using driver position mesh skins.
+            if (NewMesh == Gun.default.Mesh)
+            {
+                for (i = 0; i < Gun.default.Skins.Length; ++i)
+                {
+                    Gun.Skins[i] = Gun.default.Skins[0];
+                }
+            }
+            else
+            {
+                for (i = 0; i < DriverPositionMeshSkins.Length; ++i)
+                {
+                    Gun.Skins[i] = DriverPositionMeshSkins[i];
+                }
             }
 
             OnSwitchMesh();

@@ -3,12 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M1919A4Weapon extends DHMountedWeapon;
+class DH_MaximM191030GunConstruction_Standing extends DH_MaximM191030GunConstruction;
 
 defaultproperties
 {
-    ConstructionClasses(0)=Class'DH_M1919A4GunConstruction'
-    AttachmentClass=Class'DH_M1919A4Attachment'
-    PickupClass=Class'DH_M1919A4Pickup'
-    Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
+    VehicleClasses(0)=(VariantIndex=1,VehicleClass=Class'DH_MaximM191030Gun_Standing')
+    bShouldAlignToGround=false
 }

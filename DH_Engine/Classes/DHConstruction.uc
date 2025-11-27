@@ -219,6 +219,25 @@ var int SkinIndex;
 // When true, this construction is "active" and counts towards the owning team's active limit.
 var private bool bIsActive;
 
+enum ECollisionQueryType
+{
+    CQT_Trace,              // Trace from TraceStart to TraceEnd.
+    CQT_PlayerCollision     // Do a test to see if a player can stand where we want him.
+};
+
+// Additional collision queries to perform.
+struct SCollisionQuery
+{
+    var ECollisionQueryType Type;
+    var Vector TraceStart;
+    var Vector TraceEnd;
+    var Vector Location;
+    var float Radius;
+    var float Height;
+};
+
+var array<SCollisionQuery> CollisionQueries;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1119,7 +1138,7 @@ static function DHActorProxy.ActorProxyError GetContextError(DHActorProxy.Contex
         return E;
     }
 
-    if (!P.CanSwitchWeapon())
+    if (!P.CanSwitchWeapon() && !P.CanThrowWeapon())
     {
         E.Type = ERROR_PlayerBusy;
         return E;

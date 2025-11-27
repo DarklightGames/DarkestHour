@@ -24,8 +24,6 @@ function DHActorProxy.Context GetContext()
     local DHActorProxy.Context Context;
 
     Context = super.GetContext();
-    
-    // TODO: replace this with optional object?
     Context.VariantIndex = VariantIndex;
     Context.SkinIndex = DefaultSkinIndex + SkinIndex;
 
@@ -173,6 +171,7 @@ protected simulated function Vector GetPlacementOffset()
     return ConstructionClass.static.GetPlacementOffset(GetContext());
 }
 
+// TODO: shouldn't this be CanSnapToTerrain??
 protected simulated function bool CanPlaceOnTerrain(TerrainInfo TerrainInfo)
 {
     if (TerrainInfo.TerrainScale.X > ConstructionClass.default.TerrainScaleMax ||
