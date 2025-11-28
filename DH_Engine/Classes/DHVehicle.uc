@@ -95,7 +95,8 @@ var   array<DHVehicleComponentController>   VehicleComponentControllerActors;
 
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
-var DHVehicleMG     MGun;                        // reference to the vehicle's mounted MG weapon
+var DHVehicleMG     MGun;                        // reference to the vehicle's vehicle MG weapon
+var DHMountedMG     MountedMG;                   // reference to the vehicle's mounted MG weapon
 var array<Material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array

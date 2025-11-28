@@ -9,7 +9,8 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.mg'
     VehicleClasses(0)=(VariantIndex=0,VehicleClass=Class'DH_MaximM191030Gun')
-    VehicleClasses(1)=(VariantIndex=1,VehicleClass=Class'DH_MaximM191030Gun_Standing')
+    VehicleClasses(1)=(VariantIndex=0,VehicleClass=Class'DH_MaximM191030Gun_Winter',SeasonFilters=((Seasons=(SEASON_Winter))))
+    VehicleClasses(2)=(VariantIndex=1,VehicleClass=Class'DH_MaximM191030Gun_Standing')
     SupplyCost=500
     ProgressMax=5
     bCanOnlyPlaceOnTerrain=false

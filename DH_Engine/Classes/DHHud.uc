@@ -1384,6 +1384,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         {
             Gun = V.MGun;
         }
+        else if (V.MountedMG != none)
+        {
+            Gun = V.MountedMG;
+        }
 
         if (Gun != none)
         {

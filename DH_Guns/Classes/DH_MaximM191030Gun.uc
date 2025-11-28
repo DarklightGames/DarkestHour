@@ -64,9 +64,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_MaximM191030MGPawn',WeaponBone="TURRET_PLACEMENT")
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
-    VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'                   // TODO: replace
-    VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'        // TODO: replace
-    VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'   // TODO: replace
+    VehicleHudImage=Texture'DH_Maxim_tex.MAXIM_BODY_ICON'
+    VehicleHudTurret=TexRotator'DH_Maxim_tex.MAXIM_TURRET_ROT'
+    VehicleHudTurretLook=TexRotator'DH_Maxim_tex.MAXIM_TURRET_LOOK'
     MountedWeaponClass=Class'DH_MaximM191030Weapon'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)

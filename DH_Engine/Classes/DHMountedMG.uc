@@ -580,6 +580,16 @@ simulated function float GetFireSoundPitch()
     return super.GetFireSoundPitch();
 }
 
+simulated function InitializeVehicleBase()
+{
+    super.InitializeVehicleBase();
+
+    if (DHVehicle(Base) != none)
+    {
+        DHVehicle(Base).MountedMG = self;
+    }
+}
+
 defaultproperties
 {
     ReloadCameraTweenTime=0.5
