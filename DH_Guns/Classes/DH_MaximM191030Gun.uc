@@ -4,9 +4,7 @@
 //==============================================================================
 // MODELING & TEXTURING
 //==============================================================================
-// [ ] FP and TP texturing
-// [ ] FP model
-// [ ] Destroyed mesh
+// [~] Destroyed mesh
 //==============================================================================
 // ANIMATION
 //==============================================================================
@@ -22,31 +20,25 @@
 //     the gun to aim straight or just have this occur in TP, ala the hetzer)
 // [ ] persist barrel states through different instances (pickup, inventory,
 //     vehicle)
-// [ ] add collision querying for standing mounts
-// [ ] standing mounts should always be flat when placed
+// [ ] add collision querying for placement (i.e., make sure there's enough room for the gunner)
 // [ ] add UI for barrel heat/damage??
 // [ ] persist variant when picking up mounted gun
-// [ ] add barrel overheating/swap prompt for mounted MGs
+// [ ] add barrel overheating/swap hint for mounted MGs
 //==============================================================================
 // BUGS
 //==============================================================================
 // [ ] mounted guns start moving as karma objects once force is applied to them
-//     (grenade explosion nearby etc.)
+//     (grenade explosion nearby etc.) [mnight have to do with whether or not it has a karma collision box]
 // [ ] view screws up once barrel has failed (due to CanFire being used in
 //     SpecialCamCalc or whatever it's called)
 // [ ] reloads from supply points not working
-// [ ] the anim channel for blending the upper body is still active for some
-//     reason? was not an issue before. maybe just mute that channel; first 
-//     find out which one it is!
 // [ ] mounted weapons lerp to initial sight position instead of snapping immediately. make it do this when created?
-// [ ] fix collision box on base
 // [ ] shells eject backwards with other mount (maybe make a second base mesh entirely so we can have different collision)
+// [ ] make sure vis box is correct
 //==============================================================================
 // MISC
 //==============================================================================
 // [ ] new sounds (firing, reload etc.)
-// [ ] add steaming sound for MG steam actor (placeholder used for now)
-// [ ] interface art
 //==============================================================================
 
 class DH_MaximM191030Gun extends DHATGun;
