@@ -432,15 +432,26 @@ def write_unt(path: str, unt_contents: str):
 def clean(args):
     language_extensions = {'.det', '.int', '.frt',  '.est', '.itt', '.dut', '.jap', '.ukr', '.rus', '.pol'}
     root_path = Path(args.path).absolute().resolve()
-    repository_path = root_path / args.mod / 'System'
+    system_path = root_path / args.mod / 'System'
     files_to_delete = []
 
-    for root, _, files in os.walk(repository_path):
+    process = subprocess.run(['git', 'ls-files'], cwd=str(system_path), capture_output=True, text=True)
+    if process.returncode != 0:
+        print('ERROR: Failed to list tracked files. Is git installed?')
+        exit(1)
+
+    git_tracked_files = set(process.stdout.splitlines())
+
+    for root, _, files in os.walk(system_path):
         for file in files:
             ext = os.path.splitext(file)[1]
             if ext in language_extensions:
+                basename = os.path.basename(file)    
+                if basename in git_tracked_files:
+                    print(f'Skipping {basename} since it is a tracked file')
+                    continue
                 files_to_delete.append(Path(root) / file)
-    
+
     if len(files_to_delete) == 0:
         print('No translation files to clean')
         return
