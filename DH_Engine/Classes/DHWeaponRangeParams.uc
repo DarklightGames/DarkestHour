@@ -35,7 +35,7 @@ simulated function float GetAnimFrameTarget()
     return AnimFrameTarget;
 }
 
-simulated function SetRangeDriverFrameTarget(float TimeSeconds, int RangeIndex)
+simulated function SetRangeDriverFrameTarget(float TimeSeconds, int RangeIndex, optional bool bNoInterpolation)
 {
     local float NewFrameTarget;
 
@@ -44,7 +44,12 @@ simulated function SetRangeDriverFrameTarget(float TimeSeconds, int RangeIndex)
     AnimFrameStart = AnimFrame;
     AnimFrameTarget = NewFrameTarget;
     AnimTimeSecondsStart = TimeSeconds;
-    AnimTimeSecondsEnd = AnimTimeSecondsStart + AnimationInterpDuration;
+    AnimTimeSecondsEnd = AnimTimeSecondsStart;
+
+    if (!bNoInterpolation)
+    {
+        AnimTimeSecondsEnd += AnimationInterpDuration;
+    }
 }
 
 simulated function Tick(float TimeSeconds)

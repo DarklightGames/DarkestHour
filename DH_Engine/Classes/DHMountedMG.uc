@@ -169,7 +169,7 @@ simulated function OnSwitchMesh()
     SetupAnimationDrivers();
     InitializeAmmoRounds();
     UpdateClip();
-    UpdateRangeDriverFrameTarget();
+    UpdateRangeDriverFrameTarget(true);
 }
 
 simulated function DestroyAmmoRounds()
@@ -422,6 +422,7 @@ simulated function SetupAnimationDrivers()
     {
         AnimBlendParams(RangeParams.Channel, 1.0,,, RangeParams.Bone);
         PlayAnim(RangeParams.Anim, 0.0, 0.0, RangeParams.Channel);
+        UpdateRangeDriverFrameTarget(true);
         UpdateRangeDriver();
     }
 
@@ -519,11 +520,11 @@ simulated function RangeIndexChanged()
     UpdateRangeDriverFrameTarget();
 }
 
-simulated function UpdateRangeDriverFrameTarget()
+simulated function UpdateRangeDriverFrameTarget(optional bool bNoInterpolation)
 {
     if (RangeParams != none)
     {
-        RangeParams.SetRangeDriverFrameTarget(Level.TimeSeconds, RangeIndex);
+        RangeParams.SetRangeDriverFrameTarget(Level.TimeSeconds, RangeIndex, bNoInterpolation);
     }
 }
 
@@ -588,6 +589,27 @@ simulated function InitializeVehicleBase()
     {
         DHVehicle(Base).MountedMG = self;
     }
+}
+
+// Modified to handle resupply MG ammunition.
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    if (NumMGMags < default.NumMGMags)
+    {
+        ++NumMGMags;
+        bDidResupply = true;
+    }
+
+    // TODO: not sure if this works; double check it.
+    // If weapon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
+    if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
+    {
+        AttemptReload();
+    }
+    
+    return bDidResupply;
 }
 
 defaultproperties

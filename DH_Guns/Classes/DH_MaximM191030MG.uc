@@ -3,6 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Maxim Gun firing: https://www.youtube.com/watch?v=vYx1KnXVvs4
+// Good firing video: https://www.youtube.com/watch?v=h-w_3niamzQ
 //==============================================================================
 
 class DH_MaximM191030MG extends DHMountedMG;
@@ -44,8 +45,8 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
-    FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
+    FireSoundClass=Sound'DH_WeaponSounds.maxim_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.MaximFireLoopEnd'
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

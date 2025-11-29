@@ -20,9 +20,8 @@
 //     the gun to aim straight or just have this occur in TP, ala the hetzer)
 // [ ] persist barrel states through different instances (pickup, inventory,
 //     vehicle)
+// [ ] persist skin when picking up mounted gun
 // [ ] add collision querying for placement (i.e., make sure there's enough room for the gunner)
-// [ ] add UI for barrel heat/damage??
-// [ ] persist variant when picking up mounted gun
 // [ ] add barrel overheating/swap hint for mounted MGs
 //==============================================================================
 // BUGS
@@ -31,8 +30,6 @@
 //     (grenade explosion nearby etc.) [mnight have to do with whether or not it has a karma collision box]
 // [ ] view screws up once barrel has failed (due to CanFire being used in
 //     SpecialCamCalc or whatever it's called)
-// [ ] reloads from supply points not working
-// [ ] mounted weapons lerp to initial sight position instead of snapping immediately. make it do this when created?
 // [ ] shells eject backwards with other mount (maybe make a second base mesh entirely so we can have different collision)
 // [ ] make sure vis box is correct
 //==============================================================================

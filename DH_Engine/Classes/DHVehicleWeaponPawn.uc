@@ -2739,8 +2739,6 @@ simulated function UpdateAnimationDriverStates()
     local int i;
     local bool bShouldBeActive;
 
-    Log("UpdateAnimationDriverStates" @ Driver);
-
     if (Driver == none)
     {
         return;
