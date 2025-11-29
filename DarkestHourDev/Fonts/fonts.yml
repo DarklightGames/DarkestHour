@@ -1,20 +1,18 @@
 # This file is used to generate the fonts and supporting code for the game.
 # All fonts must be installed before executing the script.
-package_name: DHFonts
+# On Linux, the fonts must be installed on both the host machine and the WINE prefix.
+package_name: DH_Fonts_int
 unrealscript:
-  gui_fonts:
     # The directory where the GUIFonts will be generated.
-    directory: ./DH_Interface/Classes
+  gui_fonts_directory: ./DH_Interface/Classes
   # The path to the script that will be generated to support loading and accessing fonts.
-  fonts:
-    directory: ./DH_Engine/Classes
-    class_name: DHFonts
-proportional:
-  resolution:
-    baseline: 1080  # The resolution that the baseline font size is based on.
-    groups:
-      canvas: [1440, 1080, 1024, 900, 768]
-      gui: [1400, 1080, 900] # GUI fonts can only have 3 different size levels.
+  fonts_package_name: DH_Fonts
+  fonts_class_name: DHFonts
+resolution:
+  baseline: 1080  # The resolution that the baseline font size is based on.
+  groups:
+    canvas: [1440, 1080, 1024, 900, 768]
+    gui: [1400, 1080, 900] # GUI fonts can only have 3 different size levels.
 defaults:
   unicode_ranges: # These unicode ranges are always included for each language.
     - [ 0x0000, 0x007F ] # Basic Latin
@@ -46,17 +44,19 @@ defaults:
     - [ 0x2032, 0x2033 ]
     - 0x20AC
   font_style:
+    compression: DXT5  # [RGBA8, DXT3, DXT5]
     texture_size: # Maximum size of each texture atlas.
       x: 512
       y: 512
-    margin: # Margin around each character
-      bottom: 1
-      top: 1
-      left: 1
-      right: 1
+    # margin: # Margin around each character
+    #   bottom: 1
+    #   top: 1
+    #   left: 1
+    #   right: 1
     padding:
       x: 1
       y: 1
+    anti_alias: 1
   resolution_group: canvas
 font_styles:
   # TODO: do not duplicate duplicate font styles if the hash of all the settings are identical.
@@ -149,15 +149,15 @@ font_styles:
         method: proportional
         baseline: 8
         resolution_group: gui
-languages:
-  en:
-    name: English, French, German, Italian, Spanish
-#  ja:
-#    name: Japanese
-#    font_substitutions:
-#      Sofia Sans Condensed: BIZ UDGothic
-#    ensure_all_characters: true
-#    unicode_ranges:
-#      - [0x3041, 0x309F]
-#      - [0x30A0, 0x30FF]
-#      - [0x31F0, 0x31FF]
+packages:
+  DH_Fonts_jap:
+    languages: [ja]
+    font_substitutions:
+      Sofia Sans Condensed: Source Han Sans JP
+      Inter: Source Han Sans JP
+      Arial: Source Han Sans JP
+    ensure_all_used_characters: true
+    unicode_ranges:
+      - [0x3041, 0x309F]
+      - [0x30A0, 0x30FF]
+      - [0x31F0, 0x31FF]

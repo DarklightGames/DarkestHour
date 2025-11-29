@@ -12,7 +12,7 @@ struct FontStyleItem {
     var int Resolution;
 };
 
-var string FontNames[31];
+var localized string FontNames[31];
 var Font Fonts[31];
 var FontStyleItem DHConsoleFontItems[5];
 var FontStyleItem DHConsoleFontDSItems[5];
@@ -237,37 +237,37 @@ static function Font GetDHTinyFontByResolution(int ResX, int ResY) {
 
 defaultproperties
 {
-    FontNames(0)="DHFonts.InterA18"
-    FontNames(1)="DHFonts.InterA14"
-    FontNames(2)="DHFonts.InterA12"
-    FontNames(3)="DHFonts.InterA10"
-    FontNames(4)="DHFonts.InterAD18"
-    FontNames(5)="DHFonts.InterAD14"
-    FontNames(6)="DHFonts.InterAD12"
-    FontNames(7)="DHFonts.InterAD10"
-    FontNames(8)="DHFonts.SofiaSansCondensedAW100026"
-    FontNames(9)="DHFonts.SofiaSansCondensedAW100020"
-    FontNames(10)="DHFonts.SofiaSansCondensedAW100016"
-    FontNames(11)="DHFonts.SofiaSansCondensedADW100026"
-    FontNames(12)="DHFonts.SofiaSansCondensedADW100020"
-    FontNames(13)="DHFonts.SofiaSansCondensedADW100016"
-    FontNames(14)="DHFonts.SofiaSansCondensedA42"
-    FontNames(15)="DHFonts.SofiaSansCondensedA32"
-    FontNames(16)="DHFonts.SofiaSansCondensedA26"
-    FontNames(17)="DHFonts.ArialA26"
-    FontNames(18)="DHFonts.ArialA20"
-    FontNames(19)="DHFonts.ArialA16"
-    FontNames(20)="DHFonts.ArialAD26"
-    FontNames(21)="DHFonts.ArialAD20"
-    FontNames(22)="DHFonts.ArialAD16"
-    FontNames(23)="DHFonts.SofiaSansCondensedAW100028"
-    FontNames(24)="DHFonts.SofiaSansCondensedAW100022"
-    FontNames(25)="DHFonts.SofiaSansCondensedAW100018"
-    FontNames(26)="DHFonts.SofiaSansCondensedADW100028"
-    FontNames(27)="DHFonts.SofiaSansCondensedADW100022"
-    FontNames(28)="DHFonts.SofiaSansCondensedADW100018"
-    FontNames(29)="DHFonts.InterA8"
-    FontNames(30)="DHFonts.InterA6"
+    FontNames(0)="DH_Fonts_int.InterA18"
+    FontNames(1)="DH_Fonts_int.InterA14"
+    FontNames(2)="DH_Fonts_int.InterA12"
+    FontNames(3)="DH_Fonts_int.InterA10"
+    FontNames(4)="DH_Fonts_int.InterAD18"
+    FontNames(5)="DH_Fonts_int.InterAD14"
+    FontNames(6)="DH_Fonts_int.InterAD12"
+    FontNames(7)="DH_Fonts_int.InterAD10"
+    FontNames(8)="DH_Fonts_int.SofiaSansCondensedAW100026"
+    FontNames(9)="DH_Fonts_int.SofiaSansCondensedAW100020"
+    FontNames(10)="DH_Fonts_int.SofiaSansCondensedAW100016"
+    FontNames(11)="DH_Fonts_int.SofiaSansCondensedADW100026"
+    FontNames(12)="DH_Fonts_int.SofiaSansCondensedADW100020"
+    FontNames(13)="DH_Fonts_int.SofiaSansCondensedADW100016"
+    FontNames(14)="DH_Fonts_int.SofiaSansCondensedA42"
+    FontNames(15)="DH_Fonts_int.SofiaSansCondensedA32"
+    FontNames(16)="DH_Fonts_int.SofiaSansCondensedA26"
+    FontNames(17)="DH_Fonts_int.ArialA26"
+    FontNames(18)="DH_Fonts_int.ArialA20"
+    FontNames(19)="DH_Fonts_int.ArialA16"
+    FontNames(20)="DH_Fonts_int.ArialAD26"
+    FontNames(21)="DH_Fonts_int.ArialAD20"
+    FontNames(22)="DH_Fonts_int.ArialAD16"
+    FontNames(23)="DH_Fonts_int.SofiaSansCondensedAW100028"
+    FontNames(24)="DH_Fonts_int.SofiaSansCondensedAW100022"
+    FontNames(25)="DH_Fonts_int.SofiaSansCondensedAW100018"
+    FontNames(26)="DH_Fonts_int.SofiaSansCondensedADW100028"
+    FontNames(27)="DH_Fonts_int.SofiaSansCondensedADW100022"
+    FontNames(28)="DH_Fonts_int.SofiaSansCondensedADW100018"
+    FontNames(29)="DH_Fonts_int.InterA8"
+    FontNames(30)="DH_Fonts_int.InterA6"
     DHConsoleFontItems(0)=(FontIndex=0,Resolution=1440)
     DHConsoleFontItems(1)=(FontIndex=1,Resolution=1080)
     DHConsoleFontItems(2)=(FontIndex=1,Resolution=1024)

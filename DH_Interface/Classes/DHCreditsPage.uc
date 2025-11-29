@@ -310,6 +310,7 @@ defaultproperties
     LocalizationTeam(4)="Ramitos (Spanish)"
     LocalizationTeam(5)="WernerWolff (German)"
     LocalizationTeam(6)="Frenchy (French)"
+    LocalizationTeam(7)="mineship2 (Japanese)"
 
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"

@@ -29,7 +29,7 @@ EXEC "C:\Program Files (x86)\Steam\steamapps\common\Red Orchestra\DarkestHourDev
 
 > Note that the above path may be different on your system depending on where Red Orchestra is installed!
 
-It will also generate the UnrealScript classes for the fonts in the directory specified in `unrealscript.gui_fonts.directory` and `unrealscript.fonts.directory` in the `fonts.yml` file. 
+It will also generate the UnrealScript classes for the fonts in the directory specified in `unrealscript.gui_fonts_directory` and `unrealscript.fonts_directory` in the `fonts.yml` file. 
 
 To execute the script file within the SDK, press the **Show Full Log Window** button at the bottom left of the screen (to the right of the command prompt input) and copy-paste the command into the console and press enter.
 
@@ -39,7 +39,7 @@ This will generate the font atlases and data structures in the package specified
 The main way for accessing fonts is though the generated fonts class.  In Darkest Hour, this is the `DHFonts` class. A number of functions are generated for accessing the font styles in various ways. For example:
 
 ```unrealscript
-Class'DHFonts'.static.GetDHConsoleFontByResolution(ResX, ResY);
+Class'DH_Fonts'.static.GetDHConsoleFontByResolution(ResX, ResY);
 ```
 
 This call will return a `Font` for the style `DHConsoleFont` that is appropriate for the resolution specified.
