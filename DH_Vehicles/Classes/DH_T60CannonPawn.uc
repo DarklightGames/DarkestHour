@@ -12,8 +12,8 @@ defaultproperties
 
     //Driver's positions & anims
     DriverPositions(0)=(ViewLocation=(X=15,Y=-2,Z=-1),ViewFOV=30,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim=none,ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)
-    DriverPositions(1)=(ViewLocation=(X=-9.0,Y=-12.0,Z=0.0),ViewFOV=75,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=false)
-    DriverPositions(2)=(ViewLocation=(X=-9.0,Y=12.0,Z=0.0),ViewFOV=75,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim=VT60_com_close,TransitionUpAnim=com_open,ViewPitchUpLimit=5000,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=false)
+    DriverPositions(1)=(ViewLocation=(X=-9.0,Y=-12.0,Z=0.0),ViewFOV=72,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=false)
+    DriverPositions(2)=(ViewLocation=(X=-9.0,Y=12.0,Z=0.0),ViewFOV=72,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim=VT60_com_close,TransitionUpAnim=com_open,ViewPitchUpLimit=5000,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=false)
     DriverPositions(3)=(ViewLocation=(X=0,Y=0,Z=0),PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim=VT60_com_open,TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=true)
     DriverPositions(4)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=12,PositionMesh=Mesh'DH_T60_anm.T60_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
 
