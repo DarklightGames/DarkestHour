@@ -7,17 +7,16 @@
 // construction may add one of these on either side of the "pit" so that
 // a stationary machine-gun can be placed on it, overriding the usual rules
 // that would disallow placement for other reasons.
-//
-// These are not replicated and are expected to be created on the server
-// and client independently.
 //==============================================================================
 
 class DHActorProxySocket extends Actor;
 
 var() bool  bLimitLocalRotation;    // When true, the local rotation of the actor proxy is limited to the specified yaw range.
 var() Range LocalRotationYawRange;  // Limits the local rotation of the actor proxy attached to this hint.
+var() bool  bShouldDestroyOccupant;
 
-var Actor   Occupant;               // The current actor that is occupying this socket.
+var private Actor Occupant;         // The current actor that is occupying this socket.
+var private DHActorProxy Proxy;     // The proxy actor that is snapped to this socket.
 
 replication
 {
@@ -29,7 +28,7 @@ function Destroyed()
 {
     super.Destroyed();
 
-    if (Occupant != None)
+    if (bShouldDestroyOccupant && Occupant != None)
     {
         Occupant.Destroy();
     }
@@ -39,6 +38,37 @@ simulated function bool IsOccupied()
 {
     return Occupant != None;
 }
+
+function Actor GetOccupant()
+{
+    return Occupant;
+}
+
+function SetOccupant(Actor Occupant)
+{
+    if (self.Occupant != Occupant)
+    {
+        self.Occupant = Occupant;
+        OnOccupantChanged();
+    }
+}
+
+simulated function DHActorProxy GetProxy()
+{
+    return Proxy;
+}
+
+simulated function SetProxy(DHActorProxy Proxy)
+{
+    if (self.Proxy != Proxy)
+    {
+        self.Proxy = Proxy;
+        OnProxyChanged();
+    }
+}
+
+function OnOccupantChanged();
+simulated function OnProxyChanged();
 
 defaultproperties
 {

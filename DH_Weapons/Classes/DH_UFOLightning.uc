@@ -9,7 +9,7 @@ defaultproperties
 {
     Damage=5000000
     BallisticCoefficient=5.675
-    Speed=3000.0  //very slow
+    Speed=5000.0  //very slow
     TracerEffectClass=Class'DHBulletTracerUFO_Blue'
     StaticMesh=StaticMesh'DH_UFO_stc.LightningA'
     DeflectedMesh=none

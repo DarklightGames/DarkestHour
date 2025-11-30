@@ -27,6 +27,8 @@ var Range                   LocalRotationYawRange;
 var localized string        MenuName;
 var localized string        MenuVerb;
 
+var DHActorProxySocket      Socket;
+
 enum EActorProxyErrorType
 {
     ERROR_None,
@@ -61,6 +63,7 @@ enum EActorProxyErrorType
     ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective.
     ERROR_MissingRequirement,       // Not close enough to a required friendly actor.
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
+    ERROR_NoSquadmatesNearby,       // No squadmates nearby.
     ERROR_Other,
 };
 
@@ -103,6 +106,10 @@ protected simulated function float GetSpawnPointDistanceThresholdMeters() { retu
 protected simulated function bool CanPlaceOnTerrainSurfaceType(Material.ESurfaceTypes SurfaceType) { return true; }
 protected simulated function Vector GetPlacementOffset();
 protected simulated function bool CanPlaceOnTerrain(TerrainInfo TerrainInfo) { return true; }
+
+// Functions to call when the proxy is snapped or unsnapped from a socket.
+delegate OnSocketEnter(DHActorProxySocket Socket);
+delegate OnSocketExit(DHActorProxySocket Socket);
 
 function PostBeginPlay()
 {
@@ -381,7 +388,6 @@ function ActorProxyError SetProvisionalLocationAndRotation()
     local Material HitMaterial;
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
-    local DHConstructionSocket Socket;
 
     GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
 
@@ -406,7 +412,6 @@ function ActorProxyError SetProvisionalLocationAndRotation()
         // The ground actor is a location hint, so just use the hint location & rotation.
         BaseLocation = GroundActor.Location;
         Forward = Vector(GroundActor.Rotation);
-        Socket = DHConstructionSocket(GroundActor);
     }
     else
     {
@@ -582,6 +587,27 @@ function ActorProxyError SetProvisionalLocationAndRotation()
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
     }
+    
+    // Handle socket entering and exiting.
+    if (Socket != GroundActor)
+    {
+        if (Socket != none)
+        {
+            Socket.SetProxy(none);
+            OnSocketExit(Socket);
+        }
+
+        if (GroundActor.IsA('DHConstructionSocket'))
+        {
+            Socket = DHConstructionSocket(GroundActor);
+            Socket.SetProxy(self);
+            OnSocketEnter(Socket);
+        }
+        else
+        {
+            Socket = none;
+        }
+    }
 
     SetLocation(BaseLocation + (GetPlacementOffset() << Rotator(Forward)));
     SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(Rotator(Forward)))));
@@ -604,7 +630,7 @@ function ActorProxyError GetPositionError()
     local ActorProxyError E;
     local Vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
     local Actor HitActor;
-    local DHConstructionSocket Socket;
+    local DHActorProxySocket Socket;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -654,9 +680,9 @@ function ActorProxyError GetPositionError()
     // TODO: abstract socketing
 
     // Don't allow placement on a socket if it's occupied.
-    Socket = DHConstructionSocket(GroundActor);
+    Socket = DHActorProxySocket(GroundActor);
 
-    if (Socket != none && Socket.Occupant != none)
+    if (Socket != none && Socket.GetOccupant() != none)
     {
         E.Type = ERROR_SocketOccupied;
         return E;

@@ -16,8 +16,8 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M4A3E2_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
-    // Turret armor
-    FrontArmorFactor=16.6
+    // Turret armor. Sources: Page 69 of WWII Ballistics: Armor and Gunnery and http://the.shadock.free.fr/sherman_minutia/manufacturer/m4a3e2jumbo/m4a3e2.html
+    FrontArmorFactor=17.8
     RightArmorFactor=15.2
     LeftArmorFactor=15.2
     RearArmorFactor=15.2

@@ -8,5 +8,5 @@ done
 DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 pushd "$DIR"
-python make.py ../../. -mod DarkestHourDev -clean -dumpint
+python3 make.py ../../. -mod DarkestHourDev -clean -dumpint
 popd

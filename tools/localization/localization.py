@@ -429,6 +429,47 @@ def write_unt(path: str, unt_contents: str):
         file.write(unt_contents.encode('utf-16-le'))
 
 
+def clean(args):
+    language_extensions = {'.det', '.int', '.frt',  '.est', '.itt', '.dut', '.jap', '.ukr', '.rus', '.pol'}
+    root_path = Path(args.path).absolute().resolve()
+    system_path = root_path / args.mod / 'System'
+    files_to_delete = []
+
+    process = subprocess.run(['git', 'ls-files'], cwd=str(system_path), capture_output=True, text=True)
+    if process.returncode != 0:
+        print('ERROR: Failed to list tracked files. Is git installed?')
+        exit(1)
+
+    git_tracked_files = set(process.stdout.splitlines())
+
+    for root, _, files in os.walk(system_path):
+        for file in files:
+            ext = os.path.splitext(file)[1]
+            if ext in language_extensions:
+                basename = os.path.basename(file)    
+                if basename in git_tracked_files:
+                    print(f'Skipping {basename} since it is a tracked file')
+                    continue
+                files_to_delete.append(Path(root) / file)
+
+    if len(files_to_delete) == 0:
+        print('No translation files to clean')
+        return
+    
+    if not args.yes:
+        for file in files_to_delete:
+            print(file)
+        print(f'{len(files_to_delete)} files will be deleted')
+        choice = input('Confirm? [y/n]: ').lower()
+        if choice not in ['y', 'yes']:
+            return
+    
+    for file in files_to_delete:
+        os.remove(file)
+    
+    print(f'{len(files_to_delete)} files deleted')
+
+
 def sync(args):
     # Add timing mechanism.
     start_time = time.time()
@@ -472,7 +513,7 @@ def sync(args):
         basename = os.path.basename(filename)
 
         # TODO: have this regex be part of the configuration file.
-        regex = r'([^\.]+)\.([^\.]+)\.po$'
+        regex = r'([^\.]+)\.([^\_\.]+)(_[^\.]*)?\.po$'
         match = re.search(regex, basename)
         basename = match.group(1)
         language_code = match.group(2)
@@ -620,6 +661,12 @@ cleanup_parser.add_argument('-t', '--target_language_code', help='The target lan
 cleanup_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 cleanup_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 cleanup_parser.set_defaults(func=remove_redundant_strings)
+
+clean_parser = subparsers.add_parser('clean', help='')
+clean_parser.add_argument('path', help='The game\'s root directory')
+clean_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
+clean_parser.add_argument('-y', '--yes', action='store_true', help='Do not prompt to confirm', required=False)
+clean_parser.set_defaults(func=clean)
 
 
 if __name__ == '__main__':

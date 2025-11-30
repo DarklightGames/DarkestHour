@@ -6443,7 +6443,7 @@ simulated function bool VerifyGivenItems()
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
-    return Level.NetMode == NM_Standalone || Class'DH_LevelInfo'.static.DHDebugMode();
+    return (Level != none && Level.NetMode == NM_Standalone) || Class'DH_LevelInfo'.static.DHDebugMode();
 }
 
 // Bogeyman mode to become invisible and invincible, useful for filming!
@@ -7384,14 +7384,13 @@ exec function BigHead(float V)
     SetHeadScale(V);
 }
 
-simulated function bool CanBuildWithShovel()
+simulated function bool CanPlaceConstruction()
 {
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    return Level.NetMode == NM_Standalone ||
-           PRI.bAdmin || PRI.bSilentAdmin ||
+    return PRI.bAdmin || PRI.bSilentAdmin ||
            IsDebugModeAllowed() ||
            !PRI.IsSquadLeader() ||
            HasSquadmatesWithinDistance(50.0); // TODO: This shouldn't be a literal!

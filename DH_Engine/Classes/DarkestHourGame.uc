@@ -92,6 +92,7 @@ var()   config bool                 bBigBalloony;
 var     bool                        bDebugConstructions;
 
 var     DHScoreManager              TeamScoreManagers[2];
+var     DHCounterBatteryManager     CounterBatteryManagers[2];
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -422,6 +423,13 @@ function PostBeginPlay()
     {
         TeamScoreManagers[i] = new Class'DHScoreManager';
         TeamScoreManagers[i].bSkipLimits = true;
+    }
+
+    // Set up counter-battery managers for each team.
+    for (i = 0; i < arraycount(CounterBatteryManagers); ++i)
+    {
+        CounterBatteryManagers[i] = Spawn(Class'DHCounterBatteryManager', self);
+        CounterBatteryManagers[i].TeamIndex = i;
     }
 
     foreach AllActors(Class'ROMineVolume', MV)
@@ -1880,7 +1888,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    
+
                     SetCharacter(aPlayer);
                 }
             }
@@ -5560,6 +5568,18 @@ function bool HandleDeath(ROPlayer Player)
     }
 
     return super.HandleDeath(Player);
+}
+
+// Event for when on-map artillery is fired. Used to feed to the counter-battery managers.
+simulated function OnArtilleryFired(int TeamIndex, class<DHVehicleWeapon> VehicleWeaponClass, Vector FireLocation)
+{
+    if (TeamIndex < 0 || TeamIndex >= arraycount(CounterBatteryManagers) || CounterBatteryManagers[TeamIndex] == none)
+    {
+        return;
+    }
+
+    // Send the OnArtilleryFired call to the enemy team's counter-battery manager.
+    CounterBatteryManagers[int(!bool(TeamIndex))].OnArtilleryFired(VehicleWeaponClass, FireLocation);
 }
 
 defaultproperties

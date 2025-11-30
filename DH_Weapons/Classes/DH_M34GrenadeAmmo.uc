@@ -8,6 +8,6 @@ class DH_M34GrenadeAmmo extends DHAmmunition;
 defaultproperties
 {
     MaxAmmo=2
-    InitialAmount=1
+    InitialAmount=2
     //IconMaterial=Texture'DH_InterfaceArt_tex.rpg43_ammo'
 }

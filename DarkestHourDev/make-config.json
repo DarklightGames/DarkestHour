@@ -1,8 +1,8 @@
 {
     "version": {
         "major": 12,
-        "minor": 0,
-        "patch": 13
+        "minor": 1,
+        "patch": 3
     },
     "should_write_build_manifest": true,
     "build_manifest_path": "./DH_Engine/Classes/DHBuildManifest.uc"

@@ -13,4 +13,5 @@ defaultproperties
     VehicleClasses(3)=(VehicleClass=Class'DH_Guns.DH_Granatwerfer34MortarWinter',SeasonFilters=((Seasons=(SEASON_Winter))))
     SupplyCost=1000
     ProgressMax=8
+    ConstructionTags=(CT_Mortar)
 }

@@ -8,7 +8,7 @@ class DH_UFOBubbleBlue extends DH_GeratPIIBullet;
 defaultproperties
 {
     Damage=5000000
-    Speed=20000.0  
+    Speed=30000.0  
     BallisticCoefficient=2.675
     ShellDiameter=400 
     //bIsTracerBullet=true

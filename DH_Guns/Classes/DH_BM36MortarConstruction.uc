@@ -10,4 +10,5 @@ defaultproperties
     VehicleClasses(0)=(VehicleClass=Class'DH_Guns.DH_BM36Mortar')
     SupplyCost=750
     ProgressMax=8
+    ConstructionTags=(CT_Mortar)
 }

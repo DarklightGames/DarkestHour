@@ -14,6 +14,77 @@ replication
         ServerCreateConstruction;
 }
 
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+}
+
+simulated function UpdateSocketVisibility()
+{
+    local DHConstructionSocket Socket;
+
+    // Show relevant construction sockets.
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        if (!Socket.IsOccupied() && Socket.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass))
+        {
+            Socket.Show();
+        }
+        else
+        {
+            Socket.Hide();
+        }
+    }
+}
+
+simulated function HideAllSockets()
+{
+    local DHConstructionSocket Socket;
+
+    foreach DynamicActors(Class'DHConstructionSocket', Socket)
+    {
+        Socket.Hide();
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // TODO: We need to also handle the case where sockets are created after the weapon is brought up.
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        UpdateSocketVisibility();
+    }
+}
+
+simulated function bool PutDown()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        HideAllSockets();
+    }
+
+    return super.PutDown();
+}
+
+simulated function ClientPlayClickSound()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none)
+    {
+        PC.ClientPlaySound(ClickSound);
+    }
+}
+
 // Overridden to cycle the variant of the construction proxy.
 exec simulated function SwitchFireMode()
 {
@@ -54,7 +125,7 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
     local DHConstructionProxy CP;
 
     ConstructionClass = NewConstructionClass;
-    
+
     // We already have the construction weapon in our inventory, so let's
     // simply update the construction class of the existing proxy cursor.
     CP = DHConstructionProxy(ProxyCursor);
@@ -65,12 +136,24 @@ simulated function SetConstructionClass(class<DHConstruction> NewConstructionCla
     }
 }
 
+simulated function OnProxySocketEnter(DHActorProxySocket Socket)
+{
+    ClientPlayClickSound();
+}
+
+simulated function OnProxySocketExit(DHActorProxySocket Socket)
+{
+    ClientPlayClickSound();
+}
+
 simulated function DHActorProxy CreateProxyCursor()
 {
     local DHConstructionProxy Cursor;
 
     Cursor = Spawn(Class'DHConstructionProxy', Instigator);
     Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
+    Cursor.OnSocketEnter = OnProxySocketEnter;
+    Cursor.OnSocketExit = OnProxySocketExit;
 
     return Cursor;
 }
@@ -163,30 +246,31 @@ function DHConstruction ServerCreateConstruction(class<DHConstruction> Construct
 
     C = Spawn(ConstructionClass, Owner,, Location, Rotation);
 
-    if (C != none)
+    if (C == none)
     {
-        C.InstigatorController = DHPlayer(Instigator.Controller);
+        return none;
+    }
 
-        // If we are being placed into a socket, set the socket as occupied by the new construction.
-        Socket = DHConstructionSocket(Owner);
+    C.InstigatorController = DHPlayer(Instigator.Controller);
+    C.VariantIndex = VariantIndex;
+    C.SkinIndex = Context.SkinIndex;
 
-        if (Socket != none)
-        {
-            Socket.Occupant = C;
-        }
+    C.OnPlaced();
 
-        C.VariantIndex = VariantIndex;
-        C.SkinIndex = Context.SkinIndex;
-        
-        C.OnPlaced();
+    if (!C.bIsNeutral)
+    {
+        C.SetTeamIndex(Instigator.GetTeamNum());
+    }
 
-        if (!C.bIsNeutral)
-        {
-            C.SetTeamIndex(Instigator.GetTeamNum());
-        }
+    C.UpdateAppearance();
+    C.OnSpawnedByPlayer(C.InstigatorController);
 
-        C.UpdateAppearance();
-        C.OnSpawnedByPlayer(C.InstigatorController);
+    // If we are being placed into a socket, set the socket as occupied by the new construction.
+    Socket = DHConstructionSocket(Owner);
+
+    if (Socket != none)
+    {
+        Socket.SetOccupant(C);
     }
 
     return C;
@@ -213,7 +297,7 @@ function bool IsSocketValid(DHActorProxySocket Socket)
 
     CS = DHConstructionSocket(Socket);
 
-    return CS != none && CS.IsForConstructionClass(ConstructionClass);
+    return CS != none && CS.IsForConstructionClass(ProxyCursor.GetContext(), ConstructionClass);
 }
 
 simulated function float GetTraceDepthMeters()

@@ -31,7 +31,7 @@ defaultproperties
     PrimaryProjectileClass=Class'DH_UFOBubbleRed'
 
     InitialPrimaryAmmo=5000
-    NumPrimaryMags=200
+    NumPrimaryMags=20000
 
     Spread=0.02
     AltFireSpread=0.3

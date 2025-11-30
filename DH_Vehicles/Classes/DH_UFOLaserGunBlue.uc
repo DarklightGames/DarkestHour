@@ -30,10 +30,10 @@ defaultproperties
     bMultipleRoundTypes=False
     PrimaryProjectileClass=Class'DH_UFOBubbleBlue'
 
-    InitialPrimaryAmmo=5000
-    NumPrimaryMags=200
+    InitialPrimaryAmmo=500
+    NumPrimaryMags=2000
 
-    Spread=0.01
+    Spread=0.0001
     AltFireSpread=0.002
     FireInterval=1
 
