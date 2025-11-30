@@ -16,4 +16,5 @@ defaultproperties
     bCanOnlyPlaceOnTerrain=false
     bCanPlaceIndoors=true
     ArcLengthTraceIntervalInMeters=0.125
+    ProxyTraceDepthMeters=2.0
 }
