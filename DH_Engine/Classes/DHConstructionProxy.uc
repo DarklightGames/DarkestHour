@@ -416,6 +416,65 @@ function string GetMenuVerb()
     return ConstructionClass.default.ConstructionVerb;
 }
 
+// TODO: move this to somewhere else.
+function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FLOAT Radius,float HalfHeight,int NumSides, byte R, byte G, byte B)
+{
+	local float AngleDelta;
+	local vector LastVertex, Vertex;
+	local int SideIndex;
+
+	AngleDelta = 2.0f * PI / NumSides;
+	LastVertex = Base + X * Radius;
+
+	for(SideIndex = 0;SideIndex < NumSides;SideIndex++)
+	{
+		Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1)) + Y * Sin(AngleDelta * (SideIndex + 1))) * Radius;
+
+		DrawStayingDebugLine(LastVertex - Z * HalfHeight,Vertex - Z * HalfHeight,R,G,B);
+		DrawStayingDebugLine(LastVertex + Z * HalfHeight,Vertex + Z * HalfHeight,R,G,B);
+		DrawStayingDebugLine(LastVertex - Z * HalfHeight,LastVertex + Z * HalfHeight,R,G,B);
+
+		LastVertex = Vertex;
+	}
+}
+
+simulated function DebugRenderCollisionQueries()
+{
+    local int i;
+    local Vector TraceStart, TraceEnd, CylinderLocation, X, Y, Z;
+    local DHConstruction.SCollisionQuery Q;
+
+    ClearStayingDebugLines();
+
+    for (i = 0; i < ConstructionClass.default.CollisionQueries.Length; ++i)
+    {
+        Q = ConstructionClass.default.CollisionQueries[i];
+
+        switch (Q.Type)
+        {
+            case CQT_Trace:
+                TraceStart = Location + (Q.TraceStart >> Rotation);
+                TraceEnd = Location + (Q.TraceEnd << Rotation);
+                DrawDebugSphere(TraceStart, 4, 8, 255, 255, 255);
+                DrawStayingDebugLine(TraceStart, TraceEnd, 255, 255, 255);
+                DrawDebugSphere(TraceEnd, 4, 8, 255, 255, 255);
+                break;
+            case CQT_Cylinder:
+                CylinderLocation = Location + (Q.Location >> Rotation);
+                GetAxes(Rotation, X, Y, Z);
+                DrawDebugCylinder(CylinderLocation, X, Y, Z, Q.Radius, Q.HalfHeight, 16, 255, 255, 255);
+                break;
+        }
+    }
+}
+
+simulated function UpdateProjectors()
+{
+    super.UpdateProjectors();
+
+    // TODO: manage our other projectors.
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_None

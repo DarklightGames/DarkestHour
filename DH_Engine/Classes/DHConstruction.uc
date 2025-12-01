@@ -223,22 +223,27 @@ var private bool bIsActive;
 
 enum ECollisionQueryType
 {
-    CQT_Trace,              // Trace from TraceStart to TraceEnd.
-    CQT_PlayerCollision     // Do a test to see if a player can stand where we want him.
+    CQT_Trace,      // Trace from TraceStart to TraceEnd.
+    CQT_Cylinder    // Do a test to see if a player can stand where we want him.
 };
 
 // Additional collision queries to perform.
 struct SCollisionQuery
 {
     var ECollisionQueryType Type;
+
+    // Trace
     var Vector TraceStart;
     var Vector TraceEnd;
+    
+    // Cylinder
     var Vector Location;
     var float Radius;
-    var float Height;
+    var float HalfHeight;
+    var float FloatToleranceMeters; // The amount of tolerance we allow the bottom of the cylinder to float or sink into the ground.
 };
 
-var array<SCollisionQuery> CollisionQueries;
+var() array<SCollisionQuery> CollisionQueries;
 
 replication
 {

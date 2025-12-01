@@ -17,4 +17,5 @@ defaultproperties
     bCanPlaceIndoors=true
     ArcLengthTraceIntervalInMeters=0.125
     ProxyTraceDepthMeters=2.0
+    CollisionQueries(0)=(Type=CQT_Cylinder,Location=(X=-48,Z=24),Radius=38.0,HalfHeight=24)
 }

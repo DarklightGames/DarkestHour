@@ -15,7 +15,7 @@ var Actor                   GroundActor;
 var Vector                  GroundNormal;
 var Rotator                 Direction;
 
-var DHActorProxyProjector   Projector;
+var DHActorProxyProjector   Projector;  // TODO: add other projectors for collision checks.
 var array<Actor>            Attachments;
 
 // Rotation
@@ -337,10 +337,10 @@ function UpdateError(optional bool bForceUpdate)
     }
 
     // This should happen every tick regardless.
-    UpdateProjector();
+    UpdateProjectors();
 }
 
-simulated function UpdateProjector()
+simulated function UpdateProjectors()
 {
     local Vector RL;
 
@@ -388,6 +388,7 @@ function ActorProxyError SetProvisionalLocationAndRotation()
     local Material HitMaterial;
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
+    local UCollision.SCylinderCollisionResult CCR;
 
     GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
 
@@ -501,73 +502,41 @@ function ActorProxyError SetProvisionalLocationAndRotation()
 
         if (E.Type == ERROR_None)
         {
-            GetAxes(Rotator(Forward), X, Y, Z);
+            CCR = class'UCollision'.static.CylinderCollisionQuery(
+                self,
+                BaseLocation,
+                Rotator(Forward),
+                CollisionRadius,
+                CollisionHeight,
+                class'DHUnits'.static.MetersToUnreal(GetArcLengthTraceIntervalMeters()),
+                class'DHUnits'.static.MetersToUnreal(GetFloatToleranceMeters()),
+                CanOnlyPlaceOnTerrain()
+            );
 
-            CircumferenceInMeters = Class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
-            ArcLengthTraceCount = (CircumferenceInMeters / GetArcLengthTraceIntervalMeters()) / 2;
-
-            // For safety's sake, make sure we don't overdo or underdo it.
-            ArcLengthTraceCount = Clamp(ArcLengthTraceCount, 8, 64);
-
-            for (i = 0; i < ArcLengthTraceCount; ++i)
+            switch (CCR.Type)
             {
-                AngleRadians = (float(i) / ArcLengthTraceCount) * Pi;
-
-                TraceStart = vect(0, 0, 0);
-                TraceStart.Z = CollisionHeight;
-                TraceEnd = TraceStart;
-                TraceEnd.X = Sin(AngleRadians) * CollisionRadius;
-                TraceEnd.Y = Cos(AngleRadians) * CollisionRadius;
-                TraceStart.X = -TraceEnd.X;
-                TraceStart.Y = -TraceEnd.Y;
-
-                TraceStart = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceStart);
-                TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceEnd);
-
-                // Trace across the diameter of the collision cylinder
-                HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, true);
-
-                if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
-                {
+                case CCRT_NoRoom:
                     E.Type = ERROR_NoRoom;
                     break;
-                }
-
-                // Trace down from the top of the cylinder to the bottom
-                TraceEnd = TraceStart - (Z * (CollisionHeight + Class'DHUnits'.static.MetersToUnreal(GetFloatToleranceMeters())));
-
-                HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, false);
-
-                if (HitActor == none)
-                {
+                case CCRT_NoGround:
                     E.Type = ERROR_NoGround;
                     break;
-                }
-                else
-                {
-                    if (CanOnlyPlaceOnTerrain() && !HitActor.IsA('TerrainInfo'))
-                    {
-                        E.Type = ERROR_NotOnTerrain;
-                        break;
-                    }
-
-                    HitNormalAverage += OtherHitNormal;
-                }
+                case CCRT_NotOnTerrain:
+                    E.Type = ERROR_NotOnTerrain;
+                    break;
             }
         }
 
         if (E.Type == ERROR_None)
         {
-            HitNormalAverage.X /= ArcLengthTraceCount;
-            HitNormalAverage.Y /= ArcLengthTraceCount;
-            HitNormalAverage.Z /= ArcLengthTraceCount;
+            HitNormalAverage = CCR.HitNormalAverage;
         }
         else
         {
             HitNormalAverage = vect(0, 0, 1);
         }
 
-        // Now check the groundslope again.
+        // Now check the ground slope again.
         GroundSlopeDegrees = Class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= GetGroundSlopeMaxDegrees())

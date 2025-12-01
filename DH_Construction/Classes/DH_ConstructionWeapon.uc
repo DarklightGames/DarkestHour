@@ -338,6 +338,17 @@ simulated function ROIronSights()
     }
 }
 
+// Modified so we can insert our debug drawing into the HUD pass.
+simulated function NewDrawWeaponInfo(Canvas C, float YPos)
+{
+    super.NewDrawWeaponInfo(C, YPos);
+    
+    if (DHConstructionProxy(ProxyCursor) != none)
+    {
+        DHConstructionProxy(ProxyCursor).DebugRenderCollisionQueries();
+    }
+}
+
 defaultproperties
 {
     ControlsMessageClass=Class'DHConstructionControlsMessage'

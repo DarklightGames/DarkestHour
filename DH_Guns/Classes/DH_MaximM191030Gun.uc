@@ -26,6 +26,7 @@
 //==============================================================================
 // BUGS
 //==============================================================================
+// [ ] PLACED MAXIM HAS INCORRECT TEAM? possible bug introduced in merged
 // [ ] mounted guns start moving as karma objects once force is applied to them
 //     (grenade explosion nearby etc.) [mnight have to do with whether or not it has a karma collision box]
 // [ ] view screws up once barrel has failed (due to CanFire being used in

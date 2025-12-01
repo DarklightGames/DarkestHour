@@ -12,7 +12,23 @@ enum ECollisionType
     CT_Parallel
 };
 
-static function bool PointInCylinder(Vector Origin, float Radius, float HalfHeight, Rotator Rotation, Vector Point)
+// TODO: attach a generic "collision actor" and se ehow it behaves.
+enum SCylinderCollisionResultType
+{
+    CCRT_OK,
+    CCRT_NoRoom,
+    CCRT_NoGround,
+    CCRT_NotOnTerrain,
+};
+
+struct SCylinderCollisionResult
+{
+    var SCylinderCollisionResultType Type;
+    var Actor HitActor;
+    var Vector HitNormalAverage;
+};
+
+final static function bool PointInCylinder(Vector Origin, float Radius, float HalfHeight, Rotator Rotation, Vector Point)
 {
     Point = (Point - Origin) << Rotation;
     return Sqrt(Point.X * Point.X + Point.Y * Point.Y) < Radius && Abs(Point.Z) < HalfHeight;
@@ -146,4 +162,86 @@ final static function bool ClipLineToViewport(out float X0, out float Y0, out fl
     }
 
     return bAccept;
+}
+
+final static function SCylinderCollisionResult CylinderCollisionQuery(
+    Actor Owner,
+    Vector BaseLocation, 
+    Rotator Rotation,
+    float CollisionRadius,
+    float CollisionHeight,
+    float ArcLengthTraceInterval,
+    float FloatTolerance,
+    bool bCanOnlyPlaceOnTerrain
+    )
+{
+    local Vector Forward, X, Y, Z, TraceStart, TraceEnd, HitLocation, HitNormal, HitNormalAverage;
+    local float Circumference, AngleRadians;
+    local int i, ArcLengthTraceCount;
+    local Actor HitActor;
+    local SCylinderCollisionResult R;
+
+    // TODO: we should extract this functionality out so it can be reused.
+    GetAxes(Rotation, X, Y, Z);
+
+    Circumference = CollisionRadius * Pi * 2;
+    ArcLengthTraceCount = (Circumference / ArcLengthTraceInterval) / 2;
+
+    // For safety's sake, make sure we don't overdo or underdo it.
+    ArcLengthTraceCount = Clamp(ArcLengthTraceCount, 8, 64);
+
+    for (i = 0; i < ArcLengthTraceCount; ++i)
+    {
+        AngleRadians = (float(i) / ArcLengthTraceCount) * Pi;
+
+        TraceStart = vect(0, 0, 0);
+        TraceStart.Z = CollisionHeight;
+        TraceEnd = TraceStart;
+        TraceEnd.X = Sin(AngleRadians) * CollisionRadius;
+        TraceEnd.Y = Cos(AngleRadians) * CollisionRadius;
+        TraceStart.X = -TraceEnd.X;
+        TraceStart.Y = -TraceEnd.Y;
+
+        TraceStart = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceStart);
+        TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceEnd);
+
+        // Trace across the diameter of the collision cylinder
+        HitActor = Owner.Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+        if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
+        {
+            R.Type = CCRT_NoRoom;
+            break;
+        }
+
+        // Trace down from the top of the cylinder to the bottom
+        TraceEnd = TraceStart - (Z * (CollisionHeight + FloatTolerance));
+
+        HitActor = Owner.Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false);
+
+        if (HitActor == none)
+        {
+            R.Type = CCRT_NoGround;
+            break;
+        }
+        else
+        {
+            if (bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
+            {
+                R.Type = CCRT_NotOnTerrain;
+                break;
+            }
+
+            HitNormalAverage += HitNormal;
+        }
+    }
+
+    HitNormalAverage.X /= ArcLengthTraceCount;
+    HitNormalAverage.Y /= ArcLengthTraceCount;
+    HitNormalAverage.Z /= ArcLengthTraceCount;
+
+    R.HitActor = HitActor;
+    R.HitNormalAverage = HitNormalAverage;
+
+    return R;
 }

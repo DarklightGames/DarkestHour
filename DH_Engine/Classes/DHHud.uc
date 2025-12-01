@@ -958,6 +958,8 @@ function DrawHudPassC(Canvas C)
     // Weapon info
     if (bShowWeaponInfo && PawnOwner.Weapon != none)
     {
+        PawnOwner.Weapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
+        
         if (AmmoIcon.WidgetTexture != none)
         {
             MyWeapon = ROWeapon(PawnOwner.Weapon);
@@ -993,8 +995,6 @@ function DrawHudPassC(Canvas C)
                         DrawSpriteWidget(C, SemiFireIcon);
                     }
                 }
-
-                MyWeapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
             }
         }
     }
