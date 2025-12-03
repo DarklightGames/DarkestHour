@@ -19,7 +19,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 defaultproperties
 {
     GunClass=Class'DH_Bofors40mmCannon'
-    DriverPositions(0)=(ViewFOV=72.0,TransitionUpAnim="com_open",bExposed=true) // FOV represents focused view, like ironsights, not magnified optics
+    DriverPositions(0)=(TransitionUpAnim="com_open",bExposed=true) // FOV represents focused view, like ironsights, not magnified optics
     DriverPositions(1)=(TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VUC_driver_idle_open"
