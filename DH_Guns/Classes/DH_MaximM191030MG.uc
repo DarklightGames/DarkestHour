@@ -18,7 +18,7 @@ defaultproperties
         Anim="SIGHT_DRIVER"
         AnimFrameCount=15
         Channel=1
-        Bone="SIGHT_ROOT"
+        Bone="SIGHT_PITCH"
         AnimationInterpDuration=0.5
         RangeTable(0)=(Range=0,AnimationTime=0.0375)
         RangeTable(1)=(Range=300,AnimationTime=0.045)

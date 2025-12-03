@@ -16,6 +16,7 @@
 //==============================================================================
 // CODE
 //==============================================================================
+// [ ] make shield an optional attachment (no separate variant though, please)
 // [ ] functionality to allow for good looking TP reload animations (either move
 //     the gun to aim straight or just have this occur in TP, ala the hetzer)
 // [ ] persist barrel states through different instances (pickup, inventory,
