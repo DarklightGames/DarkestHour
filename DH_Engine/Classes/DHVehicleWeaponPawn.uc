@@ -406,10 +406,9 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 }
 
 // New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array
-// if no ViewFOV is specified, then it is set to 72 degrees. Previously it would be set to player's display setting, 
-// but it was decided to reduce FOV for all cannon views to mitigate the effect of the fog view distance bug
-// in many instances, some player abusing the increased fog range with 100 degrees view in his cupola could single handedly define the battle's outcome
-// this doesnt fix the bug completely but the difference in increased view range between 72 and 100 degrees FOV is dramatic (~25%)
+// If no ViewFOV is specified for the given position it uses the player's default view FOV (i.e. player's normal FOV when on foot)
+// This avoids having to hard code the default FOV for most vehicle positions (except gunsights and binoculars)
+// It also facilitates the player having a customisable view FOV
 simulated function float GetViewFOV(int PositionIndex)
 {
     if (PositionIndex == BinocPositionIndex && BinocularsClass != none)
@@ -425,7 +424,7 @@ simulated function float GetViewFOV(int PositionIndex)
 
     if (IsHumanControlled())
     {
-        return 72;
+        return PlayerController(Controller).DefaultFOV;
     }
 
     return Class'DHPlayer'.default.DefaultFOV;
