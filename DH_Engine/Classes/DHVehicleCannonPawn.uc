@@ -1406,6 +1406,7 @@ defaultproperties
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
     AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
+    DefaultGunFOVMax=72  
 
     // Gunsight overlay
     GunsightSize=0.5
