@@ -11,9 +11,9 @@ defaultproperties
     NativeNationName="Regatul României"  
     VoicePackClass=class'DH_RomPlayers.DHRomaniaVoice'
     SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'
-    PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.GER_flag_01'
-    RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
-    RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack'
+    PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.ROMANIA_flag_01'
+    RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.ROM_backpack_established'
+    RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.ROM_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed'
