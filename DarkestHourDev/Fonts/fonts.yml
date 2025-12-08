@@ -14,7 +14,7 @@ resolution:
     canvas: [1440, 1080, 1024, 900, 768]
     gui: [1400, 1080, 900] # GUI fonts can only have 3 different size levels.
 defaults:
-  unicode_ranges: # These unicode ranges are always included for each language.
+  unicode_ranges: # These unicode ranges are always included for each language package.
     - [ 0x0000, 0x007F ] # Basic Latin
     - [ 0x0080, 0x00FF ] # Latin-1 Supplement
     - [ 0x0180, 0x024F ] # Latin Extended-B
@@ -158,6 +158,16 @@ packages:
       Arial: Source Han Sans JP
     ensure_all_used_characters: true
     unicode_ranges:
-      - [0x3041, 0x309F]
-      - [0x30A0, 0x30FF]
-      - [0x31F0, 0x31FF]
+      - [0x3000, 0x303F]  # CJK Symbols and Punctuation
+      - [0x3041, 0x309F]  # Hiragana
+      - [0x30A0, 0x30FF]  # Katakana
+      - [0x31F0, 0x31FF]  # Katakana Phonetic Extensions
+  DH_Fonts_chn:
+    languages: [zh]
+    font_substitutions:
+      Sofia Sans Condensed: Source Han Sans SC
+      Inter: Source Han Sans SC
+      Arial: Source Han Sans SC
+    ensure_all_used_characters: true
+    unicode:
+      - [0x3000, 0x303F]  # CJK Symbols and Punctuation

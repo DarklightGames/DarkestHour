@@ -18,6 +18,7 @@ iso639_to_language_extension = {
     'ita': 'itt',  # Italian
     'nld': 'dut',  # Dutch
     'jpn': 'jap',  # Japanese
+    'zho': 'chi'   # Chinese
 }
 
 
