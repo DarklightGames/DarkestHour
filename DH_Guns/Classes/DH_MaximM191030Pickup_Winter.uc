@@ -3,12 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MaximM191030Gun_Winter extends DH_MaximM191030Gun;
+class DH_MaximM191030Pickup_Winter extends DH_MaximM191030Pickup;
 
 defaultproperties
 {
+    InventoryType=Class'DH_MaximM191030Weapon_Winter'
     Skins(0)=Texture'DH_Maxim_tex.MAXIM_BODY_EXT_WINTER'
-    CannonSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT_WINTER'
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_MaximM191030MGPawn_Winter',WeaponBone="TURRET_PLACEMENT")
-    MountedWeaponClass=Class'DH_MaximM191030Weapon_Winter'
+    Skins(1)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT_WINTER'
 }

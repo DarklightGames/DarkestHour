@@ -22,17 +22,19 @@
 // [ ] persist barrel states through different instances (pickup, inventory,
 //     vehicle)
 // [ ] persist skin when picking up mounted gun
-// [ ] add collision querying for placement (i.e., make sure there's enough room for the gunner)
+// [ ] add collision querying for placement (i.e., make sure there's enough room
+//     for the gunner)
 // [ ] add barrel overheating/swap hint for mounted MGs
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] PLACED MAXIM HAS INCORRECT TEAM? possible bug introduced in merged
+// [ ] PLACED MAXIM HAS INCORRECT TEAM? possible bug introduced in merge
 // [ ] mounted guns start moving as karma objects once force is applied to them
 //     (grenade explosion nearby etc.) [mnight have to do with whether or not it has a karma collision box]
 // [ ] view screws up once barrel has failed (due to CanFire being used in
 //     SpecialCamCalc or whatever it's called)
-// [ ] shells eject backwards with other mount (maybe make a second base mesh entirely so we can have different collision)
+// [ ] shells eject backwards with other mount (maybe make a second base mesh
+//     entirely so we can have different collision)
 // [ ] make sure vis box is correct
 //==============================================================================
 // MISC

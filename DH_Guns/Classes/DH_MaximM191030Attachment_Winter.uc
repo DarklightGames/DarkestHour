@@ -3,10 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MaximM191030Pickup extends DHMountedWeaponPickup;
+class DH_MaximM191030Attachment_Winter extends DH_MaximM191030Attachment;
 
 defaultproperties
 {
-    InventoryType=Class'DH_MaximM191030Weapon'
-    StaticMesh=StaticMesh'DH_Maxim_stc.MAXIM_PICKUP'
+    // Skins here
 }

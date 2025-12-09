@@ -7,6 +7,7 @@ class DH_MaximM191030Weapon extends DHMountedWeapon;
 
 defaultproperties
 {
+    ItemName="Maxim M1910/30"
     ConstructionClasses(0)=Class'DH_MaximM191030GunConstruction'
     ConstructionClasses(1)=Class'DH_MaximM191030GunConstruction_Standing'
     AttachmentClass=Class'DH_MaximM191030Attachment'
