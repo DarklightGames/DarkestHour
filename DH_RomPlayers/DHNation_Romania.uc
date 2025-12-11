@@ -14,7 +14,7 @@ defaultproperties
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.ROMANIA_flag_01'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.ROM_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.ROM_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'
+    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_ROM_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed'
     PlatoonHQUnpackedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked'
