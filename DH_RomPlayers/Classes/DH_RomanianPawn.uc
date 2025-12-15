@@ -26,9 +26,9 @@ defaultproperties
     FaceSkins(10)=Texture'DHItalianCharactersTex.ita_face11'
 
     // TODO: replace all this
-    ShovelClass=Class'DHShovelItem_Italian'
+    ShovelClass=Class'DHShovelItem_German'
     BinocsClass=Class'DHBinocularsItemItalian'
-    SmokeGrenadeClass=Class'DH_SRCMMod35SmokeGrenadeWeapon'
+    //SmokeGrenadeClass=Class'DH_SRCMMod35SmokeGrenadeWeapon'
 
-    HealthFigureClass=Class'DHHealthFigure_Italy'
+    HealthFigureClass=Class'DHHealthFigure_Romania'
 }

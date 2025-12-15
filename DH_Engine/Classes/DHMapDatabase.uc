@@ -79,6 +79,8 @@ static function string GetAxisNationString(DH_LevelInfo.EAxisNation AxisNation)
             return "Germany";
         case NATION_Italy:
             return "Italy";
+        case NATION_Romania:
+            return "Romania";
     }
 }
 

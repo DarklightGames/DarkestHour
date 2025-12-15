@@ -9,12 +9,12 @@ class DHConstructionLoadout_Romania extends DHConstructionLoadout
 defaultproperties
 {
     // Logistics
-    Constructions(0)=(ConstructionClass=Class'DHConstruction_SupplyCache_Italy',Limit=-1,MaxActive=-1)
-    Constructions(1)=(ConstructionClass=Class'DHConstruction_PlatoonHQ_Italy',Limit=-1,MaxActive=5)
+    Constructions(0)=(ConstructionClass=Class'DHConstruction_SupplyCache_Romania',Limit=-1,MaxActive=-1)
+    Constructions(1)=(ConstructionClass=Class'DHConstruction_PlatoonHQ_Romania',Limit=-1,MaxActive=5)
     Constructions(2)=(ConstructionClass=Class'DHConstruction_VehiclePool',Limit=-1,MaxActive=-1)
 
     // Ammunition
-    Constructions(3)=(ConstructionClass=Class'DHConstruction_Resupply_Players_Italy',Limit=-1,MaxActive=-1)
+    Constructions(3)=(ConstructionClass=Class'DHConstruction_Resupply_Players_Romania',Limit=-1,MaxActive=-1)
     Constructions(5)=(ConstructionClass=Class'DH_StielGranateCrateConstruction',Limit=-1,MaxActive=-1) //not strictly wrong, but ideally should have their own eventually
     //Constructions(6)  romania didnt really have any anti-tank purposed hand held weapons (except for basic explosives) until they received some panzerfausts later on
 

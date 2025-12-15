@@ -19,7 +19,7 @@ defaultproperties
 	LocationHitImages(4)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Rupperleg'
 	LocationHitImages(5)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Lupperarm'
 	LocationHitImages(6)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Rupperarm'
-	LocationHitImages(7)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Llowerleg'
+	//LocationHitImages(7)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Llowerleg' //its missing, fix it
 	LocationHitImages(8)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Rlowerleg'
 	LocationHitImages(9)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Llowerarm'
 	LocationHitImages(10)=Texture'DH_InterfaceArt_CC_tex.Player_hits.rom_hit_Rlowerarm'

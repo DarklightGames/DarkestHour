@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHROmaniaVoice extends DHVoicePack;
+class DHRomaniaVoice extends DHVoicePack;
 
 //iirc romanian voicelines dont adress any specific enemy, so they are "universal"
 
@@ -71,7 +71,7 @@ defaultproperties
     // Commander sound groups
     OrderSound(0)=SoundGroup'DH_voice_rom_infantry.attack_objective'
     OrderSound(1)=SoundGroup'DH_voice_rom_infantry.defend_objective'
-    OrderSound(2)=SoundGroup'DH_voice_rom_infantry.hold_position'
+    OrderSound(2)=SoundGroup'DH_voice_rom_infantry.hold_this_position'
     OrderSound(3)=SoundGroup'DH_voice_rom_infantry.follow_me'
     OrderSound(4)=SoundGroup'DH_voice_rom_infantry.Attack'
     OrderSound(5)=SoundGroup'DH_voice_rom_infantry.retreat'
@@ -87,7 +87,7 @@ defaultproperties
 
     EnemyStringAxis(6)="Tank! Tank!"
 
-    RadioRequestSound=Sound'DH_voice_rom_infantry.need_artillery01' //weird, but there doesnt seem to be a proper artillery request line
+    RadioRequestSound=SoundGroup'DH_voice_rom_infantry.requests.need_artillery' //weird, but there doesnt seem to be a proper artillery request line
     RadioResponseConfirmSound=SoundGroup'DH_voice_rom_infantry.confirm'
     RadioResponseDenySound=SoundGroup'DH_voice_rom_infantry.deny'
 }
