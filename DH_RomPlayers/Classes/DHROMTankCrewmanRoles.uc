@@ -3,20 +3,20 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHROMTankCrewmanRoles extends DHAxisTankCrewmanRoles
+class DHROMTankCrewmanRoles extends DHRomRoles
     abstract;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_vz24Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    bCanBeTankCrew=true
+    bExemptSquadRequirement=true
+    MyName="Tank Crewman"
+    AltName="aaa"
+    Limit=3
+    bCanCarryExtraAmmo=false
+    AddedRoleRespawnTime=15
+    //PrimaryWeapons(0)=
 
-
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon') //change to m1912
-
-    GivenItems(0)="DH_Equipment.DHBinocularsItemGerman"
-
-    DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
-    DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
-
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon') //add m1912
+    GivenItems(0)="DH_Equipment.DHBinocularsItemGerman" //?
 }
