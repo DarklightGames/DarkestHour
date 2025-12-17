@@ -189,4 +189,5 @@ defaultproperties
     Records(129)=(ClassName="DH_Guns.DH_Fiat1435ACWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("fiat1435"))
     Records(130)=(ClassName="DH_Guns.DH_Fiat1435WCWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("fiat1435w"))
     Records(131)=(ClassName="DH_Guns.DH_MaximM191030Weapon",bShouldExcludeFromGiveAll=true,WeaponNames=("maxim"))
+    Records(132)=(ClassName="DH_Guns.DH_MG34LafetteWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("mg34lafette"))
 }
