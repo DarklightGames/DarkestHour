@@ -21,7 +21,8 @@
 //     the gun to aim straight or just have this occur in TP, ala the hetzer)
 // [ ] persist barrel states through different instances (pickup, inventory,
 //     vehicle)
-// [ ] persist skin when picking up mounted gun
+// [ ] use explicit skin when using mounted weapon (don't use underlying skin
+//     toggling functionality in the construction weapon)
 // [ ] add collision querying for placement (i.e., make sure there's enough room
 //     for the gunner)
 // [ ] add barrel overheating/swap hint for mounted MGs

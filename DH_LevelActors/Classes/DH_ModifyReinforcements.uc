@@ -14,7 +14,7 @@ var()   NumModifyType   HowToModify;
 var()   bool            bUseTeamMessage; //Default = true
 var() localized string  Message; //Message to send to team when door is opened
 var()   name            MessageType; //Say,TeamSay,SayDead,TeamSayDead,VehicleSay,CriticalEvent,DeathMessage,
-var()   sound           sound; //sound to play when door is opened
+var()   Sound           Sound; //sound to play when door is opened
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {

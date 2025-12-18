@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no
-//     cooldown].
 // [ ] *maybe* mid-clip reloading.
 // [ ] Sound notifications for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.

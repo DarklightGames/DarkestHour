@@ -11,7 +11,7 @@ struct Type
 {
     var()   StaticMesh              IntactStaticMesh;
     var()   array<StaticMesh>       ClearedStaticMeshes;
-    var()   sound                   ClearSound;
+    var()   Sound                   ClearSound;
     var()   float                   ClearSoundRadius;
     var()   array<class<Emitter> >  ClearEmitterClasses;
     var()   bool                    bCanBeCut;

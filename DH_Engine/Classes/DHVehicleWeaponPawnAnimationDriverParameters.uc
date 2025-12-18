@@ -50,4 +50,4 @@ var() name BoneName;
 // The sequences are expected to be on equal segment boundaries. For example, if there are 5 sequences,
 // they should be evenly spaced from 0.0 to 1.0 (i.e., [0.0, 0.25, 0.5, 0.75, 1.0]).
 var() array<name> Sequences;
-var() int FrameCount; // The number of frames in the animations.
+var() int FrameCount; // The number of frames in each sequence. This should be same for all sequences.
