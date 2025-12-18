@@ -452,6 +452,9 @@ function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string H
         Content = Announcement.Get("content").AsString();
         MOTDURL = Announcement.Get("url").AsString();
 
+        // Trying to open HTTPS URLS causes UI issues, so we'll change it to HTTP.
+        ReplaceText(MOTDURL, "https://", "http://");
+
         // Remove all \r (carriage return) characters
         Content = Repl(Content, Chr(13), "");
         // Replace all \n (line feed) characters with engine equivalent.
