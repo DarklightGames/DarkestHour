@@ -24,6 +24,9 @@ defaultproperties
     HullFireChance=0.8
     EngineFireChance=0.8
 
+    CoronaClass=Class'DHShellTracer_WhiteLarge'
+    ShellTrailClass=Class'DHShellTrail_White'
+    
     ShellImpactDamage=Class'DHShellHEGunImpactDamageType'
 
     //Effects

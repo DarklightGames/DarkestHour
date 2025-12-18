@@ -55,4 +55,7 @@ defaultproperties
     MechanicalRanges(4)=(Range=400,RangeValue=403)
     MechanicalRanges(5)=(Range=500,RangeValue=532)
     // TODO: anything beyond this stretches credulity with how far the pitch of the projectile is from the gun itself. should we turn this into a howitzer?
+
+    CoronaClass=Class'DHShellTracer_WhiteLarge'
+    ShellTrailClass=Class'DHShellTrail_White'
 }
