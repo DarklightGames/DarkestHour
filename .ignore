@@ -1,0 +1,21 @@
+# Ignore file used by `fd` and `ripgrep`
+# Overrides .gitignore to have RO/Unreal classes show up in search results
+
+!ROAmmo/
+!ROCustom/
+!ROEffects/
+!ROEngine/
+!ROGame/
+!ROInterface/
+!ROInventory/
+!RORoles/
+!ROVehicles/
+!UnrealGame/
+!UTV2004c/
+!UTV2004s/
+!UWeb/
+!XAdmin/
+!XGame/
+!XInterface/
+!XVoting/
+!XWebAdmin/

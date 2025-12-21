@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHTrenchMaceAttachment_Grenade extends DHShovelAttachment;
+class DHTrenchMaceAttachment_Grenade extends DHZombieMaceAttachment;
 
 defaultproperties
 {

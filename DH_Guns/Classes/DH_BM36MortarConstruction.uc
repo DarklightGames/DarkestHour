@@ -12,4 +12,5 @@ defaultproperties
     bIsArtillery=true
     SupplyCost=750
     ProgressMax=8
+    ConstructionTags=(CT_Mortar)
 }

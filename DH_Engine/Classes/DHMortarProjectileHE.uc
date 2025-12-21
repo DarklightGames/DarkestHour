@@ -19,26 +19,6 @@ var     Vector          ShakeOffsetMag;   // max view offset vertically
 var     Vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
-// Modified to stop shell from blowing up if it's in a no arty volume (just make the shell a dud if it is)
-simulated function Explode(Vector HitLocation, Vector HitNormal)
-{
-    local DHVolumeTest VT;
-
-    if (Role == ROLE_Authority && !bDud)
-    {
-        VT = Spawn(Class'DHVolumeTest',,, HitLocation);
-
-        if (VT != none)
-        {
-            bDud = VT.DHIsInNoArtyVolume(DHGameReplicationInfo(Level.Game.GameReplicationInfo));
-
-            VT.Destroy();
-        }
-    }
-
-    super.Explode(HitLocation, HitNormal);
-}
-
 // Modified to cause blast damage
 function BlowUp(Vector HitLocation)
 {

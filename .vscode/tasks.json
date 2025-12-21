@@ -149,6 +149,22 @@
             }
         },
         {
+            // TODO: Running editor on Windows via batch file is not desireable here because it runs compilation
+            "label": "Run Editor",
+            "command": "./DHEd.bat",
+            "linux": {
+                // NOTE: Requires launch options configured on Linux. See:
+                //       https://github.com/DarklightGames/DarkestHour/wiki/Running-SDK-on-Linux
+                "command": "steam -applaunch 1220 -- -mod=DarkestHourDev -nogamma",
+            },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
             "label": "Search for Class in Maps",
             "command": "grep -Rl . -e ${input:className} . | sort | uniq",
             "type": "shell",

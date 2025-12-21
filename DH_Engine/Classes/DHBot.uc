@@ -212,6 +212,8 @@ function Possess(Pawn aPawn)
     {
         ROPawn(aPawn).Setup(PawnSetupRecord);
     }
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).bIsPossesingPawn = true;
 }
 
 // Overridden to allow for setting the correct DH-specific pawn class
@@ -492,6 +494,13 @@ function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 
     return false;
+}
+
+function PawnDied(Pawn P)
+{
+    super.PawnDied(P);
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).bIsPossesingPawn = false;
 }
 
 defaultproperties

@@ -10,7 +10,7 @@ var()   config string           MenuSong;
 var automated       FloatingImage           i_Overlay, i_Announcement;
 var automated       GUIButton               b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord, b_Weblate;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -24,6 +24,7 @@ var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
 var     string                  DiscordURL;
+var     string                  WeblateURL;
 var     string                  ResetINIGuideURL;
 
 var     localized string        SteamMustBeRunningText;
@@ -53,10 +54,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_MainMenu.ManageComponent(b_Credits);
     sb_ShowVersion.ManageComponent(l_Version);
 
-    sb_Social.ManageComponent(b_Facebook);
-    sb_Social.ManageComponent(b_GitHub);
-    sb_Social.ManageComponent(b_SteamCommunity);
     sb_Social.ManageComponent(b_Discord);
+    sb_Social.ManageComponent(b_GitHub);
+    sb_Social.ManageComponent(b_Weblate);
+    sb_Social.ManageComponent(b_SteamCommunity);
+    sb_Social.ManageComponent(b_Facebook);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
@@ -269,6 +271,9 @@ function bool ButtonClick(GUIComponent Sender)
         case b_Discord:
             PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
             break;
+        
+        case b_Weblate:
+            PlayerOwner().ConsoleCommand("START" @ default.WeblateURL);
 
         case i_Overlay:
             HideAnnouncement();
@@ -451,6 +456,9 @@ function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string H
         Title = Announcement.Get("title").AsString();
         Content = Announcement.Get("content").AsString();
         MOTDURL = Announcement.Get("url").AsString();
+
+        // Trying to open HTTPS URLS causes UI issues, so we'll change it to HTTP.
+        ReplaceText(MOTDURL, "https://", "http://");
 
         // Remove all \r (carriage return) characters
         Content = Repl(Content, Chr(13), "");
@@ -724,6 +732,21 @@ defaultproperties
     End Object
     b_Discord=DiscordButton
 
+    Begin Object Class=GUIGFXButton Name=WeblateButton
+        WinWidth=0.04
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
+        OnClick=DHMainMenu.ButtonClick
+        Graphic=Texture'DH_GUI_Tex.weblate'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Localize the game with Weblate!"
+        bRepeatClick=false
+        StyleName="TextLabel"
+    End Object
+    b_Weblate=WeblateButton
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
         WinHeight=0.026563
@@ -810,6 +833,7 @@ defaultproperties
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
     DiscordURL="http://discord.gg/EEwFhtk"
+    WeblateURL="http://weblate.darklightgames.com/projects/darkesthour/"
     ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
     BadConfigMessage="A problem exists with your configuration file, click continue to quit the game and open a guide on how to fix your configuration file."

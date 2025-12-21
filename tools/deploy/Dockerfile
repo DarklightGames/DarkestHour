@@ -16,6 +16,7 @@ RUN echo steam steam/question select "I AGREE" | debconf-set-selections
 RUN echo steam steam/license note '' | debconf-set-selections
 RUN apt-get install -y steamcmd
 RUN apt-get install -y python3-virtualenv
+RUN apt-get install -y wine
 
 # Run steamcmd once to update it.
 RUN /usr/games/steamcmd +exit

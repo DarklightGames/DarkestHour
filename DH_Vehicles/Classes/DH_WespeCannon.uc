@@ -57,6 +57,7 @@ defaultproperties
 
     // Artillery
     bIsArtillery=true
+    CounterBatteryReport=CBR_Large
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.88mm_fire01'
@@ -79,6 +80,8 @@ defaultproperties
 
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="WHEEL_PITCH",Scale=128,RotationAxis=AXIS_X)
     GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="WHEEL_YAW",Scale=128,RotationAxis=AXIS_X)
+
+    VehicleAttachments(0)=(AttachClass=Class'DHRadio',AttachBone="TURRET",RelativeLocation=(X=-61.6307,Y=-45.5251,Z=21.0458),RadioCollisionRadius=16.0,RadioCollisionHeight=10.0,bServerOnly=true)
 
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Wespe_stc.wespe_turret_pitch_collision',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Wespe_stc.wespe_turret_yaw_collision',AttachBone="GUN_YAW")

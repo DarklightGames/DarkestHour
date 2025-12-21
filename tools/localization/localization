@@ -8,6 +8,6 @@ done
 DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 pushd "$DIR" >/dev/null 2>&1
-virtualenv venv >/dev/null 2>&1
-source ./venv/bin/activate >/dev/null 2>&1 && pip3 install -r requirements.txt >/dev/null 2>&1 && python ./localization.py $@ ../.. --mod=DarkestHourDev
+virtualenv venv --clear >/dev/null 2>&1
+source ./venv/bin/activate >/dev/null 2>&1 && pip3 install -r requirements.txt >/dev/null 2>&1 && python3 ./localization.py $@ ../.. --mod=DarkestHourDev
 popd >/dev/null 2>&1

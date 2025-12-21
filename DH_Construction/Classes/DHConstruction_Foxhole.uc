@@ -182,4 +182,6 @@ defaultproperties
     DirtProjectorDrawScale=550.0
     GroupClass=Class'DHConstructionGroup_Defenses'
     DirtProjectorMaterial=Material'DH_Construction_tex.foxhole_01_projector'
+    StartRotationMin=(Yaw=16384)
+    StartRotationMax=(Yaw=16384)
 }

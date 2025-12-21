@@ -304,6 +304,27 @@ final static function HSV RGB2HSV(Color RGB)
     return HSV;
 }
 
+final static function Color Darken(Color RGB, float Factor)
+{
+    local Color NewRGB;
+
+    if (Factor <= 0)
+    {
+        return RGB;
+    }
+
+    NewRGB.A = RGB.A;
+
+    if (Factor < 1)
+    {
+        NewRGB.R = RGB.R * (1 - Factor);
+        NewRGB.G = RGB.G * (1 - Factor);
+        NewRGB.B = RGB.B * (1 - Factor);
+    }
+
+    return NewRGB;
+}
+
 defaultproperties
 {
     AliceBlue=(R=240,G=248,B=255,A=255)

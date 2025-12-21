@@ -13,4 +13,7 @@ defaultproperties
 
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
     Headgear(0)=Class'DH_SovietSidecap'
+    Headgear(1)=Class'DH_SovietHelmet'
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
 }

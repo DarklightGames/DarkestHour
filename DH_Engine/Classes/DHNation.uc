@@ -34,6 +34,9 @@ var Sound                       RoundStartSound;
 // Supply
 var class<DHVehicle>            SupplyTruckClass;
 
+var int                         SquadSize;
+
 defaultproperties
 {
+    SquadSize=10
 }

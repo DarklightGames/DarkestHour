@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHConstruction extends Actor
+    dependson(DHConstructionTypes)
     abstract
     placeable;
 
@@ -37,8 +38,9 @@ enum EConstructionErrorType
     ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
     ERROR_SocketOccupied,           // The construction socket is already occupied.
+    ERROR_NoSquadmatesNearby,       // There are no squad members within 50 meters
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
-    ERROR_Other
+    ERROR_Other,
 };
 
 var struct ConstructionError
@@ -56,6 +58,10 @@ enum ETeamOwner
     TEAM_Allies,
     TEAM_Neutral
 };
+
+// Tags for construction classes to signal their intended use to other systems (such as the socket system).
+// This is superior to using class hierarchies as it is more flexible and has a low complexity overhead.
+var array<DHConstructionTypes.EConstructionTag> ConstructionTags;
 
 // Client state management
 var name StateName, OldStateName;
@@ -238,13 +244,10 @@ struct SConstructionSocket
 {
     var Vector Location;
     var Rotator Rotation;
-    var bool bLimitLocalRotation;
-    var Range LocalRotationYawRange;
-    var array<class<DHConstruction> > IncludeClasses;
-    var array<class<DHConstruction> > ExcludeClasses;
-    var DHConstructionSocket SocketActor;
+    var DHConstructionSocketParameters Parameters;
 };
-var array<SConstructionSocket> ConstructionSockets;
+var array<SConstructionSocket>      Sockets;
+var array<DHConstructionSocket>     SocketActors;
 
 // Cached values that are calculated only when needed (e.g., when any of the user-editable properties change such as variant or skin)
 struct RuntimeData
@@ -349,7 +352,7 @@ simulated function PostBeginPlay()
     }
 }
 
-simulated function SpawnConstructionSockets()
+function SpawnConstructionSockets()
 {
     local int i;
     local DHConstructionSocket Socket;
@@ -359,9 +362,9 @@ simulated function SpawnConstructionSockets()
         return;
     }
 
-    for (i = 0; i < ConstructionSockets.Length; ++i)
+    for (i = 0; i < Sockets.Length; ++i)
     {
-        if (ConstructionSockets[i].SocketActor != none)
+        if (i < SocketActors.Length && SocketActors[i] != none)
         {
             // Socket actor is already spawned.
             continue;
@@ -375,14 +378,12 @@ simulated function SpawnConstructionSockets()
             continue;
         }
 
-        Socket.bLimitLocalRotation = ConstructionSockets[i].bLimitLocalRotation;
-        Socket.LocalRotationYawRange = ConstructionSockets[i].LocalRotationYawRange;
-        Socket.IncludeClasses = ConstructionSockets[i].IncludeClasses;
-        Socket.ExcludeClasses = ConstructionSockets[i].ExcludeClasses;
+        Socket.Setup(Sockets[i].Parameters);
         Socket.SetBase(self);
-        Socket.SetRelativeLocation(ConstructionSockets[i].Location);
-        Socket.SetRelativeRotation(ConstructionSockets[i].Rotation);
-        ConstructionSockets[i].SocketActor = Socket;
+        Socket.SetRelativeLocation(Sockets[i].Location);
+        Socket.SetRelativeRotation(Sockets[i].Rotation);
+
+        SocketActors[i] = Socket;
     }
 }
 
@@ -390,11 +391,11 @@ simulated function DestroyConstructionSockets()
 {
     local int i;
 
-    for (i = 0; i < ConstructionSockets.Length; ++i)
+    for (i = 0; i < SocketActors.Length; ++i)
     {
-        if (ConstructionSockets[i].SocketActor != none)
+        if (SocketActors[i] != none)
         {
-            ConstructionSockets[i].SocketActor.Destroy();
+            SocketActors[i].Destroy();
         }
     }
 }
@@ -420,7 +421,7 @@ function Activate(int InstigatorTeamIndex)
         Warn("Activate call was attempted on a non-player placed construction!");
         return;
     }
-    
+
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (GRI == none)
@@ -497,7 +498,7 @@ function OnSpawnedByPlayer(DHPlayer PC)
     {
         return;
     }
-    
+
     Activate(PC.GetTeamNum());
 }
 
@@ -1204,6 +1205,12 @@ static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
         E.OptionalInteger = default.SquadMemberCountMinimum;
         return E;
     }
+    
+    if (!P.CanPlaceConstruction())
+    {
+        E.Type = ERROR_NoSquadmatesNearby;
+        return E;
+    }
 
     if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
     {
@@ -1437,6 +1444,21 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
 static function bool IsArtillery()
 {
     return default.bIsArtillery;
+}
+
+static function bool HasConstructionTag(DHConstructionTypes.EConstructionTag Tag)
+{
+    local int i;
+
+    for (i = 0; i < default.ConstructionTags.Length; ++i)
+    {
+        if (Tag == default.ConstructionTags[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties

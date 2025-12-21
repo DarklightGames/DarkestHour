@@ -67,5 +67,6 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.SU_76_Reload_04',Duration=1)
 
     bIsArtillery=true
+    CounterBatteryReport=CBR_Medium
     ResupplyInterval=12.0
 }

@@ -50,9 +50,20 @@ struct WeaponAttachments
     var StaticMesh StaticMesh;
 };
 
+// A rough estimate of the gun's size.
+// Affects how easily counter-battery systems can triangulate the firing position.
+enum ECounterBatteryReport
+{
+    CBR_None,
+    CBR_Small,
+    CBR_Medium,
+    CBR_Large,
+};
+var ECounterBatteryReport CounterBatteryReport;
+
 // Weapon fire
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
-var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
+var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 var     Sound               DryFireSound;
 
@@ -198,7 +209,7 @@ simulated function SpawnVehicleAttachments()
         {
             continue;
         }
-        
+
         if (VA.AttachClass == none)
         {
             VA.AttachClass = Class'DHDecoAttachment';
@@ -228,7 +239,7 @@ simulated function SpawnVehicleAttachments()
             {
                 VA.RadioCollisionHeight = Class'DHRadio'.default.CollisionHeight;
             }
-            
+
             Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
         }
 
@@ -324,7 +335,7 @@ simulated function int GetGunPitchMin()
     {
         return CustomPitchDownLimit - 65535;
     }
-    
+
     return CustomPitchDownLimit;
 }
 
@@ -409,7 +420,7 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = false;
         bInitializedVehicleAndWeaponPawn = false;
     }
-    
+
     UpdateGunWheels();
     UpdateAnimationDrivers();
 }
@@ -585,6 +596,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Also added a fix for bug where listen server host watching another player fire didn't see the firing effects from any AmbientEffectEmitter
 function Fire(Controller C)
 {
+    local DarkestHourGame G;
+
     if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
     {
         SpawnProjectile(TracerProjectileClass, false);
@@ -592,6 +605,17 @@ function Fire(Controller C)
     else if (ProjectileClass != none)
     {
         SpawnProjectile(ProjectileClass, false);
+    }
+
+    if (bIsArtillery)
+    {
+        // Notify the game that artillery has been fired. This will be handled by the counter-battery system.
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            G.OnArtilleryFired(WeaponPawn.VehicleBase.GetTeamNum(), Class, Location);
+        }
     }
 
     if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
@@ -1694,6 +1718,6 @@ defaultproperties
     bInheritVelocity=false
 
     ResupplyInterval=2.5
-    
+
     DryFireSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
 }

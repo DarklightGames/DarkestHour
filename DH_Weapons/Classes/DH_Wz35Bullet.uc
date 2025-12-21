@@ -16,8 +16,10 @@ defaultproperties
     BallisticCoefficient=0.504  // http://gundata.org/ballistic-coefficient-calculator/#spitzer (boat-tail shape, 226gr, .32 diameter, 0.818 length, 0.504 BC)
 
     //Damage
-    ImpactDamage=120
-    Damage=1000.0  //should leave no one alive, as even if it hits a limb, it should be ripped apart making victim uncapable of continuing fighting
+    //ImpactDamage=120
+    Damage=700.0  //should leave no one alive, as even if it hits a limb, it should be ripped apart making victim uncapable of continuing fighting
+    HullFireChance=0.02
+    EngineFireChance=0.03  //as far as i know, these bullets were non-incendiary, so fire chances are low
     MyDamageType=Class'DH_Wz35DamType'
 
     //Penetration

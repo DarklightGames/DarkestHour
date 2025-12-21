@@ -11,8 +11,16 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.FJ_Sleeve'
     Headgear(0)=Class'DH_LWHelmet'
     Headgear(1)=Class'DH_LWHelmetTwo'
+    Headgear(2)=Class'DH_LWHat'
+    Headgear(3)=Class'DH_LWCap'
+    HeadgearProbabilities(0)=0.30
+    HeadgearProbabilities(1)=0.20
+    HeadgearProbabilities(2)=0.30
+    HeadgearProbabilities(3)=0.20
 
     PrimaryWeapons(0)=(Item=Class'DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=Class'DH_G43Weapon',AssociatedAttachment=Class'ROInventory.ROG43AmmoPouch')
+    PrimaryWeapons(1)=(Item=Class'DH_MP38Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(2)=(Item=Class'DH_M712Weapon')
+
+    SecondaryWeapons(2)=(Item=Class'DH_BHPWeapon')
 }

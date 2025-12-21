@@ -9,7 +9,7 @@ defaultproperties
 {
     GunClass=Class'DH_T3476_43Cannon'
     DriverPositions(0)=(ViewLocation=(X=20.0,Y=-11.5,Z=8.5),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m43_turret_int',DriverTransitionAnim="stand_idlehip_binoc",bDrawOverlays=true)
-    DriverPositions(1)=(ViewLocation=(X=13.5,Y=0.5,Z=16.0),ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m43_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionUpAnim=com_open,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(X=13.5,Y=0.5,Z=16.0),ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m43_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionUpAnim=com_open,ViewPitchUpLimit=2731,ViewPitchDownLimit=64080,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m43_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m43_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)

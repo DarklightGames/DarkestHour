@@ -172,7 +172,7 @@ defaultproperties
     Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.rally_point')
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.fire')
     Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.construction')
-    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.infantry')
+    Options(3)=(ActionText="No Player",Material=Texture'DH_InterfaceArt2_tex.infantry')
     Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.binoculars')
     Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.move')
 }

@@ -14,6 +14,7 @@ defaultproperties
     VehicleMass=2.5
     ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ZiS5V_anm.ZiS5V_ext'

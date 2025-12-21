@@ -16,8 +16,8 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M4A3E2_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
-    // Turret armor
-    FrontArmorFactor=16.6
+    // Turret armor. Sources: Page 69 of WWII Ballistics: Armor and Gunnery and http://the.shadock.free.fr/sherman_minutia/manufacturer/m4a3e2jumbo/m4a3e2.html
+    FrontArmorFactor=17.8
     RightArmorFactor=15.2
     LeftArmorFactor=15.2
     RearArmorFactor=15.2
@@ -43,12 +43,12 @@ defaultproperties
     nProjectileDescriptions(1)="M48 HE-T"
     nProjectileDescriptions(2)="M64 WP"
 
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=25
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=30
     InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=35
-    MaxSecondaryAmmo=50
-    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+    MaxPrimaryAmmo=42
+    MaxSecondaryAmmo=52
+    MaxTertiaryAmmo=10
 
     SecondarySpread=0.00175
     TertiarySpread=0.0036

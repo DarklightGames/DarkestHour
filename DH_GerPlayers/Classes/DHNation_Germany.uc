@@ -25,4 +25,5 @@ defaultproperties
     DefaultSquadNames(7)="Heinrich"
     RoundStartSound=Sound'DH_SundrySounds.Axis_Start'
     SupplyTruckClass=Class'DH_OpelBlitzSupport'
+    SquadSize=8
 }

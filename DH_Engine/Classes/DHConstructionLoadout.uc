@@ -16,7 +16,4 @@ struct SConstruction
 };
 
 var array<SConstruction> Constructions;
-
-defaultproperties
-{
-}
+var array<Class<DHConstructionLoadout> > Loadouts;

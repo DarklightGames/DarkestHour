@@ -49,8 +49,8 @@ var private string                  AlliesNames[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 var private int                     AlliesNextRallyPointTimes[TEAM_SQUADS_MAX]; // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
 
-var globalconfig private int        AxisSquadSize;
-var globalconfig private int        AlliesSquadSize;
+var private int                     AxisSquadSize;
+var private int                     AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
@@ -177,6 +177,7 @@ replication
 simulated function PostBeginPlay()
 {
     local DH_LevelInfo LI;
+    local Class<DHNation> NationClass;
 
     super.PostBeginPlay();
 
@@ -184,12 +185,26 @@ simulated function PostBeginPlay()
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
-        SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
-
         foreach AllActors(Class'DH_LevelInfo', LI)
         {
             bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
+
+            // Axis Squad Size
+            NationClass = LI.GetTeamNationClass(AXIS_TEAM_INDEX);
+
+            if (NationClass != none)
+            {
+                SetTeamSquadSize(AXIS_TEAM_INDEX, NationClass.default.SquadSize);
+            }
+
+            // Allied Squad Size
+            NationClass = LI.GetTeamNationClass(ALLIES_TEAM_INDEX);
+
+            if (NationClass != none)
+            {
+                SetTeamSquadSize(ALLIES_TEAM_INDEX, NationClass.default.SquadSize);
+            }
+
             break;
         }
     }
@@ -3402,7 +3417,7 @@ simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIn
 defaultproperties
 {
     AlliesSquadSize=10
-    AxisSquadSize=8
+    AxisSquadSize=10
     bAllowRallyPointsBehindEnemyLines=false
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0

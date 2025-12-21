@@ -33,6 +33,7 @@ defaultproperties
     RightArmorFactor=5.1
     LeftArmorFactor=5.1
     RearArmorFactor=5.1
+    FrontArmorSlope=30.0
     RightArmorSlope=5.0
     LeftArmorSlope=5.0
     FrontLeftAngle=316.0
@@ -59,13 +60,13 @@ defaultproperties
     nProjectileDescriptions(1)="M48 HE-T"
     nProjectileDescriptions(2)="M64 WP"
 
-    InitialPrimaryAmmo=40
+    InitialPrimaryAmmo=30
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=4
 
-    MaxPrimaryAmmo=45
-    MaxSecondaryAmmo=40
-    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+    MaxPrimaryAmmo=36
+    MaxSecondaryAmmo=45
+    MaxTertiaryAmmo=9
 
     SecondarySpread=0.00175
     TertiarySpread=0.0036
