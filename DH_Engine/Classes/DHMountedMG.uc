@@ -251,6 +251,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
 function Fire(Controller C)
 {
+    local DHMountedMGPawn MGP;
     local Coords ShellEjectCoords;
     local Actor ShellEjectActor;
 
@@ -283,6 +284,14 @@ function Fire(Controller C)
     }
     
     UpdateClip();
+
+    // asdasdasdas.
+    MGP = DHMountedMGPawn(WeaponPawn);
+
+    if (MGP != none)
+    {
+        MGP.OnFire();
+    }
 }
 
 function StartFiringAnimation()

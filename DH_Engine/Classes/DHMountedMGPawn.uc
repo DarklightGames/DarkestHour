@@ -23,6 +23,11 @@ var Mesh                HandsMesh;
 var() name              HandsReloadSequence;
 var name                HandsAttachBone;
 
+// Belt
+var Class<DHFirstPersonBelt>    BeltClass;
+var name                        BeltAttachBone;
+var DHFirstPersonBelt           BeltActor;
+
 // TODO: maybe use a state while reloading to make this easier to manage.
 
 simulated function Destroyed()
@@ -37,7 +42,36 @@ simulated function Destroyed()
         HandsActor.Destroy();
     }
 
+    if (BeltActor != none)
+    {
+        BeltActor.Destroy();
+    }
+
     super.Destroyed();
+}
+
+simulated function InitializeBelt()
+{
+    if (BeltActor != none)
+    {
+        BeltActor.Destroy();
+    }
+
+    if (BeltClass == none)
+    {
+        return;
+    }
+
+    BeltActor = Spawn(BeltClass, self);
+
+    if (BeltActor == none)
+    {
+        return;
+    }
+
+    Gun.AttachToBone(BeltActor, BeltAttachBone);
+    BeltActor.SetRelativeLocation(vect(0, 0, 0));
+    BeltActor.SetRelativeRotation(rot(0, 0, 0));
 }
 
 simulated function InitializeHands()
@@ -68,6 +102,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     if (IsLocallyControlled())
     {
         InitializeHands();
+        InitializeBelt();
 
         MG = DHMountedMG(Gun);
 
@@ -290,6 +325,16 @@ function bool CanFire()
     }
 
     return super.CanFire();
+}
+
+function OnFire()
+{
+    if (BeltActor == none)
+    {
+        return;
+    }
+
+    BeltActor.PlayFiringAnimation(Gun.MainAmmoCharge[0]);
 }
 
 defaultproperties

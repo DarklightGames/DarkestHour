@@ -29,4 +29,7 @@ defaultproperties
         FrameCount=8
     End Object
     AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
+
+    BeltAttachBone="MG_PITCH"
+    BeltClass=Class'DH_MaximM191030FirstPersonBelt'
 }
