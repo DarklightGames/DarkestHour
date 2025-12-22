@@ -45,8 +45,8 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    FireSoundClass=Sound'DH_WeaponSounds.maxim_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.MaximFireLoopEnd'
+    FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
+    FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"
