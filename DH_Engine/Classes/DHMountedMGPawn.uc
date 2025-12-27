@@ -21,7 +21,9 @@ var() name  ReloadCameraBone;
 var DHFirstPersonHands  HandsActor;
 var Mesh                HandsMesh;
 var() name              HandsReloadSequence;
+var() name              HandsIdleSequence;
 var name                HandsAttachBone;
+var() Vector            HandsRelativeLocation;
 
 // Belt
 var Class<DHFirstPersonBelt>    BeltClass;
@@ -81,15 +83,27 @@ simulated function InitializeHands()
         HandsActor.Destroy();
     }
 
+    if (HandsMesh == none)
+    {
+        return;
+    }
+
     HandsActor = Spawn(Class'DHFirstPersonHands', self);
     HandsActor.LinkMesh(HandsMesh);
-    HandsActor.PlayAnim('IDLE');
+
+    if (HandsActor.HasAnim(HandsIdleSequence))
+    {
+        HandsActor.PlayAnim(HandsIdleSequence);
+    }
+
     HandsActor.SetSkins(DHPlayer(Controller));
-    // HandsActor.SetDrawScale(1.5); // TODO: not sure why this is necessary.
 
-    Gun.AttachToBone(HandsActor, HandsAttachBone);
+    if (Gun != none)
+    {
+        Gun.AttachToBone(HandsActor, HandsAttachBone);
+    }
 
-    HandsActor.SetRelativeLocation(vect(0, 0, 0));
+    HandsActor.SetRelativeLocation(HandsRelativeLocation);
     HandsActor.SetRelativeRotation(rot(0, 0, 0));
 }
 
@@ -110,6 +124,12 @@ simulated function ClientKDriverEnter(PlayerController PC)
         {
             MG.UpdateClip();
             MG.UpdateRangeDriverFrameTarget();
+
+            // Put the belt in the right state based on current ammo count.
+            if (BeltActor != none)
+            {
+                BeltActor.FreezeAnimAtAmmoCount(MG.MainAmmoCharge[0]);
+            }
         }
     }
 }
@@ -236,6 +256,9 @@ public function UpdateRocketAcceleration(Float DeltaTime, Float YawChange, Float
 // Pitch is handled with W/S keys.
 function HandleTurretRotation(Float DeltaTime, Float YawChange, Float PitchChange)
 {
+    // TODO: figure out delta from zero.
+    
+
     UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
 
     if (IsHumanControlled())

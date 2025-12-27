@@ -83,5 +83,4 @@ defaultproperties
     FireSequenceNames(32)="BELT_FIRE_32"
     FireSequenceNames(33)="BELT_FIRE_33"
     FireSequenceNames(34)="BELT_FIRE_34"
-    FireSequenceNames(35)="BELT_FIRE_35"
 }

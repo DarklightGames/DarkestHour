@@ -32,4 +32,9 @@ defaultproperties
 
     BeltAttachBone="MG_PITCH"
     BeltClass=Class'DH_MaximM191030FirstPersonBelt'
+
+    HandsMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_HANDS'
+    HandsAttachBone="MG_PITCH"
+    HandsIdleSequence="MAXIM_HANDS_IDLE"
+    HandsRelativeLocation=(Z=-6.41793)  // TODO: not sure why this is needed; something odd with the mesh origin?
 }

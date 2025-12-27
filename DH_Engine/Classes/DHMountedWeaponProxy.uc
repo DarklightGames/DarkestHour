@@ -17,3 +17,9 @@ function DHActorProxy.ActorProxyError GetContextError(Context Context)
 
     return Error;
 }
+
+protected simulated function bool CanPlaceInDangerZone()
+{
+    // There's no reason to restrict mounted weapons from being placed in the danger zone.
+    return true;
+}

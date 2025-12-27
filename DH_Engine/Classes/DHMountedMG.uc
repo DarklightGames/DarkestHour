@@ -384,6 +384,14 @@ simulated state Reloading
         }
     }
 
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        // todo: figure out if this does anything.
+        WeaponPawn.UpdateTurretRotation(DeltaTime, -10, -10);
+    }
+
 Begin:
     Sleep(GetAnimDuration(ReloadSequence));
     GotoState('');
@@ -688,12 +696,12 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
 
     // Screen shake
-    ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
-    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=2.0
-    ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
-    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=2.0
+    ShakeOffsetMag=(X=0.125,Y=0.125,Z=0.125)
+    ShakeOffsetRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=16.0,Y=16.0,Z=16.0)
+    ShakeRotRate=(X=50000.0,Y=50000.0,Z=50000.0)
+    ShakeRotTime=4.0
 
     ProjectileRotationMode=PRM_MuzzleBone
 

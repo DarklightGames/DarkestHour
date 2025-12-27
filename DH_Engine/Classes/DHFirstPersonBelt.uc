@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// This is for a first person belt (i.e. cloth belt) for mounted machine guns.
+// This handles 
+//==============================================================================
 
 class DHFirstPersonBelt extends Actor
     abstract
@@ -21,11 +24,6 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     SpawnBullets();
-
-    // TODO: set the correct belt firing animation depending on the number of bullets remaining.
-
-    PlayAnim(FireSequenceNames[0]);
-    FreezeAnimAt(0.0);
 }
 
 function SpawnBullets()
@@ -69,28 +67,29 @@ function DestroyBullets()
 
 function Destroyed()
 {
-    local int i;
-
     super.Destroyed();
-
-    for (i = 0; i < Bullets.Length; ++i)
-    {
-        if (Bullets[i] != none)
-        {
-            Bullets[i].Destroy();
-        }
-    }
-
-    Bullets.Length = 0;
+    
+    DestroyBullets();
 }
 
-function PlayFiringAnimation(int BulletCount)
+function int FreezeAnimAtAmmoCount(int AmmoCount)
+{
+    local int SequenceIndex;
+
+    SequenceIndex = GetSequenceIndexForAmmoCount(AmmoCount);
+
+    PlayAnim(FireSequenceNames[SequenceIndex]);
+    FreezeAnimAt(0.0);
+    UpdateBullets(SequenceIndex);
+}
+
+function int GetSequenceIndexForAmmoCount(int AmmoCount)
 {
     local int Index, C;
 
-    Index = self.BulletCount - BulletCount;
-    // First shot will have 250 rounds. First index comes in as 0.
+    Index = self.BulletCount - AmmoCount;
 
+    // First shot will have 250 rounds. First index comes in as 0.
     const A = 16;
     const B = 4;
 
@@ -105,19 +104,34 @@ function PlayFiringAnimation(int BulletCount)
     // Go through the last A animations starting at C.
     else if (Index >= C)
     {
-        Index = FireSequenceNames.Length - BulletCount;
+        Index = FireSequenceNames.Length - AmmoCount;
     }
 
-    PlayAnim(FireSequenceNames[Index]);
+    return Clamp(Index, 0, FireSequenceNames.Length - 1);
 }
 
-function UpdateBullets(int BulletCount)
+function PlayFiringAnimation(int AmmoCount)
+{
+    local int SequenceIndex;
+
+    SequenceIndex = GetSequenceIndexForAmmoCount(AmmoCount);
+
+    UpdateBullets(SequenceIndex);
+    PlayAnim(FireSequenceNames[SequenceIndex]);
+}
+
+function UpdateBullets(int SequenceIndex)
 {
     local int i;
 
     for (i = 0; i < Bullets.Length; ++i)
     {
-        Bullets[i].bHidden = (i >= BulletCount);
+        if (Bullets[i] == none)
+        {
+            continue;
+        }
+
+        Bullets[i].bHidden = i <= SequenceIndex;
     }
 }
 
