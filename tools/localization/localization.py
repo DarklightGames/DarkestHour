@@ -20,6 +20,7 @@ import yaml
 import colorama
 import time
 from colorama import Fore
+import fnmatch
 
 colorama.init()
 
@@ -352,6 +353,7 @@ def command_export(args):
         print(f'{Fore.RED}{e}')
 
     input_patterns = localization_data['export']['input_patterns']
+    ignore_patterns = localization_data['export']['ignore_patterns']
 
     # Swap out the extension in the input patterns for the target language's extension.
     if args.language_code is not None:
@@ -363,6 +365,13 @@ def command_export(args):
     for pattern in input_patterns:
         glob_pattern = str(root_path / pattern)
         for input_path in glob.glob(glob_pattern):
+
+            is_ignored = any(fnmatch.fnmatch(input_path, ignore_pattern) for ignore_pattern in ignore_patterns)
+
+            if is_ignored:
+                print(f'Ignored {input_path}')
+                continue
+
             # Get the file name without the path.
             filename = Path(input_path).name
             basename, extension = os.path.splitext(filename)
