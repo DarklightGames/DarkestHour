@@ -48,11 +48,6 @@ defaults:
     texture_size: # Maximum size of each texture atlas.
       x: 512
       y: 512
-    # margin: # Margin around each character
-    #   bottom: 1
-    #   top: 1
-    #   left: 1
-    #   right: 1
     padding:
       x: 1
       y: 1
@@ -153,9 +148,9 @@ packages:
   DH_Fonts_jap:
     languages: [ja]
     font_substitutions:
-      Sofia Sans Condensed: Source Han Sans JP
-      Inter: Source Han Sans JP
-      Arial: Source Han Sans JP
+      Sofia Sans Condensed: Source Han Sans
+      Inter: Source Han Sans
+      Arial: Source Han Sans
     ensure_all_used_characters: true
     unicode_ranges:
       - [0x3000, 0x303F]  # CJK Symbols and Punctuation
@@ -165,9 +160,9 @@ packages:
   DH_Fonts_chn:
     languages: [zh]
     font_substitutions:
-      Sofia Sans Condensed: Source Han Sans SC
-      Inter: Source Han Sans SC
-      Arial: Source Han Sans SC
+      Sofia Sans Condensed: Source Han Sans
+      Inter: Source Han Sans
+      Arial: Source Han Sans
     ensure_all_used_characters: true
     unicode:
       - [0x3000, 0x303F]  # CJK Symbols and Punctuation
