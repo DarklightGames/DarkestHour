@@ -198,7 +198,7 @@ def get_installed_fonts() -> Dict[str, Dict[str, str]]:
                         ttf_fonts.append(ttf_font)
             except:
                 pass
-        else:
+        elif font_path.endswith(('.ttf', '.otf', '.ttz', '.woff', '.woff2')):
             try:
                 ttf_font = TTFont(font_path, lazy=True)
                 ttf_fonts.append(get_font(ttf_font, font_path))
