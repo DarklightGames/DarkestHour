@@ -30,3 +30,4 @@ sync:
     - fr  # French
     - ja  # Japanese
     - zh  # Chinese
+    # - tr  # Turkish
