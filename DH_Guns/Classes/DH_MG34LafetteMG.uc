@@ -17,24 +17,23 @@ defaultproperties
         Channel=1
         Bone="SIGHT_PITCH"
         AnimationInterpDuration=0.5
-        RangeTable(0)=(Range=200,AnimationTime=0.0375)
-        RangeTable(1)=(Range=400,AnimationTime=0.045)
-        RangeTable(2)=(Range=500,AnimationTime=0.06)
-        RangeTable(3)=(Range=600,AnimationTime=0.0725)
-        RangeTable(4)=(Range=700,AnimationTime=0.085)
-        RangeTable(5)=(Range=800,AnimationTime=0.12)
-        RangeTable(6)=(Range=900,AnimationTime=0.16)
-        RangeTable(7)=(Range=1000,AnimationTime=0.16)
+        RangeTable(0)=(Range=200,AnimationTime=0.04)
+        RangeTable(1)=(Range=400,AnimationTime=0.065)
+        RangeTable(2)=(Range=500,AnimationTime=0.09)
+        RangeTable(3)=(Range=600,AnimationTime=0.10)
+        RangeTable(4)=(Range=700,AnimationTime=0.125)
+        RangeTable(5)=(Range=800,AnimationTime=0.15)
+        RangeTable(6)=(Range=900,AnimationTime=0.175)
+        RangeTable(7)=(Range=1000,AnimationTime=0.21)
     End Object
     RangeParams=RangeParams0
 
     bLimitYaw=true
-    MaxNegativeYaw=-3276    // -18 degrees
-    MaxPositiveYaw=3276     // +18 degrees
+    MaxNegativeYaw=-2912    // -16 degrees
+    MaxPositiveYaw=2912     // +16 degrees
 
-    // TODO: figure this out
-    CustomPitchUpLimit=2002     // +12 degrees
-    CustomPitchDownLimit=63534  // -12 degrees
+    CustomPitchUpLimit=1183     // +6.5 degrees
+    CustomPitchDownLimit=64353  // -6.5 degrees
 
     // Ammo
     InitialPrimaryAmmo=250
