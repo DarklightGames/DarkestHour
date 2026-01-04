@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHBrowser_ServerListPageFavorites extends UT2k4Browser_ServerListPageFavorites;
+class DHBrowser_ServerListPageFavorites extends ROUT2k4Browser_ServerListPageFavorites;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -14,6 +14,17 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Server);
     Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Rules);
     Class'DHInterfaceUtil'.static.ReformatLists(MyController, lb_Players);
+}
+
+function InitServerList()
+{
+    li_Server = new(none) Class'DHBrowser_ServersList';
+
+    // Switch out the list
+    lb_Server.InitBaseList(li_Server);
+    lb_Server.HeaderColumnPerc = li_Server.InitColumnPerc;
+    li_Server.OnChange = ServerListChanged;
+    lb_Server.SetAnchor(Self);
 }
 
 defaultproperties
