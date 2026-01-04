@@ -9,6 +9,7 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.mg'
     VehicleClasses(0)=(VariantIndex=0,VehicleClass=Class'DH_MG34LafetteGun')
+    VehicleClasses(1)=(VariantIndex=1,VehicleClass=Class'DH_MG34LafetteGun_Low')
     SupplyCost=500
     ProgressMax=5
     bCanOnlyPlaceOnTerrain=false

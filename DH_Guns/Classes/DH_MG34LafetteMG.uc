@@ -50,9 +50,8 @@ defaultproperties
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
 
-    // TODO: replace
-    PitchBone="MG"
-    YawBone="MG"
+    PitchBone="PITCH"
+    YawBone="YAW"
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

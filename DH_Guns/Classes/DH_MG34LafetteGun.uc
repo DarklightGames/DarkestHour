@@ -9,11 +9,11 @@ defaultproperties
 {
     VehicleTeam=AXIS_TEAM_INDEX
     VehicleNameString="Maschinengewehr 34 (Lafette)"
-    BeginningIdleAnim="IDLE"
     Mesh=SkeletalMesh'DH_MG34_anm.LAFETTE_BODY_EXT'
     //Skins(0)=Texture'DH_Maxim_tex.MAXIM_BODY_EXT'
+    BeginningIdleAnim="LAFETTE_BODY_HIGH"
     bCanBeRotated=true
-    CollisionRadius=32.0
+    CollisionRadius=40.0
     CollisionHeight=16.0
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_MG34LafetteMGPawn',WeaponBone="TURRET_PLACEMENT")
     RotationsPerSecond=0.125
