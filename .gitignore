@@ -133,3 +133,9 @@ System/libsteam_api.so
 System/MSVCP71.DLL
 System/openal.so
 System/redorchestra-bin
+umodel_64.exe
+LICENSE.txt
+readme.txt
+SDL2.dll
+SDL2_64.dll
+umodel.exe
