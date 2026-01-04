@@ -9,8 +9,8 @@ class DHRomRoles extends DHRoleInfo
 defaultproperties
 {
     Texture=Texture'DH_InterfaceArt_tex.deathicons.Andy' //something neutral since they can be either axis and allies
-    VoiceType="DH_GerPlayers.DHRomVoice"
-    AltVoiceType="DH_GerPlayers.DHRomVoice"
+    VoiceType="DH_RomPlayers.DHRomaniaVoice"
+    AltVoiceType="DH_RomPlayers.DHRomaniaVoice"
     DetachedArmClass=Class'DHSeveredArm_Rom'
     DetachedLegClass=Class'DHSeveredLeg_Rom
 
