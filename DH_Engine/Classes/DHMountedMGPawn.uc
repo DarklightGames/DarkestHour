@@ -113,23 +113,25 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super.ClientKDriverEnter(PC);
 
-    if (IsLocallyControlled())
+    if (!IsLocallyControlled())
     {
-        InitializeHands();
-        InitializeBelt();
+        return;
+    }
 
-        MG = DHMountedMG(Gun);
+    InitializeHands();
+    InitializeBelt();
 
-        if (MG != none)
+    MG = DHMountedMG(Gun);
+
+    if (MG != none)
+    {
+        MG.UpdateClip();
+        MG.UpdateRangeDriverFrameTarget();
+
+        // Put the belt in the right state based on current ammo count.
+        if (BeltActor != none)
         {
-            MG.UpdateClip();
-            MG.UpdateRangeDriverFrameTarget();
-
-            // Put the belt in the right state based on current ammo count.
-            if (BeltActor != none)
-            {
-                BeltActor.FreezeAnimAtAmmoCount(MG.MainAmmoCharge[0]);
-            }
+            BeltActor.FreezeAnimAtAmmoCount(MG.MainAmmoCharge[0]);
         }
     }
 }
@@ -342,7 +344,7 @@ function bool CanFire()
 
     MG = DHMountedMG(Gun);
 
-    if (MG.BarrelCondition == BC_Failed)
+    if (MG.BarrelCondition == BC_Failed || MG.IsBusy())
     {
         return false;
     }
@@ -358,6 +360,21 @@ function OnFire()
     }
 
     BeltActor.PlayFiringAnimation(Gun.MainAmmoCharge[0]);
+}
+
+exec function ROMGOperation()
+{
+    // TODO: implement barrel change functionality.
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    if (MG == none)
+    {
+        return;
+    }
+
+    MG.TryChangeBarrels();
 }
 
 defaultproperties

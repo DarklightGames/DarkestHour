@@ -20,7 +20,7 @@ defaultproperties
         RangeTable(0)=(Range=200,AnimationTime=0.04)
         RangeTable(1)=(Range=400,AnimationTime=0.065)
         RangeTable(2)=(Range=500,AnimationTime=0.09)
-        RangeTable(3)=(Range=600,AnimationTime=0.10)
+        RangeTable(3)=(Range=600,AnimationTime=0.105)
         RangeTable(4)=(Range=700,AnimationTime=0.125)
         RangeTable(5)=(Range=800,AnimationTime=0.15)
         RangeTable(6)=(Range=900,AnimationTime=0.175)
@@ -59,6 +59,8 @@ defaultproperties
     FiringBone="FIRING_ROOT"
 
     ShellEjectBone="EJECTOR"
+    // TODO: swap this out after we re-export
+    //ShellEjectBone="LAFETTE_EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=0,Yaw=32768)
 

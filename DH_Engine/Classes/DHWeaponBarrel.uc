@@ -26,7 +26,7 @@ enum EBarrelCondition
 var     float               Temperature;
 var     bool                bIsSteamActive;     // If barrel passes SteamTemperature, we'll start steaming the barrel.
 var     EBarrelCondition    Condition;
-var     bool                bIsCurrentBarrel;   // This is the weapon's current barrel, not a spare.
+var private bool            bIsCurrentBarrel;   // This is the weapon's current barrel, not a spare.
 
 delegate OnTemperatureChanged(DHWeaponBarrel Barrel, float Temperature);
 delegate OnIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive);
@@ -63,6 +63,11 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
+function bool IsCurrentBarrel()
+{
+    return bIsCurrentBarrel;
+}
+
 // Sets whether this barrel is the current one in the weapon & updates its status
 function SetCurrentBarrel(bool bIsCurrent)
 {
@@ -71,7 +76,7 @@ function SetCurrentBarrel(bool bIsCurrent)
     if (bIsCurrentBarrel)
     {
         OnTemperatureChanged(self, Temperature);
-        UpdateBarrelStatus();
+        UpdateBarrelStatus(true);
     }
 }
 
@@ -104,7 +109,7 @@ function Timer()
 }
 
 // Updates this barrel and the weapon's status
-function UpdateBarrelStatus()
+function UpdateBarrelStatus(optional bool bForce)
 {
     local bool bOldIsSteamActive;
 
@@ -116,7 +121,7 @@ function UpdateBarrelStatus()
     bOldIsSteamActive = bIsSteamActive;
     bIsSteamActive = Temperature > SteamTemperature;
 
-    if (bOldIsSteamActive != bIsSteamActive)
+    if (bForce || bOldIsSteamActive != bIsSteamActive)
     {
         if (bIsCurrentBarrel)
         {
@@ -153,6 +158,17 @@ simulated static function float GetFiringSoundPitch(float BarrelTemperature)
         1.0,
         0.8125
     );
+}
+
+// Sorts in order of least damaged to most damaged, then by temperature.
+static function bool SortFunction(Object LHS, Object RHS)
+{
+    if (DHWeaponBarrel(LHS).Condition != DHWeaponBarrel(RHS).Condition)
+    {
+        return DHWeaponBarrel(LHS).Condition < DHWeaponBarrel(RHS).Condition;
+    }
+
+    return DHWeaponBarrel(LHS).Temperature < DHWeaponBarrel(RHS).Temperature;
 }
 
 defaultproperties

@@ -3267,7 +3267,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
             Barrels[i].SetOwner(self); // barrel's owner is now this weapon
 
-            if (Barrels[i].bIsCurrentBarrel)
+            if (Barrels[i].IsCurrentBarrel())
             {
                 BarrelIndex = i;
             }
@@ -3289,7 +3289,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
         Barrels[i].OnConditionChanged = OnBarrelConditionChanged;
 
-        if (Barrels[BarrelIndex].bIsCurrentBarrel)
+        if (Barrels[BarrelIndex].IsCurrentBarrel())
         {
             // Now that the delegates have been hooked up, trigger the status updates.
             Barrels[BarrelIndex].UpdateBarrelStatus();

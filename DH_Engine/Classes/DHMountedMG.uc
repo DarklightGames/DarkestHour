@@ -55,13 +55,16 @@ var() Rotator               EmptyAmmoRoundRelativeRotation;
 
 var int                     NumRoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
-// Barrels
+// Barrels (STATIC)
 var int                             BarrelCount;
-var int                             BarrelIndex;
 var class<DHWeaponBarrel>           BarrelClass;
 var class<ROMGSteam>                BarrelSteamEmitterClass;
-var ROMGSteam                       BarrelSteamEmitter;
 var name                            BarrelSteamBone;
+var name                            BarrelChangeSequence;
+
+// Barrels (RUNTIME)
+var int                             BarrelIndex;
+var ROMGSteam                       BarrelSteamEmitter;
 var array<DHWeaponBarrel>           Barrels;
 var DHWeaponBarrel.EBarrelCondition BarrelCondition;
 var float                           BarrelTemperature;
@@ -94,7 +97,7 @@ private function SpawnBarrels()
     if (Barrels.Length > 0)
     {
         // Set the first barrel is being active.
-        Barrels[0].bIsCurrentBarrel = true;
+        Barrels[0].SetCurrentBarrel(true);
     }
 }
 
@@ -105,6 +108,8 @@ function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
 
 function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
 {
+    Log("OnBarrelSteamIsActiveChanged" @ Barrel @ bIsSteamActive);
+
     // Sets the variable here on the server. The client will then have this variable replicated to them.
     bBarrelIsSteamActive = bIsSteamActive;
 
@@ -285,7 +290,6 @@ function Fire(Controller C)
     
     UpdateClip();
 
-    // asdasdasdas.
     MGP = DHMountedMGPawn(WeaponPawn);
 
     if (MGP != none)
@@ -296,12 +300,12 @@ function Fire(Controller C)
 
 function StartFiringAnimation()
 {
-    if (FiringChannel != 0)
+    if (FiringChannel != 0 && HasAnim(FiringAnim))
     {
         LoopAnim(FiringAnim, 1.0, 0.0, FiringChannel);
     }
 
-    if (BeltChannel != 0)
+    if (BeltChannel != 0 && HasAnim(BeltFireLoopAnimation))
     {
         LoopAnim(BeltFireLoopAnimation, 1.0, 0.0, BeltChannel);
     }
@@ -309,12 +313,12 @@ function StartFiringAnimation()
 
 function StopFiringAnimation()
 {
-    if (FiringChannel != 0)
+    if (FiringChannel != 0 && HasAnim(FiringIdleAnim))
     {
         PlayAnim(FiringIdleAnim, 1.0, 0.0, FiringChannel);
     }
 
-    if (BeltChannel != 0)
+    if (BeltChannel != 0 && HasAnim(BeltIdleAnimation))
     {
         PlayAnim(BeltIdleAnimation, 1.0, 0.125, BeltChannel);
     }
@@ -327,7 +331,25 @@ function CeaseFire(Controller C, Bool bWasAltFire)
     StopFiringAnimation();
 }
 
-simulated state Reloading
+simulated function bool IsBusy()
+{
+    return false;
+}
+
+simulated state Busy
+{
+    simulated function bool IsBusy()
+    {
+        return true;
+    }
+
+    event bool AttemptFire(Controller C, bool bAltFire)
+    {
+        return false;
+    }
+}
+
+simulated state Reloading extends Busy
 {
     // Don't allow the player to change the range while reloading.
     simulated function DecrementRange();
@@ -394,6 +416,101 @@ simulated state Reloading
 
 Begin:
     Sleep(GetAnimDuration(ReloadSequence));
+    GotoState('');
+}
+
+// Returns the index of the next best barrel to switch to, sorting first by condition and then by temperature.
+// Returns -1 if there are no barrels that can be changed to.
+private simulated function int GetNextBestBarrelIndex()
+{
+    local int i;
+    local UComparator Comparator;
+    local array<DHWeaponBarrel> SortedBarrels;
+
+    // Copy the barrels to a new list to be sorted.
+    SortedBarrels = Barrels;
+
+    // Remove the current barrel and any failed barrels from the list to be sorted.
+    SortedBarrels.Remove(BarrelIndex, 1);
+
+    for (i = SortedBarrels.Length - 1; i >= 0; --i)
+    {
+        if (SortedBarrels[i].Condition == BC_Failed)
+        {
+            SortedBarrels.Remove(i, 1);
+        }
+    }
+
+    if (SortedBarrels.Length == 0)
+    {
+        return -1;
+    }
+
+    // Sort in order of condition and temperature.
+    Comparator = new Class'UComparator';
+    Comparator.CompareFunction = Class'DHWeaponBarrel'.static.SortFunction;
+    Class'USort'.static.Sort(SortedBarrels, Comparator);
+    return Class'UArray'.static.IndexOf(Barrels, SortedBarrels[0]);
+}
+
+simulated function bool CanChangeBarrels()
+{
+    local int i;
+
+    if (IsBusy() || GetNextBestBarrelIndex() == -1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Attempt to change barrels. Returns true if the gun is now in the changing barrel state.
+simulated function bool TryChangeBarrels()
+{
+    if (!CanChangeBarrels())
+    {
+        return false;
+    }
+
+    GotoState('ChangingBarrels');
+
+    return true;
+}
+
+simulated state ChangingBarrels extends Busy
+{
+    simulated function BeginState()
+    {
+        local int NextBarrelIndex;
+
+        super.BeginState();
+
+        NextBarrelIndex = GetNextBestBarrelIndex();
+
+        if (NextBarrelIndex == -1)
+        {
+            // Avoid out-of-bounds errors in case the function above returns -1 somehow.
+            return;
+        }
+
+        Level.Game.Broadcast(self, "Changing barrels from barrel" @ BarrelIndex @ "to barrel" @ NextBarrelIndex);
+
+        Barrels[BarrelIndex].SetCurrentBarrel(false);
+        Barrels[NextBarrelIndex].SetCurrentBarrel(true);
+
+        // TODO: some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
+        BarrelIndex = NextBarrelIndex;
+    }
+
+    simulated function EndState()
+    {
+        Level.Game.Broadcast(self, "Barrel changed");
+    }
+
+Begin:
+    // Sleep(GetAnimDuration(BarrelChangeSequence));
+    Sleep(2.0);
     GotoState('');
 }
 

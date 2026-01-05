@@ -191,7 +191,7 @@ function InitDroppedPickupFor(Inventory Inv)
                     Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
                     Barrels[i].OnConditionChanged = none;
 
-                    if (Barrels[i].bIsCurrentBarrel)
+                    if (Barrels[i].IsCurrentBarrel())
                     {
                         BarrelIndex = i;
                         Barrels[BarrelIndex].UpdateBarrelStatus();
