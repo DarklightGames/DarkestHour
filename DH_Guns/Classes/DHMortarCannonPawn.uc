@@ -405,9 +405,6 @@ simulated state Firing
         // Interpolate the camera position and rotation between the normal and firing camera positions.
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
 
-        // Hide the hands mesh if the camera is not fully in the firing position.
-        HandsActor.bHidden = GetHandsHidden();
-
         ViewActor = self;
         CameraLocation = Class'UVector'.static.VLerp(Theta * FiringCameraLocationFactor, NormalCameraLocation, FiringCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta * FiringCameraRotationFactor));
@@ -418,6 +415,9 @@ simulated state Firing
         // Finalise the camera with any shake
         CameraLocation += PC.ShakeOffset >> PC.Rotation;
         CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+
+        // Hide the hands mesh if the camera is not fully in the firing position.
+        HandsActor.bHidden = GetHandsHidden();
     }
 
     simulated function BeginState()

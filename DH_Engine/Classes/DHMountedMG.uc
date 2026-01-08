@@ -108,8 +108,6 @@ function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
 
 function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
 {
-    Log("OnBarrelSteamIsActiveChanged" @ Barrel @ bIsSteamActive);
-
     // Sets the variable here on the server. The client will then have this variable replicated to them.
     bBarrelIsSteamActive = bIsSteamActive;
 

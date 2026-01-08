@@ -7,7 +7,7 @@ class DH_MG34LafetteMG extends DHMountedMG;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT'  // TODO: replace with EXT version
+    Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'  // TODO: replace with EXT version
     // Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
 
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
@@ -58,11 +58,9 @@ defaultproperties
     FiringChannel=2
     FiringBone="FIRING_ROOT"
 
-    ShellEjectBone="EJECTOR"
-    // TODO: swap this out after we re-export
-    //ShellEjectBone="LAFETTE_EJECTOR"
+    ShellEjectBone="LAFETTE_EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
-    ShellEjectRotationOffset=(Pitch=0,Yaw=32768)
+    ShellEjectRotationOffset=(Pitch=8192,Yaw=16384,Roll=8192)
 
     WeaponFireOffset=-10
 
