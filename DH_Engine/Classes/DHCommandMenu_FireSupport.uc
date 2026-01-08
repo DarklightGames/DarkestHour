@@ -13,6 +13,7 @@ var localized string OffMapSupportExhaustedText;
 var localized string AvailableArtilleryText;
 var localized string AvailableParadropsText;
 var localized string AvailableAirstrikesText;
+var localized string SquadTooSmallText;
 
 var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 var bool bIsArtilleryTargetValid;
@@ -270,7 +271,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
             ORI.InfoColor = Class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.squad';
-            ORI.InfoText[0] = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+            ORI.InfoText[0] = default.SquadTooSmallText @ "(" $ string(SquadMembersCount) $ "/" $ FireSupportRequestClass.default.RequiredSquadMembers $ ")";
             break;
         case FSE_InsufficientPrivileges:
         case FSE_Disabled:
@@ -317,6 +318,7 @@ defaultproperties
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"
     OffMapSupportExhaustedText="Exhausted"
+    SquadTooSmallText="Squad Too Small"
     AvailableArtilleryText="Artillery: {0}"
     AvailableParadropsText="Paradrops: {0}"
     AvailableAirstrikesText="Airstrikes: {0}"

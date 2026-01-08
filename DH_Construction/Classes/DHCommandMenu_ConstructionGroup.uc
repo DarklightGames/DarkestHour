@@ -24,6 +24,7 @@ var localized string RemainingText;
 var localized string MaxActiveText;
 var localized string NoSquadMembersNearbyText;
 var localized string MoreText;
+var localized string SquadTooSmallText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHActorProxy.Context Context;
@@ -242,7 +243,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             }
 
             ORI.InfoIcon = default.SquadIcon;
-            ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
+            ORI.InfoText[0] = default.SquadTooSmallText @ "(" $ string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum) $ ")";
             break;
         case ERROR_NoSquadmatesNearby:
             ORI.InfoIcon = default.SquadIcon;
@@ -301,5 +302,6 @@ defaultproperties
     NoSquadMembersNearbyText="No squadmates nearby"
     BusyText="Busy"
     MoreText="More"
+    SquadTooSmallText="Squad Too Small"
     SlotCountOverride=8
 }

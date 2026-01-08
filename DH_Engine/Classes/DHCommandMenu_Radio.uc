@@ -16,6 +16,7 @@ var localized string UnqualifiedText;
 var localized string OngoingText;
 var localized string AvailableText;
 var localized string CancelText;
+var localized string SquadTooSmallText;
 
 function Setup()
 {
@@ -95,9 +96,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
                     if (ArtilleryClass != none)
                     {
-                        ORI.InfoText[0] = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) $
+                        ORI.InfoText[0] = default.SquadTooSmallText @ "(" $
+                                          PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) $
                                           "/" $
-                                          ArtilleryClass.default.RequiredSquadMemberCount;
+                                          ArtilleryClass.default.RequiredSquadMemberCount $ ")";
                         break;
                     }
                 }
@@ -187,4 +189,5 @@ defaultproperties
     AvailableText="Available"
     OngoingText="Ongoing"
     CancelText="Ongoing (Cancel)"
+    SquadTooSmallText="Squad Too Small"
 }
