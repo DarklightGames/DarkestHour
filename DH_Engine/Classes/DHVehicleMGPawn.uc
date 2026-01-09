@@ -149,6 +149,16 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+simulated function float GetOverlayCorrectionX()
+{
+    return OverlayCorrectionX;
+}
+
+simulated function float GetOverlayCorrectionY()
+{
+    return OverlayCorrectionY;
+}
+
 // New function to draw a gunsight overlay
 // Basis is same as a cannon pawn (see notes there), but without the extra cannon stuff)
 simulated function DrawGunsightOverlay(Canvas C)
@@ -160,8 +170,8 @@ simulated function DrawGunsightOverlay(Canvas C)
         TextureSize = float(GunsightOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / GunsightSize * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - GetOverlayCorrectionX();
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - GetOverlayCorrectionY();
         C.SetPos(0.0, 0.0);
 
         C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);

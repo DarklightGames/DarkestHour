@@ -206,6 +206,56 @@ simulated function bool IsReloading()
     return MG != none && MG.IsReloading();
 }
 
+simulated function bool IsOnGunsight()
+{
+    if (!IsInState('ViewTransition') && DriverPositionIndex == 1)
+    {
+        return true;
+    }
+}
+
+simulated function float GetOverlayCorrectionX()
+{
+    local DHMountedMG VW;
+
+    VW = DHMountedMG(Gun);
+
+    if (VW == none)
+    {
+        return super.GetOverlayCorrectionX();
+    }
+
+    return VW.RangeParams.GetGunsightCorrectXOffset();
+}
+
+exec function SetOverlayCorrectionX(float NewCorrectionX)
+{
+    local DHMountedMG VW;
+
+    VW = DHMountedMG(Gun);
+
+    if (VW == none)
+    {
+        return;
+    }
+
+    VW.RangeParams.RangeTable[VW.RangeIndex].GunsightCorrectX = NewCorrectionX;
+}
+
+exec function SetGunsightPitchOffset(float NewPitchOffset)
+{
+    local DHMountedMG VW;
+
+    VW = DHMountedMG(Gun);
+
+    if (VW == none)
+    {
+        return;
+    }
+
+    VW.RangeParams.RangeTable[VW.RangeIndex].GunsightPitch = NewPitchOffset;
+}
+
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local float T;
@@ -213,13 +263,37 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     local Coords ReloadCameraCoords;
     local Vector ReloadCameraLocation;
     local Rotator ReloadCameraRotation;
+    local Vector GunsightCameraLocation;
+    local Rotator GunsightCameraRotation;
 
-    super.SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+    VW = DHMountedMG(Gun);
+
+    if (VW == none)
+    {
+        return;
+    }
+
+    if (IsOnGunsight())
+    {
+        CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
+
+        // The rotation is in local space, so we need to convert it to world space.
+        GunsightCameraRotation.Pitch = VW.RangeParams.GetGunsightPitchOffset();
+        CameraRotation = QuatToRotator(QuatProduct(
+            QuatFromRotator(GunsightCameraRotation),
+            QuatFromRotator(Gun.GetBoneRotation(GunsightCameraBone))
+            ));
+    }
+    else
+    {
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        CameraRotation = Gun.GetBoneRotation(CameraBone);
+
+        // TODO: add offsets, shake etc.
+    }
 
     if (IsReloading())
     {
-        VW = DHMountedMG(Gun);
-
         ReloadCameraCoords = VW.GetBoneCoords(ReloadCameraBone);
         ReloadCameraLocation = ReloadCameraCoords.Origin;
         ReloadCameraRotation = QuatToRotator(
@@ -231,6 +305,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
         CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(CameraRotation), QuatFromRotator(ReloadCameraRotation), T));
+
+        return;
     }
 }
 

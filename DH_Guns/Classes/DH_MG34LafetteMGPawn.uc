@@ -15,6 +15,12 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true)
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
+    GunsightSize=0.471 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
+
+    DriverPositions(1)=(bDrawOverlays=true,ViewFOV=30.0,bExposed=true)
+    GunsightCameraBone="SIGHT_CAMERA"
+
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="maxim_yaw_pitch_0"
         Sequences(1)="maxim_yaw_pitch_25"

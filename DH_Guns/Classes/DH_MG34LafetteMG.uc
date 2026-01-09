@@ -2,6 +2,14 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] Add gunsight position (make sure it uses the right texture)
+//==============================================================================
+// BUGS
+//==============================================================================
+// [ ] destroying a barrel and then switching does not let you fire again
+// [ ] can "zoom in" on the gunsight which makes no sense
+// [ ] pressing 1 resets the view; this should be disabled for mounted MGs
+//==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
 
@@ -17,14 +25,14 @@ defaultproperties
         Channel=1
         Bone="SIGHT_PITCH"
         AnimationInterpDuration=0.5
-        RangeTable(0)=(Range=200,AnimationTime=0.04)
-        RangeTable(1)=(Range=400,AnimationTime=0.065)
-        RangeTable(2)=(Range=500,AnimationTime=0.09)
-        RangeTable(3)=(Range=600,AnimationTime=0.105)
-        RangeTable(4)=(Range=700,AnimationTime=0.125)
-        RangeTable(5)=(Range=800,AnimationTime=0.15)
-        RangeTable(6)=(Range=900,AnimationTime=0.175)
-        RangeTable(7)=(Range=1000,AnimationTime=0.21)
+        RangeTable(0)=(Range=200,AnimationTime=0.04,GunsightPitch=-19)
+        RangeTable(1)=(Range=400,AnimationTime=0.065,GunsightPitch=-50)
+        RangeTable(2)=(Range=500,AnimationTime=0.09,GunsightPitch=-65)
+        RangeTable(3)=(Range=600,AnimationTime=0.105,GunsightPitch=-80)
+        RangeTable(4)=(Range=700,AnimationTime=0.125,GunsightPitch=-95)
+        RangeTable(5)=(Range=800,AnimationTime=0.15,GunsightPitch=-120)
+        RangeTable(6)=(Range=900,AnimationTime=0.175,GunsightPitch=-140)
+        RangeTable(7)=(Range=1000,AnimationTime=0.21,GunsightPitch=-165)
     End Object
     RangeParams=RangeParams0
 
