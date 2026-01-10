@@ -292,9 +292,9 @@ function bool OnDblClick(GUIComponent Sender)
 
 function bool MyContextOpen(GUIContextMenu Sender)
 {
-    local DHSpawnPoint_SquadRallyPoint SRP;
+    local DHSquadRallyPoint SRP;
     local DHSpawnPoint_Admin AdminSpawn;
-    local array<DHSpawnPoint_SquadRallyPoint> RallyPoints;
+    local array<DHSquadRallyPoint> RallyPoints;
 
     if (Sender == none || PRI == none || GRI == none)
     {
@@ -321,7 +321,7 @@ function bool MyContextOpen(GUIContextMenu Sender)
         return false;
     }
 
-    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
+    SRP = DHSquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
 
     if (SRP == none || SRP.GetTeamIndex() != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
     {
@@ -349,7 +349,7 @@ function bool MyContextClose(GUIContextMenu Sender)
 
 function MyContextSelect(GUIContextMenu Sender, int Index)
 {
-    local DHSpawnPoint_SquadRallyPoint SRP;
+    local DHSquadRallyPoint SRP;
     local DHSpawnPoint_Admin AdminSpawn;
 
     if (PRI == none || GRI == none || PC == none)
@@ -375,7 +375,7 @@ function MyContextSelect(GUIContextMenu Sender, int Index)
         return;
     }
 
-    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
+    SRP = DHSquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
 
     switch (Index)
     {

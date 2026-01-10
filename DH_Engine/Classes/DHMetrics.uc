@@ -368,7 +368,7 @@ function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, a
     Rounds[0].Captures[Rounds[0].Captures.Length] = C;
 }
 
-function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
+function OnRallyPointCreated(DHSquadRallyPoint RP)
 {
     local DHMetricsRallyPoint MRP;
 
