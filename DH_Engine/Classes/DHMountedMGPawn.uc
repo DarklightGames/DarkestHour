@@ -2,6 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] bullet snapping & whizzing should still work on exposed vehicle occupants!
+// [ ] Un-zoom when going to the gunsight.
+// [ ] There's no message when the gun barrel is blocked and the player tries to fire.
+// [ ] Switch off of the gunsight position when reloading.
+//=============================================================================
 
 class DHMountedMGPawn extends DHVehicleMGPawn
     abstract;
@@ -30,7 +35,27 @@ var Class<DHFirstPersonBelt>    BeltClass;
 var name                        BeltAttachBone;
 var DHFirstPersonBelt           BeltActor;
 
-// TODO: maybe use a state while reloading to make this easier to manage.
+// We only have two positions and we want to snap the field of view when switching
+// between them.
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return true;
+}
+
+// Overridden to un-zoom when changing view positions.
+simulated state ViewTransition
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        // Un-zoom when changing view positions.
+        if (bIsZoomed)
+        {
+            SetIsZoomed(false);
+        }
+    }
+}
 
 simulated function Destroyed()
 {
@@ -173,9 +198,8 @@ simulated function SetIsZoomed(bool bNewIsZoomed)
 
 simulated function ToggleZoom()
 {
-    if (IsReloading())
+    if (IsReloading() || IsOnGunsight() || IsInState('ViewTransition'))
     {
-        // Don't allow the player to toggle the zoom while reloading.
         return;
     }
 
@@ -273,6 +297,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
+    super.SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+
     if (IsOnGunsight())
     {
         CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
@@ -288,8 +314,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
         CameraRotation = Gun.GetBoneRotation(CameraBone);
-
-        // TODO: add offsets, shake etc.
     }
 
     if (IsReloading())
@@ -308,6 +332,10 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
         return;
     }
+
+    // Finalise the camera with any shake
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
 // Despite the name, this function is used to update the gun's rotation.
@@ -347,7 +375,7 @@ function HandleTurretRotation(Float DeltaTime, Float YawChange, Float PitchChang
 }
 
 // Debugging functions.
-simulated exec function SpawnRangeTarget()
+simulated exec function SpawnRangeTarget(int SizeMeters)
 {
     local Coords MuzzleCoords;
     local Vector Direction, TargetLocation;
@@ -378,8 +406,15 @@ simulated exec function SpawnRangeTarget()
 
     TargetLocation = MuzzleCoords.Origin + (Direction * Class'DHUnits'.static.MetersToUnreal(MG.RangeParams.RangeTable[MG.RangeIndex].Range));
 
+    if (SizeMeters == 0)
+    {
+        SizeMeters = 4.0;
+    }
+    
     TargetActor = Spawn(Class'DHRangeTargetActor', self,, TargetLocation, Rotator(-Direction));
     TargetActor.SetStaticMesh(TargetStaticMesh);
+    // Set the target size.
+    TargetActor.SetDrawScale(SizeMeters / 4.0);
 }
 
 //  Debugging function for calibrating the range table to the animations.

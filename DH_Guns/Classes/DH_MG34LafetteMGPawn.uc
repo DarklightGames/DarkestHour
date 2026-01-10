@@ -12,13 +12,17 @@ defaultproperties
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="cv33_gunner_closed"   // TODO: replace with the idle animation.
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true)
+    InitialPositionIndex=1
+    DriverPositions(0)=(bDrawOverlays=true,ViewFOV=30.0,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true)
+    
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    // The reticle is the same as the MGZ sight.
+    // View width is 250 meters at 1000 meters.
     GunsightOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
-    GunsightSize=0.471 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
+    GunsightSize=0.471
 
-    DriverPositions(1)=(bDrawOverlays=true,ViewFOV=30.0,bExposed=true)
     GunsightCameraBone="SIGHT_CAMERA"
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0

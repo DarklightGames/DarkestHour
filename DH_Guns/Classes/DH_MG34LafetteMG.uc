@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Add gunsight position (make sure it uses the right texture)
+// TODO
 //==============================================================================
+// [ ] Reverse the position so the gunsight is position 0 and the normal view is position 1
 // BUGS
 //==============================================================================
 // [ ] destroying a barrel and then switching does not let you fire again
-// [ ] can "zoom in" on the gunsight which makes no sense
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs
 //==============================================================================
 
