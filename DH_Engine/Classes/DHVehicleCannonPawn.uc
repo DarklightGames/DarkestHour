@@ -21,6 +21,7 @@ var()   bool        bLockCameraDuringTransition; // lock the camera's rotation t
 var     Texture     PeriscopeOverlay;            // overlay for commander's periscope
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     int         DefaultGunFOVMax;            // used to define "default" FOV for cannon views, such as cupola or unbuttoned views
 
 // Projectile shell textures.
 // RO only allowed a single texture for all shells, but DH allows different textures for different shell types.
@@ -103,6 +104,33 @@ exec function SetCamPos(int X, int Y, int Z)
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array
+// Modified from the parent class DHVehicleWeaponPawn (passengers extend it too, and they shouldnt be limited)
+// if no ViewFOV is specified, then it is set to 72 degrees. Previously it would be set to player's display setting, 
+// but it was decided to reduce FOV for all cannon views to mitigate the effect of the fog view distance bug
+// in many instances, some player abusing the increased fog range with 100 degrees view in his cupola could single handedly define the battle's outcome
+// this doesnt fix the bug completely but the difference in increased view range between 72 and 100 degrees FOV is dramatic (~25%)
+simulated function float GetViewFOV(int PositionIndex)
+{
+    if (PositionIndex == BinocPositionIndex && BinocularsClass != none)
+    {
+        // Use the binoculars' FOV if player is using binoculars.
+        return BinocularsClass.default.PlayerFOVZoom;
+    }
+
+    if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
+    {
+        return DriverPositions[PositionIndex].ViewFOV;
+    }
+
+    if (IsHumanControlled())
+    {
+        return DefaultGunFOVMax;
+    }
+
+    return Class'DHPlayer'.default.DefaultFOV;
+}
 
 // Modified so player's view turns with a turret, to properly handle vehicle roll, to handle dual-magnification optics,
 // to handle FPCamPos camera offset for any position (not just overlays), & to optimise & simplify generally
@@ -1378,6 +1406,7 @@ defaultproperties
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
     AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.MG42_ammo_reload'
+    DefaultGunFOVMax=72  
 
     // Gunsight overlay
     GunsightSize=0.5
