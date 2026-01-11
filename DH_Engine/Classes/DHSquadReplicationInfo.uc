@@ -43,7 +43,6 @@ var float                           RallyPointSquadmatePlacementRadiusInMeters;
 var int                             RallyPointInitialSpawnsMinimum;
 var float                           RallyPointInitialSpawnsMemberFactor;
 var float                           RallyPointInitialSpawnsDangerZoneFactor;
-var config  bool                    bAllowRallyPointsBehindEnemyLines;
 
 struct SquadLeaderDraw
 {
@@ -2076,8 +2075,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     {
         Result.bIsInDangerZone = Class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
 
-        if (!bAllowRallyPointsBehindEnemyLines &&
-            Result.bIsInDangerZone)
+        if (Result.bIsInDangerZone)
         {
             Result.Error.Type = ERROR_BehindEnemyLines;
             return Result;
