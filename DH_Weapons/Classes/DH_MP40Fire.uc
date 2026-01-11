@@ -12,6 +12,8 @@ defaultproperties
     FireRate=0.13 // ~512rpm (value had to be found experimentally due to an engine bug)
     Spread=125.0
 
+    AddedPitch=60   // Zeroed to 200m
+
     // Recoil
     RecoilRate=0.05
     MaxVerticalRecoilAngle=225

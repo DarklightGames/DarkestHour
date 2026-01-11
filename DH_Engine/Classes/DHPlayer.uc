@@ -2553,6 +2553,8 @@ function Possess(Pawn aPawn)
     {
         ROPawn(aPawn).Setup(PawnSetupRecord, true);
     }
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).bIsPossesingPawn = true;
 }
 
 // Server call to client to force prone
@@ -3510,6 +3512,8 @@ function PawnDied(Pawn P)
             NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
         }
     }
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).bIsPossesingPawn = false;
 }
 
 // Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player in vehicle or has no inventory)
@@ -6282,7 +6286,7 @@ function ServerSquadSpawnRallyPoint()
     }
 }
 
-function ServerSquadDestroyRallyPoint(DHSpawnPoint_SquadRallyPoint SRP)
+function ServerSquadDestroyRallyPoint(DHSquadRallyPoint SRP)
 {
     local DHPlayerReplicationInfo PRI;
 

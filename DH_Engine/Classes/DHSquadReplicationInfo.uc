@@ -35,7 +35,7 @@ var int                             SquadLockMemberCountMin;    // The amount of
 var int                             SquadLeaderRallyPointInactivityThreshold;
 
 // Rally points
-var DHSpawnPoint_SquadRallyPoint    RallyPoints[RALLY_POINTS_MAX];
+var DHSquadRallyPoint               RallyPoints[RALLY_POINTS_MAX];
 var float                           RallyPointInitialDelaySeconds;
 var float                           RallyPointChangeLeaderDelaySeconds;
 var float                           RallyPointRadiusInMeters;
@@ -307,9 +307,9 @@ private function UpdateSquadLeaderLocations(DHPlayer PC)
 private function UpdateSquadRallyPoints()
 {
     local int i, TeamIndex, SquadIndex, UnblockedCount;
-    local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints, ActiveSquadRallyPoints;
+    local array<DHSquadRallyPoint> SquadRallyPoints, ActiveSquadRallyPoints;
     local UComparator Comparator;
-    local DHSpawnPoint_SquadRallyPoint RP;
+    local DHSquadRallyPoint RP;
     local bool bShouldAccrueSpawns;
 
     for (TeamIndex = AXIS_TEAM_INDEX; TeamIndex <= ALLIES_TEAM_INDEX; ++TeamIndex)
@@ -1910,7 +1910,7 @@ function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, 
     SignalClass.static.OnSent(Sender, Location, OptionalObject);
 }
 
-function DHSpawnPoint_SquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
+function DHSquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
 {
     local int i;
 
@@ -1976,9 +1976,9 @@ simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
     return Count;
 }
 
-simulated function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
+simulated function array<DHSquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
-    local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints;
+    local array<DHSquadRallyPoint> SquadRallyPoints;
     local int i;
 
     for (i = 0; i < arraycount(RallyPoints); ++i)
@@ -1994,9 +1994,9 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int T
     return SquadRallyPoints;
 }
 
-simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
+simulated function array<DHSquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
-    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
+    local array<DHSquadRallyPoint> ActiveSquadRallyPoints;
     local int i;
 
     for (i = 0; i < arraycount(RallyPoints); ++i)
@@ -2257,13 +2257,14 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     return Result;
 }
 
-function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
+function DHSquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 {
     local int i, RallyPointIndex;
-    local DHSpawnPoint_SquadRallyPoint RP;
+    local DHSquadRallyPoint RP;
     local Vector V;
     local Rotator R;
     local DarkestHourGame G;
+    local class<DHNation> NationClass;
     local RallyPointPlacementResult Result;
 
     Result = GetRallyPointPlacementResult(PC);
@@ -2326,7 +2327,19 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     V = V cross Result.HitNormal;
 
     R = Rotator(V);
-    RP = Spawn(Class'DHSpawnPoint_SquadRallyPoint', none,, Result.HitLocation, R);
+
+    // Get the rally point class from the nation
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.DHLevelInfo != none)
+    {
+        NationClass = G.DHLevelInfo.GetTeamNationClass(PC.GetTeamNum());
+
+        if (NationClass != none && NationClass.default.RallyPointClass != none)
+        {
+            RP = Spawn(NationClass.default.RallyPointClass, none,, Result.HitLocation, R);
+        }
+    }
 
     if (RP == none)
     {
@@ -2339,8 +2352,6 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     RP.RallyPointIndex = RallyPointIndex;
     RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(RP);
     RP.InstigatorController = PC;
-
-    G = DarkestHourGame(Level.Game);
 
     if (G != none && G.Metrics != none)
     {
@@ -2358,7 +2369,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 }
 
 // Returns the initial number of spawns a squad's rally point will have.
-function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
+function int GetSquadRallyPointInitialSpawns(DHSquadRallyPoint RP)
 {
     local bool bIsInDangerZone;
     local int InitialSpawns;
@@ -2381,7 +2392,7 @@ function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
 }
 
 // Function is called when a rally point is destroyed for any reason.
-function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
+function OnSquadRallyPointDestroyed(DHSquadRallyPoint SRP)
 {
     if (SRP != none)
     {
@@ -2389,7 +2400,7 @@ function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
     }
 }
 
-function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
+function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSquadRallyPoint SRP)
 {
     if (PRI == none || SRP == none || !PRI.IsSquadLeader() || PRI.Team.TeamIndex != SRP.GetTeamIndex() || PRI.SquadIndex != SRP.SquadIndex || !SRP.IsActive())
     {
@@ -2437,7 +2448,7 @@ function UpdateSquadRallyPointInfo(int TeamIndex, int SquadIndex)
 function SwapRallyPoints(DHPlayerReplicationInfo PRI)
 {
     local UComparator Comparator;
-    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
+    local array<DHSquadRallyPoint> ActiveSquadRallyPoints;
 
     if (PRI != none && PRI.IsSquadLeader())
     {
@@ -2461,10 +2472,10 @@ function SwapRallyPoints(DHPlayerReplicationInfo PRI)
 
 function bool RallyPointSortFunction(Object LHS, Object RHS)
 {
-    return DHSpawnPoint_SquadRallyPoint(LHS).CreatedTimeSeconds > DHSpawnPoint_SquadRallyPoint(RHS).CreatedTimeSeconds;
+    return DHSquadRallyPoint(LHS).CreatedTimeSeconds > DHSquadRallyPoint(RHS).CreatedTimeSeconds;
 }
 
-function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
+function OnSquadRallyPointActivated(DHSquadRallyPoint SRP)
 {
     if (SRP != none &&
         SRP.InstigatorController != none &&
@@ -2480,7 +2491,7 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
     OnSquadRallyPointUpdated(SRP);
 }
 
-function OnSquadRallyPointUpdated(DHSpawnPoint_SquadRallyPoint SRP)
+function OnSquadRallyPointUpdated(DHSquadRallyPoint SRP)
 {
     if (SRP == none)
     {

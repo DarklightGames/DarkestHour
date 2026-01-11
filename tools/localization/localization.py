@@ -20,6 +20,7 @@ import yaml
 import colorama
 import time
 from colorama import Fore
+import fnmatch
 
 colorama.init()
 
@@ -352,6 +353,7 @@ def command_export(args):
         print(f'{Fore.RED}{e}')
 
     input_patterns = localization_data['export']['input_patterns']
+    ignore_patterns = localization_data['export']['ignore_patterns']
 
     # Swap out the extension in the input patterns for the target language's extension.
     if args.language_code is not None:
@@ -363,6 +365,13 @@ def command_export(args):
     for pattern in input_patterns:
         glob_pattern = str(root_path / pattern)
         for input_path in glob.glob(glob_pattern):
+
+            is_ignored = any(fnmatch.fnmatch(input_path, ignore_pattern) for ignore_pattern in ignore_patterns)
+
+            if is_ignored:
+                print(f'Ignored {input_path}')
+                continue
+
             # Get the file name without the path.
             filename = Path(input_path).name
             basename, extension = os.path.splitext(filename)
@@ -432,15 +441,26 @@ def write_unt(path: str, unt_contents: str):
 def clean(args):
     language_extensions = {'.det', '.int', '.frt',  '.est', '.itt', '.dut', '.jap', '.ukr', '.rus', '.pol'}
     root_path = Path(args.path).absolute().resolve()
-    repository_path = root_path / args.mod / 'System'
+    system_path = root_path / args.mod / 'System'
     files_to_delete = []
 
-    for root, _, files in os.walk(repository_path):
+    process = subprocess.run(['git', 'ls-files'], cwd=str(system_path), capture_output=True, text=True)
+    if process.returncode != 0:
+        print('ERROR: Failed to list tracked files. Is git installed?')
+        exit(1)
+
+    git_tracked_files = set(process.stdout.splitlines())
+
+    for root, _, files in os.walk(system_path):
         for file in files:
             ext = os.path.splitext(file)[1]
             if ext in language_extensions:
+                basename = os.path.basename(file)    
+                if basename in git_tracked_files:
+                    print(f'Skipping {basename} since it is a tracked file')
+                    continue
                 files_to_delete.append(Path(root) / file)
-    
+
     if len(files_to_delete) == 0:
         print('No translation files to clean')
         return

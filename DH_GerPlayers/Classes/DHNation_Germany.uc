@@ -10,8 +10,7 @@ defaultproperties
     NationName="Germany"
     NativeNationName="Deutschland"
     VoicePackClass=Class'DHGerVoice'
-    RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.GER_backpack_established'
-    RallyPointStaticMesh=StaticMesh'DH_Construction_stc.GER_backpack'
+    RallyPointClass=Class'DH_GerPlayers.DHSquadRallyPoint_German'
     DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_Germany'
     DeployMenuFlagTexture=Material'DH_GUI_tex.flag_germany'
     MapFlagIconSpriteWidget=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

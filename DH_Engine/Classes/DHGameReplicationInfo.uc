@@ -947,7 +947,7 @@ simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, opti
 
 simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
-    local DHSpawnPoint_SquadRallyPoint RP;
+    local DHSquadRallyPoint RP;
     local DHPlayerReplicationInfo PRI;
 
     if (PC == none || PC.SquadReplicationInfo == none)
