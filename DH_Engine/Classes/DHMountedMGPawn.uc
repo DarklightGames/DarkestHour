@@ -35,6 +35,8 @@ var Class<DHFirstPersonBelt>    BeltClass;
 var name                        BeltAttachBone;
 var DHFirstPersonBelt           BeltActor;
 
+var int GunsightPositionIndex;
+
 // We only have two positions and we want to snap the field of view when switching
 // between them.
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
@@ -232,7 +234,7 @@ simulated function bool IsReloading()
 
 simulated function bool IsOnGunsight()
 {
-    if (!IsInState('ViewTransition') && DriverPositionIndex == 1)
+    if (!IsInState('ViewTransition') && DriverPositionIndex == GunsightPositionIndex)
     {
         return true;
     }
@@ -504,4 +506,5 @@ defaultproperties
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
     ZoomFOV=50.0
     TPCamLookat=(Z=-70.0)
+    GunsightPositionIndex=-1
 }

@@ -24,6 +24,7 @@ defaultproperties
     GunsightSize=0.471
 
     GunsightCameraBone="SIGHT_CAMERA"
+    GunsightPositionIndex=0
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="maxim_yaw_pitch_0"
