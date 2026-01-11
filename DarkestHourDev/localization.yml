@@ -12,6 +12,9 @@ export:
     - System/ROInterface.int
     - System/XInterface.int
     - System/XVoting.int
+  ignore_patterns:
+    - "*DH_Fonts.int"  # Font localization is handled by the font generation script.
+
   # The pattern to use for the output file names, relative to the Weblate repository.
   # Use {l} to substitute the ISO 639-1 language code (e.g., "English" -> "en").
   # Use {f} to substitute the filename (e.g., "Core.int" -> "Core").

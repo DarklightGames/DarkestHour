@@ -11,8 +11,7 @@ defaultproperties
     NativeNationName="Ludowe Wojsko Polskie"
     VoicePackClass=Class'DHPolishVoice'
     DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_USSR'
-    RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.POL_backpack_established'
-    RallyPointStaticMesh=StaticMesh'DH_Construction_stc.POL_backpack'
+    RallyPointClass=Class'DH_SovietPlayers.DHSquadRallyPoint_Polish'
     DeployMenuFlagTexture=Material'DH_GUI_tex.flag_poland'
     MapFlagIconSpriteWidget=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=32,X2=95,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     DefaultSquadNames(0)="Adam"

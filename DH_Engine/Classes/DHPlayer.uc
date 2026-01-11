@@ -6266,7 +6266,7 @@ function ServerSquadSpawnRallyPoint()
     }
 }
 
-function ServerSquadDestroyRallyPoint(DHSpawnPoint_SquadRallyPoint SRP)
+function ServerSquadDestroyRallyPoint(DHSquadRallyPoint SRP)
 {
     local DHPlayerReplicationInfo PRI;
 

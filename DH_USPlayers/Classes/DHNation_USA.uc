@@ -10,8 +10,7 @@ defaultproperties
     NationName="United States of America"
     VoicePackClass=Class'DHUSVoice'
     
-    RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.USA_backpack_established'
-    RallyPointStaticMesh=StaticMesh'DH_Construction_stc.USA_backpack'
+    RallyPointClass=Class'DH_USPlayers.DHSquadRallyPoint_USA'
 
     DefaultConstructionLoadoutClass=Class'DHConstructionLoadout_USA'
 
