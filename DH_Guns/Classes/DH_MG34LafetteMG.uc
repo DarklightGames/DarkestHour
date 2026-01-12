@@ -4,11 +4,14 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Reverse the position so the gunsight is position 0 and the normal view is position 1
+// [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for the camera rotation and barrel rotation angles)
+//==============================================================================
 // BUGS
 //==============================================================================
+// [ ] "exit position not found" error if you try to exit in some places
 // [ ] destroying a barrel and then switching does not let you fire again
-// [ ] pressing 1 resets the view; this should be disabled for mounted MGs
+// [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or maybe just *all* vehicles?)
+// [ ] should not be able to switch positions while reloading or barrel changing
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
@@ -81,9 +84,10 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    NumRoundsInStaticMesh=1
-
     //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Maxim_stc.MAXIM_TURRET_PITCH_COLLISION',AttachBone="MG_PITCH")
+
+    // Pitch rack animation driver
+    AnimationDrivers(0)=(BoneName="PITCH_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=4,Channel=3,RotationType=ROTATION_Pitch)
 
     BarrelCount=2
     BarrelClass=Class'DH_MG34Barrel'

@@ -234,10 +234,7 @@ simulated function bool IsReloading()
 
 simulated function bool IsOnGunsight()
 {
-    if (!IsInState('ViewTransition') && DriverPositionIndex == GunsightPositionIndex)
-    {
-        return true;
-    }
+    return !IsInState('ViewTransition') && DriverPositionIndex == GunsightPositionIndex;
 }
 
 simulated function float GetOverlayCorrectionX()

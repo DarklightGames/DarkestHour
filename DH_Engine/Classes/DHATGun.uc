@@ -46,7 +46,7 @@ var bool              bCanBeRotated;
 var int               NextRotationTime;
 var int               PlayersNeededToRotate;
 var int               RotateCooldown;
-var float             RotateControlRadiusInMeters;
+var float             InteractRadiusInMeters;
 var float             RotationsPerSecond;
 
 var string            SentinelString;
@@ -281,6 +281,12 @@ simulated function EPickUpError GetPickUpError(DHPawn Pawn)
     return ERROR_None;
 }
 
+// Returns true if the pawn is close enough to interact with the gun (e.g. rotate, pick up)
+simulated function bool IsPawnCloseEnoughToInteract(Pawn P)
+{
+    return P != none && VSize(P.Location - Location) < Class'DHUnits'.static.MetersToUnreal(InteractRadiusInMeters);
+}
+
 // Rotation
 simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int TeammatesInRadiusCount)
 {
@@ -297,7 +303,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Busy;
     }
 
-    if (VSize(Pawn.Location - Location) > Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    if (!IsPawnCloseEnoughToInteract(Pawn))
     {
         return ERROR_TooFarAway;
     }
@@ -367,7 +373,7 @@ simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
     local DHPlayerReplicationInfo OtherPRI;
     local int Count;
 
-    foreach RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    foreach RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(InteractRadiusInMeters))
     {
         if (OtherPawn != none &&
             OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
@@ -531,7 +537,7 @@ state Rotating
 
         RotatingActor = Spawn(Class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
-        RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
+        RotatingActor.ControlRadiusInMeters = InteractRadiusInMeters;
         RotatingActor.ControllerPawn = RotateControllerPawn;
         RotatingActor.RotationRate.Yaw = RotationsPerSecond * 65536;;
 
@@ -815,7 +821,7 @@ defaultproperties
     RotationsPerSecond=0.03125
     bFixedRotationDir=false
     RotateCooldown=5
-    RotateControlRadiusInMeters=5
+    InteractRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     RotateSoundVolume=200
 
