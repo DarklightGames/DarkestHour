@@ -2,6 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// REFERENCES
+//==============================================================================
+// https://www.german-smallarms.com/mg34top.html - MG34
+// https://www.german-smallarms.com/lafette_top.html - MG34+Lafette
+// https://www.german-smallarms.com/MGaccessory_p_top.html - MG34/42 ammo related equipment 
+// https://www.german-smallarms.com/MGaccessorytop.html - MG accessories
+//==============================================================================
 
 class DH_MG34LafetteGun extends DHATGun;
 

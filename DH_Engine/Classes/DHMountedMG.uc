@@ -408,12 +408,13 @@ simulated state Reloading extends Busy
     {
         super.Tick(DeltaTime);
 
-        // todo: figure out if this does anything.
-        WeaponPawn.UpdateTurretRotation(DeltaTime, -10, -10);
+        // TODO: for animation purposes we probably want to center the gun quickly as the reload starts.
+        // how to do this?
     }
 
 Begin:
-    Sleep(GetAnimDuration(ReloadSequence));
+    //Sleep(GetAnimDuration(ReloadSequence));
+    Sleep(5.0); // For now, just a fixed time until we have proper reload animations.
     GotoState('');
 }
 
@@ -516,7 +517,7 @@ simulated function Tick(float DeltaTime)
 {
     local float T;
 
-    // Only do all this crap if the local player is the driver.
+    // Update the range driver if the pawn is locally controlled.
     if (RangeParams != none && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
         if (RangeParams.GetAnimFrameTarget() != RangeParams.GetAnimFrame())
@@ -526,6 +527,8 @@ simulated function Tick(float DeltaTime)
             UpdateRangeDriver();
         }
     }
+
+    super.Tick(DeltaTime);
 }
 
 simulated function PostBeginPlay()
@@ -570,6 +573,8 @@ simulated function SetupAnimationDrivers()
         AnimBlendParams(BeltChannel, 1.0,,, BeltBone);
         PlayAnim(BeltIdleAnimation, 0.0, 0.0, BeltChannel);
     }
+
+    super.SetupAnimationDrivers();
 }
 
 simulated function UpdateRangeDriver()

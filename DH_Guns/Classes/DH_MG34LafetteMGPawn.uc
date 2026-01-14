@@ -13,8 +13,9 @@ defaultproperties
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="cv33_gunner_closed"   // TODO: replace with the idle animation.
     InitialPositionIndex=1
-    DriverPositions(0)=(bDrawOverlays=true,ViewFOV=30.0,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=30.0,bDrawOverlays=true,TransitionUpAnim="OVERLAY_OUT")
+    // NOTE: 72.5 FOV is calibrated to not clip into the gun in 4:3 aspect ratio.
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN")
     
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
