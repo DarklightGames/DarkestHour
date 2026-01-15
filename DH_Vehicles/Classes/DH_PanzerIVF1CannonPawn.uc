@@ -23,7 +23,6 @@ defaultproperties
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ4_sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     //HUD
     AmmoShellTexture=Texture'InterfaceArt_tex.Panzer4F1shell'

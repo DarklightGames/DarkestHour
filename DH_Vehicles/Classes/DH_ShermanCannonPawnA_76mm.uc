@@ -17,7 +17,6 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Sherman76mm_sight_background'
     GunsightSize=0.765 // 13 degrees visible FOV at 5x magnification (M71D sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Wolverine_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.WolverineShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.WolverineShell_reload'
     PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'

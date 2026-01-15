@@ -117,7 +117,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=20,PointBone="BODY",PointOffset=(X=55,Y=22,Z=46),DamageMultiplier=5,HitPointType=HP_AmmoStore)
     NewVehHitpoints(0)=(PointRadius=4,PointBone="GUNSIGHT_CAMERA",NewHitPointType=NHP_GunOptics,bIsGun=true)
     NewVehHitpoints(1)=(PointRadius=12,PointBone="BODY",PointOffset=(X=55,Y=2,Z=80),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=8,PointBone="BODY",PointOffset=(X=55,Y=2,Z=104),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(2)=(PointRadius=8,PointBone="BODY",PointOffset=(X=55,Y=2,Z=104),NewHitPointType=NHP_Elevation)
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_1',AttachBone="body"))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(StaticMesh=StaticMesh'DH_Hetzer_stc.HETZER_ATTACHMENT_SIDE_SKIRT_2',AttachBone="body"))))

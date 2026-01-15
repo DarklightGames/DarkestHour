@@ -19,7 +19,6 @@ defaultproperties
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.Panther_sight_center'
     RangeRingScale=0.74
     RangeRingRotationFactor=502
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Panther_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.Panthershell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panthershell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'

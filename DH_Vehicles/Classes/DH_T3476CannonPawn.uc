@@ -26,7 +26,6 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.T3476_sight_background' // edited RO sight to make edges solid black to avoid graphical smears on sides of sight
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (TMFD-7 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
     AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'

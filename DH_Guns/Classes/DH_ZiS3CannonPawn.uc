@@ -17,7 +17,6 @@ defaultproperties
     DrivePos=(Z=58)
     GunsightOverlay=Texture'DH_VehicleOptics_tex.PG1_sight_background'
     GunsightSize=0.441 // 10.5 degrees visible FOV at 3.7x magnification (PG1 sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
     AmmoShellTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
     CameraBone="GUNSIGHT_CAMERA_ZIS3"

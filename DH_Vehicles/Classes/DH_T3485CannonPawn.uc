@@ -28,7 +28,6 @@ defaultproperties
     ScopeCenterPositionX=0.075
     ScopeCenterScaleX=2.0
     ScopeCenterScaleY=1.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
 
     AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'

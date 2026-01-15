@@ -27,7 +27,6 @@ defaultproperties
     GunsightSize=0.3
     OverlayCorrectionX=-4.0
     OverlayCorrectionY=12.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ3_sight_destroyed'  // TODO: we need one made, or do it programmatically
     BinocPositionIndex=3
     AmmoShellTexture=Texture'DH_FiatL640_tex.breda2065_ammo_icon'
     AmmoShellReloadTexture=Texture'DH_FiatL640_tex.breda2065_ammo_reload'

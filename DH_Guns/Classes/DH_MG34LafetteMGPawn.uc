@@ -15,7 +15,9 @@ defaultproperties
     InitialPositionIndex=1
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=30.0,bDrawOverlays=true,TransitionUpAnim="OVERLAY_OUT")
     // NOTE: 72.5 FOV is calibrated to not clip into the gun in 4:3 aspect ratio.
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN",TransitionUpAnim="RAISE")
+    // TODO: let the player move the camera around??
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,TransitionDownAnim="LOWER")
     
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
@@ -24,21 +26,21 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
     GunsightSize=0.471
 
-    GunsightCameraBone="SIGHT_CAMERA"
+    GunsightCameraBone="GUNSIGHT_CAMERA"
     GunsightPositionIndex=0
 
-    Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
-        Sequences(0)="maxim_yaw_pitch_0"
-        Sequences(1)="maxim_yaw_pitch_25"
-        Sequences(2)="maxim_yaw_pitch_50"
-        Sequences(3)="maxim_yaw_pitch_75"
-        Sequences(4)="maxim_yaw_pitch_100"
-        SequenceChannel=4
-        BlendChannel=5
-        SequenceInputType=DIT_Yaw
-        BlendInputType=DIT_Pitch
-        DriverPositionIndexRange=(Min=0,Max=0)
-        FrameCount=8
-    End Object
-    AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
+    // Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
+    //     Sequences(0)="mg34lafette_yaw_pitch_0"
+    //     Sequences(1)="mg34lafette_yaw_pitch_25"
+    //     Sequences(2)="mg34lafette_yaw_pitch_50"
+    //     Sequences(3)="mg34lafette_yaw_pitch_75"
+    //     Sequences(4)="mg34lafette_yaw_pitch_100"
+    //     SequenceChannel=4
+    //     BlendChannel=5
+    //     SequenceInputType=DIT_Yaw
+    //     BlendInputType=DIT_Pitch
+    //     DriverPositionIndexRange=(Min=0,Max=0)
+    //     FrameCount=8
+    // End Object
+    // AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
 }

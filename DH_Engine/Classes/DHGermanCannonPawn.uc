@@ -18,25 +18,27 @@ simulated function DrawGunsightOverlay(Canvas C)
 
     super.DrawGunsightOverlay(C);
 
-    if (RangeRingRotator != none && Gun != none)
+    if (RangeRingRotator == none || Gun == none)
     {
-        // Set rotation of range ring
-        RotationFactor = Gun.CurrentRangeIndex * RangeRingRotationFactor;
-
-        if (Gun.CurrentRangeIndex > 20) // after range index 20 the range increments are in 200m instead of 100m, so we need to double up to adjust for that
-        {
-            RotationFactor += (Gun.CurrentRangeIndex - 20) * RangeRingRotationFactor;
-        }
-
-        RangeRingRotator.Rotation.Yaw = RotationFactor;
-
-        // Position & draw range ring
-        ScaledTexureSize = float(C.SizeX) * GunsightSize * RangeRingScale;
-        Scale = ScaledTexureSize / float(RangeRingRotator.MaterialUSize());
-        C.SetPos((float(C.SizeX) - ScaledTexureSize) / 2.0, (float(C.SizeY) - ScaledTexureSize) / 2.0);
-
-        C.DrawTileScaled(RangeRingRotator, Scale, Scale);
+        return;
     }
+
+    // Set rotation of range ring
+    RotationFactor = Gun.CurrentRangeIndex * RangeRingRotationFactor;
+
+    if (Gun.CurrentRangeIndex > 20) // after range index 20 the range increments are in 200m instead of 100m, so we need to double up to adjust for that
+    {
+        RotationFactor += (Gun.CurrentRangeIndex - 20) * RangeRingRotationFactor;
+    }
+
+    RangeRingRotator.Rotation.Yaw = RotationFactor;
+
+    // Position & draw range ring
+    ScaledTexureSize = float(C.SizeX) * GunsightSize * RangeRingScale;
+    Scale = ScaledTexureSize / float(RangeRingRotator.MaterialUSize());
+    C.SetPos((float(C.SizeX) - ScaledTexureSize) / 2.0, (float(C.SizeY) - ScaledTexureSize) / 2.0);
+
+    C.DrawTileScaled(RangeRingRotator, Scale, Scale);
 }
 
 // Modified to add RangeRingRotator

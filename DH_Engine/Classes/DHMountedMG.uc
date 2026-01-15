@@ -485,6 +485,11 @@ simulated state ChangingBarrels extends Busy
 
         super.BeginState();
 
+        if (BarrelChangeSequence != '')
+        {
+            PlayAnim(BarrelChangeSequence, 1.0, 0.0, 0.0);
+        }
+
         NextBarrelIndex = GetNextBestBarrelIndex();
 
         if (NextBarrelIndex == -1)
@@ -508,8 +513,7 @@ simulated state ChangingBarrels extends Busy
     }
 
 Begin:
-    // Sleep(GetAnimDuration(BarrelChangeSequence));
-    Sleep(2.0);
+    Sleep(GetAnimDuration(BarrelChangeSequence));
     GotoState('');
 }
 

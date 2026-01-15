@@ -17,32 +17,39 @@ simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, Scale, PosX, PosY;
 
-    if (GunsightOverlay != none)
+    if (GunsightOverlay == none)
     {
-        // Draw the gunsight overlay
-        TextureSize = float(GunsightOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / GunsightSize * 0.955;
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-
-        // Draw the gunsight aiming reticle or moving range indicator (different from DHVehicleCannonPawn)
-        if (CannonScopeCenter != none && Gun != none && Gun.ProjectileClass != none)
-        {
-            Scale = float(C.SizeY) / TilePixelHeight; // how much the tile has been scaled to fit the screen
-            PosX = ((ScopeCenterPositionX * TextureSize) - TileStartPosU) * Scale;
-            PosY = ((Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * TextureSize) - TileStartPosV) * Scale; // vertical adjustment of reticle or range indicator position
-            C.SetPos(PosX, PosY);
-            Scale *= TextureSize / 1200.0; // 'mover' texture is sized for a 1200 pixel screen height, so finally adjust draw scale to suit actual screen height
-
-            C.DrawTileScaled(CannonScopeCenter, Scale * ScopeCenterScaleX, Scale * ScopeCenterScaleY);
-        }
-
-        DrawGunsightRangeSetting(C);
+        return;
     }
+
+    if (bGunsightOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, GunsightOverlay, GunsightSize);
+    }
+
+    // Draw the gunsight overlay
+    TextureSize = float(GunsightOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / GunsightSize * 0.955;
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+    C.SetPos(0.0, 0.0);
+
+    C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+
+    // Draw the gunsight aiming reticle or moving range indicator (different from DHVehicleCannonPawn)
+    if (CannonScopeCenter != none && Gun != none && Gun.ProjectileClass != none)
+    {
+        Scale = float(C.SizeY) / TilePixelHeight; // how much the tile has been scaled to fit the screen
+        PosX = ((ScopeCenterPositionX * TextureSize) - TileStartPosU) * Scale;
+        PosY = ((Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * TextureSize) - TileStartPosV) * Scale; // vertical adjustment of reticle or range indicator position
+        C.SetPos(PosX, PosY);
+        Scale *= TextureSize / 1200.0; // 'mover' texture is sized for a 1200 pixel screen height, so finally adjust draw scale to suit actual screen height
+
+        C.DrawTileScaled(CannonScopeCenter, Scale * ScopeCenterScaleX, Scale * ScopeCenterScaleY);
+    }
+
+    DrawGunsightRangeSetting(C);
 }
 
 // New debug execs to adjust ScopeCenter properties

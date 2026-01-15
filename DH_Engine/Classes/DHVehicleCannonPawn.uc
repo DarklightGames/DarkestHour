@@ -48,12 +48,6 @@ var     float       ManualMaxRotateThreshold;
 var     float       PoweredMinRotateThreshold;
 var     float       PoweredMaxRotateThreshold;
 
-// Damage
-var     bool        bTurretRingDamaged;
-var     bool        bGunPivotDamaged;
-var     bool        bOpticsDamaged;
-var     Texture     DestroyedGunsightOverlay;
-
 // Debug
 var     bool        bDebugSights; // shows centering cross in gunsight for testing purposes
 
@@ -63,17 +57,6 @@ var     int                 ProjectileGunOpticRangeTableIndices[3]; // The index
 
 // Periscope
 var     name        PeriscopeCameraBone;
-
-replication
-{
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bTurretRingDamaged, bGunPivotDamaged;
-
-    // Functions the server can call on the client that owns this actor
-    reliable if (Role == ROLE_Authority)
-        ClientDamageCannonOverlay;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
@@ -285,28 +268,29 @@ simulated function DrawGunsightOverlay(Canvas C)
     local int RangeTableIndex;
     local PlayerController PC;
 
-    RangeTableIndex = -1;
+    VW = DHVehicleWeapon(Gun);
+
+    if (VW == none)
+    {
+        return;
+    }
+
+    // If the gun optic is destroyed, draw the destroyed gunsight overlay first using the same sizing as normal gunsight.
+    if (bGunsightOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, GunsightOverlay, GunsightSize);
+    }
 
     if (GunOpticsClass != none)
     {
-        VW = DHVehicleWeapon(Gun);
-
-        if (VW != none)
-        {
-            RangeTableIndex = ProjectileGunOpticRangeTableIndices[VW.GetAmmoIndex()];
-            RangeTableIndex = Clamp(RangeTableIndex, 0, GunOpticsClass.default.OpticalRangeTables.Length - 1);
-        }
+        RangeTableIndex = ProjectileGunOpticRangeTableIndices[VW.GetAmmoIndex()];
+        RangeTableIndex = Clamp(RangeTableIndex, 0, GunOpticsClass.default.OpticalRangeTables.Length - 1);
 
         // Draw the gunsight using the optics class if it exists.
         GunOpticsClass.static.DrawGunsightOverlay(C, Gun.GetRange(), OverlayCorrectionX, OverlayCorrectionY, RangeTableIndex);
     }
-    else
+    else if (GunsightOverlay != none)
     {
-        if (GunsightOverlay == none)
-        {
-            return;
-        }
-
         // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
         // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
         // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
@@ -319,7 +303,6 @@ simulated function DrawGunsightOverlay(Canvas C)
 
         // Draw the gunsight overlay
         C.SetPos(0.0, 0.0);
-
         C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 
         // Draw any gunsight aiming reticle
@@ -393,6 +376,12 @@ simulated function DrawPeriscopeOverlay(Canvas C)
     {
         return;
     }
+
+    if (bPeriscopeOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, PeriscopeOverlay, PeriscopeSize);
+    }
+
     // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
     // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
     // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
@@ -708,11 +697,6 @@ function float GetSmokeLauncherAmmoReloadState()
 function KDriverEnter(Pawn P)
 {
     super.KDriverEnter(P);
-
-    if (bOpticsDamaged)
-    {
-        ClientDamageCannonOverlay();
-    }
 }
 
 simulated function bool HasSpottingScope()
@@ -870,9 +854,9 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.CannonScopeCenter);
     }
 
-    if (default.DestroyedGunsightOverlay != none)
+    if (default.DestroyedOpticsOverlay != none)
     {
-        L.AddPrecacheMaterial(default.DestroyedGunsightOverlay);
+        L.AddPrecacheMaterial(default.DestroyedOpticsOverlay);
     }
 
     if (default.PeriscopeOverlay != none)
@@ -920,7 +904,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
-    Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
+    Level.AddPrecacheMaterial(DestroyedOpticsOverlay);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
 
@@ -1026,12 +1010,12 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
         }
         else
         {
-            if (bTurretRingDamaged)
+            if (bTraverseDamaged)
             {
                 YawChange = 0.0;
             }
 
-            if (bGunPivotDamaged)
+            if (bElevationDamaged)
             {
                 PitchChange = 0.0;
             }
@@ -1046,7 +1030,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
         }
 
         if (Level.NetMode != NM_DedicatedServer &&
-            ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
+            ((YawChange != 0.0 && !bTraverseDamaged) || (PitchChange != 0.0 && !bElevationDamaged)))
         {
             Cannon.UpdateGunWheels();
             Cannon.UpdateAnimationDrivers();
@@ -1072,19 +1056,6 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
-
-// New function to damage gunsight optics
-function DamageCannonOverlay()
-{
-    ClientDamageCannonOverlay();
-    bOpticsDamaged = true;
-}
-
-// New replicated server-to-client function to damage gunsight optics
-simulated function ClientDamageCannonOverlay()
-{
-    GunsightOverlay = DestroyedGunsightOverlay;
-}
 
 // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
 function float ModifyThreat(float Current, Pawn Threat)

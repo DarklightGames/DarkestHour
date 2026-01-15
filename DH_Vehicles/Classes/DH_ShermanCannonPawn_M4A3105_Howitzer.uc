@@ -21,7 +21,6 @@ defaultproperties
     bManualTraverseOnly=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.sherman105_sight_background'
     GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M72D sight) // TODO: find M72 sight properties
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Sherman105Shell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Sherman105Shell_reload'
     FireImpulse=(X=-110000.0)

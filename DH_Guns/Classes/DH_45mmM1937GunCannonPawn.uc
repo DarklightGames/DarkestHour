@@ -13,6 +13,11 @@ simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, Scale, PosX, PosY;
 
+    if (bGunsightOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, GunsightOverlay, GunsightSize);
+    }
+
     if (GunsightOverlay != none)
     {
         // Draw the gunsight overlay
@@ -61,7 +66,6 @@ defaultproperties
     ScopeCenterPositionX=0.035
     ScopeCenterScaleX=2.2
     ScopeCenterScaleY=2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
 
     //HUD
     AmmoShellTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count

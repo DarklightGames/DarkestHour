@@ -11,7 +11,7 @@ class DHGunOpticsRangeTable extends Object;
 
 struct RangeValue
 {
-    var int Range;    // The range in the distance unit (i.e., meters, yards etc.)
+    var int Range;      // The range in the distance unit (i.e., meters, yards etc.)
     var float Value;    // The "value" to use for this optical range (can be rotation, offset etc., depending on the type of optics)
 };
 

@@ -18,7 +18,6 @@ defaultproperties
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.PZ4_sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.panzer4F2shell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.electric_turret_traverse'

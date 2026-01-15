@@ -20,7 +20,7 @@ enum ENewHitPointType
     NHP_GunOptics,
     NHP_PeriscopeOptics,
     NHP_Traverse,
-    NHP_GunPitch,
+    NHP_Elevation,
 };
 
 struct NewHitpoint
@@ -61,6 +61,8 @@ var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points 
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
 var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
+var     bool        bPeriscopeOpticsDestroyed;
+var     Material    DestroyedOpticsOverlay;     // texture overlay for shattered glass to display "under" the gunsight
 
 // The naming on these are extremely deceptive.
 // These are not "chances", but are damage thresholds that, when reached, will have a base 100% chance of doing damage to the thing in question.
@@ -116,7 +118,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bEngineOnFire;
+        bOnFire, bEngineOnFire, bPeriscopeOpticsDestroyed;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -409,28 +411,56 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+simulated function DrawDestroyedOpticsOverlay(Canvas C, Material OpticMaterial, float OverlaySize)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (C == none || OpticMaterial == none)
+    {
+        return;
+    }
+
+    TextureSize = float(OpticMaterial.MaterialUSize());
+    TilePixelWidth = TextureSize / OverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;
+    TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;
+
+    C.SetPos(0.0, 0.0);
+    C.SetDrawColor(255, 255, 255, 255);
+    C.DrawTile(DestroyedOpticsOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+}
+
 // New function to draw any textured driver's periscope overlay - updated in 2019 to add PeriscopeSize so that we can adjust FOV's
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
-    if (PeriscopeOverlay != none)
+    if (PeriscopeOverlay == none)
     {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(PeriscopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;// - OverlayCorrectionX;
-        TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;// - OverlayCorrectionY;
-
-        // Draw the periscope overlay
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        return;
     }
+
+    // TODO: add periscope damaged overlay here.
+    if (bPeriscopeOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, PeriscopeOverlay, PeriscopeSize);
+    }
+
+    // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+    // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+    // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+    // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+    TextureSize = float(PeriscopeOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;// - OverlayCorrectionX;
+    TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;// - OverlayCorrectionY;
+
+    // Draw the periscope overlay
+    C.SetPos(0.0, 0.0);
+    C.SetDrawColor(255, 255, 255, 255);
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1803,7 +1833,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                 // Hit periscope optics
                 if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
                 {
-                    // does nothing at present - possibly add in future
+                    CannonPawn.DamagePeriscopeOptics();
                 }
                 else if (CannonPawn != none)
                 {
@@ -1815,7 +1845,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                             Log("Hit gunsight optics");
                         }
 
-                        CannonPawn.DamageCannonOverlay();
+                        CannonPawn.DamageGunsightOptics();
                     }
                     else if (bProjectilePenetrated)
                     {
@@ -1827,17 +1857,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                                 Log("Hit gun/turret traverse");
                             }
 
-                            CannonPawn.bTurretRingDamaged = true;
+                            CannonPawn.bTraverseDamaged = true;
                         }
                         // Hit gun pivot mechanism
-                        else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                        else if (NewVehHitpoints[i].NewHitPointType == NHP_Elevation)
                         {
                             if (bDebuggingText)
                             {
                                 Log("Hit gun pivot");
                             }
 
-                            CannonPawn.bGunPivotDamaged = true;
+                            CannonPawn.bElevationDamaged = true;
                         }
                     }
                 }
@@ -1891,7 +1921,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                             Log("Gunsight optics destroyed by shrapnel");
                         }
 
-                        CannonPawn.DamageCannonOverlay();
+                        CannonPawn.DamageGunsightOptics();
                     }
 
                     // Random chance of shrapnel damaging gun pivot mechanism
@@ -1902,7 +1932,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                             Log("Gun pivot damaged by shrapnel");
                         }
 
-                        CannonPawn.bGunPivotDamaged = true;
+                        CannonPawn.bElevationDamaged = true;
                     }
 
                     // Random chance of shrapnel damaging gun traverse mechanism
@@ -1913,7 +1943,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
                             Log("Gun/turret traverse damaged by shrapnel");
                         }
 
-                        CannonPawn.bTurretRingDamaged = true;
+                        CannonPawn.bTraverseDamaged = true;
                     }
                 }
             }
@@ -2204,7 +2234,7 @@ static function StaticPrecache(LevelInfo L)
     super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(default.PeriscopeOverlay);
-    L.AddPrecacheMaterial(default.DamagedPeriscopeOverlay);
+    L.AddPrecacheMaterial(default.DestroyedOpticsOverlay);
 }
 
 // Modified to add periscope materials
@@ -2213,7 +2243,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(PeriscopeOverlay);
-    Level.AddPrecacheMaterial(DamagedPeriscopeOverlay);
+    Level.AddPrecacheMaterial(DestroyedOpticsOverlay);
 }
 
 // Modified to include extra attachment
@@ -2432,7 +2462,6 @@ defaultproperties
     TreadDamageThreshold=0.75
     bCanCrash=false
     ImpactDamageThreshold=5000.0
-    DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Destroyed'
     bUsesCodedDestroyedSkins=true
 
     // Component damage probabilities
@@ -2563,4 +2592,6 @@ defaultproperties
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
     bDebuggingText=false
+
+    DestroyedOpticsOverlay=Texture'DH_VehicleOptics_tex.optics_destroyed_overlay'
 }

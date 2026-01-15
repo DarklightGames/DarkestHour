@@ -111,6 +111,8 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
+    // TODO: what is the point of this?
+
     ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
     C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);

@@ -312,7 +312,7 @@ simulated function bool IsReloading()
 
 simulated function bool IsOnGunsight()
 {
-    return !IsInState('ViewTransition') && DriverPositionIndex == GunsightPositionIndex;
+    return DriverPositionIndex == GunsightPositionIndex && !IsInState('ViewTransition');
 }
 
 simulated function float GetOverlayCorrectionX()
@@ -358,10 +358,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     local float T;
     local DHMountedMG MG;
     local Coords ReloadCameraCoords;
-    local Vector ReloadCameraLocation;
-    local Rotator ReloadCameraRotation;
-    local Vector GunsightCameraLocation;
-    local Rotator GunsightCameraRotation;
+    local Vector ReloadCameraLocation, GunsightCameraLocation;
+    local Rotator GunsightCameraRotation, ReloadCameraRotation;
 
     MG = DHMountedMG(Gun);
 
@@ -379,6 +377,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
             QuatFromRotator(GunsightCameraRotation),
             QuatFromRotator(Gun.GetBoneRotation(GunsightCameraBone))
             ));
+
+        Log("CameraRotation" @ CameraRotation);
     }
     else if (IsReloading())
     {
@@ -590,7 +590,11 @@ exec function ROMGOperation()
         return;
     }
 
-    MG.TryChangeBarrels();
+    if (MG.TryChangeBarrels())
+    {
+        // We're changing barrels, so un-zoom.
+        SetIsZoomed(false);
+    }
 }
 
 defaultproperties

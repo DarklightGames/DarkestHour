@@ -20,6 +20,7 @@
 //==============================================================================
 // BUGS
 //==============================================================================
+// [ ] some sort of issues with texturing of interior parts of cannons? (refactoring change regression?)
 // [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
 //  the camera rotation and barrel rotation angles). some sort of correction
 //  may be needed.
@@ -41,7 +42,6 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'  // TODO: replace with EXT version
     // Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
-
 
 	// var() float           	PointRadius;     	// Squared radius of the head of the pawn that is vulnerable to headshots
 	// var() float           	PointHeight;     	// Distance from base of neck to center of head - used for headshot calculation
@@ -92,10 +92,10 @@ defaultproperties
     PitchBone="PITCH"
     YawBone="YAW"
 
-    FiringAnim="FIRING"
-    FiringIdleAnim="IDLE"
-    FiringChannel=2
-    FiringBone="FIRING_ROOT"
+    // FiringAnim="FIRING"
+    // FiringIdleAnim="IDLE"
+    // FiringChannel=2
+    // FiringBone="FIRING_ROOT"
 
     ShellEjectBone="LAFETTE_EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
@@ -119,4 +119,5 @@ defaultproperties
 
     BarrelCount=2
     BarrelClass=Class'DH_MG34Barrel'
+    BarrelChangeSequence="BARREL_CHANGE"
 }

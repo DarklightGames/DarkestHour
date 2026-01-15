@@ -23,7 +23,6 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.17Pdr_sight_background'
     CannonScopeCenter=Texture'DH_VehicleOptics_tex.British_sight_mover'
     GunsightSize=0.635
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.17pdr_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'
     PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'

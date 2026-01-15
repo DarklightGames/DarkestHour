@@ -18,7 +18,6 @@ defaultproperties
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.tiger_sight_center'
     RangeRingScale=0.68
     RangeRingRotationFactor=820
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.tiger_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tigershell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tigershell_reload'
     PoweredRotateSound=Sound'DH_GerVehicleSounds2.tiger2B_turret_traverse_loop'

@@ -19,7 +19,6 @@ defaultproperties
     GunsightSize=0.5 // 17 degrees visible FOV at 2.5x magnification (TZF3a sight)
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.20mmFlak_sight_center'
     RangeRingRotationFactor=2048
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.2341Mag'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.2341Mag_reload'
     FireImpulse=(X=-15000.0)

@@ -17,7 +17,6 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Stuart_sight_background'
     GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M70D sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Stuart_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.StuartShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.StuartShell_reload'
     PoweredRotateSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'

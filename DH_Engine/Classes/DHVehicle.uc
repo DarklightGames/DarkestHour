@@ -274,7 +274,6 @@ var     int         PeriscopePositionIndex;     // index of the periscope positi
 var     name        PeriscopeCameraBone;        // bone to attach the camera to when looking through the periscope
 var     Texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
-var     Texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
 
 var Sound BuzzSound;
 
@@ -4315,7 +4314,7 @@ simulated function bool IsDisabled()
     {
         CP = DHVehicleCannonPawn(Cannon.WeaponPawn);
 
-        if (CP != none && (CP.bOpticsDamaged || CP.bTurretRingDamaged || CP.bGunPivotDamaged))
+        if (CP != none && (CP.bGunsightOpticsDestroyed || CP.bTraverseDamaged || CP.bElevationDamaged))
         {
             return true;
         }

@@ -26,7 +26,6 @@ defaultproperties
     GunsightSize=0.711 // 16 degrees visible FOV at 4x magnification (TSh-17 sight) // TODO: our model 1943 IS-2 may have had 10T/17 sight with 15 degs FOV & 2.5x mag?
     ScopeCenterPositionX=0.075
     ScopeCenterScaleX=2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
     AmmoShellTexture=Texture'InterfaceArt_tex.IS2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.IS2shell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.hydraul_turret_traverse'

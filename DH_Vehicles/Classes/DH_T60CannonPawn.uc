@@ -29,7 +29,6 @@ defaultproperties
     ScopeCenterPositionX=0.001 //0.035
     ScopeCenterScaleX=2.4
     ScopeCenterScaleY=2.0 //2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     //Traverse & Fire
     bManualTraverseOnly=true

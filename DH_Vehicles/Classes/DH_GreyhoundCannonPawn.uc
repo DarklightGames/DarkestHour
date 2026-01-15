@@ -19,7 +19,6 @@ defaultproperties
     bManualTraverseOnly=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Stuart_sight_background'
     GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M70D sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Stuart_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.StuartShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.StuartShell_reload'
     FireImpulse=(X=-30000.0)

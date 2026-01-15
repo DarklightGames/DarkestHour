@@ -363,9 +363,9 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
                     && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), AV.GunOpticsHitPointIndex)
-                    && AV.Cannon != none && DHVehicleCannonPawn(AV.Cannon.WeaponPawn) != none)
+                    && AV.Cannon != none && AV.Cannon.WeaponPawn != none)
                 {
-                    DHVehicleCannonPawn(AV.Cannon.WeaponPawn).DamageCannonOverlay();
+                    AV.Cannon.WeaponPawn.DamageGunsightOptics();
 
                     if (AV.bLogDebugPenetration)
                     {

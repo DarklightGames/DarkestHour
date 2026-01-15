@@ -31,8 +31,6 @@ defaultproperties
 
     bHasAltFire=false
 
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed' // matches size of gunsight
-
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3476_SU76_Kv1shell_reload'
     ManualRotateSound=Sound'Vehicle_Weapons.manual_gun_traverse'
     ManualRotateAndPitchSound=Sound'Vehicle_Weapons.manual_gun_traverse'

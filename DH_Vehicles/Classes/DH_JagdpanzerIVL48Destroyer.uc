@@ -65,7 +65,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     NewVehHitpoints(0)=(PointRadius=5.0,PointBone="body",PointOffset=(X=40.0,Y=10.5,Z=65.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Elevation)
     GunOpticsHitPointIndex=0
     TreadHitMaxHeight=13.0
     DamagedEffectScale=0.9

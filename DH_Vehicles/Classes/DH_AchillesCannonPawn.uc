@@ -33,7 +33,6 @@ defaultproperties
     RangePositionX=0.16
 
     //HUD
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.17pdr_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.T3485shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.T3485shell_reload'
 }

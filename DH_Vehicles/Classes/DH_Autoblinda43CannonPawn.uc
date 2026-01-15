@@ -19,7 +19,6 @@ defaultproperties
     bLockCameraDuringTransition=true
     CannonScopeCenter=Texture'DH_VehicleOptics_tex.PZ3_sight_graticule'
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification (TZF4b sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ3_sight_destroyed'
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.PERISCOPE_overlay_German'
     AmmoShellTexture=Texture'InterfaceArt_tex.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Panzer3shell_reload'

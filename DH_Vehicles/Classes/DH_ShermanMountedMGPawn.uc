@@ -90,6 +90,11 @@ simulated function DrawGunsightOverlay(Canvas C)
 {
     local float ScreenRatio;
 
+    if (bGunsightOpticsDestroyed)
+    {
+        DrawDestroyedOpticsOverlay(C, GunsightOverlay, GunsightSize);
+    }
+
     ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
 

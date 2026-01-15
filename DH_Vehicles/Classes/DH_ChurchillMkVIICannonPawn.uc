@@ -19,7 +19,6 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Cromwell_sight_background'
     CannonScopeCenter=Texture'DH_VehicleOptics_tex.British_sight_mover'
     GunsightSize=0.459 // 13 degrees visible FOV at 3x magnification (No.50 x3 ML Mk. II sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Cromwell_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ShermanShell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.electric_turret_traverse'

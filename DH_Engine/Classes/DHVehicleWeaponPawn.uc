@@ -19,7 +19,14 @@ var     int                         BinocPositionIndex; // index position when p
 var     class<DHProjectileWeapon>   BinocularsClass;    // on entering, records which class of the binoculars the player has (necessary to move to binocs position)
 var     DHDecoAttachment            BinocsAttachment;   // decorative actor spawned locally when player is using binoculars
 
+// Damage
+var     bool        bGunsightOpticsDestroyed;
+var     bool        bPeriscopeOpticsDestroyed;
+var     bool        bTraverseDamaged;
+var     bool        bElevationDamaged;
+
 // Gunsight overlay
+var     Material    DestroyedOpticsOverlay;     // texture overlay for shattered glass to display "under" the gunsight
 var     Material    GunsightOverlay;            // texture overlay for gunsight
 var     float       GunsightSize;               // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
 var     float       OverlayCorrectionX;         // scope center correction in pixels, in case an overlay is off-center by pixel or two
@@ -73,6 +80,9 @@ replication
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)  // TODO: why is this necessary???
         BinocularsClass;
+    
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bGunsightOpticsDestroyed, bPeriscopeOpticsDestroyed, bTraverseDamaged, bElevationDamaged;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -2928,6 +2938,60 @@ simulated function Tick(float DeltaTime)
     UpdateAnimationDrivers();
 }
 
+// Damage the gunsight optics.
+function DamageGunsightOptics()
+{
+    bGunsightOpticsDestroyed = true;
+}
+
+// Damage the periscopic optics.
+function DamagePeriscopeOptics()
+{
+    bPeriscopeOpticsDestroyed = true;
+}
+
+// Debug function to damage the gunsight optics.
+exec function DamGunsight(bool bGunsightDamaged)
+{
+    bGunsightOpticsDestroyed = bGunsightDamaged;
+}
+
+// Debug function to damage the periscope optics.
+exec function DamPeriscope(bool bPeriscopeDamaged)
+{
+    bPeriscopeOpticsDestroyed = bPeriscopeDamaged;
+}
+
+simulated function float GetOverlayCorrectionX()
+{
+    return OverlayCorrectionX;
+}
+
+simulated function float GetOverlayCorrectionY()
+{
+    return OverlayCorrectionY;
+}
+
+simulated function DrawDestroyedOpticsOverlay(Canvas C, Material OpticMaterial, float OverlaySize)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (C == none || OpticMaterial == none)
+    {
+        return;
+    }
+
+    TextureSize = float(OpticMaterial.MaterialUSize());
+    TilePixelWidth = TextureSize / OverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;
+    TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;
+
+    C.SetPos(0.0, 0.0);
+    C.SetDrawColor(255, 255, 255, 255);
+    C.DrawTile(DestroyedOpticsOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+}
+
 defaultproperties
 {
     bCustomAiming=true
@@ -2949,6 +3013,5 @@ defaultproperties
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
-    // RangeString="Range"
-    // ElevationString="Elevation"
+    DestroyedOpticsOverlay=Texture'DH_VehicleOptics_tex.optics_destroyed_overlay'
 }

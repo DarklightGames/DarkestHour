@@ -3257,7 +3257,7 @@ function DrawVehiclePointSphere()
 
                 HitPointLocation = AV.GetNewHitPointLocation(i);
 
-                if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_Elevation)
                 {
                     C = GoldColor;
                 }

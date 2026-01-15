@@ -37,7 +37,6 @@ defaultproperties
     ScopeCenterPositionX=0.035
     ScopeCenterScaleX=2.2
     ScopeCenterScaleY=2.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ4_sight_destroyed'
 
     // HUD
     AmmoShellTexture=Texture'InterfaceArt_ahz_tex.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count

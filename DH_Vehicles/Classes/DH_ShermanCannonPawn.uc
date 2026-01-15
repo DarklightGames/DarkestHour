@@ -26,7 +26,6 @@ defaultproperties
     GunsightSize=0.492 // 12.3 degrees visible FOV at 3x magnification (M70F sight)
 
     //HUD
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Sherman_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.ShermanShell_reload'
 
