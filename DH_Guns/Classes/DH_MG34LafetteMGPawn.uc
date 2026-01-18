@@ -21,6 +21,9 @@ defaultproperties
     
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    IronSightsPositionIndex=1
+    IronSightsCameraBone="IRONSIGHT_CAMERA"
+
     // The reticle is the same as the MGZ sight.
     // View width is 250 meters at 1000 meters.
     GunsightOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
@@ -29,18 +32,17 @@ defaultproperties
     GunsightCameraBone="GUNSIGHT_CAMERA"
     GunsightPositionIndex=0
 
-    // Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
-    //     Sequences(0)="mg34lafette_yaw_pitch_0"
-    //     Sequences(1)="mg34lafette_yaw_pitch_25"
-    //     Sequences(2)="mg34lafette_yaw_pitch_50"
-    //     Sequences(3)="mg34lafette_yaw_pitch_75"
-    //     Sequences(4)="mg34lafette_yaw_pitch_100"
-    //     SequenceChannel=4
-    //     BlendChannel=5
-    //     SequenceInputType=DIT_Yaw
-    //     BlendInputType=DIT_Pitch
-    //     DriverPositionIndexRange=(Min=0,Max=0)
-    //     FrameCount=8
-    // End Object
-    // AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
+    Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
+        // TODO: have exports at 3 different pitches for better blending
+        Sequences(0)="MG34_GUNNER_YAW"
+        Sequences(1)="MG34_GUNNER_YAW"
+        Sequences(2)="MG34_GUNNER_YAW"
+        SequenceChannel=4
+        BlendChannel=5
+        SequenceInputType=DIT_Yaw
+        BlendInputType=DIT_Pitch
+        DriverPositionIndexRange=(Min=0,Max=2)
+        FrameCount=6
+    End Object
+    AnimationDrivers(0)=(Parameters=AnimationDriverParameters0)
 }

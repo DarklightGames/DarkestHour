@@ -34,6 +34,8 @@ var Class<DHFirstPersonBelt>    BeltClass;
 var name                        BeltAttachBone;
 var DHFirstPersonBelt           BeltActor;
 
+var name IronSightsCameraBone;
+var int IronSightsPositionIndex;
 var int GunsightPositionIndex;
 
 // Camera Transition
@@ -310,6 +312,11 @@ simulated function bool IsReloading()
     return MG != none && MG.IsReloading();
 }
 
+simulated function bool IsOnIronSights()
+{
+    return DriverPositionIndex == IronSightsPositionIndex && !IsInState('ViewTransition');
+}
+
 simulated function bool IsOnGunsight()
 {
     return DriverPositionIndex == GunsightPositionIndex && !IsInState('ViewTransition');
@@ -368,7 +375,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    if (IsOnGunsight())
+    if (IsOnIronSights())
+    {
+        // Iron sights view
+        CameraLocation = Gun.GetBoneCoords(IronSightsCameraBone).Origin;
+        CameraRotation = Gun.GetBoneRotation(IronSightsCameraBone);
+    }
+    else if (IsOnGunsight())
     {
         // Adjust the pitch of the gunsight bone based on the current range setting.
         CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
@@ -377,8 +390,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
             QuatFromRotator(GunsightCameraRotation),
             QuatFromRotator(Gun.GetBoneRotation(GunsightCameraBone))
             ));
-
-        Log("CameraRotation" @ CameraRotation);
     }
     else if (IsReloading())
     {

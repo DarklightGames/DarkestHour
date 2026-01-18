@@ -336,6 +336,10 @@ simulated function bool IsBusy()
 
 simulated state Busy
 {
+    // Don't allow the player to change the range while busy.
+    simulated function DecrementRange();
+    simulated function IncrementRange();
+
     simulated function bool IsBusy()
     {
         return true;
@@ -348,11 +352,7 @@ simulated state Busy
 }
 
 simulated state Reloading extends Busy
-{
-    // Don't allow the player to change the range while reloading.
-    simulated function DecrementRange();
-    simulated function IncrementRange();
-    
+{    
     simulated function BeginState()
     {
         local DHMountedMGPawn MGPawn;
@@ -472,6 +472,7 @@ simulated function bool TryChangeBarrels()
         return false;
     }
 
+    // TODO: handle different paths for client and server.
     GotoState('ChangingBarrels');
 
     return true;
@@ -531,8 +532,6 @@ simulated function Tick(float DeltaTime)
             UpdateRangeDriver();
         }
     }
-
-    super.Tick(DeltaTime);
 }
 
 simulated function PostBeginPlay()
