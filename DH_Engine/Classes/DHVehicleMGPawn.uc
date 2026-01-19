@@ -285,6 +285,11 @@ function ClientVehicleCeaseFire(bool bWasAltFire)
     PlayHudOverlayStopFiring();
 }
 
+simulated function bool IsUnbuttoned()
+{
+    return DriverPositionIndex >= UnbuttonedPositionIndex;
+}
+
 // Implemented to handle externally-mounted MGs where player must be unbuttoned to reload, & to prevent reloading if player using binoculars
 simulated function bool CanReload()
 {
@@ -293,8 +298,17 @@ simulated function bool CanReload()
         return false;
     }
 
-    return !bMustUnbuttonToReload || DriverPositionIndex > UnbuttonedPositionIndex
-        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)); // if unbuttoned position make sure not unbuttoning
+    if (IsInState('ViewTransition'))
+    {
+        return false;
+    }
+
+    if (bMustUnbuttonToReload && !IsUnbuttoned())
+    {
+        return false;
+    }
+
+    return super.CanReload();
 }
 
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)

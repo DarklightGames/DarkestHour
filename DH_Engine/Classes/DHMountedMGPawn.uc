@@ -212,6 +212,16 @@ simulated function ClientKDriverLeave(PlayerController PC)
     }
 }
 
+simulated function bool CanReload()
+{
+    if (DriverPositionIndex == GunsightPositionIndex)
+    {
+        return false;
+    }
+
+    return super.CanReload();
+}
+
 simulated function SetIsZoomed(bool bNewIsZoomed)
 {
     local DHPlayer PC;
@@ -253,12 +263,10 @@ simulated function ROIronSights()
 
 simulated function PlayReloadAnim(float AnimationDurationSeconds)
 {
-    if (HandsActor == none)
+    if (HandsActor != none)
     {
-        return;
+        HandsActor.PlayAnim(HandsReloadSequence);
     }
-
-    HandsActor.PlayAnim(HandsReloadSequence);
 
     // Add a transition to and from the reload camera.
     CameraTransitionController.QueueCameraTransition(
