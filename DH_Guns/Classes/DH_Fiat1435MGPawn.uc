@@ -13,6 +13,12 @@ defaultproperties
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     DriveAnim="cv33_gunner_closed"  // TODO: replace
 
+    IronSightsPositionIndex=0
+
+    // DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA")
+    // DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
+    // DriverPositionsExtra(2)=(CameraBone="")
+
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="fiat1435_gunner_yaw_driver"
         SequenceInputType=DIT_Yaw

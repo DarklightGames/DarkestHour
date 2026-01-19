@@ -101,6 +101,8 @@ private function SpawnBarrels()
     }
 }
 
+simulated function bool IsChangingBarrels();
+
 function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
 {
     BarrelTemperature = Temperature;
@@ -337,8 +339,8 @@ simulated function bool IsBusy()
 simulated state Busy
 {
     // Don't allow the player to change the range while busy.
-    simulated function DecrementRange();
-    simulated function IncrementRange();
+    simulated function DecrementRange() {}
+    simulated function IncrementRange() {}
 
     simulated function bool IsBusy()
     {
@@ -454,8 +456,6 @@ private simulated function int GetNextBestBarrelIndex()
 
 simulated function bool CanChangeBarrels()
 {
-    local int i;
-
     if (IsBusy() || GetNextBestBarrelIndex() == -1)
     {
         return false;
@@ -513,6 +513,11 @@ simulated state ChangingBarrels extends Busy
         Level.Game.Broadcast(self, "Barrel changed");
     }
 
+    simulated function bool IsChangingBarrels()
+    {
+        return true;
+    }
+
 Begin:
     Sleep(GetAnimDuration(BarrelChangeSequence));
     GotoState('');
@@ -520,8 +525,6 @@ Begin:
 
 simulated function Tick(float DeltaTime)
 {
-    local float T;
-
     // Update the range driver if the pawn is locally controlled.
     if (RangeParams != none && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {

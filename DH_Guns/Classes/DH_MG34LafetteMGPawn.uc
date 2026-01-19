@@ -18,19 +18,22 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN",TransitionUpAnim="RAISE")
     // TODO: let the player move the camera around??
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,TransitionDownAnim="LOWER")
+
+    DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA")
+    DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
+    DriverPositionsExtra(2)=(CameraBone="")
     
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    GunsightPositionIndex=0
     IronSightsPositionIndex=1
-    IronSightsCameraBone="IRONSIGHT_CAMERA"
 
     // The reticle is the same as the MGZ sight.
     // View width is 250 meters at 1000 meters.
     GunsightOverlay=Texture'DH_VehicleOptics_tex.RblF16_artillery_sight'
     GunsightSize=0.471
 
-    GunsightCameraBone="GUNSIGHT_CAMERA"
-    GunsightPositionIndex=0
+    ReloadCameraBone="GUNNER_CAMERA"
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         // TODO: have exports at 3 different pitches for better blending

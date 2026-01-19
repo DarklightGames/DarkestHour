@@ -15,6 +15,10 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_TURRET_INT',bExposed=true)
     DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    // DriverPositionsExtra(0)=(CameraBone="GUNNER_CAMERA")
+    // DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
+    // DriverPositionsExtra(2)=(CameraBone="")
+
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="maxim_yaw_pitch_0"
         Sequences(1)="maxim_yaw_pitch_25"
@@ -32,6 +36,8 @@ defaultproperties
 
     BeltAttachBone="MG_PITCH"
     BeltClass=Class'DH_MaximM191030FirstPersonBelt'
+
+    IronSightsPositionIndex=0
 
     HandsMesh=SkeletalMesh'DH_Maxim_anm.MAXIM_HANDS'
     HandsAttachBone="MG_PITCH"

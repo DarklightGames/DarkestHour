@@ -2,7 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] bullet snapping & whizzing should still work on exposed vehicle occupants!
+// TODO
+//==============================================================================
+// [ ] Bullet snapping & whizzing should still work on exposed vehicle occupants.
 // [ ] There's no message when the gun barrel is blocked and the player tries to fire.
 // [ ] Switch off of the gunsight position when reloading.
 //=============================================================================
@@ -34,15 +36,21 @@ var Class<DHFirstPersonBelt>    BeltClass;
 var name                        BeltAttachBone;
 var DHFirstPersonBelt           BeltActor;
 
-var name IronSightsCameraBone;
-var int IronSightsPositionIndex;
-var int GunsightPositionIndex;
-
 // Camera Transition
 var name CameraBone;
 var name TargetCameraBone;
 var float CameraTransitionStartTimeSeconds;
 var float CameraTransitionDurationSeconds;
+
+var int IronSightsPositionIndex;
+var int GunsightPositionIndex;
+
+// Extra info for driver positions.
+struct PositionInfoExtra
+{
+    var name CameraBone;
+};
+var array<PositionInfoExtra> DriverPositionsExtra;
 
 simulated function SetCameraBoneTarget(name NewTargetCameraBone, optional float TransitionDurationSeconds)
 {
@@ -53,8 +61,6 @@ simulated function SetCameraBoneTarget(name NewTargetCameraBone, optional float 
 
 simulated function TickCamera()
 {
-    local Vector CameraLocation, TargetCameraLocation;
-    local Rotator CameraRotation, TargetCameraRotation;
     local float T;
 
     if (Gun == none || CameraBone == TargetCameraBone)
@@ -128,11 +134,6 @@ simulated state ViewTransition
         if (bIsZoomed)
         {
             SetIsZoomed(false);
-        }
-
-        // Which camera are we switching to?
-        if (DriverPositionIndex == GunsightPositionIndex)
-        {
         }
     }
     
@@ -312,6 +313,15 @@ simulated function bool IsReloading()
     return MG != none && MG.IsReloading();
 }
 
+simulated function bool IsChangingBarrels()
+{
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    return MG != none && MG.IsChangingBarrels();
+}
+
 simulated function bool IsOnIronSights()
 {
     return DriverPositionIndex == IronSightsPositionIndex && !IsInState('ViewTransition');
@@ -360,12 +370,24 @@ exec function SetGunsightPitchOffset(float NewPitchOffset)
     }
 }
 
+// Get the camera bone for the current driver position.
+simulated function name GetCameraBoneForCurrentPosition()
+{
+    if (DriverPositionIndex < DriverPositionsExtra.Length && DriverPositionsExtra[DriverPositionIndex].CameraBone != '')
+    {
+        return DriverPositionsExtra[DriverPositionIndex].CameraBone;
+    }
+
+    return CameraBone;
+}
+
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local float T;
     local DHMountedMG MG;
+    local name CurrentCameraBone;
     local Coords ReloadCameraCoords;
-    local Vector ReloadCameraLocation, GunsightCameraLocation;
+    local Vector ReloadCameraLocation;
     local Rotator GunsightCameraRotation, ReloadCameraRotation;
 
     MG = DHMountedMG(Gun);
@@ -375,23 +397,9 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    if (IsOnIronSights())
-    {
-        // Iron sights view
-        CameraLocation = Gun.GetBoneCoords(IronSightsCameraBone).Origin;
-        CameraRotation = Gun.GetBoneRotation(IronSightsCameraBone);
-    }
-    else if (IsOnGunsight())
-    {
-        // Adjust the pitch of the gunsight bone based on the current range setting.
-        CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
-        GunsightCameraRotation.Pitch = MG.RangeParams.GetGunsightPitchOffset();
-        CameraRotation = QuatToRotator(QuatProduct(
-            QuatFromRotator(GunsightCameraRotation),
-            QuatFromRotator(Gun.GetBoneRotation(GunsightCameraBone))
-            ));
-    }
-    else if (IsReloading())
+    CurrentCameraBone = GetCameraBoneForCurrentPosition();
+
+    if (IsReloading() || IsChangingBarrels())
     {
         ReloadCameraCoords = MG.GetBoneCoords(ReloadCameraBone);
         ReloadCameraLocation = ReloadCameraCoords.Origin;
@@ -402,8 +410,25 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         T = Class'UInterp'.static.LerpBilateral(Level.TimeSeconds, MG.ReloadStartTimeSeconds, MG.ReloadEndTimeSeconds, MG.ReloadCameraTweenTime, MG.ReloadCameraTweenTime);
         T = Class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
 
+        GetCameraLocationAndRotation(CameraLocation, CameraRotation);
         CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(CameraRotation), QuatFromRotator(ReloadCameraRotation), T));
+    }
+    else if (IsOnIronSights())
+    {
+        // Iron sights view
+        CameraLocation = Gun.GetBoneCoords(CurrentCameraBone).Origin;
+        CameraRotation = Gun.GetBoneRotation(CurrentCameraBone);
+    }
+    else if (IsOnGunsight())
+    {
+        // Adjust the pitch of the gunsight bone based on the current range setting.
+        CameraLocation = Gun.GetBoneCoords(CurrentCameraBone).Origin;
+        GunsightCameraRotation.Pitch = MG.RangeParams.GetGunsightPitchOffset();
+        CameraRotation = QuatToRotator(QuatProduct(
+            QuatFromRotator(GunsightCameraRotation),
+            QuatFromRotator(Gun.GetBoneRotation(CurrentCameraBone))
+            ));
     }
     else
     {

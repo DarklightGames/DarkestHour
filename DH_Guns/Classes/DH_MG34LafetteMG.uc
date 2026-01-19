@@ -92,6 +92,8 @@ defaultproperties
     PitchBone="PITCH"
     YawBone="YAW"
 
+    ReloadSequence="RELOAD"
+
     // FiringAnim="FIRING"
     // FiringIdleAnim="IDLE"
     // FiringChannel=2
