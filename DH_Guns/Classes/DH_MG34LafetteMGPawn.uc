@@ -19,12 +19,13 @@ defaultproperties
     // TODO: let the player move the camera around??
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,TransitionDownAnim="LOWER")
 
-    DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA")
+    DriverPositionsExtra(0)=(CameraBone="")
     DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
     DriverPositionsExtra(2)=(CameraBone="")
     
     //DriverPositionMeshSkins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_INT'
 
+    GunsightCameraBone="GUNSIGHT_CAMERA"
     GunsightPositionIndex=0
     IronSightsPositionIndex=1
 

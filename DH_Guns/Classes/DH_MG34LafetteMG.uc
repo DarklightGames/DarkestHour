@@ -75,8 +75,8 @@ defaultproperties
     CustomPitchDownLimit=64353  // -6.5 degrees
 
     // Ammo
-    InitialPrimaryAmmo=250
-    NumMGMags=3
+    InitialPrimaryAmmo=50
+    NumMGMags=8
     ProjectileClass=Class'DH_MG34Bullet'
     
     FireInterval=0.08 // 862 rpm (value had to be found experimentally due to an engine bug)

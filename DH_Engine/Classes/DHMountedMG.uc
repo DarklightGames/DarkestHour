@@ -382,8 +382,7 @@ simulated state Reloading extends Busy
         // Zoom out.
         if (MGPawn != none)
         {
-            MGPawn.PlayHandsReloadAnim();
-
+            MGPawn.PlayReloadAnim(GetAnimDuration(ReloadSequence));
             MGPawn.SetIsZoomed(false);
         }
     }
@@ -483,6 +482,7 @@ simulated state ChangingBarrels extends Busy
     simulated function BeginState()
     {
         local int NextBarrelIndex;
+        local DHMountedMGPawn MGPawn;
 
         super.BeginState();
 
@@ -506,6 +506,15 @@ simulated state ChangingBarrels extends Busy
 
         // TODO: some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
         BarrelIndex = NextBarrelIndex;
+
+        MGPawn = DHMountedMGPawn(WeaponPawn);
+
+        if (MGPawn != none)
+        {
+            MGPawn.PlayerBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
+            // Zoom out.
+            MGPawn.SetIsZoomed(false);
+        }
     }
 
     simulated function EndState()

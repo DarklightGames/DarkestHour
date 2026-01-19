@@ -7,6 +7,7 @@
 // [ ] Bullet snapping & whizzing should still work on exposed vehicle occupants.
 // [ ] There's no message when the gun barrel is blocked and the player tries to fire.
 // [ ] Switch off of the gunsight position when reloading.
+// [ ] muzzle flash not visible unless on gunsight?
 //=============================================================================
 
 class DHMountedMGPawn extends DHVehicleMGPawn
@@ -37,10 +38,7 @@ var name                        BeltAttachBone;
 var DHFirstPersonBelt           BeltActor;
 
 // Camera Transition
-var name CameraBone;
-var name TargetCameraBone;
-var float CameraTransitionStartTimeSeconds;
-var float CameraTransitionDurationSeconds;
+var DHCameraTransitionController CameraTransitionController;
 
 var int IronSightsPositionIndex;
 var int GunsightPositionIndex;
@@ -51,68 +49,6 @@ struct PositionInfoExtra
     var name CameraBone;
 };
 var array<PositionInfoExtra> DriverPositionsExtra;
-
-simulated function SetCameraBoneTarget(name NewTargetCameraBone, optional float TransitionDurationSeconds)
-{
-    TargetCameraBone = NewTargetCameraBone;
-    CameraTransitionStartTimeSeconds = Level.TimeSeconds;
-    CameraTransitionDurationSeconds = TransitionDurationSeconds;
-}
-
-simulated function TickCamera()
-{
-    local float T;
-
-    if (Gun == none || CameraBone == TargetCameraBone)
-    {
-        // Nothing to do.
-        return;
-    }
-
-    T = (Level.TimeSeconds - CameraTransitionStartTimeSeconds) / CameraTransitionDurationSeconds;
-
-    if (T >= 1.0)
-    {
-        // Transition complete.
-        CameraBone = TargetCameraBone;
-        return;
-    }
-}
-
-simulated function GetCameraLocationAndRotation(out Vector CameraLocation, out Rotator CameraRotation)
-{
-    local float T;
-    local Vector TargetCameraLocation;
-    local Rotator TargetCameraRotation;
-
-    // Get current and target camera coords.
-    CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-    CameraRotation = Gun.GetBoneRotation(CameraBone);
-    TargetCameraLocation = Gun.GetBoneCoords(TargetCameraBone).Origin;
-    TargetCameraRotation = Gun.GetBoneRotation(TargetCameraBone);
-
-    T = Clamp((Level.TimeSeconds - CameraTransitionStartTimeSeconds) / CameraTransitionDurationSeconds, 0.0, 1.0);
-
-    if (T >= 1.0)
-    {
-        // Transition complete.
-        CameraLocation = TargetCameraLocation;
-        CameraRotation = TargetCameraRotation;
-        return;
-    }
-    else if (T <= 0.0)
-    {
-        // Transition not started yet.
-        return;
-    }
-    else
-    {
-        // Smooth step.
-        T = Class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
-        CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, TargetCameraLocation);
-        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(CameraRotation), QuatFromRotator(TargetCameraRotation), T));
-    }
-}
 
 // We only have two positions and we want to snap the field of view when switching
 // between them.
@@ -126,8 +62,6 @@ simulated state ViewTransition
 {
     simulated function BeginState()
     {
-        // TODO: i think this is what's immediately forcing the FOV?
-
         super.BeginState();
 
         // Un-zoom when changing view positions.
@@ -135,9 +69,32 @@ simulated state ViewTransition
         {
             SetIsZoomed(false);
         }
+
+        // TODO: have this camera transition info be defined in the Extras struct.
+
+        // TODO: this is UGLY.
+        if (LastPositionIndex == IronsightsPositionIndex)
+        {
+            // Transition off of the ironsights position to the normal position.
+            CameraTransitionController.QueueCameraTransition(CameraBone, Level.TimeSeconds, 0.125, INTERP_SmoothStep);
+        }
+        else if (DriverPositionIndex == IronsightsPositionIndex)
+        {
+            // Transition to the transition camera.
+            CameraTransitionController.QueueCameraTransition(CameraBone, Level.TimeSeconds, 0.125, INTERP_SmoothStep);
+            // Then transition to the ironsights camera at the end of the animation.
+            CameraTransitionController.QueueCameraTransition(
+                GetCameraBoneForPosition(IronsightsPositionIndex),
+                Level.TimeSeconds + ViewTransitionDuration - 0.25, 0.25, INTERP_SmoothStep);
+        }
     }
-    
-    // TODO: transfer the camera.
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        CameraTransitionController.SetCurrentCameraBone(GetCameraBoneForPosition(DriverPositionIndex));
+    }
 }
 
 simulated function Destroyed()
@@ -294,7 +251,7 @@ simulated function ROIronSights()
     ToggleZoom();
 }
 
-simulated function PlayHandsReloadAnim()
+simulated function PlayReloadAnim(float AnimationDurationSeconds)
 {
     if (HandsActor == none)
     {
@@ -302,6 +259,21 @@ simulated function PlayHandsReloadAnim()
     }
 
     HandsActor.PlayAnim(HandsReloadSequence);
+
+    // Add a transition to and from the reload camera.
+    CameraTransitionController.QueueCameraTransition(
+        ReloadCameraBone, Level.TimeSeconds, 0.25, INTERP_SmoothStep);
+    CameraTransitionController.QueueCameraTransition(
+        GetCameraBoneForPosition(DriverPositionIndex), Level.TimeSeconds + AnimationDurationSeconds - 0.25, 0.25, INTERP_SmoothStep);
+}
+
+simulated function PlayerBarrelChangeAnim(float AnimationDurationSeconds)
+{
+    // Add a transition to and from the reload camera.
+    CameraTransitionController.QueueCameraTransition(
+        ReloadCameraBone, Level.TimeSeconds, 0.25, INTERP_SmoothStep);
+    CameraTransitionController.QueueCameraTransition(
+        GetCameraBoneForPosition(DriverPositionIndex), Level.TimeSeconds + AnimationDurationSeconds, 0.25, INTERP_SmoothStep);
 }
 
 simulated function bool IsReloading()
@@ -320,11 +292,6 @@ simulated function bool IsChangingBarrels()
     MG = DHMountedMG(Gun);
 
     return MG != none && MG.IsChangingBarrels();
-}
-
-simulated function bool IsOnIronSights()
-{
-    return DriverPositionIndex == IronSightsPositionIndex && !IsInState('ViewTransition');
 }
 
 simulated function bool IsOnGunsight()
@@ -346,36 +313,11 @@ simulated function float GetOverlayCorrectionX()
     return MG.RangeParams.GetGunsightCorrectXOffset();
 }
 
-exec function SetOverlayCorrectionX(float NewCorrectionX)
+simulated function name GetCameraBoneForPosition(int PositionIndex)
 {
-    local DHMountedMG MG;
-
-    MG = DHMountedMG(Gun);
-
-    if (MG != none)
+    if (PositionIndex < DriverPositionsExtra.Length && DriverPositionsExtra[PositionIndex].CameraBone != '')
     {
-        MG.RangeParams.RangeTable[MG.RangeIndex].GunsightCorrectX = NewCorrectionX;
-    }
-}
-
-exec function SetGunsightPitchOffset(float NewPitchOffset)
-{
-    local DHMountedMG MG;
-
-    MG = DHMountedMG(Gun);
-
-    if (MG != none)
-    {
-        MG.RangeParams.RangeTable[MG.RangeIndex].GunsightPitch = NewPitchOffset;
-    }
-}
-
-// Get the camera bone for the current driver position.
-simulated function name GetCameraBoneForCurrentPosition()
-{
-    if (DriverPositionIndex < DriverPositionsExtra.Length && DriverPositionsExtra[DriverPositionIndex].CameraBone != '')
-    {
-        return DriverPositionsExtra[DriverPositionIndex].CameraBone;
+        return DriverPositionsExtra[PositionIndex].CameraBone;
     }
 
     return CameraBone;
@@ -383,12 +325,9 @@ simulated function name GetCameraBoneForCurrentPosition()
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
-    local float T;
     local DHMountedMG MG;
     local name CurrentCameraBone;
-    local Coords ReloadCameraCoords;
-    local Vector ReloadCameraLocation;
-    local Rotator GunsightCameraRotation, ReloadCameraRotation;
+    local Rotator GunsightCameraRotation;
 
     MG = DHMountedMG(Gun);
 
@@ -397,42 +336,24 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    CurrentCameraBone = GetCameraBoneForCurrentPosition();
+    CameraTransitionController.Tick(MG, Level.TimeSeconds);
 
-    if (IsReloading() || IsChangingBarrels())
+    if (IsOnGunsight())
     {
-        ReloadCameraCoords = MG.GetBoneCoords(ReloadCameraBone);
-        ReloadCameraLocation = ReloadCameraCoords.Origin;
-        ReloadCameraRotation = QuatToRotator(
-            Class'UQuaternion'.static.FromAxes(ReloadCameraCoords.XAxis, ReloadCameraCoords.YAxis, ReloadCameraCoords.ZAxis)
-        );
+        // Gunsight is a special case.
 
-        T = Class'UInterp'.static.LerpBilateral(Level.TimeSeconds, MG.ReloadStartTimeSeconds, MG.ReloadEndTimeSeconds, MG.ReloadCameraTweenTime, MG.ReloadCameraTweenTime);
-        T = Class'UInterp'.static.SmoothStep(T, 0.0, 1.0);
-
-        GetCameraLocationAndRotation(CameraLocation, CameraRotation);
-        CameraLocation = Class'UVector'.static.VLerp(T, CameraLocation, ReloadCameraLocation);
-        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(CameraRotation), QuatFromRotator(ReloadCameraRotation), T));
-    }
-    else if (IsOnIronSights())
-    {
-        // Iron sights view
-        CameraLocation = Gun.GetBoneCoords(CurrentCameraBone).Origin;
-        CameraRotation = Gun.GetBoneRotation(CurrentCameraBone);
-    }
-    else if (IsOnGunsight())
-    {
         // Adjust the pitch of the gunsight bone based on the current range setting.
-        CameraLocation = Gun.GetBoneCoords(CurrentCameraBone).Origin;
+        CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
         GunsightCameraRotation.Pitch = MG.RangeParams.GetGunsightPitchOffset();
+        // TODO: double check that this is the right order of multiplication; this could be the cause of aiming issues.
         CameraRotation = QuatToRotator(QuatProduct(
             QuatFromRotator(GunsightCameraRotation),
-            QuatFromRotator(Gun.GetBoneRotation(CurrentCameraBone))
+            QuatFromRotator(Gun.GetBoneRotation(GunsightCameraBone))
             ));
     }
     else
     {
-        GetCameraLocationAndRotation(CameraLocation, CameraRotation);
+        CameraTransitionController.GetCameraLocationAndRotation(CameraLocation, CameraRotation);
     }
 
     // Finalise the camera with any shake
@@ -616,20 +537,42 @@ function OnFire()
 
 exec function ROMGOperation()
 {
-    // TODO: implement barrel change functionality.
     local DHMountedMG MG;
 
     MG = DHMountedMG(Gun);
 
-    if (MG == none)
-    {
-        return;
-    }
-
-    if (MG.TryChangeBarrels())
+    if (MG != none && MG.TryChangeBarrels())
     {
         // We're changing barrels, so un-zoom.
         SetIsZoomed(false);
+    }
+}
+
+//==============================================================================
+// DEBUG FUNCTIONS
+//==============================================================================
+
+exec function SetOverlayCorrectionX(float NewCorrectionX)
+{
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    if (MG != none)
+    {
+        MG.RangeParams.RangeTable[MG.RangeIndex].GunsightCorrectX = NewCorrectionX;
+    }
+}
+
+exec function SetGunsightPitchOffset(float NewPitchOffset)
+{
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    if (MG != none)
+    {
+        MG.RangeParams.RangeTable[MG.RangeIndex].GunsightPitch = NewPitchOffset;
     }
 }
 
@@ -650,4 +593,8 @@ defaultproperties
     ZoomFOV=50.0
     TPCamLookat=(Z=-70.0)
     GunsightPositionIndex=-1
+    Begin Object Class=DHCameraTransitionController Name=CameraTransitionController0
+        CurrentCameraBone="GUNNER_CAMERA"
+    End Object
+    CameraTransitionController=CameraTransitionController0
 }
