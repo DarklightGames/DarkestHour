@@ -184,7 +184,7 @@ packages:
       - [0x3041, 0x309F]  # Hiragana
       - [0x30A0, 0x30FF]  # Katakana
       - [0x31F0, 0x31FF]  # Katakana Phonetic Extensions
-  DH_Fonts_chn:
+  DH_Fonts_chi:
     languages: [zh]
     font_substitutions:
       Sofia Sans Condensed: Source Han Sans
