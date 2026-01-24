@@ -8,7 +8,7 @@
 // [ ] Have only ONE reload stage, time it to the duration of the animation.
 // [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
-// [ ] Hide hands actor in third person.
+// [ ] Make the hands part of the INT mesh. No separate hands mesh needed.
 // [ ] Animation bug when the gun is empty and you get onto it (clip does not
 //     animate) [half-reloads in general are busted]
 // [ ] Fix fucky geo on the hands.

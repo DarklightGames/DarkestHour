@@ -20,20 +20,17 @@
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] some sort of issues with texturing of interior parts of cannons? (refactoring change regression?)
+// [ ] some sort of issues with texturing of interior parts of cannons?
+//  (refactoring change regression?)
 // [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
 //  the camera rotation and barrel rotation angles). some sort of correction
 //  may be needed.
-// [ ] needs to "zoom out" when going to gunsight position
-// [ ] sight driver no longer working after recent changes
 // [ ] "exit position not found" error if you try to exit in some places
 // [ ] destroying a barrel and then switching does not let you fire again
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
 //      the mouse
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
 //      maybe just *all* vehicles?)
-// [ ] should not be able to switch positions while reloading or barrel changing
-// [ ] crash when toggling third-person view (some sort of driver/bone mismatch?)
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
@@ -42,12 +39,6 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'  // TODO: replace with EXT version
     // Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
-
-	// var() float           	PointRadius;     	// Squared radius of the head of the pawn that is vulnerable to headshots
-	// var() float           	PointHeight;     	// Distance from base of neck to center of head - used for headshot calculation
-	// var() float				PointScale;
-	// var() name				PointBone;
-	// var() vector			PointOffset;		// Amount to offset the hitpoint from the bone
 
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
         DistanceUnit=DU_Meters
