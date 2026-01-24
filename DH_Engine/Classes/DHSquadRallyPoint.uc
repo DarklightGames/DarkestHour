@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
+class DHSquadRallyPoint extends DHSpawnPointBase
+    abstract
     notplaceable;
 
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
@@ -34,6 +35,9 @@ var int SpawnAccrualThreshold;
 
 // Health
 var int Health;
+
+// Appearance
+var StaticMesh StaticMeshActive;
 
 // Instigator
 var DHPlayer InstigatorController;
@@ -219,7 +223,10 @@ state Active
 
         AwardScoreOnEstablishment();
 
-        UpdateAppearance();
+        if (StaticMeshActive != none)
+        {
+            SetStaticMesh(StaticMeshActive);
+        }
 
         if (MetricsObject != none)
         {
@@ -369,43 +376,9 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
     }
 }
 
-function UpdateAppearance()
-{
-    local DarkestHourGame G;
-    local StaticMesh NewStaticMesh;
-    local class<DHNation> NationClass;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G == none || G.DHLevelInfo == none)
-    {
-        return;
-    }
-
-    NationClass = G.DHLevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    if (NationClass == none)
-    {
-        return;
-    }
-
-    if (IsActive())
-    {
-        NewStaticMesh = NationClass.default.RallyPointStaticMeshActive;
-    }
-    else
-    {
-        NewStaticMesh = NationClass.default.RallyPointStaticMesh;
-    }
-
-    SetStaticMesh(NewStaticMesh);
-}
-
 function OnTeamIndexChanged()
 {
     local bool bIsInFriendlyTerritory;
-
-    UpdateAppearance();
 
     if (IsInState('Constructing'))
     {

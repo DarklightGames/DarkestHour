@@ -17,10 +17,8 @@ var class<DHVoicePack>          VoicePackClass;
 
 var class<DHConstructionLoadout>    DefaultConstructionLoadoutClass;
 
-// TODO: move these to classes as well.
 // Rally Point
-var StaticMesh                  RallyPointStaticMesh;
-var StaticMesh                  RallyPointStaticMeshActive;
+var class<DHSquadRallyPoint> RallyPointClass;
 
 // Flags
 var Material                    DeployMenuFlagTexture;

@@ -3,10 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_ZiS3FactoryLate_Snow extends DH_ZiS3FactoryLate;
+class DHSquadRallyPoint_Italian extends DHSquadRallyPoint
+    notplaceable;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_ZiS3GunLate_Snow'
-    Skins(0)=Texture'DH_ZiS_tex.ZIS_BODY_EXT_WINTER'
+    StaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'
+    StaticMeshActive=StaticMesh'DH_Construction_stc.ITA_backpack_established'
 }
