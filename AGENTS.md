@@ -49,6 +49,11 @@ var     string   VariableThree;
 * All DH-specific classes should be prefixed with `DH_` or `DH`, depending on how class names are typically formed in the relevant package.
 * Enums should be prefixed with `E`. For example: `EGameMode`, `EWeaponType`.
 
+# Arrays
+* Use static arrays (e.g., `var int MyFixedArray[10];`) when the size is known and fixed.
+* Use dynamic arrays (e.g., `var array<int> MyDynamicArray;`) when the size is variable or unknown.
+* When adding items to dynamic arrays, use the syntax `MyDynamicArray[MyDynamicArray.Length] = NewItem;`.
+
 # Replication
 * Dynamic arrays (`array<T>`) cannot be replicated and should not be used for replicated variables. Use static arrays instead.
 * In public functions, all references must be checked for `None` before being used.
@@ -58,6 +63,7 @@ var     string   VariableThree;
 * Functions must have a comment block with a brief description of their purpose, parameters, and return values (if any).
 * Use `//` for single-line comments.
 * Use `/* ... */` for multi-line comments.
+* All explanatory comments should be complete sentences and use proper punctuation.
 
 # Building
 * Use `./tools/make/make` to build the project on Linux.
