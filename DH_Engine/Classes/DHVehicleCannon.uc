@@ -1020,7 +1020,7 @@ simulated function ToggleRoundType()
             break;
         }
 
-    } until (i >= arraycount(MainAmmoChargeExtra))
+    } until (i >= arraycount(MainAmmoChargeExtra));
 }
 
 // New function for net client to check whether it needs to update pending ammo type to server

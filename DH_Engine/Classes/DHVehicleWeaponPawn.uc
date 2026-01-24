@@ -2857,7 +2857,7 @@ simulated function UpdateAnimationDrivers()
         SequenceTheta *= float(FrameCount - 1) / FrameCount;
 
         BlendTheta = GetAnimationDriverTheta(AD.Parameters.BlendInputType);
-        BlendTheta *= (SequenceCount - 1);
+        BlendTheta *= SequenceCount - 1;
         SequenceIndex = int(BlendTheta);
 
         // Calculate the "theta" now based on the remainder to contribute to the next sequence.

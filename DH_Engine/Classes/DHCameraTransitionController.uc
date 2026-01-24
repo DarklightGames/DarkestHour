@@ -97,7 +97,3 @@ function GetCameraLocationAndRotation(out Vector OutLocation, out Rotator OutRot
     OutLocation = CameraLocation;
     OutRotation = CameraRotation;
 }
-
-defaultproperties
-{
-}

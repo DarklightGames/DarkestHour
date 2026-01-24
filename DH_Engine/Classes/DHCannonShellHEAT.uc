@@ -136,7 +136,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
                 TraceHitActor = none;
             }
         }
-        until (TraceHitActor != none || TempMaxWall >= MaxWall)
+        until (TraceHitActor != none || TempMaxWall >= MaxWall);
     }
     else
     {
