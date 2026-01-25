@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import git
-import polib
+from polib import POFile, pofile
 import os
 import re
 from collections import OrderedDict
@@ -234,8 +234,8 @@ def add_entry(msgid: str, msgstr: str, sections):
     target[target_key] = msgstr
 
 
-def po_to_unt(contents: str) -> str:
-    po = polib.pofile(contents)
+
+def po_to_unt(po: POFile) -> str:
 
     sections = OrderedDict()
 
@@ -514,7 +514,8 @@ def sync(args):
 
     files_processed = 0
     language_files_processed = dict()
-    sync_languages = set(localization_data['sync']['languages'])
+    sync_languages: set[str] = set(localization_data['sync']['languages'])
+    sync_excludes: list[dict[str, str]] = localization_data['sync'].get('exclude', list())
 
     for filename in glob.glob(pattern, recursive=True):
 
@@ -524,6 +525,11 @@ def sync(args):
         # TODO: have this regex be part of the configuration file.
         regex = r'([^\.]+)\.([^\_\.]+)(_[^\.]*)?\.po$'
         match = re.search(regex, basename)
+
+        if match is None:
+            print(f'ERROR: Failed to parse name and language code for file \'{filename}\'')
+            continue
+
         basename = match.group(1)
         language_code = match.group(2)
 
@@ -548,7 +554,23 @@ def sync(args):
 
         # Convert the .po file to a .unt file.
         with open(filename, 'r', encoding='utf-8') as file:
-            unt_contents = po_to_unt(file.read())
+            # Read the PO file.
+            po = pofile(file.read())
+
+            # Filter the msgids based on the exclude patterns in the configuration file.
+            package_exclude_patterns: list[str] = []
+            for exclude in sync_excludes:
+                if basename == exclude['package']:
+                    package_exclude_patterns.extend(exclude['patterns'])
+
+            # Remove entries that we are excluding from this package.
+            for entry in reversed(po):
+                for pattern in package_exclude_patterns:
+                    if fnmatch.fnmatch(entry.msgid, pattern):
+                        po.remove(entry)
+
+            # Convert the filtered PO files to UNT.
+            unt_contents = po_to_unt(po)
 
         if not args.dry:
             # Write the .unt file to the mod's System folder.
