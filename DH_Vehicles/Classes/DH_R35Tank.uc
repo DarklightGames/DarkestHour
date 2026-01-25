@@ -43,29 +43,21 @@ defaultproperties
     UnbuttonedPositionIndex=3
     bLockCameraDuringTransition=false
 
-    //==============================================================================
-    // TODO: all armor values need to be verified (with sources) and adjusted
-    //==============================================================================
-
     // Hull armor
-    // https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
-    // "The front plates of the superstructure were 30 mm thick, while those of the gun shield and driver’s port were 40 mm thick.
-    // The front plates of the transmission cover and the side plates were 15 mm thick, as was the rear. The engine deck was 6 mm
-    // thick and the floor had 10 mm armor plates."
-    FrontArmor(0)=(Thickness=3.0,Slope=-65.84,MaxRelativeHeight=32.3213,LocationName="lower slope")
-    FrontArmor(1)=(Thickness=3.0,Slope=-15.27,MaxRelativeHeight=51.5188,LocationName="lower")
-    FrontArmor(2)=(Thickness=1.5,Slope=75.82,MaxRelativeHeight=65.4981,LocationName="transmission cover")
-    FrontArmor(3)=(Thickness=3.0,Slope=13.35,LocationName="upper")
-    RightArmor(0)=(Thickness=1.5,Slope=0.0,MaxRelativeHeight=59.0221,LocationName="lower")
-    RightArmor(1)=(Thickness=1.5,Slope=11.3,LocationName="upper")
-    LeftArmor(0)=(Thickness=1.5,Slope=0.0,MaxRelativeHeight=59.0221,LocationName="lower")
-    LeftArmor(1)=(Thickness=1.5,Slope=11.3,LocationName="upper")
-    RearArmor(0)=(Thickness=1.5,Slope=0)
+    // https://tanks-encyclopedia.com/ww2/romania/vanatorul-de-care-r35/
+    FrontArmor(0)=(Thickness=4.0,Slope=-45,MaxRelativeHeight=30,LocationName="lower slope")
+    FrontArmor(1)=(Thickness=4.0,Slope=0,MaxRelativeHeight=49.5499,LocationName="nose")
+    FrontArmor(2)=(Thickness=4.0,Slope=75,MaxRelativeHeight=63.828,LocationName="upper slope")
+    FrontArmor(3)=(Thickness=4.0,Slope=15,LocationName="upper")
+    RightArmor(0)=(Thickness=4.0,Slope=0.0,LocationName="side")
+    LeftArmor(0)=(Thickness=4.0,Slope=0.0,LocationName="side")
+    RearArmor(0)=(Thickness=4.0,Slope=-38,MaxRelativeHeight=38.5723,LocationName="lower")
+    RearArmor(1)=(Thickness=4.0,Slope=11,LocationName="upper")
 
-    FrontLeftAngle=330
-    FrontRightAngle=30
+    FrontLeftAngle=337
+    FrontRightAngle=23
     RearLeftAngle=208
-    RearRightAngle=153
+    RearRightAngle=152
 
     // Damage
     // pros: 37mm ammo is less likely to explode;
