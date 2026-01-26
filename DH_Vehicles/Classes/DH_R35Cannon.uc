@@ -13,6 +13,11 @@ defaultproperties
     // Skins(1)=Texture'DH_VehiclesUS_tex.M5_turret_int'
     // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_R35_stc.R35_turret_col')
 
+    YawBone="YAW"
+    PitchBone="PITCH"
+    WeaponFireAttachmentBone="MUZZLE"
+    AltFireAttachmentBone="MG_MUZZLE"
+
     // Turret armor
     FrontArmorFactor=5.1
     RightArmorFactor=3.2
