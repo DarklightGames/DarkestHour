@@ -3,6 +3,19 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://tank-afv.com/ww2/france/Renault_R-35.php
+// [2] https://forum.axishistory.com/viewtopic.php?t=118800
+//==============================================================================
+// TODO
+//==============================================================================
+// [ ] Riders
+// [ ] Nation & Camo Variants
+// [ ] Factory Classes
+// [ ] Destroyed Treads
+// [ ] Destroyed static
+// [ ] UI Icons
+// [ ] Set up shell types and ammo counts
+// [ ] New coax MG sound effects
+// [ ] Third person driver and gunner anims
 //==============================================================================
 
 class DH_R35Tank extends DHArmoredVehicle;
@@ -12,12 +25,14 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Renault R35"
     VehicleTeam=0
-    VehicleMass=6.8
+    VehicleMass=10.6
     ReinforcementCost=2
 
     // Periscope
     PeriscopePositionIndex=0
-    PeriscopeCameraBone="CAMERA_PERISCOPE"
+    PeriscopeCameraBone="DRIVER_CAMERA" // TODO: do we even have a periscope?
+
+    PlayerCameraBone="DRIVER_CAMERA"
 
     // Skins(0)=Texture'DH_FiatL640_tex.fiatl640_body_ext'
     // Skins(1)=Texture'DH_FiatL640_tex.fiatl640_treads'
@@ -60,19 +75,17 @@ defaultproperties
     RearRightAngle=152
 
     // Damage
-    // pros: 37mm ammo is less likely to explode;
-    // cons: tightly placed 4 men crew; petrol fuel;
-    Health=420
-    HealthMax=420.0
-    EngineHealth=300
-    AmmoIgnitionProbability=0.27  // 0.75 default
+    Health=400
+    HealthMax=400
+    EngineHealth=250
+    AmmoIgnitionProbability=0.5  // 0.75 default
     TurretDetonationThreshold=4000.0 // increased from 1750
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
 
     // Hitpoints
-    // VehHitpoints(0)=(PointBone="BODY",PointRadius=27.1584,PointOffset=(X=-68.1716,Z=49.7671),HitPointType=HP_Engine)
-    // VehHitpoints(1)=(PointBone="BODY",PointRadius=16,PointOffset=(X=-19.1348,Y=-38.7964,Z=68.5152),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointBone="BODY",PointRadius=28,PointOffset=(X=-63,Z=51),HitPointType=HP_Engine)
+    VehHitpoints(1)=(PointBone="BODY",PointRadius=20,PointOffset=(X=36,Y=27,Z=44),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 
     TreadHitMaxHeight=55.0
     TreadDamageThreshold=0.5
@@ -117,7 +130,7 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     TreadVelocityScale=100.0
     WheelRotationScale=45500.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-115.924,Y=48.0646,Z=60.461),ExhaustRotation=(Pitch=32768))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-90,Y=-49,Z=69),ExhaustRotation=(Pitch=32768))
     LeftLeverBoneName="LEVER_L"
     RightLeverBoneName="LEVER_R"
 
@@ -171,7 +184,13 @@ defaultproperties
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
 
-    //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
+    // TODO: attach these to the right bones
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_R35_stc.R35_BODY_HATCH_COLLISION',AttachBone="BODY")
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_R35_stc.R35_BODY_VISION_PORT_COLLISION',AttachBone="BODY")
+
+    // RandomAttachmentGroups(0)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_R35_stc.R35_ATTACHMENT_SPARE_WHEEL'))))
+    bDoRandomAttachments=true
+    RandomAttachmentGroups(0)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_R35_stc.R35_ATTACHMENT_TRENCH_SKID'))))
 
     // Movement
     GearRatios(3)=0.65
@@ -208,7 +227,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="STEER_WHEEL_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
         bLeftTrack=true
     End Object
     Wheels(0)=LF_Steering
@@ -217,7 +236,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="STEER_WHEEL_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
     End Object
     Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -225,7 +244,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="STEER_WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
         bLeftTrack=true
     End Object
     Wheels(2)=LR_Steering
@@ -234,14 +253,14 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="STEER_WHEEL_B_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
     End Object
     Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="DRIVE_WHEEL_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
         bLeftTrack=true
     End Object
     Wheels(4)=Left_Drive_Wheel
@@ -249,7 +268,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="DRIVE_WHEEL_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=20
+        WheelRadius=26
     End Object
     Wheels(5)=Right_Drive_Wheel
 }
