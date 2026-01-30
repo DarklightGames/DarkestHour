@@ -40,7 +40,7 @@ defaultproperties
     // Damage
     ImpactDamage=600
     Damage=600.0
-    DamageRadius=910 //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
+    DamageRadius=1100 //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
                      //calculated that the lethal effective radius is around 15 meters give or take
     EngineFireChance=0.9
     ShellImpactDamage=Class'DH_LTypeGrenadeImpactDamType'
