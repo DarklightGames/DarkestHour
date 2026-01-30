@@ -12,10 +12,15 @@
 // [ ] Factory Classes
 // [ ] Destroyed Treads
 // [ ] Destroyed static
-// [ ] UI Icons
+// [ ] Clock Icon
+// [ ] Spawn Icon
+// [ ] Pan magazine icon for coax
 // [ ] Set up shell types and ammo counts
 // [ ] New coax MG sound effects
 // [ ] Third person driver and gunner anims
+// [ ] Reduce karma kick when firing (very very light gun)
+// [ ] Gunsight (pinned in Discord)
+// [ ] Hitpoints for turret parts
 //==============================================================================
 
 class DH_R35Tank extends DHArmoredVehicle;

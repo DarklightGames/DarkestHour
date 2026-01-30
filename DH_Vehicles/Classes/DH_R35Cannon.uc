@@ -39,8 +39,8 @@ defaultproperties
     CustomPitchDownLimit=63352
 
     // Cannon ammo
-    PrimaryProjectileClass=Class'DH_StuartCannonShell'
-    SecondaryProjectileClass=Class'DH_StuartCannonShellHE'
+    PrimaryProjectileClass=Class'DH_R35CannonShell'
+    SecondaryProjectileClass=Class'DH_R35CannonShellHE'
     TertiaryProjectileClass=Class'DH_R35ShellCanister'
 
     ProjectileDescriptions(0)="APCBC"
@@ -51,6 +51,7 @@ defaultproperties
     nProjectileDescriptions(1)="HE Mle 1937"
     nProjectileDescriptions(2)="Canister Mle 1918"
 
+    // TODO: get ammo counts, apparently thesse were quite low.
     InitialPrimaryAmmo=60
     InitialSecondaryAmmo=30
     InitialTertiaryAmmo=15
@@ -66,7 +67,7 @@ defaultproperties
     NumMGMags=5
     AltFireInterval=0.08    // 750 rounds per minute
     TracerProjectileClass=Class'DH_ReibelMGTracerBullet'
-    TracerFrequency=5
+    TracerFrequency=10
 
     // Weapon fire
     WeaponFireOffset=12.5
