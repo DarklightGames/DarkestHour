@@ -24,8 +24,8 @@ defaultproperties
     PoweredPitchSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.ShermanTurretTraverse'
     FireImpulse=(X=-30000.0)
-
     CameraBone="GUNSIGHT_CAMERA"
     // TODO: replace this when we add a proper camera
     PlayerCameraBone="GUNSIGHT_CAMERA"
+    bManualTraverseOnly=true
 }

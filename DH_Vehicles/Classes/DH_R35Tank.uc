@@ -109,12 +109,13 @@ defaultproperties
     FireEffectOffset=(X=40,Y=15,Z=60)
 
     // Exit
-    ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00)
-    ExitPositions(1)=(X=-85.00,Y=25.00,Z=150.00)
-    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00)
-    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00)
-    ExitPositions(4)=(X=-165.00,Y=-35.00,Z=55.00)
-    ExitPositions(5)=(X=-165.00,Y=35.00,Z=55.00)
+    ExitPositions(0)=(X=45,Y=-98,Z=59)  // Left of the driver
+    ExitPositions(1)=(X=-96,Y=0,Z=142)  // Behind the turret
+    ExitPositions(4)=(X=-76,Y=-98,Z=59) // Left passenger
+    ExitPositions(5)=(X=-76,Y=98,Z=59)  // Right passenger
+    ExitPositions(2)=(X=189,Y=0,Z=62)   // Very front of the vehicle
+    ExitPositions(3)=(X=45,Y=98,Z=59)   // Right of the driver
+    ExitPositions(6)=(X=-218,Y=0,Z=55)  // Far behind the vehicle
 
     // TODO: choose some other vehicle sounds
 
@@ -232,7 +233,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="STEER_WHEEL_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
         bLeftTrack=true
     End Object
     Wheels(0)=LF_Steering
@@ -241,7 +242,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="STEER_WHEEL_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
     End Object
     Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -249,7 +250,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="STEER_WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
         bLeftTrack=true
     End Object
     Wheels(2)=LR_Steering
@@ -258,14 +259,14 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="STEER_WHEEL_B_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
     End Object
     Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="DRIVE_WHEEL_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
         bLeftTrack=true
     End Object
     Wheels(4)=Left_Drive_Wheel
@@ -273,7 +274,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="DRIVE_WHEEL_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26
+        WheelRadius=28
     End Object
     Wheels(5)=Right_Drive_Wheel
 }

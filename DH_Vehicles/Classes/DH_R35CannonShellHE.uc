@@ -4,15 +4,15 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Speed, ballistic coefficient, penetration, damage (currently a copy of Stuart HE shell)
+// [ ] Ballistic coefficient, penetration, damage (copy of Stuart HE shell)
 //==============================================================================
 
 class DH_R35CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=47828.0 // 2600 fps or 793 m/s
-    MaxSpeed=47828.0
+    Speed=26554.88 // 440m/s
+    MaxSpeed=26554.88
     ShellDiameter=3.7
     BallisticCoefficient=0.984 //TODO: double check this
 

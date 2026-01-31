@@ -34,14 +34,13 @@ defaultproperties
 
     // Turret movement
     ManualRotationsPerSecond=0.04
-    PoweredRotationsPerSecond=0.083
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63352
 
     // Cannon ammo
     PrimaryProjectileClass=Class'DH_R35CannonShell'
     SecondaryProjectileClass=Class'DH_R35CannonShellHE'
-    TertiaryProjectileClass=Class'DH_R35ShellCanister'
+    TertiaryProjectileClass=Class'DH_R35CannonShellCanister'
 
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HE"

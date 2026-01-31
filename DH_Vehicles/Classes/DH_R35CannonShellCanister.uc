@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_R35ShellCanister extends DHCannonShellCanister;
+class DH_R35CannonShellCanister extends DHCannonShellCanister;
 
 defaultproperties
 {

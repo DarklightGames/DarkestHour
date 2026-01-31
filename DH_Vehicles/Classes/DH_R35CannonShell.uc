@@ -4,17 +4,15 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Velocity
-// [ ] Damage
-// [ ] Penetration
+// [ ] Damage & Penetration values (currently same as Stuart)
 //==============================================================================
 
 class DH_R35CannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53346.0 //2900 fps or 884 m/s
-    MaxSpeed=53346.0
+    Speed=36211.2 // 600 m/s
+    MaxSpeed=36211.2
     ShellDiameter=3.7
     BallisticCoefficient=1.52 //Correct - verified on range at 1000 yards
 
