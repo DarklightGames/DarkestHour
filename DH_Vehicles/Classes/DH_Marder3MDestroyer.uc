@@ -67,8 +67,12 @@ defaultproperties
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-90.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-90.0,Y=50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(4)=(PointRadius=17.0,PointBone="turret",PointOffset=(Z=25.0),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(5)=(PointRadius=6.0,PointBone="turret",PointOffset=(X=15.0,Y=-16.0,Z=15.0),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(6)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=18.0,Y=-21.7,Z=29.8),NewHitPointType=NHP_GunOptics)
+    GunOpticsHitPointIndex=6
     TreadHitMaxHeight=-5.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
@@ -211,11 +215,4 @@ defaultproperties
     KParams=KParams0
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
-
-    // Because the turret is completely disconnected from the hull, there should be no chance of
-    // hull components being damaged when the turret is penetrated and vice versa.
-    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
-    TurretPenetrationHullDamageChanceModifier=0.0
-    HullPenetrationTurretDamageChanceModifier=0.0
-    TurretPenetrationDamageModifier=0.25
 }
