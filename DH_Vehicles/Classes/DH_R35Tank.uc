@@ -121,7 +121,7 @@ defaultproperties
 
     // Sounds
     SoundPitch=48
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart_engine_loop'
+    IdleSound=SoundGroup'VehicleEngines.ba64_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'
@@ -199,12 +199,23 @@ defaultproperties
     RandomAttachmentGroups(0)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_R35_stc.R35_ATTACHMENT_TRENCH_SKID'))))
 
     // Movement
-    GearRatios(3)=0.65
-    GearRatios(4)=0.75
-    TransRatio=0.13
+    // Hand-tweaked these values for the R35 to achieve the maximum speed of ~20km/h while
+    // keeping acceleration and handling reasonable and retaining the ability to climb slopes.
     WheelLatFrictionScale=2.0
     HandbrakeThresh=1000.000000
     MaxBrakeTorque=10.0
+    EngineRPMSoundRange=7500
+    GearRatios(0)=-0.15
+    GearRatios(1)=0.15
+    GearRatios(2)=0.2
+    GearRatios(3)=0.35
+    GearRatios(4)=0.45
+    ChangeDownPoint=1100
+    ChangeUpPoint=2200
+    FTScale=0.02
+    IdleRPM=800
+    TransRatio=0.12
+    TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200,OutVal=6.0),(InVal=1750,OutVal=1.0),(InVal=2600,OutVal=0.0)))
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
