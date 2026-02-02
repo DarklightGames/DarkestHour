@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_R35CannonPawn extends DHVehicleCannonPawn;
+class DH_R35CannonPawn extends DHVehicleCannonPawn
+    abstract;
 
 defaultproperties
 {
-    GunClass=Class'DH_R35Cannon'
     DriverPositions(0)=(ViewLocation=(X=12.0,Y=-9.5,Z=7.0),ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_R35_anm.R35_TURRET_ITA_EXT',ViewPitchUpLimit=3641,ViewPitchDownLimit=63352,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_R35_anm.R35_TURRET_ITA_EXT',TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_R35_anm.R35_TURRET_ITA_EXT',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)

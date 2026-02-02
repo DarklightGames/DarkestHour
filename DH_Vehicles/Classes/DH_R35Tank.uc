@@ -8,7 +8,7 @@
 // TODO
 //==============================================================================
 // [ ] Riders
-// [ ] Nation & Camo Variants
+// [ ] Camo Variants
 // [ ] Factory Classes
 // [ ] Destroyed Treads
 // [ ] Destroyed static

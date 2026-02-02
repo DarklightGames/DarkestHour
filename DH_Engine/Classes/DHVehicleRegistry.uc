@@ -200,5 +200,5 @@ defaultproperties
     Records(117)=(VehicleNames=("pak43"),Variants=((ClassName="DH_Guns.DH_Pak43ATGun"),(ClassName="DH_Guns.DH_Pak43ATGun_Camo",VariantName="camo"),(ClassName="DH_Guns.DH_Pak43ATGun_Green",VariantName="green"),(ClassName="DH_Guns.DH_Pak43ATGun_Winter",VariantName="snow")))
     Records(118)=(VehicleNames=("zis2"),Variants=((ClassName="DH_Guns.DH_Zis2Gun"),(ClassName="DH_Guns.DH_Zis2Gun_Camo",VariantName="camo"),(ClassName="DH_Guns.DH_Zis2Gun_SnowCamo",VariantName="snowcamo"),(ClassName="DH_Guns.DH_Zis2Gun_Snow",VariantName="snow")))
     Records(119)=(VehicleNames=("zis3"),Variants=((ClassName="DH_Guns.DH_Zis3Gun"),(ClassName="DH_Guns.DH_Zis3Gun_Camo",VariantName="camo"),(ClassName="DH_Guns.DH_Zis3Gun_SnowCamo",VariantName="snowcamo"),(ClassName="DH_Guns.DH_Zis3Gun_Snow",VariantName="snow")))
-    Records(120)=(VehicleNames=("r35"),Variants=((ClassName="DH_Vehicles.DH_R35Tank")))
+    Records(120)=(VehicleNames=("r35"),Variants=((ClassName="DH_Vehicles.DH_R35Tank_German"),(ClassName="DH_Vehicles.DH_R35Tank_Italian",VariantName="italian")))
 }

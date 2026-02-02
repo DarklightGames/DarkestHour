@@ -3,14 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_R35Cannon extends DHVehicleCannon;
+class DH_R35Cannon extends DHVehicleCannon
+    abstract;
 
 defaultproperties
 {
-    // Turret mesh
-    Mesh=SkeletalMesh'DH_R35_anm.R35_TURRET_ITA_EXT'
-    // Skins(0)=Texture'DH_VehiclesUS_tex.M5_body_ext'
-    // Skins(1)=Texture'DH_VehiclesUS_tex.M5_turret_int'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_R35_stc.R35_TURRET_YAW_COLLISION_ITA',AttachBone="YAW")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_R35_stc.R35_TURRET_PITCH_COLLISION',AttachBone="PITCH")
 
