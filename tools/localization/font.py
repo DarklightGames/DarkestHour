@@ -8,7 +8,7 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import List, Iterable, Dict, Tuple
 from iso639 import Language
-from fontTools.ttLib import TTFont
+from fontTools.ttLib import TTFont, TTLibError
 from unicode_ranges import UnicodeRanges
 from ttf import Compression, TrueTypeFont, TrueTypeFactory
 from font_config import FontConfiguration, FontSize
@@ -18,11 +18,15 @@ from unt import iso639_to_language_extension, read_unique_characters_from_unt_fi
 
 def read_font_unicode_ranges(font_path: str) -> UnicodeRanges:
     font_unicode_ranges = UnicodeRanges()
-    with TTFont(font_path) as ttf:
+    font_number = -1
+    if font_path.endswith('.ttc'):
+        font_number = 0
+    with TTFont(font_path, fontNumber=font_number) as ttf:
         from itertools import chain
         x = chain.from_iterable(x.cmap.keys() for x in ttf['cmap'].tables)
         for ordinal in x:
             font_unicode_ranges.add_ordinal(ordinal)
+    print(f'Font "{font_path}" supports {len(list(font_unicode_ranges.iter_ordinals()))} characters')
     return font_unicode_ranges
 
 
@@ -141,14 +145,14 @@ def get_font_style_closest(installed_fonts, styles: Iterable[str], fontname: str
 
 
 def get_font_paths() -> List[str]:
-    font_paths = []
+    font_paths = set()
     match platform.system():
         case 'Linux':
             import shutil
             if shutil.which('fc-list') is None:
                 raise RuntimeError('fc-list is not installed')
             fc_list_output = subprocess.run(['fc-list', '--format=%{file}\n'], capture_output=True, text=True).stdout
-            font_paths.extend([x for x in fc_list_output.split('\n') if x])
+            font_paths |= set([x for x in fc_list_output.split('\n') if x])
         case 'Windows':
             from os import walk
             font_directories = [
@@ -160,10 +164,10 @@ def get_font_paths() -> List[str]:
                 for (dirpath, dirnames, filenames) in walk(font_directory):
                     for filename in filenames:
                         if any(filename.endswith(ext) for ext in font_extensions):
-                            font_paths.append(dirpath.replace('\\\\', '\\') + '\\' + filename)
+                            font_paths.add(dirpath.replace('\\\\', '\\') + '\\' + filename)
         case _:
             raise RuntimeError(f'Unhandled platform: {platform.system()}')
-    return font_paths
+    return list(font_paths)
             
 
 # Get the list of all installed Fonts.
@@ -181,17 +185,25 @@ def get_installed_fonts() -> Dict[str, Dict[str, str]]:
     font_paths = get_font_paths()
 
     for font_path in font_paths:
+        # Ensure that we even have permission to read the font file.
+        if not os.access(font_path, os.R_OK):
+            continue
+
         if font_path.endswith('.ttc'):
             try:
                 # Try to get the sizes of the font from 0 to 100.
                 for font_index in range(100):
-                    ttf_font = get_font(TTFont(font_path, fontNumber=font_index), font_path)
+                    ttf_font = get_font(TTFont(font_path, fontNumber=font_index, lazy=True), font_path)
                     if ttf_font is not None:
                         ttf_fonts.append(ttf_font)
             except:
                 pass
-        else:
-            ttf_fonts.append(get_font(TTFont(font_path), font_path))
+        elif font_path.endswith(('.ttf', '.otf', '.ttz', '.woff', '.woff2')):
+            try:
+                ttf_font = TTFont(font_path, lazy=True)
+                ttf_fonts.append(get_font(ttf_font, font_path))
+            except TTLibError as e:
+                raise RuntimeError(f'Error reading font at "{font_path}": {e}') from e
 
     installed_fonts: Dict[str, Dict[str, str]] = {}
     for (family, style, path) in ttf_fonts:

@@ -18,7 +18,6 @@ Before running the font generation script, ensure that all of the requisite font
 On Linux, the "Arial" font does not come pre-installed on many distros, so you will need to install it manually. On Arch Linux, it can be installed by installing the [ttf-ms-win11-auto](https://aur.archlinux.org/packages/ttf-ms-win11-auto) package.
 
 ## Font Generation
-
 The batch file for generating fonts is found in the `tools\localization\generate_fonts.bat` file.
 
 Executing this batch file will generate a text file full of commands that can be executed within the SDK using the following command, as well as printing out the command to be pasted into the SDK later. For example:
@@ -34,6 +33,11 @@ It will also generate the UnrealScript classes for the fonts in the directory sp
 To execute the script file within the SDK, press the **Show Full Log Window** button at the bottom left of the screen (to the right of the command prompt input) and copy-paste the command into the console and press enter.
 
 This will generate the font atlases and data structures in the package specified in the `fonts.yml` file (`package_name` field).
+
+### Linux Font Installation
+On Linux, the fonts must be installed to the Wine prefix you are using. You can simply install the fonts to `~/.local/share/fonts` by just copy-pasting the files from the `DarkestHourDev/Fonts/Fonts` folder.
+
+You may need to run `fc-cache -r -v` on the host machine in order for the fonts to be recognized.
 
 ## Using Fonts in UnrealScript
 The main way for accessing fonts is though the generated fonts class.  In Darkest Hour, this is the `DHFonts` class. A number of functions are generated for accessing the font styles in various ways. For example:

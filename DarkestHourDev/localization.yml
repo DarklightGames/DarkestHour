@@ -29,3 +29,12 @@ sync:
     - de  # German
     - fr  # French
     - ja  # Japanese
+    - zh  # Chinese
+  # Some strings are translated, but due to font issues, we don't want to display them
+  # in the game until those issues are resolved.
+  # This section lists the package and key patterns to be excluded (wildcards allowed).
+  exclude:
+      # Progress strings on the loading screen use a built-in font that only supports Windows-1252.
+    - package: Engine
+      patterns: 
+      - "Progress.*"

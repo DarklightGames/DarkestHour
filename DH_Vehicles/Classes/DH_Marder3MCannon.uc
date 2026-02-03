@@ -13,8 +13,11 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex7.marder_turret_ext'
 
+    //Give the cannon some basic armor (30mm) so that it can't simply be penetrated by anything (which was previously the case as no armor was modeled)
+    FrontArmorFactor=3.0
+
     // Cannon movement
-//  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
+    //  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
     ManualRotationsPerSecond=0.033
     bLimitYaw=true
     MaxPositiveYaw=3822

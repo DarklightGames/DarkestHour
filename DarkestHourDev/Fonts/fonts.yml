@@ -14,7 +14,7 @@ resolution:
     canvas: [1440, 1080, 1024, 900, 768]
     gui: [1400, 1080, 900] # GUI fonts can only have 3 different size levels.
 defaults:
-  unicode_ranges: # These unicode ranges are always included for each language.
+  unicode_ranges: # These unicode ranges are always included for each language package.
     - [ 0x0000, 0x007F ] # Basic Latin
     - [ 0x0080, 0x00FF ] # Latin-1 Supplement
     - [ 0x0180, 0x024F ] # Latin Extended-B
@@ -29,7 +29,7 @@ defaults:
     - 0x2116 # Numero Sign (№)
     - 0xFE2E # Combining Cyrillic Titlo Left Half
     - 0xFE2F # Combining Cyrillic Titlo Right Half
-    # Polish characters
+    # Polish Characters (https://character-table.netlify.app/polish/#unicode-ranges)
     - [ 0x104, 0x107 ]
     - [ 0x118, 0x119 ]
     - [ 0x141, 0x144 ]
@@ -43,16 +43,38 @@ defaults:
     - 0x2030
     - [ 0x2032, 0x2033 ]
     - 0x20AC
+    # Turkish Characters (https://character-table.netlify.app/turkish/#unicode-ranges)
+    - [ 0x20, 0x5F ]
+    - [ 0x61, 0x70 ]
+    - [ 0x72, 0x76 ]
+    - [ 0x79, 0x7A ]
+    - 0x7C
+    - 0xA0
+    - 0xA7
+    - 0xA9
+    - 0xC7
+    - 0xD6
+    - 0xDC
+    - 0xE7
+    - 0xF6
+    - 0xFC
+    - [ 0x11E, 0x11F ]
+    - [ 0x130, 0x131 ]
+    - [ 0x15E, 0x15F ]
+    - [ 0x2010, 0x2011 ]
+    - [ 0x2013, 0x2014 ]
+    - [ 0x2018, 0x2019 ]
+    - [ 0x201C, 0x201D ]
+    - [ 0x2020, 0x2021 ]
+    - 0x2026
+    - 0x2030
+    - [ 0x2032, 0x2033 ]
+    - 0x20AC
   font_style:
     compression: DXT5  # [RGBA8, DXT3, DXT5]
     texture_size: # Maximum size of each texture atlas.
       x: 512
       y: 512
-    # margin: # Margin around each character
-    #   bottom: 1
-    #   top: 1
-    #   left: 1
-    #   right: 1
     padding:
       x: 1
       y: 1
@@ -153,11 +175,21 @@ packages:
   DH_Fonts_jap:
     languages: [ja]
     font_substitutions:
-      Sofia Sans Condensed: Source Han Sans JP
-      Inter: Source Han Sans JP
-      Arial: Source Han Sans JP
+      Sofia Sans Condensed: Source Han Sans
+      Inter: Source Han Sans
+      Arial: Source Han Sans
     ensure_all_used_characters: true
     unicode_ranges:
-      - [0x3041, 0x309F]
-      - [0x30A0, 0x30FF]
-      - [0x31F0, 0x31FF]
+      - [0x3000, 0x303F]  # CJK Symbols and Punctuation
+      - [0x3041, 0x309F]  # Hiragana
+      - [0x30A0, 0x30FF]  # Katakana
+      - [0x31F0, 0x31FF]  # Katakana Phonetic Extensions
+  DH_Fonts_chi:
+    languages: [zh]
+    font_substitutions:
+      Sofia Sans Condensed: Source Han Sans
+      Inter: Source Han Sans
+      Arial: Source Han Sans
+    ensure_all_used_characters: true
+    unicode:
+      - [0x3000, 0x303F]  # CJK Symbols and Punctuation
