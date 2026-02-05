@@ -121,7 +121,7 @@ defaultproperties
 
     // Sounds
     SoundPitch=48
-    IdleSound=SoundGroup'VehicleEngines.ba64_engine_loop'
+    IdleSound=SoundGroup'Vehicle_Engines.ba64_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.t60_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.t60_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC_tread_L'

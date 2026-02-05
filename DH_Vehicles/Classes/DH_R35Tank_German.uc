@@ -7,7 +7,7 @@ class DH_R35Tank_German extends DH_R35Tank;
 
 defaultproperties
 {
-    VehicleNameString="Panzerkampfwagen 35R(f)"
+    VehicleNameString="Panzerkampfwagen 35R 731(f)"
     VehicleTeam=0
 
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_R35CannonPawn_German',WeaponBone="TURRET_ATTACHMENT")
