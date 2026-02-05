@@ -334,7 +334,6 @@ simulated function name GetCameraBoneForPosition(int PositionIndex)
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local DHMountedMG MG;
-    local name CurrentCameraBone;
     local Rotator GunsightCameraRotation;
 
     MG = DHMountedMG(Gun);

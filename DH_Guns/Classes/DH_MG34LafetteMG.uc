@@ -36,6 +36,8 @@
 // [ ] can still rotate the gun with WASD while reloading/changing barrels
 // [ ] when barrel is destroyed, the gun doesn't stop firing
 // [ ] picking up the gun and putting it down again resets the barrel conditions
+// [ ] going onto the gun after changing positions doesn't reset the camera fsr
+// [ ] reload can be initiated in the raised position
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
