@@ -10,7 +10,7 @@ defaultproperties
     //HandsMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_HANDS'
     GunClass=Class'DH_MG34LafetteMG'
     DrivePos=(X=0,Y=0,Z=58)
-    DriveRot=(Pitch=0,Yaw=0,Roll=0)
+    DriveRot=(Pitch=0,Yaw=16384,Roll=0)
     DriveAnim="cv33_gunner_closed"   // TODO: replace with the idle animation.
     InitialPositionIndex=1
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=30.0,bDrawOverlays=true,TransitionUpAnim="OVERLAY_OUT")

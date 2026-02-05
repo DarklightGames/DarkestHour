@@ -76,7 +76,7 @@ function SetCurrentBarrel(bool bIsCurrent)
     if (bIsCurrentBarrel)
     {
         OnTemperatureChanged(self, Temperature);
-        UpdateBarrelStatus(true);
+        ForceUpdateBarrelStatus();
     }
 }
 
@@ -108,8 +108,20 @@ function Timer()
     }
 }
 
+function ForceUpdateBarrelStatus()
+{
+    if (Role != ROLE_Authority || !bIsCurrentBarrel)
+    {
+        return;
+    }
+
+    OnIsSteamActiveChanged(self, bIsSteamActive);
+    OnTemperatureChanged(self, Temperature);
+    OnConditionChanged(self, Condition);
+}
+
 // Updates this barrel and the weapon's status
-function UpdateBarrelStatus(optional bool bForce)
+function UpdateBarrelStatus()
 {
     local bool bOldIsSteamActive;
 
@@ -121,7 +133,7 @@ function UpdateBarrelStatus(optional bool bForce)
     bOldIsSteamActive = bIsSteamActive;
     bIsSteamActive = Temperature > SteamTemperature;
 
-    if (bForce || bOldIsSteamActive != bIsSteamActive)
+    if (bOldIsSteamActive != bIsSteamActive)
     {
         if (bIsCurrentBarrel)
         {

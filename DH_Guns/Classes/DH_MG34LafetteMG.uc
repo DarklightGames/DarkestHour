@@ -17,20 +17,25 @@
 // QUALITY OF LIFE IMPROVEMENTS
 //==============================================================================
 // [ ] shooting the sight should break it!
+// [ ] maybe reloads should be totally manual?
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] some sort of issues with texturing of interior parts of cannons?
-//  (refactoring change regression?)
 // [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
 //  the camera rotation and barrel rotation angles). some sort of correction
 //  may be needed.
+// [ ] some sort of issues with texturing of interior parts of cannons?
+//  (refactoring change regression?)
 // [ ] "exit position not found" error if you try to exit in some places
-// [ ] destroying a barrel and then switching does not let you fire again
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
 //      the mouse
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
-//      maybe just *all* vehicles?)
+//      maybe just *all* vehicles)
+// [ ] getting off the gun while reloading or changing barrels doesn't stop
+//      the animation, leading to weirdness
+// [ ] can still rotate the gun with WASD while reloading/changing barrels
+// [ ] when barrel is destroyed, the gun doesn't stop firing
+// [ ] picking up the gun and putting it down again resets the barrel conditions
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
@@ -93,6 +98,8 @@ defaultproperties
     ShellEjectBone="LAFETTE_EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=8192,Yaw=16384,Roll=8192)
+
+    ProjectileRotationMode=PRM_CurrentAim
 
     WeaponFireOffset=-10
 
