@@ -69,9 +69,10 @@ var     string   VariableThree;
 * Use `./tools/make/make` to build the project on Linux.
 * Use `./tools/make/make.bat` to build the project on Windows.
 
-# Testing
+# Testing & Debugging
 * The game code has no built-in unit testing framework and relies on manual testing.
 * Use logging and debug messages to assist with testing and debugging.
+* Functions with the `exec` modifier can be invoked from the console and are often used to run debug commands. `exec` functions are only invokable if the player is possessing the appropriate `Pawn` or `Controller`.
 
 # Debugging
 * Remove unreferenced local variables to avoid compiler warnings.
