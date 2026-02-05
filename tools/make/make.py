@@ -7,7 +7,6 @@ import configparser
 import shutil
 import json
 from binascii import crc32
-import zipfile
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Optional
@@ -20,7 +19,7 @@ https://stackoverflow.com/questions/13921323/handling-duplicate-keys-with-config
 class Manifest:
     def __init__(self):
         self.package_crcs = dict()
-        self.default_ini_crc = None
+        self.default_ini_crc: int | None = None
 
     @staticmethod
     def load(path: str) -> 'Manifest':
@@ -517,7 +516,7 @@ def main():
 
 
 class BuildManifest:
-    def __init__(self, version: (int, int, int), commit: str, branch: str = 'main', prerelease: Optional[str] = None):
+    def __init__(self, version: tuple[int, int, int], commit: str, branch: str = 'main', prerelease: Optional[str] = None):
         self.version = version
         self.prerelease = prerelease
         self.branch = branch
@@ -550,7 +549,7 @@ class BuildManifest:
                '}\n'
 
     @staticmethod
-    def new_from_cli(version: (int, int, int), prerelease: Optional[str] = None) -> 'BuildManifest':
+    def new_from_cli(version: tuple[int, int, int], prerelease: Optional[str] = None) -> 'BuildManifest':
         import subprocess
         p = subprocess.Popen(['git', 'rev-parse', '--short', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         commit, _ = p.communicate()
