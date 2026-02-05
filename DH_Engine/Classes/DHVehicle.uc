@@ -256,16 +256,6 @@ struct SExitPosition
 };
 var     array<SExitPosition> AbsoluteExitPositions;
 
-// Steering Animations
-var bool bUseSteeringAnimation;
-var struct SSteeringAnimation
-{
-    var int Channel;
-    var name Bone;
-    var name Sequence;  // 0.0 = full left, 0.5 = center, 1.0 = full right
-    var int FrameCount;
-} SteeringAnimation;
-
 // Debugging
 var     bool        bDebuggingText;
 
@@ -782,11 +772,6 @@ simulated function Tick(float DeltaTime)
             PlayerController(Controller).ReceiveLocalizedMessage(Class'DHSupplyVehicleMessage',, Controller.PlayerReplicationInfo,, self);
         }
     }
-
-    if (bUseSteeringAnimation && IsLocallyControlled())
-    {
-        UpdateSteeringAnimation();
-    }
     
     super.Tick(DeltaTime);
 
@@ -852,25 +837,6 @@ simulated function UpdateDustColor()
             Dust[i].SetDirtColor(DustColor);
         }
     }
-}
-
-simulated function InitializeSteeringAnimation()
-{
-    AnimBlendParams(SteeringAnimation.Channel, 1.0, 0.0,, SteeringAnimation.Bone);
-}
-
-simulated function float GetSteeringAnimationTime()
-{
-    local float F;
-    
-    F = (Steering + 1.0) / 2.0;
-
-    return F * (SteeringAnimation.FrameCount - 1);
-}
-
-simulated function UpdateSteeringAnimation()
-{
-    FreezeAnimAt(GetSteeringAnimationTime(), SteeringAnimation.Channel);
 }
 
 // Modified to remove RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as DH doesn't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
