@@ -16,29 +16,30 @@
 //==============================================================================
 // QUALITY OF LIFE IMPROVEMENTS
 //==============================================================================
+// [ ] add click sound when trying to fire while barrel is broken
+// [ ] display the number of barrels on the HUD (flash red when a barrel is
+//     broken and show button prompt to change it, if applicable)
 // [ ] shooting the sight should break it!
 // [ ] maybe reloads should be totally manual?
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
-//  the camera rotation and barrel rotation angles). some sort of correction
-//  may be needed.
+// [ ] picking up the gun and putting it down again resets the barrel conditions.
 // [ ] some sort of issues with texturing of interior parts of cannons?
-//  (refactoring change regression?)
+//     (refactoring change regression?)
 // [ ] "exit position not found" error if you try to exit in some places
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
 //      the mouse
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
 //      maybe just *all* vehicles)
-// [ ] getting off the gun while reloading or changing barrels doesn't stop
-//      the animation, leading to weirdness
-// [ ] can still rotate the gun with WASD while reloading/changing barrels
-// [ ] picking up the gun and putting it down again resets the barrel conditions
-// [ ] going onto the gun after changing positions doesn't reset the camera fsr
+// [ ] going onto the gun after changing positions doesn't reset the camera
 // [ ] reload can be initiated in the raised position
-// [ ] when getting on the gun for the first time, the gun will reload immediately for no reason.
+// [ ] when getting on the gun for the first time, the gun will reload
+//      immediately for no reason (with no animation)
 // [ ] camera slightly fucky on first enter
+// [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
+//     the camera rotation and barrel rotation angles). some sort of correction
+//     may be needed.
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
