@@ -1247,6 +1247,117 @@ function DrawSupplyCount(Canvas C)
     }
 }
 
+function DrawVehiclePositionDots(
+    Canvas Canvas,
+    ROVehicle Vehicle,
+    ROVehicleWeaponPawn Passenger,
+    AbsoluteCoordsInfo Coords
+    )
+{
+    local int i;
+    local VehicleWeaponPawn WP;
+
+    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
+    {
+        if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
+        {
+            continue;
+        }
+
+        // Draw driver dot
+        if (i == 0)
+        {
+            if (Passenger == none)
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor; // we are the driver
+            }
+            else if (Vehicle.Driver != none || Vehicle.bDriving) // another player is the driver (added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false)
+            {
+                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
+                VehicleOccupants.Tints[TeamIndex].A = 128;
+            }
+            else
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor; // no one is driving
+            }
+
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            if (Passenger == none)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
+
+            PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
+            PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
+            PlayerNumberText.Text = string(i + 1);
+
+            Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
+
+            DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
+        }
+        else
+        {
+            if (i - 1 >= Vehicle.WeaponPawns.Length)
+            {
+                break;
+            }
+
+            WP = Vehicle.WeaponPawns[i - 1];
+
+            if (WP == none) // added to show missing rider/passenger pawns, as now they won't exist on net clients unless occupied
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+            }
+            else if (WP == Passenger) // we are in this vehicle position
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+            }
+            else if (WP.PlayerReplicationInfo != none)
+            {
+                if (Passenger != none && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo) // we are in this vehicle position
+                {
+                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+                }
+                else // another player is in this vehicle position
+                {
+                    VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(WP.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
+                    VehicleOccupants.Tints[TeamIndex].A = 128;
+                }
+            }
+            else
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+            }
+
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            if (WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
+
+            PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
+            PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
+            PlayerNumberText.text = string(i + 1);
+            Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
+            DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
+        }
+    }
+}
+
 // Draws all the vehicle HUD info, e.g. vehicle icon, passengers, ammo, speed, throttle
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
@@ -1410,105 +1521,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     // Draw vehicle occupant dots
     if (V.bShouldDrawPositionDots)
     {
-        for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
-        {
-            if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
-            {
-                continue;
-            }
-
-            // Draw driver dot
-            if (i == 0)
-            {
-                if (Passenger == none)
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor; // we are the driver
-                }
-                else if (Vehicle.Driver != none || Vehicle.bDriving) // another player is the driver (added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false)
-                {
-                    VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
-                    VehicleOccupants.Tints[TeamIndex].A = 128;
-                }
-                else
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor; // no one is driving
-                }
-
-                VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
-                VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
-                DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
-
-                if (Passenger == none)
-                {
-                    VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
-                    VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
-
-                    TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
-                    DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
-                }
-
-                PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
-                PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
-                PlayerNumberText.Text = string(i + 1);
-
-                Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
-
-                DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
-            }
-            else
-            {
-                if (i - 1 >= Vehicle.WeaponPawns.Length)
-                {
-                    break;
-                }
-
-                WP = Vehicle.WeaponPawns[i - 1];
-
-                if (WP == none) // added to show missing rider/passenger pawns, as now they won't exist on net clients unless occupied
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
-                }
-                else if (WP == Passenger) // we are in this vehicle position
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
-                }
-                else if (WP.PlayerReplicationInfo != none)
-                {
-                    if (Passenger != none && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo) // we are in this vehicle position
-                    {
-                        VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
-                    }
-                    else // another player is in this vehicle position
-                    {
-                        VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(WP.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
-                        VehicleOccupants.Tints[TeamIndex].A = 128;
-                    }
-                }
-                else
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
-                }
-
-                VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
-                VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
-                DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
-
-                if (WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
-                {
-                    VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
-                    VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
-
-                    TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
-                    DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
-                }
-
-                PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
-                PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
-                PlayerNumberText.text = string(i + 1);
-                Canvas.Font = Class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipX, Canvas.ClipY);
-                DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
-            }
-        }
+        DrawVehiclePositionDots(Canvas, Vehicle, Passenger, Coords);
     }
 
     //////////////////////////////////////////////////////////////////
