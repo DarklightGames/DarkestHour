@@ -16,8 +16,6 @@ defaultproperties
     
     Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M2_GUN_EXT'
 
-    ReloadCameraTweenTime=0.5
-
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
         DistanceUnit=DU_Meters
         Anim="SIGHT_DRIVER"

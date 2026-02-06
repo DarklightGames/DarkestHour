@@ -19,8 +19,6 @@ class DH_Fiat1435MG extends DHMountedMG
 
 defaultproperties
 {
-    ReloadCameraTweenTime=0.5
-
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
         DistanceUnit=DU_Meters
         Anim="SIGHT_DRIVER"

@@ -11,9 +11,6 @@ var int                     RangeIndex;
 
 // Reload
 var()   name                ReloadSequence;
-var     float               ReloadStartTimeSeconds; // The time that the reload animation started.
-var     float               ReloadEndTimeSeconds;   // The time that the reload animation will end.
-var()   float               ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
 
 // TODO: many of these systems should be componentized.
 
@@ -378,10 +375,6 @@ simulated state Reloading extends Busy
         {
             AnimBlendParams(FiringChannel, 0.0,,, FiringBone);
         }
-
-        // For simplicity, just have a single reload phase.
-        ReloadStartTimeSeconds = Level.TimeSeconds;
-        ReloadEndTimeSeconds = Level.TimeSeconds + GetAnimDuration(ReloadSequence);
 
         PlayAnim(ReloadSequence, 1.0, 0.0, 0.0);
 
