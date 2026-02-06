@@ -124,21 +124,17 @@ simulated function InitializeBelt()
         BeltActor.Destroy();
     }
 
-    if (BeltClass == none)
+    if (BeltClass != none)
     {
-        return;
+        BeltActor = Spawn(BeltClass, self);
+
+        if (BeltActor != none)
+        {
+            Gun.AttachToBone(BeltActor, BeltAttachBone);
+            BeltActor.SetRelativeLocation(vect(0, 0, 0));
+            BeltActor.SetRelativeRotation(rot(0, 0, 0));
+        }
     }
-
-    BeltActor = Spawn(BeltClass, self);
-
-    if (BeltActor == none)
-    {
-        return;
-    }
-
-    Gun.AttachToBone(BeltActor, BeltAttachBone);
-    BeltActor.SetRelativeLocation(vect(0, 0, 0));
-    BeltActor.SetRelativeRotation(rot(0, 0, 0));
 }
 
 simulated function InitializeHands()
