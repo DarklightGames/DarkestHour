@@ -154,6 +154,12 @@ simulated function SetBarrelSteamActive(bool bIsSteamActive)
 function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
 {
     BarrelCondition = Condition;
+
+    // If the barrel has failed, stop firing (this stops the sounds and effects).
+    if (BarrelCondition == BC_Failed && WeaponPawn != none)
+    {
+        CeaseFire(WeaponPawn.Controller, false);
+    }
 }
 
 simulated function PostNetReceive()
