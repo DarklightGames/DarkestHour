@@ -368,7 +368,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
-// Despite the name, this function is used to update the gun's rotation.
+// Despite the name, this function is used to update the gun's rotation using the mouse.
 public function UpdateRocketAcceleration(Float DeltaTime, Float YawChange, Float PitchChange)
 {
     PitchChange *= 0.5;
@@ -393,6 +393,12 @@ public function UpdateRocketAcceleration(Float DeltaTime, Float YawChange, Float
 function HandleTurretRotation(Float DeltaTime, Float YawChange, Float PitchChange)
 {
     local DHMountedMG MG;
+
+    if (IsWeaponBusy())
+    {
+        PitchChange = 0;
+        YawChange = 0;
+    }
 
     super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
 
