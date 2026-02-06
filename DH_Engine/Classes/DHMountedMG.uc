@@ -413,8 +413,7 @@ simulated state Reloading extends Busy
     }
 
 Begin:
-    //Sleep(GetAnimDuration(ReloadSequence));
-    Sleep(5.0); // For now, just a fixed time until we have proper reload animations.
+    Sleep(GetAnimDuration(ReloadSequence));
     GotoState('');
 }
 
@@ -763,10 +762,19 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
+// Modified to leave the reload or barrel change state when pausing reloads.
+// This is called when a player leaves the gun.
+simulated function PauseAnyReloads()
+{
+    super.PauseAnyReloads();
+
+    PlayAnim(BeginningIdleAnim);
+
+    GotoState('');
+}
+
 defaultproperties
 {
-    ReloadCameraTweenTime=0.5
-
     YawBone="MG_YAW"
     PitchBone="MG_PITCH"
 
@@ -841,4 +849,6 @@ defaultproperties
 
     BarrelSteamEmitterClass=Class'DHMGSteam'
     BarrelSteamBone="MUZZLE"
+
+    BeginningIdleAnim="IDLE"
 }
