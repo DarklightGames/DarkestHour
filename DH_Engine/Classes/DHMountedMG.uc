@@ -479,7 +479,6 @@ simulated state ChangingBarrels extends Busy
 {
     simulated function BeginState()
     {
-        local int NextBarrelIndex;
         local DHMountedMGPawn MGPawn;
 
         super.BeginState();
@@ -489,6 +488,29 @@ simulated state ChangingBarrels extends Busy
             PlayAnim(BarrelChangeSequence, 1.0, 0.0, 0.0);
         }
 
+        MGPawn = DHMountedMGPawn(WeaponPawn);
+
+        if (MGPawn != none)
+        {
+            MGPawn.PlayerBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
+            // Zoom out.
+            MGPawn.SetIsZoomed(false);
+        }
+    }
+
+    simulated function bool IsChangingBarrels()
+    {
+        return true;
+    }
+
+    // Function to actually change the barrel. We don't put this in EndState because
+    // the state can be prematurely exited. We want this to only be called after the
+    // animation is fully finished.
+    // TODO: Perhaps add some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
+    simulated function PerformBarrelChange()
+    {
+        local int NextBarrelIndex;
+        
         NextBarrelIndex = GetNextBestBarrelIndex();
 
         if (NextBarrelIndex == -1)
@@ -502,31 +524,12 @@ simulated state ChangingBarrels extends Busy
         Barrels[BarrelIndex].SetCurrentBarrel(false);
         Barrels[NextBarrelIndex].SetCurrentBarrel(true);
 
-        // TODO: some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
         BarrelIndex = NextBarrelIndex;
-
-        MGPawn = DHMountedMGPawn(WeaponPawn);
-
-        if (MGPawn != none)
-        {
-            MGPawn.PlayerBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
-            // Zoom out.
-            MGPawn.SetIsZoomed(false);
-        }
-    }
-
-    simulated function EndState()
-    {
-        Level.Game.Broadcast(self, "Barrel changed");
-    }
-
-    simulated function bool IsChangingBarrels()
-    {
-        return true;
     }
 
 Begin:
     Sleep(GetAnimDuration(BarrelChangeSequence));
+    PerformBarrelChange();
     GotoState('');
 }
 
