@@ -195,6 +195,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
             BeltActor.FreezeAnimAtAmmoCount(MG.MainAmmoCharge[0]);
         }
     }
+
+    CameraTransitionController.SetCurrentCameraBone(GetCameraBoneForPosition(DriverPositionIndex));
 }
 
 simulated function ClientKDriverLeave(PlayerController PC)
