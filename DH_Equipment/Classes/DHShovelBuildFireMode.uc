@@ -15,7 +15,6 @@ simulated function bool AllowFire()
 {
     local Actor  HitActor;
     local Vector TraceStart, TraceEnd, HitLocation, HitNormal;
-    local DHPawn Pawn;
 
     if (Weapon == none ||
         Instigator == none ||

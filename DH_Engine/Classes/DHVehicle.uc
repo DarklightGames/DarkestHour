@@ -272,7 +272,7 @@ var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combine
 var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
 
 // Vehicle state, used to restore a saved state.
-var DHVehicleState VehicleState;
+var DHVehicleState SavedVehicleState;
 
 replication
 {
@@ -432,13 +432,13 @@ simulated function PostNetBeginPlay()
     // Spawn a variety of vehicle attachment options
     SpawnVehicleAttachments();
 
-    if (Role == ROLE_Authority && VehicleState != none)
+    if (Role == ROLE_Authority && SavedVehicleState != none)
     {
         // Restore the vehicle state now that all the weapons have been spawned.
-        SetVehicleState(VehicleState);
+        SetVehicleState(SavedVehicleState);
 
         // Clear the saved vehicle state to release the object.
-        VehicleState = none;
+        SavedVehicleState = none;
     }
 }
 
@@ -4632,7 +4632,7 @@ function DHVehicleState GetVehicleState()
 
 function SetVehicleState(DHVehicleState VehicleState)
 {
-    local DHVehicleWeapon Weapon;
+    local DHVehicleWeapon VehicleWeapon;
     local int i;
 
     Health = VehicleState.Health;
@@ -4644,11 +4644,11 @@ function SetVehicleState(DHVehicleState VehicleState)
             continue;
         }
 
-        Weapon = DHVehicleWeapon(WeaponPawns[i].Gun);
+        VehicleWeapon = DHVehicleWeapon(WeaponPawns[i].Gun);
 
-        if (Weapon != none)
+        if (VehicleWeapon != none)
         {
-            Weapon.SetVehicleWeaponState(VehicleState.WeaponStates[i]);
+            VehicleWeapon.SetVehicleWeaponState(VehicleState.WeaponStates[i]);
         }
     }
 }

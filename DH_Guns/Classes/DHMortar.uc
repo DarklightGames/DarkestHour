@@ -17,8 +17,6 @@ replication
 
 simulated function PostBeginPlay()
 {
-    local DHConstructionSocket Socket;
-
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
