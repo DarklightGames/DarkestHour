@@ -51,11 +51,9 @@ struct PositionInfoExtra
 };
 var array<PositionInfoExtra> DriverPositionsExtra;
 
-// We only have two positions and we want to snap the field of view when switching
-// between them.
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
-    return true;
+    return PositionIndex == GunsightPositionIndex;
 }
 
 // Overridden to un-zoom when changing view positions.
@@ -64,14 +62,6 @@ simulated state ViewTransition
     simulated function BeginState()
     {
         super.BeginState();
-
-        // Un-zoom when changing view positions.
-        if (bIsZoomed)
-        {
-            SetIsZoomed(false);
-        }
-
-        // TODO: have this camera transition info be defined in the Extras struct.
 
         // TODO: this is UGLY.
         if (LastPositionIndex == IronsightsPositionIndex)
@@ -239,7 +229,7 @@ simulated function SetIsZoomed(bool bNewIsZoomed)
     }
     else
     {
-        PC.DesiredFOV = PC.DefaultFOV;
+        PC.DesiredFOV = GetViewFOV(DriverPositionIndex);
     }
 
     bIsZoomed = bNewIsZoomed;
@@ -247,7 +237,7 @@ simulated function SetIsZoomed(bool bNewIsZoomed)
 
 simulated function ToggleZoom()
 {
-    if (IsReloading() || IsOnGunsight() || IsInState('ViewTransition'))
+    if (IsReloading() || !IsOnIronsights() || IsInState('ViewTransition'))
     {
         return;
     }
@@ -304,6 +294,11 @@ simulated function bool IsChangingBarrels()
 simulated function bool IsOnGunsight()
 {
     return DriverPositionIndex == GunsightPositionIndex && !IsInState('ViewTransition');
+}
+
+simulated function bool IsOnIronSights()
+{
+    return DriverPositionIndex == IronSightsPositionIndex && !IsInState('ViewTransition');
 }
 
 simulated function float GetOverlayCorrectionX()
@@ -509,18 +504,26 @@ function bool IsWeaponBusy()
 
 simulated function NextWeapon()
 {
-    if (!IsWeaponBusy())
+    if (IsWeaponBusy())
     {
-        super.NextWeapon();
+        return;
     }
+
+    SetIsZoomed(false);
+    
+    super.NextWeapon();
 }
 
 simulated function PrevWeapon()
 {
-    if (!IsWeaponBusy())
+    if (IsWeaponBusy())
     {
-        super.PrevWeapon();
+        return;
     }
+
+    SetIsZoomed(false);
+
+    super.PrevWeapon();
 }
 
 function bool CanFire()

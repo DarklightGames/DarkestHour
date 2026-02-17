@@ -20,23 +20,27 @@
 // [ ] display the number of barrels on the HUD (flash red when a barrel is
 //     broken and show button prompt to change it, if applicable)
 // [ ] shooting the sight should break it!
-// [ ] maybe reloads should be totally manual?
+// [ ] maybe reloads should be totally manual? [working on it but this probably breaks hetzer reload? investigate.]
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] picking up the gun and putting it down again resets the barrel conditions.
+// [ ] smoking barrels stay in place after picking up the gun (probably orphaned actors)
 // [ ] some sort of issues with texturing of interior parts of cannons?
 //     (refactoring change regression?)
+// [ ] picking up the gun and putting it down again resets the barrel conditions.
 // [ ] "exit position not found" error if you try to exit in some places
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
-//      the mouse
+//      the mouse (this is due to AllowFire being used as a gate for "can the
+//      gun move")
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
-//      maybe just *all* vehicles)
-// [ ] going onto the gun after changing positions doesn't reset the camera
-// [ ] reload can be initiated in the raised position
-// [ ] when getting on the gun for the first time, the gun will reload
+//      maybe just *all* vehicles where you're changing to the same position?)
+// [ ] reload can be initiated in the raised position; what should this do instead?
+//      when the user press the reload, we can do two things:
+//      1. set a flag saying that a reload is pending.
+//      2. set a "desired position index"; the user will automatically transition to it.
+//      3. when the user gets to the position where they can reload, it will be automatically triggered by checking the flag.
+// [ ] sometimes, when getting on the gun for the first time, the gun will reload
 //      immediately for no reason (with no animation)
-// [ ] camera slightly fucky on first enter
 // [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
 //     the camera rotation and barrel rotation angles). some sort of correction
 //     may be needed.

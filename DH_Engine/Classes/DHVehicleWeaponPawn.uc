@@ -563,21 +563,21 @@ function CheckResumeReloadingOnEntry()
 // Modified to make generic, for any vehicle weapon (not just cannon) & returning part reloaded values based on ReloadStages array
 function float GetAmmoReloadState()
 {
-    if (VehWep != none)
+    if (VehWep == none)
     {
-        if (VehWep.ReloadState == RL_ReadyToFire)
-        {
-            return 0.0;
-        }
-        else if (VehWep.ReloadState == RL_Waiting || VehWep.ReloadState == RL_ReloadingPart1)
-        {
-            return 1.0;
-        }
-
-        return VehWep.ReloadStages[VehWep.ReloadState].HUDProportion;
+        return 0.0;
     }
 
-    return 0.0;
+    switch (VehWep.ReloadState)
+    {
+        case RL_ReadyToFire:
+            return 0.0;
+        case RL_Waiting:
+        case RL_ReloadingPart1:
+            return 1.0;   
+        default:
+            return VehWep.ReloadStages[VehWep.ReloadState].HUDProportion;
+    }
 }
 
 // New helper function to check whether player is in a position where he can reload the weapon - implement functionality in subclasses as required
