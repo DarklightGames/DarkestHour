@@ -13,6 +13,7 @@ defaultproperties
     Spread=190.0
     MaxVerticalRecoilAngle=500
     MaxHorizontalRecoilAngle=250
+    FireRate=0.21
 
     FireSounds(0)=SoundGroup'Inf_Weapons.lugerp08_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.lugerp08_fire02'
