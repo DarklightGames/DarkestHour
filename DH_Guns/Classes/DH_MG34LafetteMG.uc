@@ -41,9 +41,6 @@
 //      3. when the user gets to the position where they can reload, it will be automatically triggered by checking the flag.
 // [ ] sometimes, when getting on the gun for the first time, the gun will reload
 //      immediately for no reason (with no animation)
-// [ ] sight is misaligned with barrel at "extreme" yaw angles (add a debug for
-//     the camera rotation and barrel rotation angles). some sort of correction
-//     may be needed.
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;
@@ -106,8 +103,6 @@ defaultproperties
     ShellEjectBone="LAFETTE_EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=8192,Yaw=16384,Roll=8192)
-
-    ProjectileRotationMode=PRM_CurrentAim
 
     WeaponFireOffset=-10
 

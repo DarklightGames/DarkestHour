@@ -776,6 +776,35 @@ simulated function PauseAnyReloads()
     GotoState('');
 }
 
+// Modifed to take the ProjectileRotationMode into account.
+simulated function CalcWeaponFire(bool bWasAltFire)
+{
+    local name      WeaponFireAttachBone;
+    local Vector    CurrentFireOffset;
+    local Coords    MuzzleCoords;
+
+    // Get attachment bone & positional offset
+    WeaponFireAttachBone = WeaponFireAttachmentBone;
+    CurrentFireOffset.X = WeaponFireOffset;
+
+    switch (ProjectileRotationMode)
+    {
+        case PRM_CurrentAim:
+            WeaponFireRotation = Rotator(Vector(CurrentAim) >> Rotation);
+            break;
+        case PRM_MuzzleBone:
+            WeaponFireRotation = GetBoneRotation(WeaponFireAttachBone);
+            break;
+    }
+
+    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+    
+    if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
+    {
+        WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
+    }
+}
+
 defaultproperties
 {
     YawBone="MG_YAW"
