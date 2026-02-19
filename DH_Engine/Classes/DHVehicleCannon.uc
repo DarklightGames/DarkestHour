@@ -1877,7 +1877,6 @@ simulated function CalcWeaponFire(bool bWasAltFire)
         }
     }
 
-
     switch (ProjectileRotationMode)
     {
         case PRM_CurrentAim:

@@ -299,7 +299,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     YPos += YL;
     Canvas.SetPos(4.0, YPos);
 
-    // Show the barrel info - only works in multi-player as barrel actors don't exist on net clients
+    // Show the barrel info - only works in single-player as barrel actors don't exist on net clients
     if (Role == ROLE_Authority)
     {
         for (i = 0; i < Barrels.Length; ++i)
