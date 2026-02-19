@@ -5,10 +5,6 @@
 
 class DHMineVolume extends ROMineVolume;
 
-// Theel: Actors that are bStatic=true are not iterated with events and thus cannot be triggered, this is why the genius you are, added level actors to change them
-// Just use level actors to modify volumes!!!!!!!!!!!!!!!!!!!!!!!
-// YOU LOSE GOOD DAY SIR
-
 /**
 Matt's explanation of several nasty bugs in ROMineVolume, especially when mine volume is activated during the round, e.g. by a spawn:
 
