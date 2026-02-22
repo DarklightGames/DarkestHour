@@ -388,7 +388,9 @@ simulated state LeavingViewTransition
 {
     simulated function BeginState()
     {
-        if (VehWep != none && (VehWep.ReloadState == RL_Waiting || (VehWep.bReloadPaused && VehWep.ReloadState < RL_ReadyToFire)))
+        if (VehWep != none && 
+            (VehWep.ReloadState == RL_Waiting || (VehWep.bReloadPaused && VehWep.ReloadState < RL_ReadyToFire)) &&
+            !VehWep.PlayerUsesManualReloading())
         {
             VehWep.AttemptReload();
         }

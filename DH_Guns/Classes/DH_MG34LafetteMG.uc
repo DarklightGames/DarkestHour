@@ -20,7 +20,6 @@
 // [ ] display the number of barrels on the HUD (flash red when a barrel is
 //     broken and show button prompt to change it, if applicable)
 // [ ] shooting the sight should break it!
-// [ ] maybe reloads should be totally manual? [working on it but this probably breaks hetzer reload? investigate.]
 // [ ] should be destroyable by enough explosives, not just direct hits
 //==============================================================================
 // BUGS
@@ -30,18 +29,15 @@
 // [ ] "exit position not found" error if you try to exit in some places
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
 //      maybe just *all* vehicles where you're changing to the same position?)
-// [ ] reload can be initiated in the raised position; what should this do instead?
-//      when the user press the reload, we can do two things:
-//      1. set a flag saying that a reload is pending.
-//      2. set a "desired position index"; the user will automatically transition to it.
-//      3. when the user gets to the position where they can reload, it will be automatically triggered by checking the flag.
 // [ ] sometimes, when getting on the gun for the first time, the gun will reload
 //      immediately for no reason (with no animation)
 //==============================================================================
 // BARREL BUGS
 //==============================================================================
+// [ ] can "swap barrel" from any position; use the same action queuing system
+//     as the reloads to make sure it can only do it from the ironsight position.
 // [ ] smoking barrels stay in place after picking up the gun (probably orphaned actors)
-// [ ] picking up the gun and putting it down again resets the barrel conditions.
+// [ ] picking up the gun and putting it down again resets the barrel conditions [no persistence!]
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
 //      the mouse (this is due to AllowFire being used as a gate for "can the
 //      gun move")

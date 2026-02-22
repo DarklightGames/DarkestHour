@@ -776,6 +776,13 @@ simulated function PauseAnyReloads()
     GotoState('');
 }
 
+// Modified because we want mounted MGs to always use manual reloading because
+// we want them to feel like normal infantry weapons, not vehicle weapons.
+simulated function bool PlayerUsesManualReloading()
+{
+    return true;
+}
+
 // Modifed to take the ProjectileRotationMode into account.
 simulated function CalcWeaponFire(bool bWasAltFire)
 {

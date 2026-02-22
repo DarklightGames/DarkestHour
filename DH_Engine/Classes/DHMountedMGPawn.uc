@@ -44,6 +44,16 @@ var DHCameraTransitionController CameraTransitionController;
 var int IronSightsPositionIndex;
 var int GunsightPositionIndex;
 
+var enum EPendingAction
+{
+    ACTION_None,
+    ACTION_Reload,
+    ACTION_BarrelChange,
+} PendingAction;
+
+// The position index that we want to go to. -1 when inactive. This should be client-only.
+var int DriverPositionIndexTarget;
+
 // Extra info for driver positions.
 struct PositionInfoExtra
 {
@@ -85,6 +95,65 @@ simulated state ViewTransition
         super.EndState();
 
         CameraTransitionController.SetCurrentCameraBone(GetCameraBoneForPosition(DriverPositionIndex));
+    }
+}
+
+simulated private function SetDriverPositionIndexTarget(int NewDriverPositionIndexTarget)
+{
+    DriverPositionIndexTarget = NewDriverPositionIndexTarget;
+
+    MaybeTransitionToTargetDriverPosition();
+}
+
+simulated private function bool MaybeTransitionToTargetDriverPosition()
+{
+    if (DriverPositionIndexTarget == -1)
+    {
+        return false;
+    }
+
+    if (DriverPositionIndex < DriverPositionIndexTarget)
+    {
+        NextWeapon();
+        return true;
+    }
+    else if (DriverPositionIndex > DriverPositionIndexTarget)
+    {
+        PrevWeapon();
+        return true;
+    }
+
+    return false;
+}
+
+simulated state LeavingViewTransition
+{
+    // Modified to add automatic transitioning to a target position index.
+    simulated function BeginState()
+    {
+        if (DriverPositionIndex == DriverPositionIndexTarget)
+        {
+            // We have arrived at the target index. Reset it.
+            DriverPositionIndexTarget = -1;
+        }
+
+        if (DriverPositionIndexTarget != -1)
+        {
+            MaybeTransitionToTargetDriverPosition();
+        }
+        else  if (PendingAction == ACTION_Reload)
+        {
+            AttemptReload();
+        }
+        else if (PendingAction == ACTION_BarrelChange)
+        {
+            AttemptBarrelChange();
+        }
+        else
+        {
+            // Do normal 
+            super.BeginState();
+        }
     }
 }
 
@@ -550,16 +619,37 @@ function OnFire()
     BeltActor.PlayFiringAnimation(Gun.MainAmmoCharge[0]);
 }
 
-exec function ROMGOperation()
+// Attempt to change barrels. Returns true if the barrel change was initiated.
+simulated function bool AttemptBarrelChange()
 {
     local DHMountedMG MG;
 
     MG = DHMountedMG(Gun);
 
-    if (MG != none && MG.TryChangeBarrels())
+    if (MG.TryChangeBarrels())
     {
-        // We're changing barrels, so un-zoom.
+        // We're changing barrels, so un-zoom.    {
         SetIsZoomed(false);
+
+        PendingAction = ACTION_None;
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to add barrel change functionality.
+exec function ROMGOperation()
+{
+    if (CanReloadInDriverPositionIndex(DriverPositionIndex))
+    {
+        AttemptBarrelChange();
+    }
+    else
+    {
+        PendingAction = ACTION_BarrelChange;
+        SetDriverPositionIndexTarget(IronSightsPositionIndex);
     }
 }
 
@@ -589,6 +679,37 @@ exec function SetGunsightPitchOffset(float NewPitchOffset)
     {
         MG.RangeParams.RangeTable[MG.RangeIndex].GunsightPitch = NewPitchOffset;
     }
+}
+
+simulated function bool CanReloadInDriverPositionIndex(int DriverPositionIndex)
+{
+    return DriverPositionIndex == IronSightsPositionIndex;
+}
+
+simulated function AttemptReload()
+{
+    if (VehWep == none || IsWeaponBusy())
+    {
+        return;
+    }
+
+    if (CanReloadInDriverPositionIndex(DriverPositionIndex))
+    {
+        PendingAction = ACTION_None;
+        VehWep.AttemptReload();
+    }
+    else
+    {
+        // We are not in the right position to reload.
+        // Set the driver position index target and flag a reload as pending.
+        PendingAction = ACTION_Reload;
+        SetDriverPositionIndexTarget(IronSightsPositionIndex);
+    }
+}
+
+exec simulated function ROManualReload()
+{
+    AttemptReload();
 }
 
 defaultproperties
