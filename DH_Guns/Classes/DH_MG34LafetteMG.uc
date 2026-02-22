@@ -34,8 +34,6 @@
 //==============================================================================
 // BARREL BUGS
 //==============================================================================
-// [ ] can "swap barrel" from any position; use the same action queuing system
-//     as the reloads to make sure it can only do it from the ironsight position.
 // [ ] smoking barrels stay in place after picking up the gun (probably orphaned actors)
 // [ ] picking up the gun and putting it down again resets the barrel conditions [no persistence!]
 // [ ] destoying a barrel also stops you from being able to rotate the gun with
