@@ -38,9 +38,9 @@ defaultproperties
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         // TODO: have exports at 3 different pitches for better blending
-        Sequences(0)="MG34_GUNNER_YAW"
-        Sequences(1)="MG34_GUNNER_YAW"
-        Sequences(2)="MG34_GUNNER_YAW"
+        Sequences(0)="MG34_GUNNER_YAW_2"
+        Sequences(1)="MG34_GUNNER_YAW_1"
+        Sequences(2)="MG34_GUNNER_YAW_0"
         SequenceChannel=4
         BlendChannel=5
         SequenceInputType=DIT_Yaw

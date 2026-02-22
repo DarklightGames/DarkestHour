@@ -5,7 +5,7 @@
 // ART
 //==============================================================================
 // [ ] collision shapes
-// [ ] destroyed mesh for all variants (low, mid, high)
+// [ ] destroyed mesh for all variants
 ///==============================================================================
 // ANIMATIONS
 //==============================================================================
@@ -21,17 +21,13 @@
 //     broken and show button prompt to change it, if applicable)
 // [ ] shooting the sight should break it!
 // [ ] maybe reloads should be totally manual? [working on it but this probably breaks hetzer reload? investigate.]
+// [ ] should be destroyable by enough explosives, not just direct hits
 //==============================================================================
 // BUGS
 //==============================================================================
-// [ ] smoking barrels stay in place after picking up the gun (probably orphaned actors)
 // [ ] some sort of issues with texturing of interior parts of cannons?
 //     (refactoring change regression?)
-// [ ] picking up the gun and putting it down again resets the barrel conditions.
 // [ ] "exit position not found" error if you try to exit in some places
-// [ ] destoying a barrel also stops you from being able to rotate the gun with
-//      the mouse (this is due to AllowFire being used as a gate for "can the
-//      gun move")
 // [ ] pressing 1 resets the view; this should be disabled for mounted MGs (or
 //      maybe just *all* vehicles where you're changing to the same position?)
 // [ ] reload can be initiated in the raised position; what should this do instead?
@@ -41,6 +37,14 @@
 //      3. when the user gets to the position where they can reload, it will be automatically triggered by checking the flag.
 // [ ] sometimes, when getting on the gun for the first time, the gun will reload
 //      immediately for no reason (with no animation)
+//==============================================================================
+// BARREL BUGS
+//==============================================================================
+// [ ] smoking barrels stay in place after picking up the gun (probably orphaned actors)
+// [ ] picking up the gun and putting it down again resets the barrel conditions.
+// [ ] destoying a barrel also stops you from being able to rotate the gun with
+//      the mouse (this is due to AllowFire being used as a gate for "can the
+//      gun move")
 //==============================================================================
 
 class DH_MG34LafetteMG extends DHMountedMG;

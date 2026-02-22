@@ -25,9 +25,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_MG34LafetteMGPawn',WeaponBone="TURRET_PLACEMENT")
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
-    VehicleHudImage=Texture'DH_Maxim_tex.MAXIM_BODY_ICON'
-    VehicleHudTurret=TexRotator'DH_Maxim_tex.MAXIM_TURRET_ROT'
-    VehicleHudTurretLook=TexRotator'DH_Maxim_tex.MAXIM_TURRET_LOOK'
+    VehicleHudImage=Texture'DH_MG34_tex.LAFETTE_BODY_ICON'
+    VehicleHudTurret=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_ROT'
+    VehicleHudTurretLook=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_LOOK'
     MountedWeaponClass=Class'DH_MG34LafetteWeapon'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)
