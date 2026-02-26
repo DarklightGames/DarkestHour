@@ -9,7 +9,6 @@
 ///==============================================================================
 // ANIMATIONS
 //==============================================================================
-// [ ] third person pitch/yaw animations
 // [ ] first person reload animation
 // [ ] first person barrel change animation
 // [ ] third person reload animations
@@ -31,6 +30,9 @@
 //      maybe just *all* vehicles where you're changing to the same position?)
 // [ ] sometimes, when getting on the gun for the first time, the gun will reload
 //      immediately for no reason (with no animation)
+// [ ] getting off while reloading then re-entering finishes the reload, with no
+//      anim, starts from the beginning (when the player leaves, reset any state
+//      that would cause this).
 //==============================================================================
 // BARREL BUGS
 //==============================================================================
@@ -45,7 +47,7 @@ class DH_MG34LafetteMG extends DHMountedMG;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'  // TODO: replace with EXT version
+    Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'
     // Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
 
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
