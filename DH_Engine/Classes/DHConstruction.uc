@@ -606,9 +606,9 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments(int 
     foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
         if (Attachment.IsTouchingActor(self) && Attachment.GetTeamIndex() == TeamIndex)
-            {
-                Attachments[Attachments.Length] = Attachment;
-            }
+        {
+            Attachments[Attachments.Length] = Attachment;
+        }
     }
 
     return Attachments;
