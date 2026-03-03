@@ -598,14 +598,14 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
+function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments(int TeamIndex)
 {
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
     foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
-        if (Attachment.IsTouchingActor(self))
+        if (Attachment.IsTouchingActor(self) && Attachment.GetTeamIndex() == TeamIndex)
         {
             Attachments[Attachments.Length] = Attachment;
         }
@@ -628,7 +628,7 @@ function int RefundSupplies(Pawn Instigator)
     if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
-        Attachments = GetTouchingSupplyAttachments();
+        Attachments = GetTouchingSupplyAttachments(Instigator.GetTeamNum());
         AttachmentComparator = new Class'UComparator';
         AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
         Class'USort'.static.Sort(Attachments, AttachmentComparator);
