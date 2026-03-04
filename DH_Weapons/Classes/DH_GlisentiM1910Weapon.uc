@@ -40,6 +40,6 @@ defaultproperties
     SprintEndAnimRate=1.0
     SprintLoopAnimRate=1.0
 
-    // WeaponComponentAnimations(0)=(DriverType=DRIVER_MagazineAmmunition,Channel=1,Animation="driver_magazine",BoneName="MAGAZINE_INTERNALS")
-    // WeaponComponentAnimations(1)=(DriverType=DRIVER_Slide,Channel=2,Animation="driver_slide",BoneName="SLIDE",bStartMuted=true)
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_MagazineAmmunition,Channel=1,Animation="DRIVER_MAGAZINE",BoneName="MAGAZINE_INTERNALS")
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Slide,Channel=2,Animation="DRIVER_SLIDE",BoneName="SLIDE",bStartMuted=true)
 }
