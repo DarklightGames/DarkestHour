@@ -14,6 +14,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=Class'DH_CarcanoM91Weapon',AssociatedAttachment=Class'DH_CarcanoM91AmmoPouch')
 
     SecondaryWeapons(0)=(Item=Class'DH_BerettaM1934Weapon',AssociatedAttachment=Class'DH_BerettaM1934AmmoPouch')
+    SecondaryWeapons(1)=(Item=Class'DH_GlisentiM1910Weapon',AssociatedAttachment=Class'DH_BerettaM1934AmmoPouch')
 
     Grenades(0)=(Item=Class'DH_SRCMMod35GrenadeWeapon')
     Grenades(1)=(Item=Class'DH_SRCMMod35SmokeGrenadeWeapon')
