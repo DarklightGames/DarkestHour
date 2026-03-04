@@ -7,7 +7,7 @@ class DH_MG42LafetteMG extends DHMountedMG;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'  // replace with 42
+    Mesh=SkeletalMesh'DH_MG34_anm.MG42_TURRET_INT'  // replace with EXT
 
     // Begin Object Class=DHWeaponRangeParams Name=RangeParams0
     //     DistanceUnit=DU_Meters

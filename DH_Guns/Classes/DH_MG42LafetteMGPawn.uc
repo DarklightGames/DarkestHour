@@ -14,10 +14,10 @@ defaultproperties
     DriveAnim="cv33_gunner_closed"   // TODO: replace with the idle animation.
     InitialPositionIndex=1
     // todo: REPLACE WITH MG42 MESHES
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=30.0,bDrawOverlays=true,TransitionUpAnim="OVERLAY_OUT")
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG42_TURRET_INT',bExposed=true,ViewFOV=30.0,bDrawOverlays=true,TransitionUpAnim="OVERLAY_OUT")
     // NOTE: 72.5 FOV is calibrated to not clip into the gun in 4:3 aspect ratio.
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN",TransitionUpAnim="RAISE")
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="LOWER")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG42_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="OVERLAY_IN",TransitionUpAnim="RAISE")
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_MG34_anm.MG42_TURRET_INT',bExposed=true,ViewFOV=72.5,TransitionDownAnim="LOWER")
 
     DriverPositionsExtra(0)=(CameraBone="")
     DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
