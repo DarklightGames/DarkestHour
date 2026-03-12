@@ -15,10 +15,6 @@ defaultproperties
 
     IronSightsPositionIndex=0
 
-    // DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA")
-    // DriverPositionsExtra(1)=(CameraBone="IRONSIGHT_CAMERA")
-    // DriverPositionsExtra(2)=(CameraBone="")
-
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
         Sequences(0)="fiat1435_gunner_yaw_driver"
         SequenceInputType=DIT_Yaw

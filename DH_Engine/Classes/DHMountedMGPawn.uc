@@ -59,7 +59,7 @@ struct PositionInfoExtra
 {
     var name CameraBone;
 };
-var array<PositionInfoExtra> DriverPositionsExtra;
+var() array<PositionInfoExtra> DriverPositionsExtra;
 
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
