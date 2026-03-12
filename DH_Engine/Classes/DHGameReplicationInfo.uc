@@ -208,8 +208,13 @@ var byte                                bOffMapArtilleryEnabled[2];
 var byte                                bOnMapArtilleryEnabled[2];
 
 // Delayed round ending
-var byte   RoundWinnerTeamIndex;
-var string RoundEndReason;
+enum ERoundEndReason
+{
+    REASON_Surrendered,
+};
+
+var byte            DelayedRoundWinnerTeamIndex;
+var ERoundEndReason DelayedRoundEndReason;
 
 var         bool bIsSurrenderVoteEnabled;
 var private byte SurrenderVotesInProgress[2];
@@ -266,7 +271,7 @@ replication
         bIsDangerZoneEnabled,
         DangerZoneNeutral,
         DangerZoneBalance,
-        RoundWinnerTeamIndex,
+        DelayedRoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
         Constructions,
@@ -2430,7 +2435,7 @@ defaultproperties
     AxisVictoryMusicIndex=-1
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
-    RoundWinnerTeamIndex=255
+    DelayedRoundWinnerTeamIndex=255
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
