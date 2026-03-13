@@ -7,7 +7,7 @@ class DH_CarcanoM9138CarbineMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    BayonetTraceRange=118.0 // -23% from Fucile mod. 91
+    BayonetTraceRange=130.0 // -10 (only ~150mm shorter than kar98k)
     FireRate=0.23 // -0.02
     DamageType=Class'DH_Weapons.DH_CarcanoM9138CarbineBashDamType'
     BayonetDamageType=Class'DH_Weapons.DH_CarcanoM9138CarbineBayonetDamType'
