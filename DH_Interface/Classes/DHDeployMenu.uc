@@ -454,7 +454,7 @@ function UpdateStatus()
         bSurrenderButtonEnabled = bSurrenderButtonEnabled &&
                                   (Class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
                                   !GRI.IsSurrenderVoteInProgress(PC.GetTeamNum()) &&
-                                  GRI.RoundWinnerTeamIndex > 1;
+                                  GRI.DelayedRoundWinnerTeamIndex > 1;
     }
 
     SetEnabled(b_MenuOptions[2], bSurrenderButtonEnabled);

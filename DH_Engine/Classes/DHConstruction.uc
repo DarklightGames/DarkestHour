@@ -575,14 +575,14 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
+function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments(int TeamIndex)
 {
     local array<DHConstructionSupplyAttachment> Attachments;
     local DHConstructionSupplyAttachment Attachment;
 
     foreach DynamicActors(Class'DHConstructionSupplyAttachment', Attachment)
     {
-        if (Attachment.IsTouchingActor(self))
+        if (Attachment.IsTouchingActor(self) && Attachment.GetTeamIndex() == TeamIndex)
         {
             Attachments[Attachments.Length] = Attachment;
         }
@@ -605,7 +605,7 @@ function int RefundSupplies(Pawn Instigator)
     if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
-        Attachments = GetTouchingSupplyAttachments();
+        Attachments = GetTouchingSupplyAttachments(Instigator.GetTeamNum());
         AttachmentComparator = new Class'UComparator';
         AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
         Class'USort'.static.Sort(Attachments, AttachmentComparator);
@@ -1094,6 +1094,12 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
         return false;
     }
 
+    // If this type is restricted by the level, don't show it on the menu.
+    if (IsConstructionRestricted(Context))
+    {
+        return false;
+    }
+
     // Only show constructions the player is allowed to place
     if (PRI != none)
     {
@@ -1108,6 +1114,16 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 {
     return PRI.IsSLorASL();
+}
+
+static function bool IsConstructionRestricted(DHActorProxy.Context Context)
+{
+    if (Context.LevelInfo != none && Context.LevelInfo.IsConstructionRestricted(default.Class))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 // This function is used for determining if a player is able to build this type
@@ -1129,7 +1145,7 @@ static function DHActorProxy.ActorProxyError GetContextError(DHActorProxy.Contex
         return E;
     }
 
-    if (Context.LevelInfo != none && Context.LevelInfo.IsConstructionRestricted(default.Class))
+    if (IsConstructionRestricted(Context))
     {
         E.Type = ERROR_RestrictedType;
         return E;

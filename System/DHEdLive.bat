@@ -1,5 +1,4 @@
-echo Resetting window positions...
-python ..\tools\scripts\clear-windowpositions.py ..\DarkestHour\System\DarkestHourUser.ini
+@echo OFF
+cd "%~dp0"
 
-echo Launching DHEd...
-start ROEdLAA.exe %* -mod=DarkestHour -nogamma
+call "%~dp0sdk_launcher.bat" -mod DarkestHour %*
