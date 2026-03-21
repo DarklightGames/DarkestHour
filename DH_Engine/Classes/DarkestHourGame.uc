@@ -82,12 +82,6 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
 var()   config bool                 bIsSurrenderVoteEnabled;
-var()   config int                  SurrenderCooldownSeconds;               // The time between the votes
-var()   config int                  SurrenderEndRoundDelaySeconds;          // The time delay before the round ends
-var()   config int                  SurrenderRoundTimeRequiredSeconds;      // How soon the vote can be nominated
-var()   config float                SurrenderReinforcementsRequiredPercent; // How short on tickets the team needs to be
-var()   config float                SurrenderNominationsThresholdPercent;   // Nominations needed to start the vote
-var()   config float                SurrenderVotesThresholdPercent;         // "Yes" votes needed for the vote to pass
 
 var()   config bool                 bBigBalloony;
 
@@ -3101,7 +3095,7 @@ state ResetGameCountdown
 
             if (GRI != none)
             {
-                GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
+                GRI.DelayedRoundWinnerTeamIndex = GRI.default.DelayedRoundWinnerTeamIndex;
                 GRI.DangerZoneUpdated();
             }
 
@@ -4383,26 +4377,15 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     }
 }
 
-function DelayedEndRound(int Delay, string Reason, byte WinnerTeamIndex, class<LocalMessage> WinnerMessageClass, int WinnerMessageOption, class<LocalMessage> LoserMessageClass, int LoserMessageOption)
+function DelayedEndRound(int Delay, DHGameReplicationInfo.ERoundEndReason Reason, byte WinnerTeamIndex, class<LocalMessage> WinnerMessageClass, int WinnerMessageOption, class<LocalMessage> LoserMessageClass, int LoserMessageOption)
 {
-    local string WinnerTeamName;
-
-    if (GRI == none || !IsInState('RoundInPlay') || GRI.RoundWinnerTeamIndex < 2)
+    if (GRI == none || !IsInState('RoundInPlay') || GRI.DelayedRoundWinnerTeamIndex < 2)
     {
         return;
     }
 
-    switch (WinnerTeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            WinnerTeamName = "Axis";
-            break;
-        case ALLIES_TEAM_INDEX:
-            WinnerTeamName = "Allies";
-    }
-
-    GRI.RoundWinnerTeamIndex = WinnerTeamIndex;
-    GRI.RoundEndReason = Repl(Reason, "{0}", WinnerTeamName); // "The {0} has won the round because..."
+    GRI.DelayedRoundWinnerTeamIndex = WinnerTeamIndex;
+    GRI.DelayedRoundEndReason = Reason;
 
     ModifyRoundTime(Delay, 2);
 
@@ -4426,10 +4409,13 @@ function ChooseWinner()
     }
 
     // Delayed round ending
-    if (GRI.RoundWinnerTeamIndex < 2)
+    if (GRI.DelayedRoundWinnerTeamIndex < 2)
     {
-        Level.Game.Broadcast(self, GRI.RoundEndReason, 'Say');
-        EndRound(GRI.RoundWinnerTeamIndex);
+        // "The round has ended because a team voted to retreat."
+        BroadcastLocalizedMessage(Class'DHRoundEndReasonMessage', int(GRI.DelayedRoundEndReason));
+
+        EndRound(GRI.DelayedRoundWinnerTeamIndex);
+
         return;
     }
 
@@ -5854,12 +5840,6 @@ defaultproperties
     bIsDangerZoneEnabled=true
 
     bIsSurrenderVoteEnabled=true
-    SurrenderCooldownSeconds=300
-    SurrenderEndRoundDelaySeconds=15
-    SurrenderRoundTimeRequiredSeconds=900
-    SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
-    SurrenderNominationsThresholdPercent=0.15
-    SurrenderVotesThresholdPercent=0.6
 
     GameDifficulty=4    // For arcane reasons, this has to be >3 so that self-inflicted damage isn't reduced.
 }

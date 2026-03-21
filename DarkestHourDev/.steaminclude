@@ -1,10 +1,15 @@
 DarkestHourDev/*
 Web/DHImages/*
 Web/DHServerAdmin/*
+System/EditorSelectionFix/*
 System/RedOrchestraLargeAddressAware.exe
 System/ROEdLAA.exe
 System/DHMapVotingInfo.ini
 System/dh_server_launcher.bat
+System/DHEdLive.bat
+System/sdk_launcher.bat
+tools/scripts/clear-windowpositions.bat
+tools/scripts/clear-windowpositions.ps1
 bdk-default.json
 
 !*.git

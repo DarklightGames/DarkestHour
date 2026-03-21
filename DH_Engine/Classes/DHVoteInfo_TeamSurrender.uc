@@ -5,6 +5,9 @@
 
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
 
+var() config int    EndRoundDelaySeconds;       // The time delay before the round ends after the vote has passed.
+var() config int    RoundTimeRequiredSeconds;   // How soon the vote can be nominated after a round begins.
+
 function array<PlayerController> GetEligibleVoters()
 {
     local array<PlayerController> EligibleVoters;
@@ -76,8 +79,8 @@ function OnVoteEnded()
     if (bVotePassed)
     {
         // Inform both teams and end the round after a brief delay.
-        G.DelayedEndRound(G.default.SurrenderEndRoundDelaySeconds,
-                          "The {0} won the round because the other team has retreated",
+        G.DelayedEndRound(default.EndRoundDelaySeconds,
+                          REASON_Surrendered,
                           int(!bool(TeamIndex)),
                           Class'DHEnemyInformationMsg',
                           1,
@@ -174,7 +177,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
         return false;
     }
 
-    if (GRI.RoundWinnerTeamIndex < 2)
+    if (GRI.DelayedRoundWinnerTeamIndex < 2)
     {
         PC.ClientTeamSurrenderResponse(7);
         return false;
@@ -198,7 +201,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     }
 
     // You cannot vote to surrender this early.
-    if (GetRoundTimeRequiredSeconds() >= GRI.ElapsedTime)
+    if (default.RoundTimeRequiredSeconds >= GRI.ElapsedTime)
     {
         PC.ClientTeamSurrenderResponse(9);
         return false;
@@ -228,31 +231,6 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     return true;
 }
 
-static function float GetNominationsThresholdPercent()
-{
-    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderNominationsThresholdPercent);
-}
-
-static function float GetVotesThresholdPercent()
-{
-    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderVotesThresholdPercent);
-}
-
-static function float GetReinforcementsRequiredPercent()
-{
-    return FMax(0.0, Class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent);
-}
-
-static function int GetRoundTimeRequiredSeconds()
-{
-    return Max(0, Class'DarkestHourGame'.default.SurrenderRoundTimeRequiredSeconds);
-}
-
-static function int GetCooldownSeconds()
-{
-    return Max(0, Class'DarkestHourGame'.default.SurrenderCooldownSeconds);
-}
-
 defaultproperties
 {
     QuestionText="Do you want to retreat to fight another day?"
@@ -262,6 +240,10 @@ defaultproperties
     // Players notoriously refuse to surrender even when they're getting their
     // asses handed to them and the team is screaming at each other and
     // completely demoralized. Plus some people are dummies and don't vote.
-    // For everyone's sanity, we set this at 40%.
-    VotesThresholdPercent=0.4
+    // This has been adjusted many times.
+    VotesThresholdPercent=0.66666666
+    CooldownSeconds=300
+    EndRoundDelaySeconds=15
+    RoundTimeRequiredSeconds=900
+    NominationsThresholdPercent=0.15
 }
