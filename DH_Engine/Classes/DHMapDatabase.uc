@@ -341,4 +341,6 @@ defaultproperties
     MapInfos(185)=(Name="DH-Haunted_Darkest_Wonderland",AlliedNation=NATION_USA,GameTypeClass=Class'DHGameType_Advance',Size=SIZE_Any)
     MapInfos(186)=(Name="DH-San_Celeste_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=Class'DHGameType_Defence',Size=SIZE_Small)
     MapInfos(187)=(Name="DH-Hurtgen_Village_Push",AlliedNation=NATION_USA,AxisNation=NATION_Germany,GameTypeClass=Class'DHGameType_Push',Size=SIZE_Medium)
+    MapInfos(188)=(Name="DH-Armored_St_Lambert_Domination",AlliedNation=NATION_Canada,AxisNation=NATION_Germany,GameTypeClass=Class'DHGameType_Domination',Size=SIZE_Any)
+    MapInfos(189)=(Name="DH-Armored_Orel_Domination",AlliedNation=NATION_USSR,AxisNation=NATION_Germany,GameTypeClass=Class'DHGameType_Domination',Size=SIZE_Any)
 }
