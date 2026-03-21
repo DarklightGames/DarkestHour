@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_WHArtilleryGunner extends DHGETankCrewmanRoles;
+class DH_WHArtilleryGunner extends DHGERiflemanRoles;
 
 defaultproperties
 {
@@ -14,6 +14,5 @@ defaultproperties
     Headgear(0)=Class'DH_HeerHelmetThree'
     Headgear(1)=Class'DH_HeerHelmetTwo'
 
-    PrimaryWeapons(0)=(Item=Class'DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=none)
+    Grenades(0)=(Item=none)
 }
