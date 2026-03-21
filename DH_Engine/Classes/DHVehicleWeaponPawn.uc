@@ -501,7 +501,7 @@ function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
     }
 }
 
-// New function to check whether player is in a view position where he can fire the weapon - implement functionality in subclasses as required
+// New function to check whether player is in a view position where he can fire the weapon.
 function bool CanFire()
 {
     return true;

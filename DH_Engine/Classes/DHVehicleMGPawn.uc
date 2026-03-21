@@ -218,7 +218,12 @@ function Fire(optional float F)
         }
     }
 
-    if (CanFire() && !ArePlayersWeaponsLocked())
+    if (ArePlayersWeaponsLocked())
+    {
+        return;
+    }
+
+    if (CanFire())
     {
         super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
 
