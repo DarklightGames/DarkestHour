@@ -4,7 +4,7 @@
 //==============================================================================
 // ART
 //==============================================================================
-// [ ] collision shapes
+// [~] collision shapes (low variant needs a different mesh entirely)
 // [ ] destroyed mesh for all variants
 ///==============================================================================
 // ANIMATIONS
@@ -33,6 +33,7 @@
 // [ ] getting off while reloading then re-entering finishes the reload, with no
 //      anim, starts from the beginning (when the player leaves, reset any state
 //      that would cause this).
+// [ ] the gun probably shouldn't literally explode and smoke when it dies. just toppling over should be enough.
 //==============================================================================
 // BARREL BUGS
 //==============================================================================
@@ -117,7 +118,7 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Maxim_stc.MAXIM_TURRET_PITCH_COLLISION',AttachBone="MG_PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_MG34_stc.MG34_TURRET_PITCH_COLLISION',AttachBone="PITCH")
 
     // Pitch rack animation driver
     AnimationDrivers(0)=(BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=11,Channel=3,RotationType=ROTATION_Pitch)
