@@ -24,7 +24,6 @@ defaultproperties
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     ShadowZOffset=20.0
     bIsArtilleryVehicle=true
-    RotateCooldown=2
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

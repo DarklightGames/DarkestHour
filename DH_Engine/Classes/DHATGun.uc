@@ -820,7 +820,7 @@ defaultproperties
     PlayersNeededToRotate=1
     RotationsPerSecond=0.03125
     bFixedRotationDir=false
-    RotateCooldown=5
+    RotateCooldown=2
     InteractRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
     RotateSoundVolume=200
