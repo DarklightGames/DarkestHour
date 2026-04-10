@@ -8,4 +8,6 @@ class DH_SdKfz251_22CannonPawn extends DH_Pak40CannonPawn;
 defaultproperties
 {
     GunClass=Class'DH_SdKfz251_22Cannon'
+
+    bMustBeTankCrew=true
 }
