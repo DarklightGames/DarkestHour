@@ -3,9 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M1919A4MG extends DH_Fiat1435MG
-    // abstract
-    ;
+class DH_M1919A4MG extends DHMountedMG;
 
 defaultproperties
 {
