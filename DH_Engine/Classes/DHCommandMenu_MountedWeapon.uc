@@ -4,7 +4,12 @@
 //==============================================================================
 
 class DHCommandMenu_MountedWeapon extends DHCommandMenu
-    dependson(DHATGun);
+    dependson(DHMountedGun);
+
+const ROTATE_OPTION_INDEX = 0;
+const PICK_UP_OPTION_INDEX = 1;
+const UNMOUNT_OPTION_INDEX = 2;
+const MOUNT_OPTION_INDEX = 3;
 
 var localized string EnemyGunText;
 var localized string CannotBeRotatedText;
@@ -13,14 +18,59 @@ var localized string OccupiedText;
 var localized string FatalText;
 var localized string CooldownText;
 var localized string BusyText;
-var localized string CannotBePickUpText;
+var localized string CannotBePickedUpText;
 var localized string PlayerMovingText;
+var localized string AlreadyUnmountedText;
+var localized string AlreadyMountedText;
+var localized string AlreadyHasWeaponText;
+var localized string IncompatibleWeapon;
 
-var DHATGun.ERotateError RotationError;
-var DHATGun.EPickUpError PickUpError;
-var int                  TeammatesInRadiusCount;
+var DHMountedGun.EInteractionError  InteractionError;
+var DHMountedGun.ERotateError       RotationError;
+var DHMountedGun.EPickUpError       PickUpError;
+var DHMountedGun.EMountError        MountError;
+var DHMountedGun.EUnmountError      UnmountError;
 
-function PickUpMountedWeapon(DHPawn Pawn, DHATGun Gun)
+var int                             TeammatesInRadiusCount;
+
+function bool MountWeapon(DHPawn Pawn, DHMountedGun Gun)
+{
+    if (Gun == none)
+    {
+        return false;
+    }
+    
+    Gun.ServerMountWeapon(Pawn);
+
+    MenuObject = none;
+
+    return true;
+}
+
+function bool UnmountWeapon(DHPawn Pawn, DHMountedGun Gun)
+{
+    local DHWeapon Weapon;
+
+    if (Gun == none)
+    {
+        return false;
+    }
+
+    Gun.ServerUnmountWeapon(Pawn);
+    
+    // Without this, the menu is holding on to a reference to the gun, which is an actor.
+    // There is a bug in the engine where Objects holding on to Actors can cause segfaults when the actor is destroyed.
+    // This would result in a crash about 10% of the time when the player picked up a gun.
+    // This is a workaround for that bug.
+    // TODO: There is still the possiblity to have the client crash if the gun is destroyed by other means while the
+    // menu is open (i.e., gun is blown up or picked up by another player). We should find another method for finding
+    // the gun in the world or turn this into an Actor itself.
+    MenuObject = none;
+
+    return true;
+}
+
+function PickUpMountedWeapon(DHPawn Pawn, DHMountedGun Gun)
 {
     local DHMountedWeapon MountedWeapon;
 
@@ -57,10 +107,10 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
-    local DHATGun Gun;
+    local DHMountedGun Gun;
 
     PC = GetPlayerController();
-    Gun = DHATGun(MenuObject);
+    Gun = DHMountedGun(MenuObject);
 
     if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length || Gun == none)
     {
@@ -78,16 +128,29 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 
     switch (OptionIndex)
     {
-        case 0: // Rotate
+        case ROTATE_OPTION_INDEX:
             if (RotationError == ERROR_None)
             {
-                P.EnterATRotation(Gun);
+                P.EnterMountedGunRotation(Gun);
             }
             break;
-        case 1: // Pick Up
+        case PICK_UP_OPTION_INDEX:
             if (PickUpError == ERROR_None)
             {
                 PickUpMountedWeapon(P, Gun);
+            }
+            break;
+        case UNMOUNT_OPTION_INDEX:
+            if (UnmountError == ERROR_None)
+            {
+                UnmountWeapon(P, Gun);
+            }
+            break;
+        case MOUNT_OPTION_INDEX:
+            // TODO: make sure you can't dupe weapons.
+            if (MountError == ERROR_None)
+            {
+                MountWeapon(P, Gun);
             }
             break;
         default:
@@ -99,11 +162,11 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
-    local DHATGun Gun;
+    local DHMountedGun Gun;
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
 
-    Gun = DHATGun(MenuObject);
+    Gun = DHMountedGun(MenuObject);
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
     
@@ -114,9 +177,27 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     
     UpdateErrors();
 
+    switch (InteractionError)
+    {
+        case ERROR_PlayerBusy:
+            ORI.InfoText[0] = default.BusyText;
+            break;
+        case ERROR_Occupied:
+            ORI.InfoText[0] = default.OccupiedText;
+            break;
+        case ERROR_PlayerMoving:
+            ORI.InfoText[0] = default.PlayerMovingText;
+            break;
+        case ERROR_TooFarAway:
+            // The menu will close when it's too far away, so no message needed here.
+            break;
+        default:
+            break;
+    }
+
     switch (OptionIndex)
     {
-        case 0: // Rotate
+        case ROTATE_OPTION_INDEX:
 
             if (RotationError != ERROR_None)
             {
@@ -129,12 +210,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
             switch (RotationError)
             {
-                case ERROR_Busy:
-                    ORI.InfoText[0] = default.BusyText;
-                    break;
-                case ERROR_Occupied:
-                    ORI.InfoText[0] = default.OccupiedText;
-                    break;
                 case ERROR_Fatal:
                     ORI.InfoText[0] = default.FatalText;
                     break;
@@ -161,7 +236,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             }
             break;
         
-        case 1: // Pick Up
+        case PICK_UP_OPTION_INDEX:
             if (PickUpError != ERROR_None)
             {
                 ORI.InfoColor = Class'UColor'.default.Red;
@@ -174,24 +249,103 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             switch (PickUpError)
             {
                 case ERROR_CannotBePickedUp:
-                    ORI.InfoText[0] = default.CannotBePickUpText;
-                    break;
-                case ERROR_Occupied:
-                    ORI.InfoText[0] = default.OccupiedText;
+                    ORI.InfoText[0] = default.CannotBePickedUpText;
                     break;
                 case ERROR_Fatal:
                     ORI.InfoText[0] = default.FatalText;
-                    break;
-                case ERROR_Busy:
-                    ORI.InfoText[0] = default.BusyText;
-                    break;
-                case ERROR_PlayerMoving:
-                    ORI.InfoText[0] = default.PlayerMovingText;
                     break;
                 default:
                     break;
             }
             break;
+        case UNMOUNT_OPTION_INDEX:
+            if (UnmountError != ERROR_None)
+            {
+                ORI.InfoColor = Class'UColor'.default.Red;
+            }
+            else
+            {
+                ORI.InfoColor = Class'UColor'.default.White;
+            }
+
+            switch (UnmountError)
+            {
+                case ERROR_Unmounted:
+                    ORI.InfoText[0] = default.AlreadyUnmountedText;
+                    break;
+                case ERROR_NotAllowed:
+                    // If it's not allowed, this option won't be visible!
+                    break;
+                case ERROR_AlreadyHasWeapon:
+                    ORI.InfoText[0] = default.AlreadyHasWeaponText;
+                    break;
+            }
+            break;
+        case MOUNT_OPTION_INDEX:
+
+            if (MountError != ERROR_None)
+            {
+                ORI.InfoColor = Class'UColor'.default.Red;
+            }
+            else
+            {
+                ORI.InfoColor = Class'UColor'.default.White;
+            }
+
+            switch (MountError)
+            {
+                case ERROR_Mounted:
+                    ORI.InfoText[0] = default.AlreadyMountedText;
+                    break;
+                case ERROR_NotAllowed:
+                    // If it's not allowed, this option won't be visible.
+                    break;
+                case ERROR_IncompatibleWeapon:
+                    ORI.InfoText[0] = default.IncompatibleWeapon;
+                    break;
+            }
+            break;
+    }
+}
+
+
+// Modified to hide the unmount option when the gun doesn't allow this.
+function bool IsOptionHidden(int OptionIndex)
+{
+    local DHPlayer PC;
+    local DHMountedGun Gun;
+
+    PC = GetPlayerController();
+    Gun = DHMountedGun(MenuObject);
+
+    if (PC == none || Gun == none)
+    {
+        return true;
+    }
+
+    switch (OptionIndex)
+    {
+        case UNMOUNT_OPTION_INDEX:
+        case MOUNT_OPTION_INDEX:
+            if (!Gun.CanWeaponBeUnmounted())
+            {
+                // Gun cannot be unmounted. Hide the related options.
+                return true;
+            }
+        default:
+            break;
+    }
+    
+    switch (OptionIndex)
+    {
+        case UNMOUNT_OPTION_INDEX:
+            // If the weapon is not mounted, then we can't unmount it, so hide the option.
+            return !Gun.bIsWeaponMounted;
+        case MOUNT_OPTION_INDEX:
+            // If the weapon is mounted, we can't mount it again.
+            return Gun.bIsWeaponMounted;
+        default:
+            return super.IsOptionHidden(OptionIndex);
     }
 }
 
@@ -199,12 +353,21 @@ function bool IsOptionDisabled(int OptionIndex)
 {
     UpdateErrors();
 
+    if (InteractionError != ERROR_None)
+    {
+        return true;
+    }
+
     switch (OptionIndex)
     {
-        case 0: // Rotate
+        case ROTATE_OPTION_INDEX:
             return RotationError != ERROR_None;
-        case 1: // Pick Up
+        case PICK_UP_OPTION_INDEX:
             return PickUpError != ERROR_None;
+        case UNMOUNT_OPTION_INDEX:
+            return UnmountError != ERROR_None;
+        case MOUNT_OPTION_INDEX:
+            return MountError != ERROR_NOne;
         default:
             return false;
     }
@@ -214,19 +377,25 @@ simulated function UpdateErrors()
 {
     local DHPlayer PC;
     local DHPawn DHP;
-    local DHATGun Gun;
+    local DHMountedGun Gun;
 
+    InteractionError = ERROR_Fatal;
     RotationError = ERROR_Fatal;
     PickUpError = ERROR_Fatal;
+    MountError = ERROR_Fatal;
+    UnmountError = ERROR_Fatal;
 
     PC = GetPlayerController();
-    Gun = DHATGun(MenuObject);
+    Gun = DHMountedGun(MenuObject);
 
     if (PC != none && Gun != none)
     {
         DHP = DHPawn(PC.Pawn);
+        InteractionError = Gun.GetInteractionError(DHP);
         RotationError = Gun.GetRotationError(DHP, TeammatesInRadiusCount);
         PickUpError = Gun.GetPickUpError(DHP);
+        MountError = Gun.GetMountError(DHP);
+        UnmountError = Gun.GetUnmountError(DHP);
     }
 }
 
@@ -240,12 +409,18 @@ defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
     Options(1)=(ActionText="Pick Up",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup')
+    Options(2)=(ActionText="Detatch Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup',Tag=1)
+    Options(3)=(ActionText="Attach Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup',Tag=2)
     EnemyGunText="Cannot rotate an enemy gun"
-    CannotBePickUpText="Cannot be picked up"
+    CannotBePickedUpText="Cannot be picked up"
     CannotBeRotatedText="Cannot be rotated"
     OccupiedText="Gun is occupied"
-    FatalText="Rotation unavailable"
+    FatalText="Interaction unavailable"
     CooldownText="Wait"
     BusyText="Busy"
     PlayerMovingText="Must be stationary"
+    AlreadyUnmountedText="Weapon already detached"
+    AlreadyMountedText="Weapon already attached"
+    AlreadyHasWeaponText="Already holding weapon"
+    IncompatibleWeapon="Weapon incompatible"
 }

@@ -25,7 +25,6 @@ defaultproperties
     VehicleMass=11.0 // TODO: replace
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
-    RotateCooldown=2
     ShadowZOffset=10
     bIsArtilleryVehicle=true
 

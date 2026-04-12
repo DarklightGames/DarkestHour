@@ -10,7 +10,7 @@
 // https://www.german-smallarms.com/MGaccessorytop.html - MG accessories
 //==============================================================================
 
-class DH_MG34LafetteGun extends DHATGun;
+class DH_MG34LafetteGun extends DHMountedGun;
 
 defaultproperties
 {
@@ -29,6 +29,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_ROT'
     VehicleHudTurretLook=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_LOOK'
     MountedWeaponClass=Class'DH_MG34LafetteWeapon'
+    UnmountedWeaponClass=Class'DH_MG34Weapon'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)
     ExitPositions(1)=(X=-80,Y=0,Z=30)       // Main exit position (behind the gun)

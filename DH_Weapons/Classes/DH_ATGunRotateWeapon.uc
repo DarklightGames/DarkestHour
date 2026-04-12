@@ -4,9 +4,9 @@
 //==============================================================================
 
 class DH_ATGunRotateWeapon extends DHWeapon
-    dependson(DHATGun);
+    dependson(DHMountedGun);
 
-var DHATGun Gun;
+var DHMountedGun Gun;
 
 replication
 {
@@ -65,7 +65,7 @@ simulated function OnEnterRotation()
     }
 }
 
-function ServerEnterRotation(DHATGun Gun, DHPawn Pawn)
+function ServerEnterRotation(DHMountedGun Gun, DHPawn Pawn)
 {
     if (Gun != none)
     {
@@ -87,7 +87,7 @@ simulated function OnExitRotation()
     }
 }
 
-function ServerExitRotation(DHATGun Gun)
+function ServerExitRotation(DHMountedGun Gun)
 {
     if (Gun != none)
     {
@@ -103,7 +103,7 @@ simulated function OnRotate(byte InputRotationFactor)
     }
 }
 
-function ServerRotate(DHATGun Gun, byte InputRotationFactor)
+function ServerRotate(DHMountedGun Gun, byte InputRotationFactor)
 {
     if (Gun != none)
     {

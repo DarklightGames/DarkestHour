@@ -5,7 +5,7 @@
 // [ ] fire/move marks hit the backside of the gun
 //==============================================================================
 
-class DH_M1919A4Gun extends DHATGun
+class DH_M1919A4Gun extends DHMountedGun
     //abstract
     ;
 

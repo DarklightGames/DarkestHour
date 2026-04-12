@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MaximM191030Factory extends DHATGunFactory;
+class DH_MaximM191030Factory extends DHMountedMGFactory;
 
 defaultproperties
 {

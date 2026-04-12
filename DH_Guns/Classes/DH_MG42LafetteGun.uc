@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MG42LafetteGun extends DHATGun;
+class DH_MG42LafetteGun extends DHMountedGun;
 
 defaultproperties
 {
@@ -22,6 +22,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_ROT'   // TODO: replace
     VehicleHudTurretLook=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_LOOK'  // TODO: replace
     MountedWeaponClass=Class'DH_MG42LafetteWeapon'
+    UnmountedWeaponClass=Class'DH_MG42Weapon'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)
     ExitPositions(1)=(X=-80,Y=0,Z=30)       // Main exit position (behind the gun)

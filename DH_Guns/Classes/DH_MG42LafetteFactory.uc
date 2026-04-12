@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MG42LafetteFactory extends DHATGunFactory;
+class DH_MG42LafetteFactory extends DHMountedMGFactory;
 
 defaultproperties
 {

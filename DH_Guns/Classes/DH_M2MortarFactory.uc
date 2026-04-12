@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M2MortarFactory extends DHATGunFactory;
+class DH_M2MortarFactory extends DHMortarFactory;
 
 defaultproperties
 {

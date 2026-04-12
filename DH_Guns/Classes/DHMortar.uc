@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHMortar extends DHATGun
+class DHMortar extends DHMountedGun
     abstract;
 
 var DHConstructionSocket Socket;

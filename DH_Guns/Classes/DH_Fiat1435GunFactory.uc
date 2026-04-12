@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435GunFactory extends DHATGunFactory;
+class DH_Fiat1435GunFactory extends DHMountedMGFactory;
 
 defaultproperties
 {

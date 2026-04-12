@@ -1,0 +1,1022 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+
+class DHMountedGun extends DHVehicle
+    abstract;
+
+enum EInteractionError
+{
+    ERROR_None,
+    ERROR_Fatal,                // Unexpected error.
+    ERROR_Occupied,             // Weapon is occupied.
+    ERROR_TooFarAway,           // Player is too far away to interact.
+    ERROR_PlayerBusy,           // The player is currently busy (e.g., reloading, changing stance etc.)
+    ERROR_PlayerMoving,         // Player is moving.
+};
+
+enum ERotateError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_EnemyGun,
+    ERROR_CannotBeRotated,
+    ERROR_IsBeingRotated,
+    ERROR_NeedMorePlayers,
+    ERROR_Cooldown,
+};
+
+enum EPickUpError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_CannotBePickedUp,
+};
+
+enum EMountError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_NotAllowed,
+    ERROR_Mounted,              // There is already a weapon mounted.
+    ERROR_IncompatibleWeapon,   // The player's weapon carried weapon cannot be mounted to this gun.
+};
+
+enum EUnmountError
+{
+    ERROR_None,
+    ERROR_Fatal,            // Unexpected error.
+    ERROR_NotAllowed,       // Mounting and unmount weapons is not allowed.
+    ERROR_Unmounted,        // The weapon has already been unmounted.
+    ERROR_AlreadyHasWeapon, // This player already has the same weapon in their inventory.
+};
+
+var DHPawn            RotateControllerPawn;
+var DHRotatingActor   RotatingActor;
+var Actor             OldBase;
+
+// Rotation
+var ROSoundAttachment RotateSoundAttachment;
+var Sound             RotateSound;
+var float             RotateSoundVolume;
+
+var bool              bIsBeingRotated;
+var bool              bCanBeRotated;
+var int               NextRotationTime;
+var int               PlayersNeededToRotate;
+var int               RotateCooldown;
+var float             InteractRadiusInMeters;
+var float             RotationsPerSecond;
+
+var string            SentinelString;
+var Rotator           OldRotator;
+var bool              bOldIsRotating;
+
+var Material          RotationProjectionTexture;
+var DynamicProjector  RotationProjector;
+
+var float             CrushMomentumThreshold;
+
+// When non-null, this gun can be picked up by a player.
+var class<DHWeapon>   MountedWeaponClass;
+
+// Whether or not the weapon is currented mounted.
+var bool              bIsWeaponMounted;
+// The weapon to give to the player when the weapon is unmounted.
+var protected class<DHWeapon> UnmountedWeaponClass;
+// TODO: store the ROID of the player that took the gun? (so that we can know if 
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bIsBeingRotated, bIsWeaponMounted;
+
+    reliable if (bNetDirty && Role == ROLE_Authority && !IsInState('Rotating'))
+        NextRotationTime;
+
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SentinelString, RotatingActor;
+    
+    reliable if (Role < ROLE_Authority)
+        ServerMountWeapon, ServerUnmountWeapon;
+}
+
+// Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
+simulated function Tick(float DeltaTime)
+{
+    Disable('Tick');
+}
+
+function ServerMountWeapon(DHPawn Instigator)
+{
+    MountWeapon(Instigator);
+}
+
+function ServerUnmountWeapon(DHPawn Instigator)
+{
+    DismountWeapon(Instigator);
+}
+
+// Returns true when the weapon has been mounted.
+function bool MountWeapon(DHPawn Instigator)
+{
+    local Inventory Inventory;
+
+    if (Instigator == none)
+    {
+        return false;
+    }
+
+    // Make sure the player is holding a compatible weapon.
+    if (Instigator.Weapon == none || !Instigator.Weapon.IsA(GetUnmountedWeaponClass().Name))
+    {
+        return false;
+    }
+
+    // Remove the player's wepaon that's being mounted.
+    Instigator.DeleteInventory(Instigator.Weapon);
+    
+    // Mark the weapon as mounted.
+    bIsWeaponMounted = true;
+
+    return true;
+}
+
+// Returns true when the weapon has been dismounted and the player has been given the dismounted weapon.
+function bool DismountWeapon(DHPawn Instigator, optional out DHWeapon DismountedWeapon)
+{
+    // TODO: Transfer weapon state (ammunition, barrel state etc.)
+    // TODO: Swap out the weapon actor to a blank mount on the gun.
+
+    local Class<DHWeapon> UnmountedWeaponClass;
+
+    if (Instigator == none) { return false; }
+
+    UnmountedWeaponClass = GetUnmountedWeaponClass();
+
+    if (UnmountedWeaponClass == none)
+    {
+        return false;
+    }
+
+    if (Instigator.FindInventoryType(UnmountedWeaponClass) != none)
+    {
+        // Player already has the weapon in their inventory.
+        return false;
+    }
+
+    Instigator.GiveWeapon(string(GetUnmountedWeaponClass()));
+    DismountedWeapon = DHWeapon(Instigator.FindInventoryType(UnmountedWeaponClass));
+
+    if (DismountedWeapon != none)
+    {
+        bIsWeaponMounted = false;
+    }
+
+    // TODO: theres an issue here where vehicle weapons don't store the internals of individual mags, but the weapons do.
+    // the naive implementation would create an ammo duplication bug.
+    // we can change this so that taking the gun DOESN'T take the ammo (leaves it with the gun, only the
+    // amount loaded goes with the unload gun)?
+    // putting it back on, we can tally up all the ammo that can be put into full boxes.
+    // what happens to the remainder? maybe we just discard it. at least this way we aren't creating ammo from thin air.
+
+    // TODO: transfer the state of the weapon (amount of ammo, barrel state etc.)
+    DismountedWeapon.Ammo[0] = Weapons[0].MainAmmoCharge[0];
+
+    return DismountedWeapon != none;
+}
+
+// Returns the unmounted weapon class. Override in subclasses for more complex behavior.
+simulated function class<DHWeapon> GetUnmountedWeaponClass()
+{
+    return UnmountedWeaponClass;
+}
+
+// Returns true if the weapon is capable of being removed from the mount.
+simulated function bool CanWeaponBeUnmounted()
+{
+    return GetUnmountedWeaponClass() != none;
+}
+
+// Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
+function Vehicle FindEntryVehicle(Pawn P)
+{
+    return self;
+}
+
+// Modified to allow human to kick bot off a gun (also removes stuff not relevant to an AT gun)
+function bool TryToDrive(Pawn P)
+{
+    // Deny entry if gun is destroyed, or if player is on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P) ||
+        WeaponPawns.Length == 0 || WeaponPawns[0] == none)
+    {
+        return false;
+    }
+
+    // Deny entry if the gun is being rotated.
+    if (bIsBeingRotated)
+    {
+        DisplayVehicleMessage(14, P);
+        return false;
+    }
+
+    // Deny entry if the weapon has been detached.
+    if (!bIsWeaponMounted)
+    {
+        DisplayVehicleMessage(15, P);
+        return false;
+    }
+
+    // Deny entry to enemy gun
+    if ((bTeamLocked && P.GetTeamNum() != VehicleTeam) ||
+        (!bTeamLocked && WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum())) // if gun not team locked, check enemy player isn't already manning it
+    {
+        DisplayVehicleMessage(1, P); // can't use enemy gun
+
+        return false;
+    }
+
+    // The gun is already manned
+    if (WeaponPawns[0].Driver != none)
+    {
+        // If a human player wants to enter a gun manned by a bot, kick the bot off the gun
+        if (!WeaponPawns[0].IsHumanControlled() && P.IsHumanControlled())
+        {
+            WeaponPawns[0].KDriverLeave(true);
+        }
+        // Otherwise deny entry to gun that's already manned
+        else
+        {
+            DisplayVehicleMessage(2, P); // gun is already manned
+
+            return false;
+        }
+    }
+
+    // Passed all checks, so allow player to man the gun
+    KDriverEnter(P);
+
+    return true;
+}
+
+function SetTeamNum(byte NewTeam)
+{
+    super.SetTeamNum(NewTeam);
+
+    VehicleTeam = NewTeam;
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(VehicleTeam);
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun, and to update the owning team of the gun.
+function KDriverEnter(Pawn P)
+{
+    // Update the owning team of the gun.
+    SetTeamNum(P.GetTeamNum());
+
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
+    {
+        WeaponPawns[0].KDriverEnter(P);
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
+    {
+        WeaponPawns[0].ClientKDriverEnter(PC);
+    }
+}
+
+// Modified to use a different AT cannon message class with some messages that are more appropriate to a gun
+simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+{
+    if (P == none)
+    {
+        P = self;
+    }
+
+    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
+    {
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber,,, Controller);
+    }
+    else
+    {
+        P.ReceiveLocalizedMessage(Class'DHATCannonMessage', MessageNumber);
+    }
+}
+
+// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's gun that hasn't been entered (only designed to protect vehicles in spawn)
+// Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    local float DamageModifier;
+    local int   i;
+
+    ServerExitRotation();
+
+    // Suicide/self-destruction
+    if (DamageType == Class'Suicided' || DamageType == Class'ROSuicided')
+    {
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, Class'ROSuicided');
+
+        return;
+    }
+
+    // Apply damage modifier from the DamageType, plus a little damage randomisation
+    if (class<ROWeaponDamageType>(DamageType) != none)
+    {
+        DamageModifier = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier * RandRange(0.75, 1.08);
+    }
+
+    Damage *= DamageModifier;
+
+    // Exit if no damage
+    if (Damage < 1)
+    {
+        return;
+    }
+
+    // Check RO VehHitpoints, but only for any ammo store (AT gun has no engine)
+    for (i = 0; i < VehHitpoints.Length; ++i)
+    {
+        if (VehHitpoints[i].HitPointType == HP_AmmoStore && IsPointShot(HitLocation, Momentum, 1.0, i))
+        {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Hit AT gun ammo store");
+            }
+
+            Damage *= VehHitpoints[i].DamageMultiplier;
+            break;
+        }
+    }
+
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+}
+
+function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
+{
+    super.Died(Killer, DamageType, HitLocation);
+
+    if (RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+    }
+}
+
+simulated function EPickUpError GetPickUpError(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (MountedWeaponClass == none)
+    {
+        return ERROR_CannotBePickedUp;
+    }
+
+    return ERROR_None;
+}
+
+simulated function EMountError GetMountError(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (!CanWeaponBeUnmounted())
+    {
+        return ERROR_NotAllowed;
+    }
+
+    if (bIsWeaponMounted)
+    {
+        return ERROR_Mounted;
+    }
+
+    if (Pawn.Weapon == none || !Pawn.Weapon.IsA(GetUnmountedWeaponClass().Name))
+    {
+        return ERROR_IncompatibleWeapon;
+    }
+    
+    return ERROR_None;
+}
+
+simulated function EUnmountError GetUnmountError(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (!CanWeaponBeUnmounted())
+    {
+        return ERROR_NotAllowed;
+    }
+
+    if (!bIsWeaponMounted)
+    {
+        return ERROR_Unmounted;
+    }
+
+    if (Pawn.FindInventoryType(GetUnmountedWeaponClass()) != none)
+    {
+        return ERROR_AlreadyHasWeapon;
+    }
+    
+    return ERROR_None;
+}
+
+// Returns true if the pawn is close enough to interact with the gun (e.g. rotate, pick up)
+simulated function bool IsPawnCloseEnoughToInteract(Pawn P)
+{
+    return P != none && VSize(P.Location - Location) < Class'DHUnits'.static.MetersToUnreal(InteractRadiusInMeters);
+}
+
+simulated function EInteractionError GetInteractionError(DHPawn Pawn)
+{
+
+    if (Pawn == none || bVehicleDestroyed)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_PlayerBusy;
+    }
+
+    if (!IsPawnCloseEnoughToInteract(Pawn))
+    {
+        return ERROR_TooFarAway;
+    }
+
+    if (NumPassengers() > 0)
+    {
+        return ERROR_Occupied;
+    }
+
+    return ERROR_None;
+}
+
+// Rotation
+simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int TeammatesInRadiusCount)
+{
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+    if (bTeamLocked && Pawn.GetTeamNum() != VehicleTeam)
+    {
+        return ERROR_EnemyGun;
+    }
+
+    if (!bCanBeRotated)
+    {
+        return ERROR_CannotBeRotated;
+    }
+
+    if (bIsBeingRotated)
+    {
+        return ERROR_IsBeingRotated;
+    }
+
+    PC = DHPlayer(Pawn.Controller);
+
+    if (PC == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (GRI.ElapsedTime < NextRotationTime)
+    {
+        return ERROR_Cooldown;
+    }
+
+    if (PlayersNeededToRotate > 1)
+    {
+        TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
+
+        if (TeammatesInRadiusCount < PlayersNeededToRotate)
+        {
+            return ERROR_NeedMorePlayers;
+        }
+    }
+
+    return ERROR_None;
+}
+
+simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
+{
+    local Pawn OtherPawn;
+    local DHPlayerReplicationInfo OtherPRI;
+    local int Count;
+
+    foreach RadiusActors(Class'Pawn', OtherPawn, Class'DHUnits'.static.MetersToUnreal(InteractRadiusInMeters))
+    {
+        if (OtherPawn != none &&
+            OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
+            !OtherPawn.bDeleteMe &&
+            OtherPawn.Health > 0 &&
+            (!OtherPawn.IsA('ROVehicle') || !OtherPawn.IsA('ROVehicleWeaponPawn')))
+        {
+            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+            if (OtherPRI != none)
+            {
+                ++Count;
+            }
+        }
+    }
+
+    return Count;
+}
+
+function ServerEnterRotation(DHPawn Instigator)
+{
+    local ERotateError RotateError;
+
+    RotateError = GetRotationError(Instigator);
+
+    if (RotateError != ERROR_None)
+    {
+        // TODO: Send a message to the player
+        Instigator.ClientExitMountedGunRotation();
+        return;
+    }
+
+    Instigator.GunToRotate =self;
+    RotateControllerPawn = Instigator;
+    GotoState('Rotating');
+}
+
+function ServerExitRotation()
+{
+    if (RotatingActor != none && !RotatingActor.bPendingDelete)
+    {
+        RotatingActor.Destroy();
+    }
+}
+
+function ServerRotate(byte InputRotationFactor)
+{
+    local int F;
+
+    if (InputRotationFactor > 127)
+    {
+        F = InputRotationFactor - 256;
+    }
+    else
+    {
+        F = InputRotationFactor;
+    }
+
+    HandleRotate(F);
+}
+
+// HACK - This will only make sure the gun visibly rotates on the client
+// that initiates the rotation. It might look stuck to other clients.
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientEnterRotation()
+{
+    local Vector X, Y, Z;
+    local FinalBlend FinalMaterial;
+    local FadeColor FadeMaterial;
+    local Combiner CombinerMaterial;
+
+    //collision properties hack
+
+    if (Role != ROLE_Authority)
+    {
+        SetPhysics(PHYS_None);
+    }
+
+    bOldIsRotating = bIsBeingRotated;
+
+    FadeMaterial = new Class'FadeColor';
+    FadeMaterial.Color1 = Class'UColor'.default.White;
+    FadeMaterial.Color1.A = 50;
+    FadeMaterial.Color2 = Class'UColor'.default.White;
+    FadeMaterial.Color2.A = 95;
+    FadeMaterial.FadePeriod = 0.33;
+    FadeMaterial.ColorFadeType = FC_Sinusoidal;
+
+    CombinerMaterial = new Class'Combiner';
+    CombinerMaterial.CombineOperation = CO_Multiply;
+    CombinerMaterial.AlphaOperation = AO_Multiply;
+    CombinerMaterial.Material1 = RotationProjectionTexture;
+    CombinerMaterial.Material2 = FadeMaterial;
+    CombinerMaterial.Modulate4X = true;
+
+    FinalMaterial = new Class'FinalBlend';
+    FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
+    FinalMaterial.ZWrite = true;
+    FinalMaterial.ZTest = true;
+    FinalMaterial.AlphaTest = true;
+    FinalMaterial.TwoSided = true;
+    FinalMaterial.Material = CombinerMaterial;
+    FinalMaterial.FallbackMaterial = CombinerMaterial;
+
+    RotationProjector = Spawn(class'DHActorProxyProjector', self,, Location, Rotation);
+    RotationProjector.ProjTexture = FinalMaterial;
+    RotationProjector.GotoState('');
+    RotationProjector.bHidden = false;
+    RotationProjector.Texture = none;
+    RotationProjector.AttachActor(self);
+    RotationProjector.SetBase(self);
+    RotationProjector.bNoProjectOnOwner = true;
+    RotationProjector.MaterialBlendingOp = PB_None;
+    RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
+    RotationProjector.FOV = 1;
+    RotationProjector.MaxTraceDistance = 1024.0;
+    RotationProjector.bGradient = true;
+    RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
+    GetAxes(Rotation, X, Y, Z);
+    RotationProjector.SetRelativeLocation(Z * 3);
+    RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
+}
+
+simulated event Destroyed()
+{
+    super.Destroyed();
+
+    if (RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+    }
+}
+
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientExitRotation()
+{
+    bCollideWorld = true;
+    SetCollision(true,true,true);
+    SetPhysics(PHYS_Karma);
+    bOldIsRotating = bIsBeingRotated;
+    SetBase(none);
+    ClientDestroyProjection();
+}
+
+simulated function ClientDestroyProjection()
+{
+    if (RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+    }
+}
+
+function HandleRotate(int RotationFactor);
+function OnRotatingActorDestroyed(int Time);
+
+state Rotating
+{
+    function BeginState()
+    {
+        bIsBeingRotated = true;
+
+        RotatingActor = Spawn(Class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
+        RotatingActor.ControlRadiusInMeters = InteractRadiusInMeters;
+        RotatingActor.ControllerPawn = RotateControllerPawn;
+        RotatingActor.RotationRate.Yaw = RotationsPerSecond * 65536;;
+
+        if (RotateSound != none)
+        {
+            RotateSoundAttachment = Spawn(Class'ROSoundAttachment');
+            RotateSoundAttachment.AmbientSound = RotateSound;
+            RotateSoundAttachment.SetBase(self);
+        }
+
+        SetPhysics(PHYS_None);
+        bCollideWorld = false;
+        bBlockNonZeroExtentTraces = true;
+        bBlockZeroExtentTraces = true;
+
+        // NOTE: This line avoids the hack of calling ClientEnterRotation client
+        // side, but also causes issue where AT Gun falls through the world.
+        //SetCollision(false,true,true);
+
+        SetBase(RotatingActor);
+    }
+
+    function OnRotatingActorDestroyed(int Time)
+    {
+        NextRotationTime = Time + RotateCooldown;
+        GotoState('');
+    }
+
+    function HandleRotate(int RotationFactor)
+    {
+        RotatingActor.SetRotationFactor(RotationFactor);
+
+        if (RotateSoundAttachment != none)
+        {
+            if (RotationFactor == 0)
+            {
+                RotateSoundAttachment.SoundVolume = 0.0;
+            }
+            else
+            {
+                RotateSoundAttachment.SoundVolume = RotateSoundVolume;
+            }
+        }
+    }
+
+    function EndState()
+    {
+        SetBase(none);
+
+        SetRotation(RotatingActor.DesiredRotation);
+
+        if (RotatingActor != none && !RotatingActor.bPendingDelete)
+        {
+            RotatingActor.Destroy();
+        }
+
+        if (RotateSoundAttachment != none)
+        {
+            RotateSoundAttachment.Destroy();
+        }
+
+        if (RotationProjector != none)
+        {
+            RotationProjector.Destroy();
+        }
+
+        SentinelString = String(Rotation);
+
+        bCollideWorld = true;
+        SetCollision(true,true,true);
+        SetPhysics(PHYS_Karma);
+
+        bIsBeingRotated = false;
+
+        if (RotateControllerPawn != none)
+        {
+            RotateControllerPawn.GunToRotate = none;
+            RotateControllerPawn.ServerExitMountedGunRotation();
+        }
+    }
+}
+
+// Used to force the final server rotation onto the clients. Gets around replication ownership issue.
+simulated event PostNetReceive()
+{
+    local Rotator UncompressedRotation;
+    local int FirstComma,SecondComma;
+    local String CutSentinel;
+    super.PostNetReceive();
+
+    // Rotation is sent as string, process.
+    firstComma = InStr(SentinelString,",");
+    UncompressedRotation.Pitch = Int(Left(SentinelString, FirstComma));
+    CutSentinel = Mid(SentinelString,firstComma + 1);
+    SecondComma = InStr(CutSentinel, ",");
+    UncompressedRotation.Yaw = Int(Left(CutSentinel, SecondComma));
+    UncompressedRotation.Roll = Int(Mid(CutSentinel, SecondComma + 1));
+
+    if (OldRotator != UncompressedRotation)
+    {
+        OldRotator = UncompressedRotation;
+        SetPhysics(PHYS_None);
+        SetRotation(UncompressedRotation);
+        SetPhysics(PHYS_Karma);
+    }
+
+    // End rotating state
+    if (bOldIsRotating && !bIsBeingRotated)
+    {
+        ClientExitRotation();
+        bOldIsRotating = bIsBeingRotated;
+    }
+    // start rotating state
+    else if (!bOldIsRotating && bIsBeingRotated)
+    {
+        SetPhysics(PHYS_None);
+        bOldIsRotating = bIsBeingRotated;
+    }
+
+    if (bVehicleDestroyed)
+    {
+        if (RotationProjector != none)
+        {
+            RotationProjector.Destroy();
+        }
+    }
+
+    if (RotatingActor != Base)
+    {
+        SetBase(RotatingActor);
+    }
+}
+
+// Overriden to suppress the touch message when the gun is being rotated
+// TODO: This is probably not the best way to do this
+simulated event NotifySelected(Pawn User)
+{
+    if (!bIsBeingRotated)
+    {
+        super.NotifySelected(User);
+    }
+}
+
+// Function that gathers locations to use for the exit positions based on
+// factory hints (especially useful if the gun is in a tight position!)
+function PrependFactoryExitPositions()
+{
+    local DHLocationHint LocationHint;
+    local DHMountedGunFactory Factory;
+
+    Factory = DHMountedGunFactory(ParentFactory);
+
+    if (Factory != none && Factory.ExitPositionHintTag != '')
+    {
+        foreach AllActors(Class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
+        {
+            AbsoluteExitPositions.Insert(0, 1);
+            AbsoluteExitPositions[0].Location = LocationHint.Location;
+            AbsoluteExitPositions[0].Rotation = LocationHint.Rotation;
+        }
+    }
+}
+
+// Overridden to allow vehicles to destroy AT guns by running them over.
+event KImpact(Actor Other, Vector Pos, Vector ImpactVel, Vector ImpactNorm)
+{
+    local Vehicle V;
+    local float Momentum;
+
+    V = Vehicle(Other);
+
+    super.KImpact(Other, Pos, ImpactVel, ImpactNorm);
+
+    if (V == none || V.GetTeamNum() == GetTeamNum())
+    {
+        // Don't destroy the gun if it's a friendly vehicle that has hit us.
+        return;
+    }
+
+    Momentum = VSize(ImpactVel) * V.KGetMass();
+
+    if (Momentum >= CrushMomentumThreshold)
+    {
+        LastHitByDamageType = RanOverDamageType;
+        KilledBy(V.Driver);
+    }
+}
+
+// Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
+function Fire(optional float F);
+function ServerStartEngine();
+simulated function SetEngine();
+simulated function StopEmitters();
+simulated function StartEmitters();
+simulated function UpdateMovementSound(float MotionSoundVolume);
+function DamageEngine(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType);
+simulated function SetupTreads();
+simulated function DestroyTreads();
+function CheckTreadDamage(Vector HitLocation, Vector Momentum);
+function DestroyTrack(bool bLeftTrack);
+simulated function SetDamagedTracks();
+simulated event DrivingStatusChanged();
+simulated function NextWeapon();
+simulated function PrevWeapon();
+function ServerChangeViewPoint(bool bForward);
+simulated function NextViewPoint();
+simulated function SwitchWeapon(byte F);
+function ServerChangeDriverPosition(byte F);
+simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
+function bool KDriverLeave(bool bForceLeave) { return false; }
+function DriverDied();
+function DriverLeft();
+simulated function bool CanExit() { return false; }
+function bool PlaceExitingDriver() { return false; }
+simulated function Destroyed_HandleDriver();
+simulated function SetPlayerPosition();
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation);
+simulated function DrawHUD(Canvas C);
+simulated function DrawPeriscopeOverlay(Canvas C);
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
+simulated function int LimitYaw(int yaw) { return yaw; }
+function int LimitPawnPitch(int pitch) { return pitch; }
+simulated function float GetViewFOV(int PositionIndex) { return 0.0; }
+simulated function SetViewFOV(int PositionIndex, optional PlayerController PC);
+function bool ResupplyAmmo() { return false; }
+
+defaultproperties
+{
+    // Key properties
+    bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
+    bNetNotify=true // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
+    bHasTreads=false
+    bMustBeTankCommander=false
+    bMultiPosition=false
+    bSpecialHUD=false
+
+    // Damage
+    HealthMax=185.0
+    Health=185
+    EngineHealth=0
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
+    DamagedEffectClass=none
+    DestructionEffectClass=Class'ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=Class'ATCannonDestroyedEmitter'
+    DestructionLinearMomentum=(Min=0.0,Max=0.0)
+    DestructionAngularMomentum=(Min=0.0,Max=0.0)
+    bCanCrash=false
+
+    // Miscellaneous
+    TouchMessageClass=Class'DHATGunTouchMessage'
+    VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
+    MaxDesireability=1.9
+    CollisionRadius=75.0
+    CollisionHeight=100.0
+    BeginningIdleAnim=""
+    MinBrakeFriction=40.0
+    VehicleHudOccupantsX(0)=0.0 // neutralise driver & hull gunner positions
+    VehicleHudOccupantsX(2)=0.0
+    PointValue=200
+
+    // Exit positions
+    ExitPositions(0)=(X=0.0,Y=0.0,Z=100.0)  // last resort (because we start at index 1 for a cannon pawn)
+    ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0) // index 1 is gunner's 1st choice exit position
+    ExitPositions(2)=(X=-150.0,Y=0.0,Z=0.0) // all the rest are generic fallbacks to try different positions to try & get the player off the gun
+    ExitPositions(3)=(X=-100.0,Y=25.0,Z=0.0)
+    ExitPositions(4)=(X=-100.0,Y=-25.0,Z=0.0)
+    ExitPositions(5)=(X=-100.0,Y=50.0,Z=0.0)
+    ExitPositions(6)=(X=-100.0,Y=-50.0,Z=0.0)
+    ExitPositions(7)=(X=-50.0,Y=50.0,Z=0.0)
+    ExitPositions(8)=(X=-50.0,Y=-50.0,Z=0.0)
+    ExitPositions(9)=(X=-50.0,Y=50.0,Z=50.0)
+    ExitPositions(10)=(X=-50.0,Y=-50.0,Z=50.0)
+    ExitPositions(11)=(X=-75.0,Y=75.0,Z=50.0)
+    ExitPositions(12)=(X=-75.0,Y=-75.0,Z=50.0)
+    ExitPositions(13)=(X=-100.0,Y=0.0,Z=75.0)
+    ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
+    ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
+
+    // Rotation
+    PlayersNeededToRotate=1
+    RotationsPerSecond=0.03125
+    bFixedRotationDir=false
+    RotateCooldown=2
+    InteractRadiusInMeters=5
+    RotateSound=Sound'Vehicle_Weapons.manual_turret_elevate'
+    RotateSoundVolume=200
+
+    OldRotator=(Pitch=0,Yaw=0,Roll=0)
+    bOldIsRotating=false
+    bUpdateSimulatedPosition=true
+    bReplicateMovement=true
+    bSkipActorPropertyReplication=false
+    OldBase=none
+    RotationProjectionTexture = Material'DH_Construction_tex.rotation_projector'
+
+    // Karma properties
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=-0.5)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        KMaxAngularSpeed=0.0 // default is 1.0 (AT gun can't move, so KParams is probably an unnecessary override)
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+    End Object
+    KParams=KParams0
+
+    bShouldDrawPositionDots=false
+    bShouldDrawOccupantList=false
+    bTeamLocked=false
+
+    bIsWeaponMounted=true
+}

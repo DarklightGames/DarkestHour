@@ -130,7 +130,7 @@ const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_SMOKE = 4;
 const REQUIRED_SQUAD_MEMBERS_TO_RECEIVE_COLORED_SMOKE = 6;
 
 // Gun Rotation
-var     DHATGun             GunToRotate;
+var     DHMountedGun        GunToRotate;
 
 // Backpacks
 var     DHBackpack          Backpack;
@@ -175,7 +175,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientPawnWhizzed, ClientExitATRotation;
+        ClientPawnWhizzed, ClientExitMountedGunRotation;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -7187,7 +7187,7 @@ simulated function class<DHVoicePack> GetVoicePack()
     return class<DHVoicePack>(VoiceClass);
 }
 
-function EnterATRotation(DHATGun Gun)
+function EnterMountedGunRotation(DHMountedGun Gun)
 {
     local class<DHWeapon> WeaponClass;
 
@@ -7197,14 +7197,14 @@ function EnterATRotation(DHATGun Gun)
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, false);
 }
 
-function ServerExitATRotation()
+function ServerExitMountedGunRotation()
 {
     GunToRotate = none;
 
-    ClientExitATRotation();
+    ClientExitMountedGunRotation();
 }
 
-simulated function ClientExitATRotation()
+simulated function ClientExitMountedGunRotation()
 {
     GunToRotate = none;
 
@@ -7235,10 +7235,10 @@ simulated function ClientExitATRotation()
 
 exec function RotateAT()
 {
-    local DHATGun Gun;
+    local DHMountedGun Gun;
     local class<DHWeapon> WeaponClass;
 
-    foreach RadiusActors(Class'DHATGun', Gun, 256.0)
+    foreach RadiusActors(Class'DHMountedGun', Gun, 256.0)
     {
         if (Gun != none)
         {
