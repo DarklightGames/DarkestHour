@@ -5401,8 +5401,7 @@ simulated function bool CanProneTransition()
         return false;
     }
 
-    //TODO: Remove PHYS_Falling.
-    return (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
+    return Physics == PHYS_Walking && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
 }
 
 // Returns true if the player can switch the crouch state
