@@ -9,6 +9,8 @@ var localized string UnrealAngleSymbol;
 var localized string DegreesSymbol;
 var localized string MilsSymbol;
 var localized string RadiansSymbol;
+var localized string CelciusSymbol;
+var localized string FahrenheitSymbol;
 
 enum EAngleUnit
 {
@@ -16,6 +18,12 @@ enum EAngleUnit
     AU_Degrees,
     AU_Milliradians,
     AU_Radians
+};
+
+enum ETemperatureUnit
+{
+    TU_Celcius,
+    TU_Fahrenheit,
 };
 
 // Used for debugging purposes.
@@ -48,6 +56,19 @@ final static function string GetAngleUnitString(EAngleUnit Unit)
             return default.MilsSymbol;
         case AU_Radians:
             return default.RadiansSymbol;
+        default:
+            return "";
+    }
+}
+
+final static function string GetTemperatureUnitString(ETemperatureUnit Unit)
+{
+    switch (Unit)
+    {
+        case TU_Celcius:
+            return default.DegreesSymbol $ default.CelciusSymbol;
+        case TU_Fahrenheit:
+            return default.DegreesSymbol $ default.FahrenheitSymbol;
         default:
             return "";
     }
@@ -131,10 +152,22 @@ final static function float MilsToUnreal(coerce float Mils)
     return RadiansToUnreal(Mils * 0.001);
 }
 
+final static function float FahrenheitToCelcius(coerce float Fahrenheit)
+{
+    return (Fahrenheit - 32.0) * 5.0 / 9.0;
+}
+
+final static function float CelciusToFahrenheit(coerce float Celcius)
+{
+    return (Celcius * (9.0 / 5.0)) + 32.0;
+}
+
 defaultproperties
 {
-    UnrealAngleSymbol = "u";
-    DegreesSymbol = "°";
-    MilsSymbol = "mils";
-    RadiansSymbol = "rad";
+    UnrealAngleSymbol="u"
+    DegreesSymbol="°"
+    MilsSymbol="mils"
+    RadiansSymbol="rad"
+    CelciusSymbol="C"
+    FahrenheitSymbol="F"
 }

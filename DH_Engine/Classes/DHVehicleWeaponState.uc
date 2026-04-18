@@ -10,3 +10,4 @@ var int MainAmmoCharge[3];
 var int AltAmmoCharge;
 var byte NumMGMags;
 var byte ReloadState;
+var bool bIsWeaponMounted;

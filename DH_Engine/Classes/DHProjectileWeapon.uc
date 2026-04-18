@@ -85,11 +85,10 @@ var()       name        PostFireIdleAnim;           // animation after hip firin
 var()       name        PostFireIronIdleAnim;       // animation after firing while in ironsight view
 
 // Barrels
+var     DHWeaponBarrelBundle    BarrelBundle;
 var     class<DHWeaponBarrel>   BarrelClass;        // barrel type we use now
-var     array<DHWeaponBarrel>   Barrels;            // array of any carried barrels for this weapon
 var     byte                InitialBarrels;         // barrels initially given
 var     bool                bHasSpareBarrel;        // we have at least one spare barrel we can switch to (minimal replication so net client knows whether can change barrel)
-var     byte                BarrelIndex;            // index number of current barrel
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
 var     bool                bCallBarrelChangeTimer; // we're in middle of a barrel change, so Timer() should call PerformBarrelChange() instead of exiting state ChangingBarrels
 var     float               BarrelChangeDuration;   // saves duration of barrel change, so Timer() can be called at mid point & then again at end of barrel change animation
@@ -300,15 +299,15 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 
     // Show the barrel info - only works in single-player as barrel actors don't exist on net clients
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && BarrelBundle != none)
     {
-        for (i = 0; i < Barrels.Length; ++i)
+        for (i = 0; i < BarrelBundle.Barrels.Length; ++i)
         {
-            Barrel = Barrels[i];
+            Barrel = BarrelBundle.Barrels[i];
 
             if (Barrel != none)
             {
-                if (i == BarrelIndex)
+                if (i == BarrelBundle.BarrelIndex)
                 {
                     Canvas.DrawText("Active barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
                 }

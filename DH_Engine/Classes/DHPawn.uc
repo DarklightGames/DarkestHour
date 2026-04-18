@@ -5891,6 +5891,8 @@ simulated state DivingToProne
         local float NewHeight;
         local name  Anim;
 
+        Level.Game.Broadcast(self, "DivingToProne::EndState");
+
         NewHeight = default.CollisionHeight - ProneHeight;
 
         if (WeaponAttachment != none)
