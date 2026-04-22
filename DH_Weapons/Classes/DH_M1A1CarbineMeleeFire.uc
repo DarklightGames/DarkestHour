@@ -8,4 +8,5 @@ class DH_M1A1CarbineMeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=Class'DH_M1A1CarbineBashDamType'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 }
