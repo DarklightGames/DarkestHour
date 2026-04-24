@@ -60,9 +60,8 @@ var name                            BarrelSteamBone;
 var name                            BarrelChangeSequence;
 
 // Barrels (RUNTIME)
-var int                             BarrelIndex;
+var DHWeaponBarrelBundle            BarrelBundle;
 var ROMGSteam                       BarrelSteamEmitter;
-var array<DHWeaponBarrel>           Barrels;
 var DHWeaponBarrel.EBarrelCondition BarrelCondition;
 var float                           BarrelTemperature;
 var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
@@ -75,37 +74,22 @@ replication
         BarrelCondition, BarrelTemperature, bBarrelIsSteamActive;
 }
 
-private function SpawnBarrels()
+private function SpawnBarrelBundle()
 {
-    local int i;
-    local DHWeaponBarrel Barrel;
-
-    Barrels.Length = 0;
-
-    for (i = 0; i < BarrelCount; ++i)
-    {
-        Barrel = Spawn(BarrelClass, self);
-        Barrel.OnTemperatureChanged = OnBarrelTemperatureChanged;
-        Barrel.OnConditionChanged = OnBarrelConditionChanged;
-        Barrel.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
-        Barrels[i] = Barrel;
-    }
-
-    if (Barrels.Length > 0)
-    {
-        // Set the first barrel is being active.
-        Barrels[0].SetCurrentBarrel(true);
-    }
+    BarrelBundle = Spawn(Class'DHWeaponBarrelBundle', self);
+    BarrelBundle.OnTemperatureChanged = OnBarrelTemperatureChanged;
+    BarrelBundle.OnConditionChanged = OnBarrelConditionChanged;
+    BarrelBundle.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
 }
 
 simulated function bool IsChangingBarrels();
 
-function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
+function OnBarrelTemperatureChanged(int BarrelIndex, float Temperature)
 {
     BarrelTemperature = Temperature;
 }
 
-function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+function OnBarrelSteamIsActiveChanged(int BarrelIndex, bool bIsSteamActive)
 {
     // Sets the variable here on the server. The client will then have this variable replicated to them.
     bBarrelIsSteamActive = bIsSteamActive;
@@ -113,11 +97,11 @@ function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive
     if (Level.NetMode == NM_Standalone)
     {
         // In a standalone game there is no PostNetReceive, so we must trigger the steam update immediately.
-        SetBarrelSteamActive(bIsSteamActive);
+        SetBarrelSteamActive(BarrelIndex, bIsSteamActive);
     }
 }
 
-simulated function SetBarrelSteamActive(bool bIsSteamActive)
+simulated function SetBarrelSteamActive(int BarrelIndex, bool bIsSteamActive)
 {
     if (Level.NetMode == NM_DedicatedServer)
     {
@@ -148,7 +132,7 @@ simulated function SetBarrelSteamActive(bool bIsSteamActive)
     }
 }
 
-function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
+function OnBarrelConditionChanged(int BarrelIndex, DHWeaponBarrel.EBarrelCondition Condition)
 {
     BarrelCondition = Condition;
 
@@ -163,10 +147,10 @@ simulated function PostNetReceive()
 {
     super.PostNetReceive();
 
+    // TODO: shouldn't this be done per barrel in the base?
     if (bOldBarrelIsSteamActive != bBarrelIsSteamActive)
     {
-        // TODO: turn on or off the steam emitter.
-        SetBarrelSteamActive(bBarrelIsSteamActive);
+        SetBarrelSteamActive(0, bBarrelIsSteamActive);
     }
 }
 
@@ -283,12 +267,9 @@ function Fire(Controller C)
         }
     }
 
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && BarrelBundle != none) 
     {
-        if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
-        {
-            Barrels[BarrelIndex].WeaponFired();
-        }
+        BarrelBundle.WeaponFired();
     }
     
     UpdateClip();
@@ -417,43 +398,9 @@ Begin:
     GotoState('');
 }
 
-// Returns the index of the next best barrel to switch to, sorting first by condition and then by temperature.
-// Returns -1 if there are no barrels that can be changed to.
-private simulated function int GetNextBestBarrelIndex()
-{
-    local int i;
-    local UComparator Comparator;
-    local array<DHWeaponBarrel> SortedBarrels;
-
-    // Copy the barrels to a new list to be sorted.
-    SortedBarrels = Barrels;
-
-    // Remove the current barrel and any failed barrels from the list to be sorted.
-    SortedBarrels.Remove(BarrelIndex, 1);
-
-    for (i = SortedBarrels.Length - 1; i >= 0; --i)
-    {
-        if (SortedBarrels[i].Condition == BC_Failed)
-        {
-            SortedBarrels.Remove(i, 1);
-        }
-    }
-
-    if (SortedBarrels.Length == 0)
-    {
-        return -1;
-    }
-
-    // Sort in order of condition and temperature.
-    Comparator = new Class'UComparator';
-    Comparator.CompareFunction = Class'DHWeaponBarrel'.static.SortFunction;
-    Class'USort'.static.Sort(SortedBarrels, Comparator);
-    return Class'UArray'.static.IndexOf(Barrels, SortedBarrels[0]);
-}
-
 simulated function bool CanChangeBarrels()
 {
-    if (IsBusy() || GetNextBestBarrelIndex() == -1)
+    if (IsBusy() || BarrelBundle.CanChangeBarrels())
     {
         return false;
     }
@@ -509,22 +456,10 @@ simulated state ChangingBarrels extends Busy
     // TODO: Perhaps add some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
     simulated function PerformBarrelChange()
     {
-        local int NextBarrelIndex;
-        
-        NextBarrelIndex = GetNextBestBarrelIndex();
-
-        if (NextBarrelIndex == -1)
+        if (BarrelBundle != none)
         {
-            // Avoid out-of-bounds errors in case the function above returns -1 somehow.
-            return;
+            BarrelBundle.ChangeToNextBestBarrel();
         }
-
-        Level.Game.Broadcast(self, "Changing barrels from barrel" @ BarrelIndex @ "to barrel" @ NextBarrelIndex);
-
-        Barrels[BarrelIndex].SetCurrentBarrel(false);
-        Barrels[NextBarrelIndex].SetCurrentBarrel(true);
-
-        BarrelIndex = NextBarrelIndex;
     }
 
 Begin:
@@ -557,7 +492,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        SpawnBarrels();
+        SpawnBarrelBundle();
     }
 }
 

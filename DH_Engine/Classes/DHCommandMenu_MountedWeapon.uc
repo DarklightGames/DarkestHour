@@ -409,8 +409,8 @@ defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
     Options(1)=(ActionText="Pick Up",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup')
-    Options(2)=(ActionText="Detatch Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup',Tag=1)
-    Options(3)=(ActionText="Attach Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup',Tag=2)
+    Options(2)=(ActionText="Detatch Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup')
+    Options(3)=(ActionText="Attach Weapon",Material=Texture'DH_InterfaceArt2_tex.pickup_icon',HoldTime=2.5,HoldSound=Sound'DH_MortarSounds.mortar_pickup')
     EnemyGunText="Cannot rotate an enemy gun"
     CannotBePickedUpText="Cannot be picked up"
     CannotBeRotatedText="Cannot be rotated"

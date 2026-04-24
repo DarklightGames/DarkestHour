@@ -32,6 +32,7 @@ struct Option
     var int OptionalInteger;
     var float HoldTime;     // If non-zero, the amount of time the player must hold the button to select this option.
     var Sound HoldSound;    // Sound to play when the player holds the button down for this option.
+    var int Tag;
 };
 
 var array<Option> Options;

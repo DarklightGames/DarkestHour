@@ -63,7 +63,7 @@ simulated event PostNetBeginPlay()
 
                     if (class<DHOneShotWeaponPickup>(PickupClass) != none)
                     {
-                        bIsOneShotWeapon = true; // different ammo handling (in InitPickup) for one-shot weapons
+                        bIsOneShotWeapon = true; // different ammo handling (in ResetPickup for one-shot weapons
                     }
                 }
             }
@@ -77,9 +77,9 @@ simulated event PostNetBeginPlay()
 }
 
 // New function, very similar to InitDroppedPickupFor(), but here we have to use weapon class defaults, as we don't have an actual weapon actor
-function InitPickup()
+function ResetPickup()
 {
-    local class<DHProjectileWeapon> W;
+    local class<DHProjectileWeapon> WeaponClass;
     local int InitialAmount, i;
 
     // One-shot weapon (e.g. grenade, satchel, faust) just needs 1 ammo - don't want it using weapon's usual InitialAmount (e.g. 2 grenades) & the other stuff isn't relevant
@@ -94,39 +94,27 @@ function InitPickup()
             InitialAmount = WeaponType.default.FireModeClass[0].default.AmmoClass.default.InitialAmount;
         }
 
-        W = class<DHProjectileWeapon>(InventoryType);
+        WeaponClass = class<DHProjectileWeapon>(InventoryType);
 
         // Load the pickup with the ammo the weapon would start loaded with
-        if (W == none || !W.default.bDoesNotRetainLoadedMag)
+        if (WeaponClass == none || !WeaponClass.default.bDoesNotRetainLoadedMag)
         {
             AmmoAmount[0] = InitialAmount;
         }
 
-        if (W != none)
+        if (WeaponClass != none)
         {
             AmmoMags.Length = 0; // so when Reset, we start again
 
             // Give the pickup the ammo mags the weapon would start with
-            for (i = 0; i < W.default.InitialNumPrimaryMags; ++i)
+            for (i = 0; i < WeaponClass.default.InitialNumPrimaryMags; ++i)
             {
                 AmmoMags[AmmoMags.Length] = InitialAmount;
             }
 
-            bHasBayonetMounted = W.default.bBayonetMounted;
+            bHasBayonetMounted = WeaponClass.default.bBayonetMounted;
 
-            // If weapon has barrels, copy the weapon's reference to the Barrels array & make this pickup the owner of the barrels
-            if (W.default.InitialBarrels > 0 && W.default.BarrelClass != none)
-            {
-                Barrels.Length = 0; // so when Reset, we start again
-
-                for (i = 0; i < W.default.InitialBarrels; ++i)
-                {
-                    Barrels[Barrels.Length] = Spawn(W.default.BarrelClass, self);
-                }
-
-                BarrelIndex = 0;
-                Barrels[BarrelIndex].SetCurrentBarrel(true);
-            }
+            // TODO: reset the barrel bundle to its default state for the weapon.
         }
     }
 }
@@ -175,11 +163,11 @@ function SetRespawn()
     StartSleeping();
 }
 
-// Modified to call InitPickup() & to skip over the duplication & redundancy in the Supers
-// Note that this function gets called when a new round starts, so we always start with InitPickup() & not just if match is reset in the middle of a round
+// Modified to call ResetPickup() & to skip over the duplication & redundancy in the Supers
+// Note that this function gets called when a new round starts, so we always start with ResetPickup() & not just if match is reset in the middle of a round
 function Reset()
 {
-    InitPickup();
+    ResetPickup();
     GotoState('Pickup');
 }
 

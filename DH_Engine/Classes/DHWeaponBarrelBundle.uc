@@ -7,6 +7,8 @@
 // 3 different sets of management logic for infantry weapons, pickups, and
 // vehicle weapons. We can just pass this bundle to the actor that owns the
 // barrels.
+//
+// It uses delegates for communicating state changes back to the owning actor.
 //==============================================================================
 
 class DHWeaponBarrelBundle extends Actor
@@ -14,8 +16,8 @@ class DHWeaponBarrelBundle extends Actor
 
 var float LevelTemperatureCelcius; // The temperature of the level we're playing in (all temps here are in celcius)
 
-var int BarrelIndex;
 var array<DHWeaponBarrel> Barrels;
+var int BarrelIndex;
 
 // TODO: we need some unified way to initialize the barrels from inventory, pickups and vehicle weapons.
 // two possible scenarios:
@@ -38,7 +40,7 @@ private function DHWeaponBarrel GetActiveBarrel()
 }
 
 // Increases barrel active temperature when the weapon fires.
-function WeaponFired()
+function WeaponFired(optional int BarrelIndex)
 {
     local DHWeaponBarrel Barrel;
 
@@ -51,7 +53,7 @@ function WeaponFired()
 
     Barrel.Temperature += Barrel.FiringHeatIncrement;
 
-    OnTemperatureChanged(self, Barrel.Temperature);
+    OnTemperatureChanged(BarrelIndex, Barrel.Temperature);
 
     UpdateBarrelStatuses();
 
@@ -62,13 +64,13 @@ function WeaponFired()
 // Periodically lowers the barrel temp, but no further than the level's ambient temperature.
 function Timer()
 {
-    local int i;
+    local int BarrelIndex;
     local float OldTemperature;
     local DHWeaponBarrel Barrel;
 
-    for (i = 0; i < Barrels.Length; ++i)
+    for (BarrelIndex = 0; BarrelIndex < Barrels.Length; ++BarrelIndex)
     {
-        Barrel = Barrels[i];
+        Barrel = Barrels[BarrelIndex];
 
         OldTemperature = Barrel.Temperature;
 
@@ -76,9 +78,9 @@ function Timer()
         {
             Barrel.Temperature = FMax(LevelTemperatureCelcius, Barrel.Temperature -= (Barrel.BarrelCoolingRate * Barrel.BarrelTimerRate));
 
-            if (i == BarrelIndex && OldTemperature != Barrel.Temperature)
+            if (BarrelIndex == BarrelIndex && OldTemperature != Barrel.Temperature)
             {
-                OnTemperatureChanged(self, Barrel.Temperature);
+                OnTemperatureChanged(BarrelIndex, Barrel.Temperature);
             }
         }
     }
@@ -121,6 +123,12 @@ private function int GetNextBestBarrelIndex()
     return Class'UArray'.static.IndexOf(Barrels, SortedBarrels[0]);
 }
 
+// Returns true when there's a valid barrel that we can change to.
+function bool CanChangeBarrels()
+{
+    return GetNextBestBarrelIndex() != -1;
+}
+
 // Changes the barrel to the next best one available.
 // Returns true when the barrel has changed.
 function bool ChangeToNextBestBarrel()
@@ -139,7 +147,7 @@ function bool ChangeToNextBestBarrel()
 
     BarrelIndex = NextBarrelIndex;
 
-    OnTemperatureChanged(self, Barrels[BarrelIndex].Temperature);
+    OnTemperatureChanged(BarrelIndex, Barrels[BarrelIndex].Temperature);
     ForceUpdateBarrelStatus();
 
     return true;
@@ -169,13 +177,9 @@ function bool Resupply()
 // Modified to make sure any steam effects are deactivated.
 function Destroyed()
 {
-    if (Barrels[BarrelIndex].bIsSteamActive)
-    {
-        OnIsSteamActiveChanged(self, false);
-    }
-
-    OnConditionChanged(self, BC_Good);
-    OnTemperatureChanged(self, LevelTemperatureCelcius);
+    OnIsSteamActiveChanged(BarrelIndex, false);
+    OnConditionChanged(BarrelIndex, BC_Good);
+    OnTemperatureChanged(BarrelIndex, LevelTemperatureCelcius);
 
     super.Destroyed();
 }
@@ -191,9 +195,9 @@ function ForceUpdateBarrelStatus()
         return;
     }
 
-    OnIsSteamActiveChanged(self, Barrel.bIsSteamActive);
-    OnTemperatureChanged(self, Barrel.Temperature);
-    OnConditionChanged(self, Barrel.Condition);
+    OnIsSteamActiveChanged(BarrelIndex, Barrel.bIsSteamActive);
+    OnTemperatureChanged(BarrelIndex, Barrel.Temperature);
+    OnConditionChanged(BarrelIndex, Barrel.Condition);
 }
 
 // Updates this barrel and the weapon's status
@@ -215,28 +219,28 @@ function UpdateBarrelStatuses()
 
     if (bOldIsSteamActive != Barrel.bIsSteamActive)
     {
-        OnIsSteamActiveChanged(self, Barrel.bIsSteamActive);
+        OnIsSteamActiveChanged(BarrelIndex, Barrel.bIsSteamActive);
     }
 
     if (Barrel.Condition < BC_Damaged && Barrel.Temperature > Barrel.CriticalTemperature)
     {
         Barrel.Condition = BC_Damaged;
 
-        OnConditionChanged(self, Barrel.Condition);
+        OnConditionChanged(BarrelIndex, Barrel.Condition);
     }
     else if (Barrel.Condition < BC_Failed && Barrel.Temperature > Barrel.FailureTemperature)
     {
         Barrel.Condition = BC_Failed;
         
-        OnConditionChanged(self, Barrel.Condition);
+        OnConditionChanged(BarrelIndex, Barrel.Condition);
     }
 }
 
 // Delegate functions for when the active barrel changes state.
 // These functions are registered by the "owner" of the object to get state change events.
-delegate OnConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition);
-delegate OnIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive);
-delegate OnTemperatureChanged(DHWeaponBarrel Barrel, float TemperatureCelcius);
+delegate OnConditionChanged(int BarrelIndex, DHWeaponBarrel.EBarrelCondition Condition);
+delegate OnIsSteamActiveChanged(int BarrelIndex, bool bIsSteamActive);
+delegate OnTemperatureChanged(int BarrelIndex, float TemperatureCelcius);
 
 defaultproperties
 {

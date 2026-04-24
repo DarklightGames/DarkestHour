@@ -15,8 +15,7 @@ var     array<int>              AmmoMags;
 var     int                     LoadedMagazineIndex;
 
 // Barrels
-var     array<DHWeaponBarrel>   Barrels;                  // array of any carried barrels for this weapon
-var     byte                    BarrelIndex;              // index number of current barrel
+var     DHWeaponBarrelBundle    BarrelBundle;
 var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
@@ -72,7 +71,7 @@ simulated function PostNetReceive()
     if (bBarrelSteamActive != bOldBarrelSteamActive)
     {
         bOldBarrelSteamActive = bBarrelSteamActive;
-        OnBarrelIsSteamActiveChanged(Barrels[BarrelIndex], bBarrelSteamActive);
+        OnBarrelIsSteamActiveChanged(0, bBarrelSteamActive);
     }
 }
 
@@ -177,28 +176,14 @@ function InitDroppedPickupFor(Inventory Inv)
             }
         }
 
-        // If weapon has barrels, transfer over any barrels
-        if (W.Barrels.Length > 0)
-        {
-            Barrels = W.Barrels; // copy the weapon's reference to the Barrels array
-
-            for (i = 0; i < Barrels.Length; ++i)
-            {
-                if (Barrels[i] != none)
-                {
-                    Barrels[i].SetOwner(self); // barrel's owner is now this pickup
-                    Barrels[i].OnTemperatureChanged = none;
-                    Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
-                    Barrels[i].OnConditionChanged = none;
-
-                    if (Barrels[i].IsCurrentBarrel())
-                    {
-                        BarrelIndex = i;
-                        Barrels[BarrelIndex].UpdateBarrelStatus();
-                    }
-                }
-            }
-        }
+        // Transfer barrel bundle.
+        BarrelBundle = W.BarrelBundle;
+        W.BarrelBundle = none;
+        BarrelBundle.SetOwner(self);
+        BarrelBundle.OnTemperatureChanged = none;
+        BarrelBundle.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
+        BarrelBundle.OnConditionChanged = none;
+        BarrelBundle.ForceUpdateBarrelStatus();
         
         // If the weapon is empty and we have an empty static mesh variant, show that instead
         if (EmptyStaticMesh != none && W.AmmoAmount(0) == 0)
@@ -209,7 +194,7 @@ function InitDroppedPickupFor(Inventory Inv)
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+simulated function OnBarrelIsSteamActiveChanged(int BarrelIndex, bool bIsSteamActive)
 {
     bBarrelSteamActive = bIsSteamActive;
 

@@ -20,14 +20,6 @@ struct SBarrel
     var class<WeaponAmbientEmitter> EffectEmitterClass;     // class for the barrel firing effect emitters
     var DHMGSteam                   SteamEmitter;
     var class<DHWeaponBarrel>       BarrelClass;            // class for the barrel actor to spawn (if any)
-    var DHWeaponBarrel              BarrelActor;            // barrel object for this barrel (if any)
-};
-
-struct SBarrelState
-{
-    var bool bIsSteamActive;
-    var float Temperature;
-    var DHWeaponBarrel.EBarrelCondition Condition;
 };
 
 var class<DHMGSteam>    BarrelSteamEmitterClass;
@@ -37,8 +29,19 @@ var byte            FiringBarrelIndex;        // Barrel index that is due to fir
 var array<SBarrel>  Barrels;
 
 // For weapons with multiple active barrels (i.e. quad maxim guns etc.)
+// TODO: this is being replaced by the barrel bundle.
+// TODO: this doesn't even actually work beacuse we aren't passing classes
+// in the CV33 and M45.
 const BARRELS_MAX = 4;
+struct SBarrelState
+{
+    var bool bIsSteamActive;
+    var float Temperature;
+    var DHWeaponBarrel.EBarrelCondition Condition;
+};
 var SBarrelState    BarrelStates[BARRELS_MAX];
+
+var DHWeaponBarrelBundle BarrelBundle;
 
 replication
 {
@@ -50,31 +53,11 @@ function SpawnBarrels()
 {
     local int i;
 
-    for (i = 0; i < Barrels.Length; ++i)
-    {
-        if (Barrels[i].BarrelClass == none)
-        {
-            return;
-        }
+    BarrelBundle = Spawn(Class'DHWeaponBarrelBundle', self);
 
-        Barrels[i].BarrelActor = Spawn(Barrels[i].BarrelClass, self);
-
-        // TODO: for now, just make the barrel "active" until we can add barrel swaps
-        // or design a better way to handle this.
-
-        if (Barrels[i].BarrelActor != none)
-        {
-            Barrels[i].BarrelActor.SetCurrentBarrel(true);
-            Barrels[i].BarrelActor.OnTemperatureChanged = OnBarrelTemperatureChanged;
-            Barrels[i].BarrelActor.OnConditionChanged = OnBarrelConditionChanged;
-            Barrels[i].BarrelActor.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
-
-            // Attach the barrel actor to the MG.
-            // This is not strictly necessary since the barrel has no visual representation and is server-side only.
-            AttachToBone(Barrels[i].BarrelActor, Barrels[i].MuzzleBone);
-            Barrels[i].BarrelActor.SetRelativeLocation(vect(0.0, 0.0, 0.0));
-        }
-    }
+    BarrelBundle.OnTemperatureChanged = OnBarrelTemperatureChanged;
+    BarrelBundle.OnConditionChanged = OnBarrelConditionChanged;
+    BarrelBundle.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
 }
 
 // Modified to interrupt firing if any of the active barrels have failed.
@@ -82,9 +65,9 @@ event bool AttemptFire(Controller C, bool bAltFire)
 {
     local int i;
 
-    for (i = 0; i < Barrels.Length; ++i)
+    for (i = 0; i < BarrelBundle.Barrels.Length; ++i)
     {
-        if (Barrels[i].BarrelActor != none && Barrels[i].BarrelActor.Condition == BC_Failed)
+        if (BarrelBundle.Barrels[i] != none && BarrelBundle.Barrels[i].Condition == BC_Failed)
         {
             return false;
         }
@@ -292,9 +275,9 @@ function Fire(Controller C)
                 SpawnProjectile(ProjectileClass, false);
             }
 
-            if (FiringBarrelIndex < Barrels.Length && Barrels[FiringBarrelIndex].BarrelActor != none)
+            if (BarrelBundle != none)
             {
-                Barrels[FiringBarrelIndex].BarrelActor.WeaponFired();
+                BarrelBundle.WeaponFired(FiringBarrelIndex);
             }
 
             bSkipFiringEffects = true; // so we don't repeat firing effects after the 1st projectile
@@ -304,9 +287,9 @@ function Fire(Controller C)
     }
     else
     {
-        if (Barrels.Length > 0 && Barrels[0].BarrelActor != none)
+        if (BarrelBundle != none)
         {
-            Barrels[0].BarrelActor.WeaponFired();
+            BarrelBundle.WeaponFired();
         }
 
         super.Fire(C);
@@ -362,27 +345,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
 // Modified to change the pitch of the firing sound based on the barrel temperature.
 simulated function float GetFireSoundPitch()
 {
-    if (FiringBarrelIndex < 0 || FiringBarrelIndex >= Barrels.Length || Barrels[FiringBarrelIndex].BarrelActor == none)
+    if (FiringBarrelIndex < 0 || FiringBarrelIndex >= Barrels.Length)
     {
         return 1.0;
     }
 
-    return Barrels[FiringBarrelIndex].BarrelActor.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
-}
-
-function int GetBarrelIndex(DHWeaponBarrel Barrel)
-{
-    local int i;
-
-    for (i = 0; i < Barrels.Length; ++i)
-    {
-        if (Barrels[i].BarrelActor == Barrel)
-        {
-            return i;
-        }
-    }
-
-    return -1;
+    return Barrels[FiringBarrelIndex].BarrelClass.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
 }
 
 // Client-only function to enable or disable the steam emitter for a barrel.
@@ -435,13 +403,9 @@ simulated function UpdateBarrelSteam()
     }
 }
 
-function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemperature)
+function OnBarrelTemperatureChanged(int BarrelIndex, float NewTemperature)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
-    if (BarrelIndex != -1)
+    if (BarrelIndex >= 0 && BarrelIndex < arraycount(BarrelStates))
     {
         BarrelStates[BarrelIndex].Temperature = NewTemperature;
     }
@@ -452,25 +416,17 @@ function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemperature)
     }
 }
 
-function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition NewCondition)
+function OnBarrelConditionChanged(int BarrelIndex, DHWeaponBarrel.EBarrelCondition NewCondition)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
-    if (BarrelIndex != -1)
+    if (BarrelIndex >= 0 && BarrelIndex < arraycount(BarrelStates))
     {
         BarrelStates[BarrelIndex].Condition = NewCondition;
     }
 }
 
-function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+function OnBarrelIsSteamActiveChanged(int BarrelIndex, bool bIsSteamActive)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
-    if (BarrelIndex != -1)
+    if (BarrelIndex >= 0 && BarrelIndex < arraycount(BarrelStates))
     {
         BarrelStates[BarrelIndex].bIsSteamActive = bIsSteamActive;
 
