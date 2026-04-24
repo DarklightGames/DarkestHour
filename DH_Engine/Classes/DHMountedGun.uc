@@ -182,7 +182,7 @@ function bool DismountWeapon(DHPawn Instigator, optional out DHWeapon Dismounted
     // what happens to the remainder? maybe we just discard it. at least this way we aren't creating ammo from thin air.
 
     // TODO: transfer the state of the weapon (amount of ammo, barrel state etc.)
-    DismountedWeapon.Ammo[0] = Weapons[0].MainAmmoCharge[0];
+    //DismountedWeapon.Ammo[0] = Weapons[0].MainAmmoCharge[0];
 
     return DismountedWeapon != none;
 }
