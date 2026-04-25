@@ -2,21 +2,20 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] fire/move marks hit the backside of the gun
-//==============================================================================
 
-class DH_M1919A4Gun extends DHMountedGun
-    abstract;
+class DH_M1919A4_M1917_Gun extends DHMountedGun
+    //abstract
+    ;
 
 defaultproperties
 {
     BeginningIdleAnim="idle"
     VehicleNameString="M1919A4 Browning Machine Gun"
-    Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M2_BODY_EXT'
+    Mesh=SkeletalMesh'DH_M1919_anm.TRIPOD_M1917_BODY'
     bCanBeRotated=true
     CollisionRadius=36.0
     CollisionHeight=36.0
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4MGPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4_M1917_MGPawn',WeaponBone="turret_placement")
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
     VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'
