@@ -40,18 +40,18 @@ defaultproperties
     ProjectileDescriptions(1)="HEAT"
 
     nProjectileDescriptions(0)="OF-350"
-    nProjectileDescriptions(1)="BP-350M"
+    nProjectileDescriptions(1)="BP-353A"
 
     PrimaryProjectileClass=Class'DH_M1927CannonShellHE'
-    SecondaryProjectileClass=Class'DH_LeIG18CannonShellHEAT'
+    SecondaryProjectileClass=Class'DH_M1927CannonShellHEAT'
 
     InitialPrimaryAmmo=28
-    InitialSecondaryAmmo=4
+    InitialSecondaryAmmo=5 //HEAT came in crates of 5 shells.
     MaxPrimaryAmmo=28
-    MaxSecondaryAmmo=4
+    MaxSecondaryAmmo=5
 
     Spread=0.020
-    SecondarySpread=0.00125
+    SecondarySpread=0.002
 
     // Weapon fire
     WeaponFireOffset=0
