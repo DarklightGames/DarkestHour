@@ -7,7 +7,8 @@ class DH_M1919A4_M1917_MG extends DH_M1919A4MG;
 
 defaultproperties
 {   
-    Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M1917_GUN_INT'
+    // Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M1917_GUN_INT'
+    //Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M1917_GUN_EXT'
 
     YawBone="M1917_YAW"
     PitchBone="M1917_PITCH"
