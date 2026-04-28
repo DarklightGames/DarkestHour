@@ -2083,6 +2083,23 @@ ignores SeePlayer, HearNoise, Bump;
                 }
                 else
                 {
+                    // Keep applying throttle when chat is open
+                    if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
+                    {
+                        if (aForward != 0.0)
+                        {
+                            aForwardWhileTyping = aForward;
+                        }
+                        else if (aForwardWhileTyping != 0.0)
+                        {
+                            aForward = aForwardWhileTyping;
+                        }
+                    }
+                    else if (aForwardWhileTyping != 0.0)
+                    {
+                        aForwardWhileTyping = 0.0;
+                    }
+
                     if (CurrentVehicle != none)
                     {
                         CurrentVehicle.Throttle = FClamp(aForward / 5000.0, -1.0, 1.0);
@@ -2096,6 +2113,7 @@ ignores SeePlayer, HearNoise, Bump;
         }
         else
         {
+            // TODO: Lots of duplicate logic here can be refactored.
             if (bIncrementalThrottle)
             {
                 if (aForward > 0.0)
