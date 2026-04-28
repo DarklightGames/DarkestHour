@@ -2001,6 +2001,57 @@ ignores SeePlayer, HearNoise, Bump;
         // Update 'looking' rotation
         UpdateRotation(DeltaTime, 2.0);
 
+        if (CurrentVehicle != none && bIncrementalThrottle)
+        {
+            if (aForward > 0.0)
+            {
+                CurrentVehicle.ThrottleAmount += DeltaTime * ThrottleChangeRate;
+            }
+            else if (aForward < 0.0)
+            {
+                CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
+            }
+
+            CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0);
+            AppliedThrottle = CurrentVehicle.ThrottleAmount;
+
+            // Stop if the throttle is below this amount
+            if (Abs(AppliedThrottle) < 500.0)
+            {
+                AppliedThrottle = 0.0;
+            }
+
+            // Brakes are on, so zero the throttle
+            if (aUp > 0.0)
+            {
+                AppliedThrottle = 0.0;
+                CurrentVehicle.ThrottleAmount = 0.0;
+            }
+        }
+        else if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
+        {
+            if (aForward != 0.0)
+            {
+                // Enable auto-throttle in the next tick.
+                aForwardWhileTyping = aForward;
+                AppliedThrottle = aForward;
+            }
+            else if (aForwardWhileTyping != 0.0)
+            {
+                // Keep applying throttle while chat is open.
+                AppliedThrottle = aForwardWhileTyping;
+            }
+        }
+        else
+        {
+            if (aForwardWhileTyping != 0.0)
+            {
+                aForwardWhileTyping = 0.0;
+            }
+
+            AppliedThrottle = aForward;
+        }
+
         // TODO: Don't send things like aForward and aStrafe for gunners who don't need it - only servers can actually do the driving logic
         if (Role < ROLE_Authority)
         {
@@ -2048,122 +2099,19 @@ ignores SeePlayer, HearNoise, Bump;
                 aLastForward = aForward;
                 aLastStrafe = aStrafe;
 
-                if (bIncrementalThrottle)
+                if (CurrentVehicle != none)
                 {
-                    if (aForward > 0.0)
-                    {
-                        CurrentVehicle.ThrottleAmount += DeltaTime * ThrottleChangeRate;
-                    }
-                    else if (aForward < 0.0)
-                    {
-                        CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
-                    }
-
-                    CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0);
-                    AppliedThrottle = CurrentVehicle.ThrottleAmount;
-
-                    // Stop if the throttle is below this amount
-                    if (Abs(AppliedThrottle) < 500.0)
-                    {
-                        AppliedThrottle = 0.0;
-                    }
-
-                    // Brakes are on, so zero the throttle
-                    if (aUp > 0.0)
-                    {
-                        AppliedThrottle = 0.0;
-                        CurrentVehicle.ThrottleAmount = 0.0;
-                    }
-
                     CurrentVehicle.Throttle = FClamp(AppliedThrottle / 5000.0, -1.0, 1.0);
                     CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0);
                     CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0);
-
-                    ServerDrive(AppliedThrottle, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
                 }
-                else
-                {
-                    // Keep applying throttle when chat is open
-                    if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
-                    {
-                        if (aForward != 0.0)
-                        {
-                            aForwardWhileTyping = aForward;
-                        }
-                        else if (aForwardWhileTyping != 0.0)
-                        {
-                            aForward = aForwardWhileTyping;
-                        }
-                    }
-                    else if (aForwardWhileTyping != 0.0)
-                    {
-                        aForwardWhileTyping = 0.0;
-                    }
 
-                    if (CurrentVehicle != none)
-                    {
-                        CurrentVehicle.Throttle = FClamp(aForward / 5000.0, -1.0, 1.0);
-                        CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0);
-                        CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0);
-                    }
-
-                    ServerDrive(aForward, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
-                }
+                ServerDrive(AppliedThrottle, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
             }
         }
         else
         {
-            // TODO: Lots of duplicate logic here can be refactored.
-            if (bIncrementalThrottle)
-            {
-                if (aForward > 0.0)
-                {
-                    CurrentVehicle.ThrottleAmount += DeltaTime * ThrottleChangeRate;
-                }
-                else if (aForward < 0.0)
-                {
-                    CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
-                }
-
-                CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0);
-                AppliedThrottle = CurrentVehicle.ThrottleAmount;
-
-                // Stop if the throttle is below this amount
-                if (Abs(AppliedThrottle) < 500.0)
-                {
-                    AppliedThrottle = 0.0;
-                }
-
-                // Brakes are on, so zero the throttle
-                if (aUp > 0.0)
-                {
-                    AppliedThrottle = 0.0;
-                    CurrentVehicle.ThrottleAmount = 0.0;
-                }
-
-                ProcessDrive(AppliedThrottle, aStrafe, aUp, bPressedJump);
-            }
-            else
-            {
-                // Keep applying throttle when chat is open
-                if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
-                {
-                    if (aForward != 0.0)
-                    {
-                        aForwardWhileTyping = aForward;
-                    }
-                    else if (aForwardWhileTyping != 0.0)
-                    {
-                        aForward = aForwardWhileTyping;
-                    }
-                }
-                else if (aForwardWhileTyping != 0.0)
-                {
-                    aForwardWhileTyping = 0.0;
-                }
-
-                ProcessDrive(aForward, aStrafe, aUp, bPressedJump);
-            }
+            ProcessDrive(AppliedThrottle, aStrafe, aUp, bPressedJump);
         }
 
         // If the vehicle is being controlled here, set replicated variables
