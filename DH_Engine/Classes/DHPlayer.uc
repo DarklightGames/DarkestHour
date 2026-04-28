@@ -61,10 +61,9 @@ var     bool                    bIsGagged;           // player is gagged from ch
 
 // Continue automatically running or driving after opening chat
 var     globalconfig bool       bKeepMovingWhileTyping;
-var     private      float      LastForwardInputBeforeTyping;
-var     private      float      LastStrafeInputBeforeTyping;
-var     private      byte       LastSprintInputBeforeTyping;
-var     private      bool       bDisableSprintForTypingSession;
+var     private      float      aForwardWhileTyping;
+var     private      float      aStrafeWhileTyping;
+var     private      byte       bSprintWhileTyping;
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
@@ -1402,36 +1401,34 @@ function HandleWalking()
         P.SetWalking(bRun != 0);
     }
 
-    if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping && !bDisableSprintForTypingSession)
+    if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
     {
-        // Disable auto-sprint for the remainder of the typing session to prevent character
-        // continuously going in and out of sprint when out of stamina.
         if (P.Stamina ~= 0.0)
         {
-            bDisableSprintForTypingSession = true;
+            // Disable auto-sprint for the remainder of the typing session to prevent character
+            // continuously going in and out of sprint when out of stamina.
+            bSprint = 0;
+            bSprintWhileTyping = 0;
         }
-
-        if (bSprint != 0)
+        else if (bSprint != 0)
         {
-            LastSprintInputBeforeTyping = bSprint;
+            // Enable auto-sprint on the next tick.
+            bSprintWhileTyping = bSprint;
         }
-
-        P.SetSprinting(LastSprintInputBeforeTyping != 0);
+        else if (bSprintWhileTyping != 0.0)
+        {
+            // Keep forcing sprint input to a positive value.
+            bSprint = bSprintWhileTyping;
+        }
     }
-    else
+    else if (bSprintWhileTyping != 0)
     {
-        if (bDisableSprintForTypingSession)
-        {
-            bDisableSprintForTypingSession = false;
-        }
-
-        if (LastSprintInputBeforeTyping != 0)
-        {
-            LastSprintInputBeforeTyping = 0;
-        }
-
-        P.SetSprinting(bSprint != 0);
+        // Reset input to stop character from sprinting after exiting chat.
+        bSprint = 0;
+        bSprintWhileTyping = 0;
     }
+
+    P.SetSprinting(bSprint != 0);
 }
 
 // Modified to edit an if state in Timer()
@@ -1608,34 +1605,32 @@ state PlayerWalking
             {
                 if (aForward != 0.0)
                 {
-                    LastForwardInputBeforeTyping = aForward;
+                    aForwardWhileTyping = aForward;
                 }
-
-                if (LastForwardInputBeforeTyping != 0.0)
+                else if (aForwardWhileTyping != 0.0)
                 {
-                    aForward = LastForwardInputBeforeTyping;
+                    aForward = aForwardWhileTyping;
                 }
 
                 if (aStrafe != 0.0)
                 {
-                    LastStrafeInputBeforeTyping = aStrafe;
+                    aStrafeWhileTyping = aStrafe;
                 }
-
-                if (LastStrafeInputBeforeTyping != 0.0)
+                else if (aStrafeWhileTyping != 0.0)
                 {
-                    aStrafe = LastStrafeInputBeforeTyping;
+                    aStrafe = aStrafeWhileTyping;
                 }
             }
             else
             {
-                if (LastForwardInputBeforeTyping != 0.0)
+                if (aForwardWhileTyping != 0.0)
                 {
-                    LastForwardInputBeforeTyping = 0.0;
+                    aForwardWhileTyping = 0.0;
                 }
 
-                if (LastStrafeInputBeforeTyping != 0.0)
+                if (aStrafeWhileTyping != 0.0)
                 {
-                    LastStrafeInputBeforeTyping = 0.0;
+                    aStrafeWhileTyping = 0.0;
                 }
             }
         }
@@ -2137,17 +2132,16 @@ ignores SeePlayer, HearNoise, Bump;
                 {
                     if (aForward != 0.0)
                     {
-                        LastForwardInputBeforeTyping = aForward;
+                        aForwardWhileTyping = aForward;
                     }
-
-                    if (LastForwardInputBeforeTyping != 0.0)
+                    else if (aForwardWhileTyping != 0.0)
                     {
-                        aForward = LastForwardInputBeforeTyping;
+                        aForward = aForwardWhileTyping;
                     }
                 }
-                else if (LastForwardInputBeforeTyping != 0.0)
+                else if (aForwardWhileTyping != 0.0)
                 {
-                    LastForwardInputBeforeTyping = 0.0;
+                    aForwardWhileTyping = 0.0;
                 }
 
                 ProcessDrive(aForward, aStrafe, aUp, bPressedJump);
