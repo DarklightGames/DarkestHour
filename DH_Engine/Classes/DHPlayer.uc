@@ -59,6 +59,13 @@ var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
 var     bool                    bIsGagged;           // player is gagged from chatting
 
+// Continue automatically running or driving after opening chat
+var     globalconfig bool       bKeepMovingWhileTyping;
+var     private      float      LastForwardInputBeforeTyping;
+var     private      float      LastStrafeInputBeforeTyping;
+var     private      byte       LastSprintInputBeforeTyping;
+var     private      bool       bDisableSprintForTypingSession;
+
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
 var     DHHintManager           DHHintManager;
@@ -1370,6 +1377,63 @@ function ClientSetBehindView(bool B)
     }
 }
 
+// Overriden to add support for auto-sprint
+function HandleWalking()
+{
+    local ROPawn P;
+
+    P = ROPawn(Pawn);
+
+    if (P == None)
+    {
+        return;
+    }
+
+    if (P.bIsCrawling)
+    {
+        P.SetWalking(false);
+    }
+    else if (P.bIronSights)
+    {
+        P.SetWalking(true);
+    }
+    else
+    {
+        P.SetWalking(bRun != 0);
+    }
+
+    if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping && !bDisableSprintForTypingSession)
+    {
+        // Disable auto-sprint for the remainder of the typing session to prevent character
+        // continuously going in and out of sprint when out of stamina.
+        if (P.Stamina ~= 0.0)
+        {
+            bDisableSprintForTypingSession = true;
+        }
+
+        if (bSprint != 0)
+        {
+            LastSprintInputBeforeTyping = bSprint;
+        }
+
+        P.SetSprinting(LastSprintInputBeforeTyping != 0);
+    }
+    else
+    {
+        if (bDisableSprintForTypingSession)
+        {
+            bDisableSprintForTypingSession = false;
+        }
+
+        if (LastSprintInputBeforeTyping != 0)
+        {
+            LastSprintInputBeforeTyping = 0;
+        }
+
+        P.SetSprinting(bSprint != 0);
+    }
+}
+
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
@@ -1535,6 +1599,44 @@ state PlayerWalking
             else
             {
                 aForward = 5999.9; // If toggle run, then make aForward as close as possible to 6000.0, but not
+            }
+        }
+        else
+        {
+            // Keep running when chat is open
+            if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
+            {
+                if (aForward != 0.0)
+                {
+                    LastForwardInputBeforeTyping = aForward;
+                }
+
+                if (LastForwardInputBeforeTyping != 0.0)
+                {
+                    aForward = LastForwardInputBeforeTyping;
+                }
+
+                if (aStrafe != 0.0)
+                {
+                    LastStrafeInputBeforeTyping = aStrafe;
+                }
+
+                if (LastStrafeInputBeforeTyping != 0.0)
+                {
+                    aStrafe = LastStrafeInputBeforeTyping;
+                }
+            }
+            else
+            {
+                if (LastForwardInputBeforeTyping != 0.0)
+                {
+                    LastForwardInputBeforeTyping = 0.0;
+                }
+
+                if (LastStrafeInputBeforeTyping != 0.0)
+                {
+                    LastStrafeInputBeforeTyping = 0.0;
+                }
             }
         }
 
@@ -2030,6 +2132,24 @@ ignores SeePlayer, HearNoise, Bump;
             }
             else
             {
+                // Keep applying throttle when chat is open
+                if (Player.Console != none && Player.Console.bTyping && bKeepMovingWhileTyping)
+                {
+                    if (aForward != 0.0)
+                    {
+                        LastForwardInputBeforeTyping = aForward;
+                    }
+
+                    if (LastForwardInputBeforeTyping != 0.0)
+                    {
+                        aForward = LastForwardInputBeforeTyping;
+                    }
+                }
+                else if (LastForwardInputBeforeTyping != 0.0)
+                {
+                    LastForwardInputBeforeTyping = 0.0;
+                }
+
                 ProcessDrive(aForward, aStrafe, aUp, bPressedJump);
             }
         }
@@ -8159,6 +8279,7 @@ defaultproperties
     VehiclePoolIndex=-1
     SpectateSpeed=+1200.0
     MinDesiredFPS=+60
+    bKeepMovingWhileTyping=true
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
