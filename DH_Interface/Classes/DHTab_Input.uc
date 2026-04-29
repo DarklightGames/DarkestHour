@@ -370,10 +370,10 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=KeepMovingWhileTyping
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
-        Caption="Keep Moving While Typing"
+        Caption="Keep Moving With Chat Open"
         OnCreateComponent=KeepMovingWhileTyping.InternalOnCreateComponent
         IniOption="@Internal"
-        Hint="Continue running or driving after opening chat"
+        Hint="Continue running or driving after opening the chat prompt."
         WinTop=0.717552
         WinLeft=0.060938
         WinWidth=0.3
