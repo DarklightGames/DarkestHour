@@ -51,7 +51,10 @@ class DH_MG34LafetteMG extends DHMountedMG;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_MG34_anm.MG34_TURRET_EXT'
-    // Skins(0)=Texture'DH_Maxim_tex.MAXIM_TURRET_EXT'
+    Skins(0)=Texture'DH_MG34_tex.MG34_3RD'
+    Skins(1)=Texture'DH_MG34_tex.MG_BIPOD_3RD'
+    Skins(2)=Texture'DH_MG34_tex.Lafette.LAFETTE_TURRET_GRAY_3RD'
+    Skins(3)=Texture'DH_MG34_tex.Lafette.LAFETTE_SIGHT_3RD'
 
     Begin Object Class=DHWeaponRangeParams Name=RangeParams0
         DistanceUnit=DU_Meters

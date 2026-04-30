@@ -1807,29 +1807,16 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 }
 
-// Modified to add option to skin cannon mesh using CannonSkins array in Vehicle class (avoiding need for separate cannon pawn & cannon classes just for camo variants)
 // Also to give Vehicle a 'Cannon' reference to this actor
 simulated function InitializeVehicleBase()
 {
     local DHVehicle V;
-    local int       i;
 
     V = DHVehicle(Base);
 
     if (V != none)
     {
         V.Cannon = self;
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            for (i = 0; i < V.CannonSkins.Length; ++i)
-            {
-                if (V.CannonSkins[i] != none)
-                {
-                    Skins[i] = V.CannonSkins[i];
-                }
-            }
-        }
     }
 
     super.InitializeVehicleBase();

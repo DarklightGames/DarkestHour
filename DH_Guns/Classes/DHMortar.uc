@@ -6,8 +6,8 @@
 class DHMortar extends DHMountedGun
     abstract;
 
-var DHConstructionSocket Socket;
-var DHConstructionSocketParameters Params;
+var DHConstructionSocket            Socket;
+var DHConstructionSocketParameters  SocketParameters;
 
 replication
 {
@@ -25,7 +25,7 @@ simulated function PostBeginPlay()
 
         if (Socket != none)
         {
-            Socket.Setup(Params);
+            Socket.Setup(SocketParameters);
             Socket.SetBase(self);
             Socket.SetRelativeLocation(vect(0, 0, 0));
             Socket.SetRelativeRotation(rot(0, 0, 0));
@@ -69,5 +69,5 @@ defaultproperties
     Begin Object Class=DHConstructionSocketParameters Name=MortarPitSocketParams
         TagFilters(0)=(Operation=Include,Tag=CT_MortarPit)
     End Object
-    Params=MortarPitSocketParams
+    SocketParameters=MortarPitSocketParams
 }

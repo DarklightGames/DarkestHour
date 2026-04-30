@@ -10,7 +10,7 @@ defaultproperties
     VehicleTeam=AXIS_TEAM_INDEX
     VehicleNameString="Maschinengewehr 42 (Lafette)"
     Mesh=SkeletalMesh'DH_MG34_anm.LAFETTE_BODY_EXT'
-    //Skins(0)=Texture'DH_Maxim_tex.MAXIM_BODY_EXT'
+    Skins(0)=Texture'DH_MG34_tex.Lafette.LAFETTE_BODY_GRAY'
     BeginningIdleAnim="LAFETTE_BODY_HIGH"
     bCanBeRotated=true
     CollisionRadius=40.0

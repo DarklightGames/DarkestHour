@@ -1379,6 +1379,9 @@ simulated function InitializeWeaponPawn(DHVehicleWeaponPawn WeaponPwn)
 // Using it to add option to reposition VehicleWeapon attachment, & to start a hatch fire if armoured vehicle is burning when replicated.
 simulated function InitializeVehicleBase()
 {
+    local DHVehicle V;
+    local int       i;
+
     // Set any optional attachment offset, when attaching weapon to hull (set separately on net client as replication is unreliable & loses fractional precision)
     if (WeaponAttachOffset != vect(0.0, 0.0, 0.0))
     {
@@ -1395,6 +1398,24 @@ simulated function InitializeVehicleBase()
     if (WeaponPawn != none && !bInitializedVehicleAndWeaponPawn)
     {
         InitializeVehicleAndWeaponPawn();
+    }
+
+    // Modified to skin the weapon mesh using CannonSkins array in Vehicle class.
+    // This avoids the need for separate weapon and weapon pawn classes just for camo variants.
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        V = DHVehicle(Base);
+
+        if (V != none)
+        {
+            for (i = 0; i < V.CannonSkins.Length; ++i)
+            {
+                if (V.CannonSkins[i] != none)
+                {
+                    Skins[i] = V.CannonSkins[i];
+                }
+            }
+        }
     }
 
     SpawnWeaponAttachments();
