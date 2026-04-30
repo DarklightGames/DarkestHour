@@ -3,15 +3,13 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M1919A4_M1917_Gun extends DHMountedGun
-    //abstract
-    ;
+class DH_M1919A4_M1917_Gun extends DHMountedGun;
 
 defaultproperties
 {
     BeginningIdleAnim="idle"
     VehicleNameString="M1919A4 Browning Machine Gun"
-    Mesh=SkeletalMesh'DH_M1919_anm.TRIPOD_M1917_BODY'
+    Mesh=SkeletalMesh'DH_M1919A4_anm.TRIPOD_M1917_BODY'
     bCanBeRotated=true
     CollisionRadius=36.0
     CollisionHeight=36.0

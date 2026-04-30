@@ -9,6 +9,6 @@ defaultproperties
 {
     DriverPositions(0)=(bExposed=true)
     GunClass=Class'DH_M1919A4MG'
-    CameraBone="GUNNER_CAMERA"
+    CameraBone="SIGHT_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
 }

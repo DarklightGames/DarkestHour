@@ -7,10 +7,15 @@ class DH_M1919A4_M2_MG extends DH_M1919A4MG;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_M1919_anm.M1919A4_M2_GUN_EXT'
+    Mesh=SkeletalMesh'DH_M1919A4_anm.M1919A4_M2_TURRET_EXT'
 
-    YawBone="GUN_YAW"
-    PitchBone="GUN_PITCH"
+    MaxNegativeYaw=-2184    // -12 degrees
+    MaxPositiveYaw=2184     // +12 degrees
+    CustomPitchUpLimit=3640     // +20 degrees
+    CustomPitchDownLimit=61895  // -20 degrees
+
+    YawBone="PINTLE_YAW"
+    PitchBone="PINTLE_PITCH"
 
     FiringAnim="BOLT_FIRING"
     FiringIdleAnim="BOLT_IDLE"

@@ -7,8 +7,8 @@ class DH_M1919A4_M2_MGPawn extends DHMountedMGPawn;
 
 defaultproperties
 {
-    DriverPositions(0)=(bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M1919A4_anm.M1919A4_M2_TURRET_INT',bExposed=true)
     GunClass=Class'DH_M1919A4_M2_MG'
-    CameraBone="GUNNER_CAMERA"
+    CameraBone="SIGHT_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
 }
