@@ -3,12 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] add ammo box
-// [ ] third person animations
-// [ ] calibrate sight
 // [ ] figure out pitch limits
-// [ ] first person reload animations
 // [ ] ejector bone
-// [ ] collision meshes
 //==============================================================================
 
 class DH_M1919A4_M1917_MG extends DH_M1919A4MG;
@@ -33,4 +29,7 @@ defaultproperties
     FiringIdleAnim="BOLT_IDLE"
     FiringChannel=2
     FiringBone="FIRING_ROOT"
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M1917_TURRET_PITCH_COLLISION',AttachBone="TURRET_PITCH")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M1917_TURRET_YAW_COLLISION',AttachBone="TURRET_YAW")
 }

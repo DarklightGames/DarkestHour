@@ -21,4 +21,6 @@ defaultproperties
     FiringIdleAnim="BOLT_IDLE"
     FiringChannel=2
     FiringBone="FIRING_ROOT"
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1919A4_stc.M1919A4_GUN_COLLISION',AttachBone="PINTLE_PITCH")
 }

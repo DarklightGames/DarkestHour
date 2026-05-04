@@ -7,8 +7,7 @@ class DH_M1919A4_M1917_MGPawn extends DHMountedMGPawn;
 
 defaultproperties
 {
-    // TODO: spelling error
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M1919A4_anm.M1919A4_M9117_TURRET_INT',bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M1919A4_anm.M1919A4_M9117_TURRET_INT',ViewFOV=72.5,bExposed=true)
     GunClass=Class'DH_M1919A4_M1917_MG'
     CameraBone="SIGHT_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
