@@ -13,8 +13,8 @@ defaultproperties
     CollisionHeight=36.0
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4_M2_MGPawn',WeaponBone="turret_placement")
     RotationsPerSecond=0.125
-    VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'
-    VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'
-    VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'
+    VehicleHudImage=Texture'DH_M1919A4_tex.HUD.M1919A4_M2_BODY'
+    VehicleHudTurret=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_ROT'  // TODO: spelling error
+    VehicleHudTurretLook=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_LOOK'
     MountedWeaponClass=Class'DH_M1919A4Weapon'
 }

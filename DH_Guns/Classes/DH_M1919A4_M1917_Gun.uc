@@ -16,9 +16,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_M1919A4_M1917_MGPawn',WeaponBone="turret_placement")
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
-    VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'
-    VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'
-    VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'
+    VehicleHudImage=Texture'DH_M1919A4_tex.HUD.M1919A4_M1917_BODY'
+    VehicleHudTurret=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M1917_TURRET_ROT'
+    VehicleHudTurretLook=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M1917_TURRET_LOOK'
     VehicleTeam=1
     // In order for the collision meshes to actually work, for some reason there needs to be karma shapes.
     // However, we don't actually want the gun to move, so we set the max speed and angular speed to 0.

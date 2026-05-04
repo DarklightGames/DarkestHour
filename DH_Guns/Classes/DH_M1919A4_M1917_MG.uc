@@ -2,7 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] add ammo box
 // [ ] figure out pitch limits
 // [ ] ejector bone
 //==============================================================================
