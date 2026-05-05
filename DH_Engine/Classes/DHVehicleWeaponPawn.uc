@@ -2286,7 +2286,7 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
             {
                 for (i = 0; i < Gun.default.Skins.Length; ++i)
                 {
-                    Gun.Skins[i] = Gun.default.Skins[0];
+                    Gun.Skins[i] = Gun.default.Skins[i];
                 }
             }
             else
