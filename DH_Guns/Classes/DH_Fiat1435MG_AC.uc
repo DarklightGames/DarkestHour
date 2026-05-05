@@ -33,6 +33,7 @@ defaultproperties
     NumMGMags=3
     ReloadSequence="RELOAD_WC"  // TODO: replace with "RELOAD_AC"
     Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_AC_3RD'
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT35_GUN_YAW_COLLISION',AttachBone="MG_YAW")
     WeaponFireAttachmentBone="MUZZLE_AC"
     WeaponFireOffset=-10.0
 
@@ -52,7 +53,6 @@ defaultproperties
     AmmoRoundBones(12)="BELT_13"
     AmmoRoundBones(13)="BELT_14"
     AmmoRoundBones(14)="BELT_15"
-    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_WC_COLLISION_YAW',AttachBone="MG_YAW")
     // HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
 
     EmptyAmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_BELT_LINK_EMPTY_1ST'
@@ -89,4 +89,5 @@ defaultproperties
     BarrelCount=1
     BarrelClass=Class'DH_Fiat1435MGBarrel'
     BarrelSteamBone="MUZZLE_AC"
+
 }

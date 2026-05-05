@@ -10,6 +10,8 @@ defaultproperties
 {
     VehicleNameString="Fiat-Revelli modello 14/35"
     Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_TRIPOD_3RD'
+    Skins(0)=Texture'DH_Fiat1435_tex.FIAT1435_3RD'
+    CannonSkins(0)=Texture'DH_Fiat1435_tex.FIAT1435_3RD'
     bCanBeRotated=true
     CollisionRadius=36.0
     CollisionHeight=36.0

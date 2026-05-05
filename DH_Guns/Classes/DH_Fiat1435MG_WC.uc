@@ -11,18 +11,14 @@ defaultproperties
 {
     InitialPrimaryAmmo=50
     NumMGMags=20
-
     ReloadSequence="RELOAD_WC"
-
     Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_3RD'
-
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT14_GUN_YAW_COLLISION',AttachBone="MG_YAW")
     WeaponFireAttachmentBone="MUZZLE_WC"
     WeaponFireOffset=-10.0
-
     ClipBone="CLIP"
     ClipAnim="CLIP_DRIVER"
     ClipChannel=3
-
     NumRoundsInStaticMesh=5
     AmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_CLIP_CARTRIDGE_1ST'
     AmmoRoundBones(0)="CLIP_CARTRIDGES_10"
@@ -35,11 +31,7 @@ defaultproperties
     AmmoRoundBones(7)="CLIP_CARTRIDGES_03"
     AmmoRoundBones(8)="CLIP_CARTRIDGES_02"
     AmmoRoundBones(9)="CLIP_CARTRIDGES_01"
-
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_WC_COLLISION_YAW',AttachBone="MG_YAW")
-
     HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
-
     BarrelCount=1
     BarrelClass=Class'DH_Fiat1435MGWCBarrel'
     BarrelSteamBone="MUZZLE_WC"
