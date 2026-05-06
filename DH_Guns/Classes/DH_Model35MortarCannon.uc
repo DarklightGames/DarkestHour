@@ -55,7 +55,7 @@ defaultproperties
     TertiaryProjectileClass=Class'DH_Model35MortarProjectileHEBig'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=2
+    InitialTertiaryAmmo=5
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
     MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
