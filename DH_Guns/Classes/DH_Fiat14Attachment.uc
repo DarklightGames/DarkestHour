@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435WCAttachment extends DHWeaponAttachment;
+class DH_Fiat14Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {

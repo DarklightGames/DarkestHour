@@ -3,12 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435WCWeapon extends DHMountedWeapon;
+class DH_Fiat14Pickup extends DHMountedWeaponPickup;
 
 defaultproperties
 {
-    ConstructionClasses(0)=Class'DH_Fiat1435GunConstruction'
-    AttachmentClass=Class'DH_Fiat1435WCAttachment'
-    PickupClass=Class'DH_Fiat1435WCPickup'
-    Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
+    InventoryType=Class'DH_Fiat14Weapon'
+    StaticMesh=StaticMesh'DH_M1919_stc.M1919A6_world'   // TODO: replace
 }

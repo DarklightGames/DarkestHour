@@ -5,7 +5,7 @@
 // Water-cooled, clip-fed version of the Fiat 14/35.
 //==============================================================================
 
-class DH_Fiat1435MG_WC extends DH_Fiat1435MG;
+class DH_Fiat14MG extends DH_Fiat1435MG;
 
 defaultproperties
 {
@@ -33,6 +33,6 @@ defaultproperties
     AmmoRoundBones(9)="CLIP_CARTRIDGES_01"
     HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
     BarrelCount=1
-    BarrelClass=Class'DH_Fiat1435MGWCBarrel'
+    BarrelClass=Class'DH_Fiat14MGBarrel'
     BarrelSteamBone="MUZZLE_WC"
 }

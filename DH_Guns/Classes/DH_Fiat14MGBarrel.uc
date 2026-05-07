@@ -3,10 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435ACPickup extends DHMountedWeaponPickup;
+class DH_Fiat14MGBarrel extends DH_Fiat1435MGBarrel;
 
 defaultproperties
 {
-    InventoryType=Class'DH_Fiat1435ACWeapon'
-    StaticMesh=StaticMesh'DH_M1919_stc.M1919A6_world'   // TODO: replace
+    // Increased cooling rate for the water-cooled version.
+    BarrelCoolingRate=2.25
 }

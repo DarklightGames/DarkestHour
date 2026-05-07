@@ -32,6 +32,8 @@
 // [ ] PLACED MAXIM HAS INCORRECT TEAM? possible bug introduced in merge
 // [ ] mounted guns start moving as karma objects once force is applied to them
 //     (grenade explosion nearby etc.) [mnight have to do with whether or not it has a karma collision box]
+//     can be stopped by going into rotate mode. we need to stop this thing from accepting karma forces at all.
+//     it should be permanently in "sleep" mode so we don't slide around.
 // [ ] view screws up once barrel has failed (due to CanFire being used in
 //     SpecialCamCalc or whatever it's called)
 // [ ] shells eject backwards with other mount (maybe make a second base mesh

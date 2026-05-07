@@ -5,7 +5,7 @@
 // Air-cooled, belt-fed version of the Fiat 14/35 MG
 //==============================================================================
 
-class DH_Fiat1435MG_AC extends DH_Fiat1435MG;
+class DH_Fiat35MG extends DH_Fiat1435MG;
 
 defaultproperties
 {

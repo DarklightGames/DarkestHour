@@ -6,12 +6,12 @@
 // want to be able to arbitrarily change variants after it's placed.
 //==============================================================================
 
-class DH_Fiat1435ACWeapon extends DHMountedWeapon;
+class DH_Fiat35Weapon extends DHMountedWeapon;
 
 defaultproperties
 {
     ConstructionClasses(0)=Class'DH_Fiat1435GunConstruction'
-    AttachmentClass=Class'DH_Fiat1435ACAttachment'
-    PickupClass=Class'DH_Fiat1435ACPickup'
+    AttachmentClass=Class'DH_Fiat35Attachment'
+    PickupClass=Class'DH_Fiat35Pickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
 }
