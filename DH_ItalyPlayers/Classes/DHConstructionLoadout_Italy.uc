@@ -26,7 +26,8 @@ defaultproperties
     Constructions(12)=(ConstructionClass=Class'DHConstruction_DragonsTooth_Italy',Limit=-1,MaxActive=-1)
 
     // Guns
-    Constructions(13)=(ConstructionClass=Class'DH_Cannone4732GunConstruction',Limit=5,MaxActive=-1)
-    Constructions(14)=(ConstructionClass=Class'DH_Model35MortarConstruction',Limit=3,MaxActive=-1)
-    Constructions(15)=(ConstructionClass=Class'DH_Fiat1435GunConstruction',Limit=5,MaxActive=-1)
+    Constructions(13)=(ConstructionClass=Class'DH_Fiat14GunConstruction',Limit=2,MaxActive=-1)
+    Constructions(14)=(ConstructionClass=Class'DH_Fiat35GunConstruction',Limit=3,MaxActive=-1)
+    Constructions(15)=(ConstructionClass=Class'DH_Model35MortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(16)=(ConstructionClass=Class'DH_Cannone4732GunConstruction',Limit=5,MaxActive=-1)
 }

@@ -10,7 +10,7 @@ class DH_Fiat35Weapon extends DHMountedWeapon;
 
 defaultproperties
 {
-    ConstructionClasses(0)=Class'DH_Fiat1435GunConstruction'
+    ConstructionClasses(0)=Class'DH_Fiat35GunConstruction'
     AttachmentClass=Class'DH_Fiat35Attachment'
     PickupClass=Class'DH_Fiat35Pickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'
