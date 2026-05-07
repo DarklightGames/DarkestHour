@@ -11,7 +11,7 @@ defaultproperties
     HandsReloadSequence="RELOAD_WC"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true)
     GunsightCameraBone="GUNSIGHT_CAMERA_WC"
-    VehicleMGReloadTexture=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_Fiat1435_tex.fiat14_ammo_reload'
 
     DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA_WC")
 }

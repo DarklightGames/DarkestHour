@@ -31,7 +31,7 @@ defaultproperties
     AmmoRoundBones(7)="CLIP_CARTRIDGES_03"
     AmmoRoundBones(8)="CLIP_CARTRIDGES_02"
     AmmoRoundBones(9)="CLIP_CARTRIDGES_01"
-    HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
+    HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat14_ammo_icon'
     BarrelCount=1
     BarrelClass=Class'DH_Fiat14MGBarrel'
     BarrelSteamBone="MUZZLE_WC"

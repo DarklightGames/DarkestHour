@@ -53,7 +53,6 @@ defaultproperties
     AmmoRoundBones(12)="BELT_13"
     AmmoRoundBones(13)="BELT_14"
     AmmoRoundBones(14)="BELT_15"
-    // HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
 
     EmptyAmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_BELT_LINK_EMPTY_1ST'
     EmptyAmmoRoundBones(0)="BELT_EMPTY_01"

@@ -20,8 +20,7 @@ defaultproperties
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
     VehicleHudImage=Texture'DH_Fiat1435_tex.fiat1435_tripod_icon'
-    VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_rot'
-    VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat1435_turret_wc_icon_look'
+    // VehicleHudTurret & VehicleHudTurretLook handled in subclasses.
     VehicleTeam=1
     // In order for the collision meshes to actually work, for some reason there needs to be karma shapes.
     // However, we don't actually want the gun to move, so we set the max speed and angular speed to 0.

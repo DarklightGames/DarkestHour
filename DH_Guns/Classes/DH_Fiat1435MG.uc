@@ -77,5 +77,5 @@ defaultproperties
 
     NumRoundsInStaticMesh=1
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_PITCH_COLLISION',AttachBone="MG_PITCH") // NAME IS ALL WRONG HERE
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_PITCH_COLLISION',AttachBone="MG_PITCH")
 }
