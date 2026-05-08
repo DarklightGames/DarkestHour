@@ -61,9 +61,9 @@ var     bool                    bIsGagged;           // player is gagged from ch
 
 // Continue automatically running or driving after opening chat
 var     globalconfig bool       bKeepMovingWhileTyping;
-var     private      float      aForwardWhileTyping;
-var     private      float      aStrafeWhileTyping;
-var     private      byte       bSprintWhileTyping;
+var                  float      aForwardWhileTyping;
+var                  float      aStrafeWhileTyping;
+var                  byte       bSprintWhileTyping;
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;

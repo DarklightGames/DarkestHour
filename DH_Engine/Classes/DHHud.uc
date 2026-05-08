@@ -124,6 +124,8 @@ var     localized string    PlaceRallyPointText;
 var     localized string    SayTypeConsoleText;
 var     localized string    SayTypeAllText;
 var     localized string    TypingPromptText;
+var     localized string    TypingPromptAutoWalkText;
+var     localized string    TypingPromptAutoDriveText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -5866,6 +5868,7 @@ function DHDrawTypingPrompt(Canvas C)
     local Color SayTypeColor;
     local string SayTypeText, PromptText;
     local class<DHLocalMessage> SayTypeMessageClass;
+    local DHPlayer PC;
 
     Console = DHConsole(PlayerConsole);
     SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
@@ -5905,6 +5908,18 @@ function DHDrawTypingPrompt(Canvas C)
 
     // Draw the button prompt for cycling chat modes.
     PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC.IsInState('PlayerDriving') && PC.aForwardWhileTyping != 0)
+    {
+        PromptText $= Repl(TypingPromptAutoDriveText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+    }
+    else if (PC.aStrafeWhileTyping != 0 || PC.aForwardWhileTyping != 0)
+    {
+        PromptText $= Repl(TypingPromptAutoWalkText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+    }
+
     YPos += YL;
     C.SetPos(XPos, YPos);
     C.DrawColor.A = 128;
@@ -6004,6 +6019,8 @@ defaultproperties
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
     TypingPromptText="Press [{0}] to change chat channel"
+    TypingPromptAutoWalkText=", [{0}] to stop moving"
+    TypingPromptAutoDriveText=", [{0}] to stop accelerating"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture

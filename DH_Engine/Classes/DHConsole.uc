@@ -1028,6 +1028,15 @@ state Typing
         {
             IncrementSayType();
         }
+        else if (Key == IK_Ctrl)
+        {
+            if (DHPlayer(ViewportOwner.Actor) != none)
+            {
+                DHPlayer(ViewportOwner.Actor).aForwardWhileTyping = 0;
+                DHPlayer(ViewportOwner.Actor).aStrafeWhileTyping = 0;
+                DHPlayer(ViewportOwner.Actor).bSprintWhileTyping = 0;
+            }
+        }
 
         return true;
     }
