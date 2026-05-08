@@ -745,6 +745,20 @@ exec function StartTyping()
     TypingOpen();
 }
 
+function TypingOpen()
+{
+    local DHPlayer PC;
+
+    super.TypingOpen();
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC.bKeepMovingWhileTyping)
+    {
+        PC.QueueHint(67, false);
+    }
+}
+
 // Modified to fix reconnect command bug
 exec function ConsoleClose()
 {
