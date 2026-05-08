@@ -194,6 +194,11 @@ function PostBeginPlay()
 
     MapIconAttachmentDrawOrderComparator = new class'UComparator';
     MapIconAttachmentDrawOrderComparator.CompareFunction = MapIconAttachmentDrawOrderCompareFunction;
+
+    // Initialize strings
+    TypingPromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+    TypingPromptStopDrivingText = Repl(TypingPromptStopDrivingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+    TypingPromptStopWalkingText = Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
 }
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
@@ -5907,7 +5912,6 @@ function DHDrawTypingPrompt(Canvas C)
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 
     // Draw the button prompt for cycling chat modes.
-    // TODO: The same string substitutions are repeated on each frame here. This should be done once when class is initialized.
     PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
 
     PC = DHPlayer(PlayerOwner);
@@ -5918,17 +5922,17 @@ function DHDrawTypingPrompt(Canvas C)
         {
             if (PC.IsInState('PlayerDriving'))
             {
-                PromptText $= Repl(TypingPromptStopDrivingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+                PromptText $= TypingPromptStopDrivingText;
             }
             else
             {
-                PromptText $= Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+                PromptText $= TypingPromptStopWalkingText;
             }
 
         }
         else if (PC.aStrafeWhileTyping != 0)
         {
-            PromptText $= Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+            PromptText $= TypingPromptStopWalkingText;
         }
     }
 
