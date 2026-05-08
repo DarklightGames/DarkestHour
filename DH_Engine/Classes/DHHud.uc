@@ -124,8 +124,8 @@ var     localized string    PlaceRallyPointText;
 var     localized string    SayTypeConsoleText;
 var     localized string    SayTypeAllText;
 var     localized string    TypingPromptText;
-var     localized string    TypingPromptAutoWalkText;
-var     localized string    TypingPromptAutoDriveText;
+var     localized string    TypingPromptStopWalkingText;
+var     localized string    TypingPromptStopDrivingText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -5907,17 +5907,29 @@ function DHDrawTypingPrompt(Canvas C)
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 
     // Draw the button prompt for cycling chat modes.
+    // TODO: The same string substitutions are repeated on each frame here. This should be done once when class is initialized.
     PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC.IsInState('PlayerDriving') && PC.aForwardWhileTyping != 0)
+    if (PC != none)
     {
-        PromptText $= Repl(TypingPromptAutoDriveText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
-    }
-    else if (PC.aStrafeWhileTyping != 0 || PC.aForwardWhileTyping != 0)
-    {
-        PromptText $= Repl(TypingPromptAutoWalkText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+        if (PC.aForwardWhileTyping != 0)
+        {
+            if (PC.IsInState('PlayerDriving'))
+            {
+                PromptText $= Repl(TypingPromptStopDrivingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+            }
+            else
+            {
+                PromptText $= Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+            }
+
+        }
+        else if (PC.aStrafeWhileTyping != 0)
+        {
+            PromptText $= Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+        }
     }
 
     YPos += YL;
@@ -6019,8 +6031,8 @@ defaultproperties
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
     TypingPromptText="Press [{0}] to change chat channel"
-    TypingPromptAutoWalkText=", [{0}] to stop moving"
-    TypingPromptAutoDriveText=", [{0}] to stop accelerating"
+    TypingPromptStopWalkingText=", [{0}] to stop moving"
+    TypingPromptStopDrivingText=", [{0}] to stop accelerating"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture

@@ -753,7 +753,7 @@ function TypingOpen()
 
     PC = DHPlayer(ViewportOwner.Actor);
 
-    if (PC.bKeepMovingWhileTyping)
+    if (PC != none && PC.bKeepMovingWhileTyping)
     {
         PC.QueueHint(67, false);
     }
