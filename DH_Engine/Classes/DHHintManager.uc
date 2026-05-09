@@ -216,4 +216,6 @@ defaultproperties
 
     Hints(65)=(Title="Semovente da 90/53",Text="Although the Semovente da 90/53 has a powerful gun, it has a very limited ammunition rack. Make every shot count!")
     Hints(66)=(Title="Incoming!",Text="You have just launched a mortar round straight up into the air. You may want to take cover!")
+
+    Hints(67)=(Title="Sending Messages On The Move",Text="You will continue moving autonomously if you open the chat prompt while walking on foot or accelerating in a vehicle. You can disable this option in \"Input\" settings.")
 }
