@@ -17,6 +17,7 @@ var() ETeamOwner                TeamOwner;                      // Set the team 
 var() int                       InitialSupplyCount;             // Initial amount of supply
 var() int                       SupplyCountMax;                 // The max amount of supply
 var() int                       BonusSupplyGenerationRate;
+var() bool                      bInitiallyActive;               //Leveller can set the SC to be inactive at the start of the round and activated later via a modify actor.
 
 var DHConstructionSupplyAttachment              SupplyAttachment;
 var class<DHConstructionSupplyAttachment>       SupplyAttachmentClass;
@@ -28,7 +29,7 @@ function Reset()
         DestroySupplyAttachment();
     }
 
-    if (SupplyAttachment == none)
+    if (SupplyAttachment == none && bInitiallyActive)
     {
         CreateSupplyAttachment();
     }
@@ -83,6 +84,7 @@ defaultproperties
     InitialSupplyCount=8000
     SupplyCountMax=8000
     BonusSupplyGenerationRate=500
+    bInitiallyActive=true
 
     Texture=Texture'DHEngine_Tex.LevelActor'
     bHidden=true
