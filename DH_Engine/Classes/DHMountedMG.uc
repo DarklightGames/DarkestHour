@@ -67,6 +67,12 @@ var DHWeaponBarrel.EBarrelCondition BarrelCondition;
 var float                           BarrelTemperature;
 var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
 
+// Timing for zero-aim during reload.
+var float                           ReloadZeroAimStartSeconds;
+var float                           ReloadZeroAimEndSeconds;
+var Rotator                         ReloadStartLocalWeaponAim;
+var float                           ReloadZeroAimTweenSeconds;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -357,7 +363,7 @@ simulated state Busy
 }
 
 simulated state Reloading extends Busy
-{    
+{
     simulated function BeginState()
     {
         local DHMountedMGPawn MGPawn;
@@ -384,6 +390,11 @@ simulated state Reloading extends Busy
             MGPawn.PlayReloadAnim(GetAnimDuration(ReloadSequence));
             MGPawn.SetIsZoomed(false);
         }
+
+        // Initialize the variables for zero-aim tweening during reload.
+        ReloadZeroAimStartSeconds = Level.TimeSeconds;
+        ReloadZeroAimEndSeconds = Level.TimeSeconds + ReloadZeroAimTweenSeconds;
+        ReloadStartLocalWeaponAim = MGPawn.LocalWeaponAim;
     }
 
     simulated function EndState()
@@ -406,10 +417,18 @@ simulated state Reloading extends Busy
 
     simulated function Tick(float DeltaTime)
     {
+        local float T;
+
         super.Tick(DeltaTime);
 
-        // TODO: for animation purposes we probably want to center the gun quickly as the reload starts.
-        // how to do this?
+        // Interpolate the weapon aim to zero over a short duration.
+        // We do this so that the gun is in the right spot for the third person reload animations.
+        if (Level.TimeSeconds < ReloadZeroAimEndSeconds)
+        {
+            T = class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, ReloadZeroAimStartSeconds, ReloadZeroAimEndSeconds, 0.0, 1.0);
+            T = class'UInterp'.static.Interpolate(T, 0.0, 1.0, INTERP_Deceleration);
+            WeaponPawn.LocalWeaponAim = class'URotator'.static.RLerp(ReloadStartLocalWeaponAim, rot(0, 0, 0), T);
+        }
     }
 
 Begin:
@@ -890,4 +909,6 @@ defaultproperties
     BarrelSteamBone="MUZZLE"
 
     BeginningIdleAnim="IDLE"
+
+    ReloadZeroAimTweenSeconds=0.5
 }
