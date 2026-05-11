@@ -76,4 +76,6 @@ defaultproperties
 
     BarrelCount=1
     BarrelClass=Class'DH_30CalBarrel'
+
+    WeaponFireOffset=-8.5
 }
