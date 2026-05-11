@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MG42LafetteGun extends DHMountedGun;
+class DH_MG42LafetteGun extends DHMountedMachineGun;
 
 defaultproperties
 {

@@ -2,10 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] fire/move marks hit the backside of the gun
-//==============================================================================
 
-class DH_M1919A4Gun extends DHMountedGun
+class DH_M1919A4Gun extends DHMountedMachineGun
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat1435Gun extends DHMountedGun
+class DH_Fiat1435Gun extends DHMountedMachineGun
     abstract;
 
 defaultproperties

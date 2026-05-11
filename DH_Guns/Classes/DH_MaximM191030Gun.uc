@@ -45,7 +45,7 @@
 // [ ] new sounds (firing, reload etc.)
 //==============================================================================
 
-class DH_MaximM191030Gun extends DHMountedGun;
+class DH_MaximM191030Gun extends DHMountedMachineGun;
 
 defaultproperties
 {

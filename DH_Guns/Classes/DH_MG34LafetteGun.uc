@@ -10,7 +10,7 @@
 // https://www.german-smallarms.com/MGaccessorytop.html - MG accessories
 //==============================================================================
 
-class DH_MG34LafetteGun extends DHMountedGun;
+class DH_MG34LafetteGun extends DHMountedMachineGun;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M1919A4_M1917_Gun extends DHMountedGun;
+class DH_M1919A4_M1917_Gun extends DHMountedMachineGun;
 
 defaultproperties
 {
