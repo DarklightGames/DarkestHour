@@ -2284,6 +2284,8 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
             // Handle skins if we are using driver position mesh skins.
             if (NewMesh == Gun.default.Mesh)
             {
+                Gun.Skins.Length = 0;
+
                 for (i = 0; i < Gun.default.Skins.Length; ++i)
                 {
                     Gun.Skins[i] = Gun.default.Skins[i];
@@ -2291,6 +2293,8 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
             }
             else
             {
+                Gun.Skins.Length = 0;
+                
                 for (i = 0; i < DriverPositionMeshSkins.Length; ++i)
                 {
                     Gun.Skins[i] = DriverPositionMeshSkins[i];
