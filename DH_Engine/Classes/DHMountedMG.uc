@@ -68,9 +68,10 @@ var float                           BarrelTemperature;
 var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
 
 // Timing for zero-aim during reload.
+var() bool                          bShouldZeroAimDuringReload;
 var float                           ReloadZeroAimStartSeconds;
 var float                           ReloadZeroAimEndSeconds;
-var Rotator                         ReloadStartLocalWeaponAim;
+var Quat                            ReloadStartLocalWeaponAim;
 var float                           ReloadZeroAimTweenSeconds;
 
 replication
@@ -392,9 +393,12 @@ simulated state Reloading extends Busy
         }
 
         // Initialize the variables for zero-aim tweening during reload.
-        ReloadZeroAimStartSeconds = Level.TimeSeconds;
-        ReloadZeroAimEndSeconds = Level.TimeSeconds + ReloadZeroAimTweenSeconds;
-        ReloadStartLocalWeaponAim = MGPawn.LocalWeaponAim;
+        if (bShouldZeroAimDuringReload)
+        {
+            ReloadZeroAimStartSeconds = Level.TimeSeconds;
+            ReloadZeroAimEndSeconds = Level.TimeSeconds + ReloadZeroAimTweenSeconds;
+            ReloadStartLocalWeaponAim = QuatFromRotator(MGPawn.LocalWeaponAim);
+        }
     }
 
     simulated function EndState()
@@ -421,13 +425,13 @@ simulated state Reloading extends Busy
 
         super.Tick(DeltaTime);
 
-        // Interpolate the weapon aim to zero over a short duration.
-        // We do this so that the gun is in the right spot for the third person reload animations.
-        if (Level.TimeSeconds < ReloadZeroAimEndSeconds)
+        if (bShouldZeroAimDuringReload && WeaponPawn != none && WeaponPawn.LocalWeaponAim != rot(0, 0, 0))
         {
+            // Interpolate the weapon aim to zero over a short duration.
+            // We do this so that the gun is in the right spot for the third person reload animations.
             T = class'UInterp'.static.MapRangeClamped(Level.TimeSeconds, ReloadZeroAimStartSeconds, ReloadZeroAimEndSeconds, 0.0, 1.0);
             T = class'UInterp'.static.Interpolate(T, 0.0, 1.0, INTERP_Deceleration);
-            WeaponPawn.LocalWeaponAim = class'URotator'.static.RLerp(ReloadStartLocalWeaponAim, rot(0, 0, 0), T);
+            WeaponPawn.LocalWeaponAim = QuatToRotator(QuatSlerp(ReloadStartLocalWeaponAim, QuatFromRotator(rot(0, 0, 0)), T));
         }
     }
 
@@ -911,4 +915,5 @@ defaultproperties
     BeginningIdleAnim="IDLE"
 
     ReloadZeroAimTweenSeconds=0.5
+    bShouldZeroAimDuringReload=true
 }
