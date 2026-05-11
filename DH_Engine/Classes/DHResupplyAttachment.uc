@@ -185,11 +185,13 @@ function Timer()
 {
     local Pawn recvr;
     local ROPawn P;
-    local Vehicle V;
+    local DHVehicle V;
+    local DHVehicleWeaponPawn MMG;
+    local int i;
 
     ProcessActorLeave();
 
-    ResupplyActors.Remove(0, ResupplyActors.Length);
+    ResupplyActors.Length = 0;
 
     foreach RadiusActors(Class'Pawn', recvr, CollisionRadius)
     {
@@ -202,24 +204,30 @@ function Timer()
         if (CanResupplyPawn(recvr))
         {
             P = ROPawn(recvr);
-            V = Vehicle(recvr);
+            V = DHVehicle(recvr);
 
             if (P != none && ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Players))
             {
-                //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
                 P.bTouchingResupply = true;
             }
-            else if (V != none && V != Base && ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Vehicles))
+            else if (
+                V != none &&
+                V != Base &&    // Don't resupply the vehicle we are attached to.
+                V.CanBeResuppliedByType(ResupplyType)
+                )
             {
                 ResupplyActors[ResupplyActors.Length] = V;
-                V.bTouchingResupply = true;
+                V.EnteredResupply();
             }
+        }
+    }
 
-            if (ResupplyStrategy.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
-            {
-                OnPawnResupplied(recvr);
-            }
+    for (i = 0; i < ResupplyActors.Length; ++i)
+    {
+        if (ResupplyStrategy.HandleResupply(ResupplyActors[i], ResupplyType, Level.TimeSeconds))
+        {
+            OnPawnResupplied(ResupplyActors[i]);
         }
     }
 }

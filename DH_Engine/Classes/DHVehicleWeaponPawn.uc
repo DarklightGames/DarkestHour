@@ -2996,6 +2996,18 @@ simulated function DrawDestroyedOpticsOverlay(Canvas C, Material OpticMaterial, 
     C.DrawTile(DestroyedOpticsOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 }
 
+function bool CanBeResuppliedByType(DHResupplyStrategy.EResupplyType ResupplyType)
+{
+    switch (ResupplyType)
+    {
+        case RT_All:
+        case RT_Vehicles:
+            return true;
+        default:
+            return false;
+    }
+}
+
 defaultproperties
 {
     bCustomAiming=true

@@ -40,7 +40,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     local bool bResupplied;
     local bool bShouldResupplyGrenades;
     local DHPawn P;
-    local Vehicle V;
+    local DHVehicle V;
     local ROWeapon recvr_weapon;
 
     if (default.UpdateTime > TimeSeconds - recvr.LastResupplyTime)
@@ -51,7 +51,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     bResupplied = false;
 
     P = DHPawn(recvr);
-    V = Vehicle(recvr);
+    V = DHVehicle(recvr);
 
     if (P != none)
     {
@@ -93,9 +93,9 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     else if (V != none)
     {
         // Resupply vehicles
-        if (CanResupplyType(SourceType, RT_Vehicles))
+        if (V.CanBeResuppliedByType(SourceType))
         {
-            bResupplied = bResupplied || V.ResupplyAmmo();
+            bResupplied = bResupplied || V.ResupplyAmmoDH(SourceType);
         }
     }
 

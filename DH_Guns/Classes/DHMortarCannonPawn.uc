@@ -492,6 +492,17 @@ simulated function ClientKDriverLeave(PlayerController PC)
     }
 }
 
+// Modified to accept mortar resupply type.
+function bool CanBeResuppliedByType(DHResupplyStrategy.EResupplyType ResupplyType)
+{
+    if (ResupplyType == RT_Mortars)
+    {
+        return true;
+    }
+
+    return super.CanBeResuppliedByType(ResupplyType);
+}
+
 defaultproperties
 {
     bNetNotify=true

@@ -712,6 +712,17 @@ exec simulated function ROManualReload()
     AttemptReload();
 }
 
+// Modified so that mounted machine guns can be resupplied by infantry resupply types.
+function bool CanBeResuppliedByType(DHResupplyStrategy.EResupplyType ResupplyType)
+{
+    if (ResupplyType == RT_Players)
+    {
+        return true;
+    }
+    
+    return super.CanBeResuppliedByType(ResupplyType);
+}
+
 defaultproperties
 {
     HandsAttachBone="HANDS_ATTACHMENT"

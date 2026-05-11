@@ -922,7 +922,6 @@ simulated function int LimitYaw(int yaw) { return yaw; }
 function int LimitPawnPitch(int pitch) { return pitch; }
 simulated function float GetViewFOV(int PositionIndex) { return 0.0; }
 simulated function SetViewFOV(int PositionIndex, optional PlayerController PC);
-function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {

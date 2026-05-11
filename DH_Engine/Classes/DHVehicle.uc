@@ -7,6 +7,7 @@
 
 class DHVehicle extends ROWheeledVehicle
     dependson(DHVehicleComponentController)
+    dependson(DHResupplyStrategy)
     abstract;
 
 // Structs
@@ -192,7 +193,6 @@ var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
 var     bool                bShouldDrawPositionDots;
 var     bool                bShouldDrawOccupantList;
-
 
 // Map icon
 var     class<DHMapIconAttachment_Vehicle>  MapIconAttachmentClass;
@@ -3972,14 +3972,25 @@ function ServerLoadSupplies()
     PC.ReceiveLocalizedMessage(Class'DHSupplyMessage', 3);
 }
 
-// Modified to include any SupplyAttachment
-function bool ResupplyAmmo()
+function bool ResupplyAmmoDH(DHResupplyStrategy.EResupplyType ResupplyType)
 {
+	local int i;
     local bool bDidResupply;
+    local DHVehicleWeaponPawn VWP;
 
     if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        bDidResupply = super.ResupplyAmmo();
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            VWP = DHVehicleWeaponPawn(WeaponPawns[i]);
+
+            if (VWP != none && VWP.CanBeResuppliedByType(ResupplyType) && VWP.ResupplyAmmo())
+            {
+                VWP.LastResupplyTime = Level.TimeSeconds;
+                VWP.ClientResupplied();
+                bDidResupply = true;
+            }
+        }
 
         if (SupplyAttachment != none && SupplyAttachment.Resupply())
         {
@@ -3993,6 +4004,29 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
+}
+
+// Deprecated. Use ResupplyAmmoDH() instead.
+function bool ResupplyAmmo() {}
+
+// Checks if the vehicle can be resupplied by a specific resupply type.
+// Override in subclasses to specify which resupply types can resupply this vehicle.
+function bool CanBeResuppliedByType(DHResupplyStrategy.EResupplyType ResupplyType)
+{
+    local int i;
+    local DHVehicleWeaponPawn VWP;
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        VWP = DHVehicleWeaponPawn(WeaponPawns[i]);
+
+        if (VWP != none && VWP.CanBeResuppliedByType(ResupplyType))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // Modified to prevent players from dying so easily when near a slightly moving vehicle
