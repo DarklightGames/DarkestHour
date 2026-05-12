@@ -40,6 +40,15 @@ defaultproperties
     CustomPitchUpLimit=3640     // +20 degrees
     CustomPitchDownLimit=61895  // -20 degrees
 
+    // Screen shake
+    // Overriden from the default because the shaking was a bit much.
+    ShakeOffsetMag=(X=0.05,Y=0.05,Z=0.05)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=6.0
+    ShakeRotMag=(X=8.0,Y=8.0,Z=8.0)
+    ShakeRotRate=(X=50000.0,Y=50000.0,Z=50000.0)
+    ShakeRotTime=4.0
+
     // Ammo
     ProjectileClass=Class'DH_30CalBullet'
     FireInterval=0.135
@@ -49,13 +58,11 @@ defaultproperties
     // Weapon fire
     FireSoundClass=SoundGroup'DH_WeaponSounds.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30cal_FireEnd01'
-    ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
-    ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
 
-    FiringAnim="BOLT_FIRING"
-    FiringIdleAnim="BOLT_IDLE"
+    FiringAnim="FIRE_LOOP"
+    FiringIdleAnim="FIRE_IDLE"
     FiringChannel=2
-    FiringBone="FIRING_ROOT"
+    FiringBone="CHARGING_HANDLE"
 
     ShellEjectBone="EJECTOR"
     ShellEjectClass=Class'RO3rdShellEject762x54mm'

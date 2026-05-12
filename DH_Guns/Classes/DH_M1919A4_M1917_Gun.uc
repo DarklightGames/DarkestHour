@@ -10,6 +10,7 @@ defaultproperties
     BeginningIdleAnim="idle"
     VehicleNameString="M1919A4 Browning Machine Gun"
     Mesh=SkeletalMesh'DH_M1919A4_anm.TRIPOD_M1917_BODY'
+    Skins(0)=Texture'DH_M1919A4_tex.M1919A4_TRIPODS'
     bCanBeRotated=true
     CollisionRadius=36.0
     CollisionHeight=36.0

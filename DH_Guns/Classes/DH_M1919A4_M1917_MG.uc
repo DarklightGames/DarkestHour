@@ -2,14 +2,17 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] figure out pitch limits
-// [ ] ejector bone
+// [ ] decide on pitch limits
 //==============================================================================
 
 class DH_M1919A4_M1917_MG extends DH_M1919A4MG;
 
 defaultproperties
-{   
+{
+    Skins(0)=Texture'DH_M1919A4_tex.M1919A4_TP'
+    Skins(1)=Texture'DH_M1919A4_tex.M1919A4_TRIPODS_TURRET_TP'
+    Skins(2)=Texture'DH_M1919A4_tex.M1917_AMMO_BOX_3RD'
+
     Mesh=SkeletalMesh'DH_M1919A4_anm.M1919A4_M1917_TURRET_EXT'
 
     YawBone="TURRET_YAW"
@@ -22,12 +25,6 @@ defaultproperties
     MaxPositiveYaw=8192     // +45 degrees
     CustomPitchUpLimit=3640     // +20 degrees
     CustomPitchDownLimit=61895  // -20 degrees
-
-    // TODO: animations might need to be different? leave these here for now.
-    FiringAnim="BOLT_FIRING"
-    FiringIdleAnim="BOLT_IDLE"
-    FiringChannel=2
-    FiringBone="FIRING_ROOT"
 
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M1917_TURRET_PITCH_COLLISION',AttachBone="TURRET_PITCH")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M1917_TURRET_YAW_COLLISION',AttachBone="TURRET_YAW")
