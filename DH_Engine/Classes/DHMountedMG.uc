@@ -33,9 +33,14 @@ var name                    ClipAnim;
 var int                     ClipChannel;
 
 // Shell Ejection
-var()   class<RO3rdShellEject>  ShellEjectClass;
-var()   name                    ShellEjectBone;
-var()   Rotator                 ShellEjectRotationOffset;
+
+struct ShellEjectInfo
+{
+    var class<RO3rdShellEject>  ShellEjectClass;
+    var name                    Bone;
+    var Rotator                 RotationOffset;
+};
+var array<ShellEjectInfo>       ShellEjectors;
 
 // Ammo Round
 var array<ROFPAmmoRound>    AmmoRounds;
@@ -264,11 +269,39 @@ event bool AttemptFire(Controller C, bool bAltFire)
     super.AttemptFire(C, bAltFire);
 }
 
+simulated function SpawnEjectors()
+{
+    local int i;
+    local Coords EjectCoords;
+    local Actor Ejection;
+
+    for (i = 0; i < ShellEjectors.Length; ++i)
+    {
+        if (ShellEjectors[i].ShellEjectClass == none || ShellEjectors[i].Bone == '')
+        {
+            continue;
+        }
+
+        EjectCoords = GetBoneCoords(ShellEjectors[i].Bone);
+        Ejection = Spawn(ShellEjectors[i].ShellEjectClass, self,, EjectCoords.Origin, GetBoneRotation(ShellEjectors[i].Bone));
+
+        if (Ejection == none)
+        {
+            continue;
+        }
+
+        Ejection.SetRotation(Ejection.Rotation + ShellEjectors[i].RotationOffset);
+
+        // The class defines bOwnerNoSee as true since this is meant only for third person, but we want to just
+        // reuse the same class for first person as well.
+        Ejection.bOwnerNoSee = false;
+    }
+}
+
 function Fire(Controller C)
 {
     local DHMountedMGPawn MGP;
-    local Coords ShellEjectCoords;
-    local Actor ShellEjectActor;
+    local int i;
 
     super.Fire(C);
     
@@ -277,17 +310,7 @@ function Fire(Controller C)
     // TODO: make sure this will work in multiplayer; only have this run on the client. server doesn't care.
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (ShellEjectClass != none && ShellEjectBone != '')
-        {
-            ShellEjectCoords = GetBoneCoords(ShellEjectBone);
-
-            ShellEjectActor = Spawn(ShellEjectClass, self,, ShellEjectCoords.Origin, GetBoneRotation(ShellEjectBone));
-            ShellEjectActor.SetRotation(ShellEjectActor.Rotation + ShellEjectRotationOffset);
-
-            // The class defines bOwnerNoSee as true since this is meant only for third person, but we want to just
-            // reuse the same class for first person as well.
-            ShellEjectActor.bOwnerNoSee = false;
-        }
+        SpawnEjectors();
     }
 
     if (Role == ROLE_Authority)
@@ -860,9 +883,7 @@ defaultproperties
     FiringChannel=2
     FiringBone="FIRING_ROOT"
 
-    ShellEjectBone="EJECTOR"
-    ShellEjectClass=Class'RO3rdShellEject762x54mm'
-    ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
+    ShellEjectors(0)=(ShellEjectClass=Class'RO3rdShellEject762x54mm',Bone="EJECTOR",RotationOffset=(Pitch=-16384,Yaw=16384))
 
     // Regular MGs do not have collision on because it's assumed that they're a small part
     // mounted on a larger vehicle. In this case, we want to have collision on because it's

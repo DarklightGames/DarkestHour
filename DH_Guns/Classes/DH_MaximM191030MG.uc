@@ -53,9 +53,7 @@ defaultproperties
     FiringChannel=2
     FiringBone="FIRING_ROOT"
 
-    ShellEjectBone="EJECTOR"
-    ShellEjectClass=Class'RO3rdShellEject762x54mm'
-    ShellEjectRotationOffset=(Pitch=0,Yaw=32768)
+    ShellEjectors(0)=(ShellEjectClass=Class'RO3rdShellEject762x54mm',Bone="EJECTOR",RotationOffset=(Yaw=32768))
 
     WeaponFireOffset=-10
 

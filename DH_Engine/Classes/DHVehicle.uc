@@ -4007,7 +4007,7 @@ function bool ResupplyAmmoDH(DHResupplyStrategy.EResupplyType ResupplyType)
 }
 
 // Deprecated. Use ResupplyAmmoDH() instead.
-function bool ResupplyAmmo() {}
+function bool ResupplyAmmo() { return false; }
 
 // Checks if the vehicle can be resupplied by a specific resupply type.
 // Override in subclasses to specify which resupply types can resupply this vehicle.

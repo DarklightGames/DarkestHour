@@ -64,9 +64,9 @@ defaultproperties
     FiringChannel=2
     FiringBone="CHARGING_HANDLE"
 
-    ShellEjectBone="EJECTOR"
-    ShellEjectClass=Class'RO3rdShellEject762x54mm'
-    ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
+    ShellEjectors(0)=(ShellEjectClass=Class'RO3rdShellEject762x54mm',Bone="EJECTOR",RotationOffset=(Pitch=-16384,Yaw=16384))
+    // TODO: add link ejector.
+    //ShellEjectors(1)=()
 
     ProjectileRotationMode=PRM_MuzzleBone
 
