@@ -8,9 +8,9 @@ class DHConstructionLoadout_Sandbags extends DHConstructionLoadout
 
 defaultproperties
 {
-    Constructions(7)=(ConstructionClass=Class'DHConstruction_Foxhole',Limit=-1,MaxActive=-1)
-    Constructions(8)=(ConstructionClass=Class'DHConstruction_Sandbags_Line',Limit=-1,MaxActive=-1)
-    Constructions(9)=(ConstructionClass=Class'DHConstruction_Sandbags_Crescent',Limit=-1,MaxActive=-1)
-    Constructions(10)=(ConstructionClass=Class'DHConstruction_Sandbags_Bunker',Limit=-1,MaxActive=-1)
-    Constructions(11)=(ConstructionClass=Class'DHConstruction_Sandbags_MortarPit',Limit=-1,MaxActive=-1)
+    Constructions(0)=(ConstructionClass=Class'DHConstruction_Foxhole',Limit=-1,MaxActive=-1)
+    Constructions(1)=(ConstructionClass=Class'DHConstruction_Sandbags_Line',Limit=-1,MaxActive=-1)
+    Constructions(2)=(ConstructionClass=Class'DHConstruction_Sandbags_Crescent',Limit=-1,MaxActive=-1)
+    Constructions(3)=(ConstructionClass=Class'DHConstruction_Sandbags_Bunker',Limit=-1,MaxActive=-1)
+    Constructions(4)=(ConstructionClass=Class'DHConstruction_Sandbags_MortarPit',Limit=-1,MaxActive=-1)
 }
