@@ -257,7 +257,7 @@ simulated function bool IsConstructionTagLimited(int TeamIndex, int Tag)
         if (ConstructionTagLimitsEvaluated[i].TeamIndex == TeamIndex &&
             ConstructionTagLimitsEvaluated[i].Tag == Tag)
         {
-            return ConstructionTagLimitsEvaluated[i].Limit != -1;
+            return ConstructionTagLimitsEvaluated[i].Limit >= 0;
         }
     }
 
@@ -311,43 +311,98 @@ simulated function int GetConstructionTagLimitIndex(int TeamIndex, int Tag)
     return -1;
 }
 
-// Returns the maximum active limit for a team's construction class.
-// If the value is -1, there is no limit to the number of active constructions.
-simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+// Returns the limit for a team's construction class.
+// If the value is -1, there is no limit.
+simulated function int GetConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
-    local int i, Index, Value;
-    local int ConstructionMaxActive, TagMaxActive;
-    local array<int> MaxActiveValues;
+    local int Index;
+    local int ConstructionLimit;
+    local bool bHasConstructionLimit;
+    local int TagLimit, Tag;
+    local bool bHasTagLimit;
 
     Index = GetConstructionIndex(TeamIndex, ConstructionClass);
 
     if (Index > -1)
     {
-        MaxActiveValues[MaxActiveValues.Length] = ConstructionsEvaluated[Index].MaxActive;
+        ConstructionLimit = ConstructionsEvaluated[Index].Limit;
+        bHasConstructionLimit = ConstructionLimit >= 0;
     }
 
-    Index = GetConstructionTagLimitIndex(TeamIndex, GetTeamConstructionTag(TeamIndex, ConstructionClass));
+    Tag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
+    Index = GetConstructionTagLimitIndex(TeamIndex, Tag);
 
     if (Index > -1)
     {
-        MaxActiveValues[MaxActiveValues.Length] = ConstructionTagLimitsEvaluated[Index].MaxActive;
+        TagLimit = ConstructionTagLimitsEvaluated[Index].Limit;
+        bHasTagLimit = TagLimit >= 0;
     }
 
-    if (MaxActiveValues.Length == 0)
+    if (!bHasConstructionLimit && !bHasTagLimit)
     {
         // No limits found, return -1 for unlimited.
         return -1;
     }
-
-    // One or more limits found, return the smallest value (most restrictive).
-    Value = MaxActiveValues[0];
-
-    for (i = 1; i < MaxActiveValues.Length; ++i)
+    else if (bHasConstructionLimit && bHasTagLimit)
     {
-        Value = Min(Value, MaxActiveValues[i]);
+        // Both limits found, return the smallest value (most restrictive).
+        return Min(ConstructionLimit, TagLimit);
+    }
+    else if (bHasTagLimit)
+    {
+        return TagLimit;
+    }
+    else
+    {
+        return ConstructionLimit;
+    }
+}
+
+// Returns the maximum active limit for a team's construction class.
+// If the value is -1, there is no limit to the number of active constructions.
+simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int Index;
+    local int ConstructionMaxActive;
+    local bool bHasConstructionMaxActive;
+    local int TagMaxActive, Tag;
+    local bool bHasTagMaxActive;
+
+    Index = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (Index > -1)
+    {
+        ConstructionMaxActive = ConstructionsEvaluated[Index].MaxActive;
+        bHasConstructionMaxActive = ConstructionMaxActive >= 0;
     }
 
-    return Value;
+    Tag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
+    Index = GetConstructionTagLimitIndex(TeamIndex, Tag);
+
+    if (Index > -1)
+    {
+        TagMaxActive = ConstructionTagLimitsEvaluated[Index].MaxActive;
+        bHasTagMaxActive = TagMaxActive >= 0;
+    }
+
+    if (!bHasConstructionMaxActive && !bHasTagMaxActive)
+    {
+        // No MaxActives found, return -1 for unMaxActiveed.
+        return -1;
+    }
+    else if (bHasConstructionMaxActive && bHasTagMaxActive)
+    {
+        // Both MaxActives found, return the smallest value (most restrictive).
+        return Min(ConstructionMaxActive, TagMaxActive);
+    }
+    else if (bHasTagMaxActive)
+    {
+        return TagMaxActive;
+    }
+    else
+    {
+        return ConstructionMaxActive;
+    }
 }
 
 simulated private function bool HasConstruction(int TeamIndex, Class<DHConstruction> ConstructionClass)
@@ -366,6 +421,31 @@ simulated private function bool HasConstruction(int TeamIndex, Class<DHConstruct
     return false;
 }
 
+// Upsert into the evaluated tag limits list with a team specified in the function argument.
+simulated function UpsertTeamConstructionTagLimits(array<DHConstructionTypes.SConstructionTagLimit> ConstructionTagLimits, int TeamIndex)
+{
+    local int j, k;
+
+    // Tag limits will be upserted as they are encountered in the evaluation stack.
+    for (j = 0; j < ConstructionTagLimits.Length; ++j)
+    {
+        // Gets the insertion index of the construction tag limit info.
+        // If it already exists, it will be overridden; if not it will be added to the end of the list.
+        for (k = 0; k < ConstructionTagLimitsEvaluated.Length; ++k)
+        {
+            if (ConstructionTagLimitsEvaluated[k].TeamIndex == TeamIndex &&
+                ConstructionTagLimitsEvaluated[k].Tag == ConstructionTagLimits[j].Tag)
+            {
+                break;
+            }
+        }
+
+        ConstructionTagLimitsEvaluated[k] = ConstructionTagLimits[j];
+        ConstructionTagLimitsEvaluated[k].TeamIndex = TeamIndex;
+    }
+}
+
+// Upsert into the evaluated tag limits list.
 simulated function UpsertConstructionTagLimits(array<DHConstructionTypes.SConstructionTagLimit> ConstructionTagLimits)
 {
     local int j, k;
@@ -471,7 +551,7 @@ simulated function EvaluateConstructions()
                 ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
             }
 
-            UpsertConstructionTagLimits(LoadoutClasses[i].default.TagLimits);
+            UpsertTeamConstructionTagLimits(LoadoutClasses[i].default.TagLimits, TeamIndex);
         }
     }
 
@@ -496,9 +576,12 @@ simulated function EvaluateConstructions()
     // Upsert construction tag limits with the level's list.
     UpsertConstructionTagLimits(TeamConstructionTagLimits);
 
-    Log("========================");
-    DebugDumpTagLimits();
-    Log("========================");
+    // Update the limit and max active of any constructions, taking into account any tags.
+    for (i = 0; i < ConstructionsEvaluated.Length; ++i)
+    {
+        ConstructionsEvaluated[i].Limit = GetConstructionLimit(ConstructionsEvaluated[i].TeamIndex, ConstructionsEvaluated[i].ConstructionClass);
+        ConstructionsEvaluated[i].MaxActive = GetConstructionMaxActive(ConstructionsEvaluated[i].TeamIndex, ConstructionsEvaluated[i].ConstructionClass);
+    }
 }
 
 function DebugDumpTagLimits()
@@ -589,6 +672,41 @@ simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
     }
 
     return LI;
+}
+
+function array<int> GetConstructionIndicesByMatchingTag(int TeamIndex, Class<DHConstruction> ConstructionClass)
+{
+    local int i, ConstructionIndex, Tag;
+    local array<int> Indices;
+
+    ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex == -1)
+    {
+        return Indices;
+    }
+
+    // Add the base construction index.
+    Indices[Indices.Length] = ConstructionIndex;
+
+    Tag = ConstructionsEvaluated[ConstructionIndex].Tag;
+
+    if (Tag == 0)
+    {
+        // A tag of zero means no tag.
+        return Indices;
+    }
+
+    // Add all construction indices that share our tag.
+    for (i = 0; i < ConstructionsEvaluated.Length; ++i)
+    {
+        if (i != ConstructionIndex && ConstructionsEvaluated[i].Tag == Tag)
+        {
+            Indices[Indices.Length] = i;
+        }
+    }
+
+    return Indices;
 }
 
 defaultproperties

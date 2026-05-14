@@ -344,7 +344,7 @@ simulated function PostBeginPlay()
 // TODO: All this construction stuff in here is a disaster. Move it to a separate class.
 function ResetConstructionRuntimeInfo()
 {
-    local int i;
+    local int i, j;
     local DH_LevelInfo LI;
     
     LI = Class'DH_LevelInfo'.static.GetInstance(Level);
@@ -358,6 +358,63 @@ function ResetConstructionRuntimeInfo()
         }
 
         bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
+    }
+}
+
+function OnConstructionActivate(int TeamIndex, Class<DHConstruction> ConstructionClass)
+{
+    local DH_LevelInfo LI;
+    local int i, J;
+    local array<int> ConstructionIndices;
+
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return;
+    }
+
+    ConstructionIndices = LI.GetConstructionIndicesByMatchingTag(TeamIndex, ConstructionClass);
+
+    for (i = 0; i < ConstructionIndices.Length; ++i)
+    {
+        Log("ConstructionIndices[" $ i $ "]" @ ConstructionIndices[i]);
+    }
+
+    for (i = 0; i < ConstructionIndices.Length; ++i)
+    {
+        j = ConstructionIndices[i];
+        Constructions[j].Remaining = Max(0, int(Constructions[j].Remaining) - 1);
+        Constructions[j].Active += 1;
+    }
+}
+
+function OnConstructionDeactivate(int TeamIndex, Class<DHConstruction> ConstructionClass, bool bInstigatorIsFriendly)
+{
+    local DH_LevelInfo LI;
+    local int i, j;
+    local array<int> ConstructionIndices;
+
+    LI = Class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return;
+    }
+
+    ConstructionIndices = LI.GetConstructionIndicesByMatchingTag(TeamIndex, ConstructionClass);
+
+    for (i = 0; i < ConstructionIndices.Length; ++i)
+    {
+        j = ConstructionIndices[i];
+        // Increment the remaining count of this construction type.
+        Constructions[j].Active = Max(0, int(Constructions[j].Active) - 1);
+
+        if (bInstigatorIsFriendly)
+        {
+            // Instigator is friendly, so increment the remaining count (i.e., put it back in the pool).
+            Constructions[j].Remaining += 1;
+        }
     }
 }
 
@@ -382,7 +439,6 @@ simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHCons
     local DH_LevelInfo LevelInfo;
 
     LevelInfo = Class'DH_LevelInfo'.static.GetInstance(Level);
-
     ConstructionIndex = LevelInfo.GetConstructionIndex(TeamIndex, ConstructionClass);
 
     if (ConstructionIndex == -1)
@@ -390,7 +446,7 @@ simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHCons
         return false;
     }
 
-    return LevelInfo.ConstructionsEvaluated[ConstructionIndex].Limit == -1 || Constructions[ConstructionIndex].Remaining > 0;
+    return LevelInfo.GetConstructionLimit(TeamIndex, ConstructionClass) == -1 || Constructions[ConstructionIndex].Remaining > 0;
 }
 
 // Returns the remaining construction count for a team of a certain class, or -1 if the class construction is unlimited.
@@ -409,7 +465,7 @@ simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConst
        return -1;
     }
 
-    if (LI.IsConstructionUnlimited(TeamIndex, ConstructionIndex))
+    if (LI.IsConstructionUnlimited(TeamIndex, ConstructionClass))
     {
         return -1;
     }

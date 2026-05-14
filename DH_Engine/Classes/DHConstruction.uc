@@ -406,14 +406,7 @@ function Activate(int InstigatorTeamIndex)
         return;
     }
 
-    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
-
-    if (ConstructionIndex != -1)
-    {
-        // Decrement the remaining count of this construction type.
-        GRI.Constructions[ConstructionIndex].Remaining = Max(0, int(GRI.Constructions[ConstructionIndex].Remaining) - 1);
-        GRI.Constructions[ConstructionIndex].Active += 1;
-    }
+    GRI.OnConstructionActivate(InstigatorTeamIndex, Class);
 
     bIsActive = true;
 }
@@ -451,19 +444,7 @@ function Deactivate(optional bool bInstigatorIsFriendly)
         return;
     }
 
-    ConstructionIndex = GRI.GetTeamConstructionIndex(TeamIndex, Class);
-
-    if (ConstructionIndex != -1)
-    {
-        // Increment the remaining count of this construction type.
-        GRI.Constructions[ConstructionIndex].Active = Max(0, int(GRI.Constructions[ConstructionIndex].Active) - 1);
-
-        if (bInstigatorIsFriendly)
-        {
-            // Instigator is friendly, so increment the remaining count (i.e., put it back in the pool).
-            GRI.Constructions[ConstructionIndex].Remaining += 1;
-        }
-    }
+    GRI.OnConstructionDeactivate(TeamIndex, Class, bInstigatorIsFriendly);
 
     bIsActive = false;
 }
