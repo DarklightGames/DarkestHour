@@ -21,6 +21,14 @@ enum EFilterOperation
     Exclude
 };
 
+struct SConstructionTagLimit
+{
+    var byte TeamIndex; // Optional team index for when this is needed (e.g., DH_LevelInfo).
+    var byte Tag;
+    var int Limit;      // The total limit alotted per round. -1 means no limit.
+    var int MaxActive;  // The maximum amount active at a time. -1 means no limit.
+};
+
 struct SClassFilter
 {
     var EFilterOperation Operation;

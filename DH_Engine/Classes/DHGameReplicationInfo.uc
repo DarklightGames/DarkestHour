@@ -395,6 +395,7 @@ simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHCons
 
 // Returns the remaining construction count for a team of a certain class, or -1 if the class construction is unlimited.
 // Also returns -1 if the team has no construction of that class.
+// TODO: if this is tag limited, use the smaller value.
 simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int ConstructionIndex;
@@ -408,7 +409,7 @@ simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConst
        return -1;
     }
 
-    if (LI.ConstructionsEvaluated[ConstructionIndex].Limit == -1)
+    if (LI.IsConstructionUnlimited(TeamIndex, ConstructionIndex))
     {
         return -1;
     }

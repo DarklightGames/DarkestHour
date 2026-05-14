@@ -13,7 +13,7 @@ defaultproperties
     ReloadCameraBone="RELOAD_CAMERA"
 
     DriveAnim=M1919A4_M1917_GUNNER_YAW
-
+    DrivePos=(Z=25.5)
     DriveRot=(Yaw=16384)
 
     // TODO: just for testing, reduce number of frames to 10 or 20 depending on how it looks.

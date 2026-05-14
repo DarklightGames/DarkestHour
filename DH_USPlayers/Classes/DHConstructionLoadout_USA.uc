@@ -26,10 +26,13 @@ defaultproperties
     Constructions(8)=(ConstructionClass=Class'DHConstruction_DragonsTooth',Limit=-1,MaxActive=-1)
 
     // Guns
-    Constructions(9)=(ConstructionClass=Class'DH_M1919A4GunConstruction',Limit=6,MaxActive=-1)
-    Constructions(10)=(ConstructionClass=Class'DH_M2MortarConstruction',Limit=3,MaxActive=-1)
-    Constructions(11)=(ConstructionClass=Class'DH_AT57GunConstruction',Limit=5,MaxActive=-1)
-    Constructions(12)=(ConstructionClass=Class'DH_M5GunConstruction',Limit=3,MaxActive=-1)
-    Constructions(13)=(ConstructionClass=Class'DH_M1MortarConstruction',Limit=3,MaxActive=-1)
-    Constructions(14)=(ConstructionClass=Class'DH_M116GunConstruction',Limit=3,MaxActive=-1)
+    Constructions(9)=(ConstructionClass=Class'DH_M1919A4_M2_GunConstruction',Limit=6,MaxActive=-1,Tag=1)
+    Constructions(10)=(ConstructionClass=Class'DH_M1919A4_M1917_GunConstruction',Limit=6,MaxActive=-1,Tag=1)
+    Constructions(11)=(ConstructionClass=Class'DH_M2MortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(12)=(ConstructionClass=Class'DH_AT57GunConstruction',Limit=5,MaxActive=-1)
+    Constructions(13)=(ConstructionClass=Class'DH_M5GunConstruction',Limit=3,MaxActive=-1)
+    Constructions(14)=(ConstructionClass=Class'DH_M1MortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(15)=(ConstructionClass=Class'DH_M116GunConstruction',Limit=3,MaxActive=-1)
+
+    TagLimits(0)=(Tag=1,Limit=6,MaxActive=-1)   // Combine mounted MGs under a single tag.
 }

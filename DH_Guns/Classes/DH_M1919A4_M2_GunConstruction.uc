@@ -3,15 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_M1919A4GunConstruction extends DHConstruction_Vehicle
-    abstract;
+class DH_M1919A4_M2_GunConstruction extends DH_M1919A4GunConstruction;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.mg'
-    SupplyCost=500
-    ProgressMax=5
-    bCanOnlyPlaceOnTerrain=false
-    bCanPlaceIndoors=true
-    ArcLengthTraceIntervalInMeters=0.125
+    VehicleClasses(0)=(VariantIndex=0,VehicleClass=Class'DH_M1919A4_M2_Gun')
 }
