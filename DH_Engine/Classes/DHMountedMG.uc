@@ -459,7 +459,7 @@ simulated state Reloading extends Busy
     }
 
 Begin:
-    Sleep(GetAnimDuration(ReloadSequence));
+    Sleep(FMax(GetAnimDuration(ReloadSequence), ReloadZeroAimTweenSeconds));
     GotoState('');
 }
 
