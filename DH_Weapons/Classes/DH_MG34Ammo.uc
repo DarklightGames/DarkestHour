@@ -3,11 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MG42Ammo extends DHAmmunition;
+class DH_MG34Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=200
-    InitialAmount=200
-    IconMaterial=Texture'InterfaceArt_tex.mg42_ammo'
+    IconMaterial=Material'DH_MG34_tex.MG34_DRUM_AMMO_ICON'
+    MaxAmmo=51
+    InitialAmount=50
 }

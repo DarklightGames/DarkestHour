@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] calibrate ironsight
+//==============================================================================
 
 class DH_MG42LafetteMG extends DHMountedMG;
 
@@ -9,24 +11,23 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_MG34_anm.MG42_TURRET_EXT'
 
-    // TODO: didn't we have this calibrated at one point??
-    // Begin Object Class=DHWeaponRangeParams Name=RangeParams0
-    //     DistanceUnit=DU_Meters
-    //     Anim="SIGHT_DRIVER"
-    //     AnimFrameCount=15
-    //     Channel=1
-    //     Bone="REAR_SIGHT_POST"
-    //     AnimationInterpDuration=0.5
-    //     RangeTable(0)=(Range=200,AnimationTime=0.04,GunsightPitch=-19)
-    //     RangeTable(1)=(Range=400,AnimationTime=0.065,GunsightPitch=-50)
-    //     RangeTable(2)=(Range=500,AnimationTime=0.09,GunsightPitch=-65)
-    //     RangeTable(3)=(Range=600,AnimationTime=0.105,GunsightPitch=-80)
-    //     RangeTable(4)=(Range=700,AnimationTime=0.125,GunsightPitch=-95)
-    //     RangeTable(5)=(Range=800,AnimationTime=0.15,GunsightPitch=-120)
-    //     RangeTable(6)=(Range=900,AnimationTime=0.175,GunsightPitch=-140)
-    //     RangeTable(7)=(Range=1000,AnimationTime=0.21,GunsightPitch=-165)
-    // End Object
-    // RangeParams=RangeParams0
+    Begin Object Class=DHWeaponRangeParams Name=RangeParams0
+        DistanceUnit=DU_Meters
+        Anim="SIGHT_DRIVER"
+        AnimFrameCount=15
+        Channel=1
+        Bone="REAR_SIGHT_POST"
+        AnimationInterpDuration=0.5
+        RangeTable(0)=(Range=200,AnimationTime=0.04,GunsightPitch=-19)
+        RangeTable(1)=(Range=400,AnimationTime=0.065,GunsightPitch=-50)
+        RangeTable(2)=(Range=500,AnimationTime=0.09,GunsightPitch=-65)
+        RangeTable(3)=(Range=600,AnimationTime=0.105,GunsightPitch=-80)
+        RangeTable(4)=(Range=700,AnimationTime=0.125,GunsightPitch=-95)
+        RangeTable(5)=(Range=800,AnimationTime=0.15,GunsightPitch=-120)
+        RangeTable(6)=(Range=900,AnimationTime=0.175,GunsightPitch=-140)
+        RangeTable(7)=(Range=1000,AnimationTime=0.21,GunsightPitch=-165)
+    End Object
+    RangeParams=RangeParams0
 
     bLimitYaw=true
     MaxNegativeYaw=-2912    // -16 degrees

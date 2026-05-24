@@ -448,6 +448,7 @@ simulated state Reloading extends Busy
 
         super.Tick(DeltaTime);
 
+        // TODO: we should also have this run while transitioning out of the gunsight.
         if (bShouldZeroAimDuringReload && WeaponPawn != none && WeaponPawn.LocalWeaponAim != rot(0, 0, 0))
         {
             // Interpolate the weapon aim to zero over a short duration.

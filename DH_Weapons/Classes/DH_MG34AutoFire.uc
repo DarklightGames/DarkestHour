@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=Class'DH_MG34Bullet'
     TracerProjectileClass=Class'DH_MG34TracerBullet'
-    AmmoClass=Class'MG50Rd792x57DrumAmmo'
+    AmmoClass=Class'DH_MG34Ammo'
     FireRate=0.08 // 862 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=7
     Spread=88.0

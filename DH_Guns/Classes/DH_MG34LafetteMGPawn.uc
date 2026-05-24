@@ -36,8 +36,9 @@ defaultproperties
 
     ReloadCameraBone="GUNNER_CAMERA"
 
+    VehicleMGReloadTexture=Texture'DH_MG34_tex.MG34_DRUM_AMMO_ICON_RELOAD'
+
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
-        // TODO: have exports at 3 different pitches for better blending
         Sequences(0)="MG34_GUNNER_YAW_2"
         Sequences(1)="MG34_GUNNER_YAW_1"
         Sequences(2)="MG34_GUNNER_YAW_0"

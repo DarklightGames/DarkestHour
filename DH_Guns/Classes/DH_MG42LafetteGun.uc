@@ -19,8 +19,8 @@ defaultproperties
     RotationsPerSecond=0.125
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
     VehicleHudImage=Texture'DH_MG34_tex.LAFETTE_BODY_ICON'
-    VehicleHudTurret=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_ROT'   // TODO: replace
-    VehicleHudTurretLook=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_LOOK'  // TODO: replace
+    VehicleHudTurret=TexRotator'DH_MG42_tex.MG42_TURRET_ICON_ROT'
+    VehicleHudTurretLook=TexRotator'DH_MG42_tex.MG42_TURRET_ICON_LOOK'
     MountedWeaponClass=Class'DH_MG42LafetteWeapon'
     UnmountedWeaponClass=Class'DH_MG42Weapon'
 
