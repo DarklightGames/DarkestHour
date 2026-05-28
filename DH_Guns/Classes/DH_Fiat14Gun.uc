@@ -12,4 +12,5 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Fiat14MGPawn',WeaponBone=turret_placement)
     VehicleHudTurret=TexRotator'DH_Fiat1435_tex.fiat14_turret_icon_look'
     VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.fiat14_turret_icon_rot'
+    DestroyedVehicleMesh=StaticMesh'DH_Fiat1435_stc.FIAT14_DESTROYED'
 }
