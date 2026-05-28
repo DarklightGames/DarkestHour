@@ -58,7 +58,10 @@ static function GridCoordinate GetGridCoordinateFromString(string CoordinateStri
     return Coordinate;
 }
 
-static function GridCoordinate GetGridCoordinatesFromWorldLocation(DHGameReplicationInfo GRI, Vector WorldLocation, optional bool bIncludeKeypad)
+static function GridCoordinate GetGridCoordinatesFromWorldLocation(
+    DHGameReplicationInfo GRI,
+    Vector WorldLocation,
+    optional bool bIncludeKeypad)
 {
     local GridCoordinate Coordinate;
     local float X, Y;
