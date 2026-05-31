@@ -58,7 +58,7 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     // Check that we are not inside the danger zone.
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
     {
-        return SPBR_EnemiesNearby;
+        return SPBR_InDangerZone;
     }
 
     if (bIsTemporary)
