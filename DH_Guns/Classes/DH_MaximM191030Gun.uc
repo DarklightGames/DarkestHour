@@ -2,10 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// MODELING & TEXTURING
-//==============================================================================
-// [~] Destroyed mesh
-//==============================================================================
 // ANIMATION
 //==============================================================================
 // [ ] FP belt animations
@@ -64,6 +60,10 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Maxim_tex.MAXIM_TURRET_ROT'
     VehicleHudTurretLook=TexRotator'DH_Maxim_tex.MAXIM_TURRET_LOOK'
     MountedWeaponClass=Class'DH_MaximM191030Weapon'
+
+    DestroyedVehicleMesh=StaticMesh'DH_Maxim_stc.MAXIM_DESTROYED'
+    DestroyedMeshSkins(0)=Combiner'DH_Maxim_tex.MAXIM_BODY_DESTROYED'
+    DestroyedMeshSkins(1)=Combiner'DH_Maxim_tex.MAXIM_TURRET_DESTROYED'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)
     ExitPositions(1)=(X=-80,Y=0,Z=30)       // Main exit position (behind the gun)
