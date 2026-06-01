@@ -17,5 +17,5 @@ defaultproperties
     VehicleHudImage=Texture'DH_M1919A4_tex.HUD.M1919A4_M2_BODY'
     VehicleHudTurret=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_ROT'  // TODO: spelling error
     VehicleHudTurretLook=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_LOOK'
-    MountedWeaponClass=Class'DH_M1919A4Weapon'
+    MountedWeaponClass=Class'DH_M1919A4_M2_Weapon'
 }
