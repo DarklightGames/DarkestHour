@@ -53,4 +53,9 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    ScopeRanges(0)=(Range=100,Pitch=0)
+    ScopeRanges(1)=(Range=200,Pitch=5)
+    ScopeRanges(2)=(Range=300,Pitch=10)
+    ScopeRanges(3)=(Range=400,Pitch=25)
 }

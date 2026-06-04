@@ -139,11 +139,15 @@ var     float           OverlayCorrectionX;      // scope center correction in p
 var     float           OverlayCorrectionY;
 var     int             LensMaterialID;          // used since material id's seem to change alot
 
-// Not sure if these pitch vars are still needed now that we use Scripted Textures. We'll keep for now in case they are. - Ramm 08/14/04
-var()       int         ScopePitch;             // Tweaks the pitch of the scope firing angle
-var()       int         ScopeYaw;               // Tweaks the yaw of the scope firing angle
-var()       int         ScopePitchHigh;         // Tweaks the pitch of the scope firing angle high detail scope
-var()       int         ScopeYawHigh;           // Tweaks the yaw of the scope firing angle high detail scope
+// Scope Range
+struct SScopeRange
+{
+    var int Range;
+    var int Pitch;
+};
+var()   array<SScopeRange>      ScopeRanges;
+var     DHUnits.EDistanceUnit   ScopeRangeDistanceUnit;
+var private int                 ScopeRangeIndex;     // index of the current range we're zeroed to
 
 // 3d Scope vars
 var   ScriptedTexture   ScopeScriptedTexture;       // Scripted texture for 3d scopes
@@ -595,24 +599,67 @@ simulated event RenderOverlays(Canvas Canvas)
     bDrawingFirstPerson = false;
 }
 
+simulated function int GetScopeRangePitch()
+{
+    if (ScopeRangeIndex < ScopeRanges.Length)
+    {
+        return ScopeRanges[ScopeRangeIndex].Pitch;
+    }
+
+    return 0;
+}
+
+simulated function bool ToggleScopeRange()
+{
+    if (ScopeRanges.Length == 0)
+    {
+        return false;
+    }
+
+    ScopeRangeIndex = (ScopeRangeIndex + 1) % ScopeRanges.Length;
+
+    return true;
+}
+
+exec simulated function CycleRange()
+{
+    if (IsBusy() && !bUsingSights)
+    {
+        return;
+    }
+
+    ToggleScopeRange();
+
+    if (InstigatorIsLocallyControlled())
+    {
+        Instigator.ReceiveLocalizedMessage(
+            Class'DHWeaponRangeMessage', 
+            Class'UInteger'.static.FromShorts(ScopeRanges[ScopeRangeIndex].Range, int(ScopeRangeDistanceUnit))
+        );
+    }
+}
+
 // From ROSniperWeapon
 simulated event RenderTexture(ScriptedTexture Tex)
 {
-    local Rotator RollMod;
+    local Rotator CameraRotation;
     local ROPawn  RPawn;
 
     if (Owner != none && Instigator != none && Tex != none && Tex.Client != none)
     {
-        RollMod = Instigator.GetViewRotation();
+        CameraRotation = Instigator.GetViewRotation();
         RPawn = ROPawn(Instigator);
 
         // Subtract roll from view while leaning
         if (RPawn != none && RPawn.LeanAmount != 0.0)
         {
-            RollMod.Roll += RPawn.LeanAmount;
+            CameraRotation.Roll += RPawn.LeanAmount;
         }
 
-        Tex.DrawPortal(0, 0, Tex.USize, Tex.VSize, Owner, (Instigator.Location + Instigator.EyePosition()), RollMod, ScopePortalFOV);
+        // TODO: quaternion here instead in case the order is wrong.
+        CameraRotation.Pitch += GetScopeRangePitch();
+
+        Tex.DrawPortal(0, 0, Tex.USize, Tex.VSize, Owner, (Instigator.Location + Instigator.EyePosition()), CameraRotation, ScopePortalFOV);
     }
 }
 
@@ -3868,4 +3915,6 @@ defaultproperties
     IronIdleAnim="Iron_idle"
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
+
+    ScopeRangeDistanceUnit=DU_Meters
 }
