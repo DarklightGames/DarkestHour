@@ -15,4 +15,6 @@ defaultproperties
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
     Headgear(0)=Class'DH_SovietHelmet'
     GlovedHandTexture=Texture'DHSovietCharactersTex.hands_sovgloves'
+    // Reduced from the base class since the DP27 is more akin to a squad support weapon (e.g., BAR, Bren)
+    AddedRoleRespawnTime=10
 }
