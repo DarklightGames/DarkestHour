@@ -703,6 +703,18 @@ function bool AssistedReload()
 
 simulated function bool WeaponAllowMantle()
 {
+    local int i;
+
+    // Don't allow the player to mantle if they are firing
+    // (e.g., if they are holding a primed grenade)
+    for (i = 0; i < arraycount(FireMode); ++i)
+    {
+        if (FireMode[i] != none && FireMode[i].bIsFiring)
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 

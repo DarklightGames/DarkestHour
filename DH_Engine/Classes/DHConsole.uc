@@ -745,6 +745,20 @@ exec function StartTyping()
     TypingOpen();
 }
 
+function TypingOpen()
+{
+    local DHPlayer PC;
+
+    super.TypingOpen();
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC != none && PC.bKeepMovingWhileTyping)
+    {
+        PC.QueueHint(67, false);
+    }
+}
+
 // Modified to fix reconnect command bug
 exec function ConsoleClose()
 {
@@ -1027,6 +1041,15 @@ state Typing
         else if (Key == IK_Tab)
         {
             IncrementSayType();
+        }
+        else if (Key == IK_Ctrl)
+        {
+            if (DHPlayer(ViewportOwner.Actor) != none)
+            {
+                DHPlayer(ViewportOwner.Actor).aForwardWhileTyping = 0;
+                DHPlayer(ViewportOwner.Actor).aStrafeWhileTyping = 0;
+                DHPlayer(ViewportOwner.Actor).bSprintWhileTyping = 0;
+            }
         }
 
         return true;

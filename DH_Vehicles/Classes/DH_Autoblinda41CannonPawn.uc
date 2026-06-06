@@ -10,9 +10,9 @@ defaultproperties
     GunClass=Class'DH_Autoblinda41Cannon'
     
     // Gunsight
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=24.0,TransitionUpAnim="gunsight_out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=18.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     // Periscope
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=40.0,TransitionDownAnim="gunsight_in",TransitionUpAnim="open",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,DriverTransitionAnim="fiatl640_gunner_close")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=40.0,TransitionUpAnim="open",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,DriverTransitionAnim="fiatl640_gunner_close")
     // Exposed
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',TransitionDownAnim="close",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,DriverTransitionAnim="fiatl640_gunner_open")
     // Binocs
@@ -24,7 +24,7 @@ defaultproperties
     DriveAnim="fiatl640_gunner_closed"
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.20mmBreda_sight_background'
-    GunsightSize=0.3
+    GunsightSize=0.4
     OverlayCorrectionX=-4.0
     OverlayCorrectionY=12.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.PZ3_sight_destroyed'  // TODO: we need one made, or do it programmatically

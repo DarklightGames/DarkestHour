@@ -491,7 +491,7 @@ def sync(args):
     repository_path = root_path / localization_data['repository']['path']
 
     # Do a submodule update to get the latest changes from the repository.
-    subprocess.run(["git", "-C", root_path, "submodule", "update", "--remote"])
+    subprocess.run(["git", "-C", root_path, "submodule", "update", "--init", "--remote"])
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
     pattern = str(repository_path / '**' / '*.po')
