@@ -953,6 +953,7 @@ function DrawHudPassC(Canvas C)
         {
             case SPBR_None:
                 DrawSpriteWidget(C, DeployOkayIcon); break;
+            case SPBR_InDangerZone:
             case SPBR_InObjective:
                 DrawSpriteWidget(C, DeployInObjectiveIcon); break;
             case SPBR_EnemiesNearby:
