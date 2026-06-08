@@ -459,7 +459,7 @@ defaultproperties
         bKDoubleTickRate=true
         bKStayUpright=true
         bKAllowRotate=true
-        bDestroyOnWorldPenetrate=true
+        bDestroyOnWorldPenetrate=false
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=850.0

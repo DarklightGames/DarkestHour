@@ -237,7 +237,7 @@ defaultproperties
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
-        bDestroyOnWorldPenetrate=true
+        bDestroyOnWorldPenetrate=false
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
