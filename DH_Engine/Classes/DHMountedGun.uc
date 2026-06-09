@@ -1002,7 +1002,7 @@ defaultproperties
         KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.0 // default is 1.0 (AT gun can't move, so KParams is probably an unnecessary override)
+        KMaxAngularSpeed=0.0 // default is 1.0 (mounted gun can't move, so KParams is probably an unnecessary override)
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true

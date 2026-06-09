@@ -20,14 +20,7 @@ defaultproperties
     VehicleHudImage=Texture'DH_M1919A4_tex.HUD.M1919A4_M1917_BODY'
     VehicleHudTurret=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M1917_TURRET_ROT'
     VehicleHudTurretLook=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M1917_TURRET_LOOK'
-    VehicleTeam=1
-    // In order for the collision meshes to actually work, for some reason there needs to be karma shapes.
-    // However, we don't actually want the gun to move, so we set the max speed and angular speed to 0.
-    Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KMaxSpeed=0.0
-        KMaxAngularSpeed=0.0
-    End Object
-    KParams=KParams0
-    
+    VehicleTeam=1    
     MountedWeaponClass=Class'DH_M1919A4_M1917_Weapon'
+    DestroyedVehicleMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M2_DESTROYED'
 }

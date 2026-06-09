@@ -18,4 +18,5 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_ROT'  // TODO: spelling error
     VehicleHudTurretLook=TexRotator'DH_M1919A4_tex.HUD.M1919A4_M2_TURRRET_LOOK'
     MountedWeaponClass=Class'DH_M1919A4_M2_Weapon'
+    DestroyedVehicleMesh=StaticMesh'DH_M1919A4_stc.M1919A4_M2_DESTROYED'
 }

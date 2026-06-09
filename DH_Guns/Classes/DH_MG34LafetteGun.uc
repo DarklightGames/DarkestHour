@@ -37,12 +37,4 @@ defaultproperties
     ExitPositions(3)=(X=0,Y=+80.0,Z=30)     
     ExitPositions(4)=(X=-80,Y=-80.0,Z=30)
     ExitPositions(5)=(X=-80,Y=80.0,Z=30)
-
-    // In order for the collision meshes to actually work, for some reason there needs to be karma shapes.
-    // However, we don't actually want the gun to move, so we set the max speed and angular speed to 0.
-    Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KMaxSpeed=0.0
-        KMaxAngularSpeed=0.0
-    End Object
-    KParams=KParams0
 }
