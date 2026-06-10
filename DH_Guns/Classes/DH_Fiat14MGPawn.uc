@@ -9,9 +9,13 @@ defaultproperties
 {
     GunClass=Class'DH_Fiat14MG'
     HandsReloadSequence="RELOAD_WC"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true)
+
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true,ViewFOV=72.5/*,TransitionUpAnim="RAISE"*/)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true,ViewFOV=72.5/*,TransitionDownAnim="LOWER"*/)
+    DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA_WC")
+    DriverPositionsExtra(1)=(CameraBone="GUNSIGHT_CAMERA_WC")
     GunsightCameraBone="GUNSIGHT_CAMERA_WC"
     VehicleMGReloadTexture=Texture'DH_Fiat1435_tex.fiat14_ammo_reload'
 
-    DriverPositionsExtra(0)=(CameraBone="GUNSIGHT_CAMERA_WC")
+    
 }

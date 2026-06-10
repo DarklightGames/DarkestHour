@@ -7,7 +7,6 @@ class DH_MaximM191030MGPawn extends DHMountedMGPawn;
 
 defaultproperties
 {
-    //HandsMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_HANDS'
     GunClass=Class'DH_MaximM191030MG'
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
