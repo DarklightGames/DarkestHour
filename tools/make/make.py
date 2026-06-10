@@ -438,7 +438,7 @@ def main():
             sys.exit(1)
 
         # Run ucc make.
-        ucc_args = ['ucc', 'make', '-mod=' + args.mod]
+        ucc_args = ['ucc', 'Editor.MakeCommandlet', '-mod=' + args.mod]
         if args.debug:
             ucc_args.append('-debug')
         if sys.platform == 'linux':
@@ -467,7 +467,7 @@ def main():
             print('Running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
             processes = []
             for package in (compiled_packages & changed_packages):
-                ucc_args = ['ucc', 'dumpint', package, '-mod=' + args.mod]
+                ucc_args = ['ucc', 'Editor.DumpIntCommandlet', package, '-mod=' + args.mod]
                 if sys.platform == 'linux':
                     ucc_args.insert(0, 'wine')
                 processes.append(subprocess.Popen(ucc_args))
