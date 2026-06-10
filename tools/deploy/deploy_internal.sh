@@ -8,13 +8,13 @@ pushd "$(dirname ${BASH_SOURCE:0})" > /dev/null
 git config --global --add safe.directory /RedOrchestra
 
 # Clean localization
-../localization/localization clean -y
+../localization/localization.sh clean -y
 
 # Build the game (requires wine, UCC etc.)
-../make/clean
+../make/clean.sh
 
 # Sync localizations.
-../localization/localization sync
+../localization/localization.sh sync
 
 virtualenv venv --clear && \
 source venv/bin/activate && \
