@@ -4071,7 +4071,7 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
 
 // Modified to include setting ResetTime for an empty vehicle, which natively calls future CheckReset() event that may destroy & respawn an apparently abandoned vehicle
 // Moved this functionality here from DriverLeft() as it fits well here, but functionality has been substantially modified & improved
-// We never consider destroying a spawn vehicle, or a factory's last/only vehicle (it won't spawn a replacement so no point 'recycling') unless factory deactivated
+// We never consider destroying a persistent spawn vehicle, or a factory's last/only vehicle (it won't spawn a replacement so no point 'recycling') unless factory deactivated
 // But we do do now set a ResetTime for an empty bNeverReset vehicle (e.g, AT gun) if its factory has since been deactivated & should destroy an empty vehicle
 // And we skip check that vehicle has moved from its spawning location if parent is DH spawn manager, as that has no location & doesn't spawn empty vehicle like a factory
 function MaybeDestroyVehicle()
@@ -4090,8 +4090,8 @@ function MaybeDestroyVehicle()
 
         // (If the vehicle was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
         // AND is not meant to reset)
-        // OR is a spawn vehicle, return
-        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || IsPermanentSpawnVehicle())
+        // OR is a persistent spawn vehicle, return
+        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || CanSpawnVehiclePersistWhenIdle())
         {
             return;
         }
@@ -4133,10 +4133,10 @@ event CheckReset()
     local float      Distance;
     local ROVehicleFactory VF;
 
-    // Do nothing if vehicle is a spawn vehicle or it isn't empty
+    // Do nothing if vehicle is a persistent spawn vehicle, or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
     // Occupied vehicle shouldn't have CheckReset timer running & if player exits, leaving vehicle empty, then a new CheckReset timer gets started
-    if (IsPermanentSpawnVehicle() || !IsVehicleEmpty())
+    if (CanSpawnVehiclePersistWhenIdle() || !IsVehicleEmpty())
     {
         return;
     }
@@ -4290,10 +4290,13 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
     }
 }
 
-// New helper function to check whether vehicle is a spawn vehicle
-simulated function bool IsPermanentSpawnVehicle()
+// Helper function to check whether a spawn vehicle shouldn't despawn after being abandoned (when IdleTimeBeforeReset is reached)
+simulated function bool CanSpawnVehiclePersistWhenIdle()
 {
-    return SpawnPointAttachment != none && !SpawnPointAttachment.bIsTemporary;
+    // The vehicle must be a permanent spawn (MDV) and within reach of the owning team
+    return SpawnPointAttachment != none &&
+           !SpawnPointAttachment.bIsTemporary &&
+           SpawnPointAttachment.BlockReason != SPBR_InDangerZone;
 }
 
 // Modified so vehicle is treated as disabled if it suffers a range of damage that renders it of very limited use, as well as if the engine is dead

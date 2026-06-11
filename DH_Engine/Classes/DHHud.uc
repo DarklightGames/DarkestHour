@@ -124,6 +124,8 @@ var     localized string    PlaceRallyPointText;
 var     localized string    SayTypeConsoleText;
 var     localized string    SayTypeAllText;
 var     localized string    TypingPromptText;
+var     localized string    TypingPromptStopWalkingText;
+var     localized string    TypingPromptStopDrivingText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -192,6 +194,11 @@ function PostBeginPlay()
 
     MapIconAttachmentDrawOrderComparator = new class'UComparator';
     MapIconAttachmentDrawOrderComparator.CompareFunction = MapIconAttachmentDrawOrderCompareFunction;
+
+    // Initialize strings
+    TypingPromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+    TypingPromptStopDrivingText = Repl(TypingPromptStopDrivingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
+    TypingPromptStopWalkingText = Repl(TypingPromptStopWalkingText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Ctrl)));
 }
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
@@ -946,6 +953,7 @@ function DrawHudPassC(Canvas C)
         {
             case SPBR_None:
                 DrawSpriteWidget(C, DeployOkayIcon); break;
+            case SPBR_InDangerZone:
             case SPBR_InObjective:
                 DrawSpriteWidget(C, DeployInObjectiveIcon); break;
             case SPBR_EnemiesNearby:
@@ -5881,6 +5889,7 @@ function DHDrawTypingPrompt(Canvas C)
     local Color SayTypeColor;
     local string SayTypeText, PromptText;
     local class<DHLocalMessage> SayTypeMessageClass;
+    local DHPlayer PC;
 
     Console = DHConsole(PlayerConsole);
     SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
@@ -5920,6 +5929,29 @@ function DHDrawTypingPrompt(Canvas C)
 
     // Draw the button prompt for cycling chat modes.
     PromptText = Repl(TypingPromptText, "{0}", Caps(class'Interactions'.static.GetFriendlyName(IK_Tab)));
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC != none)
+    {
+        if (PC.aForwardWhileTyping != 0)
+        {
+            if (PC.IsInState('PlayerDriving'))
+            {
+                PromptText $= TypingPromptStopDrivingText;
+            }
+            else
+            {
+                PromptText $= TypingPromptStopWalkingText;
+            }
+
+        }
+        else if (PC.aStrafeWhileTyping != 0)
+        {
+            PromptText $= TypingPromptStopWalkingText;
+        }
+    }
+
     YPos += YL;
     C.SetPos(XPos, YPos);
     C.DrawColor.A = 128;
@@ -6019,6 +6051,8 @@ defaultproperties
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
     InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
     TypingPromptText="Press [{0}] to change chat channel"
+    TypingPromptStopWalkingText=", [{0}] to stop moving"
+    TypingPromptStopDrivingText=", [{0}] to stop accelerating"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Compass_rotator') // using DH version of compass background texture
