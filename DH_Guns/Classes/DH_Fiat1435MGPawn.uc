@@ -8,10 +8,9 @@ class DH_Fiat1435MGPawn extends DHMountedMGPawn
 
 defaultproperties
 {
-    //HandsMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_HANDS'
     DrivePos=(X=-15.5622,Y=0,Z=29.7831)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
-    DriveAnim="FIAT1435_GUNNER_YAW_0"  // TODO: replace with neutral pose
+    DriveAnim="FIAT1435_GUNNER_IDLE"
     IronSightsPositionIndex=0
 
     Begin Object Class=DHVehicleWeaponPawnAnimationDriverParameters Name=AnimationDriverParameters0
