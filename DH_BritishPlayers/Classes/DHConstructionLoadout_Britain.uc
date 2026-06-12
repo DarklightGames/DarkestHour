@@ -26,8 +26,9 @@ defaultproperties
     Constructions(8)=(ConstructionClass=Class'DHConstruction_DragonsTooth',Limit=-1,MaxActive=-1)
 
     // Guns
-    Constructions(9)=(ConstructionClass=Class'DH_6PounderGunConstruction',Limit=5,MaxActive=-1)
-    Constructions(10)=(ConstructionClass=Class'DH_17PounderGunConstruction',Limit=3,MaxActive=-1)
-    Constructions(11)=(ConstructionClass=Class'DH_Bofors40mmGunConstruction',Limit=2,MaxActive=-1)
-    Constructions(12)=(ConstructionClass=Class'DH_ML3InchMortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(9)=(ConstructionClass=Class'DH_VickersGunConstruction',Limit=6,MaxActive=-1)
+    Constructions(10)=(ConstructionClass=Class'DH_ML3InchMortarConstruction',Limit=3,MaxActive=-1)
+    Constructions(11)=(ConstructionClass=Class'DH_6PounderGunConstruction',Limit=5,MaxActive=-1)
+    Constructions(12)=(ConstructionClass=Class'DH_17PounderGunConstruction',Limit=3,MaxActive=-1)
+    Constructions(13)=(ConstructionClass=Class'DH_Bofors40mmGunConstruction',Limit=2,MaxActive=-1)
 }
