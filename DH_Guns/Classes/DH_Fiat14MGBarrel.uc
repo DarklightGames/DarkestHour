@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat14MGBarrel extends DH_Fiat1435MGBarrel;
+class DH_Fiat14MGBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
