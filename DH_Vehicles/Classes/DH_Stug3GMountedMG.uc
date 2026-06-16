@@ -57,4 +57,6 @@ defaultproperties
     ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
     ReloadStages(3)=(Sound=none,Duration=1.63)
+
+    bShouldBaseTakeDamage=false
 }
