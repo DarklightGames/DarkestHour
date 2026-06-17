@@ -65,9 +65,9 @@ var name                            BarrelSteamBone;
 var name                            BarrelChangeSequence;
 
 // Barrels (RUNTIME)
-var int                             BarrelIndex;
+var DHWeaponBarrelBundle            BarrelBundle;
+
 var ROMGSteam                       BarrelSteamEmitter;
-var array<DHWeaponBarrel>           Barrels;
 var DHWeaponBarrel.EBarrelCondition BarrelCondition;
 var float                           BarrelTemperature;
 var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
@@ -87,12 +87,27 @@ replication
         BarrelCondition, BarrelTemperature, bBarrelIsSteamActive;
 }
 
-private function SpawnBarrels()
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (BarrelBundle != none)
+    {
+        BarrelBundle.Destroy();
+    }
+}
+
+private function CreateBarrelBundle()
 {
     local int i;
     local DHWeaponBarrel Barrel;
 
-    Barrels.Length = 0;
+    if (BarrelBundle != none)
+    {
+        BarrelBundle.Destroy();
+    }
+
+    BarrelBundle = Spawn(Class'DHWeaponBarrelBundle', self);
 
     for (i = 0; i < BarrelCount; ++i)
     {
@@ -100,13 +115,13 @@ private function SpawnBarrels()
         Barrel.OnTemperatureChanged = OnBarrelTemperatureChanged;
         Barrel.OnConditionChanged = OnBarrelConditionChanged;
         Barrel.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
-        Barrels[i] = Barrel;
+        BarrelBundle.Barrels[i] = Barrel;
     }
 
-    if (Barrels.Length > 0)
+    if (BarrelBundle.Barrels.Length > 0)
     {
         // Set the first barrel is being active.
-        Barrels[0].SetCurrentBarrel(true);
+        BarrelBundle.Barrels[0].SetCurrentBarrel(true);
     }
 }
 
@@ -307,18 +322,16 @@ function Fire(Controller C)
     
     StartFiringAnimation();
 
-    // TODO: make sure this will work in multiplayer; only have this run on the client. server doesn't care.
+    // TODO: make sure this will work in multiplayer; only have this run on the client.
+    // server doesn't care.
     if (Level.NetMode != NM_DedicatedServer)
     {
         SpawnEjectors();
     }
 
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && BarrelBundle != none)
     {
-        if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
-        {
-            Barrels[BarrelIndex].WeaponFired();
-        }
+        BarrelBundle.WeaponFired();
     }
     
     UpdateClip();
@@ -464,43 +477,9 @@ Begin:
     GotoState('');
 }
 
-// Returns the index of the next best barrel to switch to, sorting first by condition and then by temperature.
-// Returns -1 if there are no barrels that can be changed to.
-private simulated function int GetNextBestBarrelIndex()
-{
-    local int i;
-    local UComparator Comparator;
-    local array<DHWeaponBarrel> SortedBarrels;
-
-    // Copy the barrels to a new list to be sorted.
-    SortedBarrels = Barrels;
-
-    // Remove the current barrel and any failed barrels from the list to be sorted.
-    SortedBarrels.Remove(BarrelIndex, 1);
-
-    for (i = SortedBarrels.Length - 1; i >= 0; --i)
-    {
-        if (SortedBarrels[i].Condition == BC_Failed)
-        {
-            SortedBarrels.Remove(i, 1);
-        }
-    }
-
-    if (SortedBarrels.Length == 0)
-    {
-        return -1;
-    }
-
-    // Sort in order of condition and temperature.
-    Comparator = new Class'UComparator';
-    Comparator.CompareFunction = Class'DHWeaponBarrel'.static.SortFunction;
-    Class'USort'.static.Sort(SortedBarrels, Comparator);
-    return Class'UArray'.static.IndexOf(Barrels, SortedBarrels[0]);
-}
-
 simulated function bool CanChangeBarrels()
 {
-    if (IsBusy() || GetNextBestBarrelIndex() == -1)
+    if (IsBusy() || BarrelBundle.CanChangeBarrel())
     {
         return false;
     }
@@ -539,7 +518,7 @@ simulated state ChangingBarrels extends Busy
 
         if (MGPawn != none)
         {
-            MGPawn.PlayerBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
+            MGPawn.PlayBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
             // Zoom out.
             MGPawn.SetIsZoomed(false);
         }
@@ -556,22 +535,7 @@ simulated state ChangingBarrels extends Busy
     // TODO: Perhaps add some sort of mechanism to only do the actual swap mid-animation (a notify on the animation, perhaps?)
     simulated function PerformBarrelChange()
     {
-        local int NextBarrelIndex;
-        
-        NextBarrelIndex = GetNextBestBarrelIndex();
-
-        if (NextBarrelIndex == -1)
-        {
-            // Avoid out-of-bounds errors in case the function above returns -1 somehow.
-            return;
-        }
-
-        Level.Game.Broadcast(self, "Changing barrels from barrel" @ BarrelIndex @ "to barrel" @ NextBarrelIndex);
-
-        Barrels[BarrelIndex].SetCurrentBarrel(false);
-        Barrels[NextBarrelIndex].SetCurrentBarrel(true);
-
-        BarrelIndex = NextBarrelIndex;
+        BarrelBundle.PerformBarrelChange();
     }
 
 Begin:
@@ -604,7 +568,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        SpawnBarrels();
+        CreateBarrelBundle();
     }
 }
 

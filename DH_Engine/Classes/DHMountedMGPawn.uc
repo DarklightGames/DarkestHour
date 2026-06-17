@@ -333,7 +333,7 @@ simulated function PlayReloadAnim(float AnimationDurationSeconds)
         GetCameraBoneForPosition(DriverPositionIndex), Level.TimeSeconds + AnimationDurationSeconds - 0.25, 0.25, INTERP_SmoothStep);
 }
 
-simulated function PlayerBarrelChangeAnim(float AnimationDurationSeconds)
+simulated function PlayBarrelChangeAnim(float AnimationDurationSeconds)
 {
     // Add a transition to and from the reload camera.
     CameraTransitionController.QueueCameraTransition(

@@ -121,8 +121,6 @@ function ServerUnmountWeapon(DHPawn Instigator)
 // Returns true when the weapon has been mounted.
 function bool MountWeapon(DHPawn Instigator)
 {
-    local Inventory Inventory;
-
     if (Instigator == none)
     {
         return false;

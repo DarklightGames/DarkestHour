@@ -15,6 +15,83 @@ delegate OnConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelConditi
 delegate OnIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive);
 delegate OnTemperatureChanged(DHWeaponBarrel Barrel, float Temperature);
 
+function Destroyed()
+{
+    local int i;
+
+    for (i = 0; i < Barrels.Length; ++i)
+    {
+        if (Barrels[i] != none)
+        {
+            Barrels[i].Destroy();
+        }
+    }
+}
+
+// Returns the index of the next best barrel to switch to, sorting first by condition and then by temperature.
+// Returns -1 if there are no barrels that can be changed to.
+private simulated function int GetNextBestBarrelIndex()
+{
+    local int i;
+    local UComparator Comparator;
+    local array<DHWeaponBarrel> SortedBarrels;
+
+    // Copy the barrels to a new list to be sorted.
+    SortedBarrels = Barrels;
+
+    // Remove the current barrel and any failed barrels from the list to be sorted.
+    SortedBarrels.Remove(BarrelIndex, 1);
+
+    for (i = SortedBarrels.Length - 1; i >= 0; --i)
+    {
+        if (SortedBarrels[i].Condition == BC_Failed)
+        {
+            SortedBarrels.Remove(i, 1);
+        }
+    }
+
+    if (SortedBarrels.Length == 0)
+    {
+        return -1;
+    }
+
+    // Sort in order of condition and temperature.
+    Comparator = new Class'UComparator';
+    Comparator.CompareFunction = Class'DHWeaponBarrel'.static.SortFunction;
+    Class'USort'.static.Sort(SortedBarrels, Comparator);
+    return Class'UArray'.static.IndexOf(Barrels, SortedBarrels[0]);
+}
+
+function bool CanChangeBarrel()
+{
+    return GetNextBestBarrelIndex() != -1;
+}
+
+function PerformBarrelChange()
+{
+    local int NextBarrelIndex;
+    
+    NextBarrelIndex = GetNextBestBarrelIndex();
+
+    if (NextBarrelIndex == -1)
+    {
+        // Avoid out-of-bounds errors in case the function above returns -1 somehow.
+        return;
+    }
+
+    Level.Game.Broadcast(self, "Changing barrels from barrel" @ BarrelIndex @ "to barrel" @ NextBarrelIndex);
+
+    Barrels[BarrelIndex].SetCurrentBarrel(false);
+    Barrels[NextBarrelIndex].SetCurrentBarrel(true);
+
+    BarrelIndex = NextBarrelIndex;
+}
+
+function WeaponFired()
+{
+    Barrels[BarrelIndex].WeaponFired();
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_None
