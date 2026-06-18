@@ -12,6 +12,7 @@ defaultproperties
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
     Spread=45.0   //worn-out barrel
+    AddedPitch=20.0 // should be zeroed to 300m (this is an approximation though)
     FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.G98_shootA'
     FireSounds(1)=SoundGroup'DH_CC_Inf_Weapons.G98_shootB'
     
