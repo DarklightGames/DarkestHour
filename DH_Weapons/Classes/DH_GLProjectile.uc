@@ -15,7 +15,7 @@ defaultproperties
     ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.GeballteLadungExp01'
 
     Damage=760.0 // 1260 gramms TNT
-    DamageRadius=1100 // about 18 meters
+    DamageRadius=910 // 15 meters give or take
                       // practically, user has to either throw from cover or run away immediately
 
     EngineDamageMassThreshold=15.1  //1260 gramms TNT should penetrate every top armor, EXCEPT the jagdtiger (~40mm top armor) and KV-1 (30-40mm), which should be problematic
