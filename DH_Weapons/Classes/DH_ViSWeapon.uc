@@ -19,8 +19,8 @@ defaultproperties
 
     Skins(1)=Texture'DH_ViS_tex.ViS_texture'
     Skins(2)=Texture'Weapons1st_tex.p38'
-    SleeveNum=3
-    HandNum=0
+    sleevenum=3
+    handnum=0
 
     FirstSelectAnim="draw2"
 
@@ -30,6 +30,7 @@ defaultproperties
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+    bCanHaveInitialNumMagsChanged=false
 
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"

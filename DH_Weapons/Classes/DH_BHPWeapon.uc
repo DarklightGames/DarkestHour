@@ -27,6 +27,7 @@ defaultproperties
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+    bCanHaveInitialNumMagsChanged=false
 
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"

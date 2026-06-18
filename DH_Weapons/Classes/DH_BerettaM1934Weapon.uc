@@ -32,6 +32,7 @@ defaultproperties
 
     InitialNumPrimaryMags=3
     MaxNumPrimaryMags=3
+    bCanHaveInitialNumMagsChanged=false
 
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload"
