@@ -13,6 +13,7 @@ defaultproperties
     Spread=185.0
     MaxVerticalRecoilAngle=400
     MaxHorizontalRecoilAngle=225
+    FireRate=0.21
 
     FireSounds(0)=SoundGroup'Inf_Weapons.waltherp38_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.waltherp38_fire02'
