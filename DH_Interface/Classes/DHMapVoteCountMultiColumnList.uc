@@ -118,9 +118,9 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    ColumnHeadings(0)="Nominated Maps"
-    ColumnHeadings(1)="Vote Weight"
-    ColumnHeadings(2)="Map Size"
+    ColumnHeadings(0)="Nominated"
+    ColumnHeadings(1)="Votes"
+    ColumnHeadings(2)="Size"
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="The combined voting power of players for the map."
     ColumnHeadingHints(2)="Recommended players for the map."

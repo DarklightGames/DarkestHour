@@ -5,6 +5,13 @@
 
 class DHMapVoteCountMultiColumnListBox extends MapVoteCountMultiColumnListBox;
 
+function InitBaseList(GUIListBase ListBase)
+{
+    super.InitBaseList(ListBase);
+
+    ListBase.OnChange = OnChange;
+}
+
 defaultproperties
 {
     ContextMenu=none
