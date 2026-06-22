@@ -7,7 +7,7 @@
 
 class DHWeaponBarrelBundle extends Actor;
 
-var int BarrelIndex;    // The current active barrel.
+var private int CurrentBarrelIndex;
 var array<DHWeaponBarrel> Barrels;
 
 // Delegate functions for when the active barrel changes state.
@@ -16,6 +16,13 @@ delegate OnIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive);
 delegate OnTemperatureChanged(DHWeaponBarrel Barrel, float Temperature);
 
 function Destroyed()
+{
+    super.Destroyed();
+
+    DestroyBarrels();
+}
+
+private function DestroyBarrels()
 {
     local int i;
 
@@ -28,9 +35,14 @@ function Destroyed()
     }
 }
 
+function int GetCurrentBarrelIndex()
+{
+    return CurrentBarrelIndex;
+}
+
 // Returns the index of the next best barrel to switch to, sorting first by condition and then by temperature.
 // Returns -1 if there are no barrels that can be changed to.
-private simulated function int GetNextBestBarrelIndex()
+private function int GetNextBestBarrelIndex()
 {
     local int i;
     local UComparator Comparator;
@@ -40,7 +52,7 @@ private simulated function int GetNextBestBarrelIndex()
     SortedBarrels = Barrels;
 
     // Remove the current barrel and any failed barrels from the list to be sorted.
-    SortedBarrels.Remove(BarrelIndex, 1);
+    SortedBarrels.Remove(CurrentBarrelIndex, 1);
 
     for (i = SortedBarrels.Length - 1; i >= 0; --i)
     {
@@ -79,17 +91,32 @@ function PerformBarrelChange()
         return;
     }
 
-    Level.Game.Broadcast(self, "Changing barrels from barrel" @ BarrelIndex @ "to barrel" @ NextBarrelIndex);
+    Level.Game.Broadcast(self, "Changed barrels from barrel" @ CurrentBarrelIndex @ "to barrel" @ NextBarrelIndex);
 
-    Barrels[BarrelIndex].SetCurrentBarrel(false);
+    Barrels[CurrentBarrelIndex].SetCurrentBarrel(false);
     Barrels[NextBarrelIndex].SetCurrentBarrel(true);
 
-    BarrelIndex = NextBarrelIndex;
+    CurrentBarrelIndex = NextBarrelIndex;
+}
+
+function DHWeaponBarrel GetCurrentBarrel()
+{
+    if (CurrentBarrelIndex < 0 || CurrentBarrelIndex >= Barrels.Length)
+    {
+        return none;
+    }
+
+    return Barrels[CurrentBarrelIndex];
 }
 
 function WeaponFired()
 {
-    Barrels[BarrelIndex].WeaponFired();
+    local DHWeaponBarrel CurrentBarrel;
+
+    if (CurrentBarrel != none)
+    {
+        CurrentBarrel.WeaponFired();
+    }
 }
 
 defaultproperties
