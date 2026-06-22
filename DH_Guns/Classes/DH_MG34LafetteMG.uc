@@ -126,7 +126,7 @@ defaultproperties
 
     BarrelCount=2
     BarrelClass=Class'DH_MG34Barrel'
-    BarrelChangeSequence="BARREL_CHANGE"
+    BarrelChangeAnimation="BARREL_CHANGE"
 
     HudAltAmmoIcon=Texture'DH_MG34_tex.MG34_DRUM_AMMO_ICON'
 }

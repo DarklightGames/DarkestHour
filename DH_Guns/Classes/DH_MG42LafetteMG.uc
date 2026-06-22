@@ -80,5 +80,5 @@ defaultproperties
 
     BarrelCount=2
     BarrelClass=Class'DH_MG42Barrel'
-    BarrelChangeSequence="BARREL_CHANGE"
+    BarrelChangeAnimation="BARREL_CHANGE"
 }

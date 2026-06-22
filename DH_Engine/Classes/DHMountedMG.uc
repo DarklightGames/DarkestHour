@@ -62,7 +62,7 @@ var int                             BarrelCount;
 var class<DHWeaponBarrel>           BarrelClass;
 var class<ROMGSteam>                BarrelSteamEmitterClass;
 var name                            BarrelSteamBone;
-var name                            BarrelChangeSequence;
+var name                            BarrelChangeAnimation;
 
 // Barrels (RUNTIME)
 var DHWeaponBarrelBundle            BarrelBundle;
@@ -509,16 +509,16 @@ simulated state ChangingBarrels extends Busy
 
         super.BeginState();
 
-        if (BarrelChangeSequence != '')
+        if (BarrelChangeAnimation != '')
         {
-            PlayAnim(BarrelChangeSequence, 1.0, 0.0, 0.0);
+            PlayAnim(BarrelChangeAnimation, 1.0, 0.0, 0.0);
         }
 
         MGPawn = DHMountedMGPawn(WeaponPawn);
 
         if (MGPawn != none)
         {
-            MGPawn.PlayBarrelChangeAnim(GetAnimDuration(BarrelChangeSequence));
+            MGPawn.PlayBarrelChangeAnim(GetAnimDuration(BarrelChangeAnimation));
             // Zoom out.
             MGPawn.SetIsZoomed(false);
         }
@@ -539,7 +539,7 @@ simulated state ChangingBarrels extends Busy
     }
 
 Begin:
-    Sleep(GetAnimDuration(BarrelChangeSequence));
+    Sleep(GetAnimDuration(BarrelChangeAnimation));
     PerformBarrelChange();
     GotoState('');
 }
