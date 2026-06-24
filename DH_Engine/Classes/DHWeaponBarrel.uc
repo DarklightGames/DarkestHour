@@ -42,7 +42,7 @@ simulated function PostBeginPlay()
     if (Role == ROLE_Authority && DarkestHourGame(Level.Game).LevelInfo != none)
     {
         TempFahrenheit = DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit;
-        LevelTempCentigrade = float(TempFahrenheit - 32) * 5.0 / 9.0;
+        LevelTempCentigrade = class'DHUnits'.static.FahrenheitToCelcius(TempFahrenheit);
         Temperature = LevelTempCentigrade;
 
         SetTimer(BarrelTimerRate, true);
