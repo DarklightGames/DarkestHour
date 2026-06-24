@@ -29,7 +29,6 @@ function PostBeginPlay()
 function SpawnBullets()
 {
     local int i;
-    local string BoneName;
 
     DestroyBullets();
 

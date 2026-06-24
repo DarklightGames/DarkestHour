@@ -471,7 +471,7 @@ simulated function UpsertConstructionTagLimits(array<DHConstructionTypes.SConstr
 // This function evaluates the level's construction classes and populates the ConstructionsEvaluated list.
 simulated function EvaluateConstructions()
 {
-    local int i, j, k, TeamIndex, ConstructionIndex;
+    local int i, j, TeamIndex, ConstructionIndex;
     local class<DHNation> NationClass;
     local Stack_Object LoadoutClassStack;
     local class<DHConstructionLoadout> LoadoutClass;

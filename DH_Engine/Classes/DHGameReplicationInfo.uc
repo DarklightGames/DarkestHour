@@ -344,7 +344,7 @@ simulated function PostBeginPlay()
 // TODO: All this construction stuff in here is a disaster. Move it to a separate class.
 function ResetConstructionRuntimeInfo()
 {
-    local int i, j;
+    local int i;
     local DH_LevelInfo LI;
     
     LI = Class'DH_LevelInfo'.static.GetInstance(Level);

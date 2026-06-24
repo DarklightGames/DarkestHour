@@ -175,7 +175,7 @@ final static function SCylinderCollisionResult CylinderCollisionQuery(
     bool bCanOnlyPlaceOnTerrain
     )
 {
-    local Vector Forward, X, Y, Z, TraceStart, TraceEnd, HitLocation, HitNormal, HitNormalAverage;
+    local Vector X, Y, Z, TraceStart, TraceEnd, HitLocation, HitNormal, HitNormalAverage;
     local float Circumference, AngleRadians;
     local int i, ArcLengthTraceCount;
     local Actor HitActor;

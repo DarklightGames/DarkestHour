@@ -386,7 +386,6 @@ function bool IsActive()
 function Activate(int InstigatorTeamIndex)
 {
     local DHGameReplicationInfo GRI;
-    local int ConstructionIndex;
 
     if (bIsActive)
     {
@@ -417,7 +416,6 @@ function Activate(int InstigatorTeamIndex)
 function Deactivate(optional bool bInstigatorIsFriendly)
 {
     local DHGameReplicationInfo GRI;
-    local int ConstructionIndex;
 
     if (Role != ROLE_Authority)
     {

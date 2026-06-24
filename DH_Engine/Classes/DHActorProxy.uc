@@ -379,15 +379,13 @@ function Context GetContext()
 // Sets the location and rotation of the proxy and returns an error if one occurs.
 function ActorProxyError SetProvisionalLocationAndRotation()
 {
-    local Vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Forward, Left, X, Y, Z, HitNormalAverage, BaseLocation;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal, Forward, Left, HitNormalAverage, BaseLocation;
     local Rotator R;
-    local float GroundSlopeDegrees, AngleRadians, CircumferenceInMeters;
+    local float GroundSlopeDegrees;
     local ActorProxyError E;
-    local int i, ArcLengthTraceCount;
     local TerrainInfo TI;
     local Material HitMaterial;
     local DHGameReplicationInfo GRI;
-    local Actor HitActor;
     local UCollision.SCylinderCollisionResult CCR;
 
     GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);

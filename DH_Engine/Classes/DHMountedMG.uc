@@ -316,7 +316,6 @@ simulated function SpawnEjectors()
 function Fire(Controller C)
 {
     local DHMountedMGPawn MGP;
-    local int i;
 
     super.Fire(C);
     
@@ -799,7 +798,6 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 {
     local name      WeaponFireAttachBone;
     local Vector    CurrentFireOffset;
-    local Coords    MuzzleCoords;
 
     // Get attachment bone & positional offset
     WeaponFireAttachBone = WeaponFireAttachmentBone;

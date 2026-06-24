@@ -49,8 +49,6 @@ function bool MountWeapon(DHPawn Pawn, DHMountedGun Gun)
 
 function bool UnmountWeapon(DHPawn Pawn, DHMountedGun Gun)
 {
-    local DHWeapon Weapon;
-
     if (Gun == none)
     {
         return false;

@@ -22,8 +22,6 @@ simulated function ResetDirtColor()
 
 simulated function SetDirtColor(Color DirtColor)
 {
-    local int j;
-
     if (DirtColor.R == 0 && DirtColor.G == 0 && DirtColor.B == 0)
     {
         ResetDirtColor();

@@ -40,9 +40,7 @@ function QueueCameraTransition(name TargetCameraBone, float StartTimeSeconds, fl
 // Tick function to update the camera location and rotation based on state and active transitions.
 function Tick(Actor Actor, float TimeSeconds)
 {
-    local int i;
     local CameraTransition ActiveTransition;
-    local name TargetCameraBone;
     local Vector CurrentLocation, TargetLocation;
     local Rotator CurrentRotation, TargetRotation;
     local float Alpha;

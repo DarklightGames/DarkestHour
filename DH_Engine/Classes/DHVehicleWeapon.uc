@@ -757,7 +757,7 @@ function Rotator GetProjectileFireRotation(optional bool bAltFire)
 // This makes the assumption that CalcWeaponFire has already been called before this.
 simulated function GetMuzzleObstructionTrace(out Vector TraceStart, out Vector TraceEnd)
 {
-    local Vector YawBoneLocation, MuzzleDirection;
+    local Vector MuzzleDirection;
     local float TraceLength;
 
     MuzzleDirection = Vector(WeaponFireRotation);

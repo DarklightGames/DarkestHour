@@ -186,7 +186,6 @@ function Timer()
     local Pawn recvr;
     local ROPawn P;
     local DHVehicle V;
-    local DHVehicleWeaponPawn MMG;
     local int i;
 
     ProcessActorLeave();
