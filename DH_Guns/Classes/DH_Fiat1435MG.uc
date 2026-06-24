@@ -62,18 +62,5 @@ defaultproperties
 
     ShellEjectors(0)=(ShellEjectClass=Class'RO3rdShellEject762x54mm',Bone="EJECTOR",RotationOffset=(Pitch=-16384,Yaw=16384))
 
-    ProjectileRotationMode=PRM_MuzzleBone
-
-    // Regular MGs do not have collision on because it's assumed that they're a small part
-    // mounted on a larger vehicle. In this case, we want to have collision on because it's
-    // a standalone weapon.
-    bCollideActors=true
-    bBlockActors=true
-    bProjTarget=true
-    bBlockNonZeroExtentTraces=true
-    bBlockZeroExtentTraces=true
-
-    NumRoundsInStaticMesh=1
-
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_PITCH_COLLISION',AttachBone="MG_PITCH")
 }
