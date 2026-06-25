@@ -71,11 +71,16 @@ function Destroyed()
     DestroyBullets();
 }
 
-function int FreezeAnimAtAmmoCount(int AmmoCount)
+function FreezeAnimAtAmmoCount(int AmmoCount)
 {
     local int SequenceIndex;
 
     SequenceIndex = GetSequenceIndexForAmmoCount(AmmoCount);
+
+    if (SequenceIndex < 0 || SequenceIndex >= FireSequenceNames.Length)
+    {
+        return;
+    }
 
     PlayAnim(FireSequenceNames[SequenceIndex]);
     FreezeAnimAt(0.0);

@@ -8,8 +8,6 @@ class DHConstructionProxy extends DHActorProxy
 
 var class<DHConstruction>   ConstructionClass;
 
-var DHConstructionSocket    Socket;
-
 var int                     VariantIndex;       // The current selected variant index.
 var int                     DefaultSkinIndex;   // The default skin index for the current variant.
 var int                     SkinIndex;          // The current selected skin index. This is unbounded here, but modulo'd downstream.

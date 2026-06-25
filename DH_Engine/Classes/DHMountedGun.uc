@@ -147,25 +147,25 @@ function bool DismountWeapon(DHPawn Instigator, optional out DHWeapon Dismounted
     // TODO: Transfer weapon state (ammunition, barrel state etc.)
     // TODO: Swap out the weapon actor to a blank mount on the gun.
 
-    local Class<DHWeapon> UnmountedWeaponClass;
+    local Class<DHWeapon> MyUnmountedWeaponClass;
 
     if (Instigator == none) { return false; }
 
-    UnmountedWeaponClass = GetUnmountedWeaponClass();
+    MyUnmountedWeaponClass = GetUnmountedWeaponClass();
 
-    if (UnmountedWeaponClass == none)
+    if (MyUnmountedWeaponClass == none)
     {
         return false;
     }
 
-    if (Instigator.FindInventoryType(UnmountedWeaponClass) != none)
+    if (Instigator.FindInventoryType(MyUnmountedWeaponClass) != none)
     {
         // Player already has the weapon in their inventory.
         return false;
     }
 
-    Instigator.GiveWeapon(string(GetUnmountedWeaponClass()));
-    DismountedWeapon = DHWeapon(Instigator.FindInventoryType(UnmountedWeaponClass));
+    Instigator.GiveWeapon(string(MyUnmountedWeaponClass));
+    DismountedWeapon = DHWeapon(Instigator.FindInventoryType(MyUnmountedWeaponClass));
 
     if (DismountedWeapon != none)
     {

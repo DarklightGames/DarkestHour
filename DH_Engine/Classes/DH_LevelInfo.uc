@@ -217,11 +217,11 @@ simulated function int GetTeamConstructionTag(int TeamIndex, class<DHConstructio
 simulated function bool IsConstructionUnlimited(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int ConstructionIndex;
-    local int Tag;
+    local int ConstructionTag;
     local bool bIsTagLimited;
 
-    Tag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
-    bIsTagLimited = IsConstructionTagLimited(TeamIndex, Tag);
+    ConstructionTag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
+    bIsTagLimited = IsConstructionTagLimited(TeamIndex, ConstructionTag);
 
     if (bIsTagLimited)
     {
@@ -318,7 +318,7 @@ simulated function int GetConstructionLimit(int TeamIndex, class<DHConstruction>
     local int Index;
     local int ConstructionLimit;
     local bool bHasConstructionLimit;
-    local int TagLimit, Tag;
+    local int TagLimit, ConstructionTag;
     local bool bHasTagLimit;
 
     Index = GetConstructionIndex(TeamIndex, ConstructionClass);
@@ -329,8 +329,8 @@ simulated function int GetConstructionLimit(int TeamIndex, class<DHConstruction>
         bHasConstructionLimit = ConstructionLimit >= 0;
     }
 
-    Tag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
-    Index = GetConstructionTagLimitIndex(TeamIndex, Tag);
+    ConstructionTag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
+    Index = GetConstructionTagLimitIndex(TeamIndex, ConstructionTag);
 
     if (Index > -1)
     {
@@ -365,7 +365,7 @@ simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruct
     local int Index;
     local int ConstructionMaxActive;
     local bool bHasConstructionMaxActive;
-    local int TagMaxActive, Tag;
+    local int TagMaxActive, ConstructionTag;
     local bool bHasTagMaxActive;
 
     Index = GetConstructionIndex(TeamIndex, ConstructionClass);
@@ -376,8 +376,8 @@ simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruct
         bHasConstructionMaxActive = ConstructionMaxActive >= 0;
     }
 
-    Tag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
-    Index = GetConstructionTagLimitIndex(TeamIndex, Tag);
+    ConstructionTag = GetTeamConstructionTag(TeamIndex, ConstructionClass);
+    Index = GetConstructionTagLimitIndex(TeamIndex, ConstructionTag);
 
     if (Index > -1)
     {
@@ -676,7 +676,7 @@ simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 
 function array<int> GetConstructionIndicesByMatchingTag(int TeamIndex, Class<DHConstruction> ConstructionClass)
 {
-    local int i, ConstructionIndex, Tag;
+    local int i, ConstructionIndex, ConstructionTag;
     local array<int> Indices;
 
     ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
@@ -689,9 +689,9 @@ function array<int> GetConstructionIndicesByMatchingTag(int TeamIndex, Class<DHC
     // Add the base construction index.
     Indices[Indices.Length] = ConstructionIndex;
 
-    Tag = ConstructionsEvaluated[ConstructionIndex].Tag;
+    ConstructionTag = ConstructionsEvaluated[ConstructionIndex].Tag;
 
-    if (Tag == 0)
+    if (ConstructionTag == 0)
     {
         // A tag of zero means no tag.
         return Indices;
@@ -700,7 +700,7 @@ function array<int> GetConstructionIndicesByMatchingTag(int TeamIndex, Class<DHC
     // Add all construction indices that share our tag.
     for (i = 0; i < ConstructionsEvaluated.Length; ++i)
     {
-        if (i != ConstructionIndex && ConstructionsEvaluated[i].Tag == Tag)
+        if (i != ConstructionIndex && ConstructionsEvaluated[i].Tag == ConstructionTag)
         {
             Indices[Indices.Length] = i;
         }

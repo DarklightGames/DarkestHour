@@ -597,7 +597,7 @@ function ActorProxyError GetPositionError()
     local ActorProxyError E;
     local Vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
     local Actor HitActor;
-    local DHActorProxySocket Socket;
+    local DHActorProxySocket GroundActorSocket;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -647,16 +647,16 @@ function ActorProxyError GetPositionError()
     // TODO: abstract socketing
 
     // Don't allow placement on a socket if it's occupied.
-    Socket = DHActorProxySocket(GroundActor);
+    GroundActorSocket = DHActorProxySocket(GroundActor);
 
-    if (Socket != none && Socket.GetOccupant() != none)
+    if (GroundActorSocket != none && GroundActorSocket.GetOccupant() != none)
     {
         E.Type = ERROR_SocketOccupied;
         return E;
     }
 
     // Don't allow the actor to touch blocking actors if we aren't on a socket.
-    if (Socket == none)
+    if (GroundActorSocket == none)
     {
         foreach TouchingActors(class'Actor', TouchingActor)
         {
