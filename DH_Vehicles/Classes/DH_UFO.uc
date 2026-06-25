@@ -3,10 +3,6 @@
 //-----------------------------------------------------------
 class DH_UFO extends ROChopperCraft;
 
-#exec OBJ LOAD FILE=..\Animations\allies_ba64_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\Vehicle_Optic.utx
-#exec OBJ LOAD FILE=..\textures\DH_UFO_tex.utx
-
 // wheel params
 var()	float			WheelSoftness;
 var()	float			WheelPenScale;
