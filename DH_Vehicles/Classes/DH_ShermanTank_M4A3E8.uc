@@ -121,6 +121,7 @@ defaultproperties
     DamagedTrackAttachBone="body"
     DamagedTrackStaticMeshLeft=StaticMesh'DH_ShermanM4A3E8_stc.tracks_L'
     DamagedTrackStaticMeshRight=StaticMesh'DH_ShermanM4A3E8_stc.tracks_R'
+    TreadHitMaxHeight=17.0
 
     LeftTreadIndex=2
     RightTreadIndex=3
