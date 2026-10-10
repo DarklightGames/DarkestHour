@@ -684,24 +684,31 @@ function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
 
 function GagThisPlayer(Controller PlayerToGag, optional string PlayerName)
 {
-    if (DHPlayer(PlayerToGag) == none)
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    if (PlayerName == "" || Admin == none)
     {
         return;
     }
 
-    if (!DHPlayer(PlayerToGag).bIsGagged)
-    {
-        DHPlayer(PlayerToGag).bIsGagged = true;
+    PC = DHPlayer(PlayerToGag);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-        if (PlayerName != "" && Admin != none)
-        {
-            NotifyPlayer(17, PlayerToGag); // admin gagged you
-            Log("DHAdminMenu: admin" @ GetAdminName() @ "gagged player '" $ PlayerName $ "'");
-        }
-    }
-    else if (PlayerName != "")
+    if (PC == none || PRI == none)
     {
         ErrorMessageToSelf(9, PlayerName); // player is not active
+        return;
+    }
+
+    if (!PC.bRestrictOutboundMessages || !PRI.bRestrictOutboundVoice)
+    {
+        PC.bRestrictOutboundMessages = true;
+        PRI.bRestrictOutboundVoice = true;
+        PC.UnsetActiveRoom();
+
+        NotifyPlayer(17, PlayerToGag); // admin gagged you
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "gagged player '" $ PlayerName $ "'");
     }
 }
 

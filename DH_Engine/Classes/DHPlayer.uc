@@ -58,7 +58,6 @@ var     private MapMarkerCooldown                               MapMarkerCooldow
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
-var     bool                    bIsGagged;           // player is gagged from chatting
 
 // Continue automatically running or driving after opening chat
 var     globalconfig bool       bKeepMovingWhileTyping;
@@ -238,8 +237,7 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged,
-        NextSquadRallyPointTime, SquadRallyPointCount,
+        SquadLeaderLocations, NextSquadRallyPointTime, SquadRallyPointCount,
         bSurrendered, bIQManaged, ArtillerySupportSquadIndex,
         MapMarkerCooldowns, bRestrictOutboundMessages, bRestrictVehicleAccess, bRestrictSquadNames;
 
@@ -799,8 +797,7 @@ function bool AllowTextMessage(string Msg)
         return true;
     }
 
-    // TODO: Get rid of `bIsGagged` and merge admin mutator features with the restriction system.
-    if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 2 || bIsGagged)
+    if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 2)
     {
         return false;
     }
@@ -5919,6 +5916,22 @@ simulated function RemoveSquadAssistantVolunteer(int VolunteerIndex)
     }
 
     SquadAssistantVolunteers.Length = 0;
+}
+
+function UnsetActiveRoom()
+{
+    if (ActiveRoom == none)
+    {
+        return;
+    }
+
+    ActiveRoom = none;
+    ClientSetActiveRoom(-1);
+
+    if (PlayerReplicationInfo != none)
+    {
+        PlayerReplicationInfo.ActiveChannel = -1;
+    }
 }
 
 exec function Speak(string ChannelTitle)

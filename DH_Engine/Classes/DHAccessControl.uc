@@ -94,11 +94,9 @@ function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
 
             // Player will be muted via the chat manager, but we still
             // unset their active channel just to be thorough.
-            if (PRI.bRestrictOutboundVoice && PC.ActiveRoom != none)
+            if (PRI.bRestrictOutboundVoice)
             {
-                PC.ActiveRoom = none;
-                PC.ClientSetActiveRoom(-1);
-                PRI.ActiveChannel = -1;
+                PC.UnsetActiveRoom();
             }
         }
 
