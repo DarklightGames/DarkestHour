@@ -2700,7 +2700,8 @@ function GetSquadLeaderVolunteers(int TeamIndex, int SquadIndex, out array<DHPla
         if (PRI != none &&
             PRI.Team != none &&
             PRI.Team.TeamIndex == TeamIndex &&
-            PRI.SquadIndex == SquadIndex)
+            PRI.SquadIndex == SquadIndex &&
+            !PRI.bRestrictLeaderPositions)
         {
             Volunteers[Volunteers.Length] = PRI;
         }
@@ -2739,7 +2740,7 @@ function StartSquadLeaderDraw(int TeamIndex, int SquadIndex)
     {
         PC = DHPlayer(Members[i].Owner);
 
-        if (PC != none)
+        if (PC != none && !Members[i].bRestrictLeaderPositions)
         {
             PC.ClientSquadLeaderVolunteerPrompt(TeamIndex, SquadIndex, SquadLeaderDraws[0].ExpirationTime);
         }

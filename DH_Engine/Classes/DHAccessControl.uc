@@ -23,6 +23,7 @@ struct Restriction
     var string ForcedName;
     var bool   bOutboundMessages;
     var bool   bOutboundVoice;
+    var bool   bLeaderPositions;
     var bool   bSquadNames;
     var bool   bVehicleAccess;
 };
@@ -129,6 +130,26 @@ function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
             {
                 PC.LeaveVehicleAsDriver();
                 PC.ReceiveLocalizedMessage(class'DHAdminMessage', 11);
+            }
+        }
+
+        // Squad positions (SL and ASL)
+        if (PRI.bRestrictLeaderPositions != Restrictions[i].bLeaderPositions)
+        {
+            PRI.bRestrictLeaderPositions = Restrictions[i].bLeaderPositions;
+
+            if (PRI.bRestrictLeaderPositions && PRI.Team != none && PC.SquadReplicationInfo != none)
+            {
+                if (PRI.IsSquadLeader())
+                {
+                    PC.SquadReplicationInfo.LeaveSquad(PRI);
+                }
+                else if (PRI.IsAssistantLeader())
+                {
+                    PC.SquadReplicationInfo.SetAssistantSquadLeader(PRI.Team.TeamIndex, PRI.SquadIndex, none);
+                }
+
+                PC.ReceiveLocalizedMessage(class'DHAdminMessage', 12);
             }
         }
     }

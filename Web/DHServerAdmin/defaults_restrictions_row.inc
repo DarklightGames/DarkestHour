@@ -5,6 +5,7 @@
     <td class="check"><%OutMsg%></td>
     <td class="check"><%OutVoice%></td>
     <td class="check"><%VehAccess%></td>
+    <td class="check"><%LeaderPos%></td>
     <td class="check"><%SquadName%></td>
     <td class="textbox"><%ForcedName%></td>
     <td>

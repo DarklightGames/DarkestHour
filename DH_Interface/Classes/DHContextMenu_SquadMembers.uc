@@ -58,15 +58,19 @@ protected function AssembleMenu(GUIComponent Component)
             {
                 AddEntry(2);     // Kick player
                 AddEntry(3);     // Ban player
-                AddEntry(0);     // --------
-                AddEntry(4);     // Promote to SL
-                AddEntry(0);     // --------
+
+                if (!SelectedPRI.bRestrictLeaderPositions)
+                {
+                    AddEntry(0);     // --------
+                    AddEntry(4);     // Promote to SL
+                    AddEntry(0);     // --------
+                }
 
                 if (SelectedPRI.bIsSquadAssistant)
                 {
                     AddEntry(6); // Rescind assistant
                 }
-                else
+                else if (!SelectedPRI.bRestrictLeaderPositions)
                 {
                     AddEntry(5); // Assign assistant
                 }
@@ -82,7 +86,8 @@ protected function AssembleMenu(GUIComponent Component)
         }
         else if (SelectedPRI.IsSquadLeader() &&
                  PRI.SquadIndex == SquadIndex &&
-                 !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex))
+                 !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex) &&
+                 !PRI.bRestrictLeaderPositions)
         {
             AddEntry(7);         // Volunteer to assist
         }

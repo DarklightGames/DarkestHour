@@ -54,9 +54,10 @@ var     int                     PlayerIQ;
 var     int                     NoRallyPointsTime; // Time when SL lost all rally points
 
 // Restrictions
-var     bool                    bRestrictOutboundMessages;
-var     bool                    bRestrictOutboundVoice;
-var     bool                    bRestrictSquadNames;
+var     bool                    bRestrictOutboundMessages; // Disable ability to send text messages
+var     bool                    bRestrictOutboundVoice;    // Disable ability to speak in voice chat
+var     bool                    bRestrictSquadNames;       // Disable editing of squad names
+var     bool                    bRestrictLeaderPositions;   // Disable access to SL and ASL positions and ability to create squads
 
 replication
 {
@@ -64,7 +65,7 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
         TotalScore, CategoryScores, PlayerIQ, NoRallyPointsTime, bIsIncognito, bIsPossesingPawn,
-        bRestrictOutboundMessages, bRestrictOutboundVoice, bRestrictSquadNames;
+        bRestrictOutboundMessages, bRestrictOutboundVoice, bRestrictSquadNames, bRestrictLeaderPositions;
 }
 
 simulated function string GetNamePrefix()

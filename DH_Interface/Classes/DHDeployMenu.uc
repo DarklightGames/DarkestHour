@@ -1787,7 +1787,7 @@ function UpdateSquads()
         ++j;
     }
 
-    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
+    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length && !PRI.bRestrictLeaderPositions)
     {
         C = p_Squads.SquadComponents[j++];
 
