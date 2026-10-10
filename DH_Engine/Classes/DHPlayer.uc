@@ -26,6 +26,7 @@ enum ERoleEnabledResult
     RER_SquadLeaderOnly,
     RER_NonSquadLeaderOnly,
     RER_Locked,
+    RER_Restricted,
 };
 
 enum EAutomaticVehicleAlerts
@@ -225,6 +226,7 @@ var     bool                    bHideMapActivateMousePrompt;
 
 // Restrictions
 var     bool                    bRestrictName;
+var     bool                    bRestrictVehicleAccess;
 
 replication
 {
@@ -237,7 +239,7 @@ replication
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
         bSurrendered, bIQManaged, ArtillerySupportSquadIndex,
-        MapMarkerCooldowns;
+        MapMarkerCooldowns, bRestrictVehicleAccess;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -2308,6 +2310,22 @@ ignores SeePlayer, HearNoise, Bump;
 
         return false;
     }
+}
+
+// Force player out of a vehicle or a weapon pawn, unless they're a passenger
+function LeaveVehicleAsDriver()
+{
+    if (Vehicle(Pawn) == none)
+    {
+        return;
+    }
+
+    if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).bPassengerOnly)
+    {
+        return;
+    }
+
+    Vehicle(Pawn).KDriverLeave(true);
 }
 
 // Modified so player can enter vehicle if looking at one of its vehicle weapons (generally a turret), not just its hull/base
@@ -8145,6 +8163,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         if (IsSquadLeader() && !RI.bCanBeSquadLeader)
         {
             return RER_NonSquadLeaderOnly;
+        }
+
+        if (bRestrictVehicleAccess && RI.bCanBeTankCrew)
+        {
+            return RER_Restricted;
         }
     }
 

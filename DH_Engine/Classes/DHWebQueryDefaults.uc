@@ -127,6 +127,7 @@ function EOperationError UpdateRestriction(WebRequest Request)
 
     DHAC.Restrictions[i].bOutboundMessages = Request.GetVariable("OutMsg") != "";
     DHAC.Restrictions[i].bOutboundVoice = Request.GetVariable("OutVoice") != "";
+    DHAC.Restrictions[i].bVehicleAccess = Request.GetVariable("VehAccess") != "";
     DHAC.Restrictions[i].bSquadNames = Request.GetVariable("SquadName") != "";
     DHAC.Restrictions[i].ForcedName = Request.GetVariable("ForcedName", "");
     DHAC.ApplyRestrictionsByID(PlayerID);
@@ -213,6 +214,7 @@ function QueryDefaultsRestrictions(WebRequest Request, WebResponse Response)
         Response.Subst("ForcedName", WebInclude(DefaultsRestrictionsPage $ "_playername"));
         Response.Subst("OutMsg", Checkbox("OutMsg", DHAC.Restrictions[i].bOutboundMessages));
         Response.Subst("OutVoice", Checkbox("OutVoice", DHAC.Restrictions[i].bOutboundVoice));
+        Response.Subst("VehAccess", Checkbox("VehAccess", DHAC.Restrictions[i].bVehicleAccess));
         Response.Subst("SquadName", Checkbox("SquadName", DHAC.Restrictions[i].bSquadNames));
         Response.Subst("PostAction", DefaultsRestrictionsPage $ "?IDNo="$string(i));
         Response.Subst("UpdateButton", "");

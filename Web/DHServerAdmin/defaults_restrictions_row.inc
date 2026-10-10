@@ -4,6 +4,7 @@
     <td><a href="https://steamcommunity.com/profiles/<%PlayerID%>" target="_blank" rel="noopener noreferrer"><%PlayerID%></a></td>
     <td class="check"><%OutMsg%></td>
     <td class="check"><%OutVoice%></td>
+    <td class="check"><%VehAccess%></td>
     <td class="check"><%SquadName%></td>
     <td class="textbox"><%ForcedName%></td>
     <td>

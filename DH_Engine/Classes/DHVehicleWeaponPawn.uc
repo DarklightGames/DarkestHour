@@ -1342,6 +1342,12 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
             DisplayVehicleMessage(0); // not qualified to operate vehicle
             return false;
         }
+
+        if (!bMustBeTankerToSwitch && Class'DHPlayerReplicationInfo'.static.IsPlayerVehicleAccessRestricted(DHPlayer(self.Controller)))
+        {
+            DisplayVehicleMessage(32); // restricted from operating vehicles
+            return false;
+        }
     }
     // Trying to switch to non-driver position
     else
@@ -1382,6 +1388,12 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         if (Role == ROLE_Authority && (AV != none || GetArmoredVehicleBase(AV)) && AV.AreCrewPositionsLockedForPlayer(self))
         {
             DisplayVehicleMessage(22); // this vehicle has been locked by its crew
+            return false;
+        }
+
+        if (Class'DHPlayerReplicationInfo'.static.IsPlayerVehicleAccessRestricted(DHPlayer(self.Controller)))
+        {
+            DisplayVehicleMessage(32); // restricted from operating vehicles
             return false;
         }
     }

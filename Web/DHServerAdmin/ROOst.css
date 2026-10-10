@@ -267,6 +267,10 @@ td.i9	{ background-color:#013DFF; } /*dblue	*/
     width: 18ch;
 }
 
+#restr-table {
+    width: 640px;
+}
+
 /*Tables for array CRUD operations*/
 .crud-table {
     text-align: left;
@@ -319,6 +323,7 @@ td.i9	{ background-color:#013DFF; } /*dblue	*/
 
 .crud-table :is(th,td).check {
     text-align: center;
+    white-space: normal;
 }
 
 .crud-table :is(th,td) {

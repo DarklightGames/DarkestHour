@@ -24,6 +24,7 @@ struct Restriction
     var bool   bOutboundMessages;
     var bool   bOutboundVoice;
     var bool   bSquadNames;
+    var bool   bVehicleAccess;
 };
 
 var globalconfig array<Restriction> Restrictions;
@@ -44,6 +45,10 @@ function ApplyRestrictionsByID(string ID)
 
 // Should be called on restriction list updates and in PostLogin (after
 // ID hash is updated, and before player name is sent out into the wild)
+//
+// TODO:
+// - Vehicles: kick restricted player off the tank role when they die
+//             (they can't spawn, but they still can hog the role for a while)
 function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
 {
     local int i;
@@ -112,6 +117,19 @@ function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
         if (PC.bRestrictName)
         {
             DarkestHourGame(Level.Game).ChangeName(PC, Restrictions[i].ForcedName, !bOnLogin);
+        }
+
+        // Driving vehicles
+        if (PC.bRestrictVehicleAccess != Restrictions[i].bVehicleAccess)
+        {
+            PC.bRestrictVehicleAccess = Restrictions[i].bVehicleAccess;
+
+            // Kick them out from the vehicle immediately
+            if (PC.bRestrictVehicleAccess)
+            {
+                PC.LeaveVehicleAsDriver();
+                PC.ReceiveLocalizedMessage(class'DHAdminMessage', 11);
+            }
         }
     }
 }

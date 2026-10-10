@@ -197,6 +197,11 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
 }
 
+simulated static function bool IsPlayerVehicleAccessRestricted(DHPlayer C)
+{
+    return C != none && C.bRestrictVehicleAccess;
+}
+
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
     return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();

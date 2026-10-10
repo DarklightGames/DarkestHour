@@ -33,8 +33,8 @@ var localized string OtherCrewmanCanLockVehicle;
 var localized string UnbuttonToReload;
 var localized string VehicleScuttleInitiated;
 var localized string UnbuttonHatchToChangePosition;
-
 var localized string GunObstructed;
+var localized string PlayerRestricted;
 
 var string NextWeaponButtonString;
 
@@ -119,6 +119,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 31:
             S = default.GunObstructed;
             break;
+        case 32:
+            S = default.PlayerRestricted;
+            break;
         default:
             break;
     }
@@ -158,6 +161,7 @@ defaultproperties
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
     VehicleScuttleInitiated="currently deprecated"
     GunObstructed="The gun cannot fire because it is obstructed"
+    PlayerRestricted="You're not allowed to operate vehicles"
 
     NextWeaponButtonString="[%NEXTWEAPON%]"
 }

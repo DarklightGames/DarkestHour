@@ -19,6 +19,7 @@ var localized string AdminLoggedOutMessage;
 var localized string PlayerMessagesRestrictionMessage;
 var localized string PlayerVoiceRestrictionMessage;
 var localized string PlayerNameRestrictionMesssage;
+var localized string PlayerVehicleAccessRestrictionMessage;
 
 static function string GetSquadName(int TeamIndex, int SquadIndex, DHSquadReplicationInfo SRI)
 {
@@ -75,6 +76,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.PlayerVoiceRestrictionMessage;
         case 10:
             return default.PlayerNameRestrictionMesssage;
+        case 11:
+            return default.PlayerVehicleAccessRestrictionMessage;
         default:
             break;
     }
@@ -99,6 +102,7 @@ defaultproperties
     PlayerMessagesRestrictionMessage="You're not allowed to send messages on this server."
     PlayerVoiceRestrictionMessage="You're not allowed to speak in the voice chat on this server."
     PlayerNameRestrictionMesssage="You're not allowed to change your name on this server."
+    PlayerVehicleAccessRestrictionMessage="Your access to vehicles has been revoked on this server."
 
     bIsSpecial=false
     bIsConsoleMessage=true

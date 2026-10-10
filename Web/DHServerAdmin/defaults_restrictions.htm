@@ -1,10 +1,11 @@
 <!-- #include file="header.inc" -->
-  <table width="400px" class="crud-table">
+  <table class="crud-table" id="restr-table">
     <thead>
       <tr>
         <th>Player ID</th>
         <th class="check">Messages</th>
         <th class="check">Voice</th>
+        <th class="check">Vehicle Access</th>
         <th class="check">Squad Names</th>
         <th class="textbox">Force Name</th>
         <th></th>
@@ -19,6 +20,7 @@
           <td><input class="textbox playerid" type="text" pattern="^[0-9]{17}$" maxlength="17" name="PlayerID" title="SteamID64 (17-digit Steam ID)" placeholder="Enter SteamID64" required></td>
           <td class="check"><input class="check" type="checkbox" name="OutMsg"></td>
           <td class="check"><input class="check" type="checkbox" name="OutVoice"></td>
+          <td class="check"><input class="check" type="checkbox" name="VehAccess"></td>
           <td class="check"><input class="check" type="checkbox" name="SquadName"></td>
           <td class="textbox"><input class="textbox playername" type="text" maxlength="32" name="ForcedName" title="Forced Name" placeholder="Player name"></td>
           <td><input class="button create" type="submit" name="Update" value="Create"></td>

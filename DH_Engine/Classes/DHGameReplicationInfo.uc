@@ -31,7 +31,8 @@ enum EVehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoLicense
+    ERROR_NoLicense,
+    ERROR_Restricted
 };
 
 struct SpawnVehicle
@@ -1508,6 +1509,11 @@ simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
     {
         return ERROR_TeamMaxActive;
+    }
+
+    if (PC.bRestrictVehicleAccess)
+    {
+        return ERROR_Restricted;
     }
 
     return ERROR_None;

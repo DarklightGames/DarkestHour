@@ -219,7 +219,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, Vector SpawnLocation, Rotator Spawn
     // Make sure the player is in a squad if the vehicle requires them to be
     DHVC = class<DHVehicle>(VehiclePools[PC.VehiclePoolIndex].VehicleClass);
 
-    if (DHVC != none && DHVC.default.bRequiresDriverLicense && PRI != none && !PRI.IsPlayerLicensedToDrive(PC))
+    if (DHVC != none && DHVC.default.bRequiresDriverLicense && PRI != none && !PRI.IsPlayerLicensedToDrive(PC) && PC.bRestrictVehicleAccess)
     {
         GRI.UnreserveVehicle(PC);
         return none;
