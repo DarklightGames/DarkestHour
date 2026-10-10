@@ -1703,7 +1703,7 @@ function UpdateSquads()
         SetVisible(C.lb_Members, true);
         SetVisible(C.li_Members, true);
         SetVisible(C.l_SquadName, !C.bIsEditingName);
-        SetVisible(C.eb_SquadName, bIsSquadLeader && (!PRI.bRestrictSquadNames || C.bIsEditingName));
+        SetVisible(C.eb_SquadName, bIsSquadLeader && (!PC.bRestrictSquadNames || C.bIsEditingName));
         SetVisible(C.b_CreateSquad, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);

@@ -225,8 +225,10 @@ var     float                   LastListClientGUIDTime;
 var     bool                    bHideMapActivateMousePrompt;
 
 // Restrictions
-var     bool                    bRestrictName;
-var     bool                    bRestrictVehicleAccess;
+var     bool                    bRestrictOutboundMessages; // Disable ability to send text messages
+var     bool                    bRestrictVehicleAccess;    // Disable entering vehicles as driver or gunner
+var     bool                    bRestrictSquadNames;       // Disable editing of squad names
+var     bool                    bRestrictName;             // Player name is enforced by access control
 
 replication
 {
@@ -239,7 +241,7 @@ replication
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
         bSurrendered, bIQManaged, ArtillerySupportSquadIndex,
-        MapMarkerCooldowns, bRestrictVehicleAccess;
+        MapMarkerCooldowns, bRestrictOutboundMessages, bRestrictVehicleAccess, bRestrictSquadNames;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -791,7 +793,6 @@ function ShowMidGameMenu(bool bPause)
 function bool AllowTextMessage(string Msg)
 {
     local int i;
-    local DHPlayerReplicationInfo PRI;
 
     if (PlayerReplicationInfo.bSilentAdmin || Level.NetMode == NM_Standalone || PlayerReplicationInfo.bAdmin)
     {
@@ -804,9 +805,7 @@ function bool AllowTextMessage(string Msg)
         return false;
     }
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (PRI != none && PRI.bRestrictOutboundMessages)
+    if (bRestrictOutboundMessages)
     {
         ReceiveLocalizedMessage(class'DHAdminMessage', 8);
         return false;

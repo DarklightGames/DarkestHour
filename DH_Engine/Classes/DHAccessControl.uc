@@ -85,7 +85,7 @@ function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
         }
 
         // Outbound messages
-        PRI.bRestrictOutboundMessages = Restrictions[i].bOutboundMessages;
+        PC.bRestrictOutboundMessages = Restrictions[i].bOutboundMessages;
 
         // Outbound voice
         if (PRI.bRestrictOutboundVoice != Restrictions[i].bOutboundVoice)
@@ -104,13 +104,13 @@ function ApplyRestrictions(DHPlayer PC, optional bool bOnLogin)
 
         // Squad name editing
         if (PRI.Team != none &&
-            Restrictions[i].bSquadNames && !PRI.bRestrictSquadNames &&
+            Restrictions[i].bSquadNames && !PC.bRestrictSquadNames &&
             PC.SquadReplicationInfo != none && PRI.IsSquadLeader())
         {
             PC.SquadReplicationInfo.SetName(PRI.Team.TeamIndex, PRI.SquadIndex, "");
         }
 
-        PRI.bRestrictSquadNames = Restrictions[i].bSquadNames;
+        PC.bRestrictSquadNames = Restrictions[i].bSquadNames;
 
         // Force player name
         PC.bRestrictName = Restrictions[i].ForcedName != "";
