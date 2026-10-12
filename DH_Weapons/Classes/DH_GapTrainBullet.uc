@@ -7,6 +7,15 @@ class DH_GapTrainBullet extends DHCannonShell;
 
 defaultproperties
 {
+    CollisionRadius=90.000000    
+    CollisionHeight=90.000000    
+
+    bCollideActors=True
+    bCollideWorld=True
+    
+    bBlockActors=False
+    bBlockPlayers=False
+
     Speed=4550.0 
     MaxSpeed=6220.0
     ShellDiameter=355.2
