@@ -44,6 +44,9 @@ var DHCameraTransitionController CameraTransitionController;
 var int IronSightsPositionIndex;
 var int GunsightPositionIndex;
 
+//Ragdoll's offset change to fix its falling into terrain when driver dies
+var Vector RagdollOffset;
+
 var enum EPendingAction
 {
     ACTION_None,
@@ -619,6 +622,17 @@ function OnFire()
     BeltActor.PlayFiringAnimation(Gun.MainAmmoCharge[0]);
 }
 
+// Modified to fix driver's ragdoll falling into terrain by changing its offset.
+function DriverDied()
+{   
+    if (Driver != none)
+    {   
+        Driver.SetLocation(Driver.Location + RagdollOffset);
+    }
+    
+    super.DriverDied();
+}
+
 // Attempt to change barrels. Returns true if the barrel change was initiated.
 simulated function bool AttemptBarrelChange()
 {
@@ -744,4 +758,5 @@ defaultproperties
         CurrentCameraBone="GUNNER_CAMERA"
     End Object
     CameraTransitionController=CameraTransitionController0
+    RagdollOffset=(X=0.0,Y=0.0,Z=32.0)
 }

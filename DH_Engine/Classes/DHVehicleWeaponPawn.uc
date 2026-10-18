@@ -1524,10 +1524,6 @@ function DriverDied()
         Driver.Controller = Controller;
         Driver.DrivenVehicle = self; // for in game stats, so it knows player was killed inside a vehicle
         
-        //BUG : when driver dies, he (his ragdoll) falls into terrain
-        //Solution : just move his position up along the Z axis
-        Driver.SetLocation(Driver.Location + vect(0.0,0.0,32.0));
-
         if (Controller != none)
         {
             if (IsHumanControlled()) // set PlayerController to view the dead driver
