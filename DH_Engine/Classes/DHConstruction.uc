@@ -1519,6 +1519,7 @@ defaultproperties
     HarmfulDamageTypes(4)=Class'DHRocketImpactDamage'               // AT Rocket Impact
     HarmfulDamageTypes(5)=Class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
     HarmfulDamageTypes(6)=Class'DHMortarDamageType'                 // Mortar
+    HarmfulDamageTypes(7)=Class'DHLargeCaliberDamageType'           // Large caliber (e.g., PTRD)
 
     // Impact
     bCanTakeImpactDamage=false

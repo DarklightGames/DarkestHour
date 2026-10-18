@@ -354,7 +354,7 @@ simulated state RaisingWeapon
     }
 }
 
-// Implemented so pressing the deploy key will attempt to deploy a carried mortar
+// Implemented so pressing the deploy key will attempt to deploy a carried stationary weapon
 exec simulated function Deploy()
 {
     local DHPawn  P;
@@ -412,7 +412,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     return Error.Type == ERROR_None;
 }
 
-// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy the carried weapon.
+// New function to spawn the deployed stationary weapon, which is a Vehicle actor, & to destroy the carried weapon.
 function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHVehicle Vehicle;
@@ -438,7 +438,7 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 
     if (Vehicle == none)
     {
-        // Either failed to trace a location to spawn the mortar, or somehow failed to spawn it.
+        // Either failed to trace a location to spawn the stationary weapon, or somehow failed to spawn it.
         GotoState('Idle');
         return;
     }
@@ -456,7 +456,7 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
     Destroy();
 }
 
-// Functions emptied out as carried mortar weapons cannot be fired, ironsighted or reloaded:
+// Functions emptied out as carried stationary weapons cannot be fired, ironsighted or reloaded:
 simulated function Fire(float F);
 simulated function AltFire(float F);
 simulated function WeaponFire GetFireMode(byte Mode);
