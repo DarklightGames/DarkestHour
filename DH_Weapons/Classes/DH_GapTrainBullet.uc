@@ -19,7 +19,7 @@ defaultproperties
     Speed=4550.0 
     MaxSpeed=6220.0
     ShellDiameter=355.2
-    BallisticCoefficient=0.1 //TODO: find correct BC
+    BallisticCoefficient=0.1 
     SpeedFudgeScale=0.8
 
     //Damage
@@ -33,7 +33,7 @@ defaultproperties
 
     //Effects
     DrawScale=1.0
-    StaticMesh=StaticMesh'DH_OpelBlitz_stc.Destroyed.OPEL_BLITZ_DESTROYED'
+    StaticMesh=StaticMesh'DH_UFO_stc.Train.et165_shell'
     CoronaClass=none
     ShellTrailClass=none
     ShellDeflectEffectClass=Class'ROArtilleryDirtEmitter'
