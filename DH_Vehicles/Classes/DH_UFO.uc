@@ -215,7 +215,7 @@ defaultproperties
 {
 
      DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_UFOLaserGun',WeaponBone="Turret_placement2")
-
+     ImpactDamageSounds(0)=none
      AmbientGlow=224
      bUseDynamicLights=true
      bUseLightingFromBase=true

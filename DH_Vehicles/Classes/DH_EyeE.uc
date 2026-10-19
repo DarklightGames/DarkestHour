@@ -225,6 +225,7 @@ defaultproperties
 {
 
     DamagedEffectClass=none //no damage smoke
+    ImpactDamageSounds(0)=none
     
      DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_EyeEGun',WeaponBone="Turret_placement3")
 
