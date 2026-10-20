@@ -23,6 +23,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_MG42_tex.MG42_TURRET_ICON_LOOK'
     MountedWeaponClass=Class'DH_MG42LafetteWeapon'
     UnmountedWeaponClass=Class'DH_MG42Weapon'
+    DestroyedVehicleMesh=StaticMesh'DH_MG34_stc.MG42_DESTROYED'
 
     ExitPositions(0)=(X=0,Y=0,Z=80)         // Failsafe exit position (ontop of the gun)
     ExitPositions(1)=(X=-80,Y=0,Z=30)       // Main exit position (behind the gun)
