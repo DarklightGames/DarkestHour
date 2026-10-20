@@ -52,8 +52,6 @@ function bool IsOptionDisabled(int OptionIndex)
     {
         case 0: // Construction
             return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
-        case 1: // Spotting
-            return DHPawn(PC.Pawn) == none || GRI == none;
         default:
             return false;
     }
