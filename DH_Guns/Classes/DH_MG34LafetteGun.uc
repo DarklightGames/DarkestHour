@@ -30,6 +30,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_MG34_tex.MG34_TURRET_ICON_LOOK'
     MountedWeaponClass=Class'DH_MG34LafetteWeapon'
     UnmountedWeaponClass=Class'DH_MG34Weapon'
+    DestroyedVehicleMesh=StaticMesh'DH_MG34_stc.MG34_DESTROYED'
 
     // DestroyedVehicleMesh=StaticMesh'DH_MG34_stc.MG34_DESTROYED'
 

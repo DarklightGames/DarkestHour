@@ -1523,7 +1523,7 @@ function DriverDied()
         Driver.StopDriving(self);
         Driver.Controller = Controller;
         Driver.DrivenVehicle = self; // for in game stats, so it knows player was killed inside a vehicle
-
+        
         if (Controller != none)
         {
             if (IsHumanControlled()) // set PlayerController to view the dead driver

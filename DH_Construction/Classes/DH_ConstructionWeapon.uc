@@ -105,6 +105,11 @@ simulated function bool WeaponCanBusySwitch()
     return true;
 }
 
+simulated function bool ShouldDestroyOnPutAway()
+{
+    return true;
+}
+
 // Overridden to cycle the skin of the construction proxy.
 exec simulated function ROMGOperation()
 {

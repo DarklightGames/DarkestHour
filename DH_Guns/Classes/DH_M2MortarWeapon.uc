@@ -16,4 +16,5 @@ defaultproperties
     bUsesFreeAim=true
     HudAmmoIconMaterial=Texture'DH_M2Mortar_tex.M2MORTAR_AMMO_ICON'
     bShouldAlignToGround=false
+    bIsEncumbering=false
 }

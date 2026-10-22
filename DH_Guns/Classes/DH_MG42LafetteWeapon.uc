@@ -13,4 +13,5 @@ defaultproperties
     AttachmentClass=Class'DH_MG42LafetteAttachment'
     PickupClass=Class'DH_MG42LafettePickup'
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_WEAPON'      // TODO: replace
+    bIsEncumbering=false
 }

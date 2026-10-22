@@ -31,6 +31,7 @@ var localized string TooCloseToObjectiveMessage;
 var localized string TooCloseToEnemyObjectiveMessage;
 var localized string MissingRequirementMessage;
 var localized string ExhaustedMessage;
+var localized string PlayerIsntCrouchedMessage;
 
 static function string GetStringFromType(DHActorProxy.EActorProxyErrorType Type)
 {
@@ -86,6 +87,8 @@ static function string GetStringFromType(DHActorProxy.EActorProxyErrorType Type)
             return default.MissingRequirementMessage;
         case ERROR_Exhausted:
             return default.ExhaustedMessage;
+        case ERROR_PlayerIsntCrouched:
+            return default.PlayerIsntCrouchedMessage;
         default:
             return "";
     }
@@ -171,4 +174,5 @@ defaultproperties
     InDangerZoneMessage="You cannot {verb} a {name} in enemy territory"
     ExhaustedMessage="There are no more {name} available"
     SocketOccupiedMessage="This socket is already occupied"
+    PlayerIsntCrouchedMessage="You must be crouched to {verb} a {name}."
 }

@@ -3834,6 +3834,20 @@ function TakeFallingDamage()
     }
 }
 
+// Modified to add the check !W.WeaponAllowJump
+simulated function bool CanJump()
+{
+    local DHWeapon W;
+    W = DHWeapon(Weapon);
+    
+    if (W !=none && !W.WeaponAllowJump())
+    {
+        return false;
+    }
+
+    return super.CanJump();
+}
+
 // Called on the server. Sends a message to the client to let them know to play a the reload
 function HandleAssistedReload()
 {

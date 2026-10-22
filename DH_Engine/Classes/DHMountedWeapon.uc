@@ -31,6 +31,8 @@ var()   bool    bCanDeployWhileCrawling;
 
 var()   bool    bShouldAlignToGround;
 
+var     bool    bIsEncumbering; // When true, player cannot run, go prone or switch weapons
+
 replication
 {
     // Functions a client can call on the server
@@ -95,22 +97,14 @@ simulated state Deploying
         return;
     }
 
-    // Modified to prevent player from changing stance while he is crouched & deploying the mortar
-    simulated function bool WeaponAllowCrouchChange()
-    {
-        return false;
-    }
-
-    simulated function bool WeaponAllowProneChange()
-    {
-        return false;
-    }
-
-    simulated function bool CanThrow()
-    {
-        return false;
-    }
-
+    // Modified to prevent player from changing stance while he is crouched & deploying the weapon
+    simulated function bool CanThrow();
+    simulated function bool WeaponAllowJump();
+    simulated function bool WeaponAllowCrouchChange();
+    simulated function bool WeaponAllowProneChange();
+    simulated function bool WeaponCanSwitch();
+    function DropFrom(vector StartLocation);
+    
 Begin:
     PlayAnim(DeployAnimation);
     Sleep(GetAnimDuration(DeployAnimation));
@@ -289,10 +283,9 @@ simulated function DHActorProxy CreateProxyCursor()
 }
 
 // Implemented to force player to equip the stationary weapon if it isn't already his current weapon
-// TODO: not necessarily universal; some carried weapons may be small enough to be put away.
 simulated function Tick(float DeltaTime)
 {
-    if (Instigator != none && Instigator.Weapon != self && Instigator.PendingWeapon != self && Instigator.IsLocallyControlled())
+    if (Instigator != none && Instigator.Weapon != self && Instigator.PendingWeapon != self && Instigator.IsLocallyControlled() && bIsEncumbering)
     {
         Instigator.SwitchWeapon(InventoryGroup);
     }
@@ -305,6 +298,21 @@ simulated function Tick(float DeltaTime)
     {
         Instigator.ReceiveLocalizedMessage(class'DHMountedWeaponControlsMessage', 0, Instigator.PlayerReplicationInfo, none, self);
     }
+
+}
+
+// Copied from ROWeapon as we don't want to use PutDown from superclass for MMGs and mortars
+simulated function bool PutDown()
+{
+ 	GotoState('LoweringWeapon');
+
+	if (ROWeaponAttachment(ThirdPersonActor) != None)
+	{
+		ROWeaponAttachment(ThirdPersonActor).AmbientSound = None;
+	}
+
+    OldWeapon = None;
+    return true; // return false if preventing weapon switch
 }
 
 // Modified to add a hint when carrying a stationary weapon.
@@ -322,23 +330,67 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-// Functions always returning false as carried mortar is too heavy & bulky to put away, or to sprint, crawl, or mantle with
-simulated function bool WeaponCanSwitch()
+simulated function bool WeaponAllowSprint()
 {
-    return false;
+    if (bIsEncumbering)
+    {
+        return false;
+    }
+    
+    return super.WeaponAllowSprint();
 }
 
-// Implemented so pressing the deploy key will attempt to deploy a carried mortar
+simulated function bool WeaponAllowProneChange()
+{
+    if (bIsEncumbering)
+    {
+        return false;
+    }
+
+    return super.WeaponAllowProneChange();
+}      
+    
+simulated function bool WeaponCanSwitch()
+{
+    if (bIsEncumbering)
+    {
+        return false;
+    }
+    
+    return super.WeaponCanSwitch();
+}
+
+simulated function bool WeaponAllowMantle()
+{
+    if (bIsEncumbering)
+    {   
+        return false;
+    }
+    
+    return super.WeaponAllowMantle();
+}
+
+// Modified to unhide cursor when player raised his weapon
+simulated state RaisingWeapon
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        ProxyCursor.bHidden=false;
+    }
+}
+
+// Implemented so pressing the deploy key will attempt to deploy a carried stationary weapon
 exec simulated function Deploy()
 {
     local DHPawn  P;
 
     P = DHPawn(Instigator);
-
     // BUG: player can drop the weapon while in this state, bricking the pawn's movement until it dies.
     // solution: don't let them drop the weapon while deploying.
 
-    if (CanConfirmPlacement())
+    if (CanConfirmPlacement() && P.Physics != PHYS_Falling) // Don't allow player to deploy mmg when he is jumping 
     {
         GotoState('Deploying');
     }
@@ -354,12 +406,6 @@ simulated function bool CanConfirmPlacement()
     }
 
     P = DHPawn(Instigator);
-
-    if (P != none && (P.bLeanLeft || P.bLeanRight))
-    {
-        // Don't allow deploying while leaning.
-        return false;
-    }
 
     return super.CanConfirmPlacement();
 }
@@ -393,7 +439,7 @@ function bool CanSpawnVehicle(Actor Owner, Vector Location, Rotator Rotation)
     return Error.Type == ERROR_None;
 }
 
-// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy the carried weapon.
+// New function to spawn the deployed stationary weapon, which is a Vehicle actor, & to destroy the carried weapon.
 function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHVehicle Vehicle;
@@ -421,7 +467,7 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 
     if (Vehicle == none)
     {
-        // Either failed to trace a location to spawn the mortar, or somehow failed to spawn it.
+        // Either failed to trace a location to spawn the stationary weapon, or somehow failed to spawn it.
         GotoState('Idle');
         return;
     }
@@ -456,7 +502,7 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
     Destroy();
 }
 
-// Functions emptied out as carried mortar weapons cannot be fired, ironsighted or reloaded:
+// Functions emptied out as carried stationary weapons cannot be fired, ironsighted or reloaded:
 simulated function Fire(float F);
 simulated function AltFire(float F);
 simulated function WeaponFire GetFireMode(byte Mode);
@@ -501,17 +547,6 @@ exec simulated function SwitchFireMode()
     CycleVariant();
 }
 
-// TODO: use state instead.
-function DropFrom(vector StartLocation)
-{
-    if (bDeploying)
-    {
-        return;
-    }
-
-    super.DropFrom(StartLocation);
-}
- 
 public function bool ShouldShowProxyCursor()
 {
     local DHPawn P;
@@ -589,4 +624,6 @@ defaultproperties
     bCanDeployWhileStanding=true
     bCanDeployWhileCrawling=true
     bShouldAlignToGround=true
+    bIsEncumbering=true
 }
+

@@ -98,7 +98,11 @@ simulated function OnTick(float DeltaTime)
     {
         ProxyCursor.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
 
-        if (ProxyCursor.ProxyError.Type != ERROR_None)
+        if (IsInState('RaisingWeapon') || IsInState('LoweringWeapon'))
+        {
+            ProxyCursor.bHidden=true;
+        }
+        else if (ProxyCursor.ProxyError.Type != ERROR_None)
         {
             if (ErrorMessageClass != none)
             {
@@ -158,30 +162,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
         }
 
         ProxyCursor = CreateProxyCursor();
-    }
-}
-
-simulated state LoweringWeapon
-{
-    simulated function BeginState()
-    {
-        // NOTE: The !bDeleteMe and GotoState('Idle') are integral to stop
-        // stack overflows!
-        if (Role == ROLE_Authority && !bDeleteMe)
-        {
-            GotoState('Idle');
-            SelfDestroy();
-        }
-
-        super.BeginState();
-    }
-
-    simulated function EndState()
-    {
-        if (!bDeleteMe)
-        {
-            super.EndState();
-        }
     }
 }
 
