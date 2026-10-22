@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Breda30Barrel extends DHWeaponBarrel;
+class DH_Breda30Barrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

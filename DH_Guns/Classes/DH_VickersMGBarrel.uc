@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_VickersMGBarrel extends DHWeaponBarrel;
+class DH_VickersMGBarrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

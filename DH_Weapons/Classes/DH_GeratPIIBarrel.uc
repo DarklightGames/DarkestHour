@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_GeratPIIBarrel extends DHWeaponBarrel;
+class DH_GeratPIIBarrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

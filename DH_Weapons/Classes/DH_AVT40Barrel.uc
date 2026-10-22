@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_AVT40Barrel extends DHWeaponBarrel;
+class DH_AVT40Barrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

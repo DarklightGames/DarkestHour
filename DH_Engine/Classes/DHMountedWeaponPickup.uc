@@ -7,6 +7,7 @@ class DHMountedWeaponPickup extends DHWeaponPickup
     abstract;
 
 var DHVehicleState              VehicleState;
+var array<DHWeaponBarrelBundle> WeaponBarrelBundles;
 var DHMapIconAttachment_Vehicle MapIconAttachment;
 
 simulated function Destroyed()
@@ -23,15 +24,28 @@ simulated function Destroyed()
 function Inventory SpawnCopy(Pawn Other)
 {
 	local Inventory Copy;
-    local DHMountedWeapon MountedWeapon;
+    local DHMountedWeapon MW;
+    local int i;
 
     Copy = super.SpawnCopy(Other);
 
-    MountedWeapon = DHMountedWeapon(Copy);
+    MW = DHMountedWeapon(Copy);
 
-    if (MountedWeapon != none)
+    if (MW != none)
     {
-        MountedWeapon.SetVehicleState(VehicleState);
+        MW.SetVehicleState(VehicleState);
+
+        for (i = 0; i < WeaponBarrelBundles.Length; ++i)
+        {
+            MW.WeaponBarrelBundles[i] = WeaponBarrelBundles[i];
+            MW.WeaponBarrelBundles[i].SetOwner(MW);
+            MW.WeaponBarrelBundles[i].OnConditionChanged = none;
+            MW.WeaponBarrelBundles[i].OnTemperatureChanged = none;
+            MW.WeaponBarrelBundles[i].OnIsSteamActiveChanged = none;
+            MW.WeaponBarrelBundles[i].ForceUpdateBarrelStatuses();
+
+            WeaponBarrelBundles[i] = none;
+        }
     }
 
     return Copy;
@@ -41,6 +55,7 @@ function Inventory SpawnCopy(Pawn Other)
 function InitDroppedPickupFor(Inventory Inv)
 {
     local DHMountedWeapon MountedWeapon;
+    local int i;
 
     super.InitDroppedPickupFor(Inv);
 
@@ -54,6 +69,19 @@ function InitDroppedPickupFor(Inventory Inv)
     if (MapIconAttachment != none)
     {
         MapIconAttachment.Destroy();
+    }
+
+    // Transfer barrel bundle.
+    for (i = 0; i < MountedWeapon.WeaponBarrelBundles.Length; ++i)
+    {
+        WeaponBarrelBundles[i] = MountedWeapon.WeaponBarrelBundles[i]; 
+        WeaponBarrelBundles[i].SetOwner(self);
+        WeaponBarrelBundles[i].OnConditionChanged = none;
+        WeaponBarrelBundles[i].OnTemperatureChanged = none;
+        WeaponBarrelBundles[i].OnIsSteamActiveChanged = none;
+        WeaponBarrelBundles[i].ForceUpdateBarrelStatuses();
+
+        MountedWeapon.WeaponBarrelBundles[i] = none;
     }
 
     // Spawn the map icon attachment.

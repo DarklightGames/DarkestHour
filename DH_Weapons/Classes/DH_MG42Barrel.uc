@@ -3,4 +3,5 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_MG42Barrel extends DHWeaponBarrel;
+class DH_MG42Barrel extends DHWeaponBarrel
+    abstract;

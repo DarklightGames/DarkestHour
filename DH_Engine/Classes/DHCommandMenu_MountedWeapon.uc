@@ -71,6 +71,8 @@ function bool UnmountWeapon(DHPawn Pawn, DHMountedGun Gun)
 function PickUpMountedWeapon(DHPawn Pawn, DHMountedGun Gun)
 {
     local DHMountedWeapon MountedWeapon;
+    local DHMountedMG MG;
+    local int i;
 
     if (Pawn == none || Gun == none)
     {
@@ -87,6 +89,24 @@ function PickUpMountedWeapon(DHPawn Pawn, DHMountedGun Gun)
     if (MountedWeapon != none)
     {
         MountedWeapon.SetVehicleState(Gun.GetVehicleState());
+
+        // Transfer the barrel bundles to the weapon.
+        for (i = 0; i < Gun.WeaponPawns.Length; ++i)
+        {
+            MG = DHMountedMG(Gun.WeaponPawns[i].Gun);
+
+            if (MG != none)
+            {
+                MountedWeapon.WeaponBarrelBundles[i] = MG.BarrelBundle;
+                MountedWeapon.WeaponBarrelBundles[i].SetOwner(MountedWeapon);
+                MountedWeapon.WeaponBarrelBundles[i].OnConditionChanged = none;
+                MountedWeapon.WeaponBarrelBundles[i].OnIsSteamActiveChanged = none;
+                MountedWeapon.WeaponBarrelBundles[i].OnTemperatureChanged = none;
+
+                // Critical to null this since we destroy it indirectly below.
+                MG.BarrelBundle = none;
+            }
+        }
     }
 
     Gun.Destroy();

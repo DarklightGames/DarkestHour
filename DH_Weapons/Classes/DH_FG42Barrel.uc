@@ -3,7 +3,8 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_FG42Barrel extends DHWeaponBarrel;
+class DH_FG42Barrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

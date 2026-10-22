@@ -114,18 +114,14 @@ function InitPickup()
 
             bHasBayonetMounted = W.default.bBayonetMounted;
 
-            // If weapon has barrels, copy the weapon's reference to the Barrels array & make this pickup the owner of the barrels
+            // If weapon has barrels, copy the weapon's reference to the Barrels array &
+            // make this pickup the owner of the barrels
             if (W.default.InitialBarrels > 0 && W.default.BarrelClass != none)
             {
-                Barrels.Length = 0; // so when Reset, we start again
-
-                for (i = 0; i < W.default.InitialBarrels; ++i)
-                {
-                    Barrels[Barrels.Length] = Spawn(W.default.BarrelClass, self);
-                }
-
-                BarrelIndex = 0;
-                Barrels[BarrelIndex].SetCurrentBarrel(true);
+                BarrelBundle = Spawn(class'DHWeaponBarrelBundle', self);
+                BarrelBundle.Setup(W.default.BarrelClass, W.default.InitialBarrels);
+                // We don't bother setting up callbacks since this is a brand new
+                // weapon and we don't need to track the barrel status.
             }
         }
     }

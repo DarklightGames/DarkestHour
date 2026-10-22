@@ -7,10 +7,12 @@ class DHVehicleMG extends DHVehicleWeapon
     dependson(DHWeaponBarrel)
     abstract;
 
-var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
-var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
+var     bool    bMatchSkinToVehicle;    // Option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes.
+var     name    HUDOverlayReloadAnim;   // Reload animation to play if the MG uses a HUDOverlay.
+var     bool    bShouldBaseTakeDamage;  // When true, damage will be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
 
-var     bool    bShouldBaseTakeDamage;       // When true, damage will not be transferred to the base vehicle. Used for things like the external MG on the StuG and Hetzer.
+var DHWeaponBarrelBundle    BarrelBundle;
+var class<DHWeaponBarrel>   BarrelClass;    // Class for the barrel actor to spawn (if any)
 
 // Barrels
 struct SBarrel
@@ -19,15 +21,13 @@ struct SBarrel
     var WeaponAmbientEmitter        EffectEmitter;          // separate emitter for this barrel, for muzzle flash & ejected shell cases
     var class<WeaponAmbientEmitter> EffectEmitterClass;     // class for the barrel firing effect emitters
     var DHMGSteam                   SteamEmitter;
-    var class<DHWeaponBarrel>       BarrelClass;            // class for the barrel actor to spawn (if any)
-    var DHWeaponBarrel              BarrelActor;            // barrel object for this barrel (if any)
 };
 
 struct SBarrelState
 {
     var bool bIsSteamActive;
     var float Temperature;
-    var DHWeaponBarrel.EBarrelCondition Condition;
+    var DHWeaponBarrelBundle.EBarrelCondition Condition;
 };
 
 var class<DHMGSteam>    BarrelSteamEmitterClass;
@@ -50,44 +50,32 @@ function SpawnBarrels()
 {
     local int i;
 
-    for (i = 0; i < Barrels.Length; ++i)
+    if (BarrelClass == none || Barrels.Length == 0)
     {
-        if (Barrels[i].BarrelClass == none)
-        {
-            return;
-        }
-
-        Barrels[i].BarrelActor = Spawn(Barrels[i].BarrelClass, self);
-
-        // TODO: for now, just make the barrel "active" until we can add barrel swaps
-        // or design a better way to handle this.
-
-        if (Barrels[i].BarrelActor != none)
-        {
-            Barrels[i].BarrelActor.SetCurrentBarrel(true);
-            Barrels[i].BarrelActor.OnTemperatureChanged = OnBarrelTemperatureChanged;
-            Barrels[i].BarrelActor.OnConditionChanged = OnBarrelConditionChanged;
-            Barrels[i].BarrelActor.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
-
-            // Attach the barrel actor to the MG.
-            // This is not strictly necessary since the barrel has no visual representation and is server-side only.
-            AttachToBone(Barrels[i].BarrelActor, Barrels[i].MuzzleBone);
-            Barrels[i].BarrelActor.SetRelativeLocation(vect(0.0, 0.0, 0.0));
-        }
+        return;
     }
+
+    if (BarrelBundle != none)
+    {
+        BarrelBundle.Destroy();
+    }
+
+    BarrelBundle = Spawn(class'DHWeaponBarrelBundle');
+    // We don't have barrel changing on this class of vehicle MGs.
+    // For that reason, the number of active barrels and starting barrels are always the same.
+    // Mounted MGs allow this, but do not inherit from this class.
+    BarrelBundle.Setup(BarrelClass, Barrels.Length, Barrels.Length);
+    BarrelBundle.OnTemperatureChanged = OnBarrelTemperatureChanged;
+    BarrelBundle.OnConditionChanged = OnBarrelConditionChanged;
+    BarrelBundle.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
 }
 
 // Modified to interrupt firing if any of the active barrels have failed.
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-    local int i;
-
-    for (i = 0; i < Barrels.Length; ++i)
+    if (BarrelBundle != none && BarrelBundle.AreAnyActiveBarrelsFailed())
     {
-        if (Barrels[i].BarrelActor != none && Barrels[i].BarrelActor.Condition == BC_Failed)
-        {
-            return false;
-        }
+        return false;
     }
 
     return super.AttemptFire(C, bAltFire);
@@ -292,9 +280,9 @@ function Fire(Controller C)
                 SpawnProjectile(ProjectileClass, false);
             }
 
-            if (FiringBarrelIndex < Barrels.Length && Barrels[FiringBarrelIndex].BarrelActor != none)
+            if (BarrelBundle != none)
             {
-                Barrels[FiringBarrelIndex].BarrelActor.WeaponFired();
+                BarrelBundle.WeaponFired(FiringBarrelIndex);
             }
 
             bSkipFiringEffects = true; // so we don't repeat firing effects after the 1st projectile
@@ -304,9 +292,9 @@ function Fire(Controller C)
     }
     else
     {
-        if (Barrels.Length > 0 && Barrels[0].BarrelActor != none)
+        if (BarrelBundle != none)
         {
-            Barrels[0].BarrelActor.WeaponFired();
+            BarrelBundle.WeaponFired(FiringBarrelIndex);
         }
 
         super.Fire(C);
@@ -362,27 +350,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Mo
 // Modified to change the pitch of the firing sound based on the barrel temperature.
 simulated function float GetFireSoundPitch()
 {
-    if (FiringBarrelIndex < 0 || FiringBarrelIndex >= Barrels.Length || Barrels[FiringBarrelIndex].BarrelActor == none)
+    if (FiringBarrelIndex < 0 || FiringBarrelIndex >= Barrels.Length)
     {
         return 1.0;
     }
 
-    return Barrels[FiringBarrelIndex].BarrelActor.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
-}
-
-function int GetBarrelIndex(DHWeaponBarrel Barrel)
-{
-    local int i;
-
-    for (i = 0; i < Barrels.Length; ++i)
-    {
-        if (Barrels[i].BarrelActor == Barrel)
-        {
-            return i;
-        }
-    }
-
-    return -1;
+    return BarrelClass.static.GetFiringSoundPitch(BarrelStates[FiringBarrelIndex].Temperature);
 }
 
 // Client-only function to enable or disable the steam emitter for a barrel.
@@ -435,12 +408,8 @@ simulated function UpdateBarrelSteam()
     }
 }
 
-function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemperature)
+function OnBarrelTemperatureChanged(int BarrelIndex, float NewTemperature)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
     if (BarrelIndex != -1)
     {
         BarrelStates[BarrelIndex].Temperature = NewTemperature;
@@ -452,24 +421,16 @@ function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemperature)
     }
 }
 
-function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition NewCondition)
+function OnBarrelConditionChanged(int BarrelIndex, DHWeaponBarrelBundle.EBarrelCondition NewCondition)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
     if (BarrelIndex != -1)
     {
         BarrelStates[BarrelIndex].Condition = NewCondition;
     }
 }
 
-function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+function OnBarrelIsSteamActiveChanged(int BarrelIndex, bool bIsSteamActive)
 {
-    local int BarrelIndex;
-
-    BarrelIndex = GetBarrelIndex(Barrel);
-
     if (BarrelIndex != -1)
     {
         BarrelStates[BarrelIndex].bIsSteamActive = bIsSteamActive;

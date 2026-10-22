@@ -16,6 +16,8 @@ var array<class<DHConstruction_Vehicle> >   ConstructionClasses;
 var int                                     ConstructionClassIndex;
 var private DHVehicleState                  VehicleState;
 
+var array<DHWeaponBarrelBundle> WeaponBarrelBundles;
+
 var()       Material    HudAmmoIconMaterial;
 var         int         HudAmmoCount;
 
@@ -36,6 +38,22 @@ replication
         ServerDeployEnd;
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         HudAmmoCount;
+}
+
+simulated function Destroyed()
+{
+    local int i;
+
+    super.Destroyed();
+
+    // Destroy barrel bundles.
+    for (i = 0; i < WeaponBarrelBundles.Length; ++i)
+    {
+        if (WeaponBarrelBundles[i] != none)
+        {
+            WeaponBarrelBundles[i].Destroy();
+        }
+    }
 }
 
 simulated state Deploying
@@ -218,6 +236,15 @@ function bool FillAmmo()
             until (MainAmmoResupplyCount == 0 || bDidResupplyCannon == false);
         }
 
+        for (i = 0; i < WeaponBarrelBundles.Length; ++i)
+        {
+            if (WeaponBarrelBundles[i] != none &&
+                WeaponBarrelBundles[i].ReplaceInactiveFailedBarrels() > 0)
+            {
+                bDidResupplyWeapon = true;
+            }
+        }
+
         if (bDidResupplyWeapon)
         {
             VehicleWeaponState.LastResupplyTimestamp = Level.TimeSeconds;
@@ -371,6 +398,8 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHVehicle Vehicle;
     local class<DHVehicle> VehicleClass;
+    local DHMountedMG MG;
+    local int i;
     
     if (!CanSpawnVehicle(Owner, Location, Rotation))
     {
@@ -404,6 +433,23 @@ function ServerDeployEnd(Actor Owner, Vector Location, Rotator Rotation)
     if (VehicleState != none)
     {
         Vehicle.SetVehicleState(VehicleState);
+    }
+
+    // Transfer the barrel bundle to the MG weapon.
+    for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
+    {
+        if (Vehicle.WeaponPawns[i] == none)
+        {
+            continue;
+        }
+
+        MG = DHMountedMG(Vehicle.WeaponPawns[i].Gun);
+
+        if (MG != none && WeaponBarrelBundles[i] != none)
+        {
+            MG.SetBarrelBundle(WeaponBarrelBundles[i]);
+            WeaponBarrelBundles[i] = none;
+        }
     }
     
     // Destroy the carried weapon, as it's now been replaced by the deployed weapon.
@@ -499,6 +545,26 @@ public function bool ShouldShowProxyCursor()
 protected simulated function bool ShouldAlignToGround()
 {
     return bShouldAlignToGround;
+}
+
+// Display debug info for the barrel bundles.
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    local int i;
+
+    super.DisplayDebug(Canvas, YL, YPos);
+
+    for (i = 0; i < WeaponBarrelBundles.Length; ++i)
+    {
+        YPos += YL;
+        Canvas.SetPos(4, YPos);
+        Canvas.DrawText("WeaponBarrelBundles[" $ i $ "] @ " $ WeaponBarrelBundles[i]);
+
+        if (WeaponBarrelBundles[i] != none)
+        {
+            WeaponBarrelBundles[i].DisplayDebug(Canvas, YL, YPos);
+        }
+    }
 }
 
 defaultproperties

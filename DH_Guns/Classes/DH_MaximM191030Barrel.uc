@@ -5,7 +5,8 @@
 // The Maxim gun has a water cooled jacket, so the cooling rate is higher.
 //==============================================================================
 
-class DH_MaximM191030Barrel extends DHWeaponBarrel;
+class DH_MaximM191030Barrel extends DHWeaponBarrel
+    abstract;
 
 defaultproperties
 {

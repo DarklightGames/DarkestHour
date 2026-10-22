@@ -3,4 +3,5 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Fiat35MGBarrel extends DHWeaponBarrel;
+class DH_Fiat35MGBarrel extends DHWeaponBarrel
+    abstract;

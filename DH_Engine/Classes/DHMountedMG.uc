@@ -68,7 +68,7 @@ var name                            BarrelChangeAnimation;
 var DHWeaponBarrelBundle            BarrelBundle;
 
 var ROMGSteam                       BarrelSteamEmitter;
-var DHWeaponBarrel.EBarrelCondition BarrelCondition;
+var DHWeaponBarrelBundle.EBarrelCondition BarrelCondition;
 var float                           BarrelTemperature;
 var bool                            bBarrelIsSteamActive, bOldBarrelIsSteamActive;
 
@@ -95,44 +95,51 @@ simulated function Destroyed()
     {
         BarrelBundle.Destroy();
     }
+
+    if (BarrelSteamEmitter != none)
+    {
+        BarrelSteamEmitter.Destroy();
+    }
 }
 
-private function CreateBarrelBundle()
+function SetBarrelBundle(DHWeaponBarrelBundle NewBundle)
 {
-    local int i;
-    local DHWeaponBarrel Barrel;
-
     if (BarrelBundle != none)
     {
         BarrelBundle.Destroy();
     }
 
-    BarrelBundle = Spawn(Class'DHWeaponBarrelBundle', self);
+    BarrelBundle = NewBundle;
 
-    for (i = 0; i < BarrelCount; ++i)
+    if (BarrelBundle != none)
     {
-        Barrel = Spawn(BarrelClass, self);
-        Barrel.OnTemperatureChanged = OnBarrelTemperatureChanged;
-        Barrel.OnConditionChanged = OnBarrelConditionChanged;
-        Barrel.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
-        BarrelBundle.Barrels[i] = Barrel;
-    }
-
-    if (BarrelBundle.Barrels.Length > 0)
-    {
-        // Set the first barrel is being active.
-        BarrelBundle.Barrels[0].SetCurrentBarrel(true);
+        BarrelBundle.SetOwner(self);
+        BarrelBundle.OnTemperatureChanged = OnBarrelTemperatureChanged;
+        BarrelBundle.OnConditionChanged = OnBarrelConditionChanged;
+        BarrelBundle.OnIsSteamActiveChanged = OnBarrelSteamIsActiveChanged;
+        BarrelBundle.ForceUpdateBarrelStatuses();
     }
 }
 
 simulated function bool IsChangingBarrels();
 
-function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float Temperature)
+function OnBarrelTemperatureChanged(int BarrelIndex, float Temperature)
 {
     BarrelTemperature = Temperature;
 }
 
-function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive)
+function OnBarrelConditionChanged(int BarrelIndex, DHWeaponBarrelBundle.EBarrelCondition Condition)
+{
+    BarrelCondition = Condition;
+
+    // If the barrel has failed, stop firing (this stops the sounds and effects).
+    if (BarrelCondition == BC_Failed && WeaponPawn != none)
+    {
+        CeaseFire(WeaponPawn.Controller, false);
+    }
+}
+
+function OnBarrelSteamIsActiveChanged(int BarrelIndex, bool bIsSteamActive)
 {
     // Sets the variable here on the server. The client will then have this variable replicated to them.
     bBarrelIsSteamActive = bIsSteamActive;
@@ -140,11 +147,11 @@ function OnBarrelSteamIsActiveChanged(DHWeaponBarrel Barrel, bool bIsSteamActive
     if (Level.NetMode == NM_Standalone)
     {
         // In a standalone game there is no PostNetReceive, so we must trigger the steam update immediately.
-        SetBarrelSteamActive(bIsSteamActive);
+        SetBarrelSteamActive(BarrelIndex, bIsSteamActive);
     }
 }
 
-simulated function SetBarrelSteamActive(bool bIsSteamActive)
+simulated function SetBarrelSteamActive(int BarrelIndex, bool bIsSteamActive)
 {
     if (Level.NetMode == NM_DedicatedServer)
     {
@@ -175,17 +182,6 @@ simulated function SetBarrelSteamActive(bool bIsSteamActive)
     }
 }
 
-function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
-{
-    BarrelCondition = Condition;
-
-    // If the barrel has failed, stop firing (this stops the sounds and effects).
-    if (BarrelCondition == BC_Failed && WeaponPawn != none)
-    {
-        CeaseFire(WeaponPawn.Controller, false);
-    }
-}
-
 simulated function PostNetReceive()
 {
     super.PostNetReceive();
@@ -193,7 +189,7 @@ simulated function PostNetReceive()
     if (bOldBarrelIsSteamActive != bBarrelIsSteamActive)
     {
         // TODO: turn on or off the steam emitter.
-        SetBarrelSteamActive(bBarrelIsSteamActive);
+        SetBarrelSteamActive(0, bBarrelIsSteamActive);
     }
 }
 
@@ -478,12 +474,7 @@ Begin:
 
 simulated function bool CanChangeBarrels()
 {
-    if (IsBusy() || BarrelBundle.CanChangeBarrel())
-    {
-        return false;
-    }
-
-    return true;
+    return !IsBusy() && BarrelBundle != none && BarrelBundle.CanChangeBarrel();
 }
 
 // Attempt to change barrels. Returns true if the gun is now in the changing barrel state.
@@ -557,17 +548,33 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+// Modified to add barrel debug readouts.
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    super.DisplayDebug(Canvas, YL, YPos);
+
+    if (BarrelBundle != none)
+    {
+        BarrelBundle.DisplayDebug(Canvas, YL, YPos);
+    }
+}
+
 simulated function PostBeginPlay()
 {
+    local DHWeaponBarrelBundle BarrelBundle;
+
     super.PostBeginPlay();
 
     PlayAnim('IDLE');
 
     SetupAnimationDrivers();
 
+
     if (Role == ROLE_Authority)
     {
-        CreateBarrelBundle();
+        BarrelBundle = Spawn(Class'DHWeaponBarrelBundle', self);
+        BarrelBundle.Setup(BarrelClass, BarrelCount);
+        SetBarrelBundle(BarrelBundle);
     }
 }
 
@@ -770,6 +777,15 @@ function bool ResupplyAmmo()
     if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
     {
         AttemptReload();
+    }
+
+    if (BarrelBundle != none)
+    {
+        // Attempt to replace any failed barrels.
+        if (BarrelBundle.ReplaceInactiveFailedBarrels() > 0)
+        {
+            bDidResupply = true;
+        }
     }
     
     return bDidResupply;

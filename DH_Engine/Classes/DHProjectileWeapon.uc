@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
-    dependson(DHWeaponBarrel)
+    dependson(DHWeaponBarrelBundle)
     abstract;
 
 enum EUnloadedMunitionsPolicy
@@ -86,10 +86,9 @@ var()       name        PostFireIronIdleAnim;       // animation after firing wh
 
 // Barrels
 var     class<DHWeaponBarrel>   BarrelClass;        // barrel type we use now
-var     array<DHWeaponBarrel>   Barrels;            // array of any carried barrels for this weapon
+var     DHWeaponBarrelBundle    BarrelBundle;
 var     byte                InitialBarrels;         // barrels initially given
 var     bool                bHasSpareBarrel;        // we have at least one spare barrel we can switch to (minimal replication so net client knows whether can change barrel)
-var     byte                BarrelIndex;            // index number of current barrel
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
 var     bool                bCallBarrelChangeTimer; // we're in middle of a barrel change, so Timer() should call PerformBarrelChange() instead of exiting state ChangingBarrels
 var     float               BarrelChangeDuration;   // saves duration of barrel change, so Timer() can be called at mid point & then again at end of barrel change animation
@@ -283,7 +282,6 @@ simulated event WeaponTick(float DeltaTime)
 // Modified so works in DHDebugMode, & to log barrels & their current temperature & state
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
-    local DHWeaponBarrel Barrel;
     local int            i;
 
     if (Level.NetMode != NM_Standalone && !Class'DH_LevelInfo'.static.DHDebugMode())
@@ -300,27 +298,9 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 
     // Show the barrel info - only works in single-player as barrel actors don't exist on net clients
-    if (Role == ROLE_Authority)
+    if (BarrelBundle != none)
     {
-        for (i = 0; i < Barrels.Length; ++i)
-        {
-            Barrel = Barrels[i];
-
-            if (Barrel != none)
-            {
-                if (i == BarrelIndex)
-                {
-                    Canvas.DrawText("Active barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-                else
-                {
-                    Canvas.DrawText("Hidden barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-
-                YPos += YL;
-                Canvas.SetPos(4.0, YPos);
-            }
-        }
+        BarrelBundle.DisplayDebug(Canvas, YL, YPos);
     }
 }
 
@@ -807,7 +787,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     {
         if (bBarrelSteamActive)
         {
-            OnBarrelIsSteamActiveChanged(none, true);
+            OnBarrelIsSteamActiveChanged(0, true);
         }
 
         InitializeClientWeaponSystems();
@@ -2682,11 +2662,20 @@ function bool FillAmmo()
             }
         }
 
+        // Replace inactive failed barrels.
+        if (BarrelBundle != none &&
+            BarrelBundle.ReplaceInactiveFailedBarrels() > 0)
+        {
+            bHasSpareBarrel = true;
+            bDidFillAmmo = true;
+        }
+
         if (bDidFillAmmo && IsCurrentWeapon())
         {
             UpdateResupplyStatus(true);
         }
     }
+
     if (bDidFillAmmo)
     {
         LastResupplyTimestamp = Level.TimeSeconds;
@@ -3088,46 +3077,16 @@ Begin:
 
 function PerformBarrelChange()
 {
-    if (!bHasSpareBarrel)
+    if (BarrelBundle != none)
     {
-        // We only have the 1 barrel in our weapon, don't do anything
-        return;
-    }
+        BarrelBundle.PerformBarrelChange();
 
-    if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length && Barrels[BarrelIndex] != none)
-    {
-        // If the barrel has failed, we're going to toss it, so remove it from the barrel array
-        if (Barrels[BarrelIndex].Condition == BC_Failed)
-        {
-            Barrels[BarrelIndex].Destroy();
-            Barrels.Remove(BarrelIndex, 1);
-
-            if (Barrels.Length < 2)
-            {
-                bHasSpareBarrel = false;
-            }
-
-            // If just removed the last barrel in array, cycle back to 0 (otherwise BarrelIndex stays the same, as next barrel has dropped back into current index position)
-            if (BarrelIndex >- Barrels.Length)
-            {
-                BarrelIndex = 0;
-            }
-        }
-        else
-        {
-            Barrels[BarrelIndex].SetCurrentBarrel(false); // old barrel is no longer current
-            BarrelIndex = ++BarrelIndex % Barrels.Length; // cycle BarrelIndex (loops back to 0 when goes past the last barrel in array)
-        }
-    }
-
-    if (Barrels[BarrelIndex] != none)
-    {
-        Barrels[BarrelIndex].SetCurrentBarrel(true);
+        bHasSpareBarrel = BarrelBundle.CanChangeBarrel();
     }
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function OnBarrelIsSteamActiveChanged(DHWeaponBarrel Barrel, bool bSteaming)
+simulated function OnBarrelIsSteamActiveChanged(int BarrelIndex, bool bSteaming)
 {
     local DHPlayer PC;
 
@@ -3209,17 +3168,17 @@ simulated function ClientSetBarrelSteam(bool bSteaming)
 {
     if (Role < ROLE_Authority)
     {
-        OnBarrelIsSteamActiveChanged(none, bSteaming);
+        OnBarrelIsSteamActiveChanged(0, bSteaming);
     }
 }
 
-function OnBarrelConditionChanged(DHWeaponBarrel Barrel, DHWeaponBarrel.EBarrelCondition Condition)
+function OnBarrelConditionChanged(int BarrelIndex, DHWeaponBarrelBundle.EBarrelCondition Condition)
 {
     bBarrelDamaged = Condition >= BC_Damaged;
     bBarrelFailed = Condition >= BC_Failed;
 }
 
-function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemp)
+function OnBarrelTemperatureChanged(int BarrelIndex, float NewTemp)
 {
     BarrelTemperature = NewTemp;
 }
@@ -3227,10 +3186,7 @@ function OnBarrelTemperatureChanged(DHWeaponBarrel Barrel, float NewTemp)
 // Modified to give barrel actors to player, if relevant
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
-    local int i;
     local DHWeaponPickup WP;
-
-    WP = DHWeaponPickup(Pickup);
 
     super.GiveTo(Other, Pickup);
 
@@ -3239,83 +3195,43 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         return;
     }
 
-    // This weapon is spawning for this player, so spawn any barrels
+    WP = DHWeaponPickup(Pickup);
+
     if (Pickup == none)
     {
-        if (InitialBarrels > 0)
-        {
-            for (i = 0; i < InitialBarrels; ++i)
-            {
-                Barrels[i] = Spawn(BarrelClass, self);
-            }
-
-            BarrelIndex = 0;
-            Barrels[BarrelIndex].SetCurrentBarrel(true);
-        }
+        // This weapon is spawning for this player, so spawn any barrels.
+        BarrelBundle = Spawn(class'DHWeaponBarrelBundle', self);
+        BarrelBundle.Setup(BarrelClass, InitialBarrels);
     }
-    // Player has picked up this weapon from the ground, so transfer any barrels from the pickup
-    else if (WP != none && WP.Barrels.Length > 0)
+    // Player has picked up this weapon from the ground, so transfer any barrels
+    // from the pickup.
+    else if (WP != none && WP.BarrelBundle != none)
     {
-        Barrels = WP.Barrels; // copy the pickup's reference to the Barrels array
-
-        for (i = 0; i < Barrels.Length; ++i)
-        {
-            if (Barrels[i] == none)
-            {
-                continue;
-            }
-
-            Barrels[i].SetOwner(self); // barrel's owner is now this weapon
-
-            if (Barrels[i].IsCurrentBarrel())
-            {
-                BarrelIndex = i;
-            }
-        }
+        // Transfer the barrel bundle from the pickup.
+        BarrelBundle = WP.BarrelBundle;
+        BarrelBundle.SetOwner(self);
     }
 
-    bHasSpareBarrel = Barrels.Length >= 2;
+    BarrelBundle.OnTemperatureChanged = OnBarrelTemperatureChanged;
+    BarrelBundle.OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
+    BarrelBundle.OnConditionChanged = OnBarrelConditionChanged;
+    BarrelBundle.ForceUpdateBarrelStatuses();
 
-    // Update delegate functions.
-    for (i = 0; i < Barrels.Length; ++i)
-    {
-        if (Barrels[i] == none)
-        {
-            return;
-        }
-
-        // Set up delegate functions.
-        Barrels[i].OnTemperatureChanged = OnBarrelTemperatureChanged;
-        Barrels[i].OnIsSteamActiveChanged = OnBarrelIsSteamActiveChanged;
-        Barrels[i].OnConditionChanged = OnBarrelConditionChanged;
-
-        if (Barrels[BarrelIndex].IsCurrentBarrel())
-        {
-            // Now that the delegates have been hooked up, trigger the status updates.
-            Barrels[BarrelIndex].UpdateBarrelStatus();
-        }
-    }
+    bHasSpareBarrel = BarrelBundle.CanChangeBarrel();
 }
 
 // Modified to notify an active barrel that we have fired (so it can increase its temperature) & change the WeaponAttachment's sound if the barrel is damaged
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
-    local DHWeaponBarrel B;
-
-    if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
+    if (BarrelBundle != none)
     {
-        B = Barrels[BarrelIndex];
-
-        if (Role == ROLE_Authority && B != none)
-        {
-            B.WeaponFired();
-        }
+        BarrelBundle.WeaponFired();
 
         if (ThirdPersonActor != none)
         {
-            if (bBarrelDamaged && B != none)
+            if (bBarrelDamaged)
             {
-                ThirdPersonActor.SoundPitch = B.static.GetFiringSoundPitch(B.Temperature) * 64;
+                ThirdPersonActor.SoundPitch = BarrelClass.static.GetFiringSoundPitch(BarrelBundle.Barrels[BarrelBundle.GetBarrelIndexFromActiveIndex(0)].Temperature) * 64;
             }
             else if (ThirdPersonActor.SoundPitch != 64)
             {
