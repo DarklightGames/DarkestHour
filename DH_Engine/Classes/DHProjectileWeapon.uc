@@ -277,6 +277,11 @@ simulated event WeaponTick(float DeltaTime)
     {
         BipodPhysicsSimulation.PhysicsTick(self, DeltaTime);
     }
+
+    if (bBarrelFailed && bHasSpareBarrel && Instigator != none && !IsBusy())
+    {
+        Instigator.ReceiveLocalizedMessage(class'DHBarrelChangeControlsMessage', 0, Instigator.PlayerReplicationInfo, none, self);
+    }
 }
 
 // Modified so works in DHDebugMode, & to log barrels & their current temperature & state
