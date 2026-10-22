@@ -1212,6 +1212,4 @@ defaultproperties
     SprintStartAnimRate=1.5
     SprintEndAnimRate=1.5
     SprintLoopAnimRate=1.5
-
-    bShouldDestroyOnPutAway=false
 }
