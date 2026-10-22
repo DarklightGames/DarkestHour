@@ -394,6 +394,25 @@ simulated function name GetCameraBoneForPosition(int PositionIndex)
     return CameraBone;
 }
 
+simulated function bool ShouldShowBarrelChangeControlsMessage()
+{
+    local DHMountedMG MG;
+
+    MG = DHMountedMG(Gun);
+
+    return MG != none && MG.BarrelCondition == BC_Failed && MG.CanChangeBarrels();
+}
+
+simulated function Tick(float DeltaTime)
+{
+    if (ShouldShowBarrelChangeControlsMessage())
+    {
+        ReceiveLocalizedMessage(class'DHBarrelChangeControlsMessage', 0, PlayerReplicationInfo, none, self);
+    }
+
+    super.Tick(DeltaTime);
+}
+
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out Vector CameraLocation, out Rotator CameraRotation)
 {
     local DHMountedMG MG;
