@@ -532,7 +532,7 @@ final function CycleVariant()
 
     Proxy = DHMountedWeaponProxy(ProxyCursor);
 
-    if (Proxy != none)
+    if (Proxy != none && ConstructionClasses.Length > 1)
     {
         ConstructionClassIndex = ++ConstructionClassIndex % ConstructionClasses.Length;
 
