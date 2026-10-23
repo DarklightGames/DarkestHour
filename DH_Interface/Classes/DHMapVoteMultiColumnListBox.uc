@@ -5,6 +5,12 @@
 
 class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
 
+function InitBaseList(GUIListBase ListBase)
+{
+    super.InitBaseList(ListBase);
+
+    ListBase.OnChange = OnChange;
+}
 function InternalOnClick(GUIContextMenu Sender, int Index)
 {
     if (Sender == none || NotifyContextSelect(Sender, Index))
