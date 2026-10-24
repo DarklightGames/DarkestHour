@@ -93,7 +93,7 @@ simulated function DestroyAttachments()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
-    VehicleNameString="Sherman M4A3E8"
+    VehicleNameString="M4A3E8(76)W Sherman"
     ReinforcementCost=8
 
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.logs_L'

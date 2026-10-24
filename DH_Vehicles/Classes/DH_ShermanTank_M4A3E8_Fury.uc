@@ -7,7 +7,7 @@ class DH_ShermanTank_M4A3E8_Fury extends DH_ShermanTank_M4A3E8;
 
 defaultproperties
 {
-    VehicleNameString="Sherman M4A3E8 'Fury'"
+    VehicleNameString="M4A3E8(76)W Sherman 'Fury'"
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_ShermanCannonPawn_M4A3E8_Fury')
     VehicleAttachments(0)=(AttachClass=Class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body_stowage',bHasCollision=false)
 
