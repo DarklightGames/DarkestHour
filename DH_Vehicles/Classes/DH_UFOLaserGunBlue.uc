@@ -41,7 +41,7 @@ defaultproperties
     WeaponFireAttachmentBone="tip"
     AltFireAttachmentBone="tip"
     AmbientEffectEmitterClass=none
-    CannonFireSound(0)=Sound'DH_UFO_snd.UFO.UfoBigShot'
+    CannonFireSound(0)=Sound'DH_UFO_snd.UFO.PortalExit'
     CannonFireSound(1)=Sound'DH_UFO_snd.UFO.UfoBigShotD'
     CannonFireSound(2)=Sound'DH_UFO_snd.UFO.UfoBigShotE'
 

@@ -215,7 +215,7 @@ defaultproperties
 {
 
      DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_UFOLaserGun',WeaponBone="Turret_placement2")
-
+     ImpactDamageSounds(0)=none
      AmbientGlow=224
      bUseDynamicLights=true
      bUseLightingFromBase=true
@@ -354,8 +354,8 @@ defaultproperties
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
      GroundSpeed=100000.000000
-     HealthMax=12000.000000
-     Health=12000
+     HealthMax=2800.000000
+     Health=2800
      Mesh=SkeletalMesh'DH_UFO_anm.UFO_body_ext'
      Skins(0)=Texture'DH_UFO_tex.UFO.ufo_d_A00'
      //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'

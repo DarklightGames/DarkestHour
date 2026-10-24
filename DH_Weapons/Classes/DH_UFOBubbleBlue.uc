@@ -7,6 +7,14 @@ class DH_UFOBubbleBlue extends DH_GeratPIIBullet;
 
 defaultproperties
 {
+    CollisionRadius=130.000000    
+    CollisionHeight=130.000000    
+
+    bCollideActors=True
+    bCollideWorld=True
+    
+    bBlockActors=False
+    bBlockPlayers=False
     Damage=5000000
     Speed=30000.0
     BallisticCoefficient=2.675

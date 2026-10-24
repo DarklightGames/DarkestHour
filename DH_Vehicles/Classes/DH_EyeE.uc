@@ -223,6 +223,10 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
+
+    DamagedEffectClass=none //no damage smoke
+    ImpactDamageSounds(0)=none
+    
      DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_EyeEGun',WeaponBone="Turret_placement3")
 
      //AmbientGlow=224
@@ -363,8 +367,8 @@ defaultproperties
      HUDOverlayFOV=85.000000
      bCanBeBaseForPawns=True
      GroundSpeed=100000.000000
-     HealthMax=6000.000000
-     Health=6000
+     HealthMax=1800.000000
+     Health=1800
      Mesh=SkeletalMesh'DH_UFO_anm.EyeBody'
      Skins(0)=Texture'DH_UFO_tex.UFO.EyeB'
      //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
