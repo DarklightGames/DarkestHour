@@ -11,5 +11,7 @@ defaultproperties
     VehicleClasses(1)=(VariantIndex=0,VehicleClass=Class'DH_MG34LafetteGun_Camo',SeasonFilters=((Operation=SFO_None,Seasons=(SEASON_Winter))))
     VehicleClasses(2)=(VariantIndex=0,VehicleClass=Class'DH_MG34LafetteGun_Desert',SeasonFilters=((Operation=SFO_Any,Seasons=(SEASON_Summer,SEASON_Autumn))))
     VehicleClasses(3)=(VariantIndex=1,VehicleClass=Class'DH_MG34LafetteGun_Low')
+    VehicleClasses(4)=(VariantIndex=1,VehicleClass=Class'DH_MG34LafetteGun_LowCamo',SeasonFilters=((Operation=SFO_None,Seasons=(SEASON_Winter))))
+    VehicleClasses(5)=(VariantIndex=1,VehicleClass=Class'DH_MG34LafetteGun_LowDesert',SeasonFilters=((Operation=SFO_Any,Seasons=(SEASON_Summer,SEASON_Autumn))))
     //CollisionQueries(0)=(Type=CQT_Cylinder,Location=(X=-48,Z=24),Radius=38.0,HalfHeight=24)
 }
