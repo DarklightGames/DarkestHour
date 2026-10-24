@@ -18,9 +18,9 @@ defaultproperties
     // Recoil
     RecoilRate=0.05
     PctBipodDeployRecoil=0.1
-    MaxVerticalRecoilAngle=555
-    MaxHorizontalRecoilAngle=275
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=8.0,OutVal=1.1),(InVal=14.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=630 
+    MaxHorizontalRecoilAngle=270
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=8.0,OutVal=1.1),(InVal=14.0,OutVal=0.9),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 

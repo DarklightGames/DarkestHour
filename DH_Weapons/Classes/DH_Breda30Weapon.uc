@@ -170,7 +170,7 @@ defaultproperties
 
     MaxNumPrimaryMags=15        // The backpack that the machine-gunner carries holds 15 slots for stripper clips.
     InitialNumPrimaryMags=10
-    NumMagsToResupply=2
+    NumMagsToResupply=3
 
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
